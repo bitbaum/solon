@@ -1,9 +1,10 @@
 # Golden CI floor — see dotfiles/templates/ci/README.md.
-# solon: npm + Prisma. Floor = verify (typecheck only). `next lint` is not
-# configured here (it drops into an interactive setup prompt), so lint is
-# DEFERRED until an eslint config is added — a Never-Twice item. The Playwright
-# e2e + build are also deferred (need a running app + DB). Prisma has no
-# postinstall, so the client is generated before typecheck needs its types.
+# solon: npm + Prisma. Floor = verify (lint + typecheck) + build.
+# Lint is `next lint` (eslint + eslint-config-next, config in .eslintrc.json).
+# `next build` is hermetic: the server components that touch Prisma catch DB
+# errors and render demo fallbacks, so no live DB is needed. Prisma has no
+# postinstall, so the client is generated before typecheck/build need its types.
+# The Playwright e2e smoke tests stay deferred (need a running app).
 name: CI
 
 on:
@@ -37,6 +38,10 @@ jobs:
       - name: Prisma generate (types for typecheck)
         run: npx prisma generate
 
-      # SSOT: typecheck (lint deferred — see header), defined in package.json `verify`.
+      # SSOT: lint + typecheck, defined in package.json `verify`.
       - name: Verify
         run: npm run verify
+
+      # Build gate — hermetic (Prisma calls fall back without a live DB, see header).
+      - name: Build
+        run: npm run build

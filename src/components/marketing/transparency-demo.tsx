@@ -285,7 +285,6 @@ export function TransparencyDemo() {
                   <span>Public Ledger</span>
                 </div>
               </div>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(activeDemo as any).transactions?.map((tx: any) => (
                 <div key={tx.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-4">
@@ -315,7 +314,6 @@ export function TransparencyDemo() {
                   <span>KPIs Tracked</span>
                 </div>
               </div>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(activeDemo as any).decisions?.map((decision: any) => (
                 <div key={decision.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex justify-between items-start mb-3">
@@ -365,7 +363,6 @@ export function TransparencyDemo() {
                   <span>Bitcoin Payments</span>
                 </div>
               </div>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(activeDemo as any).services?.map((service: any) => (
                 <div key={service.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex justify-between items-start mb-3">
@@ -401,7 +398,6 @@ export function TransparencyDemo() {
                   <span>Cryptographic</span>
                 </div>
               </div>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(activeDemo as any).sessions?.map((session: any) => (
                 <div key={session.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex justify-between items-start mb-3">

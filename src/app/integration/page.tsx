@@ -17,14 +17,14 @@ export default function IntegrationPage() {
               <h3 className="text-lg font-semibold text-[var(--navy)] mb-4">REST API Example</h3>
               <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
                 <div className="text-gray-400"># Get organization treasury balance</div>
-                <div className="text-white">curl -H "Authorization: Bearer YOUR_API_KEY" \</div>
+                <div className="text-white">curl -H &quot;Authorization: Bearer YOUR_API_KEY&quot; \</div>
                 <div className="text-white ml-4">https://api.solon.org/v1/treasury/balance</div>
                 <br />
                 <div className="text-gray-400"># Response</div>
                 <div className="text-green-300">{'{'}</div>
-                <div className="text-green-300 ml-2">"balance": "2.47851234",</div>
-                <div className="text-green-300 ml-2">"currency": "BTC",</div>
-                <div className="text-green-300 ml-2">"usd_value": "142847.23"</div>
+                <div className="text-green-300 ml-2">&quot;balance&quot;: &quot;2.47851234&quot;,</div>
+                <div className="text-green-300 ml-2">&quot;currency&quot;: &quot;BTC&quot;,</div>
+                <div className="text-green-300 ml-2">&quot;usd_value&quot;: &quot;142847.23&quot;</div>
                 <div className="text-green-300">{'}'}</div>
               </div>
             </div>
@@ -32,12 +32,12 @@ export default function IntegrationPage() {
             <div>
               <h3 className="text-lg font-semibold text-[var(--navy)] mb-4">SDK Integration</h3>
               <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                <div className="text-gray-400">// JavaScript SDK</div>
-                <div className="text-blue-300">import</div> <div className="text-white">{'{ SolonAPI }'}</div> <div className="text-blue-300">from</div> <div className="text-orange-300">'@solon/sdk'</div>
+                <div className="text-gray-400">{'// JavaScript SDK'}</div>
+                <div className="text-blue-300">import</div> <div className="text-white">{'{ SolonAPI }'}</div> <div className="text-blue-300">from</div> <div className="text-orange-300">&apos;@solon/sdk&apos;</div>
                 <br />
                 <div className="text-blue-300">const</div> <div className="text-white">client = </div><div className="text-blue-300">new</div> <div className="text-white">SolonAPI(apiKey)</div>
                 <br />
-                <div className="text-gray-400">// Get treasury data</div>
+                <div className="text-gray-400">{'// Get treasury data'}</div>
                 <div className="text-blue-300">const</div> <div className="text-white">balance = </div><div className="text-blue-300">await</div> <div className="text-white">client.treasury.getBalance()</div>
                 <div className="text-blue-300">const</div> <div className="text-white">votes = </div><div className="text-blue-300">await</div> <div className="text-white">client.voting.getActive()</div>
               </div>

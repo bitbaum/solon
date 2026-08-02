@@ -18,7 +18,7 @@ export default function AboutPage() {
               transparency and democratic decision-making without the overhead of traditional systems.
             </p>
             <p>
-              By leveraging Bitcoin's immutable blockchain and cryptographic signatures, we enable 
+              By leveraging Bitcoin&apos;s immutable blockchain and cryptographic signatures, we enable
               organizations to operate with unprecedented transparency while maintaining security 
               and privacy where needed.
             </p>
@@ -80,7 +80,7 @@ export default function AboutPage() {
             <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Organization?</h3>
             <p className="text-gray-300 mb-6">
               Join the future of transparent governance. Contact us to learn how Solon can 
-              revolutionize your organization's operations.
+              revolutionize your organization&apos;s operations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="bg-white text-[var(--navy)] px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-semibold">
