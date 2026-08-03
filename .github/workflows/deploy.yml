@@ -8,6 +8,10 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # Redeploy the current main without inventing a commit. Re-running a failed
+  # deploy is NOT equivalent: a re-run reuses the original run's resolved
+  # reusable-workflow version, so a fix landed since then does not apply.
+  workflow_dispatch:
 
 jobs:
   deploy:
