@@ -16,13 +16,13 @@ export default function BitcoinTreasury({ organizationId, walletBalance, recentT
           <p className="text-sm text-gray-600">Organization: {organizationId}</p>
         </div>
         <div className="text-right">
-          <div className="text-gray-600 text-xs">Balance (BTC)</div>
+          <div className="text-gray-600 text-xs">Recorded balance (BTC) — sum of the transactions below</div>
           <div className="text-2xl font-mono text-[var(--navy)]">{btc}</div>
         </div>
       </header>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="md:col-span-2 rounded-lg border border-gray-200 p-4 bg-gray-50">
+      <div className="grid gap-4">
+        <div className="rounded-lg border border-gray-200 p-4 bg-gray-50">
           <h3 className="font-semibold text-[var(--navy)]">Recent Transactions</h3>
           <table className="w-full mt-3 text-sm">
             <thead className="text-gray-600">
@@ -52,15 +52,6 @@ export default function BitcoinTreasury({ organizationId, walletBalance, recentT
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="rounded-lg border border-gray-200 p-4 bg-gray-50">
-          <h3 className="font-semibold text-[var(--navy)]">Budget Snapshot</h3>
-          <ul className="mt-2 text-sm text-gray-700 space-y-1">
-            <li>Operations: 40%</li>
-            <li>Development: 35%</li>
-            <li>Grants: 15%</li>
-            <li>Reserves: 10%</li>
-          </ul>
         </div>
       </div>
     </section>
