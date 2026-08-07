@@ -18,7 +18,7 @@ import {
   CATEGORY_THRESHOLD,
   VOTING_WINDOW_DAYS,
 } from "@/lib/config/governance";
-import { tally, decideOutcome, type Tally } from "@/lib/domain/tally";
+import { tally, decideOutcome, closeRefusal, type Tally } from "@/lib/domain/tally";
 
 export interface SubmitVoteInput {
   address: string;
@@ -208,6 +208,15 @@ export async function closeSession(sessionId: string) {
   });
   if (!session) throw new Error("voting session not found");
   if (session.status !== SessionStatus.ACTIVE) throw new Error(`session already ${session.status}`);
+
+  const votesCast = await prisma.vote.count({ where: { sessionId } });
+  const refusal = closeRefusal({
+    now: new Date(),
+    closesAt: session.closesAt,
+    votesCast,
+    eligibleCount: session.eligibleCount,
+  });
+  if (refusal) throw new Error(refusal);
 
   const t = await sessionTally(sessionId);
   const outcome = decideOutcome({

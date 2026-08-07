@@ -26,7 +26,7 @@ export default function IntegrationPage() {
             <div className="text-white">voter:&lt;your-bitcoin-address&gt;</div>
             <br />
             <div className="text-gray-400"># Submit the signed vote</div>
-            <div className="text-white">curl -X POST /api/voting/&lt;sessionId&gt;/cryptographic-vote \</div>
+            <div className="text-white">curl -X POST /api/sessions/&lt;sessionId&gt;/votes \</div>
             <div className="text-white ml-4">-H &quot;Content-Type: application/json&quot; \</div>
             <div className="text-white ml-4">
               -d &apos;{'{'}&quot;choice&quot;:&quot;yes&quot;,&quot;address&quot;:&quot;1...&quot;,&quot;signature&quot;:&quot;&lt;base64&gt;&quot;{'}'}&apos;
@@ -44,15 +44,33 @@ export default function IntegrationPage() {
           <ul className="space-y-2">
             <li>
               <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
-                POST /api/voting/[sessionId]/cryptographic-vote
+                POST /api/proposals
+              </code>
+              <span className="text-sm text-gray-600 ml-2">file a signed proposal</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                POST /api/proposals/[proposalId]/open
+              </code>
+              <span className="text-sm text-gray-600 ml-2">open the voting session</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/sessions/[sessionId]
+              </code>
+              <span className="text-sm text-gray-600 ml-2">session, snapshotted rules, live tally</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                POST /api/sessions/[sessionId]/votes
               </code>
               <span className="text-sm text-gray-600 ml-2">cast a signed vote</span>
             </li>
             <li>
               <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
-                GET /api/voting/[sessionId]/cryptographic-vote
+                POST /api/sessions/[sessionId]/close
               </code>
-              <span className="text-sm text-gray-600 ml-2">weighted tally for a session</span>
+              <span className="text-sm text-gray-600 ml-2">close after the window and decide the outcome</span>
             </li>
             <li>
               <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">

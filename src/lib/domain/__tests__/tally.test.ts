@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SessionOutcome, VoteChoice, VoteThreshold } from "@prisma/client";
-import { decideOutcome, tally } from "../tally";
+import { closeRefusal, decideOutcome, tally } from "../tally";
 
 describe("tally", () => {
   it("weights votes by member weight", () => {
@@ -60,6 +60,21 @@ describe("decideOutcome", () => {
     expect(
       decideOutcome({ ...base, tally: { yes: 3.9, no: 2.1, abstain: 0 }, threshold: VoteThreshold.SUPERMAJORITY }),
     ).toBe(SessionOutcome.REJECTED);
+  });
+
+  it("refuses to close early unless every eligible member has voted", () => {
+    const closesAt = new Date("2026-08-14T00:00:00Z");
+    const before = new Date("2026-08-10T00:00:00Z");
+    // Window open, a voter missing: refuse with the reason.
+    expect(closeRefusal({ now: before, closesAt, votesCast: 2, eligibleCount: 3 })).toMatch(
+      /voting window is open/,
+    );
+    // Window open but everyone has spoken: nothing left to wait for.
+    expect(closeRefusal({ now: before, closesAt, votesCast: 3, eligibleCount: 3 })).toBeNull();
+    // Window elapsed: closable regardless of turnout.
+    expect(
+      closeRefusal({ now: new Date("2026-08-14T00:00:01Z"), closesAt, votesCast: 0, eligibleCount: 3 }),
+    ).toBeNull();
   });
 
   it("expires on zero eligible weight — an empty electorate decides nothing", () => {

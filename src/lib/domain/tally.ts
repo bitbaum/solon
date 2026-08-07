@@ -28,6 +28,23 @@ export function tally(votes: WeightedVote[]): Tally {
  * Abstain counts toward quorum (the member showed up) but not toward the
  * threshold (it is not a yes and not a no).
  */
+/**
+ * May a session be closed now? Closing early would cut voting short — an
+ * attacker could stack a tally and slam the door — so a session only closes
+ * once the window has elapsed, or once every eligible member has already
+ * spoken (nothing left to wait for). Returns the refusal reason, or null.
+ */
+export function closeRefusal(params: {
+  now: Date;
+  closesAt: Date;
+  votesCast: number;
+  eligibleCount: number;
+}): string | null {
+  if (params.now >= params.closesAt) return null;
+  if (params.eligibleCount > 0 && params.votesCast >= params.eligibleCount) return null;
+  return `voting window is open until ${params.closesAt.toISOString()} and only ${params.votesCast} of ${params.eligibleCount} eligible members have voted`;
+}
+
 export function decideOutcome(params: {
   tally: Tally;
   threshold: VoteThreshold;
