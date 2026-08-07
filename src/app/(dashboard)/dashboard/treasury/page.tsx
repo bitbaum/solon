@@ -1,21 +1,14 @@
 import BitcoinTreasury from "@/components/dashboard/bitcoin-treasury";
+import { treasuryReport } from "@/lib/domain/treasury";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function TreasuryPage() {
   let org = null;
-  let txs: Awaited<ReturnType<typeof prisma.bitcoin_transactions.findMany>> = [];
   let dbError = false;
   try {
-    org = await prisma.organizations.findFirst();
-    if (org) {
-      txs = await prisma.bitcoin_transactions.findMany({
-        where: { organization_id: org.id },
-        orderBy: { transaction_date: "desc" },
-        take: 10,
-      });
-    }
+    org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
   } catch {
     dbError = true;
   }
@@ -33,24 +26,10 @@ export default async function TreasuryPage() {
     );
   }
 
-  const balanceSats = txs.reduce((acc, t) => acc + Number(t.amount_sats), 0);
+  const report = await treasuryReport(org.id);
   return (
     <main className="space-y-6">
-      <BitcoinTreasury
-        organizationId={org.id}
-        walletBalance={balanceSats}
-        recentTransactions={txs.map((t) => ({
-          ...t,
-          amount_sats: Number(t.amount_sats),
-          transaction_date:
-            t.transaction_date instanceof Date
-              ? t.transaction_date.toISOString()
-              : String(t.transaction_date),
-          description: t.description ?? undefined,
-          to_address: t.to_address ?? undefined,
-          from_address: t.from_address ?? undefined,
-        }))}
-      />
+      <BitcoinTreasury orgName={org.name} report={report} />
     </main>
   );
 }

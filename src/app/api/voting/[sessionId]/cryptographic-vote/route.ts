@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { Democracy, type VoteChoice } from "@/lib/solon/democracy";
+import { submitVote, sessionTally, type SubmitVoteInput } from "@/lib/domain/voting";
 
-const CHOICES: VoteChoice[] = ['yes', 'no', 'abstain'];
+const CHOICES = ["yes", "no", "abstain"] as const;
 
 /**
  * Cast a cryptographically-signed vote. The body must carry the member's
@@ -14,16 +14,16 @@ const CHOICES: VoteChoice[] = ['yes', 'no', 'abstain'];
 export async function POST(req: Request, { params }: { params: { sessionId: string } }) {
   const { sessionId } = params;
   const body = await req.json().catch(() => ({}));
-  const { choice, address, signature } = body || {};
+  const { choice, address, signature } = (body ?? {}) as Partial<SubmitVoteInput>;
 
   if (!choice || !address || !signature) {
-    return NextResponse.json({ error: 'choice, address and signature are required' }, { status: 400 });
+    return NextResponse.json({ error: "choice, address and signature are required" }, { status: 400 });
   }
   if (!CHOICES.includes(choice)) {
-    return NextResponse.json({ error: `choice must be one of ${CHOICES.join(', ')}` }, { status: 400 });
+    return NextResponse.json({ error: `choice must be one of ${CHOICES.join(", ")}` }, { status: 400 });
   }
 
-  const result = await new Democracy().submitVote(sessionId, { address, choice, signature });
+  const result = await submitVote(sessionId, { address, choice, signature });
 
   if (!result.stored) {
     // 401 when the signature itself failed; 422 when it verified but the
@@ -34,6 +34,6 @@ export async function POST(req: Request, { params }: { params: { sessionId: stri
 }
 
 export async function GET(_: Request, { params }: { params: { sessionId: string } }) {
-  const tally = await new Democracy().tally(params.sessionId);
+  const tally = await sessionTally(params.sessionId);
   return NextResponse.json({ sessionId: params.sessionId, tally });
 }

@@ -7,7 +7,7 @@ type Choice = "yes" | "no" | "abstain";
 const CHOICES: Choice[] = ["yes", "no", "abstain"];
 
 export interface VotingInterfaceProps {
-  session: { id: string; title: string; voting_type: string; status: string };
+  session: { id: string; title: string; rules: string; status: string };
   tally: Record<Choice, number>;
 }
 
@@ -60,7 +60,7 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
       <header className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[var(--navy)]">{session.title}</h2>
-          <p className="text-sm text-gray-600">Voting type: {session.voting_type}</p>
+          <p className="text-sm text-gray-600">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-gray-600">Session: {session.status}</div>
       </header>
