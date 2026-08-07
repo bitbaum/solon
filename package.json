@@ -42,6 +42,7 @@
     "prisma": "5.17.0",
     "puppeteer": "22.15.0",
     "ts-node": "10.9.2",
+    "tsx": "^4.23.11",
     "typescript": "5.5.3",
     "vitest": "^4.1.10"
   }

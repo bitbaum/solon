@@ -42,7 +42,7 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
     setSubmitting(true);
     setVerdict(null);
     try {
-      const res = await fetch(`/api/voting/${session.id}/cryptographic-vote`, {
+      const res = await fetch(`/api/sessions/${session.id}/votes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ choice, address, signature }),
