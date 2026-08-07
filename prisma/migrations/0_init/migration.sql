@@ -1,12 +1,45 @@
+-- CreateEnum
+CREATE TYPE "MemberType" AS ENUM ('HUMAN', 'AGENT');
+
+-- CreateEnum
+CREATE TYPE "KeyCustody" AS ENUM ('SELF', 'SERVICE');
+
+-- CreateEnum
+CREATE TYPE "MemberStatus" AS ENUM ('ACTIVE', 'SUSPENDED', 'RETIRED');
+
+-- CreateEnum
+CREATE TYPE "DecisionCategory" AS ENUM ('ALLOCATION_POLICY', 'TREASURY_SPEND', 'OPERATIONS', 'AID_DISBURSEMENT', 'MEMBERSHIP', 'SAFETY', 'GOVERNANCE_RULES');
+
+-- CreateEnum
+CREATE TYPE "Electorate" AS ENUM ('ALL_MEMBERS', 'HUMANS_ONLY');
+
+-- CreateEnum
+CREATE TYPE "VoteThreshold" AS ENUM ('SIMPLE_MAJORITY', 'SUPERMAJORITY');
+
+-- CreateEnum
+CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT', 'OPEN', 'CLOSED');
+
+-- CreateEnum
+CREATE TYPE "SessionStatus" AS ENUM ('ACTIVE', 'CLOSED');
+
+-- CreateEnum
+CREATE TYPE "SessionOutcome" AS ENUM ('APPROVED', 'REJECTED', 'EXPIRED');
+
+-- CreateEnum
+CREATE TYPE "VoteChoice" AS ENUM ('YES', 'NO', 'ABSTAIN');
+
+-- CreateEnum
+CREATE TYPE "PolicyStatus" AS ENUM ('ACTIVE', 'SUPERSEDED');
+
+-- CreateEnum
+CREATE TYPE "AuditEventType" AS ENUM ('ORG_CREATED', 'MEMBER_ADDED', 'MEMBER_STATUS_CHANGED', 'PROPOSAL_CREATED', 'SESSION_OPENED', 'VOTE_CAST', 'SESSION_CLOSED', 'POLICY_ACTIVATED');
+
 -- CreateTable
 CREATE TABLE "organizations" (
     "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "bitcoin_wallet_xpub" TEXT NOT NULL,
-    "governance_model" TEXT NOT NULL DEFAULT 'democratic',
-    "country" TEXT NOT NULL DEFAULT 'CH',
-    "primary_language" TEXT NOT NULL DEFAULT 'en',
+    "description" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "organizations_pkey" PRIMARY KEY ("id")
@@ -16,63 +49,53 @@ CREATE TABLE "organizations" (
 CREATE TABLE "members" (
     "id" TEXT NOT NULL,
     "organization_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "bitcoin_address" VARCHAR(62),
-    "role" TEXT NOT NULL,
-    "voting_weight" DECIMAL(65,30) NOT NULL DEFAULT 1.0,
+    "display_name" TEXT NOT NULL,
+    "member_type" "MemberType" NOT NULL,
+    "key_custody" "KeyCustody" NOT NULL,
+    "bitcoin_address" VARCHAR(90) NOT NULL,
+    "public_key_hex" TEXT,
+    "voting_weight" DECIMAL(10,2) NOT NULL DEFAULT 1,
+    "status" "MemberStatus" NOT NULL DEFAULT 'ACTIVE',
+    "oc_actor_id" TEXT,
+    "system" TEXT,
     "joined_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "status" TEXT NOT NULL DEFAULT 'active',
 
     CONSTRAINT "members_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "bitcoin_transactions" (
+CREATE TABLE "proposals" (
     "id" TEXT NOT NULL,
     "organization_id" TEXT NOT NULL,
-    "txid" TEXT NOT NULL,
-    "amount_sats" BIGINT NOT NULL,
-    "category" TEXT NOT NULL,
-    "description" TEXT,
-    "to_address" VARCHAR(62),
-    "from_address" VARCHAR(62),
-    "block_height" INTEGER,
-    "transaction_date" TIMESTAMP(3) NOT NULL,
-    "created_by" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "bitcoin_transactions_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "decisions" (
-    "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
+    "category" "DecisionCategory" NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT,
-    "decision_type" TEXT NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'proposed',
-    "effectiveness_kpi" JSONB,
-    "origin_member_id" TEXT,
-    "bitcoin_signature" TEXT,
+    "body" TEXT NOT NULL,
+    "policy_key" TEXT,
+    "proposed_content" JSONB,
+    "target" TEXT,
+    "content_hash" TEXT,
+    "proposer_member_id" TEXT NOT NULL,
+    "proposer_signature" TEXT NOT NULL,
+    "status" "ProposalStatus" NOT NULL DEFAULT 'DRAFT',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "voting_deadline" TIMESTAMP(3),
 
-    CONSTRAINT "decisions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "proposals_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "voting_sessions" (
     "id" TEXT NOT NULL,
-    "organization_id" TEXT NOT NULL,
-    "decision_id" TEXT,
-    "title" TEXT NOT NULL,
-    "voting_type" TEXT NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'active',
-    "start_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "end_date" TIMESTAMP(3),
-    "total_votes_cast" INTEGER NOT NULL DEFAULT 0,
-    "bitcoin_signature_required" BOOLEAN NOT NULL DEFAULT true,
+    "proposal_id" TEXT NOT NULL,
+    "status" "SessionStatus" NOT NULL DEFAULT 'ACTIVE',
+    "opens_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "closes_at" TIMESTAMP(3) NOT NULL,
+    "electorate" "Electorate" NOT NULL,
+    "threshold" "VoteThreshold" NOT NULL,
+    "quorum_percent" INTEGER NOT NULL,
+    "eligible_count" INTEGER NOT NULL,
+    "eligible_weight" DECIMAL(12,2) NOT NULL,
+    "outcome" "SessionOutcome",
+    "closed_at" TIMESTAMP(3),
 
     CONSTRAINT "voting_sessions_pkey" PRIMARY KEY ("id")
 );
@@ -80,94 +103,124 @@ CREATE TABLE "voting_sessions" (
 -- CreateTable
 CREATE TABLE "votes" (
     "id" TEXT NOT NULL,
-    "voting_session_id" TEXT NOT NULL,
+    "session_id" TEXT NOT NULL,
     "member_id" TEXT NOT NULL,
-    "vote_choice" TEXT NOT NULL,
-    "weight" DECIMAL(65,30) NOT NULL DEFAULT 1.0,
-    "bitcoin_signature" TEXT NOT NULL,
-    "signed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "choice" "VoteChoice" NOT NULL,
+    "weight" DECIMAL(10,2) NOT NULL,
+    "signed_message" TEXT NOT NULL,
+    "signature" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "votes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "service_requests" (
+CREATE TABLE "policies" (
     "id" TEXT NOT NULL,
     "organization_id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "budget_sats" BIGINT,
-    "status" TEXT NOT NULL DEFAULT 'open',
-    "evaluation_criteria" JSONB,
-    "created_by" TEXT,
+    "key" TEXT NOT NULL,
+    "version" INTEGER NOT NULL,
+    "content" JSONB NOT NULL,
+    "status" "PolicyStatus" NOT NULL,
+    "approved_by_session_id" TEXT,
+    "activated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "policies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "treasury_sources" (
+    "id" TEXT NOT NULL,
+    "organization_id" TEXT NOT NULL,
+    "label" TEXT NOT NULL,
+    "address" VARCHAR(90) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deadline" TIMESTAMP(3),
 
-    CONSTRAINT "service_requests_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "treasury_sources_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "service_bids" (
-    "id" TEXT NOT NULL,
-    "service_request_id" TEXT NOT NULL,
-    "bidder_name" TEXT NOT NULL,
-    "bitcoin_address" VARCHAR(62) NOT NULL,
-    "bid_amount_sats" BIGINT NOT NULL,
-    "proposal" TEXT,
-    "submitted_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "service_bids_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "budget_allocations" (
+CREATE TABLE "audit_events" (
     "id" TEXT NOT NULL,
     "organization_id" TEXT NOT NULL,
-    "category" TEXT NOT NULL,
-    "allocated_sats" BIGINT NOT NULL,
-    "spent_sats" BIGINT NOT NULL DEFAULT 0,
-    "year" INTEGER NOT NULL,
-    "approved_by_vote" TEXT,
+    "event_type" "AuditEventType" NOT NULL,
+    "actor_member_id" TEXT,
+    "subject_type" TEXT NOT NULL,
+    "subject_id" TEXT NOT NULL,
+    "payload" JSONB NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "budget_allocations_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "audit_events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "agent_api_keys" (
+    "id" TEXT NOT NULL,
+    "member_id" TEXT NOT NULL,
+    "key_hash" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "revoked_at" TIMESTAMP(3),
+
+    CONSTRAINT "agent_api_keys_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "bitcoin_transactions_txid_key" ON "bitcoin_transactions"("txid");
+CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "votes_voting_session_id_member_id_key" ON "votes"("voting_session_id", "member_id");
+CREATE UNIQUE INDEX "members_oc_actor_id_key" ON "members"("oc_actor_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "members_organization_id_bitcoin_address_key" ON "members"("organization_id", "bitcoin_address");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "voting_sessions_proposal_id_key" ON "voting_sessions"("proposal_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "votes_session_id_member_id_key" ON "votes"("session_id", "member_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "policies_organization_id_key_version_key" ON "policies"("organization_id", "key", "version");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "treasury_sources_organization_id_address_key" ON "treasury_sources"("organization_id", "address");
+
+-- CreateIndex
+CREATE INDEX "audit_events_organization_id_created_at_idx" ON "audit_events"("organization_id", "created_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "agent_api_keys_key_hash_key" ON "agent_api_keys"("key_hash");
 
 -- AddForeignKey
 ALTER TABLE "members" ADD CONSTRAINT "members_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bitcoin_transactions" ADD CONSTRAINT "bitcoin_transactions_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "proposals" ADD CONSTRAINT "proposals_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "decisions" ADD CONSTRAINT "decisions_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "proposals" ADD CONSTRAINT "proposals_proposer_member_id_fkey" FOREIGN KEY ("proposer_member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "decisions" ADD CONSTRAINT "decisions_origin_member_id_fkey" FOREIGN KEY ("origin_member_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "voting_sessions" ADD CONSTRAINT "voting_sessions_proposal_id_fkey" FOREIGN KEY ("proposal_id") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "voting_sessions" ADD CONSTRAINT "voting_sessions_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "voting_sessions" ADD CONSTRAINT "voting_sessions_decision_id_fkey" FOREIGN KEY ("decision_id") REFERENCES "decisions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "votes" ADD CONSTRAINT "votes_voting_session_id_fkey" FOREIGN KEY ("voting_session_id") REFERENCES "voting_sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "votes" ADD CONSTRAINT "votes_session_id_fkey" FOREIGN KEY ("session_id") REFERENCES "voting_sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "votes" ADD CONSTRAINT "votes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "service_requests" ADD CONSTRAINT "service_requests_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "policies" ADD CONSTRAINT "policies_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "service_bids" ADD CONSTRAINT "service_bids_service_request_id_fkey" FOREIGN KEY ("service_request_id") REFERENCES "service_requests"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "policies" ADD CONSTRAINT "policies_approved_by_session_id_fkey" FOREIGN KEY ("approved_by_session_id") REFERENCES "voting_sessions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "budget_allocations" ADD CONSTRAINT "budget_allocations_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "treasury_sources" ADD CONSTRAINT "treasury_sources_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "audit_events" ADD CONSTRAINT "audit_events_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "agent_api_keys" ADD CONSTRAINT "agent_api_keys_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

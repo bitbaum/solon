@@ -1,5 +1,5 @@
 import VotingInterface from "@/components/dashboard/voting-interface";
-import { Democracy } from "@/lib/solon/democracy";
+import { sessionTally } from "@/lib/domain/voting";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,10 @@ export default async function VotingPage() {
   let session = null;
   let dbError = false;
   try {
-    session = await prisma.voting_sessions.findFirst({ orderBy: { start_date: "desc" } });
+    session = await prisma.votingSession.findFirst({
+      orderBy: { opensAt: "desc" },
+      include: { proposal: true },
+    });
   } catch {
     dbError = true;
   }
@@ -36,12 +39,22 @@ export default async function VotingPage() {
     );
   }
 
-  const tally = await new Democracy().tally(session.id);
+  const tally = await sessionTally(session.id);
 
   return (
     <main className="space-y-6">
-      <h1 className="text-3xl font-bold">Open Vote</h1>
-      <VotingInterface session={session} tally={tally} />
+      <h1 className="text-3xl font-bold">
+        {session.status === "ACTIVE" ? "Open Vote" : "Latest Vote"}
+      </h1>
+      <VotingInterface
+        session={{
+          id: session.id,
+          title: session.proposal.title,
+          rules: `${session.threshold} · quorum ${session.quorumPercent}% · electorate ${session.electorate}`,
+          status: session.status,
+        }}
+        tally={tally}
+      />
     </main>
   );
 }
