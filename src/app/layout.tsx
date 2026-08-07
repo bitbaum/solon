@@ -17,14 +17,23 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+/**
+ * Where this site actually serves. Next resolves the generated og:image against
+ * `metadataBase`; without it the tag is emitted as http://localhost:3000/... —
+ * present, plausible, and unfetchable by every social scraper. The fallback is
+ * the real host rather than localhost so a missing env var degrades to correct.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://solon.orangecat.ch";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Solon — Bitcoin-Native Governance",
   description: "Radical transparency and cryptographic democracy for organizations.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   openGraph: {
     title: "Solon",
     description: "Bitcoin-Native Governance for the Digital Age",
-    url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    url: SITE_URL,
     siteName: "Solon",
   },
 };
