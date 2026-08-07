@@ -16,8 +16,15 @@ import {
   SessionOutcome,
 } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { generateKeyPair, proposalMessage, signMessage, voteMessage } from "@/lib/bitcoin/message";
+import {
+  generateKeyPair,
+  proposalMessage,
+  signMessage,
+  verifyMessage,
+  voteMessage,
+} from "@/lib/bitcoin/message";
 import { contentHashOf, sha256Hex } from "@/lib/domain/canonical";
+import { decisionDocument } from "@/lib/domain/decision";
 import { createProposal } from "@/lib/domain/proposals";
 import { closeSession, openSession, submitVote } from "@/lib/domain/voting";
 
@@ -141,6 +148,31 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
       where: { organizationId_key_version: { organizationId: org.id, key: "allocation_policy", version: 1 } },
     });
     expect(v1.status).toBe(PolicyStatus.SUPERSEDED);
+
+    // --- The decision document self-verifies, the way a consumer would ---
+    const doc = await decisionDocument(session.id);
+    if (!doc.found || !doc.finalized) throw new Error("decision document missing after close");
+    const d = doc.document;
+    expect(d.outcome).toBe(SessionOutcome.APPROVED);
+    expect(d.proposal.contentHash).toBe(contentHash);
+    expect(contentHashOf(d.proposal.proposedContent)).toBe(d.proposal.contentHash);
+    expect(
+      verifyMessage(d.proposal.proposerMessage, d.proposal.proposer.bitcoinAddress, d.proposal.proposerSignature)
+        .valid,
+    ).toBe(true);
+    expect(d.votes).toHaveLength(3);
+    for (const v of d.votes) {
+      expect(verifyMessage(v.signedMessage, v.member.bitcoinAddress, v.signature).valid).toBe(true);
+      // The signed message must bind THIS session and THIS voter.
+      expect(v.signedMessage).toContain(`session:${session.id}`);
+      expect(v.signedMessage).toContain(`voter:${v.member.bitcoinAddress}`);
+    }
+    // Recompute the tally from the votes — never trust the server's arithmetic.
+    const recomputed = d.votes.reduce(
+      (t, v) => ({ ...t, [v.choice.toLowerCase()]: t[v.choice.toLowerCase() as "yes" | "no" | "abstain"] + v.weight }),
+      { yes: 0, no: 0, abstain: 0 },
+    );
+    expect(recomputed).toEqual(d.tally);
 
     // --- The audit trail recorded every step ---
     const events = await prisma.auditEvent.findMany({

@@ -22,7 +22,10 @@ export const NAV_ITEMS: NavSection[] = [
   },
   {
     title: 'Governance',
-    children: [{ title: 'Voting System', href: '/governance/voting' }],
+    children: [
+      { title: 'Voting System', href: '/governance/voting' },
+      { title: 'Audit Trail', href: '/governance/audit' },
+    ],
   },
   {
     title: 'Treasury',
