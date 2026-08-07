@@ -1,6 +1,5 @@
 import SolonHero from '@/components/marketing/solon-hero'
 import { FourPillars } from '@/components/marketing/four-pillars'
-import { TransparencyDemo } from '@/components/marketing/transparency-demo'
 import en from '@/i18n/en.json'
 
 export default function Home() {
@@ -25,21 +24,6 @@ export default function Home() {
           </p>
         </div>
         <FourPillars />
-      </section>
-
-      {/* Live Demo — on light surface for rhythm */}
-      <section id="demo" className="py-20 bg-solon-light rounded-xl">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-navy mb-4">
-              {t.demo_section.title}
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              {t.demo_section.subtitle}
-            </p>
-          </div>
-          <TransparencyDemo />
-        </div>
       </section>
 
       {/* Call to Action — navy anchor closes the page */}

@@ -9,6 +9,7 @@ export interface NavSection {
   href?: string;
 }
 
+// Only routes that actually exist belong here — a nav link to a 404 is a lie.
 export const NAV_ITEMS: NavSection[] = [
   {
     title: 'Platform',
@@ -21,39 +22,15 @@ export const NAV_ITEMS: NavSection[] = [
   },
   {
     title: 'Governance',
-    children: [
-      { title: 'Voting System', href: '/governance/voting' },
-      { title: 'Decision Making', href: '/governance/decisions' },
-      { title: 'Transparency', href: '/governance/transparency' },
-      { title: 'Audit Trail', href: '/governance/audit' },
-    ],
+    children: [{ title: 'Voting System', href: '/governance/voting' }],
   },
   {
     title: 'Treasury',
-    children: [
-      { title: 'Bitcoin Treasury', href: '/treasury/bitcoin' },
-      { title: 'Transaction History', href: '/treasury/transactions' },
-      { title: 'Budget Tracking', href: '/treasury/budget' },
-      { title: 'Financial Reports', href: '/treasury/reports' },
-    ],
-  },
-  {
-    title: 'Marketplace',
-    children: [
-      { title: 'Service Directory', href: '/marketplace/services' },
-      { title: 'Procurement', href: '/marketplace/procurement' },
-      { title: 'Vendor Management', href: '/marketplace/vendors' },
-      { title: 'Contract Tracking', href: '/marketplace/contracts' },
-    ],
+    children: [{ title: 'Bitcoin Treasury', href: '/treasury/bitcoin' }],
   },
   {
     title: 'Resources',
-    children: [
-      { title: 'Documentation', href: '/docs' },
-      { title: 'About', href: '/about' },
-      { title: 'Support', href: '/support' },
-      { title: 'Contact', href: '/contact' },
-    ],
+    children: [{ title: 'About', href: '/about' }],
   },
 ];
 
