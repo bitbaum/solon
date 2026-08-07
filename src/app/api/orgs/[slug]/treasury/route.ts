@@ -5,15 +5,13 @@ import { treasuryReport } from "@/lib/domain/treasury";
 export const dynamic = "force-dynamic";
 
 /**
- * Watch-only treasury balances for an organization (by id or slug). Every
- * number is read live from the chain; a failed lookup reports null, never a
- * substitute.
+ * Watch-only treasury balances for an organization. Every number is read live
+ * from the chain via mempool.space; a failed lookup reports null, never a
+ * substitute, and every address links to a public explorer so the claim is
+ * independently checkable.
  */
-export async function GET(_: Request, { params }: { params: { orgId: string } }) {
-  const { orgId } = params;
-  const org = await prisma.organization.findFirst({
-    where: { OR: [{ id: orgId }, { slug: orgId }] },
-  });
+export async function GET(_: Request, { params }: { params: { slug: string } }) {
+  const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 
   const report = await treasuryReport(org.id);

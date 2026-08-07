@@ -74,9 +74,41 @@ export default function IntegrationPage() {
             </li>
             <li>
               <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
-                GET /api/bitcoin/wallet/[orgId]
+                GET /api/orgs/[slug]
               </code>
-              <span className="text-sm text-gray-600 ml-2">organization wallet balance</span>
+              <span className="text-sm text-gray-600 ml-2">organization + public member roster</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/orgs/[slug]/proposals
+              </code>
+              <span className="text-sm text-gray-600 ml-2">all proposals with session state</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/orgs/[slug]/policies/[key]
+              </code>
+              <span className="text-sm text-gray-600 ml-2">policy version history</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/orgs/[slug]/audit
+              </code>
+              <span className="text-sm text-gray-600 ml-2">append-only audit stream</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/orgs/[slug]/treasury
+              </code>
+              <span className="text-sm text-gray-600 ml-2">live on-chain treasury balances</span>
+            </li>
+            <li>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+                GET /api/v1/decisions/[sessionId]
+              </code>
+              <span className="text-sm text-gray-600 ml-2">
+                self-verifying decision document — re-verify it, don&apos;t trust it
+              </span>
             </li>
             <li>
               <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
@@ -86,9 +118,11 @@ export default function IntegrationPage() {
             </li>
           </ul>
           <p className="text-gray-600 text-sm mt-4">
-            A broader public read API (organizations, proposals, decisions, treasury,
-            audit log) is being built next — endpoints appear here when they are live,
-            not before.
+            All reads are public and auth-free — transparency is the product. On
+            finalization Solon emits a <code className="font-mono text-xs">decision.finalized</code>{" "}
+            webhook (HMAC-signed); consumers are expected to fetch the decision
+            document and re-verify every signature locally rather than trust the
+            notification.
           </p>
         </div>
       </div>
