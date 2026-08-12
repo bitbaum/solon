@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl *)",
+      "Bash(npm run verify)",
+      "Bash(npm run build)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm run test)",
+      "Bash(npm run prisma:generate)",
+      "mcp__github__actions_list",
+      "mcp__github__pull_request_read"
+    ]
+  }
+}
