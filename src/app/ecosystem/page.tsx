@@ -102,14 +102,14 @@ export default async function EcosystemPage() {
               key={pillar.key}
               className={`rounded-xl border shadow-sm p-6 flex flex-col gap-3 ${
                 pillar.key === "solon"
-                  ? "bg-[var(--navy)] border-[var(--navy)] text-white"
+                  ? "bg-navy border-navy text-white"
                   : "bg-white border-gray-200"
               }`}
             >
               <div className="flex items-baseline justify-between gap-2">
                 <h2
                   className={`text-xl font-bold ${
-                    pillar.key === "solon" ? "text-white" : "text-[var(--navy)]"
+                    pillar.key === "solon" ? "text-white" : "text-navy"
                   }`}
                 >
                   {pillar.name}
@@ -117,7 +117,7 @@ export default async function EcosystemPage() {
                 <span
                   className={`text-xs font-semibold uppercase tracking-wide ${
                     pillar.key === "solon"
-                      ? "text-[var(--solon-orange)]"
+                      ? "text-solon-orange"
                       : "text-gray-500"
                   }`}
                 >
@@ -148,7 +148,7 @@ export default async function EcosystemPage() {
                     href={pillar.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-semibold text-[var(--solon-orange)] hover:text-[var(--solon-orange-dark)]"
+                    className="text-sm font-semibold text-solon-orange hover:text-solon-orange-dark"
                   >
                     {pillar.url.replace("https://", "")} →
                   </a>
@@ -160,7 +160,7 @@ export default async function EcosystemPage() {
 
         {/* How a decision travels */}
         <section className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-[var(--navy)] text-center mb-6">
+          <h2 className="text-2xl font-bold text-navy text-center mb-6">
             How a decision travels
           </h2>
           <ol className="space-y-3 text-sm text-gray-700">
@@ -173,7 +173,7 @@ export default async function EcosystemPage() {
               "OrangeCat and FleetCrown are notified — and OrangeCat re-verifies every vote signature against its own pinned keys before acting. A decision is evidence, not authority.",
             ].map((step, i) => (
               <li key={i} className="flex gap-3 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--solon-orange)] text-white text-xs font-bold flex items-center justify-center">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-solon-orange text-white text-xs font-bold flex items-center justify-center">
                   {i + 1}
                 </span>
                 <span>{step}</span>
@@ -189,7 +189,7 @@ export default async function EcosystemPage() {
 
         {/* Live governed state */}
         <section className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] text-center">
+          <h2 className="text-2xl font-bold text-navy text-center">
             What is governed here, live
           </h2>
           {dbError && (
@@ -210,14 +210,14 @@ export default async function EcosystemPage() {
               </p>
 
               <div>
-                <h3 className="text-lg font-semibold text-[var(--navy)] mb-3">
+                <h3 className="text-lg font-semibold text-navy mb-3">
                   {org.name} — members
                 </h3>
                 <ul className="space-y-3">
                   {members.map((m) => (
                     <li key={m.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                       <div className="flex items-baseline justify-between gap-4">
-                        <span className="font-semibold text-[var(--navy)]">{m.displayName}</span>
+                        <span className="font-semibold text-navy">{m.displayName}</span>
                         <span className="text-xs text-gray-500 uppercase tracking-wide">
                           {m.memberType}
                           {m.system ? ` · ${m.system}` : ""} · {m.status}
@@ -232,7 +232,7 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-[var(--navy)] mb-3">Active policies</h3>
+                <h3 className="text-lg font-semibold text-navy mb-3">Active policies</h3>
                 {policies.length === 0 ? (
                   <p className="text-sm text-gray-600">No active policies.</p>
                 ) : (
@@ -243,7 +243,7 @@ export default async function EcosystemPage() {
                         className="bg-white rounded-xl border border-gray-200 shadow-sm p-4"
                       >
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-[var(--navy)] font-mono text-sm">
+                          <span className="font-semibold text-navy font-mono text-sm">
                             {p.key}
                           </span>
                           <span className="text-xs text-gray-500">v{p.version}</span>
@@ -258,7 +258,7 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-[var(--navy)] mb-3">Recent proposals</h3>
+                <h3 className="text-lg font-semibold text-navy mb-3">Recent proposals</h3>
                 {proposals.length === 0 ? (
                   <p className="text-sm text-gray-600">No proposals yet.</p>
                 ) : (
@@ -266,7 +266,7 @@ export default async function EcosystemPage() {
                     {proposals.map((p) => (
                       <li key={p.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-[var(--navy)]">{p.title}</span>
+                          <span className="font-semibold text-navy">{p.title}</span>
                           <span className="text-xs text-gray-500 whitespace-nowrap">
                             {CATEGORY_LABEL[p.category]} ·{" "}
                             {p.session?.outcome ?? p.session?.status ?? p.status}
@@ -275,7 +275,7 @@ export default async function EcosystemPage() {
                         {p.session?.outcome && (
                           <a
                             href={`/api/v1/decisions/${p.session.id}`}
-                            className="mt-1 inline-block text-xs font-mono text-[var(--solon-orange)] hover:text-[var(--solon-orange-dark)]"
+                            className="mt-1 inline-block text-xs font-mono text-solon-orange hover:text-solon-orange-dark"
                           >
                             self-verifying decision document →
                           </a>

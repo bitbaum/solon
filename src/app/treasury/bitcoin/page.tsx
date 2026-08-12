@@ -12,7 +12,7 @@ export default function BitcoinTreasuryPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-4">The model</h2>
+          <h2 className="text-2xl font-bold text-navy mb-4">The model</h2>
           <ul className="space-y-3 text-gray-700">
             <li>
               <span className="font-semibold">Bitcoin-native</span> — the treasury is a
@@ -36,7 +36,7 @@ export default function BitcoinTreasuryPage() {
         <div className="text-center">
           <a
             href="/dashboard/treasury"
-            className="inline-flex items-center justify-center bg-[var(--navy)] text-white px-8 py-3 rounded-lg hover:bg-[var(--navy-light)] transition-colors font-semibold"
+            className="inline-flex items-center justify-center bg-navy text-white px-8 py-3 rounded-lg hover:bg-navy-light transition-colors font-semibold"
           >
             View the treasury
           </a>

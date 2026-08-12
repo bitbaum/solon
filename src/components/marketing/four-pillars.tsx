@@ -1,186 +1,114 @@
-'use client'
+import { Bitcoin, Scale, Eye, Users, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
-import { useState } from 'react'
-import { Bitcoin, Scale, ShoppingCart, Users, ArrowRight, CheckCircle } from 'lucide-react'
+/**
+ * What Solon governs — the four product areas, matching the repo canon
+ * (Treasury / Voting / Decisions / Audit Trail). Server component: there is
+ * nothing interactive here, and every feature listed exists in production.
+ * "Pillars" is deliberately NOT used for these — that word belongs to the
+ * three-product stack (see /ecosystem).
+ */
+
+const AREAS = [
+  {
+    icon: Bitcoin,
+    title: 'Transparent Treasury',
+    shortDesc: 'Watch-only, on-chain, no custody',
+    description:
+      'Treasuries are registered as watch-only Bitcoin addresses anyone can verify independently. Solon holds no keys and no funds — amounts are read from the chain and stored in satoshis.',
+    features: [
+      'Watch-only address registry',
+      'On-chain balance reads',
+      'Satoshis as integers, never floats',
+    ],
+    href: '/treasury/bitcoin',
+    linkLabel: 'View the treasury',
+  },
+  {
+    icon: Users,
+    title: 'Democratic Voting',
+    shortDesc: 'Bitcoin-signed, one member one vote',
+    description:
+      'Votes are Bitcoin signed messages verified against each member’s registered address. Humans and AI agents vote as equals where the rules allow — and agents are locked out of the red-line categories.',
+    features: [
+      'Signature recovery on every vote',
+      'One vote per member per session',
+      'Weighted by public member weight',
+    ],
+    href: '/governance/voting',
+    linkLabel: 'How voting works',
+  },
+  {
+    icon: Scale,
+    title: 'Decision Making',
+    shortDesc: 'Signed proposals, snapshotted rules',
+    description:
+      'Proposals are signed by their proposer and decided in sessions whose rules — electorate, threshold, quorum — are frozen at open, so a past decision stays explainable after the rules change.',
+    features: [
+      'Signed proposals',
+      'Versioned, vote-approved policies',
+      'Self-verifying decision documents',
+    ],
+    href: '/ecosystem',
+    linkLabel: 'See live decisions',
+  },
+  {
+    icon: Eye,
+    title: 'Audit Trail',
+    shortDesc: 'Append-only, public, complete',
+    description:
+      'Every governance event lands in an append-only log with no update or delete path in code. The public audit page shows the record itself — not a summary of it.',
+    features: [
+      'Append-only by construction',
+      'Every step recorded',
+      'Public audit page and API',
+    ],
+    href: '/governance/audit',
+    linkLabel: 'Browse the audit trail',
+  },
+]
 
 export function FourPillars() {
-  const [activePillar, setActivePillar] = useState<number | null>(null)
-
-  const pillars = [
-    {
-      id: 1,
-      icon: Bitcoin,
-      title: "Transparent Transaction System",
-      shortDesc: "All finances on Bitcoin blockchain",
-      description: "Every financial transaction is permanently recorded on the Bitcoin blockchain, ensuring complete transparency and auditability. No more hidden spending or questionable financial decisions.",
-      features: [
-        "Real-time Bitcoin balance tracking",
-        "Immutable transaction history",
-        "Multi-signature wallet security",
-        "Automated budget enforcement",
-        "Cost reduction through Bitcoin efficiency"
-      ],
-      color: "from-orange-400 to-yellow-400",
-      bgColor: "bg-orange-50",
-      borderColor: "border-orange-200",
-      textColor: "text-orange-700"
-    },
-    {
-      id: 2,
-      icon: Scale,
-      title: "Law Transparency Framework",
-      shortDesc: "Cryptographically signed decisions",
-      description: "Every organizational decision is cryptographically signed and tracked with effectiveness KPIs. Create transparent policies and measure their real-world impact.",
-      features: [
-        "Cryptographic decision signatures",
-        "KPI effectiveness tracking",
-        "Decision origin traceability",
-        "Policy lifecycle management",
-        "Impact measurement dashboard"
-      ],
-      color: "from-blue-400 to-indigo-400",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200",
-      textColor: "text-blue-700"
-    },
-    {
-      id: 3,
-      icon: ShoppingCart,
-      title: "Open Service Marketplace",
-      shortDesc: "Bitcoin-native procurement",
-      description: "Transparent service procurement with Bitcoin payments. Open bidding, fair evaluation, and automated contract execution through smart contracts.",
-      features: [
-        "Open service request posting",
-        "Transparent bidding process",
-        "Bitcoin payment automation",
-        "Vendor performance tracking",
-        "Automated contract execution"
-      ],
-      color: "from-green-400 to-emerald-400",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200",
-      textColor: "text-green-700"
-    },
-    {
-      id: 4,
-      icon: Users,
-      title: "Open Vote System",
-      shortDesc: "Cryptographically verified democracy",
-      description: "Democratic decision-making with cryptographic verification. Every vote is signed with Bitcoin keys and permanently recorded for complete auditability.",
-      features: [
-        "Cryptographic vote verification",
-        "Real-time consensus tracking",
-        "Flexible voting mechanisms",
-        "Weighted voting by Bitcoin holdings",
-        "Complete audit trail"
-      ],
-      color: "from-purple-400 to-pink-400",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
-      textColor: "text-purple-700"
-    }
-  ]
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {pillars.map((pillar) => {
-        const IconComponent = pillar.icon
-        const isActive = activePillar === pillar.id
-
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {AREAS.map((area) => {
+        const IconComponent = area.icon
         return (
           <div
-            key={pillar.id}
-            className={`relative group cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-              isActive ? 'z-10' : ''
-            }`}
-            onMouseEnter={() => setActivePillar(pillar.id)}
-            onMouseLeave={() => setActivePillar(null)}
+            key={area.title}
+            className="rounded-lg border border-slate-200 bg-white shadow-card hover:shadow-lg transition-shadow p-8 flex flex-col"
           >
-            <div className={`rounded-2xl border-2 p-8 h-full transition-all duration-300 ${
-              isActive
-                ? `${pillar.bgColor} ${pillar.borderColor} shadow-2xl scale-105`
-                : 'bg-white border-gray-200 shadow-lg hover:shadow-xl'
-            }`}>
-
-              {/* Header */}
-              <div className="flex items-center space-x-4 mb-6">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${pillar.color} flex items-center justify-center shadow-lg`}>
-                  <IconComponent className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-1">{pillar.title}</h3>
-                  <p className="text-gray-600 font-medium">{pillar.shortDesc}</p>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                {pillar.description}
-              </p>
-
-              {/* Features */}
-              <div className="space-y-3 mb-6">
-                {pillar.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-center space-x-3">
-                    <CheckCircle className={`w-5 h-5 flex-shrink-0 ${pillar.textColor}`} />
-                    <span className="text-gray-700">{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <div className="flex items-center space-x-2 text-sm font-semibold">
-                <span className={`text-${pillar.textColor.split('-')[1]}-600`}>Learn more</span>
-                <ArrowRight className={`w-4 h-4 ${pillar.textColor} transform group-hover:translate-x-1 transition-transform`} />
-              </div>
-
-              {/* Bitcoin Integration Note */}
-              <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                <Bitcoin className="w-6 h-6 text-orange-500" />
+            <div className="flex items-center space-x-4 mb-5">
+              <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-navy">
+                <IconComponent className="h-6 w-6 text-solon-bitcoin" />
+              </span>
+              <div>
+                <h3 className="text-xl font-bold font-display text-navy">{area.title}</h3>
+                <p className="text-slate-500 text-sm font-medium">{area.shortDesc}</p>
               </div>
             </div>
+
+            <p className="text-slate-600 mb-5 leading-relaxed">{area.description}</p>
+
+            <ul className="space-y-2 mb-6">
+              {area.features.map((feature) => (
+                <li key={feature} className="flex items-center text-sm text-slate-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-solon-orange mr-3 flex-shrink-0" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <Link
+              href={area.href}
+              className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-solon-orange hover:text-solon-orange-dark"
+            >
+              {area.linkLabel}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         )
       })}
-
-      {/* Integration Note */}
-      <div className="lg:col-span-2 mt-8">
-        <div className="bg-gradient-to-r from-solon-orange/10 to-solon-bitcoin/10 rounded-2xl p-8 border border-solon-orange/20">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Revolutionary Integration
-            </h3>
-            <p className="text-lg text-gray-600 mb-6 max-w-4xl mx-auto">
-              Unlike traditional governance platforms,               Solon doesn&apos;t just add transparency as an afterthought.
-              Every pillar is designed from the ground up to leverage Bitcoin&apos;s revolutionary properties:
-              <strong className="text-solon-orange"> decentralization, immutability, and cryptographic security</strong>.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-solon-orange rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-bold text-lg">1</span>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Decentralized</h4>
-                <p className="text-gray-600 text-sm">No single point of failure or control</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-solon-orange rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-bold text-lg">2</span>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Immutable</h4>
-                <p className="text-gray-600 text-sm">Permanent record of all activities</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-solon-orange rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-bold text-lg">3</span>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Cryptographic</h4>
-                <p className="text-gray-600 text-sm">Mathematically verifiable security</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

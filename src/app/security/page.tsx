@@ -1,71 +1,105 @@
 import PageLayout from '@/components/ui/page-layout';
 
+/**
+ * The real security model, stated plainly. Every claim on this page maps to
+ * code in this repo — nothing aspirational, nothing borrowed from a future
+ * roadmap. The strongest claim Solon can make is what it does NOT have:
+ * no private keys, no custody, no way to rewrite history.
+ */
 export default function SecurityPage() {
   return (
-    <PageLayout 
-      title="Cryptographic Security Model" 
-      description="Bitcoin-grade security for organizational governance and financial operations"
+    <PageLayout
+      title="Security Model"
+      description="Solon's security comes from what it refuses to hold: no keys, no funds, no rewritable history"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <SecurityFeature
-            title="Multi-Signature Bitcoin Wallet"
-            description="Enterprise-grade Bitcoin custody with configurable signature requirements"
+            title="No key custody, ever"
+            description="Solon never holds a private key. There is nothing to steal from Solon that lets an attacker vote or move funds."
             details={[
-              'M-of-N signature schemes',
-              'Hardware wallet integration', 
-              'Time-locked transactions',
-              'Emergency recovery procedures'
+              'Members register a Bitcoin address; the key stays in their own wallet or environment',
+              'Agent members (the Cat, Loki) sign on their own machines — Solon only ever sees signatures',
+              'The treasury is watch-only: independently verifiable on-chain addresses, no spending capability',
             ]}
           />
           <SecurityFeature
-            title="Cryptographic Vote Verification"
-            description="Tamper-proof voting with mathematical verification"
+            title="Bitcoin signed-message voting"
+            description="A vote is accepted only if its signature cryptographically recovers to the member's registered address."
             details={[
-              'Digital signature validation',
-              'Zero-knowledge proofs',
-              'Blockchain anchoring',
-              'Independent verification'
+              'The exact signed message is stored with every vote, so anyone can re-verify it',
+              'One member, one vote per session — enforced by a database uniqueness constraint',
+              'Proposals are signed too: no proposer signature, no proposal',
             ]}
           />
           <SecurityFeature
-            title="Immutable Decision Records"
-            description="Permanent record of all organizational decisions"
+            title="Append-only audit trail"
+            description="Governance events are written once. No code path exists that updates or deletes an audit event."
             details={[
-              'Hash chain integrity',
-              'Timestamped decisions',
-              'Public verification',
-              'Audit trail transparency'
+              'Every step — proposal, session open, vote, close, policy activation — lands in the log',
+              'The public audit page renders the record itself, not a summary of it',
+              'Policy versions chain to the approved voting session that legitimated them',
             ]}
           />
           <SecurityFeature
-            title="Privacy-Preserving Operations"
-            description="Maximum transparency with appropriate privacy controls"
+            title="Self-verifying decisions"
+            description="A closed decision is published as a document carrying everything needed to recount it from scratch."
             details={[
-              'Anonymous voting options',
-              'Selective disclosure',
-              'Role-based permissions',
-              'Data minimization'
+              'Votes, signatures, snapshotted rules, and tally in one document',
+              'Session rules are frozen at open — later rule changes cannot rewrite a past decision',
+              'OrangeCat re-verifies every signature against its own pinned keys before acting on a decision',
             ]}
           />
         </div>
 
-        <div className="bg-[var(--navy)] text-white p-8 rounded-xl">
-          <h3 className="text-2xl font-bold mb-4">Security Guarantees</h3>
+        <div className="bg-navy text-white p-8 rounded-xl">
+          <h3 className="text-2xl font-bold mb-4">What this buys you</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-semibold mb-2">Financial Security</h4>
-              <p className="text-gray-300 text-sm">Multi-signature Bitcoin custody with enterprise-grade security practices</p>
+              <h4 className="font-semibold mb-2">Nothing to seize</h4>
+              <p className="text-gray-300 text-sm">
+                Compromising Solon&apos;s servers yields no keys and no funds — only records that were
+                already public.
+              </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Vote Integrity</h4>
-              <p className="text-gray-300 text-sm">Cryptographically verified voting with tamper-proof results</p>
+              <h4 className="font-semibold mb-2">Nothing to forge</h4>
+              <p className="text-gray-300 text-sm">
+                A vote that doesn&apos;t verify against the member&apos;s Bitcoin address is rejected. Solon
+                cannot invent votes, and neither can an attacker.
+              </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Data Immutability</h4>
-              <p className="text-gray-300 text-sm">Blockchain-anchored records that cannot be altered or deleted</p>
+              <h4 className="font-semibold mb-2">Nothing to rewrite</h4>
+              <p className="text-gray-300 text-sm">
+                Decisions travel with their evidence. Consumers recount the tally themselves —
+                Solon&apos;s word is evidence, not authority.
+              </p>
             </div>
           </div>
+        </div>
+
+        {/* Where to verify the claims */}
+        <div className="mt-10 text-center text-sm text-gray-600">
+          <p>
+            Verify, don&apos;t trust:{' '}
+            <a href="/governance/voting" className="font-semibold text-solon-orange hover:text-solon-orange-dark">
+              how voting works
+            </a>
+            {' · '}
+            <a href="/governance/audit" className="font-semibold text-solon-orange hover:text-solon-orange-dark">
+              the live audit trail
+            </a>
+            {' · '}
+            <a
+              href="https://github.com/maonakamoto/solon"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+            >
+              the source code
+            </a>
+          </p>
         </div>
       </div>
     </PageLayout>
@@ -79,12 +113,12 @@ function SecurityFeature({ title, description, details }: {
 }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h3 className="text-xl font-bold text-[var(--navy)] mb-3">{title}</h3>
+      <h3 className="text-xl font-bold text-navy mb-3">{title}</h3>
       <p className="text-gray-600 mb-4">{description}</p>
       <ul className="space-y-2">
         {details.map((detail, index) => (
-          <li key={index} className="flex items-center text-sm text-gray-700">
-            <svg className="w-4 h-4 text-green-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <li key={index} className="flex items-start text-sm text-gray-700">
+            <svg className="w-4 h-4 text-solon-green mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {detail}

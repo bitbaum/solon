@@ -12,19 +12,19 @@ export default function BitcoinTreasury({ orgName, report }: { orgName: string; 
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--navy)]">Bitcoin Treasury</h2>
+          <h2 className="text-2xl font-bold text-navy">Bitcoin Treasury</h2>
           <p className="text-sm text-gray-600">Organization: {orgName}</p>
         </div>
         <div className="text-right">
           <div className="text-gray-600 text-xs">
             On-chain balance (BTC){report.allSourcesResolved ? "" : " — some sources unavailable"}
           </div>
-          <div className="text-2xl font-mono text-[var(--navy)]">{totalBtc ?? "unavailable"}</div>
+          <div className="text-2xl font-mono text-navy">{totalBtc ?? "unavailable"}</div>
         </div>
       </header>
 
       <div className="rounded-lg border border-gray-200 p-4 bg-gray-50">
-        <h3 className="font-semibold text-[var(--navy)]">Treasury sources (watch-only)</h3>
+        <h3 className="font-semibold text-navy">Treasury sources (watch-only)</h3>
         {report.sources.length === 0 ? (
           <p className="mt-2 text-sm text-gray-600">
             No treasury source registered yet. When one is, its balance renders here from a
@@ -50,7 +50,7 @@ export default function BitcoinTreasury({ orgName, report }: { orgName: string; 
                   </td>
                   <td className="py-2 text-right">
                     <a
-                      className="text-[var(--navy)] hover:text-[var(--navy-light)] underline transition-colors"
+                      className="text-navy hover:text-navy-light underline transition-colors"
                       href={`https://mempool.space/address/${s.address}`}
                       target="_blank"
                     >
