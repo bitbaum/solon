@@ -13,7 +13,7 @@ export default function IntegrationPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-6">Cast a cryptographic vote</h2>
+          <h2 className="text-2xl font-bold text-navy mb-6">Cast a cryptographic vote</h2>
           <p className="text-gray-700 mb-4">
             A vote is a Bitcoin signed message. Sign the canonical vote message with the
             wallet that holds your registered member address, then POST the signature:
@@ -40,70 +40,70 @@ export default function IntegrationPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-4">Live endpoints</h2>
+          <h2 className="text-2xl font-bold text-navy mb-4">Live endpoints</h2>
           <ul className="space-y-2">
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 POST /api/proposals
               </code>
               <span className="text-sm text-gray-600 ml-2">file a signed proposal</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 POST /api/proposals/[proposalId]/open
               </code>
               <span className="text-sm text-gray-600 ml-2">open the voting session</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/sessions/[sessionId]
               </code>
               <span className="text-sm text-gray-600 ml-2">session, snapshotted rules, live tally</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 POST /api/sessions/[sessionId]/votes
               </code>
               <span className="text-sm text-gray-600 ml-2">cast a signed vote</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 POST /api/sessions/[sessionId]/close
               </code>
               <span className="text-sm text-gray-600 ml-2">close after the window and decide the outcome</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/orgs/[slug]
               </code>
               <span className="text-sm text-gray-600 ml-2">organization + public member roster</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/orgs/[slug]/proposals
               </code>
               <span className="text-sm text-gray-600 ml-2">all proposals with session state</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/orgs/[slug]/policies/[key]
               </code>
               <span className="text-sm text-gray-600 ml-2">policy version history</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/orgs/[slug]/audit
               </code>
               <span className="text-sm text-gray-600 ml-2">append-only audit stream</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/orgs/[slug]/treasury
               </code>
               <span className="text-sm text-gray-600 ml-2">live on-chain treasury balances</span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/v1/decisions/[sessionId]
               </code>
               <span className="text-sm text-gray-600 ml-2">
@@ -111,7 +111,7 @@ export default function IntegrationPage() {
               </span>
             </li>
             <li>
-              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs text-navy font-mono">
                 GET /api/health
               </code>
               <span className="text-sm text-gray-600 ml-2">service health</span>

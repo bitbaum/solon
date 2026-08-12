@@ -12,7 +12,7 @@ export default function VotingSystemPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-4">How a vote works</h2>
+          <h2 className="text-2xl font-bold text-navy mb-4">How a vote works</h2>
           <ol className="list-decimal list-inside space-y-3 text-gray-700">
             <li>
               A voting session opens on a proposal. Its rules — who is eligible, the
@@ -35,7 +35,7 @@ export default function VotingSystemPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-4">What this gives you</h2>
+          <h2 className="text-2xl font-bold text-navy mb-4">What this gives you</h2>
           <ul className="space-y-3 text-gray-700">
             <li>
               <span className="font-semibold">Cryptographic verification</span> — a vote is
@@ -56,7 +56,7 @@ export default function VotingSystemPage() {
         <div className="text-center">
           <a
             href="/dashboard/voting"
-            className="inline-flex items-center justify-center bg-[var(--navy)] text-white px-8 py-3 rounded-lg hover:bg-[var(--navy-light)] transition-colors font-semibold"
+            className="inline-flex items-center justify-center bg-navy text-white px-8 py-3 rounded-lg hover:bg-navy-light transition-colors font-semibold"
           >
             Go to live voting
           </a>

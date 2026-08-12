@@ -63,7 +63,7 @@ export default async function AuditPage() {
               {events.map((e) => (
                 <li key={e.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="font-semibold text-[var(--navy)]">{EVENT_LABEL[e.eventType]}</span>
+                    <span className="font-semibold text-navy">{EVENT_LABEL[e.eventType]}</span>
                     <time className="text-xs text-gray-500 whitespace-nowrap" dateTime={e.createdAt.toISOString()}>
                       {e.createdAt.toISOString().replace("T", " ").slice(0, 19)} UTC
                     </time>

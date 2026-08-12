@@ -32,6 +32,8 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
   const [verdict, setVerdict] = useState<VoteVerdict | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const isOpen = session.status === "ACTIVE";
+
   const message = address
     ? voteMessage({ sessionId: session.id, choice, memberAddress: address })
     : null;
@@ -59,12 +61,27 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[var(--navy)]">{session.title}</h2>
+          <h2 className="text-2xl font-bold text-navy">{session.title}</h2>
           <p className="text-sm text-gray-600">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-gray-600">Session: {session.status}</div>
       </header>
 
+      {!isOpen && (
+        <div className="rounded-lg border border-gray-200 p-4 bg-gray-50 text-sm text-gray-700">
+          This session is closed — votes are no longer accepted. The final tally is below, and
+          the full signed record is published as a{" "}
+          <a
+            href={`/api/v1/decisions/${session.id}`}
+            className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+          >
+            self-verifying decision document
+          </a>
+          .
+        </div>
+      )}
+
+      {isOpen && (
       <div className="rounded-lg border border-gray-200 p-4 bg-gray-50 space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700" htmlFor="vote-address">
@@ -89,7 +106,7 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
                 onClick={() => setChoice(c)}
                 className={`px-4 py-2 rounded-md border transition-colors ${
                   choice === c
-                    ? "border-[var(--navy)] bg-[var(--navy)] text-white"
+                    ? "border-navy bg-navy text-white"
                     : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
@@ -107,7 +124,7 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
               </span>
               <button
                 type="button"
-                className="text-xs text-[var(--navy)] underline"
+                className="text-xs text-navy underline"
                 onClick={async () => {
                   await navigator.clipboard.writeText(message);
                   setCopied(true);
@@ -159,9 +176,10 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
           </div>
         )}
       </div>
+      )}
 
       <div className="rounded-lg border border-gray-200 p-4 bg-gray-50">
-        <h3 className="font-semibold text-[var(--navy)]">Tally (weighted)</h3>
+        <h3 className="font-semibold text-navy">Tally (weighted)</h3>
         <div className="mt-2 grid grid-cols-3 gap-4 text-center">
           <Tally label="YES" value={liveTally.yes} color="text-green-600" />
           <Tally label="NO" value={liveTally.no} color="text-red-600" />
