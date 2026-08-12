@@ -17,8 +17,8 @@ test.describe('Header & Footer', () => {
     await expect(siteFooter).toBeVisible();
     await expect(siteFooter.locator('div:text-is("Platform")')).toBeVisible();
     await expect(siteFooter.locator('div:text-is("Governance")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Treasury")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Company")')).toBeVisible();
+    await expect(siteFooter.locator('div:text-is("Ecosystem")')).toBeVisible();
+    await expect(siteFooter.locator('div:text-is("Resources")')).toBeVisible();
   });
 });
 
