@@ -32,6 +32,14 @@ export const NAV_ITEMS: NavSection[] = [
     children: [{ title: 'Bitcoin Treasury', href: '/treasury/bitcoin' }],
   },
   {
+    title: 'Ecosystem',
+    children: [
+      { title: 'Three Pillars', href: '/ecosystem' },
+      { title: 'OrangeCat', href: 'https://orangecat.ch' },
+      { title: 'FleetCrown', href: 'https://fleetcrown.orangecat.ch' },
+    ],
+  },
+  {
     title: 'Resources',
     children: [{ title: 'About', href: '/about' }],
   },
