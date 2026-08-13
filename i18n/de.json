@@ -2,44 +2,44 @@
   "solon": {
     "title": "SOLON",
     "tagline": "Bitcoin-natives Governance für das digitale Zeitalter",
-    "subtag": "Vollständig transparente Entscheidungen und Finanzierung für jede Organisation.",
+    "subtag": "Ein anschaulicher Arbeitsbereich für nachvollziehbare Treasury-Daten und signierte Abstimmungen.",
     "cta_primary": "Treasury erkunden",
-    "cta_secondary": "Live-Abstimmung ansehen",
+    "cta_secondary": "Abstimmungsablauf ansehen",
     "pillars": {
-      "transactions": "Transparenter Transaktionssystem",
+      "transactions": "Nachvollziehbare Treasury-Daten",
       "decisions": "Rahmenwerk für transparente Gesetze",
-      "marketplace": "Offener Service-Marktplatz",
+      "marketplace": "Beschaffungs-Datenmodell",
       "voting": "Offenes Abstimmungssystem"
     },
     "pillar_desc": {
-      "transactions": "Alle Finanzen auf Bitcoin",
-      "decisions": "Signierte Entscheidungen mit KPIs",
-      "marketplace": "Transparente Beschaffung",
-      "voting": "Verifizierte, gewichtete Abstimmung"
+      "transactions": "Bitcoin-Daten mit Belegen",
+      "decisions": "Entscheidungsdatensätze mit KPIs",
+      "marketplace": "Arbeitsbereich auf der Roadmap",
+      "voting": "Bitcoin-Signaturen verifizieren"
     },
     "ledger": {
-      "label": "Live Bitcoin-Treasury",
-      "live": "Live",
-      "public": "Öffentliches Hauptbuch",
+      "label": "Beispiel einer Bitcoin-Treasury",
+      "live": "Demo",
+      "public": "Beispieldaten",
       "balance": "Treasury-Saldo",
-      "verified": "On-Chain verifiziert"
+      "verified": "Anschaulicher Arbeitsbereich"
     }
   },
   "home": {
     "made_in": "Hergestellt in der Schweiz",
     "pillars_section": {
       "title": "Vier Säulen Bitcoin-nativer Governance",
-      "subtitle": "Vollständige Transparenz, kryptografische Demokratie und Bitcoin-native Finanzoperationen — als ein System konzipiert, nicht nachträglich aufgesetzt."
+      "subtitle": "Treasury-Datensätze, Entscheidungen und signierte Stimmen in einem nachvollziehbaren Datenmodell."
     },
     "demo_section": {
       "title": "Transparenz in Aktion",
-      "subtitle": "Jede Transaktion, Entscheidung und Abstimmung wird dauerhaft auf der Bitcoin-Blockchain festgehalten — vollständig prüfbar und öffentlich verifizierbar."
+      "subtitle": "Erkunden Sie Beispieldaten und öffnen Sie anschließend die implementierten Treasury- und Abstimmungsabläufe."
     },
     "cta": {
-      "title": "Bereit, Ihre Organisation zu revolutionieren?",
-      "subtitle": "Werden Sie Teil der Zukunft transparenter Governance. Jede Entscheidung, jede Transaktion, jede Abstimmung — kryptografisch verifiziert und dauerhaft prüfbar.",
-      "primary": "Organisation starten",
-      "secondary": "Mehr erfahren"
+      "title": "Die funktionierenden Abläufe erkunden",
+      "subtitle": "Prüfen Sie den Treasury-Arbeitsbereich, den signierten Abstimmungsablauf und den aktuellen Umfang dieses MVP.",
+      "primary": "Arbeitsbereich öffnen",
+      "secondary": "Funktionen prüfen"
     }
   }
 }

@@ -2,26 +2,26 @@
   "solon": {
     "title": "SOLON",
     "tagline": "Bitcoin-Native Governance for the Digital Age",
-    "subtag": "Completely transparent decision-making and financing for any organization.",
+    "subtag": "An illustrative workspace for traceable treasury records and signed member votes.",
     "cta_primary": "Explore the Treasury",
-    "cta_secondary": "See Live Voting",
+    "cta_secondary": "Explore Voting",
     "pillars": {
-      "transactions": "Transparent Transaction System",
-      "decisions": "Law Transparency Framework",
-      "marketplace": "Open Service Marketplace",
-      "voting": "Open Vote System"
+      "transactions": "Traceable Treasury Records",
+      "decisions": "Linked Decision Records",
+      "marketplace": "Procurement Data Model",
+      "voting": "Signed Vote Verification"
     },
     "pillar_desc": {
-      "transactions": "All finances on Bitcoin",
-      "decisions": "Signed decisions with KPIs",
-      "marketplace": "Transparent procurement",
-      "voting": "Verified, weighted voting"
+      "transactions": "Bitcoin data with evidence",
+      "decisions": "Decisions linked to sessions",
+      "marketplace": "Workspace on the roadmap",
+      "voting": "Bitcoin signature checks"
     },
     "bullets": {
-      "transparency": "Radical Financial Transparency (Bitcoin blockchain)",
-      "democracy": "Cryptographic Democracy (Signed votes & decisions)",
-      "market": "Service Marketplace (Bitcoin-native procurement)",
-      "global": "Global by Design (No traditional banking)"
+      "transparency": "Traceable treasury records with Bitcoin evidence",
+      "democracy": "Signed-vote verification primitives",
+      "market": "Procurement data model (workspace on roadmap)",
+      "global": "Non-custodial Bitcoin address model"
     },
     "bitcoin": {
       "treasury": "Bitcoin Treasury",
@@ -30,28 +30,28 @@
       "signature": "Cryptographic Signature"
     },
     "ledger": {
-      "label": "Live Bitcoin Treasury",
-      "live": "Live",
-      "public": "Public ledger",
+      "label": "Sample Bitcoin Treasury",
+      "live": "Demo",
+      "public": "Example ledger",
       "balance": "Treasury balance",
-      "verified": "On-chain verified"
+      "verified": "Illustrative workspace"
     }
   },
   "home": {
     "made_in": "Made in Switzerland",
     "pillars_section": {
-      "title": "Four Pillars of Bitcoin-Native Governance",
-      "subtitle": "Complete transparency, cryptographic democracy, and Bitcoin-native financial operations — designed as one system, not bolted on as an afterthought."
+      "title": "One Model for Treasury and Member Decisions",
+      "subtitle": "Treasury records, organization decisions, and signed member votes connected in one inspectable MVP data model."
     },
     "demo_section": {
-      "title": "See Transparency in Action",
-      "subtitle": "Every transaction, decision, and vote is permanently recorded on the Bitcoin blockchain for complete auditability and public verification."
+      "title": "Choose a Guided Outcome",
+      "subtitle": "Explore an illustrative organization dataset, then open the workspace to see the implemented treasury and signed-voting flows."
     },
     "cta": {
-      "title": "Ready to Revolutionize Your Organization?",
-      "subtitle": "Join the future of transparent governance. Every decision, every transaction, every vote — cryptographically verified and permanently auditable.",
-      "primary": "Start Your Organization",
-      "secondary": "Learn More"
+      "title": "Explore the Working Governance Paths",
+      "subtitle": "Review the treasury workspace, inspect the signed-voting flow, and evaluate exactly what this MVP implements today.",
+      "primary": "Open Workspace",
+      "secondary": "Review Features"
     }
   }
 }

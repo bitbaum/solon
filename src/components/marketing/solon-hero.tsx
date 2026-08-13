@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
+import { ROUTES } from "@/lib/site-config";
 
 type Lang = "en" | "de" | "fr" | "it";
 
@@ -21,7 +23,7 @@ export interface SolonHeroProps {
   language: Lang;
 }
 
-// Sample ledger rows — illustrative of the live public treasury (real data lives in /dashboard/treasury)
+// Static sample rows for explaining the treasury layout; no live data is implied.
 const LEDGER_ROWS = [
   { amount: "0.125 BTC", label: "Office Supplies", confirmations: 3 },
   { amount: "2.500 BTC", label: "Service Payment", confirmations: 12 },
@@ -57,18 +59,18 @@ export default function SolonHero({ language }: SolonHeroProps) {
             <p className="mt-2 text-slate-400">{t.subtag}</p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <a
+              <Link
                 className="inline-flex items-center justify-center rounded-sm bg-solon-orange px-6 py-3 font-semibold text-white shadow-card transition hover:bg-solon-orange-dark"
-                href="/dashboard/treasury"
+                href={ROUTES.dashboardTreasury}
               >
                 {t.cta_primary}
-              </a>
-              <a
+              </Link>
+              <Link
                 className="inline-flex items-center justify-center rounded-sm bg-white/10 px-6 py-3 font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20"
-                href="/dashboard/voting"
+                href={ROUTES.dashboardVoting}
               >
                 {t.cta_secondary}
-              </a>
+              </Link>
             </div>
 
             {/* Bullets — the core claims, compact */}
@@ -82,7 +84,7 @@ export default function SolonHero({ language }: SolonHeroProps) {
             </ul>
           </div>
 
-          {/* Right: live treasury ledger — transparency shown, not asserted */}
+          {/* Right: sample treasury ledger — layout demonstration only */}
           <div className="rounded-lg bg-white/[0.04] p-1 ring-1 ring-white/10 shadow-navy backdrop-blur">
             <div className="rounded-md bg-navy-dark/60 p-5">
               <div className="flex items-center justify-between">

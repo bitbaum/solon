@@ -2,44 +2,44 @@
   "solon": {
     "title": "SOLON",
     "tagline": "Governance nativa Bitcoin per l'era digitale",
-    "subtag": "Decisioni e finanziamenti completamente trasparenti per qualsiasi organizzazione.",
+    "subtag": "Uno spazio illustrativo per dati di tesoreria tracciabili e voti firmati.",
     "cta_primary": "Esplora il Tesoro",
-    "cta_secondary": "Vedi il voto in tempo reale",
+    "cta_secondary": "Vedi il percorso di voto",
     "pillars": {
-      "transactions": "Sistema di transazioni trasparente",
+      "transactions": "Dati di tesoreria tracciabili",
       "decisions": "Quadro di trasparenza delle leggi",
-      "marketplace": "Mercato aperto dei servizi",
+      "marketplace": "Modello dati per gli acquisti",
       "voting": "Sistema di voto aperto"
     },
     "pillar_desc": {
-      "transactions": "Tutte le finanze su Bitcoin",
-      "decisions": "Decisioni firmate con KPI",
-      "marketplace": "Approvvigionamento trasparente",
-      "voting": "Voto verificato e ponderato"
+      "transactions": "Dati Bitcoin con evidenze",
+      "decisions": "Decisioni e indicatori collegati",
+      "marketplace": "Interfaccia prevista nella roadmap",
+      "voting": "Verifica delle firme Bitcoin"
     },
     "ledger": {
-      "label": "Tesoro Bitcoin in tempo reale",
-      "live": "In diretta",
-      "public": "Registro pubblico",
+      "label": "Esempio di tesoreria Bitcoin",
+      "live": "Demo",
+      "public": "Dati di esempio",
       "balance": "Saldo del tesoro",
-      "verified": "Verificato on-chain"
+      "verified": "Spazio illustrativo"
     }
   },
   "home": {
     "made_in": "Realizzato in Svizzera",
     "pillars_section": {
       "title": "Quattro pilastri della governance nativa Bitcoin",
-      "subtitle": "Trasparenza totale, democrazia crittografica e operazioni finanziarie native Bitcoin — progettate come un unico sistema, non aggiunte come ripensamento."
+      "subtitle": "Dati di tesoreria, decisioni e voti firmati riuniti in un modello tracciabile."
     },
     "demo_section": {
       "title": "La trasparenza in azione",
-      "subtitle": "Ogni transazione, decisione e voto è registrato in modo permanente sulla blockchain Bitcoin, per una verificabilità completa e pubblica."
+      "subtitle": "Esplora dati di esempio, poi apri i percorsi di tesoreria e voto realmente implementati."
     },
     "cta": {
-      "title": "Pronto a rivoluzionare la tua organizzazione?",
-      "subtitle": "Unisciti al futuro della governance trasparente. Ogni decisione, ogni transazione, ogni voto — verificato crittograficamente e sempre auditabile.",
-      "primary": "Avvia la tua organizzazione",
-      "secondary": "Scopri di più"
+      "title": "Esplora i percorsi funzionanti",
+      "subtitle": "Valuta lo spazio di tesoreria, il percorso di voto firmato e l’ambito attuale di questo MVP.",
+      "primary": "Apri lo spazio",
+      "secondary": "Esamina le funzioni"
     }
   }
 }

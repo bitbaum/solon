@@ -5,21 +5,22 @@ test.describe('Header & Footer', () => {
     await page.goto('/');
 
     // Header
-    await expect(page.getByRole('navigation', { name: 'Main Navigation' })).toBeVisible();
+    const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+    await expect(navigation).toBeVisible();
     await expect(page.getByText('SOLON').first()).toBeVisible();
-    // At least one top-level menu button is visible
-    await expect(page.getByRole('button', { name: 'Platform' }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Get Started' })).toBeVisible();
+    if ((page.viewportSize()?.width ?? 1280) < 1024) {
+      await navigation.getByRole('button', { name: 'Open menu' }).click();
+      await expect(navigation.getByRole('link', { name: 'Explore voting' })).toBeVisible();
+    } else {
+      await expect(navigation.getByRole('button', { name: 'Platform' })).toBeVisible();
+      await expect(navigation.getByRole('link', { name: 'Explore voting' })).toBeVisible();
+    }
 
     // Footer
-    // Pick the white footer (site footer), not any dark section footer
-    const siteFooter = page.locator('footer.mt-16');
+    const siteFooter = page.getByRole('contentinfo');
     await expect(siteFooter).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Platform")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Governance")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Treasury")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Company")')).toBeVisible();
+    await expect(siteFooter.getByRole('heading', { name: 'Platform' })).toBeVisible();
+    await expect(siteFooter.getByRole('heading', { name: 'Explore' })).toBeVisible();
+    await expect(siteFooter.getByRole('link', { name: /Source code/ })).toHaveAttribute('href', 'https://github.com/maonakamoto/solon');
   });
 });
-
-

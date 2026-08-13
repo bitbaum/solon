@@ -39,6 +39,8 @@ model members {
   organization organizations @relation(fields: [organization_id], references: [id])
   votes         votes[]
   decisions_origin decisions[] @relation("decisions_origin_member")
+
+  @@unique([organization_id, bitcoin_address])
 }
 
 model bitcoin_transactions {
@@ -85,7 +87,6 @@ model voting_sessions {
   status                     String   @default("active")
   start_date                 DateTime @default(now())
   end_date                   DateTime?
-  total_votes_cast           Int      @default(0)
   bitcoin_signature_required Boolean  @default(true)
 
   organization organizations @relation(fields: [organization_id], references: [id])
@@ -147,4 +148,3 @@ model budget_allocations {
 
   organization organizations @relation(fields: [organization_id], references: [id])
 }
-

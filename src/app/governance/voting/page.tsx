@@ -1,6 +1,8 @@
 "use client";
 import { useState } from 'react';
+import Link from 'next/link';
 import PageLayout from '@/components/ui/page-layout';
+import { ROUTES } from '@/lib/site-config';
 
 export default function VotingSystemPage() {
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
@@ -8,13 +10,20 @@ export default function VotingSystemPage() {
   return (
     <PageLayout 
       title="Democratic Voting System" 
-      description="Cryptographically verified voting with complete transparency"
+      description="Explore a sample proposal, then review the Bitcoin signed-message workflow implemented by this MVP"
     >
       <div className="max-w-6xl mx-auto">
         
-        {/* Live Voting Demo */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-6">Active Votes</h2>
+        {/* Illustrative voting walkthrough */}
+        <div className="mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-wider text-solon-orange">Illustrative sample data</p>
+              <h2 className="mt-1 text-2xl font-bold text-navy">Active votes walkthrough</h2>
+              <p className="text-sm text-slate-600">Explore this public demonstration, then use the workspace for signed member voting.</p>
+            </div>
+            <Link href={ROUTES.dashboardVoting} className="flex min-h-11 items-center justify-center rounded-md bg-navy px-5 py-2 text-sm font-semibold text-white hover:bg-navy-light">Open voting workspace</Link>
+          </div>
           
           <div className="space-y-4">
             <VoteProposal
@@ -27,6 +36,7 @@ export default function VotingSystemPage() {
               totalEligible={12}
               isActive={true}
               onVote={setSelectedVote}
+              selectedVote={selectedVote}
               userHasVoted={false}
             />
             
@@ -40,56 +50,47 @@ export default function VotingSystemPage() {
               totalEligible={12}
               isActive={true}
               onVote={setSelectedVote}
+              selectedVote={selectedVote}
               userHasVoted={true}
             />
 
             <VoteProposal
-              id="marketplace-003"
-              title="Add New Service Category: Legal Services"
-              description="Expand marketplace to include vetted legal service providers for organizational compliance"
+              id="policy-003"
+              title="Adopt a Quarterly Financial Review"
+              description="Require organization stewards to publish a quarterly treasury review for member inspection"
               deadline="Completed"
               yesVotes={9}
               noVotes={1}
               totalEligible={12}
               isActive={false}
               onVote={setSelectedVote}
+              selectedVote={selectedVote}
               userHasVoted={true}
             />
           </div>
         </div>
 
-        {/* Voting Features */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <FeatureBox
-            title="Cryptographic Signatures"
-            description="Every vote is cryptographically signed and verified"
-            icon="🔐"
-          />
-          <FeatureBox
-            title="Anonymous Options"
-            description="Choose between public and anonymous voting modes"
-            icon="🎭"
-          />
-          <FeatureBox
-            title="Weighted Voting"
-            description="Configurable voting weights based on stake or role"
-            icon="⚖️"
-          />
-          <FeatureBox
-            title="Real-time Results"
-            description="Live vote tallies with instant result updates"
-            icon="📊"
-          />
-          <FeatureBox
-            title="Audit Trail"
-            description="Complete voting history with verification tools"
-            icon="📋"
-          />
-          <FeatureBox
-            title="Proposal System"
-            description="Structured proposal creation and discussion"
-            icon="💡"
-          />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="voting-now-heading">
+            <p className="text-xs font-bold uppercase tracking-wider text-solon-orange">Available now</p>
+            <h2 id="voting-now-heading" className="mt-1 font-display text-xl font-bold text-navy">Verification primitives</h2>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
+              <li>Canonical messages bind session, choice, and member address.</li>
+              <li>Bitcoin signatures recover to registered organization members.</li>
+              <li>Only active sessions and active member addresses are eligible.</li>
+              <li>Stored vote weights contribute to the server-side tally.</li>
+            </ul>
+          </section>
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="voting-roadmap-heading">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Not in this build</p>
+            <h2 id="voting-roadmap-heading" className="mt-1 font-display text-xl font-bold text-navy">Member workflow roadmap</h2>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
+              <li>Wallet-assisted signing and UI submission.</li>
+              <li>Proposal creation, discussion, and administration.</li>
+              <li>Anonymous or privacy-preserving voting modes.</li>
+              <li>A dedicated historical audit workspace.</li>
+            </ul>
+          </section>
         </div>
       </div>
     </PageLayout>
@@ -106,7 +107,8 @@ function VoteProposal({
   totalEligible, 
   isActive, 
   onVote, 
-  userHasVoted 
+  userHasVoted,
+  selectedVote,
 }: {
   id: string;
   title: string;
@@ -118,14 +120,15 @@ function VoteProposal({
   isActive: boolean;
   onVote: (id: string) => void;
   userHasVoted: boolean;
+  selectedVote: string | null;
 }) {
   const yesPercentage = ((yesVotes / totalEligible) * 100).toFixed(1);
   const noPercentage = ((noVotes / totalEligible) * 100).toFixed(1);
 
   return (
-    <div className="border border-gray-200 rounded-lg p-6 bg-white">
-      <div className="flex justify-between items-start mb-4">
-        <div>
+    <div className="rounded-lg border border-slate-200 bg-white p-4 sm:p-6">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <h3 className="text-lg font-semibold text-[var(--navy)]">{title}</h3>
           <p className="text-gray-600 mt-1">{description}</p>
         </div>
@@ -156,18 +159,20 @@ function VoteProposal({
       </div>
 
       {isActive && (
-        <div className="flex space-x-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           {!userHasVoted ? (
             <>
               <button 
-                onClick={() => onVote(id)}
-                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                type="button"
+                onClick={() => onVote(`${id}:yes`)}
+                className="min-h-11 rounded-lg bg-green-600 px-6 py-2 font-medium text-white transition-colors hover:bg-green-700"
               >
                 Vote Yes
               </button>
               <button 
-                onClick={() => onVote(id)}
-                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                type="button"
+                onClick={() => onVote(`${id}:no`)}
+                className="min-h-11 rounded-lg bg-red-600 px-6 py-2 font-medium text-white transition-colors hover:bg-red-700"
               >
                 Vote No
               </button>
@@ -177,25 +182,14 @@ function VoteProposal({
               ✓ You have voted
             </div>
           )}
-          <button className="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-            View Details
-          </button>
+          <Link href={ROUTES.dashboardVoting} className="flex min-h-11 items-center justify-center rounded-lg border border-slate-300 px-6 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50">Continue to signed vote</Link>
         </div>
       )}
-    </div>
-  );
-}
-
-function FeatureBox({ title, description, icon }: {
-  title: string;
-  description: string;
-  icon: string;
-}) {
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
-      <div className="text-3xl mb-3">{icon}</div>
-      <h3 className="font-semibold text-[var(--navy)] mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm">{description}</p>
+      {selectedVote?.startsWith(`${id}:`) && (
+        <p role="status" className="mt-3 text-sm text-slate-600">
+          {selectedVote.endsWith(':yes') ? 'Yes' : 'No'} selected. Continue to the signed voting workspace to submit it.
+        </p>
+      )}
     </div>
   );
 }

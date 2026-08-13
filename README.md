@@ -1,176 +1,117 @@
 # Solon
 
-Bitcoin-native governance for transparent treasury management and cryptographic democracy.
+An MVP for traceable Bitcoin treasury records and Bitcoin signed-message vote verification.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14-000000.svg)](https://nextjs.org/)
 
----
+## Current scope
 
-## What Solon Does
+Solon currently provides:
 
-- **Puts public finances on-chain.** Every treasury transaction is tracked against a multi-sig Bitcoin wallet. Amounts stored in satoshis as BigInt — no floating point, no rounding errors, no trust required.
-- **Makes decisions auditable.** Laws and governance decisions are cryptographically signed, linked to voting sessions, and tracked against measurable KPIs.
-- **Opens procurement to competition.** Service requests and bids live in the open. Vendor performance is scored, not assumed.
-- **Replaces trust with math.** Votes are signed with Bitcoin keys, verified cryptographically, and enforced as one-member-one-vote per session.
+- Organization treasury reads backed by PostgreSQL, with integer-satoshi transaction records and optional address balance lookup through mempool.space.
+- Standard Bitcoin signed-message verification that binds a vote to its session, choice, and registered member address.
+- Active-session/member eligibility checks, stored weighted tallies, and one member record per session through a unique database constraint.
+- A transparency-evidence endpoint that returns raw ledger and governance counts without inventing a score.
+- Guided, explicitly illustrative marketing/demo pages and database-offline dashboard fallbacks.
 
-## Architecture
+The MVP does **not** yet provide authentication/authorization, treasury mutations, wallet-assisted signing, proposal administration, a procurement marketplace UI/API, multi-signature spending, on-chain decision anchoring, anonymous voting, hosted SDKs, or a complete audit workspace. The UI and documentation label these boundaries rather than simulating successful product activity. Vote requests have field and actual-body byte bounds plus a bounded process-local abuse brake; production still requires a shared rate limiter at the edge or in a durable store.
 
-Solon is built on four pillars. Each pillar maps to a domain in the codebase and a set of Prisma models that serve as the single source of truth.
+## Architecture and SSOTs
 
-### The Four Pillars
+- `prisma/schema.prisma` is the database schema and generated Prisma-type source.
+- `src/lib/site-config.ts` is the implemented page-route and shared-navigation catalog.
+- `src/app/globals.css` is the visual-token source.
+- `scripts/verify-routes.mjs` compares filesystem pages with the route catalog and rejects unregistered static internal links.
 
-**1. Transparent Transaction System** — `prisma/schema.prisma: BitcoinTransaction, BudgetAllocation`
+The Prisma models cover organizations, members, Bitcoin transactions, decisions, voting sessions, votes, service requests/bids, and budget allocations. Service procurement models are schema groundwork only; no usable marketplace journey is shipped.
 
-All organizational finances route through Bitcoin. Organizations carry an `xpub` field for multi-sig wallet derivation. Budget allocations reference transactions by ID, creating an auditable chain from proposal to spend.
-
-**2. Law Transparency Framework** — `prisma/schema.prisma: Decision`
-
-Decisions link to the voting session that produced them. Each carries a `kpiTracking` JSON field for effectiveness measurement after passage. No decision exists without a recorded vote.
-
-**3. Open Service Marketplace** — `prisma/schema.prisma: ServiceRequest, ServiceBid`
-
-Procurement is open by default. Service requests publish requirements; bids compete on merit. Vendor performance feeds back into future evaluations.
-
-**4. Open Vote System** — `prisma/schema.prisma: VotingSession, Vote`
-
-Votes are cryptographically signed (`signature` field on Vote). One vote per member per session, enforced by a unique constraint on `[sessionId, memberId]`. Sessions support multiple mechanisms: `SIMPLE_MAJORITY`, `SUPERMAJORITY`, `CONSENSUS`, `RANKED_CHOICE`.
-
-### Schema as SSOT
-
-The Prisma schema defines 10 models. Types, validation, and API contracts derive from it — nothing is defined twice.
-
-```
-Organization  ── has many ──> Member
-     │                          │
-     ├── BitcoinTransaction     ├── Vote (signed, unique per session)
-     ├── BudgetAllocation       │
-     ├── VotingSession ─────────┘
-     ├── Decision (linked to VotingSession)
-     ├── ServiceRequest
-     └── ServiceBid
-```
-
-Key design decisions:
-- Organizations define a `governanceModel` enum: `DEMOCRATIC | CONSENSUS | DELEGATED`
-- Members carry `bitcoinAddress` and `votingWeight` (defaults to 1.0)
-- All monetary amounts are `BigInt` satoshis — `amountSats` on transactions, `allocatedSats` / `spentSats` on budgets
-
-### Transparency Engine
-
-A computation layer scores every organization across five dimensions (0-100 each):
-
-| Metric | What It Measures |
-|---|---|
-| Financial Transparency | On-chain transaction coverage vs. total spend |
-| Decision Auditability | Percentage of decisions with linked voting sessions |
-| Participation Rate | Active voters vs. eligible members |
-| Corruption Risk | Inverse score — flags concentration of spending authority |
-| Cost Efficiency | Bid competitiveness and budget adherence |
-
-## Tech Stack
+## Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript 5.5 (strict mode) |
-| Styling | Tailwind CSS |
-| Database | PostgreSQL + Prisma ORM |
-| Bitcoin | BTCPay Server / Bitcoin Core (stubbed in MVP) |
-| Testing | Playwright E2E + Puppeteer smoke tests |
-| i18n | English, German, French, Italian |
+| Framework | Next.js 14 App Router, standalone output |
+| Language | TypeScript 5.5 strict mode |
+| Database | PostgreSQL + Prisma 5 |
+| Styling | Tailwind CSS 3 |
+| Bitcoin | `@noble/*`, `bs58check`, mempool.space reads |
+| Testing | Playwright E2E + Puppeteer smoke scripts |
 
-## Route Map
+## Route map
 
-**Marketing pages:** `/`, `/features`, `/security`, `/integration`, `/about`, `/governance/voting`
+**Marketing/demo pages:** `/`, `/features`, `/security`, `/integration`, `/about`, `/governance/voting`, `/treasury/bitcoin`
 
-**Dashboard:** `/dashboard`, `/dashboard/voting`, `/treasury/bitcoin`
+**Dashboard:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`
 
-**API:**
-- `GET /api/bitcoin/wallet/[orgId]` — wallet balance and transaction history
-- `PUT /api/bitcoin/wallet/[orgId]` — update wallet configuration
-- `POST /api/voting/[sessionId]/cryptographic-vote` — submit a signed vote
-- `GET /api/voting/[sessionId]/cryptographic-vote` — retrieve vote tally
+**Implemented APIs:**
 
-<details>
-<summary><strong>Quick Start</strong></summary>
+- `GET /api/bitcoin/wallet/[orgId]` — treasury address, balance/source, and recent transaction records.
+- `GET /api/solon/transparency?orgId=…` — read the organization identity, net total of signed recorded amounts, and source record counts.
+- `GET /api/voting/[sessionId]/cryptographic-vote` — retrieve a weighted tally.
+- `POST /api/voting/[sessionId]/cryptographic-vote` — verify and store `{ choice, address, signature }`.
+
+See [`docs/route-and-journey-audit.md`](docs/route-and-journey-audit.md) for persona journeys, responsive coverage, and detailed limitations.
+
+## Local development
 
 ```bash
-# Clone and install
-git clone https://github.com/your-org/solon.git
-cd solon
-npm install
+npm ci
+npm run prisma:generate
 
-# Set up the database
-cp .env.example .env
-# Edit .env with your PostgreSQL connection string
-npx prisma migrate dev
+# Configure DATABASE_URL in .env, then provision the schema manually.
+npm run prisma:push
 
-# Run development server
 npm run dev
 ```
 
-Open `http://localhost:3000`. The dashboard is at `/dashboard`.
+The app opens at `http://localhost:3000`; the guided dashboard starts at `/dashboard`. When PostgreSQL cannot be reached, treasury and voting dashboard pages show prominent sample-mode messages. API handlers do not convert missing database state into a sample success.
 
-**Run tests:**
+## Verification
 
 ```bash
-# E2E tests
-npx playwright test
+# CI floor: lint, strict typecheck, and deterministic route integrity
+npm run verify
 
-# Smoke tests
-npx puppeteer test
+# Browser routes and journeys (install Playwright browsers first when needed)
+npm run test:e2e
+
+# Production bundle
+npm run build
 ```
 
-</details>
+The verify gate also runs domain/API-contract unit tests on the Node 20-compatible
+TypeScript test runner. The browser suite includes 375px and 390px mobile
+coverage when those projects are selected, checks all ten page routes, follows
+the primary voting journey, verifies internal-link reachability, and detects
+horizontal overflow/clipped controls. Weighted vote tallies are serialized as
+exact decimal strings rather than binary floating-point numbers.
 
-## Project Structure
+## Project structure
 
-```
+```text
 solon/
-  prisma/
-    schema.prisma              # SSOT — 10 models, all types derived from here
-  src/
-    app/
-      page.tsx                 # Landing page
-      dashboard/
-        page.tsx               # Organization dashboard
-        voting/page.tsx        # Voting interface
-      treasury/
-        bitcoin/page.tsx       # Treasury view
-      api/
-        bitcoin/wallet/[orgId] # Wallet endpoints
-        voting/[sessionId]/    # Voting endpoints
-    components/
-      bitcoin-treasury.tsx     # Balance display + transaction table
-      voting-interface.tsx     # Live voting with real-time tally
-      four-pillars.tsx         # Interactive pillar cards
-      transparency-demo.tsx    # Live transparency scoring (4 tabs)
-    lib/
-      transparency-engine.ts   # Score computation (5 metrics, 0-100)
+  prisma/schema.prisma            # Database SSOT
+  scripts/verify-routes.mjs       # Route/catalog regression gate
+  src/app/                        # App Router pages and API handlers
+  src/components/                 # Shared marketing, dashboard, and UI components
+  src/lib/bitcoin/                # Signed-message and Bitcoin helpers
+  src/lib/solon/                  # Governance/transparency domain operations
+  src/lib/site-config.ts          # Page route/navigation SSOT
+  tests/e2e/                      # Route and journey browser tests
 ```
 
 ## Roadmap
 
-**Now (MVP):** Pillars 1 and 4 scaffolded. Bitcoin integrations stubbed for local development. Transparency engine computes scores from seed data.
+High-value next work:
 
-**Next:**
-- Live BTCPay Server integration for real transaction tracking
-- Cryptographic vote verification against Bitcoin key pairs
-- Multi-sig wallet support via descriptor wallets
-- Service marketplace with bid evaluation scoring
-
-**Later:**
-- Federated governance across organizations
-- On-chain decision anchoring (OP_RETURN or Taproot)
-- Mobile-first voting interface
-- Delegation chains with revocation
+- Authentication, organization administration, and explicit role authorization.
+- Wallet-assisted signing and end-to-end vote submission in the UI.
+- Proposal creation, discussion, closure, and historical audit views.
+- Multi-signature treasury proposal/signing workflows.
+- Procurement workspace and APIs over the existing request/bid schema.
+- Production observability, rate limiting, backups, and deployment hardening.
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
-
----
-
-*Governance should be verifiable, not trusted. Solon makes that possible.*

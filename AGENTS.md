@@ -18,11 +18,12 @@ npm run dev          # next dev (localhost:3000)
 npm run build        # next build (standalone) — run `prisma:generate` first (no postinstall)
 npm run lint         # next lint (eslint, next/core-web-vitals)
 npm run typecheck    # tsc --noEmit
-npm run verify       # lint + typecheck — the CI floor, run before every commit
+npm run verify       # lint + typecheck + unit tests + route integrity
 ```
 
 `npm run verify` is the single source of truth for "is this change clean?" CI calls it
-verbatim. Green `verify` locally ⇒ green CI.
+verbatim. Green `verify` locally ⇒ green CI. The unit tests run through the
+Node-20-compatible `ts-node/register` runner used by the pinned CI toolchain.
 
 ## Prisma / database
 
@@ -37,7 +38,8 @@ verbatim. Green `verify` locally ⇒ green CI.
 ## CI floor
 
 `.github/workflows/ci.yml` runs `npm ci` → `prisma generate` → `npm run verify`
-(lint + typecheck) on every push/PR to `main`. `next build` is not yet gated in CI (see below).
+(lint + typecheck + unit tests + route integrity) on every push/PR to `main`.
+`next build` runs as the following CI step.
 
 ## Notes for agents
 

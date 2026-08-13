@@ -1,96 +1,57 @@
+import { CheckCircle2, KeyRound, Server, ShieldAlert } from 'lucide-react';
 import PageLayout from '@/components/ui/page-layout';
+
+const CONTROLS = [
+  {
+    title: 'Bitcoin signed-message verification',
+    description: 'A vote is authorized by recovering a public key from its compact signature and comparing the derived P2PKH address.',
+    details: ['Canonical message binds session, choice, and voter', 'Invalid signatures are never stored', 'Noble secp256k1 and hash primitives', 'No private key enters Solon'],
+    icon: KeyRound,
+  },
+  {
+    title: 'Organization eligibility checks',
+    description: 'A valid signature alone is not enough: the recovered address must belong to an active member in the voting organization.',
+    details: ['Active-session check', 'Active-member check', 'One member record per vote upsert', 'Server-side tally'],
+    icon: CheckCircle2,
+  },
+  {
+    title: 'Non-custodial treasury reads',
+    description: 'The wallet endpoint reads an address balance from mempool.space when configured and falls back to recorded transaction totals.',
+    details: ['No spending key storage', 'Integer satoshi totals', 'Balance source is returned', 'Public transaction explorer links'],
+    icon: Server,
+  },
+] as const;
 
 export default function SecurityPage() {
   return (
-    <PageLayout 
-      title="Cryptographic Security Model" 
-      description="Bitcoin-grade security for organizational governance and financial operations"
-    >
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <SecurityFeature
-            title="Multi-Signature Bitcoin Wallet"
-            description="Enterprise-grade Bitcoin custody with configurable signature requirements"
-            details={[
-              'M-of-N signature schemes',
-              'Hardware wallet integration', 
-              'Time-locked transactions',
-              'Emergency recovery procedures'
-            ]}
-          />
-          <SecurityFeature
-            title="Cryptographic Vote Verification"
-            description="Tamper-proof voting with mathematical verification"
-            details={[
-              'Digital signature validation',
-              'Zero-knowledge proofs',
-              'Blockchain anchoring',
-              'Independent verification'
-            ]}
-          />
-          <SecurityFeature
-            title="Immutable Decision Records"
-            description="Permanent record of all organizational decisions"
-            details={[
-              'Hash chain integrity',
-              'Timestamped decisions',
-              'Public verification',
-              'Audit trail transparency'
-            ]}
-          />
-          <SecurityFeature
-            title="Privacy-Preserving Operations"
-            description="Maximum transparency with appropriate privacy controls"
-            details={[
-              'Anonymous voting options',
-              'Selective disclosure',
-              'Role-based permissions',
-              'Data minimization'
-            ]}
-          />
-        </div>
+    <PageLayout title="Security Model" description="Concrete controls implemented by this repository, plus the operational boundaries you must account for.">
+      <div className="mx-auto max-w-5xl">
+        <section className="grid gap-6 lg:grid-cols-3" aria-label="Implemented security controls">
+          {CONTROLS.map(({ title, description, details, icon: Icon }) => (
+            <article key={title} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <span className="flex h-11 w-11 items-center justify-center rounded-md bg-navy text-solon-bitcoin"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+              <h2 className="mt-4 font-display text-xl font-bold text-navy">{title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+              <ul className="mt-4 space-y-2">
+                {details.map((detail) => <li key={detail} className="flex items-start gap-2 text-sm text-slate-700"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-solon-orange" aria-hidden="true" />{detail}</li>)}
+              </ul>
+            </article>
+          ))}
+        </section>
 
-        <div className="bg-[var(--navy)] text-white p-8 rounded-xl">
-          <h3 className="text-2xl font-bold mb-4">Security Guarantees</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="mt-8 rounded-xl bg-navy p-6 text-white sm:p-8" aria-labelledby="boundary-heading">
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="mt-1 h-6 w-6 shrink-0 text-solon-bitcoin" aria-hidden="true" />
             <div>
-              <h4 className="font-semibold mb-2">Financial Security</h4>
-              <p className="text-gray-300 text-sm">Multi-signature Bitcoin custody with enterprise-grade security practices</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Vote Integrity</h4>
-              <p className="text-gray-300 text-sm">Cryptographically verified voting with tamper-proof results</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Data Immutability</h4>
-              <p className="text-gray-300 text-sm">Blockchain-anchored records that cannot be altered or deleted</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-solon-bitcoin">Deployment responsibility</p>
+              <h2 id="boundary-heading" className="mt-1 font-display text-2xl font-bold">What this code does not guarantee</h2>
             </div>
           </div>
-        </div>
+          <p className="mt-4 max-w-3xl leading-7 text-slate-300">
+            Authentication, authorization policy, rate limiting, production key-management integrations, database backups, and transport security must be provided and reviewed by the operator before production use. Zero-knowledge proofs and on-chain decision anchoring are not implemented in this build.
+          </p>
+        </section>
       </div>
     </PageLayout>
-  );
-}
-
-function SecurityFeature({ title, description, details }: {
-  title: string;
-  description: string;
-  details: string[];
-}) {
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h3 className="text-xl font-bold text-[var(--navy)] mb-3">{title}</h3>
-      <p className="text-gray-600 mb-4">{description}</p>
-      <ul className="space-y-2">
-        {details.map((detail, index) => (
-          <li key={index} className="flex items-center text-sm text-gray-700">
-            <svg className="w-4 h-4 text-green-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {detail}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

@@ -1,57 +1,44 @@
 import Link from 'next/link';
+import { NAV_ITEMS, REPOSITORY_URL, ROUTES } from '@/lib/site-config';
 
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-gray-200 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+    <footer className="mt-16 border-t border-slate-200 bg-white" aria-label="Site footer">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-[1.25fr_1fr_1fr]">
           <div>
-            <div className="text-sm font-semibold text-[var(--navy)]">Platform</div>
-            <ul className="mt-3 space-y-2 text-sm text-gray-600">
-              <li><Link href="/features" className="hover:text-[var(--navy)]">Features</Link></li>
-              <li><Link href="/security" className="hover:text-[var(--navy)]">Security</Link></li>
-              <li><Link href="/integration" className="hover:text-[var(--navy)]">Integration</Link></li>
-            </ul>
+            <p className="font-display text-lg font-bold text-navy">SOLON</p>
+            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
+              Bitcoin-native treasury transparency and signed-vote verification primitives.
+            </p>
+            <Link href={ROUTES.dashboard} className="mt-4 inline-flex min-h-11 items-center font-semibold text-navy underline decoration-solon-orange decoration-2 underline-offset-4">
+              Open the dashboard
+            </Link>
           </div>
-          <div>
-            <div className="text-sm font-semibold text-[var(--navy)]">Governance</div>
-            <ul className="mt-3 space-y-2 text-sm text-gray-600">
-              <li><Link href="/governance/voting" className="hover:text-[var(--navy)]">Voting</Link></li>
-              <li><Link href="/governance/decisions" className="hover:text-[var(--navy)]">Decisions</Link></li>
-              <li><Link href="/governance/transparency" className="hover:text-[var(--navy)]">Transparency</Link></li>
-            </ul>
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-[var(--navy)]">Treasury</div>
-            <ul className="mt-3 space-y-2 text-sm text-gray-600">
-              <li><Link href="/treasury/bitcoin" className="hover:text-[var(--navy)]">Bitcoin Treasury</Link></li>
-              <li><Link href="/treasury/transactions" className="hover:text-[var(--navy)]">Transaction History</Link></li>
-              <li><Link href="/treasury/reports" className="hover:text-[var(--navy)]">Reports</Link></li>
-            </ul>
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-[var(--navy)]">Company</div>
-            <ul className="mt-3 space-y-2 text-sm text-gray-600">
-              <li><Link href="/docs" className="hover:text-[var(--navy)]">Documentation</Link></li>
-              <li><Link href="/support" className="hover:text-[var(--navy)]">Support</Link></li>
-              <li><Link href="/legal/privacy" className="hover:text-[var(--navy)]">Privacy</Link></li>
-            </ul>
-          </div>
+
+          {NAV_ITEMS.map((section) => (
+            <div key={section.title}>
+              <h2 className="text-sm font-semibold text-navy">{section.title}</h2>
+              <ul className="mt-3 space-y-1 text-sm text-slate-600">
+                {section.items.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="inline-flex min-h-11 items-center hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange">
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-gray-500">© {new Date().getFullYear()} Solon. All rights reserved.</div>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <Link href="/legal/terms" className="hover:text-[var(--navy)]">Terms</Link>
-            <Link href="/legal/privacy" className="hover:text-[var(--navy)]">Privacy</Link>
-            <a href="https://github.com" target="_blank" className="hover:text-[var(--navy)]">GitHub</a>
-          </div>
+        <div className="mt-10 flex flex-col gap-4 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Solon. Open-source governance infrastructure.</p>
+          <a href={REPOSITORY_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange">
+            Source code <span className="sr-only">(opens in a new tab)</span>
+          </a>
         </div>
       </div>
     </footer>
   );
 }
-
-
-
-

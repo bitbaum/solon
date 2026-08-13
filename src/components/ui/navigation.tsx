@@ -1,213 +1,159 @@
 "use client";
 
-import { useState } from 'react';
-import Logo from './logo';
 import Link from 'next/link';
-import { NAV_ITEMS } from '@/lib/site-config';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Menu, X } from 'lucide-react';
+import Logo from './logo';
+import { NAV_ITEMS, ROUTES, type AppRoute } from '@/lib/site-config';
 
-// Items are now sourced from shared site config
+function isCurrentRoute(pathname: string, href: AppRoute) {
+  return href === ROUTES.home ? pathname === href : pathname.startsWith(href);
+}
 
 export default function Navigation() {
+  const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    setActiveDropdown(null);
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setActiveDropdown(null);
+      setIsMobileMenuOpen(false);
+    };
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!navRef.current?.contains(event.target as Node)) setActiveDropdown(null);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('mousedown', closeOnOutsideClick);
+    };
+  }, []);
+
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50" aria-label="Main Navigation">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <Logo size="md" />
-          </Link>
+    <nav ref={navRef} className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label="Main navigation">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href={ROUTES.home} className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange" aria-label="Solon home">
+          <Logo size="md" />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex space-x-1" role="menubar" aria-label="Main Navigation">
-            {NAV_ITEMS.map((item) => (
+        <div className="hidden items-center gap-1 lg:flex">
+          {NAV_ITEMS.map((section) => {
+            const isOpen = activeDropdown === section.title;
+            const containsCurrentPage = section.items.some((item) => isCurrentRoute(pathname, item.href));
+            return (
               <div
-                key={item.title}
-                className="relative group"
-                onMouseEnter={() => setActiveDropdown(item.title)}
-                onMouseLeave={() => setActiveDropdown(null)}
+                key={section.title}
+                className="relative"
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) setActiveDropdown(null);
+                }}
               >
-                {item.children ? (
-                  <button
-                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-[var(--navy)] hover:bg-gray-50 rounded-md transition-colors"
-                    aria-haspopup="true"
-                    aria-expanded={activeDropdown === item.title}
-                    onFocus={() => setActiveDropdown(item.title)}
-                    onClick={() => setActiveDropdown((prev) => (prev === item.title ? null : item.title))}
-                  >
-                    {item.title}
-                    <ChevronDownIcon className="ml-1 w-4 h-4" />
-                  </button>
-                ) : (
-                  <Link
-                    href={item.href || '#'}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-[var(--navy)] hover:bg-gray-50 rounded-md transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                )}
+                <button
+                  type="button"
+                  className={`flex min-h-11 items-center rounded-md px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange ${
+                    containsCurrentPage ? 'bg-slate-100 text-navy' : 'text-slate-700 hover:bg-slate-50 hover:text-navy'
+                  }`}
+                  aria-haspopup="menu"
+                  aria-expanded={isOpen}
+                  onClick={() => setActiveDropdown(isOpen ? null : section.title)}
+                >
+                  {section.title}
+                  <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </button>
 
-                {/* Enhanced Mega Menu Dropdown with hover bridge */}
-                {item.children && activeDropdown === item.title && (
-                  <>
-                    {/* Invisible hover bridge to prevent dropdown from closing */}
-                    <div className="absolute top-full left-0 w-96 h-2 bg-transparent z-40"></div>
-                    
-                    <div className="absolute top-full left-0 w-96 bg-white shadow-xl border border-gray-100 rounded-xl py-6 mt-2 z-50" role="menu" aria-label={`${item.title} menu`}>
-                      <div className="px-6 py-2 border-b border-gray-100 mb-4">
-                        <h3 className="text-lg font-bold text-[var(--navy)] tracking-tight">{item.title}</h3>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {item.title === 'Platform' && 'Core features and capabilities'}
-                          {item.title === 'Governance' && 'Democratic decision-making tools'}
-                          {item.title === 'Treasury' && 'Bitcoin-native financial management'}
-                          {item.title === 'Marketplace' && 'Transparent procurement platform'}
-                          {item.title === 'Resources' && 'Documentation and support'}
-                        </p>
+                {isOpen && (
+                  <div className="absolute left-0 top-full pt-2">
+                    <div className="w-80 rounded-xl border border-slate-200 bg-white p-2 shadow-lg" role="menu" aria-label={`${section.title} links`}>
+                      <div className="px-3 pb-2 pt-1">
+                        <p className="font-display font-bold text-navy">{section.title}</p>
+                        <p className="mt-0.5 text-xs text-slate-500">{section.description}</p>
                       </div>
-                      <div className="grid grid-cols-1 gap-1">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.title}
-                            href={child.href || '#'}
-                            className="flex items-start px-6 py-3 text-sm text-gray-700 hover:text-[var(--navy)] hover:bg-gray-50 transition-all duration-200 group rounded-lg mx-2"
-                            role="menuitem"
-                          >
-                            <div className="w-2 h-2 rounded-full bg-gray-300 mr-4 mt-2 group-hover:bg-[var(--navy)] transition-colors flex-shrink-0"></div>
-                            <div className="min-w-0">
-                              <div className="font-medium text-gray-900 group-hover:text-[var(--navy)]">{child.title}</div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                {child.title === 'Overview' && 'Platform introduction and key benefits'}
-                                {child.title === 'Features' && 'Complete feature breakdown'}
-                                {child.title === 'Security' && 'Cryptographic security model'}
-                                {child.title === 'Integration' && 'API and integration guides'}
-                                {child.title === 'Voting System' && 'Democratic voting mechanisms'}
-                                {child.title === 'Decision Making' && 'Proposal and consensus tools'}
-                                {child.title === 'Transparency' && 'Public audit capabilities'}
-                                {child.title === 'Audit Trail' && 'Complete transaction history'}
-                                {child.title === 'Bitcoin Treasury' && 'Multi-signature wallet management'}
-                                {child.title === 'Transaction History' && 'Complete financial records'}
-                                {child.title === 'Budget Tracking' && 'Real-time budget monitoring'}
-                                {child.title === 'Financial Reports' && 'Automated financial reporting'}
-                                {child.title === 'Service Directory' && 'Vetted service providers'}
-                                {child.title === 'Procurement' && 'Transparent buying process'}
-                                {child.title === 'Vendor Management' && 'Vendor relationships'}
-                                {child.title === 'Contract Tracking' && 'Contract lifecycle management'}
-                                {child.title === 'Documentation' && 'Complete API and user docs'}
-                                {child.title === 'About' && 'Our mission and team'}
-                                {child.title === 'Support' && 'Help and customer support'}
-                                {child.title === 'Contact' && 'Get in touch with us'}
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          role="menuitem"
+                          aria-current={isCurrentRoute(pathname, item.href) ? 'page' : undefined}
+                          className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange"
+                        >
+                          <span className="block text-sm font-semibold text-navy">{item.title}</span>
+                          <span className="mt-0.5 block text-xs leading-5 text-slate-500">{item.description}</span>
+                        </Link>
+                      ))}
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 text-sm font-medium text-[var(--navy)] hover:text-[var(--navy-light)] transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 text-sm font-medium bg-[var(--navy)] text-white rounded-md hover:bg-[var(--navy-light)] transition-colors"
-            >
-              Get Started
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
-            <button
-              className="p-2 rounded-md text-gray-700 hover:text-[var(--navy)] hover:bg-gray-50"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <MenuIcon className="w-6 h-6" />
-            </button>
-          </div>
+            );
+          })}
         </div>
+
+        <div className="hidden items-center gap-3 lg:flex">
+          <Link href={ROUTES.dashboard} className="min-h-11 rounded-md px-4 py-3 text-sm font-semibold text-navy transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange">
+            Open dashboard
+          </Link>
+          <Link href={ROUTES.dashboardVoting} className="min-h-11 rounded-md bg-navy px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange">
+            Explore voting
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange lg:hidden"
+          onClick={() => setIsMobileMenuOpen((open) => !open)}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-controls="mobile-navigation"
+          aria-expanded={isMobileMenuOpen}
+        >
+          {isMobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+        </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100" role="menu" aria-label="Mobile Navigation">
-        <div className="px-4 py-2 space-y-1">
-          {NAV_ITEMS.map((item) => (
-            <div key={item.title}>
-              {item.children ? (
-                <div className="space-y-1">
-                  <div className="px-3 py-2 text-sm font-medium text-gray-700">
-                    {item.title}
-                  </div>
-                  <div className="ml-4 space-y-1">
-                    {item.children.map((child) => (
-                      <Link
-                        key={child.title}
-                        href={child.href || '#'}
-                        className="block px-3 py-2 text-sm text-gray-600 hover:text-[var(--navy)] hover:bg-gray-50 rounded-md"
-                        role="menuitem"
-                      >
-                        {child.title}
-                      </Link>
-                    ))}
-                  </div>
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 py-4 lg:hidden">
+          <div className="mx-auto max-w-7xl space-y-5">
+            {NAV_ITEMS.map((section) => (
+              <section key={section.title} aria-labelledby={`mobile-${section.title.toLowerCase()}`}>
+                <h2 id={`mobile-${section.title.toLowerCase()}`} className="px-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  {section.title}
+                </h2>
+                <div className="mt-1 grid gap-1">
+                  {section.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={isCurrentRoute(pathname, item.href) ? 'page' : undefined}
+                      className={`min-h-11 rounded-md px-3 py-2.5 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-solon-orange ${
+                        isCurrentRoute(pathname, item.href) ? 'bg-slate-100 text-navy' : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
                 </div>
-              ) : (
-                <Link
-                  href={item.href || '#'}
-                  className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-[var(--navy)] hover:bg-gray-50 rounded-md"
-                  role="menuitem"
-                >
-                  {item.title}
-                </Link>
-              )}
+              </section>
+            ))}
+            <div className="grid grid-cols-2 gap-3 border-t border-slate-200 pt-4">
+              <Link href={ROUTES.dashboard} className="flex min-h-11 items-center justify-center rounded-md border border-slate-300 px-3 py-2 text-center text-sm font-semibold text-navy">
+                Dashboard
+              </Link>
+              <Link href={ROUTES.dashboardVoting} className="flex min-h-11 items-center justify-center rounded-md bg-navy px-3 py-2 text-center text-sm font-semibold text-white">
+                Explore voting
+              </Link>
             </div>
-          ))}
-          <div className="border-t border-gray-100 pt-2 mt-2">
-            <Link
-              href="/dashboard"
-              className="block px-3 py-2 text-sm font-medium text-[var(--navy)] hover:bg-gray-50 rounded-md"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/dashboard"
-              className="block px-3 py-2 text-sm font-medium bg-[var(--navy)] text-white rounded-md hover:bg-[var(--navy-light)] mt-1"
-            >
-              Get Started
-            </Link>
           </div>
         </div>
-      </div>
       )}
     </nav>
-  );
-}
-
-function ChevronDownIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-}
-
-function MenuIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
   );
 }

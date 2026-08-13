@@ -16,8 +16,10 @@ export interface AddressBalance {
 /** Fetch the confirmed + unconfirmed balance of a Bitcoin address. */
 export async function getAddressBalance(address: string): Promise<AddressBalance> {
   const res = await fetch(`${MEMPOOL_BASE}/address/${encodeURIComponent(address)}`, {
-    // Treasury balance is live data; don't let Next cache it.
-    cache: 'no-store',
+    // Bound upstream latency and avoid turning repeated public reads into an
+    // unbounded request amplifier. A short cache still keeps evidence fresh.
+    signal: AbortSignal.timeout(5_000),
+    next: { revalidate: 30 },
   });
   if (!res.ok) throw new Error(`mempool.space ${res.status} for ${address}`);
   const data = (await res.json()) as {

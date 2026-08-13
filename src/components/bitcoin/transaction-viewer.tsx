@@ -10,10 +10,9 @@ export default function TransactionViewer({ txs }: { txs: BitcoinTransaction[] }
             <span className="font-mono text-gray-300">{tx.txid.slice(0, 18)}…</span>
             <span className="font-mono">{tx.amount_sats} sats</span>
           </div>
-          <div className="text-xs text-gray-500">{new Date(tx.transaction_date).toLocaleString()}</div>
+          <div className="text-xs text-gray-500">{new Date(tx.transaction_date).toLocaleString('en-US')}</div>
         </li>
       ))}
     </ul>
   );
 }
-

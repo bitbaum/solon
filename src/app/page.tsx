@@ -2,6 +2,8 @@ import SolonHero from '@/components/marketing/solon-hero'
 import { FourPillars } from '@/components/marketing/four-pillars'
 import { TransparencyDemo } from '@/components/marketing/transparency-demo'
 import en from '@/i18n/en.json'
+import Link from 'next/link'
+import { ROUTES } from '@/lib/site-config'
 
 export default function Home() {
   const t = en.home
@@ -9,12 +11,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
 
-      {/* Hero — navy anchor with live treasury ledger + icon pillars */}
+      {/* Hero — navy anchor with a sample treasury and icon pillars */}
       <section className="pt-8 pb-4">
         <SolonHero language="en" />
       </section>
 
-      {/* Four Pillars — the one strong statement, then the deep dive */}
+      {/* Four modeled domains — implemented and roadmap boundaries are explicit */}
       <section id="pillars" className="py-20">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-navy mb-4">
@@ -27,7 +29,7 @@ export default function Home() {
         <FourPillars />
       </section>
 
-      {/* Live Demo — on light surface for rhythm */}
+      {/* Guided outcomes — no fabricated product activity */}
       <section id="demo" className="py-20 bg-solon-light rounded-xl">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -52,18 +54,18 @@ export default function Home() {
             {t.cta.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/dashboard"
+            <Link
+              href={ROUTES.dashboard}
               className="inline-flex items-center justify-center bg-solon-orange text-white px-8 py-3 rounded-sm hover:bg-solon-orange-dark transition-colors font-semibold shadow-card"
             >
               {t.cta.primary}
-            </a>
-            <a
-              href="/features"
+            </Link>
+            <Link
+              href={ROUTES.features}
               className="inline-flex items-center justify-center bg-white/10 text-white px-8 py-3 rounded-sm ring-1 ring-white/20 hover:bg-white/20 transition-colors font-semibold"
             >
               {t.cta.secondary}
-            </a>
+            </Link>
           </div>
         </div>
       </section>
