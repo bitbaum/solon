@@ -3,6 +3,7 @@ import de from "@/i18n/de.json";
 import fr from "@/i18n/fr.json";
 import it from "@/i18n/it.json";
 import { Check } from "lucide-react";
+import { HERO_CTAS } from "@/lib/site-config";
 
 type Lang = "en" | "de" | "fr" | "it";
 
@@ -36,13 +37,13 @@ export default function SolonHero({ language }: SolonHeroProps) {
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 className="inline-flex items-center justify-center rounded-sm bg-solon-orange px-6 py-3 font-semibold text-white shadow-card transition hover:bg-solon-orange-dark"
-                href="/ecosystem"
+                href={HERO_CTAS.primary.href}
               >
                 {t.cta_primary}
               </a>
               <a
                 className="inline-flex items-center justify-center rounded-sm bg-white/10 px-6 py-3 font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20"
-                href="/dashboard/voting"
+                href={HERO_CTAS.secondary.href}
               >
                 {t.cta_secondary}
               </a>

@@ -57,6 +57,12 @@ export const NAV_ITEMS: NavSection[] = [
   },
 ];
 
+/** Homepage hero destinations — the two outcomes a first visitor can take. */
+export const HERO_CTAS = {
+  primary: { href: '/dashboard/voting', labelKey: 'cta_primary' },
+  secondary: { href: '/treasury/bitcoin', labelKey: 'cta_secondary' },
+} as const;
+
 export const THEME = {
   navy: 'var(--navy)',
   navyLight: 'var(--navy-light)',
