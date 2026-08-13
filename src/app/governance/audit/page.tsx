@@ -25,7 +25,9 @@ export default async function AuditPage() {
   let events: AuditEvent[] = [];
   let dbError = false;
   try {
-    org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
+    org = await prisma.organization.findFirst({
+      orderBy: { createdAt: "asc" },
+    });
     if (org) {
       events = await prisma.auditEvent.findMany({
         where: { organizationId: org.id },
@@ -44,34 +46,45 @@ export default async function AuditPage() {
     >
       <div className="max-w-4xl mx-auto space-y-6">
         {dbError && (
-          <p className="text-center text-gray-600">
+          <p className="text-center text-fg-secondary">
             The audit register is currently unreachable. No events can be shown.
           </p>
         )}
         {!dbError && !org && (
-          <p className="text-center text-gray-600">
-            No organization is registered yet, so there is no audit trail to show.
+          <p className="text-center text-fg-secondary">
+            No organization is registered yet, so there is no audit trail to
+            show.
           </p>
         )}
         {org && (
           <>
-            <p className="text-sm text-gray-600 text-center">
-              {events.length} most recent events for <span className="font-semibold">{org.name}</span>.
-              Audit events are append-only: no code path updates or deletes them.
+            <p className="text-sm text-fg-secondary text-center">
+              {events.length} most recent events for{" "}
+              <span className="font-semibold">{org.name}</span>. Audit events
+              are append-only: no code path updates or deletes them.
             </p>
             <ol className="space-y-3">
               {events.map((e) => (
-                <li key={e.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                <li
+                  key={e.id}
+                  className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                >
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="font-semibold text-navy">{EVENT_LABEL[e.eventType]}</span>
-                    <time className="text-xs text-gray-500 whitespace-nowrap" dateTime={e.createdAt.toISOString()}>
-                      {e.createdAt.toISOString().replace("T", " ").slice(0, 19)} UTC
+                    <span className="font-semibold text-navy">
+                      {EVENT_LABEL[e.eventType]}
+                    </span>
+                    <time
+                      className="text-xs text-fg-secondary whitespace-nowrap"
+                      dateTime={e.createdAt.toISOString()}
+                    >
+                      {e.createdAt.toISOString().replace("T", " ").slice(0, 19)}{" "}
+                      UTC
                     </time>
                   </div>
-                  <div className="mt-1 text-xs text-gray-500 font-mono">
+                  <div className="mt-1 text-xs text-fg-secondary font-mono">
                     {e.subjectType}:{e.subjectId}
                   </div>
-                  <pre className="mt-2 p-2 rounded-md bg-gray-50 border border-gray-100 text-xs font-mono whitespace-pre-wrap break-all text-gray-700">
+                  <pre className="mt-2 p-2 rounded-md bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
                     {JSON.stringify(e.payload, null, 2)}
                   </pre>
                 </li>

@@ -12,14 +12,21 @@ export const dynamic = "force-dynamic";
  */
 export default async function DashboardOverview() {
   let org = null;
-  let session: { id: string; status: string; proposalTitle: string; outcome: string | null } | null = null;
+  let session: {
+    id: string;
+    status: string;
+    proposalTitle: string;
+    outcome: string | null;
+  } | null = null;
   let tallyLine: string | null = null;
   let treasuryLine = "No treasury source registered yet.";
   let events: { id: string; eventType: string; createdAt: Date }[] = [];
   let dbError = false;
 
   try {
-    org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
+    org = await prisma.organization.findFirst({
+      orderBy: { createdAt: "asc" },
+    });
     const s = await prisma.votingSession.findFirst({
       orderBy: { opensAt: "desc" },
       include: { proposal: true },
@@ -57,8 +64,9 @@ export default async function DashboardOverview() {
     return (
       <main className="space-y-6">
         <h1 className="text-3xl font-bold text-navy">Overview</h1>
-        <p className="text-slate-600">
-          The governance register is currently unreachable. No live data can be shown.
+        <p className="text-fg-secondary">
+          The governance register is currently unreachable. No live data can be
+          shown.
         </p>
       </main>
     );
@@ -70,54 +78,60 @@ export default async function DashboardOverview() {
         {org ? `${org.name} — Overview` : "Overview"}
       </h1>
       {!org && (
-        <p className="text-slate-600">
-          No organization is registered yet. Once one exists, its votes, treasury, and audit
-          trail appear here.
+        <p className="text-fg-secondary">
+          No organization is registered yet. Once one exists, its votes,
+          treasury, and audit trail appear here.
         </p>
       )}
       {org && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/dashboard/voting"
-            className="block rounded-lg border border-gray-200 p-5 hover:border-navy transition-colors"
+            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
           >
-            <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Latest vote
             </div>
             {session ? (
               <>
-                <div className="font-semibold text-navy">{session.proposalTitle}</div>
-                <div className="mt-1 text-sm text-slate-600">
+                <div className="font-semibold text-navy">
+                  {session.proposalTitle}
+                </div>
+                <div className="mt-1 text-sm text-fg-secondary">
                   {session.outcome ?? session.status}
                   {tallyLine ? ` · ${tallyLine}` : ""}
                 </div>
               </>
             ) : (
-              <div className="text-sm text-slate-600">No voting session opened yet.</div>
+              <div className="text-sm text-fg-secondary">
+                No voting session opened yet.
+              </div>
             )}
           </Link>
 
           <Link
             href="/dashboard/treasury"
-            className="block rounded-lg border border-gray-200 p-5 hover:border-navy transition-colors"
+            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
           >
-            <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Treasury
             </div>
-            <div className="text-sm text-slate-600">{treasuryLine}</div>
+            <div className="text-sm text-fg-secondary">{treasuryLine}</div>
           </Link>
 
           <Link
             href="/governance/audit"
-            className="block rounded-lg border border-gray-200 p-5 hover:border-navy transition-colors"
+            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
           >
-            <div className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Recent activity
             </div>
             {events.length === 0 ? (
-              <div className="text-sm text-slate-600">No audit events yet.</div>
+              <div className="text-sm text-fg-secondary">
+                No audit events yet.
+              </div>
             ) : (
-              <ul className="space-y-1 text-sm text-slate-600">
+              <ul className="space-y-1 text-sm text-fg-secondary">
                 {events.map((e) => (
                   <li key={e.id} className="truncate">
                     {e.eventType.toLowerCase().replace(/_/g, " ")} ·{" "}

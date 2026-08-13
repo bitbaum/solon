@@ -24,7 +24,10 @@ interface VoteVerdict {
  * Bitcoin Core `signmessage`) and pastes the signature here. The server
  * verifies it; nothing is stored on failure and the verdict is shown as-is.
  */
-export default function VotingInterface({ session, tally }: VotingInterfaceProps) {
+export default function VotingInterface({
+  session,
+  tally,
+}: VotingInterfaceProps) {
   const [choice, setChoice] = useState<Choice>("yes");
   const [address, setAddress] = useState("");
   const [signature, setSignature] = useState("");
@@ -51,7 +54,11 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
       });
       setVerdict(await res.json());
     } catch {
-      setVerdict({ stored: false, verified: false, reason: "network error — vote not submitted" });
+      setVerdict({
+        stored: false,
+        verified: false,
+        reason: "network error — vote not submitted",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -62,15 +69,17 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
       <header className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-navy">{session.title}</h2>
-          <p className="text-sm text-gray-600">{session.rules}</p>
+          <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
-        <div className="text-right text-sm text-gray-600">Session: {session.status}</div>
+        <div className="text-right text-sm text-fg-secondary">
+          Session: {session.status}
+        </div>
       </header>
 
       {!isOpen && (
-        <div className="rounded-lg border border-gray-200 p-4 bg-gray-50 text-sm text-gray-700">
-          This session is closed — votes are no longer accepted. The final tally is below, and
-          the full signed record is published as a{" "}
+        <div className="rounded-lg border border-default p-4 bg-surface-raised text-sm text-fg-primary">
+          This session is closed — votes are no longer accepted. The final tally
+          is below, and the full signed record is published as a{" "}
           <a
             href={`/api/v1/decisions/${session.id}`}
             className="font-semibold text-solon-orange hover:text-solon-orange-dark"
@@ -82,119 +91,139 @@ export default function VotingInterface({ session, tally }: VotingInterfaceProps
       )}
 
       {isOpen && (
-      <div className="rounded-lg border border-gray-200 p-4 bg-gray-50 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="vote-address">
-            Your Bitcoin address (registered member)
-          </label>
-          <input
-            id="vote-address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value.trim())}
-            placeholder="1..."
-            className="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 font-mono text-sm"
-          />
-        </div>
-
-        <div>
-          <span className="block text-sm font-medium text-gray-700">Your choice</span>
-          <div className="mt-1 flex gap-3">
-            {CHOICES.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setChoice(c)}
-                className={`px-4 py-2 rounded-md border transition-colors ${
-                  choice === c
-                    ? "border-navy bg-navy text-white"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {c.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {message && (
+        <div className="rounded-lg border border-default p-4 bg-surface-raised space-y-4">
           <div>
-            <div className="flex items-center justify-between">
-              <span className="block text-sm font-medium text-gray-700">
-                Sign exactly this message with your wallet
-              </span>
-              <button
-                type="button"
-                className="text-xs text-navy underline"
-                onClick={async () => {
-                  await navigator.clipboard.writeText(message);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-              >
-                {copied ? "Copied" : "Copy message"}
-              </button>
+            <label
+              className="block text-sm font-medium text-fg-primary"
+              htmlFor="vote-address"
+            >
+              Your Bitcoin address (registered member)
+            </label>
+            <input
+              id="vote-address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value.trim())}
+              placeholder="1..."
+              className="mt-1 w-full px-3 py-2 rounded-md border border-default font-mono text-sm"
+            />
+          </div>
+
+          <div>
+            <span className="block text-sm font-medium text-fg-primary">
+              Your choice
+            </span>
+            <div className="mt-1 flex gap-3">
+              {CHOICES.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setChoice(c)}
+                  className={`px-4 py-2 rounded-md border transition-colors ${
+                    choice === c
+                      ? "border-navy bg-navy text-white"
+                      : "border-default bg-surface-base text-fg-primary hover:bg-surface-raised"
+                  }`}
+                >
+                  {c.toUpperCase()}
+                </button>
+              ))}
             </div>
-            <pre className="mt-1 p-3 rounded-md bg-white border border-gray-300 text-xs font-mono whitespace-pre-wrap break-all">
-              {message}
-            </pre>
           </div>
-        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="vote-signature">
-            Signature (base64, from your wallet&apos;s Sign Message tool)
-          </label>
-          <textarea
-            id="vote-signature"
-            value={signature}
-            onChange={(e) => setSignature(e.target.value.trim())}
-            rows={3}
-            className="mt-1 w-full px-3 py-2 rounded-md border border-gray-300 font-mono text-xs"
-          />
-        </div>
+          {message && (
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="block text-sm font-medium text-fg-primary">
+                  Sign exactly this message with your wallet
+                </span>
+                <button
+                  type="button"
+                  className="text-xs text-navy underline"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(message);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                >
+                  {copied ? "Copied" : "Copy message"}
+                </button>
+              </div>
+              <pre className="mt-1 p-3 rounded-md bg-surface-base border border-default text-xs font-mono whitespace-pre-wrap break-all">
+                {message}
+              </pre>
+            </div>
+          )}
 
-        <button
-          type="button"
-          disabled={submitting || !address || !signature}
-          onClick={submit}
-          className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {submitting ? "Verifying signature…" : "Submit signed vote"}
-        </button>
+          <div>
+            <label
+              className="block text-sm font-medium text-fg-primary"
+              htmlFor="vote-signature"
+            >
+              Signature (base64, from your wallet&apos;s Sign Message tool)
+            </label>
+            <textarea
+              id="vote-signature"
+              value={signature}
+              onChange={(e) => setSignature(e.target.value.trim())}
+              rows={3}
+              className="mt-1 w-full px-3 py-2 rounded-md border border-default font-mono text-xs"
+            />
+          </div>
 
-        {verdict && (
-          <div
-            className={`rounded-md p-3 text-sm ${
-              verdict.stored
-                ? "bg-green-50 text-green-800 border border-green-200"
-                : "bg-red-50 text-red-800 border border-red-200"
-            }`}
+          <button
+            type="button"
+            disabled={submitting || !address || !signature}
+            onClick={submit}
+            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {verdict.stored
-              ? "Vote verified and recorded."
-              : `Vote rejected: ${verdict.reason ?? "signature did not verify"}`}
-          </div>
-        )}
-      </div>
+            {submitting ? "Verifying signature…" : "Submit signed vote"}
+          </button>
+
+          {verdict && (
+            <div
+              className={`rounded-md p-3 text-sm ${
+                verdict.stored
+                  ? "bg-green-50 text-green-800 border border-green-200"
+                  : "bg-red-50 text-red-800 border border-red-200"
+              }`}
+            >
+              {verdict.stored
+                ? "Vote verified and recorded."
+                : `Vote rejected: ${verdict.reason ?? "signature did not verify"}`}
+            </div>
+          )}
+        </div>
       )}
 
-      <div className="rounded-lg border border-gray-200 p-4 bg-gray-50">
+      <div className="rounded-lg border border-default p-4 bg-surface-raised">
         <h3 className="font-semibold text-navy">Tally (weighted)</h3>
         <div className="mt-2 grid grid-cols-3 gap-4 text-center">
           <Tally label="YES" value={liveTally.yes} color="text-green-600" />
           <Tally label="NO" value={liveTally.no} color="text-red-600" />
-          <Tally label="ABSTAIN" value={liveTally.abstain} color="text-amber-600" />
+          <Tally
+            label="ABSTAIN"
+            value={liveTally.abstain}
+            color="text-amber-600"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-function Tally({ label, value, color }: { label: string; value: number; color: string }) {
+function Tally({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
   return (
     <div>
       <div className={`text-xl font-bold ${color}`}>{value}</div>
-      <div className="text-xs text-gray-600">{label}</div>
+      <div className="text-xs text-fg-secondary">{label}</div>
     </div>
   );
 }

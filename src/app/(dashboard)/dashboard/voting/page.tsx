@@ -20,8 +20,9 @@ export default async function VotingPage() {
     return (
       <main className="space-y-6">
         <h1 className="text-3xl font-bold">Voting</h1>
-        <p className="text-slate-600">
-          The voting register is currently unreachable. No session data can be shown.
+        <p className="text-fg-secondary">
+          The voting register is currently unreachable. No session data can be
+          shown.
         </p>
       </main>
     );
@@ -31,9 +32,10 @@ export default async function VotingPage() {
     return (
       <main className="space-y-6">
         <h1 className="text-3xl font-bold">Voting</h1>
-        <p className="text-slate-600">
-          No voting session has been opened yet. When one opens, registered members vote
-          here by signing the canonical vote message with their own Bitcoin wallet.
+        <p className="text-fg-secondary">
+          No voting session has been opened yet. When one opens, registered
+          members vote here by signing the canonical vote message with their own
+          Bitcoin wallet.
         </p>
       </main>
     );
