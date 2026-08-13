@@ -9,7 +9,13 @@
  * Usage:
  *   npx tsx scripts/add-member.ts --org orangecat --name "George" \
  *     --type HUMAN --address <bitcoin-address> [--pubkey <hex>] \
- *     [--system orangecat:cat] [--weight 1] [--mint-key]
+ *     [--system orangecat:cat] [--weight 1] [--mint-key] \
+ *     [--oc-actor <orangecat-actor-uuid>]
+ *
+ * --oc-actor (humans only) links the member to an OrangeCat identity so
+ * "Sign in with OrangeCat" recognizes them. The actor id is shown on
+ * /account after the person signs in — recognition only; voting authority
+ * stays with the Bitcoin key regardless.
  *
  * --mint-key (agents only) generates a transport API key, stores its sha256,
  * and prints the plaintext ONCE — it is never stored or shown again.
@@ -29,6 +35,7 @@ const { values } = parseArgs({
     system: { type: "string" },
     weight: { type: "string", default: "1" },
     "mint-key": { type: "boolean", default: false },
+    "oc-actor": { type: "string" },
   },
 });
 
@@ -44,6 +51,10 @@ async function main() {
   }
   if (type === "AGENT" && !values.system) {
     console.error("agents need --system (e.g. orangecat:cat) — which system attests this member's votes");
+    process.exit(1);
+  }
+  if (type === "AGENT" && values["oc-actor"]) {
+    console.error("--oc-actor is for HUMAN members only — agents are recognized by their API key, not a login");
     process.exit(1);
   }
 
@@ -73,6 +84,7 @@ async function main() {
         publicKeyHex: values.pubkey ?? null,
         votingWeight: values.weight,
         system: values.system ?? null,
+        ocActorId: values["oc-actor"] ?? null,
       },
     });
     await tx.auditEvent.create({
@@ -86,6 +98,7 @@ async function main() {
           memberType: type,
           bitcoinAddress: address,
           ...(values.system ? { system: values.system } : {}),
+          ...(values["oc-actor"] ? { ocActorId: values["oc-actor"] } : {}),
           note: "operator bootstrap — roster changes after genesis go through MEMBERSHIP votes",
         },
       },

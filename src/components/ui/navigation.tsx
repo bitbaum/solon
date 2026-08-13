@@ -4,12 +4,13 @@ import { useState } from "react";
 import Logo from "./logo";
 import Link from "next/link";
 import { NAV_ITEMS } from "@/lib/site-config";
+import AuthControl from "./auth-control";
 
-// Structure and copy both come from the site-config SSOT. There is no
-// authentication in the product, so the header offers the dashboard
-// directly instead of pretending to have a sign-in.
+// Structure and copy both come from the site-config SSOT. Sign-in is
+// recognition only (one provider: OrangeCat, the stack's identity root) —
+// every page and vote works without it, so nothing here is gated on it.
 
-export default function Navigation() {
+export default function Navigation({ authEnabled = false }: { authEnabled?: boolean }) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -113,6 +114,7 @@ export default function Navigation() {
 
           {/* CTA */}
           <div className="hidden lg:flex items-center space-x-3">
+            {authEnabled && <AuthControl />}
             <Link
               href="/ecosystem"
               className="px-4 py-2 text-sm font-medium text-navy hover:text-navy-light transition-colors"
@@ -180,7 +182,8 @@ export default function Navigation() {
                 )}
               </div>
             ))}
-            <div className="border-t border-default pt-2 mt-2">
+            <div className="border-t border-default pt-2 mt-2 space-y-1">
+              {authEnabled && <AuthControl compact />}
               <Link
                 href="/dashboard"
                 className="block px-3 py-2 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light"
