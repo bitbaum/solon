@@ -43,7 +43,9 @@ export default async function EcosystemPage() {
   let dbError = false;
 
   try {
-    org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
+    org = await prisma.organization.findFirst({
+      orderBy: { createdAt: "asc" },
+    });
     if (org) {
       [members, policies, proposals] = await Promise.all([
         prisma.member.findMany({
@@ -100,10 +102,10 @@ export default async function EcosystemPage() {
           {ECOSYSTEM_PILLARS.map((pillar) => (
             <div
               key={pillar.key}
-              className={`rounded-xl border shadow-sm p-6 flex flex-col gap-3 ${
+              className={`rounded-md border shadow-sm p-6 flex flex-col gap-3 ${
                 pillar.key === "solon"
                   ? "bg-navy border-navy text-white"
-                  : "bg-white border-gray-200"
+                  : "bg-surface-base border-default"
               }`}
             >
               <div className="flex items-baseline justify-between gap-2">
@@ -118,7 +120,7 @@ export default async function EcosystemPage() {
                   className={`text-xs font-semibold uppercase tracking-wide ${
                     pillar.key === "solon"
                       ? "text-solon-orange"
-                      : "text-gray-500"
+                      : "text-fg-secondary"
                   }`}
                 >
                   {pillar.role}
@@ -126,21 +128,25 @@ export default async function EcosystemPage() {
               </div>
               <p
                 className={`text-sm ${
-                  pillar.key === "solon" ? "text-slate-300" : "text-gray-600"
+                  pillar.key === "solon"
+                    ? "text-on-brand-muted"
+                    : "text-fg-secondary"
                 }`}
               >
                 {pillar.description}
               </p>
               <p
                 className={`text-sm ${
-                  pillar.key === "solon" ? "text-slate-300" : "text-gray-600"
+                  pillar.key === "solon"
+                    ? "text-on-brand-muted"
+                    : "text-fg-secondary"
                 }`}
               >
                 {pillar.tie}
               </p>
               <div className="mt-auto pt-2">
                 {pillar.key === "solon" ? (
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-on-brand-muted">
                     You are here — {pillar.url.replace("https://", "")}
                   </span>
                 ) : (
@@ -163,7 +169,7 @@ export default async function EcosystemPage() {
           <h2 className="text-2xl font-bold text-navy text-center mb-6">
             How a decision travels
           </h2>
-          <ol className="space-y-3 text-sm text-gray-700">
+          <ol className="space-y-3 text-sm text-fg-primary">
             {[
               "A member — human, the Cat, or Loki — files a proposal, signed with their own Bitcoin key. Solon never holds anyone's private key.",
               "A voting session opens and snapshots its rules: electorate, threshold, quorum, eligible weight. A past decision stays explainable after the rules change.",
@@ -172,7 +178,10 @@ export default async function EcosystemPage() {
               "The decision is published as a self-verifying document (/api/v1/decisions/{sessionId}) carrying every signed message, so anyone can recount the tally.",
               "OrangeCat and FleetCrown are notified — and OrangeCat re-verifies every vote signature against its own pinned keys before acting. A decision is evidence, not authority.",
             ].map((step, i) => (
-              <li key={i} className="flex gap-3 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+              <li
+                key={i}
+                className="flex gap-3 bg-surface-base rounded-md border border-default shadow-sm p-4"
+              >
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-solon-orange text-white text-xs font-bold flex items-center justify-center">
                   {i + 1}
                 </span>
@@ -180,10 +189,13 @@ export default async function EcosystemPage() {
               </li>
             ))}
           </ol>
-          <p className="mt-4 text-sm text-gray-600 text-center">
-            Red lines: {humansOnlyCategories.map((c) => CATEGORY_LABEL[c].toLowerCase()).join(", ")}{" "}
-            are decided by humans only. Agents propose anywhere, but can never vote to expand their
-            own suffrage.
+          <p className="mt-4 text-sm text-fg-secondary text-center">
+            Red lines:{" "}
+            {humansOnlyCategories
+              .map((c) => CATEGORY_LABEL[c].toLowerCase())
+              .join(", ")}{" "}
+            are decided by humans only. Agents propose anywhere, but can never
+            vote to expand their own suffrage.
           </p>
         </section>
 
@@ -193,20 +205,22 @@ export default async function EcosystemPage() {
             What is governed here, live
           </h2>
           {dbError && (
-            <p className="text-center text-gray-600">
-              The governance register is currently unreachable, so no live state can be shown.
+            <p className="text-center text-fg-secondary">
+              The governance register is currently unreachable, so no live state
+              can be shown.
             </p>
           )}
           {!dbError && !org && (
-            <p className="text-center text-gray-600">
-              No organization is registered yet — there is nothing governed to show.
+            <p className="text-center text-fg-secondary">
+              No organization is registered yet — there is nothing governed to
+              show.
             </p>
           )}
           {org && (
             <>
-              <p className="text-sm text-gray-600 text-center">
-                Everything below is read from the same database the public API serves — nothing is
-                staged.
+              <p className="text-sm text-fg-secondary text-center">
+                Everything below is read from the same database the public API
+                serves — nothing is staged.
               </p>
 
               <div>
@@ -215,15 +229,20 @@ export default async function EcosystemPage() {
                 </h3>
                 <ul className="space-y-3">
                   {members.map((m) => (
-                    <li key={m.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <li
+                      key={m.id}
+                      className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                    >
                       <div className="flex items-baseline justify-between gap-4">
-                        <span className="font-semibold text-navy">{m.displayName}</span>
-                        <span className="text-xs text-gray-500 uppercase tracking-wide">
+                        <span className="font-semibold text-navy">
+                          {m.displayName}
+                        </span>
+                        <span className="text-xs text-fg-secondary uppercase tracking-wide">
                           {m.memberType}
                           {m.system ? ` · ${m.system}` : ""} · {m.status}
                         </span>
                       </div>
-                      <div className="mt-1 text-xs text-gray-500 font-mono break-all">
+                      <div className="mt-1 text-xs text-fg-secondary font-mono break-all">
                         {m.bitcoinAddress}
                       </div>
                     </li>
@@ -232,23 +251,29 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-navy mb-3">Active policies</h3>
+                <h3 className="text-lg font-semibold text-navy mb-3">
+                  Active policies
+                </h3>
                 {policies.length === 0 ? (
-                  <p className="text-sm text-gray-600">No active policies.</p>
+                  <p className="text-sm text-fg-secondary">
+                    No active policies.
+                  </p>
                 ) : (
                   <ul className="space-y-3">
                     {policies.map((p) => (
                       <li
                         key={`${p.key}-v${p.version}`}
-                        className="bg-white rounded-xl border border-gray-200 shadow-sm p-4"
+                        className="bg-surface-base rounded-md border border-default shadow-sm p-4"
                       >
                         <div className="flex items-baseline justify-between gap-4">
                           <span className="font-semibold text-navy font-mono text-sm">
                             {p.key}
                           </span>
-                          <span className="text-xs text-gray-500">v{p.version}</span>
+                          <span className="text-xs text-fg-secondary">
+                            v{p.version}
+                          </span>
                         </div>
-                        <pre className="mt-2 p-2 rounded-md bg-gray-50 border border-gray-100 text-xs font-mono whitespace-pre-wrap break-all text-gray-700">
+                        <pre className="mt-2 p-2 rounded-md bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
                           {JSON.stringify(p.content, null, 2)}
                         </pre>
                       </li>
@@ -258,18 +283,27 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-navy mb-3">Recent proposals</h3>
+                <h3 className="text-lg font-semibold text-navy mb-3">
+                  Recent proposals
+                </h3>
                 {proposals.length === 0 ? (
-                  <p className="text-sm text-gray-600">No proposals yet.</p>
+                  <p className="text-sm text-fg-secondary">No proposals yet.</p>
                 ) : (
                   <ul className="space-y-3">
                     {proposals.map((p) => (
-                      <li key={p.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                      <li
+                        key={p.id}
+                        className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                      >
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-navy">{p.title}</span>
-                          <span className="text-xs text-gray-500 whitespace-nowrap">
+                          <span className="font-semibold text-navy">
+                            {p.title}
+                          </span>
+                          <span className="text-xs text-fg-secondary whitespace-nowrap">
                             {CATEGORY_LABEL[p.category]} ·{" "}
-                            {p.session?.outcome ?? p.session?.status ?? p.status}
+                            {p.session?.outcome ??
+                              p.session?.status ??
+                              p.status}
                           </span>
                         </div>
                         {p.session?.outcome && (

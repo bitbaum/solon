@@ -1,6 +1,6 @@
-import PageLayout from '@/components/ui/page-layout';
-import { ECOSYSTEM_PILLARS } from '@/lib/config/ecosystem';
-import { Eye, Vote, Bitcoin, Github } from 'lucide-react';
+import PageLayout from "@/components/ui/page-layout";
+import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
+import { Eye, Vote, Bitcoin, Github } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -9,23 +9,25 @@ export default function AboutPage() {
       description="Governance you can verify instead of trust — built in the open, governed in the open"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-
         {/* Mission Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-navy mb-6">Why Solon exists</h2>
-          <div className="prose prose-lg text-gray-700">
+        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8 mb-8">
+          <h2 className="text-2xl font-bold text-navy mb-6">
+            Why Solon exists
+          </h2>
+          <div className="prose prose-lg text-fg-primary">
             <p className="mb-4">
-              Most governance runs on trust: trust the treasurer, trust the minutes, trust that the
-              vote was counted. Solon replaces that trust with verification. Votes are Bitcoin
-              signed messages anyone can re-check. Decisions are published as self-verifying
-              documents. The audit trail is append-only. The treasury is watch-only — Solon never
-              holds keys or funds.
+              Most governance runs on trust: trust the treasurer, trust the
+              minutes, trust that the vote was counted. Solon replaces that
+              trust with verification. Votes are Bitcoin signed messages anyone
+              can re-check. Decisions are published as self-verifying documents.
+              The audit trail is append-only. The treasury is watch-only — Solon
+              never holds keys or funds.
             </p>
             <p>
-              Solon is the governance pillar of a three-product stack, and it practices what it
-              ships: its first production organization governs the stack itself, with AI agents
-              from the sibling products registered as voting members and humans holding the red
-              lines.
+              Solon is the governance pillar of a three-product stack, and it
+              practices what it ships: its first production organization governs
+              the stack itself, with AI agents from the sibling products
+              registered as voting members and humans holding the red lines.
             </p>
           </div>
         </div>
@@ -50,18 +52,19 @@ export default function AboutPage() {
         </div>
 
         {/* Who runs it — the real, running answer */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8">
           <h2 className="text-2xl font-bold text-navy mb-4">Who runs it</h2>
-          <p className="text-gray-700 mb-6">
-            Solon is operated as part of the OrangeCat stack and governed on its own rails. The
-            current voting members — including the sibling products&apos; agents, The Cat and Loki —
-            and every policy they govern are public on the ecosystem page.
+          <p className="text-fg-primary mb-6">
+            Solon is operated as part of the OrangeCat stack and governed on its
+            own rails. The current voting members — including the sibling
+            products&apos; agents, The Cat and Loki — and every policy they
+            govern are public on the ecosystem page.
           </p>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-fg-secondary">
             {ECOSYSTEM_PILLARS.map((p) => (
               <li key={p.key}>
                 <span className="font-semibold text-navy">{p.name}</span>
-                <span className="text-gray-500"> — {p.role}. </span>
+                <span className="text-fg-secondary"> — {p.role}. </span>
                 {p.description}
               </li>
             ))}
@@ -70,15 +73,16 @@ export default function AboutPage() {
 
         {/* CTA — real destinations only */}
         <div className="text-center mt-12">
-          <div className="bg-navy text-white p-8 rounded-xl">
+          <div className="bg-navy text-white p-8 rounded-md">
             <h3 className="text-2xl font-bold mb-4">See it running</h3>
-            <p className="text-gray-300 mb-6">
-              The live governed state — members, policies, decisions — is public. So is the code.
+            <p className="text-on-brand-muted mb-6">
+              The live governed state — members, policies, decisions — is
+              public. So is the code.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/ecosystem"
-                className="bg-white text-navy px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="bg-surface-base text-navy px-8 py-3 rounded-lg hover:bg-surface-raised transition-colors font-semibold"
               >
                 Live governed state
               </a>
@@ -86,7 +90,7 @@ export default function AboutPage() {
                 href="https://github.com/maonakamoto/solon"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-gray-400 text-white px-8 py-3 rounded-lg hover:bg-white/10 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+                className="border border-default text-white px-8 py-3 rounded-lg hover:bg-on-brand/10 transition-colors font-semibold inline-flex items-center justify-center gap-2"
               >
                 <Github className="w-4 h-4" /> Source code
               </a>
@@ -98,16 +102,20 @@ export default function AboutPage() {
   );
 }
 
-function PrincipleCard({ title, description, icon }: {
+function PrincipleCard({
+  title,
+  description,
+  icon,
+}: {
   title: string;
   description: string;
   icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <div className="bg-surface-base p-6 rounded-md shadow-sm border border-default">
       <div className="mb-4">{icon}</div>
       <h3 className="text-xl font-bold text-navy mb-3">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+      <p className="text-fg-secondary">{description}</p>
     </div>
   );
 }

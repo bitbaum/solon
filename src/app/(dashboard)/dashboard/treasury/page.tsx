@@ -8,7 +8,9 @@ export default async function TreasuryPage() {
   let org = null;
   let dbError = false;
   try {
-    org = await prisma.organization.findFirst({ orderBy: { createdAt: "asc" } });
+    org = await prisma.organization.findFirst({
+      orderBy: { createdAt: "asc" },
+    });
   } catch {
     dbError = true;
   }
@@ -17,7 +19,7 @@ export default async function TreasuryPage() {
     return (
       <main className="space-y-6">
         <h1 className="text-3xl font-bold">Treasury</h1>
-        <p className="text-slate-600">
+        <p className="text-fg-secondary">
           {dbError
             ? "The treasury register is currently unreachable. No balance can be shown."
             : "No organization is registered yet, so there is no treasury to show."}

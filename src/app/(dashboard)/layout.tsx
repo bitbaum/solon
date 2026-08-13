@@ -9,12 +9,16 @@ const TABS = [
   { title: "Voting", href: "/dashboard/voting" },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
     <div className="py-8 space-y-8">
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="bg-surface-base border border-default rounded-lg shadow-sm">
         <nav className="flex gap-1 p-1" aria-label="Dashboard sections">
           {TABS.map((tab) => {
             const active = pathname === tab.href;
@@ -25,8 +29,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 aria-current={active ? "page" : undefined}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   active
-                    ? "bg-solon-light text-navy ring-1 ring-gray-200"
-                    : "text-gray-700 hover:text-navy hover:bg-gray-50"
+                    ? "bg-surface-raised text-navy ring-1 ring-default"
+                    : "text-fg-primary hover:text-navy hover:bg-surface-raised"
                 }`}
               >
                 {tab.title}
@@ -35,7 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
       </div>
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+      <div className="bg-surface-base border border-default rounded-lg shadow-sm p-6">
         {children}
       </div>
     </div>
