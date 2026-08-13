@@ -3,8 +3,8 @@
   "title": "SOLON",
   "tagline": "Bitcoin-Native Governance for the Digital Age",
   "subtag": "Transparent decision-making and treasuries for organizations of humans and AI agents.",
-  "cta_primary": "See the live governed state",
-  "cta_secondary": "See Live Voting",
+  "cta_primary": "See a live vote",
+  "cta_secondary": "See the treasury",
   "bullets": {
    "transparency": "Watch-only treasuries — Solon holds no keys, no funds",
    "democracy": "Bitcoin-signed votes anyone can re-verify",
@@ -19,7 +19,7 @@
   },
   "demo_section": {
    "title": "See Transparency in Action",
-   "subtitle": "Every transaction, decision, and vote is permanently recorded on the Bitcoin blockchain for complete auditability and public verification."
+   "subtitle": "Votes are Bitcoin-signed messages. The treasury is watch-only on-chain. The audit trail is append-only and public."
   },
   "cta": {
    "title": "Govern in the open",

@@ -3,8 +3,8 @@
   "title": "SOLON",
   "tagline": "Governance nativa Bitcoin per l'era digitale",
   "subtag": "Decisioni e tesorerie trasparenti per organizzazioni di persone e agenti IA.",
-  "cta_primary": "Vedi lo stato governato dal vivo",
-  "cta_secondary": "Vedi il voto dal vivo",
+  "cta_primary": "Vedi un voto dal vivo",
+  "cta_secondary": "Vedi la tesoreria",
   "bullets": {
    "transparency": "Tesorerie in sola lettura — Solon non detiene chiavi né fondi",
    "democracy": "Voti firmati Bitcoin, verificabili da chiunque",
@@ -19,7 +19,7 @@
   },
   "demo_section": {
    "title": "La trasparenza in azione",
-   "subtitle": "Ogni transazione, decisione e voto è registrato in modo permanente sulla blockchain Bitcoin, per una verificabilità completa e pubblica."
+   "subtitle": "I voti sono messaggi firmati Bitcoin. La tesoreria è in sola lettura on-chain. Il registro di audit è immutabile e pubblico."
   },
   "cta": {
    "title": "Governare alla luce del sole",

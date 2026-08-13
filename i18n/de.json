@@ -3,8 +3,8 @@
   "title": "SOLON",
   "tagline": "Bitcoin-native Governance für das digitale Zeitalter",
   "subtag": "Transparente Entscheidungen und Schatzkammern für Organisationen aus Menschen und KI-Agenten.",
-  "cta_primary": "Live-Governance ansehen",
-  "cta_secondary": "Live-Abstimmung ansehen",
+  "cta_primary": "Live-Abstimmung ansehen",
+  "cta_secondary": "Schatzkammer ansehen",
   "bullets": {
    "transparency": "Watch-only-Schatzkammern — Solon hält keine Schlüssel, keine Gelder",
    "democracy": "Bitcoin-signierte Stimmen, von jedem überprüfbar",
@@ -19,7 +19,7 @@
   },
   "demo_section": {
    "title": "Transparenz in Aktion",
-   "subtitle": "Jede Transaktion, Entscheidung und Abstimmung wird dauerhaft auf der Bitcoin-Blockchain festgehalten — vollständig prüfbar und öffentlich verifizierbar."
+   "subtitle": "Stimmen sind Bitcoin-signierte Nachrichten. Die Schatzkammer ist watch-only on-chain. Das Audit-Protokoll ist unveränderlich und öffentlich."
   },
   "cta": {
    "title": "Regieren im Offenen",
