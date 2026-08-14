@@ -45,12 +45,13 @@ Critical: All navigation links must work!
 
 ```javascript
 // tests/puppeteer/mega-menu.mjs
-// Tests every link in the mega menu:
-// - Platform: Overview, Features, Security, Integration
-// - Governance: Voting, Decisions, Transparency, Audit
-// - Treasury: Bitcoin, Transactions, Budget, Reports
-// - Marketplace: Services, Procurement, Vendors, Contracts
-// - Resources: Docs, About, Support, Contact
+// Tests every link in the mega menu. Sections come from src/lib/site-config.ts
+// (NAV_ITEMS) — read it rather than trusting this list:
+// - Platform:   Overview, Features, Security, Integration
+// - Governance: Voting System, Audit Trail
+// - Treasury:   Bitcoin Treasury
+// - Ecosystem:  Three Pillars, OrangeCat, FleetCrown
+// - About
 ```
 
 ## Test Coverage

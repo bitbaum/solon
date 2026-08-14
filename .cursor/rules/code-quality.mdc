@@ -35,35 +35,33 @@ Next.js 14 Bitcoin governance platform:
 
 ## Design System
 
-Use consistent colors:
-```typescript
-// Tailwind classes
-className="bg-navy text-solon-orange"
-className="border-bitcoin-orange"
+Tokens live in `src/app/globals.css` and nowhere else. Solon shares OrangeCat's
+token names and values and is dark-only. `npm run design:check` (part of
+`verify`) fails the build on violations — see `docs/development/ui-guidelines.md`.
 
+```tsx
+// Semantic tokens
+className="bg-surface-raised text-fg-primary border-default rounded-surface"
+
+// NOT the deleted navy palette — these fail the build
+className="bg-navy text-solon-orange"   // Wrong
 // NOT arbitrary values
-className="bg-[#1e293b]"  // Wrong
+className="bg-[#1e293b]"                // Wrong
+// NOT Tailwind greys or drop shadows
+className="bg-slate-800 shadow-lg"      // Wrong
 ```
 
 ## TypeScript Standards
 
-```typescript
-// Explicit types for Bitcoin amounts
-interface Transaction {
-  id: string;
-  amount: number; // BTC (not satoshis in UI)
-  timestamp: Date;
-  signature: string;
-}
+Derive types from the Prisma schema — never redeclare a model by hand:
 
-// Voting with cryptographic proof
-interface Vote {
-  sessionId: string;
-  choice: string;
-  signature: string;
-  publicKey: string;
-}
+```typescript
+import type { Vote, Proposal, TreasurySource } from '@prisma/client';
 ```
+
+There is **no transaction model**. The treasury is watch-only: a
+`TreasurySource` is a label plus an address, and balances are read from a
+mempool API at request time. Do not add amount fields to it.
 
 ## API Security
 

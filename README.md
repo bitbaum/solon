@@ -1,16 +1,19 @@
 # Solon
 
-Bitcoin-native governance for transparent treasury management and cryptographic democracy.
+Governance you can verify instead of trust — proposals, Bitcoin-signed votes,
+versioned policies and an append-only audit trail.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14-000000.svg)](https://nextjs.org/)
 
+Live at **[solon.orangecat.ch](https://solon.orangecat.ch)**.
+
 ---
 
 ## The Stack: Three Pillars
 
-Solon is the **governance pillar** of a three-product stack, live at [solon.orangecat.ch](https://solon.orangecat.ch):
+Solon is the **governance pillar** of a three-product stack:
 
 | Pillar | Product | Role |
 |---|---|---|
@@ -21,168 +24,157 @@ Solon is the **governance pillar** of a three-product stack, live at [solon.oran
 The ties are real, not marketing:
 
 - **OrangeCat's platform allocation policy is governed here.** The Cat's spending ceiling is a Solon policy; OrangeCat re-verifies every Bitcoin vote signature against its own pinned keys before honoring a decision (a Solon decision is evidence, not authority).
-- **Both sibling agents are voting members.** The Cat (`orangecat:cat`) and Loki (`fleetcrown:loki`) hold their own keys and cast Bitcoin signed-message votes via `scripts/agent-vote.ts`. Humans-only categories (membership, safety, aid, governance rules) are red lines agents cannot vote on.
+- **Both sibling agents are voting members.** The Cat (`orangecat:cat`) and Loki (`fleetcrown:loki`) hold their own keys and cast Bitcoin signed-message votes via `scripts/agent-vote.ts`.
 - **FleetCrown ships Solon.** `.github/workflows/deploy.yml` calls FleetCrown's shared `selfhost-deploy.yml`; a merge to `main` deploys to production.
-- **Decisions are self-verifying.** `GET /api/v1/decisions/{sessionId}` returns the full signed record so either sibling — or anyone — can recount the tally. See `/ecosystem` on the live site for the current governed state.
+- **Decisions are self-verifying.** `GET /api/v1/decisions/{sessionId}` returns the full signed record so either sibling — or anyone — can recount the tally.
 
-## What Solon Does
+## What Solon is
 
-- **Puts public finances on-chain.** Every treasury transaction is tracked against a multi-sig Bitcoin wallet. Amounts stored in satoshis as BigInt — no floating point, no rounding errors, no trust required.
-- **Makes decisions auditable.** Laws and governance decisions are cryptographically signed, linked to voting sessions, and tracked against measurable KPIs.
-- **Opens procurement to competition.** Service requests and bids live in the open. Vendor performance is scored, not assumed.
-- **Replaces trust with math.** Votes are signed with Bitcoin keys, verified cryptographically, and enforced as one-member-one-vote per session.
+A legislature for an economy that AI agents help run. It exists because
+"who counts as in need", "what is a fair allocation" and "what happens when aid
+is abused" are legitimacy questions, not engineering ones — and if an agent
+silently decides who eats, that is rule-by-algorithm.
 
-## Architecture
+Four properties do the work:
 
-Solon is built on four pillars. Each pillar maps to a domain in the codebase and a set of Prisma models that serve as the single source of truth.
+- **No keys, no custody.** Members sign votes with their own Bitcoin keys. The
+  treasury is **watch-only** — Solon stores addresses to observe, never funds or
+  keys. There is no code path that can spend.
+- **Verify, don't trust.** Every vote is a Bitcoin signed message. The full
+  signed record is published, so anyone can recount a tally independently rather
+  than believe the number Solon reports.
+- **Append-only record.** Audit events are never updated or deleted.
+- **Red lines agents cannot cross.** Some categories are constitutionally
+  humans-only (below).
 
-### The Four Pillars
+### Humans-only categories
 
-**1. Transparent Transaction System** — `prisma/schema.prisma: BitcoinTransaction, BudgetAllocation`
+`src/lib/config/governance.ts` maps every decision category to an electorate.
+Agents may vote on operational and policy matters; these four are `HUMANS_ONLY`
+and no agent key can be counted on them:
 
-All organizational finances route through Bitcoin. Organizations carry an `xpub` field for multi-sig wallet derivation. Budget allocations reference transactions by ID, creating an auditable chain from proposal to spend.
-
-**2. Law Transparency Framework** — `prisma/schema.prisma: Decision`
-
-Decisions link to the voting session that produced them. Each carries a `kpiTracking` JSON field for effectiveness measurement after passage. No decision exists without a recorded vote.
-
-**3. Open Service Marketplace** — `prisma/schema.prisma: ServiceRequest, ServiceBid`
-
-Procurement is open by default. Service requests publish requirements; bids compete on merit. Vendor performance feeds back into future evaluations.
-
-**4. Open Vote System** — `prisma/schema.prisma: VotingSession, Vote`
-
-Votes are cryptographically signed (`signature` field on Vote). One vote per member per session, enforced by a unique constraint on `[sessionId, memberId]`. Sessions support multiple mechanisms: `SIMPLE_MAJORITY`, `SUPERMAJORITY`, `CONSENSUS`, `RANKED_CHOICE`.
-
-### Schema as SSOT
-
-The Prisma schema defines 10 models. Types, validation, and API contracts derive from it — nothing is defined twice.
-
-```
-Organization  ── has many ──> Member
-     │                          │
-     ├── BitcoinTransaction     ├── Vote (signed, unique per session)
-     ├── BudgetAllocation       │
-     ├── VotingSession ─────────┘
-     ├── Decision (linked to VotingSession)
-     ├── ServiceRequest
-     └── ServiceBid
-```
-
-Key design decisions:
-- Organizations define a `governanceModel` enum: `DEMOCRATIC | CONSENSUS | DELEGATED`
-- Members carry `bitcoinAddress` and `votingWeight` (defaults to 1.0)
-- All monetary amounts are `BigInt` satoshis — `amountSats` on transactions, `allocatedSats` / `spentSats` on budgets
-
-### Transparency Engine
-
-A computation layer scores every organization across five dimensions (0-100 each):
-
-| Metric | What It Measures |
+| Category | Electorate |
 |---|---|
-| Financial Transparency | On-chain transaction coverage vs. total spend |
-| Decision Auditability | Percentage of decisions with linked voting sessions |
-| Participation Rate | Active voters vs. eligible members |
-| Corruption Risk | Inverse score — flags concentration of spending authority |
-| Cost Efficiency | Bid competitiveness and budget adherence |
+| `ALLOCATION_POLICY` | all members |
+| `TREASURY_SPEND` | all members |
+| `OPERATIONS` | all members |
+| `AID_DISBURSEMENT` | **humans only** |
+| `MEMBERSHIP` | **humans only** |
+| `SAFETY` | **humans only** |
+| `GOVERNANCE_RULES` | **humans only** |
 
-## Tech Stack
+## How a decision happens
+
+```
+Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──> CLOSED
+                                                                    │
+                                            Decision + Policy version, AuditEvent
+```
+
+1. A proposal is drafted against an organization and a decision category.
+2. Opening it creates a voting session; the category fixes the electorate.
+3. Members cast Bitcoin signed messages. One vote per member per session,
+   enforced by a unique constraint on `[sessionId, memberId]`.
+4. Closing tallies the result, writes the decision, versions the affected
+   policy, and appends an audit event.
+
+## Data model
+
+`prisma/schema.prisma` is the SSOT — **9 models**, with types, validation and API
+contracts derived from it.
+
+```
+Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
+     │                          │
+     ├── Proposal ──> VotingSession ──> Vote (signed, unique per session)
+     ├── Policy            (versioned; what a decision actually changes)
+     ├── TreasurySource    (watch-only address — label + address, nothing else)
+     ├── AuditEvent        (append-only)
+     └── AgentApiKey       (how a sibling agent authenticates)
+```
+
+Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
+`decision`, `treasury`, `canonical`) and stays free of HTTP and UI concerns.
+Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
+
+## API
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/api/orgs/{slug}` | Organization and its members |
+| `GET` | `/api/orgs/{slug}/audit` | Append-only audit trail |
+| `GET` | `/api/orgs/{slug}/policies/{key}` | Current policy version |
+| `GET` | `/api/orgs/{slug}/proposals` | Proposals for an organization |
+| `GET` | `/api/orgs/{slug}/treasury` | Watch-only treasury sources |
+| `POST` | `/api/proposals` | Create a proposal |
+| `POST` | `/api/proposals/{id}/open` | Open voting |
+| `GET` | `/api/sessions/{id}` | Session state and tally |
+| `POST` | `/api/sessions/{id}/votes` | Cast a Bitcoin-signed vote |
+| `POST` | `/api/sessions/{id}/close` | Close and record the decision |
+| `GET` | `/api/v1/decisions/{sessionId}` | **Self-verifying** signed record |
+| `GET` | `/api/health` | Liveness |
+
+## Pages
+
+**Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
+`/ecosystem` (the live governed state), `/governance/voting`,
+`/governance/audit`, `/treasury/bitcoin`
+
+**Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,
+`/account`
+
+## Tech stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript 5.5 (strict mode) |
-| Styling | Tailwind CSS |
-| Database | PostgreSQL + Prisma ORM |
-| Bitcoin | BTCPay Server / Bitcoin Core (stubbed in MVP) |
-| Testing | Playwright E2E + Puppeteer smoke tests |
+| Framework | Next.js 14.2 (App Router, `output: 'standalone'`) |
+| Language | TypeScript 5.5 (strict) |
+| Database | PostgreSQL + Prisma 5.17 |
+| Auth | NextAuth v5 (beta) |
+| Styling | Tailwind CSS 3.4 — tokens in `src/app/globals.css` |
+| Bitcoin | `@noble/*` + `bs58check` (signing / verification) |
+| Tests | Vitest (unit + integration), Playwright e2e, Puppeteer smoke |
 | i18n | English, German, French, Italian |
 
-## Route Map
+Design system: see [`docs/development/ui-guidelines.md`](docs/development/ui-guidelines.md).
+Solon shares OrangeCat's tokens by name and value, and is dark-only.
 
-**Marketing pages:** `/`, `/features`, `/security`, `/integration`, `/about`, `/governance/voting`
-
-**Dashboard:** `/dashboard`, `/dashboard/voting`, `/treasury/bitcoin`
-
-**API:**
-- `GET /api/bitcoin/wallet/[orgId]` — wallet balance and transaction history
-- `PUT /api/bitcoin/wallet/[orgId]` — update wallet configuration
-- `POST /api/voting/[sessionId]/cryptographic-vote` — submit a signed vote
-- `GET /api/voting/[sessionId]/cryptographic-vote` — retrieve vote tally
-
-<details>
-<summary><strong>Quick Start</strong></summary>
+## Quick start
 
 ```bash
-# Clone and install
-git clone https://github.com/your-org/solon.git
+git clone https://github.com/maonakamoto/solon.git
 cd solon
 npm install
 
-# Set up the database
-cp .env.example .env
-# Edit .env with your PostgreSQL connection string
-npx prisma migrate dev
+cp .env.example .env          # set DATABASE_URL
+npm run prisma:generate       # no postinstall hook — run this before typecheck/build
+npm run prisma:push
 
-# Run development server
-npm run dev
+npm run dev                   # http://localhost:3000
 ```
 
-Open `http://localhost:3000`. The dashboard is at `/dashboard`.
-
-**Run tests:**
+Add a member or cast an agent vote:
 
 ```bash
-# E2E tests
-npx playwright test
-
-# Smoke tests
-npx puppeteer test
+npx tsx scripts/add-member.ts
+npx tsx scripts/agent-vote.ts
 ```
 
-</details>
+## Verifying a change
 
-## Project Structure
+`npm run verify` is the single gate, and CI runs exactly it:
 
-```
-solon/
-  prisma/
-    schema.prisma              # SSOT — 10 models, all types derived from here
-  src/
-    app/
-      page.tsx                 # Landing page
-      dashboard/
-        page.tsx               # Organization dashboard
-        voting/page.tsx        # Voting interface
-      treasury/
-        bitcoin/page.tsx       # Treasury view
-      api/
-        bitcoin/wallet/[orgId] # Wallet endpoints
-        voting/[sessionId]/    # Voting endpoints
-    components/
-      bitcoin-treasury.tsx     # Balance display + transaction table
-      voting-interface.tsx     # Live voting with real-time tally
-      four-pillars.tsx         # Interactive pillar cards
-      transparency-demo.tsx    # Live transparency scoring (4 tabs)
-    lib/
-      transparency-engine.ts   # Score computation (5 metrics, 0-100)
+```bash
+npm run verify   # lint && typecheck && design:check && test
 ```
 
-## Roadmap
+```bash
+npm run test:e2e         # Playwright (needs a running app)
+npm run test:puppeteer   # smoke against BASE_URL
+```
 
-**Now (MVP):** Pillars 1 and 4 scaffolded. Bitcoin integrations stubbed for local development. Transparency engine computes scores from seed data.
-
-**Next:**
-- Live BTCPay Server integration for real transaction tracking
-- Cryptographic vote verification against Bitcoin key pairs
-- Multi-sig wallet support via descriptor wallets
-- Service marketplace with bid evaluation scoring
-
-**Later:**
-- Federated governance across organizations
-- On-chain decision anchoring (OP_RETURN or Taproot)
-- Mobile-first voting interface
-- Delegation chains with revocation
+Merging to `main` deploys to production automatically. Green PRs merge
+themselves — see `scripts/ci/auto-merge-sweep.sh` for the exact policy.
 
 ## License
 
@@ -190,4 +182,4 @@ MIT. See [LICENSE](LICENSE).
 
 ---
 
-*Governance should be verifiable, not trusted. Solon makes that possible.*
+*Governance should be verifiable, not trusted.*
