@@ -1,119 +1,167 @@
-import PageLayout from '@/components/ui/page-layout';
+import PageLayout from "@/components/ui/page-layout";
 
+/**
+ * Documents the API that exists today — nothing aspirational. The surface is
+ * small on purpose; it grows as governance features ship, and each endpoint is
+ * listed here only once it is live.
+ */
 export default function IntegrationPage() {
   return (
-    <PageLayout 
-      title="API & Integration Guide" 
-      description="Complete integration documentation for developers"
+    <PageLayout
+      title="API & Integration"
+      description="The current public API — every endpoint listed here is live"
     >
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Quick Start */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-[var(--navy)] mb-6">Quick Start Integration</h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold text-[var(--navy)] mb-4">REST API Example</h3>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                <div className="text-gray-400"># Get organization treasury balance</div>
-                <div className="text-white">curl -H "Authorization: Bearer YOUR_API_KEY" \</div>
-                <div className="text-white ml-4">https://api.solon.org/v1/treasury/balance</div>
-                <br />
-                <div className="text-gray-400"># Response</div>
-                <div className="text-green-300">{'{'}</div>
-                <div className="text-green-300 ml-2">"balance": "2.47851234",</div>
-                <div className="text-green-300 ml-2">"currency": "BTC",</div>
-                <div className="text-green-300 ml-2">"usd_value": "142847.23"</div>
-                <div className="text-green-300">{'}'}</div>
-              </div>
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8">
+          <h2 className="text-2xl font-bold text-navy mb-6">
+            Cast a cryptographic vote
+          </h2>
+          <p className="text-fg-primary mb-4">
+            A vote is a Bitcoin signed message. Sign the canonical vote message
+            with the wallet that holds your registered member address, then POST
+            the signature:
+          </p>
+          <div className="bg-navy-dark text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+            <div className="text-fg-secondary">
+              # Message to sign (exact text):
             </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold text-[var(--navy)] mb-4">SDK Integration</h3>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                <div className="text-gray-400">// JavaScript SDK</div>
-                <div className="text-blue-300">import</div> <div className="text-white">{'{ SolonAPI }'}</div> <div className="text-blue-300">from</div> <div className="text-orange-300">'@solon/sdk'</div>
-                <br />
-                <div className="text-blue-300">const</div> <div className="text-white">client = </div><div className="text-blue-300">new</div> <div className="text-white">SolonAPI(apiKey)</div>
-                <br />
-                <div className="text-gray-400">// Get treasury data</div>
-                <div className="text-blue-300">const</div> <div className="text-white">balance = </div><div className="text-blue-300">await</div> <div className="text-white">client.treasury.getBalance()</div>
-                <div className="text-blue-300">const</div> <div className="text-white">votes = </div><div className="text-blue-300">await</div> <div className="text-white">client.voting.getActive()</div>
-              </div>
+            <div className="text-white">Solon vote</div>
+            <div className="text-white">session:&lt;sessionId&gt;</div>
+            <div className="text-white">choice:&lt;yes|no|abstain&gt;</div>
+            <div className="text-white">voter:&lt;your-bitcoin-address&gt;</div>
+            <br />
+            <div className="text-fg-secondary"># Submit the signed vote</div>
+            <div className="text-white">
+              curl -X POST /api/sessions/&lt;sessionId&gt;/votes \
+            </div>
+            <div className="text-white ml-4">
+              -H &quot;Content-Type: application/json&quot; \
+            </div>
+            <div className="text-white ml-4">
+              -d &apos;{"{"}
+              &quot;choice&quot;:&quot;yes&quot;,&quot;address&quot;:&quot;1...&quot;,&quot;signature&quot;:&quot;&lt;base64&gt;&quot;
+              {"}"}&apos;
             </div>
           </div>
+          <p className="text-fg-secondary text-sm mt-3">
+            The server recovers the public key from the signature and only
+            stores the vote if it resolves to a registered member. Invalid
+            signatures return 401; verified but ineligible votes return 422 —
+            with the reason in both cases.
+          </p>
         </div>
 
-        {/* API Endpoints */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <APIEndpointCard
-            title="Treasury API"
-            description="Manage Bitcoin treasury operations"
-            endpoints={[
-              'GET /treasury/balance - Current Bitcoin balance',
-              'GET /treasury/transactions - Transaction history', 
-              'POST /treasury/proposal - Create payment proposal',
-              'GET /treasury/reports - Financial reports'
-            ]}
-          />
-          
-          <APIEndpointCard
-            title="Voting API"
-            description="Democratic decision-making endpoints"
-            endpoints={[
-              'GET /voting/active - Active vote proposals',
-              'POST /voting/cast - Cast cryptographic vote',
-              'GET /voting/results - Vote results and audit',
-              'POST /voting/propose - Create new proposal'
-            ]}
-          />
-          
-          <APIEndpointCard
-            title="Governance API"
-            description="Organizational governance tools"
-            endpoints={[
-              'GET /governance/decisions - Decision history',
-              'POST /governance/decision - Record decision',
-              'GET /governance/transparency - Public records',
-              'GET /governance/audit - Audit trail data'
-            ]}
-          />
-          
-          <APIEndpointCard
-            title="Marketplace API"
-            description="Service procurement platform"
-            endpoints={[
-              'GET /marketplace/services - Service directory',
-              'POST /marketplace/procurement - Start procurement',
-              'GET /marketplace/vendors - Vendor management',
-              'GET /marketplace/contracts - Contract tracking'
-            ]}
-          />
+        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8">
+          <h2 className="text-2xl font-bold text-navy mb-4">Live endpoints</h2>
+          <ul className="space-y-2">
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                POST /api/proposals
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                file a signed proposal
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                POST /api/proposals/[proposalId]/open
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                open the voting session
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/sessions/[sessionId]
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                session, snapshotted rules, live tally
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                POST /api/sessions/[sessionId]/votes
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                cast a signed vote
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                POST /api/sessions/[sessionId]/close
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                close after the window and decide the outcome
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/orgs/[slug]
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                organization + public member roster
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/orgs/[slug]/proposals
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                all proposals with session state
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/orgs/[slug]/policies/[key]
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                policy version history
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/orgs/[slug]/audit
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                append-only audit stream
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/orgs/[slug]/treasury
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                live on-chain treasury balances
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/v1/decisions/[sessionId]
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                self-verifying decision document — re-verify it, don&apos;t
+                trust it
+              </span>
+            </li>
+            <li>
+              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-navy font-mono">
+                GET /api/health
+              </code>
+              <span className="text-sm text-fg-secondary ml-2">
+                service health
+              </span>
+            </li>
+          </ul>
+          <p className="text-fg-secondary text-sm mt-4">
+            All reads are public and auth-free — transparency is the product. On
+            finalization Solon emits a{" "}
+            <code className="font-mono text-xs">decision.finalized</code>{" "}
+            webhook (HMAC-signed); consumers are expected to fetch the decision
+            document and re-verify every signature locally rather than trust the
+            notification.
+          </p>
         </div>
       </div>
     </PageLayout>
-  );
-}
-
-function APIEndpointCard({ title, description, endpoints }: {
-  title: string;
-  description: string;
-  endpoints: string[];
-}) {
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h3 className="text-xl font-bold text-[var(--navy)] mb-3">{title}</h3>
-      <p className="text-gray-600 mb-4">{description}</p>
-      <ul className="space-y-2">
-        {endpoints.map((endpoint, index) => (
-          <li key={index} className="text-sm">
-            <code className="bg-gray-100 px-2 py-1 rounded text-xs text-[var(--navy)] font-mono">
-              {endpoint}
-            </code>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

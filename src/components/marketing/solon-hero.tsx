@@ -1,8 +1,9 @@
-"use client";
 import en from "@/i18n/en.json";
 import de from "@/i18n/de.json";
 import fr from "@/i18n/fr.json";
 import it from "@/i18n/it.json";
+import { Check } from "lucide-react";
+import { HERO_CTAS } from "@/lib/site-config";
 
 type Lang = "en" | "de" | "fr" | "it";
 
@@ -12,91 +13,58 @@ export interface SolonHeroProps {
   language: Lang;
 }
 
+/**
+ * The hero states the message once and sends visitors to real destinations.
+ * No badges claiming states the product isn't in; the pillar detail lives in
+ * the section below, not duplicated here.
+ */
 export default function SolonHero({ language }: SolonHeroProps) {
   const t = dict[language]?.solon ?? dict.en.solon;
-  return (
-    <section className="py-16 sm:py-24">
-      <div className="text-center">
-        <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[var(--navy)]">
-          {t.title}
-        </h1>
-        <p className="mt-6 text-xl text-gray-600">{t.tagline}</p>
-        <p className="mt-2 text-gray-500">{t.subtag}</p>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <a
-            className="px-5 py-3 rounded-md bg-[var(--navy)] text-white font-semibold hover:bg-[var(--navy-light)] transition"
-            href="/dashboard/treasury"
-          >
-            {t.cta_primary}
-          </a>
-          <a
-            className="px-5 py-3 rounded-md bg-white text-[var(--navy)] font-semibold hover:bg-gray-50 border border-[var(--navy)] transition"
-            href="/dashboard/voting"
-          >
-            {t.cta_secondary}
-          </a>
+  const bullets = [
+    t.bullets?.transparency,
+    t.bullets?.democracy,
+    t.bullets?.global,
+  ];
+
+  return (
+    <section className="solon-hero-navy rounded-md overflow-hidden">
+      <div className="px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center">
+            <h1 className="font-display text-5xl sm:text-6xl font-bold tracking-tight text-white">
+              {t.title}
+            </h1>
+            <p className="mt-5 text-xl text-on-brand-muted">{t.tagline}</p>
+            <p className="mt-2 text-on-brand-muted">{t.subtag}</p>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                className="inline-flex items-center justify-center rounded-sm bg-solon-orange px-6 py-3 font-semibold text-white transition hover:bg-solon-orange-dark"
+                href={HERO_CTAS.primary.href}
+              >
+                {t.cta_primary}
+              </a>
+              <a
+                className="inline-flex items-center justify-center rounded-sm bg-on-brand/10 px-6 py-3 font-semibold text-white ring-1 ring-on-brand/20 transition hover:bg-on-brand/20"
+                href={HERO_CTAS.secondary.href}
+              >
+                {t.cta_secondary}
+              </a>
+            </div>
+
+            {/* Bullets — the core claims, each one true of the running system */}
+            <ul className="mt-8 grid sm:grid-cols-3 gap-x-8 gap-y-3 text-left text-on-brand-muted">
+              {bullets.filter(Boolean).map((b: string) => (
+                <li key={b} className="flex items-start gap-2.5">
+                  <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-solon-bitcoin" />
+                  <span className="text-sm">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
-
-      <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Pillar title={t.pillars.transactions} desc="All finances on Bitcoin" />
-        <Pillar title={t.pillars.decisions} desc="Signed decisions with KPIs" />
-        <Pillar title={t.pillars.marketplace} desc="Transparent procurement" />
-        <Pillar title={t.pillars.voting} desc="Verified, weighted voting" />
-      </div>
-
-      <div className="mt-16 rounded-xl border border-gray-200 p-8 bg-white shadow-sm">
-        <h3 className="font-semibold text-2xl text-[var(--navy)]">
-          Revolutionary Transparency
-        </h3>
-        <ul className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-gray-700">
-          <li className="flex items-center gap-3">
-            <CheckIcon />
-            Radical Financial Transparency (Bitcoin blockchain)
-          </li>
-          <li className="flex items-center gap-3">
-            <CheckIcon />
-            Cryptographic Democracy (Signed votes & decisions)
-          </li>
-          <li className="flex items-center gap-3">
-            <CheckIcon />
-            Service Marketplace (Bitcoin-native procurement)
-          </li>
-          <li className="flex items-center gap-3">
-            <CheckIcon />
-            Global by Design (No traditional banking)
-          </li>
-        </ul>
-      </div>
     </section>
-  );
-}
-
-function Pillar({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="rounded-lg border border-gray-200 p-6 bg-white shadow-sm text-center hover:shadow-md transition-shadow">
-      <div className="text-[var(--navy)] font-bold text-lg">{title}</div>
-      <div className="text-gray-600 mt-2">{desc}</div>
-    </div>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 text-[var(--navy)]"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M5 13l4 4L19 7"
-      />
-    </svg>
   );
 }

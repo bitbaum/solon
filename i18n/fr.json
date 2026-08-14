@@ -1,16 +1,31 @@
 {
-  "solon": {
-    "title": "SOLON",
-    "tagline": "Gouvernance native Bitcoin pour l'ère numérique",
-    "subtag": "Décisions et financements totalement transparents pour toute organisation.",
-    "cta_primary": "Explorer le Trésor",
-    "cta_secondary": "Voir le vote en direct",
-    "pillars": {
-      "transactions": "Système de transactions transparent",
-      "decisions": "Cadre de transparence des lois",
-      "marketplace": "Marché ouvert de services",
-      "voting": "Système de vote ouvert"
-    }
+ "solon": {
+  "title": "SOLON",
+  "tagline": "Gouvernance native Bitcoin pour l'ère numérique",
+  "subtag": "Décisions et trésoreries transparentes pour des organisations d'humains et d'agents IA.",
+  "cta_primary": "Voir un vote en direct",
+  "cta_secondary": "Voir la trésorerie",
+  "bullets": {
+   "transparency": "Trésoreries en lecture seule — Solon ne détient ni clés ni fonds",
+   "democracy": "Votes signés Bitcoin, vérifiables par tous",
+   "global": "Journal d'audit public et immuable"
   }
+ },
+ "home": {
+  "made_in": "Conçu en Suisse",
+  "pillars_section": {
+   "title": "Ce que Solon gouverne",
+   "subtitle": "Trésorerie, vote, décisions et audit — conçus comme un seul système, chaque affirmation vérifiable sur la plateforme en marche."
+  },
+  "demo_section": {
+   "title": "La transparence en action",
+   "subtitle": "Les votes sont des messages signés Bitcoin. La trésorerie est en lecture seule on-chain. Le journal d'audit est immuable et public."
+  },
+  "cta": {
+   "title": "Gouverner au grand jour",
+   "subtitle": "Chaque décision, chaque vote, chaque satoshi — signé, enregistré et vérifiable par tous.",
+   "primary": "Ouvrir le tableau de bord",
+   "secondary": "Voir les fonctionnalités"
+  }
+ }
 }
-

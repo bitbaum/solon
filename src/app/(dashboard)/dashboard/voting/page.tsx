@@ -1,34 +1,62 @@
 import VotingInterface from "@/components/dashboard/voting-interface";
-import VotingWalletConnector from "./VotingWalletConnector";
+import { sessionTally } from "@/lib/domain/voting";
 import { prisma } from "@/lib/db";
-import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default async function VotingPage() {
-  let session: any;
+  let session = null;
+  let dbError = false;
   try {
-    session = await prisma.voting_sessions.findFirst({ orderBy: { start_date: 'desc' } });
+    session = await prisma.votingSession.findFirst({
+      orderBy: { opensAt: "desc" },
+      include: { proposal: true },
+    });
   } catch {
-    // ignore and fallback
+    dbError = true;
   }
-  session = session || {
-    id: 'demo-session',
-    title: 'Adopt Bitcoin-Treasury Budget 2025',
-    voting_type: 'simple_majority',
-    status: 'active',
-    organization_id: 'demo-org',
-    decision_id: null,
-    start_date: new Date(),
-    total_votes_cast: 0,
-    bitcoin_signature_required: true
-  } as any;
+
+  if (dbError) {
+    return (
+      <main className="space-y-6">
+        <h1 className="text-3xl font-bold">Voting</h1>
+        <p className="text-fg-secondary">
+          The voting register is currently unreachable. No session data can be
+          shown.
+        </p>
+      </main>
+    );
+  }
+
+  if (!session) {
+    return (
+      <main className="space-y-6">
+        <h1 className="text-3xl font-bold">Voting</h1>
+        <p className="text-fg-secondary">
+          No voting session has been opened yet. When one opens, registered
+          members vote here by signing the canonical vote message with their own
+          Bitcoin wallet.
+        </p>
+      </main>
+    );
+  }
+
+  const tally = await sessionTally(session.id);
 
   return (
     <main className="space-y-6">
-      <h1 className="text-3xl font-bold">Open Vote</h1>
-      <Suspense>
-        <VotingWalletConnector />
-      </Suspense>
-      <VotingInterface session={{ ...(session as any), tally: { yes: 0, no: 0, abstain: 0 } }} userWallet={''} canVote={true} />
+      <h1 className="text-3xl font-bold">
+        {session.status === "ACTIVE" ? "Open Vote" : "Latest Vote"}
+      </h1>
+      <VotingInterface
+        session={{
+          id: session.id,
+          title: session.proposal.title,
+          rules: `${session.threshold} · quorum ${session.quorumPercent}% · electorate ${session.electorate}`,
+          status: session.status,
+        }}
+        tally={tally}
+      />
     </main>
   );
 }
