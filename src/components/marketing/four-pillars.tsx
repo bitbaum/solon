@@ -83,7 +83,7 @@ export function FourPillars() {
                 <IconComponent className="h-5 w-5 text-accent" />
               </span>
               <div>
-                <h3 className="font-display text-lg font-semibold tracking-display text-fg-primary">
+                <h3 className="text-lg font-semibold text-fg-primary">
                   {area.title}
                 </h3>
                 <p className="text-sm text-fg-tertiary">{area.shortDesc}</p>

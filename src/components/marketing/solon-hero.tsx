@@ -35,7 +35,7 @@ export default function SolonHero({ language }: SolonHeroProps) {
 
           {/* The headline is the proposition, not the brand name — the wordmark
               is already in the nav, exactly as on OrangeCat and FleetCrown. */}
-          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-bold leading-[1.08] tracking-display text-fg-primary sm:text-5xl lg:text-6xl">
+          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl leading-[1.08] text-fg-primary sm:text-5xl lg:text-6xl">
             {t.tagline}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-fg-secondary">

@@ -19,7 +19,7 @@ export default function PageLayout({
   return (
     <main className={`section-shell py-16 sm:py-20 ${className}`}>
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="font-display text-4xl font-bold tracking-display text-fg-primary sm:text-5xl">
+        <h1 className="font-display text-4xl text-fg-primary sm:text-5xl">
           {title}
         </h1>
         {description && (

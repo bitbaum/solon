@@ -52,7 +52,45 @@ const FORBIDDEN = [
     pattern: /\bmax-w-7xl\b/,
     message: 'Use the .section-shell class (or max-w-shell) so every page lines up.',
   },
+  {
+    // The display face (Instrument Serif) ships ONE weight. Asking for a bolder
+    // one makes the browser synthesize a fake bold, which looks cheap and is
+    // invisible in code review. Weight belongs to the face, in the token
+    // package, not to the component — that is what keeps a face swap one line.
+    pattern: /\bfont-display\b[^"']*\bfont-(?:medium|semibold|bold|extrabold|black)\b|\bfont-(?:medium|semibold|bold|extrabold|black)\b[^"']*\bfont-display\b/,
+    message:
+      'Do not set a weight next to font-display — the display face has one weight, owned by @fleet/design-tokens.',
+  },
+  {
+    // .font-display already applies the face's tracking. Re-declaring it means
+    // a future face swap silently keeps the OLD face's tracking.
+    pattern: /\bfont-display\b[^"']*\btracking-display\b|\btracking-display\b[^"']*\bfont-display\b/,
+    message: 'Redundant: .font-display already applies --tracking-display.',
+  },
+  {
+    pattern: /font-\[['"]?[A-Z]/,
+    message: 'Never name a typeface in a component. Use font-display / font-sans / font-mono.',
+  },
+  {
+    // Size floor. The display face is a high-contrast serif: its thin strokes
+    // thin out further as type shrinks, so an 18px display heading renders
+    // LIGHTER than the 16px sans paragraph under it and the hierarchy inverts.
+    // Display type starts at text-2xl; below that use the sans at font-semibold.
+    // The uppercase, open-tracked wordmark is the sanctioned exception (.wordmark).
+    pattern: /\bfont-display\b[^"']*\btext-(?:xs|sm|base|lg|xl)\b|\btext-(?:xs|sm|base|lg|xl)\b[^"']*\bfont-display\b/,
+    message:
+      'Display face below its size floor — use text-2xl+ with font-display, or the sans at font-semibold.',
+  },
 ];
+
+/**
+ * Tokens are defined in @fleet/design-tokens and nowhere else. A local
+ * redefinition is precisely how the three products drifted apart, so treat any
+ * app-level `--token: value` in globals.css as a build failure rather than a
+ * convenience.
+ */
+const TOKEN_REDEFINITION =
+  /^\s*--(?:surface|text|border|accent|public-accent|status|radius|font|tracking|shell|bitcoin)[a-z-]*\s*:/;
 
 function walk(dir, files = []) {
   if (!fs.existsSync(dir)) return files;
@@ -80,6 +118,24 @@ for (const target of TARGETS) {
       }
     });
   }
+}
+
+// globals.css must stay free of token definitions — the package owns them.
+const GLOBALS = path.join(ROOT, 'src/app/globals.css');
+if (fs.existsSync(GLOBALS)) {
+  fs.readFileSync(GLOBALS, 'utf8')
+    .split('\n')
+    .forEach((line, i) => {
+      if (TOKEN_REDEFINITION.test(line)) {
+        violations.push({
+          file: 'src/app/globals.css',
+          line: i + 1,
+          message:
+            'Token redefined locally. Tokens live in @fleet/design-tokens so all three products share them.',
+          source: line.trim(),
+        });
+      }
+    });
 }
 
 if (violations.length) {
