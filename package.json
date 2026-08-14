@@ -40,7 +40,7 @@
     "autoprefixer": "10.5.4",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.5",
-    "postcss": "8.5.23",
+    "postcss": "8.5.26",
     "prisma": "5.17.0",
     "puppeteer": "22.15.0",
     "ts-node": "10.9.2",
