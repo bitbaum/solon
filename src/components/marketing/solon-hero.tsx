@@ -29,20 +29,22 @@ export default function SolonHero({ language }: SolonHeroProps) {
 
   return (
     <section className="public-backdrop border-b border-subtle">
-      <div className="section-shell py-20 sm:py-24">
-        <div className="mx-auto max-w-3xl text-center">
+      <div className="section-shell py-section">
+        <div className="mx-auto max-w-5xl text-center">
           <p className="eyebrow">{t.title}</p>
 
           {/* The headline is the proposition, not the brand name — the wordmark
-              is already in the nav, exactly as on OrangeCat and FleetCrown. */}
-          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-bold leading-[1.08] tracking-display text-fg-primary sm:text-5xl lg:text-6xl">
+              is already in the nav, exactly as on OrangeCat and FleetCrown.
+              The column above is what holds it to two lines at desktop; giving
+              the h1 its own max-width as well just adds a rule that never binds. */}
+          <h1 className="mx-auto mt-8 font-display text-display-1 font-bold tracking-display text-fg-primary">
             {t.tagline}
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-fg-secondary">
+          <p className="mx-auto mt-7 max-w-lede text-lg text-fg-secondary">
             {t.subtag}
           </p>
 
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-11 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
               className="inline-flex w-full items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover sm:w-auto"
               href={HERO_CTAS.primary.href}
@@ -58,7 +60,7 @@ export default function SolonHero({ language }: SolonHeroProps) {
           </div>
 
           {/* Bullets — the core claims, each one true of the running system */}
-          <ul className="mx-auto mt-12 grid gap-x-8 gap-y-3 text-left sm:grid-cols-3">
+          <ul className="mx-auto mt-16 grid gap-x-10 gap-y-4 text-left sm:grid-cols-3">
             {bullets.filter(Boolean).map((b: string) => (
               <li key={b} className="flex items-start gap-2.5">
                 <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />

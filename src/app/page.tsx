@@ -12,30 +12,30 @@ export default function Home() {
       <SolonHero language="en" />
 
       {/* Four Pillars — the one strong statement, then the deep dive */}
-      <section id="pillars" className="section-shell py-20 sm:py-28">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-3xl font-bold tracking-display text-fg-primary sm:text-4xl">
+      <section id="pillars" className="section-shell py-section">
+        <div className="mx-auto max-w-lede text-center">
+          <h2 className="font-display text-display-2 font-bold tracking-display text-fg-primary">
             {t.pillars_section.title}
           </h2>
-          <p className="mt-4 text-lg text-fg-secondary">
+          <p className="mt-6 text-lg text-fg-secondary">
             {t.pillars_section.subtitle}
           </p>
         </div>
-        <div className="mt-14">
+        <div className="mt-20">
           <FourPillars />
         </div>
       </section>
 
       {/* Closing call to action */}
       <section className="public-backdrop border-t border-subtle">
-        <div className="section-shell py-20 text-center sm:py-24">
-          <h2 className="font-display text-3xl font-bold tracking-display text-fg-primary sm:text-4xl">
+        <div className="section-shell py-section text-center">
+          <h2 className="font-display text-display-2 font-bold tracking-display text-fg-primary">
             {t.cta.title}
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-secondary">
+          <p className="mx-auto mt-6 max-w-lede text-lg text-fg-secondary">
             {t.cta.subtitle}
           </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="mt-11 flex flex-col justify-center gap-3 sm:flex-row">
             <a
               href="/dashboard"
               className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover"
