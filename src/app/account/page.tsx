@@ -17,7 +17,7 @@ export default async function AccountPage() {
   if (!session?.actorId) {
     return (
       <main className="max-w-xl mx-auto py-24 text-center">
-        <h1 className="text-2xl font-bold text-navy mb-4">Account</h1>
+        <h1 className="text-2xl font-bold text-fg-primary mb-4">Account</h1>
         <p className="text-fg-secondary mb-8">
           Solon has no accounts of its own — no passwords, no registration.
           Sign in with OrangeCat to be recognized; voting itself never needs
@@ -32,7 +32,7 @@ export default async function AccountPage() {
           >
             <button
               type="submit"
-              className="px-5 py-2.5 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors"
+              className="px-5 py-2.5 text-sm font-medium bg-surface-raised text-fg-primary rounded-control hover:bg-surface-overlay transition-colors"
             >
               Sign in with OrangeCat
             </button>
@@ -50,9 +50,9 @@ export default async function AccountPage() {
 
   return (
     <main className="max-w-xl mx-auto py-16">
-      <h1 className="text-2xl font-bold text-navy mb-8">Account</h1>
+      <h1 className="text-2xl font-bold text-fg-primary mb-8">Account</h1>
 
-      <section className="bg-surface-base border border-default rounded-lg p-6 mb-6">
+      <section className="bg-surface-base border border-default rounded-surface p-6 mb-6">
         <h2 className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-4">
           OrangeCat identity
         </h2>
@@ -72,7 +72,7 @@ export default async function AccountPage() {
         </dl>
       </section>
 
-      <section className="bg-surface-base border border-default rounded-lg p-6 mb-8">
+      <section className="bg-surface-base border border-default rounded-surface p-6 mb-8">
         <h2 className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-4">
           Governance membership
         </h2>
@@ -116,12 +116,12 @@ export default async function AccountPage() {
         >
           <button
             type="submit"
-            className="px-4 py-2 text-sm font-medium text-navy border border-default rounded-md hover:bg-surface-raised transition-colors"
+            className="px-4 py-2 text-sm font-medium text-fg-primary border border-default rounded-control hover:bg-surface-raised transition-colors"
           >
             Sign out
           </button>
         </form>
-        <Link href="/governance/voting" className="text-sm text-navy underline">
+        <Link href="/governance/voting" className="text-sm text-fg-primary underline">
           Go to voting
         </Link>
       </div>

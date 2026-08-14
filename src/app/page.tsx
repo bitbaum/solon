@@ -6,48 +6,51 @@ export default function Home() {
   const t = en.home;
 
   return (
-    <div className="min-h-screen">
-      {/* Hero — navy anchor with live treasury ledger + icon pillars */}
-      <section className="pt-8 pb-4">
-        <SolonHero language="en" />
-      </section>
+    <main>
+      {/* Hero — full-bleed backdrop, same treatment as the other two products'
+          public pages. Sections own their width; the root layout has no container. */}
+      <SolonHero language="en" />
 
       {/* Four Pillars — the one strong statement, then the deep dive */}
-      <section id="pillars" className="py-20">
-        <div className="text-center mb-16">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-navy mb-4">
+      <section id="pillars" className="section-shell py-20 sm:py-28">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-3xl font-bold tracking-display text-fg-primary sm:text-4xl">
             {t.pillars_section.title}
           </h2>
-          <p className="text-lg text-fg-secondary max-w-3xl mx-auto">
+          <p className="mt-4 text-lg text-fg-secondary">
             {t.pillars_section.subtitle}
           </p>
         </div>
-        <FourPillars />
+        <div className="mt-14">
+          <FourPillars />
+        </div>
       </section>
 
-      {/* Call to Action — navy anchor closes the page */}
-      <section className="my-20 solon-hero-navy rounded-md ">
-        <div className="max-w-4xl mx-auto px-6 sm:px-10 py-20 text-center">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-6">
+      {/* Closing call to action */}
+      <section className="public-backdrop border-t border-subtle">
+        <div className="section-shell py-20 text-center sm:py-24">
+          <h2 className="font-display text-3xl font-bold tracking-display text-fg-primary sm:text-4xl">
             {t.cta.title}
           </h2>
-          <p className="text-lg text-on-brand-muted mb-8">{t.cta.subtitle}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-fg-secondary">
+            {t.cta.subtitle}
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
               href="/dashboard"
-              className="inline-flex items-center justify-center bg-solon-orange text-white px-8 py-3 rounded-sm hover:bg-solon-orange-dark transition-colors font-semibold "
+              className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover"
             >
               {t.cta.primary}
             </a>
             <a
               href="/features"
-              className="inline-flex items-center justify-center bg-on-brand/10 text-white px-8 py-3 rounded-sm ring-1 ring-on-brand/20 hover:bg-on-brand/20 transition-colors font-semibold"
+              className="inline-flex items-center justify-center rounded-control border border-default bg-surface-base px-6 py-3 font-semibold text-fg-primary transition-colors hover:bg-surface-raised"
             >
               {t.cta.secondary}
             </a>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

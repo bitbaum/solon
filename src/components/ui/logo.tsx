@@ -13,33 +13,34 @@ export default function Logo({ className = '', size = 'md' }: LogoProps) {
   };
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className={`${sizeClasses[size]} relative`}>
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      <div
+        className={`${sizeClasses[size]} flex items-center justify-center rounded-control border border-default bg-surface-base`}
+      >
         <svg
           viewBox="0 0 48 48"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full"
+          className="w-3/5 h-3/5"
+          aria-hidden="true"
         >
-          {/* Shield shape representing trust and governance */}
-          <path
-            d="M24 4L8 10V24C8 32.5 14.5 40.5 24 44C33.5 40.5 40 32.5 40 24V10L24 4Z"
-            fill="var(--navy)"
-            stroke="var(--navy-light)"
-            strokeWidth="2"
-          />
-          {/* Scale of justice - representing fairness */}
-          <g transform="translate(16, 16)">
-            <rect x="4" y="6" width="8" height="1" fill="white" />
-            <rect x="2" y="7" width="12" height="1" fill="white" />
-            <circle cx="4" cy="4" r="2" fill="white" />
-            <circle cx="12" cy="4" r="2" fill="white" />
-            <rect x="3" y="8" width="1" height="4" fill="white" />
-            <rect x="12" y="8" width="1" height="4" fill="white" />
+          {/* Scales — the mark is the balance itself, in the accent all three
+              products share, on the same badge shape OrangeCat uses. */}
+          <g
+            stroke="var(--public-accent)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M24 8v32" />
+            <path d="M12 40h24" />
+            <path d="M8 16h32" />
+            <path d="M8 16l-5 11a6 6 0 0 0 10 0z" />
+            <path d="M40 16l5 11a6 6 0 0 1-10 0z" />
           </g>
         </svg>
       </div>
-      <div className="font-bold text-xl text-navy tracking-tight">
+      <div className="font-display font-semibold text-lg text-fg-primary tracking-display">
         SOLON
       </div>
     </div>

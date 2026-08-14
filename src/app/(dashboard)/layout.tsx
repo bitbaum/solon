@@ -18,7 +18,7 @@ export default function DashboardLayout({
 
   return (
     <div className="py-8 space-y-8">
-      <div className="bg-surface-base border border-default rounded-lg shadow-sm">
+      <div className="bg-surface-base border border-default rounded-surface">
         <nav className="flex gap-1 p-1" aria-label="Dashboard sections">
           {TABS.map((tab) => {
             const active = pathname === tab.href;
@@ -27,10 +27,10 @@ export default function DashboardLayout({
                 key={tab.href}
                 href={tab.href}
                 aria-current={active ? "page" : undefined}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-4 py-2 text-sm font-medium rounded-control transition-colors ${
                   active
-                    ? "bg-surface-raised text-navy ring-1 ring-default"
-                    : "text-fg-primary hover:text-navy hover:bg-surface-raised"
+                    ? "bg-surface-raised text-fg-primary ring-1 ring-default"
+                    : "text-fg-primary hover:text-fg-primary hover:bg-surface-raised"
                 }`}
               >
                 {tab.title}
@@ -39,7 +39,7 @@ export default function DashboardLayout({
           })}
         </nav>
       </div>
-      <div className="bg-surface-base border border-default rounded-lg shadow-sm p-6">
+      <div className="bg-surface-base border border-default rounded-surface p-6">
         {children}
       </div>
     </div>

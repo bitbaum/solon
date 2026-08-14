@@ -6,54 +6,54 @@ export default function Footer() {
   const siblings = ECOSYSTEM_PILLARS.filter((p) => p.key !== "solon");
 
   return (
-    <footer className="mt-16 border-t border-default bg-surface-base">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+    <footer className="border-t border-subtle bg-surface-public">
+      <div className="section-shell py-14">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div>
-            <div className="text-sm font-semibold text-navy">Platform</div>
-            <ul className="mt-3 space-y-2 text-sm text-fg-secondary">
+            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Platform</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
               <li>
-                <Link href="/features" className="hover:text-navy">
+                <Link href="/features" className="transition-colors hover:text-fg-primary">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="/security" className="hover:text-navy">
+                <Link href="/security" className="transition-colors hover:text-fg-primary">
                   Security
                 </Link>
               </li>
               <li>
-                <Link href="/integration" className="hover:text-navy">
+                <Link href="/integration" className="transition-colors hover:text-fg-primary">
                   Integration
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <div className="text-sm font-semibold text-navy">Governance</div>
-            <ul className="mt-3 space-y-2 text-sm text-fg-secondary">
+            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Governance</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
               <li>
-                <Link href="/governance/voting" className="hover:text-navy">
+                <Link href="/governance/voting" className="transition-colors hover:text-fg-primary">
                   Voting
                 </Link>
               </li>
               <li>
-                <Link href="/governance/audit" className="hover:text-navy">
+                <Link href="/governance/audit" className="transition-colors hover:text-fg-primary">
                   Audit Trail
                 </Link>
               </li>
               <li>
-                <Link href="/treasury/bitcoin" className="hover:text-navy">
+                <Link href="/treasury/bitcoin" className="transition-colors hover:text-fg-primary">
                   Bitcoin Treasury
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <div className="text-sm font-semibold text-navy">Ecosystem</div>
-            <ul className="mt-3 space-y-2 text-sm text-fg-secondary">
+            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Ecosystem</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
               <li>
-                <Link href="/ecosystem" className="hover:text-navy">
+                <Link href="/ecosystem" className="transition-colors hover:text-fg-primary">
                   Three Pillars
                 </Link>
               </li>
@@ -63,7 +63,7 @@ export default function Footer() {
                     href={p.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-navy"
+                    className="transition-colors hover:text-fg-primary"
                   >
                     {p.name} — {p.role}
                   </a>
@@ -72,10 +72,10 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <div className="text-sm font-semibold text-navy">Resources</div>
-            <ul className="mt-3 space-y-2 text-sm text-fg-secondary">
+            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Resources</div>
+            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
               <li>
-                <Link href="/about" className="hover:text-navy">
+                <Link href="/about" className="transition-colors hover:text-fg-primary">
                   About
                 </Link>
               </li>
@@ -84,7 +84,7 @@ export default function Footer() {
                   href={SOLON_GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-navy"
+                  className="transition-colors hover:text-fg-primary"
                 >
                   Source Code
                 </a>
@@ -93,11 +93,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-fg-secondary">
-            © {new Date().getFullYear()} Solon. All rights reserved.
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-subtle pt-6 sm:flex-row">
+          <div className="text-xs text-fg-tertiary">
+            © {new Date().getFullYear()} Solon
           </div>
-          <div className="text-sm text-fg-secondary">
+          <div className="text-xs text-fg-tertiary">
             The governance pillar of the OrangeCat stack.
           </div>
         </div>

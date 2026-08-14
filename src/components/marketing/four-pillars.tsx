@@ -70,25 +70,23 @@ const AREAS = [
 
 export function FourPillars() {
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
       {AREAS.map((area) => {
         const IconComponent = area.icon;
         return (
           <div
             key={area.title}
-            className="rounded-lg border border-default bg-surface-base transition-shadow p-8 flex flex-col"
+            className="flex flex-col rounded-surface border border-default bg-surface-base p-8 transition-colors hover:border-strong"
           >
             <div className="flex items-center space-x-4 mb-5">
-              <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-navy">
-                <IconComponent className="h-6 w-6 text-solon-bitcoin" />
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-control border border-default bg-surface-raised">
+                <IconComponent className="h-5 w-5 text-accent" />
               </span>
               <div>
-                <h3 className="text-xl font-bold font-display text-navy">
+                <h3 className="font-display text-lg font-semibold tracking-display text-fg-primary">
                   {area.title}
                 </h3>
-                <p className="text-fg-secondary text-sm font-medium">
-                  {area.shortDesc}
-                </p>
+                <p className="text-sm text-fg-tertiary">{area.shortDesc}</p>
               </div>
             </div>
 
@@ -100,9 +98,9 @@ export function FourPillars() {
               {area.features.map((feature) => (
                 <li
                   key={feature}
-                  className="flex items-center text-sm text-fg-primary"
+                  className="flex items-center text-sm text-fg-secondary"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-solon-orange mr-3 flex-shrink-0" />
+                  <span className="mr-3 h-1 w-1 flex-shrink-0 rounded-pill bg-border-interactive" />
                   {feature}
                 </li>
               ))}
@@ -110,7 +108,7 @@ export function FourPillars() {
 
             <Link
               href={area.href}
-              className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-solon-orange hover:text-solon-orange-dark"
+              className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
             >
               {area.linkLabel}
               <ArrowRight className="w-4 h-4" />

@@ -24,19 +24,33 @@ const FORBIDDEN = [
   },
   {
     pattern: /\b(?:text|bg|border|ring)-white\/\d+\b/,
-    message: 'Use on-brand / on-brand-muted tokens.',
+    message: 'Use bg-surface-* / border-* tokens, not white with an opacity.',
   },
   {
-    pattern: /\brounded-(?:xl|2xl|3xl)\b/,
-    message: 'Radius is 8px (rounded-md) or below.',
+    // The vocabulary is shared with OrangeCat and FleetCrown. These were Solon's
+    // private, blue-tinted palette — the reason the three sites looked like three
+    // companies. They are gone from tailwind.config.js; this keeps them gone.
+    pattern: /\b(?:text|bg|border|ring|from|to|via|divide)-(?:navy|navy-light|navy-dark|solon-[a-z]+)\b/,
+    message:
+      'Legacy Solon palette. Use the shared tokens: bg-surface-*, text-fg-*, bg-accent, text-bitcoin.',
   },
   {
-    pattern: /\bshadow-(?:md|lg|xl|2xl|navy|card)\b/,
+    // Radii are named by role so all three products round corners the same way.
+    pattern: /\brounded-(?:sm|md|lg|xl|2xl|3xl|full)\b/,
+    message: 'Use rounded-control / rounded-surface / rounded-pill.',
+  },
+  {
+    pattern: /\bshadow-(?:sm|md|lg|xl|2xl|navy|card)\b/,
     message: 'Hierarchy is border + type, not drop shadow.',
   },
   {
     pattern: /\b(?:bg-gradient|linear-gradient)\b/,
     message: 'No component gradients. Brand surfaces live in globals.css.',
+  },
+  {
+    // max-w-7xl was the old per-page container. Width is one decision now.
+    pattern: /\bmax-w-7xl\b/,
+    message: 'Use the .section-shell class (or max-w-shell) so every page lines up.',
   },
 ];
 

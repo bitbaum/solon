@@ -52,19 +52,19 @@ export default function SecurityPage() {
           />
         </div>
 
-        <div className="bg-navy text-white p-8 rounded-md">
+        <div className="bg-surface-raised text-fg-primary p-8 rounded-control">
           <h3 className="text-2xl font-bold mb-4">What this buys you</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h4 className="font-semibold mb-2">Nothing to seize</h4>
-              <p className="text-on-brand-muted text-sm">
+              <p className="text-fg-secondary text-sm">
                 Compromising Solon&apos;s servers yields no keys and no funds —
                 only records that were already public.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Nothing to forge</h4>
-              <p className="text-on-brand-muted text-sm">
+              <p className="text-fg-secondary text-sm">
                 A vote that doesn&apos;t verify against the member&apos;s
                 Bitcoin address is rejected. Solon cannot invent votes, and
                 neither can an attacker.
@@ -72,7 +72,7 @@ export default function SecurityPage() {
             </div>
             <div>
               <h4 className="font-semibold mb-2">Nothing to rewrite</h4>
-              <p className="text-on-brand-muted text-sm">
+              <p className="text-fg-secondary text-sm">
                 Decisions travel with their evidence. Consumers recount the
                 tally themselves — Solon&apos;s word is evidence, not authority.
               </p>
@@ -86,14 +86,14 @@ export default function SecurityPage() {
             Verify, don&apos;t trust:{" "}
             <a
               href="/governance/voting"
-              className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+              className="font-semibold text-accent hover:text-accent-dark"
             >
               how voting works
             </a>
             {" · "}
             <a
               href="/governance/audit"
-              className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+              className="font-semibold text-accent hover:text-accent-dark"
             >
               the live audit trail
             </a>
@@ -102,7 +102,7 @@ export default function SecurityPage() {
               href="https://github.com/maonakamoto/solon"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+              className="font-semibold text-accent hover:text-accent-dark"
             >
               the source code
             </a>
@@ -123,14 +123,14 @@ function SecurityFeature({
   details: string[];
 }) {
   return (
-    <div className="bg-surface-base p-6 rounded-md shadow-sm border border-default">
-      <h3 className="text-xl font-bold text-navy mb-3">{title}</h3>
+    <div className="bg-surface-base p-6 rounded-control border border-default">
+      <h3 className="text-xl font-bold text-fg-primary mb-3">{title}</h3>
       <p className="text-fg-secondary mb-4">{description}</p>
       <ul className="space-y-2">
         {details.map((detail, index) => (
           <li key={index} className="flex items-start text-sm text-fg-primary">
             <svg
-              className="w-4 h-4 text-solon-green mr-3 mt-0.5 flex-shrink-0"
+              className="w-4 h-4 text-status-positive mr-3 mt-0.5 flex-shrink-0"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

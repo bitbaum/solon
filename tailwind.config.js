@@ -1,4 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+
+// Every colour here resolves to a CSS var defined in src/app/globals.css —
+// never a literal. Token names mirror OrangeCat's so the two codebases can be
+// read side by side. The old `navy`/`solon-*` colours are deliberately gone:
+// they were a second, blue-tinted palette that made Solon look like a different
+// company. Removing them means any leftover usage fails the build instead of
+// silently rendering the old look.
+const withAlpha = (token) => `hsl(var(${token}) / <alpha-value>)`;
+
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,55 +18,63 @@ module.exports = {
     extend: {
       colors: {
         fg: {
-          primary: "var(--color-text)",
-          secondary: "var(--color-text-muted)",
-          inverted: "var(--color-on-brand)",
+          primary: withAlpha("--text-primary"),
+          secondary: withAlpha("--text-secondary"),
+          tertiary: withAlpha("--text-tertiary"),
+          muted: withAlpha("--text-muted"),
+          inverted: withAlpha("--text-inverted"),
         },
         surface: {
-          page: "var(--color-bg)",
-          base: "var(--color-surface)",
-          raised: "var(--color-surface-raised)",
+          public: withAlpha("--surface-public"),
+          page: withAlpha("--surface-page"),
+          base: withAlpha("--surface-base"),
+          raised: withAlpha("--surface-raised"),
+          overlay: withAlpha("--surface-overlay"),
+          hover: withAlpha("--surface-hover"),
         },
-        default: "var(--color-border)",
-        "on-brand": {
-          DEFAULT: "var(--color-on-brand)",
-          muted: "var(--color-on-brand-muted)",
+        border: {
+          subtle: withAlpha("--border-subtle"),
+          DEFAULT: withAlpha("--border-default"),
+          strong: withAlpha("--border-strong"),
+          interactive: withAlpha("--border-interactive"),
         },
-        action: "var(--color-action)",
-        "solon-orange": "var(--solon-orange)",
-        "solon-orange-dark": "var(--solon-orange-dark)",
-        "solon-bitcoin": "var(--solon-bitcoin)",
-        "solon-dark": "var(--solon-dark)",
-        "solon-light": "var(--solon-light)",
-        "solon-gray": "var(--solon-gray)",
-        "solon-green": "var(--solon-green)",
-        "solon-blue": "var(--solon-blue)",
-        navy: "var(--navy)",
-        "navy-light": "var(--navy-light)",
-        "navy-dark": "var(--navy-dark)",
+        // `border-default` / `text-fg-primary` etc. are the names components use.
+        default: withAlpha("--border-default"),
+        accent: {
+          DEFAULT: "var(--public-accent)",
+          hover: "var(--accent-hover)",
+        },
+        bitcoin: "var(--bitcoin-orange)",
+        status: {
+          positive: withAlpha("--status-positive"),
+          warning: withAlpha("--status-warning"),
+          negative: withAlpha("--status-negative"),
+        },
       },
       fontFamily: {
-        inter: ["Inter", "sans-serif"],
         sans: ["var(--font-sans)"],
         display: ["var(--font-display)"],
         mono: ["var(--font-mono)"],
       },
-      borderRadius: {
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
+      letterSpacing: {
+        display: "var(--tracking-display)",
+        label: "var(--tracking-label)",
+        caps: "var(--tracking-caps)",
       },
-      boxShadow: {
-        sm: "var(--shadow-sm)",
-        card: "var(--shadow-card)",
-        lg: "var(--shadow-lg)",
-        navy: "var(--shadow-navy)",
+      borderRadius: {
+        control: "var(--radius-control)",
+        surface: "var(--radius-surface)",
+        pill: "var(--radius-pill)",
+      },
+      maxWidth: {
+        shell: "var(--shell-max)",
+      },
+      spacing: {
+        nav: "var(--public-nav-height)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",
         "slide-up": "slideUp 0.3s ease-out",
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
         fadeIn: {

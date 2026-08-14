@@ -62,11 +62,3 @@ export const HERO_CTAS = {
   primary: { href: '/dashboard/voting', labelKey: 'cta_primary' },
   secondary: { href: '/treasury/bitcoin', labelKey: 'cta_secondary' },
 } as const;
-
-export const THEME = {
-  navy: 'var(--navy)',
-  navyLight: 'var(--navy-light)',
-  navyDark: 'var(--navy-dark)',
-  accent: 'var(--accent)',
-  accentDark: 'var(--accent-dark)'
-};

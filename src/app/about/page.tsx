@@ -10,8 +10,8 @@ export default function AboutPage() {
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Mission Section */}
-        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8 mb-8">
-          <h2 className="text-2xl font-bold text-navy mb-6">
+        <div className="bg-surface-base rounded-control border border-default p-8 mb-8">
+          <h2 className="text-2xl font-bold text-fg-primary mb-6">
             Why Solon exists
           </h2>
           <div className="prose prose-lg text-fg-primary">
@@ -37,23 +37,23 @@ export default function AboutPage() {
           <PrincipleCard
             title="No keys, no custody"
             description="Members sign votes with their own Bitcoin keys. Solon only ever sees signatures, and the treasury is watch-only."
-            icon={<Bitcoin className="w-8 h-8 text-solon-bitcoin" />}
+            icon={<Bitcoin className="w-8 h-8 text-bitcoin" />}
           />
           <PrincipleCard
             title="Verify, don't trust"
             description="Every decision is published with its votes, rules, and signatures so anyone can recount the tally independently."
-            icon={<Vote className="w-8 h-8 text-solon-bitcoin" />}
+            icon={<Vote className="w-8 h-8 text-bitcoin" />}
           />
           <PrincipleCard
             title="Append-only record"
             description="Audit events are never updated or deleted — no code path exists that could rewrite history."
-            icon={<Eye className="w-8 h-8 text-solon-bitcoin" />}
+            icon={<Eye className="w-8 h-8 text-bitcoin" />}
           />
         </div>
 
         {/* Who runs it — the real, running answer */}
-        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8">
-          <h2 className="text-2xl font-bold text-navy mb-4">Who runs it</h2>
+        <div className="bg-surface-base rounded-control border border-default p-8">
+          <h2 className="text-2xl font-bold text-fg-primary mb-4">Who runs it</h2>
           <p className="text-fg-primary mb-6">
             Solon is operated as part of the OrangeCat stack and governed on its
             own rails. The current voting members — including the sibling
@@ -63,7 +63,7 @@ export default function AboutPage() {
           <ul className="space-y-2 text-sm text-fg-secondary">
             {ECOSYSTEM_PILLARS.map((p) => (
               <li key={p.key}>
-                <span className="font-semibold text-navy">{p.name}</span>
+                <span className="font-semibold text-fg-primary">{p.name}</span>
                 <span className="text-fg-secondary"> — {p.role}. </span>
                 {p.description}
               </li>
@@ -73,16 +73,16 @@ export default function AboutPage() {
 
         {/* CTA — real destinations only */}
         <div className="text-center mt-12">
-          <div className="bg-navy text-white p-8 rounded-md">
+          <div className="bg-surface-raised text-fg-primary p-8 rounded-control">
             <h3 className="text-2xl font-bold mb-4">See it running</h3>
-            <p className="text-on-brand-muted mb-6">
+            <p className="text-fg-secondary mb-6">
               The live governed state — members, policies, decisions — is
               public. So is the code.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/ecosystem"
-                className="bg-surface-base text-navy px-8 py-3 rounded-lg hover:bg-surface-raised transition-colors font-semibold"
+                className="bg-surface-base text-fg-primary px-8 py-3 rounded-surface hover:bg-surface-raised transition-colors font-semibold"
               >
                 Live governed state
               </a>
@@ -90,7 +90,7 @@ export default function AboutPage() {
                 href="https://github.com/maonakamoto/solon"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-default text-white px-8 py-3 rounded-lg hover:bg-on-brand/10 transition-colors font-semibold inline-flex items-center justify-center gap-2"
+                className="inline-flex items-center justify-center gap-2 rounded-control border border-default bg-surface-base px-8 py-3 font-semibold text-fg-primary transition-colors hover:bg-surface-raised"
               >
                 <Github className="w-4 h-4" /> Source code
               </a>
@@ -112,9 +112,9 @@ function PrincipleCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-surface-base p-6 rounded-md shadow-sm border border-default">
+    <div className="bg-surface-base p-6 rounded-control border border-default">
       <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-bold text-navy mb-3">{title}</h3>
+      <h3 className="text-xl font-bold text-fg-primary mb-3">{title}</h3>
       <p className="text-fg-secondary">{description}</p>
     </div>
   );

@@ -21,7 +21,7 @@ export default function BitcoinTreasury({
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-navy">Bitcoin Treasury</h2>
+          <h2 className="text-2xl font-bold text-fg-primary">Bitcoin Treasury</h2>
           <p className="text-sm text-fg-secondary">Organization: {orgName}</p>
         </div>
         <div className="text-right">
@@ -29,14 +29,14 @@ export default function BitcoinTreasury({
             On-chain balance (BTC)
             {report.allSourcesResolved ? "" : " — some sources unavailable"}
           </div>
-          <div className="text-2xl font-mono text-navy">
+          <div className="text-2xl font-mono text-fg-primary">
             {totalBtc ?? "unavailable"}
           </div>
         </div>
       </header>
 
-      <div className="rounded-lg border border-default p-4 bg-surface-raised">
-        <h3 className="font-semibold text-navy">
+      <div className="rounded-surface border border-default p-4 bg-surface-raised">
+        <h3 className="font-semibold text-fg-primary">
           Treasury sources (watch-only)
         </h3>
         {report.sources.length === 0 ? (
@@ -68,7 +68,7 @@ export default function BitcoinTreasury({
                   </td>
                   <td className="py-2 text-right">
                     <a
-                      className="text-navy hover:text-navy-light underline transition-colors"
+                      className="text-fg-primary hover:text-fg-primary underline transition-colors"
                       href={`https://mempool.space/address/${s.address}`}
                       target="_blank"
                     >

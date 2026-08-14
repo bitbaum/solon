@@ -67,10 +67,10 @@ export default async function AuditPage() {
               {events.map((e) => (
                 <li
                   key={e.id}
-                  className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                  className="bg-surface-base rounded-control border border-default p-4"
                 >
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="font-semibold text-navy">
+                    <span className="font-semibold text-fg-primary">
                       {EVENT_LABEL[e.eventType]}
                     </span>
                     <time
@@ -84,7 +84,7 @@ export default async function AuditPage() {
                   <div className="mt-1 text-xs text-fg-secondary font-mono">
                     {e.subjectType}:{e.subjectId}
                   </div>
-                  <pre className="mt-2 p-2 rounded-md bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
+                  <pre className="mt-2 p-2 rounded-control bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
                     {JSON.stringify(e.payload, null, 2)}
                   </pre>
                 </li>

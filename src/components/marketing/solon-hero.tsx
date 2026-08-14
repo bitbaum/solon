@@ -28,41 +28,44 @@ export default function SolonHero({ language }: SolonHeroProps) {
   ];
 
   return (
-    <section className="solon-hero-navy rounded-md overflow-hidden">
-      <div className="px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center">
-            <h1 className="font-display text-5xl sm:text-6xl font-bold tracking-tight text-white">
-              {t.title}
-            </h1>
-            <p className="mt-5 text-xl text-on-brand-muted">{t.tagline}</p>
-            <p className="mt-2 text-on-brand-muted">{t.subtag}</p>
+    <section className="public-backdrop border-b border-subtle">
+      <div className="section-shell py-20 sm:py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow">{t.title}</p>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                className="inline-flex items-center justify-center rounded-sm bg-solon-orange px-6 py-3 font-semibold text-white transition hover:bg-solon-orange-dark"
-                href={HERO_CTAS.primary.href}
-              >
-                {t.cta_primary}
-              </a>
-              <a
-                className="inline-flex items-center justify-center rounded-sm bg-on-brand/10 px-6 py-3 font-semibold text-white ring-1 ring-on-brand/20 transition hover:bg-on-brand/20"
-                href={HERO_CTAS.secondary.href}
-              >
-                {t.cta_secondary}
-              </a>
-            </div>
+          {/* The headline is the proposition, not the brand name — the wordmark
+              is already in the nav, exactly as on OrangeCat and FleetCrown. */}
+          <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-bold leading-[1.08] tracking-display text-fg-primary sm:text-5xl lg:text-6xl">
+            {t.tagline}
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-fg-secondary">
+            {t.subtag}
+          </p>
 
-            {/* Bullets — the core claims, each one true of the running system */}
-            <ul className="mt-8 grid sm:grid-cols-3 gap-x-8 gap-y-3 text-left text-on-brand-muted">
-              {bullets.filter(Boolean).map((b: string) => (
-                <li key={b} className="flex items-start gap-2.5">
-                  <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-solon-bitcoin" />
-                  <span className="text-sm">{b}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              className="inline-flex w-full items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover sm:w-auto"
+              href={HERO_CTAS.primary.href}
+            >
+              {t.cta_primary}
+            </a>
+            <a
+              className="inline-flex w-full items-center justify-center rounded-control border border-default bg-surface-base px-6 py-3 font-semibold text-fg-primary transition-colors hover:bg-surface-raised sm:w-auto"
+              href={HERO_CTAS.secondary.href}
+            >
+              {t.cta_secondary}
+            </a>
           </div>
+
+          {/* Bullets — the core claims, each one true of the running system */}
+          <ul className="mx-auto mt-12 grid gap-x-8 gap-y-3 text-left sm:grid-cols-3">
+            {bullets.filter(Boolean).map((b: string) => (
+              <li key={b} className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                <span className="text-sm text-fg-secondary">{b}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

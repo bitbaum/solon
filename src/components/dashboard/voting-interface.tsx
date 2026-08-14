@@ -68,7 +68,7 @@ export default function VotingInterface({
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-navy">{session.title}</h2>
+          <h2 className="text-2xl font-bold text-fg-primary">{session.title}</h2>
           <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-fg-secondary">
@@ -77,12 +77,12 @@ export default function VotingInterface({
       </header>
 
       {!isOpen && (
-        <div className="rounded-lg border border-default p-4 bg-surface-raised text-sm text-fg-primary">
+        <div className="rounded-surface border border-default p-4 bg-surface-raised text-sm text-fg-primary">
           This session is closed — votes are no longer accepted. The final tally
           is below, and the full signed record is published as a{" "}
           <a
             href={`/api/v1/decisions/${session.id}`}
-            className="font-semibold text-solon-orange hover:text-solon-orange-dark"
+            className="font-semibold text-accent hover:text-accent-dark"
           >
             self-verifying decision document
           </a>
@@ -91,7 +91,7 @@ export default function VotingInterface({
       )}
 
       {isOpen && (
-        <div className="rounded-lg border border-default p-4 bg-surface-raised space-y-4">
+        <div className="rounded-surface border border-default p-4 bg-surface-raised space-y-4">
           <div>
             <label
               className="block text-sm font-medium text-fg-primary"
@@ -104,7 +104,7 @@ export default function VotingInterface({
               value={address}
               onChange={(e) => setAddress(e.target.value.trim())}
               placeholder="1..."
-              className="mt-1 w-full px-3 py-2 rounded-md border border-default font-mono text-sm"
+              className="mt-1 w-full px-3 py-2 rounded-control border border-default font-mono text-sm"
             />
           </div>
 
@@ -118,9 +118,9 @@ export default function VotingInterface({
                   key={c}
                   type="button"
                   onClick={() => setChoice(c)}
-                  className={`px-4 py-2 rounded-md border transition-colors ${
+                  className={`px-4 py-2 rounded-control border transition-colors ${
                     choice === c
-                      ? "border-navy bg-navy text-white"
+                      ? "border-default bg-surface-raised text-fg-primary"
                       : "border-default bg-surface-base text-fg-primary hover:bg-surface-raised"
                   }`}
                 >
@@ -138,7 +138,7 @@ export default function VotingInterface({
                 </span>
                 <button
                   type="button"
-                  className="text-xs text-navy underline"
+                  className="text-xs text-fg-primary underline"
                   onClick={async () => {
                     await navigator.clipboard.writeText(message);
                     setCopied(true);
@@ -148,7 +148,7 @@ export default function VotingInterface({
                   {copied ? "Copied" : "Copy message"}
                 </button>
               </div>
-              <pre className="mt-1 p-3 rounded-md bg-surface-base border border-default text-xs font-mono whitespace-pre-wrap break-all">
+              <pre className="mt-1 p-3 rounded-control bg-surface-base border border-default text-xs font-mono whitespace-pre-wrap break-all">
                 {message}
               </pre>
             </div>
@@ -166,7 +166,7 @@ export default function VotingInterface({
               value={signature}
               onChange={(e) => setSignature(e.target.value.trim())}
               rows={3}
-              className="mt-1 w-full px-3 py-2 rounded-md border border-default font-mono text-xs"
+              className="mt-1 w-full px-3 py-2 rounded-control border border-default font-mono text-xs"
             />
           </div>
 
@@ -181,7 +181,7 @@ export default function VotingInterface({
 
           {verdict && (
             <div
-              className={`rounded-md p-3 text-sm ${
+              className={`rounded-control p-3 text-sm ${
                 verdict.stored
                   ? "bg-green-50 text-green-800 border border-green-200"
                   : "bg-red-50 text-red-800 border border-red-200"
@@ -195,8 +195,8 @@ export default function VotingInterface({
         </div>
       )}
 
-      <div className="rounded-lg border border-default p-4 bg-surface-raised">
-        <h3 className="font-semibold text-navy">Tally (weighted)</h3>
+      <div className="rounded-surface border border-default p-4 bg-surface-raised">
+        <h3 className="font-semibold text-fg-primary">Tally (weighted)</h3>
         <div className="mt-2 grid grid-cols-3 gap-4 text-center">
           <Tally label="YES" value={liveTally.yes} color="text-green-600" />
           <Tally label="NO" value={liveTally.no} color="text-red-600" />
