@@ -3,44 +3,77 @@
 @tailwind utilities;
 
 :root {
-  --background:        #ffffff;
-  --foreground:        #1e293b;
-  --navy:              #1e293b;
-  --navy-light:        #334155;
-  --navy-dark:         #0f172a;
-  --accent:            #f1f5f9;
-  --accent-dark:       #e2e8f0;
-  --solon-orange:      #f97316;
-  --solon-orange-dark: #ea580c;
-  --solon-dark:        #0f172a;
-  --solon-bitcoin:     #f7931a;
-  --solon-light:       #f8fafc;
-  --solon-gray:        #64748b;
-  --solon-green:       #10b981;
-  --solon-blue:        #3b82f6;
+  /* Tier 1 — primitives. Components never use these names. */
+  --primitive-navy-950: #0f172a;
+  --primitive-navy-900: #1e293b;
+  --primitive-navy-800: #334155;
+  --primitive-orange-500: #f97316;
+  --primitive-orange-600: #ea580c;
+  --primitive-bitcoin: #f7931a;
+  --primitive-paper: #fafafa;
+  --primitive-white: #ffffff;
+  --primitive-raised: #f4f4f5;
+  --primitive-muted: #71717a;
+
+  /* Tier 2 — semantic. Same names as OrangeCat / FleetCrown. */
+  --color-bg: var(--primitive-paper);
+  --color-surface: var(--primitive-white);
+  --color-surface-raised: var(--primitive-raised);
+  --color-text: var(--primitive-navy-900);
+  --color-text-muted: var(--primitive-muted);
+  --color-border: #e4e4e7;
+  --color-brand: var(--primitive-navy-900);
+  --color-action: var(--primitive-orange-500);
+  --color-on-brand: var(--primitive-white);
+  --color-on-brand-muted: #d4d4d8;
+
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --navy: var(--primitive-navy-900);
+  --navy-light: var(--primitive-navy-800);
+  --navy-dark: var(--primitive-navy-950);
+  --accent: var(--color-surface-raised);
+  --accent-dark: var(--color-border);
+  --solon-orange: var(--primitive-orange-500);
+  --solon-orange-dark: var(--primitive-orange-600);
+  --solon-dark: var(--primitive-navy-950);
+  --solon-bitcoin: var(--primitive-bitcoin);
+  --solon-light: var(--primitive-paper);
+  --solon-gray: var(--color-text-muted);
+  --solon-green: #10b981;
+  --solon-blue: #3b82f6;
+
+  --font-display:
+    var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-pill: 9999px;
+  --radius-control: 8px;
+  --radius-card: 8px;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
-
-
-/* Solon custom utility classes */
-.solon-gradient {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+/* The one branded surface. Gradients stay out of components. */
+.solon-hero-navy {
+  background: var(--navy-dark);
 }
 
-.solon-text-gradient {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.font-display {
+  font-family: var(--font-display);
 }
 
 .text-solon-primary {
