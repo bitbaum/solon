@@ -4,7 +4,8 @@ import { prisma } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 /** Public read: all proposals of an organization, newest first. */
-export async function GET(_: Request, { params }: { params: { slug: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
+  const params = await ctx.params;
   const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 

@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
  * product — who can vote, with what weight, human or agent, is public record.
  * Private keys never exist here; addresses and public keys are the whole story.
  */
-export async function GET(_: Request, { params }: { params: { slug: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
+  const params = await ctx.params;
   const org = await prisma.organization.findUnique({
     where: { slug: params.slug },
     include: {

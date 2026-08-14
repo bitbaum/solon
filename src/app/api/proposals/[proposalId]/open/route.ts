@@ -7,7 +7,8 @@ import { openSession } from "@/lib/domain/voting";
  * clock, and it can happen exactly once (one session per proposal). The
  * rules — electorate, threshold, quorum, eligibility — are snapshotted here.
  */
-export async function POST(_: Request, { params }: { params: { proposalId: string } }) {
+export async function POST(_: Request, ctx: { params: Promise<{ proposalId: string }> }) {
+  const params = await ctx.params;
   try {
     const session = await openSession(params.proposalId);
     return NextResponse.json({ opened: true, session }, { status: 201 });

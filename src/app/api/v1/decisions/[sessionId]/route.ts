@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
  * Consumers re-verify every signature and recompute the tally locally —
  * this endpoint is evidence, not authority.
  */
-export async function GET(_: Request, { params }: { params: { sessionId: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ sessionId: string }> }) {
+  const params = await ctx.params;
   const result = await decisionDocument(params.sessionId);
   if (!result.found) return NextResponse.json({ error: result.reason }, { status: 404 });
   if (!result.finalized) return NextResponse.json({ error: result.reason }, { status: 409 });

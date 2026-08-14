@@ -15,7 +15,8 @@ const BodySchema = z.object({
  * invalid one is rejected and never stored. No transport auth: the signature
  * IS the authorization, and votes are public record anyway.
  */
-export async function POST(req: Request, { params }: { params: { sessionId: string } }) {
+export async function POST(req: Request, ctx: { params: Promise<{ sessionId: string }> }) {
+  const params = await ctx.params;
   const parsed = BodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json(

@@ -3,7 +3,8 @@ import { prisma } from "@/lib/db";
 import { sessionTally } from "@/lib/domain/voting";
 
 /** Public read: a voting session, its snapshotted rules, and the live tally. */
-export async function GET(_: Request, { params }: { params: { sessionId: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ sessionId: string }> }) {
+  const params = await ctx.params;
   const session = await prisma.votingSession.findUnique({
     where: { id: params.sessionId },
     include: {

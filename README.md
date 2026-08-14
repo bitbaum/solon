@@ -5,7 +5,7 @@ versioned policies and an append-only audit trail.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-14-000000.svg)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000.svg)](https://nextjs.org/)
 
 Live at **[solon.orangecat.ch](https://solon.orangecat.ch)**.
 
@@ -127,7 +127,7 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 14.2 (App Router, `output: 'standalone'`) |
+| Framework | Next.js 16.3 (App Router, `output: 'standalone'`) |
 | Language | TypeScript 5.5 (strict) |
 | Database | PostgreSQL + Prisma 5.17 |
 | Auth | NextAuth v5 (beta) |

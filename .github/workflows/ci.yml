@@ -1,6 +1,8 @@
 # Golden CI floor — see dotfiles/templates/ci/README.md.
-# solon: npm + Prisma. Floor = verify (lint + typecheck) + build.
-# Lint is `next lint` (eslint + eslint-config-next, config in .eslintrc.json).
+# solon: npm + Prisma. Floor = verify (lint + typecheck + design:check + test) + build.
+# Lint is `eslint .` — Next 16 removed `next lint`, and ESLint 9 wants flat
+# config, so the rules live in eslint.config.mjs (eslint-config-next already
+# exports a flat array). `.eslintrc.json` is gone.
 # `next build` is hermetic: the server components that touch Prisma catch DB
 # errors and render demo fallbacks, so no live DB is needed. Prisma has no
 # postinstall, so the client is generated before typecheck/build need its types.
