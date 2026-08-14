@@ -40,7 +40,7 @@ export default function Logo({ className = '', size = 'md' }: LogoProps) {
           </g>
         </svg>
       </div>
-      <div className="font-display font-semibold text-lg text-fg-primary tracking-display">
+      <div className="wordmark text-lg text-fg-primary">
         SOLON
       </div>
     </div>

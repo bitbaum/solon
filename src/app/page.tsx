@@ -14,7 +14,7 @@ export default function Home() {
       {/* Four Pillars — the one strong statement, then the deep dive */}
       <section id="pillars" className="section-shell py-section">
         <div className="mx-auto max-w-lede text-center">
-          <h2 className="font-display text-display-2 font-bold tracking-display text-fg-primary">
+          <h2 className="font-display text-display-2 text-fg-primary">
             {t.pillars_section.title}
           </h2>
           <p className="mt-6 text-lg text-fg-secondary">
@@ -29,7 +29,7 @@ export default function Home() {
       {/* Closing call to action */}
       <section className="public-backdrop border-t border-subtle">
         <div className="section-shell py-section text-center">
-          <h2 className="font-display text-display-2 font-bold tracking-display text-fg-primary">
+          <h2 className="font-display text-display-2 text-fg-primary">
             {t.cta.title}
           </h2>
           <p className="mx-auto mt-6 max-w-lede text-lg text-fg-secondary">

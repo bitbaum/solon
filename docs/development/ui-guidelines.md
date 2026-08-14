@@ -4,22 +4,46 @@
 
 Two files, and this document is neither of them:
 
-| File | Role |
+Not in this repo, and not in this document:
+
+| Where | Role |
 |---|---|
-| `src/app/globals.css` | **Token SSOT.** Every colour, font, radius and spacing constant. |
-| `tailwind.config.js` | Maps Tailwind utilities onto those CSS variables. Never a literal value. |
+| **`@fleet/design-tokens`** ([repo](https://github.com/maonakamoto/design-tokens)) | **Token SSOT** for all three products — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
+| `src/app/globals.css` | Solon-specific rules only. Defining a token here **fails the build**. |
+| `tailwind.config.js` | Consumes the shared preset. Defines no colours, fonts or geometry. |
 | `scripts/design-system-check.js` | **Enforcement.** Run by `npm run design:check`, which `npm run verify` runs. |
 
 This page describes conventions a linter cannot check. It deliberately lists **no
 colour values** — a palette written down twice is a palette that will disagree
-with itself. If you want to know what `--surface-raised` is, read `globals.css`.
+with itself. If you want to know what `--surface-raised` is, read the package.
 
 ## One family, three products
 
-Solon's tokens are copied from OrangeCat's **by name and by value**, and the
-public backdrop mirrors FleetCrown's. OrangeCat, FleetCrown and Solon are one
-product family and must read as one. A token added here should be added there
-under the same name, or not at all.
+The tokens are no longer *copied* between the three repos — they are **imported
+from one package**. They used to be copied, and they drifted: this file once
+claimed Solon's tokens matched OrangeCat's "by name and by value" while the two
+shared neither. Copies drift; imports cannot.
+
+To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in the package's
+`tokens.css`, tag a release, and bump the dependency in the three apps.
+
+Solon is **dark-only**. It is a public ledger; marketing and dashboard share the
+same near-black canvas. There is no light theme to keep in sync.
+
+## The display face has one weight
+
+The display face is a high-contrast serif with a **single weight (400)**. Two
+consequences, both enforced:
+
+- Never put `font-bold` / `font-semibold` beside `font-display`. There is no
+  bolder cut, so the browser synthesizes one, and a fake bold looks cheap.
+  Weight and tracking are declared *with the face* in the package — which is
+  what keeps swapping the face a one-line change.
+- Never use it below `text-2xl` / `text-display-3`. Its thin strokes thin out
+  further as type shrinks: at 18px the card titles rendered *lighter* than the
+  16px body copy beneath them and the hierarchy inverted. Below the floor, use
+  the sans at `font-semibold`. The uppercase, open-tracked `.wordmark` is the
+  one sanctioned exception.
 
 Solon is **dark-only**. It is a public ledger; marketing and dashboard share the
 same near-black canvas. There is no light theme to keep in sync.
@@ -35,8 +59,13 @@ before CI does:
 - No raw radii (`rounded-lg`) — use `rounded-control` / `rounded-surface` /
   `rounded-pill`.
 - No drop shadows. **Hierarchy is border and type**, not elevation.
-- No component gradients. Brand surfaces belong in `globals.css`.
+- No component gradients. Brand surfaces belong in the token package.
 - No `max-w-7xl`. Width is one decision: `.section-shell`.
+- No typeface named in a component (`font-['…']`) — use `font-display` /
+  `font-sans` / `font-mono`.
+- No weight or `tracking-display` beside `font-display`; no `font-display` below
+  its size floor. See above.
+- No token redefined in `globals.css`. The package owns them.
 
 The legacy `navy` / `solon-*` palette is **deleted, not aliased** — any leftover
 usage fails the build rather than quietly rendering the old look.

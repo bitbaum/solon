@@ -74,7 +74,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                       aria-label={`${item.title} menu`}
                     >
                       <div className="px-6 pb-3 border-b border-subtle mb-3">
-                        <h3 className="font-display text-base font-semibold text-fg-primary tracking-display">
+                        <h3 className="text-base font-semibold text-fg-primary">
                           {item.title}
                         </h3>
                         {item.description && (

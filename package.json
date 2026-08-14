@@ -18,6 +18,7 @@
     "prisma:push": "prisma db push"
   },
   "dependencies": {
+    "@fleet/design-tokens": "github:maonakamoto/design-tokens#v0.4.0",
     "@noble/hashes": "^1.8.0",
     "@noble/secp256k1": "^2.3.0",
     "@prisma/client": "^5.17.0",

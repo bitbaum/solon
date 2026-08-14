@@ -36,8 +36,10 @@ export default function SolonHero({ language }: SolonHeroProps) {
           {/* The headline is the proposition, not the brand name — the wordmark
               is already in the nav, exactly as on OrangeCat and FleetCrown.
               The column above is what holds it to two lines at desktop; giving
-              the h1 its own max-width as well just adds a rule that never binds. */}
-          <h1 className="mx-auto mt-8 font-display text-display-1 font-bold tracking-display text-fg-primary">
+              the h1 its own max-width as well just adds a rule that never binds.
+              No weight or tracking here: .font-display owns both, because the
+              display face has exactly one weight. */}
+          <h1 className="mx-auto mt-8 font-display text-display-1 text-fg-primary">
             {t.tagline}
           </h1>
           <p className="mx-auto mt-7 max-w-lede text-lg text-fg-secondary">

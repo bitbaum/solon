@@ -128,7 +128,7 @@ function FeatureCard({
       <span className="flex h-12 w-12 items-center justify-center rounded-control bg-surface-raised mb-4">
         <Icon className="h-6 w-6 text-bitcoin" />
       </span>
-      <h3 className="text-xl font-bold font-display text-fg-primary mb-3">{title}</h3>
+      <h3 className="text-xl font-semibold text-fg-primary mb-3">{title}</h3>
       <p className="text-fg-secondary mb-4">{description}</p>
       <ul className="space-y-2">
         {features.map((feature) => (

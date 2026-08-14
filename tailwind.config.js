@@ -1,14 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
-// Every colour here resolves to a CSS var defined in src/app/globals.css —
-// never a literal. Token names mirror OrangeCat's so the two codebases can be
-// read side by side. The old `navy`/`solon-*` colours are deliberately gone:
-// they were a second, blue-tinted palette that made Solon look like a different
-// company. Removing them means any leftover usage fails the build instead of
-// silently rendering the old look.
-const withAlpha = (token) => `hsl(var(${token}) / <alpha-value>)`;
-
+// The colour/typography/geometry scales come from the shared preset, which maps
+// every utility onto a CSS var owned by @fleet/design-tokens. Nothing visual is
+// defined here — if you find yourself adding a colour or a font below, it almost
+// certainly belongs in the token package so all three products get it.
 module.exports = {
+  presets: [require("@fleet/design-tokens/tailwind-preset")],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -16,73 +13,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        fg: {
-          primary: withAlpha("--text-primary"),
-          secondary: withAlpha("--text-secondary"),
-          tertiary: withAlpha("--text-tertiary"),
-          muted: withAlpha("--text-muted"),
-          inverted: withAlpha("--text-inverted"),
-        },
-        surface: {
-          public: withAlpha("--surface-public"),
-          page: withAlpha("--surface-page"),
-          base: withAlpha("--surface-base"),
-          raised: withAlpha("--surface-raised"),
-          overlay: withAlpha("--surface-overlay"),
-          hover: withAlpha("--surface-hover"),
-        },
-        border: {
-          subtle: withAlpha("--border-subtle"),
-          DEFAULT: withAlpha("--border-default"),
-          strong: withAlpha("--border-strong"),
-          interactive: withAlpha("--border-interactive"),
-        },
-        // `border-default` / `text-fg-primary` etc. are the names components use.
-        default: withAlpha("--border-default"),
-        accent: {
-          DEFAULT: "var(--public-accent)",
-          hover: "var(--accent-hover)",
-        },
-        bitcoin: "var(--bitcoin-orange)",
-        status: {
-          positive: withAlpha("--status-positive"),
-          warning: withAlpha("--status-warning"),
-          negative: withAlpha("--status-negative"),
-        },
-      },
-      fontFamily: {
-        sans: ["var(--font-sans)"],
-        display: ["var(--font-display)"],
-        mono: ["var(--font-mono)"],
-      },
-      letterSpacing: {
-        display: "var(--tracking-display)",
-        label: "var(--tracking-label)",
-        caps: "var(--tracking-caps)",
-      },
-      borderRadius: {
-        control: "var(--radius-control)",
-        surface: "var(--radius-surface)",
-        pill: "var(--radius-pill)",
-      },
-      fontSize: {
-        // Fluid display sizes. Line heights ride with them so a headline never
-        // needs a per-breakpoint leading override.
-        "display-1": ["var(--text-display-1)", { lineHeight: "1.04" }],
-        "display-2": ["var(--text-display-2)", { lineHeight: "1.12" }],
-        "display-3": ["var(--text-display-3)", { lineHeight: "1.2" }],
-      },
-      maxWidth: {
-        shell: "var(--shell-max)",
-        lede: "var(--measure-lede)",
-        copy: "var(--measure-copy)",
-      },
-      spacing: {
-        nav: "var(--public-nav-height)",
-        section: "var(--section-py)",
-        "section-tight": "var(--section-py-tight)",
-      },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",
         "slide-up": "slideUp 0.3s ease-out",

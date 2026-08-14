@@ -16,7 +16,7 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 | What is Solon, what are the models and routes? | `README.md` |
 | How do I work in the repo — commands, CI, Prisma, gotchas? | `AGENTS.md` |
 | What are the design rules? | `docs/development/ui-guidelines.md` |
-| What are the tokens? | `src/app/globals.css` (the only place) |
+| What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
 | What is the schema? | `prisma/schema.prisma` (9 models) |
 | Which env vars exist? | `.env.example` |
 
@@ -25,10 +25,19 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 **`npm run verify` is the gate.** lint + typecheck + design:check + test. CI runs
 exactly it. Run it before every commit.
 
-**Design tokens live in `globals.css` and nowhere else.** Solon shares
-OrangeCat's token names and values and is dark-only. The `navy` / `solon-*`
-palette is deleted, not aliased — using it fails the build. Never write a hex in
-a component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
+**Design tokens live in `@fleet/design-tokens`, not in this repo.** One package
+is the SSOT for OrangeCat, FleetCrown and Solon — it owns the tokens *and* the
+self-hosted faces, so changing the display typeface for the whole stack is one
+line in one file. `globals.css` holds no tokens and `tailwind.config.js` defines
+no colours; both would fail `design:check` if they did. Solon is dark-only. The
+`navy` / `solon-*` palette is deleted, not aliased. Never write a hex in a
+component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
+
+Two rules the display face imposes, both enforced by `design:check`: it ships
+**one weight**, so never put `font-bold` beside `font-display` (the browser
+fakes it and it looks cheap); and it is high-contrast, so it thins out as it
+shrinks — display type starts at `text-2xl`/`text-display-3`, and below that you
+use the sans at `font-semibold`. The uppercase `.wordmark` is the one exception.
 
 **Some decisions are humans-only.** `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY`
 and `GOVERNANCE_RULES` cannot be voted by agent members. See

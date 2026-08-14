@@ -83,7 +83,10 @@ export function FourPillars() {
                 <IconComponent className="h-5 w-5 text-accent" />
               </span>
               <div>
-                <h3 className="font-display text-display-3 font-semibold tracking-display text-fg-primary">
+                {/* text-display-3 bottoms out at 1.5rem — exactly the display
+                    face's size floor — so the serif is safe here, unlike the
+                    text-lg this replaced. */}
+                <h3 className="font-display text-display-3 text-fg-primary">
                   {area.title}
                 </h3>
                 <p className="text-sm text-fg-tertiary">{area.shortDesc}</p>
