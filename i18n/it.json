@@ -1,45 +1,31 @@
 {
-  "solon": {
-    "title": "SOLON",
-    "tagline": "Governance nativa Bitcoin per l'era digitale",
-    "subtag": "Decisioni e finanziamenti completamente trasparenti per qualsiasi organizzazione.",
-    "cta_primary": "Esplora il Tesoro",
-    "cta_secondary": "Vedi il voto in tempo reale",
-    "pillars": {
-      "transactions": "Sistema di transazioni trasparente",
-      "decisions": "Quadro di trasparenza delle leggi",
-      "marketplace": "Mercato aperto dei servizi",
-      "voting": "Sistema di voto aperto"
-    },
-    "pillar_desc": {
-      "transactions": "Tutte le finanze su Bitcoin",
-      "decisions": "Decisioni firmate con KPI",
-      "marketplace": "Approvvigionamento trasparente",
-      "voting": "Voto verificato e ponderato"
-    },
-    "ledger": {
-      "label": "Tesoro Bitcoin in tempo reale",
-      "live": "In diretta",
-      "public": "Registro pubblico",
-      "balance": "Saldo del tesoro",
-      "verified": "Verificato on-chain"
-    }
-  },
-  "home": {
-    "made_in": "Realizzato in Svizzera",
-    "pillars_section": {
-      "title": "Quattro pilastri della governance nativa Bitcoin",
-      "subtitle": "Trasparenza totale, democrazia crittografica e operazioni finanziarie native Bitcoin — progettate come un unico sistema, non aggiunte come ripensamento."
-    },
-    "demo_section": {
-      "title": "La trasparenza in azione",
-      "subtitle": "Ogni transazione, decisione e voto è registrato in modo permanente sulla blockchain Bitcoin, per una verificabilità completa e pubblica."
-    },
-    "cta": {
-      "title": "Pronto a rivoluzionare la tua organizzazione?",
-      "subtitle": "Unisciti al futuro della governance trasparente. Ogni decisione, ogni transazione, ogni voto — verificato crittograficamente e sempre auditabile.",
-      "primary": "Avvia la tua organizzazione",
-      "secondary": "Scopri di più"
-    }
+ "solon": {
+  "title": "SOLON",
+  "tagline": "Governance nativa Bitcoin per l'era digitale",
+  "subtag": "Decisioni e tesorerie trasparenti per organizzazioni di persone e agenti IA.",
+  "cta_primary": "Vedi un voto dal vivo",
+  "cta_secondary": "Vedi la tesoreria",
+  "bullets": {
+   "transparency": "Tesorerie in sola lettura — Solon non detiene chiavi né fondi",
+   "democracy": "Voti firmati Bitcoin, verificabili da chiunque",
+   "global": "Registro di audit pubblico e immutabile"
   }
+ },
+ "home": {
+  "made_in": "Realizzato in Svizzera",
+  "pillars_section": {
+   "title": "Cosa governa Solon",
+   "subtitle": "Tesoreria, voto, decisioni e audit — progettati come un unico sistema, ogni affermazione verificabile sulla piattaforma."
+  },
+  "demo_section": {
+   "title": "La trasparenza in azione",
+   "subtitle": "I voti sono messaggi firmati Bitcoin. La tesoreria è in sola lettura on-chain. Il registro di audit è immutabile e pubblico."
+  },
+  "cta": {
+   "title": "Governare alla luce del sole",
+   "subtitle": "Ogni decisione, ogni voto, ogni satoshi — firmato, registrato e verificabile da chiunque.",
+   "primary": "Apri la dashboard",
+   "secondary": "Vedi le funzionalità"
+  }
+ }
 }

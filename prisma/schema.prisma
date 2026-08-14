@@ -1,4 +1,14 @@
-// Prisma schema reflecting the Solon MVP database
+// Solon governance schema v2 — the SSOT for all types (client generated from here).
+//
+// Design invariants:
+// - Solon never holds private keys: members (human OR agent) register a Bitcoin
+//   address; every vote and proposal carries a Bitcoin signed-message signature.
+// - VotingSession snapshots its rules (electorate/threshold/quorum/eligibility)
+//   at open, so a past decision stays explainable after policy changes.
+// - AuditEvent is append-only: no code path may update or delete rows.
+// - Policy versions: v1 is the seeded bootstrap; every later version requires an
+//   APPROVED voting session (enforced in src/lib/domain/voting.ts).
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,143 +18,259 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model organizations {
-  id                 String   @id @default(uuid())
-  name               String
-  type               String
-  bitcoin_wallet_xpub String
-  governance_model   String   @default("democratic")
-  country            String   @default("CH")
-  primary_language   String   @default("en")
-  created_at         DateTime @default(now())
-
-  members            members[]
-  bitcoin_transactions bitcoin_transactions[]
-  decisions          decisions[]
-  voting_sessions    voting_sessions[]
-  service_requests   service_requests[]
-  budget_allocations budget_allocations[]
+enum MemberType {
+  HUMAN
+  AGENT
 }
 
-model members {
-  id              String   @id @default(uuid())
-  organization_id String
-  user_id         String
-  bitcoin_address String?  @db.VarChar(62)
-  role            String
-  voting_weight   Decimal  @default(1.0)
-  joined_at       DateTime @default(now())
-  status          String   @default("active")
-
-  organization organizations @relation(fields: [organization_id], references: [id])
-  votes         votes[]
-  decisions_origin decisions[] @relation("decisions_origin_member")
+/// Who holds the member's private key. Never Solon — SELF is a human's own
+/// wallet, SERVICE is an agent system's own environment (OC box, FC box).
+enum KeyCustody {
+  SELF
+  SERVICE
 }
 
-model bitcoin_transactions {
-  id               String   @id @default(uuid())
-  organization_id  String
-  txid             String   @unique
-  amount_sats      BigInt
-  category         String
-  description      String?
-  to_address       String?  @db.VarChar(62)
-  from_address     String?  @db.VarChar(62)
-  block_height     Int?
-  transaction_date DateTime
-  created_by       String?
-  created_at       DateTime @default(now())
-
-  organization organizations @relation(fields: [organization_id], references: [id])
+enum MemberStatus {
+  ACTIVE
+  SUSPENDED
+  RETIRED
 }
 
-model decisions {
-  id                 String   @id @default(uuid())
-  organization_id    String
-  title              String
-  description        String?
-  decision_type      String
-  status             String   @default("proposed")
-  effectiveness_kpi  Json?
-  origin_member_id   String?
-  bitcoin_signature  String?
-  created_at         DateTime @default(now())
-  voting_deadline    DateTime?
-
-  organization organizations @relation(fields: [organization_id], references: [id])
-  origin_member members? @relation("decisions_origin_member", fields: [origin_member_id], references: [id])
-  voting_sessions voting_sessions[]
+enum DecisionCategory {
+  ALLOCATION_POLICY
+  TREASURY_SPEND
+  OPERATIONS
+  AID_DISBURSEMENT
+  MEMBERSHIP
+  SAFETY
+  GOVERNANCE_RULES
 }
 
-model voting_sessions {
-  id                         String   @id @default(uuid())
-  organization_id            String
-  decision_id                String?
-  title                      String
-  voting_type                String
-  status                     String   @default("active")
-  start_date                 DateTime @default(now())
-  end_date                   DateTime?
-  total_votes_cast           Int      @default(0)
-  bitcoin_signature_required Boolean  @default(true)
-
-  organization organizations @relation(fields: [organization_id], references: [id])
-  decision     decisions?    @relation(fields: [decision_id], references: [id])
-  votes        votes[]
+enum Electorate {
+  ALL_MEMBERS
+  HUMANS_ONLY
 }
 
-model votes {
-  id                String   @id @default(uuid())
-  voting_session_id String
-  member_id         String
-  vote_choice       String
-  weight            Decimal  @default(1.0)
-  bitcoin_signature String
-  signed_at         DateTime @default(now())
-
-  voting_session voting_sessions @relation(fields: [voting_session_id], references: [id])
-  member         members         @relation(fields: [member_id], references: [id])
-
-  @@unique([voting_session_id, member_id])
+enum VoteThreshold {
+  SIMPLE_MAJORITY
+  SUPERMAJORITY
 }
 
-model service_requests {
-  id               String   @id @default(uuid())
-  organization_id  String
-  title            String
-  description      String?
-  budget_sats      BigInt?
-  status           String   @default("open")
-  evaluation_criteria Json?
-  created_by       String?
-  created_at       DateTime @default(now())
-  deadline         DateTime?
-
-  organization organizations @relation(fields: [organization_id], references: [id])
-  service_bids service_bids[]
+enum ProposalStatus {
+  DRAFT
+  OPEN
+  CLOSED
 }
 
-model service_bids {
-  id                 String   @id @default(uuid())
-  service_request_id String
-  bidder_name        String
-  bitcoin_address    String   @db.VarChar(62)
-  bid_amount_sats    BigInt
-  proposal           String?
-  submitted_at       DateTime @default(now())
-
-  service_request service_requests @relation(fields: [service_request_id], references: [id])
+enum SessionStatus {
+  ACTIVE
+  CLOSED
 }
 
-model budget_allocations {
-  id              String   @id @default(uuid())
-  organization_id String
-  category        String
-  allocated_sats  BigInt
-  spent_sats      BigInt   @default(0)
-  year            Int
-  approved_by_vote String?
-
-  organization organizations @relation(fields: [organization_id], references: [id])
+enum SessionOutcome {
+  APPROVED
+  REJECTED
+  EXPIRED
 }
 
+enum VoteChoice {
+  YES
+  NO
+  ABSTAIN
+}
+
+enum PolicyStatus {
+  ACTIVE
+  SUPERSEDED
+}
+
+enum AuditEventType {
+  ORG_CREATED
+  MEMBER_ADDED
+  MEMBER_STATUS_CHANGED
+  PROPOSAL_CREATED
+  SESSION_OPENED
+  VOTE_CAST
+  SESSION_CLOSED
+  POLICY_ACTIVATED
+}
+
+model Organization {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  members         Member[]
+  proposals       Proposal[]
+  policies        Policy[]
+  treasurySources TreasurySource[]
+  auditEvents     AuditEvent[]
+
+  @@map("organizations")
+}
+
+model Member {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  displayName    String       @map("display_name")
+  memberType     MemberType   @map("member_type")
+  keyCustody     KeyCustody   @map("key_custody")
+  /// The address votes must recover to. The only voting credential there is.
+  bitcoinAddress String       @map("bitcoin_address") @db.VarChar(90)
+  publicKeyHex   String?      @map("public_key_hex")
+  votingWeight   Decimal      @default(1) @map("voting_weight") @db.Decimal(10, 2)
+  status         MemberStatus @default(ACTIVE)
+  /// OrangeCat actor id once the member linked via OIDC login (humans only).
+  ocActorId      String?      @unique @map("oc_actor_id")
+  /// For agents: which system runs them, e.g. "orangecat:cat", "fleetcrown:loki".
+  system         String?
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+
+  organization Organization  @relation(fields: [organizationId], references: [id])
+  proposals    Proposal[]
+  votes        Vote[]
+  apiKeys      AgentApiKey[]
+
+  @@unique([organizationId, bitcoinAddress])
+  @@map("members")
+}
+
+model Proposal {
+  id                String           @id @default(uuid())
+  organizationId    String           @map("organization_id")
+  category          DecisionCategory
+  title             String
+  /// Markdown rationale — what is proposed and why.
+  body              String
+  /// For policy proposals: which policy key this would change…
+  policyKey         String?          @map("policy_key")
+  /// …the exact proposed content…
+  proposedContent   Json?            @map("proposed_content")
+  /// …an external target ("orangecat:allocation_policy:<key>")…
+  target            String?
+  /// …and sha256 of the canonical JSON of proposedContent — what voters sign over.
+  contentHash       String?          @map("content_hash")
+  proposerMemberId  String           @map("proposer_member_id")
+  /// Bitcoin signed-message signature over proposalMessage() by the proposer.
+  proposerSignature String           @map("proposer_signature")
+  status            ProposalStatus   @default(DRAFT)
+  createdAt         DateTime         @default(now()) @map("created_at")
+
+  organization Organization   @relation(fields: [organizationId], references: [id])
+  proposer     Member         @relation(fields: [proposerMemberId], references: [id])
+  session      VotingSession?
+
+  @@map("proposals")
+}
+
+model VotingSession {
+  id         String        @id @default(uuid())
+  proposalId String        @unique @map("proposal_id")
+  status     SessionStatus @default(ACTIVE)
+  opensAt    DateTime      @default(now()) @map("opens_at")
+  closesAt   DateTime      @map("closes_at")
+
+  // Snapshot at open — a past decision must stay explainable after the
+  // governance config changes.
+  electorate     Electorate
+  threshold      VoteThreshold
+  quorumPercent  Int           @map("quorum_percent")
+  eligibleCount  Int           @map("eligible_count")
+  eligibleWeight Decimal       @map("eligible_weight") @db.Decimal(12, 2)
+
+  outcome  SessionOutcome?
+  closedAt DateTime?       @map("closed_at")
+
+  proposal Proposal @relation(fields: [proposalId], references: [id])
+  votes    Vote[]
+  policies Policy[]
+
+  @@map("voting_sessions")
+}
+
+model Vote {
+  id            String     @id @default(uuid())
+  sessionId     String     @map("session_id")
+  memberId      String     @map("member_id")
+  choice        VoteChoice
+  /// Member's weight snapshotted at cast time.
+  weight        Decimal    @db.Decimal(10, 2)
+  /// The exact canonical message that was signed — stored so anyone can re-verify.
+  signedMessage String     @map("signed_message")
+  signature     String
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  session VotingSession @relation(fields: [sessionId], references: [id])
+  member  Member        @relation(fields: [memberId], references: [id])
+
+  @@unique([sessionId, memberId])
+  @@map("votes")
+}
+
+model Policy {
+  id                  String       @id @default(uuid())
+  organizationId      String       @map("organization_id")
+  key                 String
+  version             Int
+  content             Json
+  status              PolicyStatus
+  /// Null only for the seeded bootstrap version. Every later version must
+  /// reference the APPROVED session that legitimated it.
+  approvedBySessionId String?      @map("approved_by_session_id")
+  activatedAt         DateTime     @default(now()) @map("activated_at")
+
+  organization      Organization   @relation(fields: [organizationId], references: [id])
+  approvedBySession VotingSession? @relation(fields: [approvedBySessionId], references: [id])
+
+  @@unique([organizationId, key, version])
+  @@map("policies")
+}
+
+/// Watch-only treasury source. Solon never holds funds — it points at
+/// independently verifiable on-chain addresses.
+model TreasurySource {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  label          String
+  address        String   @db.VarChar(90)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, address])
+  @@map("treasury_sources")
+}
+
+/// Append-only public audit log. No update or delete path exists in code.
+model AuditEvent {
+  id             String         @id @default(uuid())
+  organizationId String         @map("organization_id")
+  eventType      AuditEventType @map("event_type")
+  actorMemberId  String?        @map("actor_member_id")
+  subjectType    String         @map("subject_type")
+  subjectId      String         @map("subject_id")
+  payload        Json
+  createdAt      DateTime       @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@map("audit_events")
+}
+
+/// Transport auth for agent members calling the write API. The API key gets a
+/// request in the door; the Bitcoin signature is the authorization artifact.
+model AgentApiKey {
+  id        String    @id @default(uuid())
+  memberId  String    @map("member_id")
+  /// sha256 hex of the plaintext key (plaintext shown once at mint).
+  keyHash   String    @unique @map("key_hash")
+  createdAt DateTime  @default(now()) @map("created_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@map("agent_api_keys")
+}

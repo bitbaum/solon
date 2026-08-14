@@ -20,6 +20,7 @@ import * as secp from '@noble/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { hmac } from '@noble/hashes/hmac';
+import { bech32 } from '@scure/base';
 import bs58check from 'bs58check';
 
 // @noble/secp256k1 v2 needs an HMAC-SHA256 for RFC6979 deterministic signing.
@@ -45,10 +46,39 @@ export function messageDigest(message: string): Uint8Array {
   return doubleSha256(preimage);
 }
 
+function hash160(bytes: Uint8Array): Uint8Array {
+  return ripemd160(sha256(bytes));
+}
+
 /** Mainnet P2PKH address (version 0x00) for a public key. */
 function p2pkhAddress(pubkey: Uint8Array): string {
-  const hash = ripemd160(sha256(pubkey));
-  return bs58check.encode(secp.etc.concatBytes(Uint8Array.of(0x00), hash));
+  return bs58check.encode(secp.etc.concatBytes(Uint8Array.of(0x00), hash160(pubkey)));
+}
+
+/** Mainnet native-segwit P2WPKH (bech32, bc1q…) for a compressed public key. */
+function p2wpkhAddress(pubkey: Uint8Array): string {
+  const words = [0, ...bech32.toWords(hash160(pubkey))];
+  return bech32.encode('bc', words);
+}
+
+/** Mainnet P2SH-wrapped segwit (3…) for a compressed public key. */
+function p2shP2wpkhAddress(pubkey: Uint8Array): string {
+  const redeemScript = secp.etc.concatBytes(Uint8Array.of(0x00, 0x14), hash160(pubkey));
+  return bs58check.encode(secp.etc.concatBytes(Uint8Array.of(0x05), hash160(redeemScript)));
+}
+
+/** All standard mainnet addresses for a compressed public key (hex). */
+export function deriveAddresses(publicKeyHex: string): {
+  p2pkh: string;
+  p2wpkh: string;
+  p2shP2wpkh: string;
+} {
+  const pub = secp.etc.hexToBytes(publicKeyHex);
+  return {
+    p2pkh: p2pkhAddress(pub),
+    p2wpkh: p2wpkhAddress(pub),
+    p2shP2wpkh: p2shP2wpkhAddress(pub),
+  };
 }
 
 export interface BitcoinKeyPair {
@@ -90,8 +120,13 @@ export interface VerifyResult {
 
 /**
  * Verify that `signatureBase64` is a valid Bitcoin signed-message signature
- * for `message` by the holder of `address`. Recovers the public key from the
- * signature and checks the derived P2PKH address matches.
+ * for `message` by the holder of `address`.
+ *
+ * Accepts the full BIP137 header range (27–42: uncompressed/compressed P2PKH,
+ * P2SH-P2WPKH, P2WPKH) and, for compressed keys, matches the claimed address
+ * against ALL standard derivations of the recovered key. That covers wallets
+ * that set the segwit header bits (Sparrow, Bitcoin Core) AND wallets that
+ * sign segwit addresses with the legacy compressed header (Electrum).
  */
 export function verifyMessage(message: string, address: string, signatureBase64: string): VerifyResult {
   let raw: Buffer;
@@ -103,7 +138,7 @@ export function verifyMessage(message: string, address: string, signatureBase64:
   if (raw.length !== 65) return { valid: false, reason: `signature must be 65 bytes, got ${raw.length}` };
 
   const header = raw[0];
-  if (header < 27 || header > 34) return { valid: false, reason: `invalid header byte ${header}` };
+  if (header < 27 || header > 42) return { valid: false, reason: `invalid header byte ${header}` };
   const compressed = header >= 31;
   const recovery = (header - 27) & 0x03;
 
@@ -112,8 +147,12 @@ export function verifyMessage(message: string, address: string, signatureBase64:
     const sig = secp.Signature.fromCompact(raw.subarray(1)).addRecoveryBit(recovery);
     const point = sig.recoverPublicKey(digest);
     const pub = point.toRawBytes(compressed);
-    const recoveredAddress = p2pkhAddress(pub);
-    return { valid: recoveredAddress === address, recoveredAddress };
+
+    const candidates = compressed
+      ? [p2pkhAddress(pub), p2wpkhAddress(pub), p2shP2wpkhAddress(pub)]
+      : [p2pkhAddress(pub)];
+    const valid = candidates.includes(address);
+    return { valid, recoveredAddress: candidates[0], ...(valid ? {} : { reason: 'recovered key does not derive the claimed address' }) };
   } catch (e) {
     return { valid: false, reason: e instanceof Error ? e.message : 'recovery failed' };
   }
@@ -126,4 +165,20 @@ export function verifyMessage(message: string, address: string, signatureBase64:
  */
 export function voteMessage(params: { sessionId: string; choice: string; memberAddress: string }): string {
   return `Solon vote\nsession:${params.sessionId}\nchoice:${params.choice}\nvoter:${params.memberAddress}`;
+}
+
+/**
+ * Canonical message a member signs to file a proposal. Binds the organization,
+ * category, title, proposer, and (for policy changes) the sha256 of the exact
+ * proposed content — so a proposal can't be altered after signing.
+ */
+export function proposalMessage(params: {
+  orgSlug: string;
+  category: string;
+  title: string;
+  proposerAddress: string;
+  contentHash?: string | null;
+}): string {
+  const base = `Solon proposal\norg:${params.orgSlug}\ncategory:${params.category}\ntitle:${params.title}\nproposer:${params.proposerAddress}`;
+  return params.contentHash ? `${base}\ncontent:${params.contentHash}` : base;
 }
