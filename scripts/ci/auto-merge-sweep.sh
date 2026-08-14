@@ -224,12 +224,24 @@ for number in $(printf '%s' "$prs_json" | jq -r 'sort_by(.number) | .[].number')
                 echo "- 🔁 #${number} had no checks and was woken; CI is running now — ${title}" >> "$GITHUB_STEP_SUMMARY"
               fi
             else
-              # Already level with the base, so there is nothing to merge in and
-              # no push to make. Close/reopen is the only remaining trigger, and
-              # that is a human's call — say so instead of retrying every sweep.
-              echo "[auto-merge] #${number} could not be woken (already current with ${BASE_BRANCH}?) — close/reopen it to force checks: ${title}" >&2
+              # update-branch refuses for two unrelated reasons, and guessing
+              # between them is how this file's whole class of bug starts. The
+              # cached mergeable above can be UNKNOWN (GitHub recomputes it
+              # lazily, and it is invalidated every time the base moves — i.e.
+              # exactly when this workflow runs), so a conflicted PR can reach
+              # here and get told it is "already current". Ask for the real
+              # reason rather than print a plausible one.
+              why=$(gh pr view "$number" --repo "$REPO" --json mergeable --jq '.mergeable' 2>/dev/null || echo UNKNOWN)
+              if [ "$why" = "CONFLICTING" ]; then
+                reason="it conflicts with ${BASE_BRANCH} — resolve the conflict (or \`@dependabot recreate\`)"
+              else
+                # Nothing to merge in, so there is no push to make. Close/reopen
+                # is the only remaining trigger, and that is a human's call.
+                reason="it is already current with ${BASE_BRANCH} — close/reopen it to force checks"
+              fi
+              echo "[auto-merge] #${number} has no checks and could not be woken: ${reason} — ${title}" >&2
               if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
-                echo "- ⚠️ #${number} has no checks and could not be woken — close/reopen it to force CI — ${title}" >> "$GITHUB_STEP_SUMMARY"
+                echo "- ⚠️ #${number} has no checks and could not be woken: ${reason} — ${title}" >> "$GITHUB_STEP_SUMMARY"
               fi
             fi
           fi
