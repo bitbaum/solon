@@ -41,7 +41,9 @@ async function main() {
     process.exit(1);
   }
 
-  const publicKeyHex = secp.etc.bytesToHex(secp.getPublicKey(privateKeyHex, true));
+  const publicKeyHex = secp.etc.bytesToHex(
+    secp.getPublicKey(secp.etc.hexToBytes(privateKeyHex), true),
+  );
   const address = deriveAddresses(publicKeyHex).p2pkh;
   const message = voteMessage({ sessionId: session, choice, memberAddress: address });
   const signature = signMessage(message, privateKeyHex);
