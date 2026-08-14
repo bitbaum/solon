@@ -12,7 +12,8 @@ import { emitDecisionFinalized } from "@/lib/webhooks";
  * On close, `decision.finalized` is emitted to the configured webhook (a
  * doorbell — consumers fetch and re-verify the decision document themselves).
  */
-export async function POST(_: Request, { params }: { params: { sessionId: string } }) {
+export async function POST(_: Request, ctx: { params: Promise<{ sessionId: string }> }) {
+  const params = await ctx.params;
   try {
     const result = await closeSession(params.sessionId);
 

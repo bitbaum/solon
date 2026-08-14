@@ -8,7 +8,7 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 
 ## Stack
 
-- **Framework**: Next.js 14.2 (App Router, `output: 'standalone'` for the Hetzner deploy)
+- **Framework**: Next.js 16.3 (App Router, `output: 'standalone'` for the Hetzner deploy)
 - **Language**: TypeScript 5.5 (strict)
 - **Database**: PostgreSQL via Prisma 5.17
 - **Auth**: NextAuth v5 (beta) — sign in with OrangeCat (OAuth)

@@ -7,7 +7,7 @@ alwaysApply: true
 
 ## Architecture
 
-Next.js 14 Bitcoin governance platform:
+Next.js 16 Bitcoin governance platform:
 - `src/app/` - Pages and API routes
 - `src/components/` - UI components
 - `src/lib/` - Business logic, Bitcoin integration

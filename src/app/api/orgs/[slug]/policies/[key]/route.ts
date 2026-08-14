@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
  * bootstrap (approvedBySessionId null, labeled as such); every later version
  * references the APPROVED voting session that legitimated it.
  */
-export async function GET(_: Request, { params }: { params: { slug: string; key: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ slug: string; key: string }> }) {
+  const params = await ctx.params;
   const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 

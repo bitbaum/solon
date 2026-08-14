@@ -8,12 +8,13 @@ export const metadata = { title: "Sign-in problem — Solon" };
  * accounts without an email (OC's anonymous "start instantly" accounts),
  * because a governance identity must be attributable.
  */
-export default function AuthErrorPage({
+export default async function AuthErrorPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const denied = searchParams.error === "AccessDenied";
+  const { error } = await searchParams;
+  const denied = error === "AccessDenied";
   return (
     <main className="section-shell flex items-center justify-center py-20 sm:py-28">
       <div className="w-full max-w-lg rounded-surface border border-default bg-surface-base p-8">

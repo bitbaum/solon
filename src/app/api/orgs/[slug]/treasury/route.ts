@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
  * substitute, and every address links to a public explorer so the claim is
  * independently checkable.
  */
-export async function GET(_: Request, { params }: { params: { slug: string } }) {
+export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
+  const params = await ctx.params;
   const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 

@@ -12,16 +12,21 @@ import { ImageResponse } from "next/og";
  * the only non-CSS consumer of the tokens.
  */
 
-export const runtime = "edge";
+// No `runtime` export: Next 16 deprecates the Edge Runtime, and Node is the
+// default. `next/og` renders identically on it.
 export const alt = "Solon — Bitcoin-Native Governance";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Mirrors --solon-dark / --solon-orange / --solon-bitcoin in src/app/globals.css
-const INK = "#0F172A";
-const ORANGE = "#F97316";
-const BITCOIN = "#F7931A";
-const MUTED = "#94A3B8";
+// Satori cannot read CSS custom properties, so these mirror @fleet/design-tokens
+// by hand — the one place in the repo where a literal is unavoidable. They had
+// gone stale: this card was still rendering the deleted navy/#F97316 palette, so
+// every shared link previewed in a brand the site no longer uses. Keep in sync
+// with tokens.css; design:check cannot see bare consts like these.
+const INK = "#0A0A0A"; // --surface-public: 0 0% 4%
+const ORANGE = "#FF5C00"; // --public-accent
+const BITCOIN = "#F7931A"; // --bitcoin-orange (identity, never an action colour)
+const MUTED = "#A6A6A6"; // --text-secondary: 0 0% 65%
 
 export default function OGImage() {
   return new ImageResponse(
@@ -82,7 +87,8 @@ export default function OGImage() {
               maxWidth: 880,
             }}
           >
-            Radical transparency and cryptographic democracy for organizations.
+            Transparent decision-making and treasuries for organizations of
+            humans and AI agents.
           </div>
         </div>
 
