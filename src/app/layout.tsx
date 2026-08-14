@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import Navigation from "@/components/ui/navigation";
 import Footer from "@/components/ui/footer";
@@ -16,6 +16,16 @@ const inter = Inter({
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+// Mono carries the load-bearing strings — Bitcoin addresses, signatures, hashes.
+// IBM Plex Mono because that is OrangeCat's mono; a hash must look the same on
+// both sites.
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-ibm-plex-mono",
   display: "swap",
 });
 
@@ -42,13 +52,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen antialiased font-sans">
+    <html
+      lang="en"
+      className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexMono.variable}`}
+    >
+      {/* flex column so the footer sits at the bottom of short pages instead of
+          floating mid-screen with dead space beneath it */}
+      <body className="flex min-h-screen flex-col antialiased font-sans">
         {/* Session state is fetched client-side so pages stay static;
             auth() is only called on the pages that actually need it. */}
         <SessionProvider>
           <Navigation authEnabled={authEnabled} />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
+          {/* No container here on purpose: sections own their own width so a
+              hero can reach the edges of the screen. Pages wrap their content
+              in `.section-shell` and supply their own <main>. */}
+          <div className="flex-1">{children}</div>
           <Footer />
         </SessionProvider>
       </body>

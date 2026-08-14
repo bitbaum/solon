@@ -63,7 +63,7 @@ export default async function DashboardOverview() {
   if (dbError) {
     return (
       <main className="space-y-6">
-        <h1 className="text-3xl font-bold text-navy">Overview</h1>
+        <h1 className="text-3xl font-bold text-fg-primary">Overview</h1>
         <p className="text-fg-secondary">
           The governance register is currently unreachable. No live data can be
           shown.
@@ -74,7 +74,7 @@ export default async function DashboardOverview() {
 
   return (
     <main className="space-y-6">
-      <h1 className="text-3xl font-bold text-navy">
+      <h1 className="text-3xl font-bold text-fg-primary">
         {org ? `${org.name} — Overview` : "Overview"}
       </h1>
       {!org && (
@@ -87,14 +87,14 @@ export default async function DashboardOverview() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             href="/dashboard/voting"
-            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
+            className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
             <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Latest vote
             </div>
             {session ? (
               <>
-                <div className="font-semibold text-navy">
+                <div className="font-semibold text-fg-primary">
                   {session.proposalTitle}
                 </div>
                 <div className="mt-1 text-sm text-fg-secondary">
@@ -111,7 +111,7 @@ export default async function DashboardOverview() {
 
           <Link
             href="/dashboard/treasury"
-            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
+            className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
             <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Treasury
@@ -121,7 +121,7 @@ export default async function DashboardOverview() {
 
           <Link
             href="/governance/audit"
-            className="block rounded-lg border border-default p-5 hover:border-navy transition-colors"
+            className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
             <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
               Recent activity

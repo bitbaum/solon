@@ -16,11 +16,11 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
 
   return (
     <nav
-      className="bg-surface-base shadow-sm border-b border-default sticky top-0 z-50"
+      className="sticky top-0 z-50 border-b border-subtle bg-surface-page/80 backdrop-blur-lg"
       aria-label="Main Navigation"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="section-shell">
+        <div className="flex h-nav items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <Logo size="md" />
@@ -41,7 +41,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
               >
                 {item.children ? (
                   <button
-                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-primary hover:text-navy hover:bg-surface-raised rounded-md transition-colors"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-secondary hover:text-fg-primary hover:bg-surface-raised rounded-control transition-colors"
                     aria-haspopup="true"
                     aria-expanded={activeDropdown === item.title}
                     onFocus={() => setActiveDropdown(item.title)}
@@ -57,7 +57,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                 ) : (
                   <Link
                     href={item.href || "#"}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-primary hover:text-navy hover:bg-surface-raised rounded-md transition-colors"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-secondary hover:text-fg-primary hover:bg-surface-raised rounded-control transition-colors"
                   >
                     {item.title}
                   </Link>
@@ -69,12 +69,12 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                     <div className="absolute top-full left-0 w-96 h-2 bg-transparent z-40"></div>
 
                     <div
-                      className="absolute top-full left-0 w-96 bg-surface-base border border-default rounded-md py-6 mt-2 z-50"
+                      className="absolute top-full left-0 w-96 rounded-surface border border-default bg-surface-base py-6 mt-2 z-50"
                       role="menu"
                       aria-label={`${item.title} menu`}
                     >
-                      <div className="px-6 py-2 border-b border-default mb-4">
-                        <h3 className="text-lg font-bold text-navy tracking-tight">
+                      <div className="px-6 pb-3 border-b border-subtle mb-3">
+                        <h3 className="font-display text-base font-semibold text-fg-primary tracking-display">
                           {item.title}
                         </h3>
                         {item.description && (
@@ -88,12 +88,12 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                           <Link
                             key={child.title}
                             href={child.href || "#"}
-                            className="flex items-start px-6 py-3 text-sm text-fg-primary hover:text-navy hover:bg-surface-raised transition-all duration-200 group rounded-lg mx-2"
+                            className="group mx-2 flex items-start rounded-control px-6 py-3 text-sm transition-colors hover:bg-surface-raised"
                             role="menuitem"
                           >
-                            <div className="w-2 h-2 rounded-full bg-surface-raised mr-4 mt-2 group-hover:bg-navy transition-colors flex-shrink-0"></div>
+                            <div className="mr-4 mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-pill bg-border-strong transition-colors group-hover:bg-accent"></div>
                             <div className="min-w-0">
-                              <div className="font-medium text-fg-primary group-hover:text-navy">
+                              <div className="font-medium text-fg-secondary group-hover:text-fg-primary">
                                 {child.title}
                               </div>
                               {child.description && (
@@ -117,13 +117,13 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
             {authEnabled && <AuthControl />}
             <Link
               href="/ecosystem"
-              className="px-4 py-2 text-sm font-medium text-navy hover:text-navy-light transition-colors"
+              className="px-3 py-2 text-sm font-medium text-fg-secondary transition-colors hover:text-fg-primary"
             >
               Live State
             </Link>
             <Link
               href="/dashboard"
-              className="px-4 py-2 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors"
+              className="rounded-control bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
             >
               Open Dashboard
             </Link>
@@ -132,7 +132,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           {/* Mobile menu button */}
           <div className="lg:hidden">
             <button
-              className="p-2 rounded-md text-fg-primary hover:text-navy hover:bg-surface-raised"
+              className="rounded-control p-2 text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
@@ -146,7 +146,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden bg-surface-base border-t border-default"
+          className="lg:hidden border-t border-subtle bg-surface-page"
           role="menu"
           aria-label="Mobile Navigation"
         >
@@ -163,7 +163,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                         <Link
                           key={child.title}
                           href={child.href || "#"}
-                          className="block px-3 py-2 text-sm text-fg-secondary hover:text-navy hover:bg-surface-raised rounded-md"
+                          className="block rounded-control px-3 py-2 text-sm text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
                           role="menuitem"
                         >
                           {child.title}
@@ -174,7 +174,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                 ) : (
                   <Link
                     href={item.href || "#"}
-                    className="block px-3 py-2 text-sm font-medium text-fg-primary hover:text-navy hover:bg-surface-raised rounded-md"
+                    className="block rounded-control px-3 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
                     role="menuitem"
                   >
                     {item.title}
@@ -182,11 +182,11 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                 )}
               </div>
             ))}
-            <div className="border-t border-default pt-2 mt-2 space-y-1">
+            <div className="border-t border-subtle pt-2 mt-2 space-y-1">
               {authEnabled && <AuthControl compact />}
               <Link
                 href="/dashboard"
-                className="block px-3 py-2 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light"
+                className="block rounded-control bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
               >
                 Open Dashboard
               </Link>

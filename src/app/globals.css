@@ -2,59 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * Design-token SSOT.
+ *
+ * These token NAMES and VALUES are copied from OrangeCat's system on purpose —
+ * OrangeCat, FleetCrown and Solon are one product family and must read as one.
+ * A token added here should be added there under the same name, or not at all.
+ * Solon is dark-only: it is a public ledger, and the whole surface (marketing
+ * and dashboard alike) is the same near-black canvas the other two use for
+ * their public pages.
+ *
+ * Values are HSL channels (not hex) so Tailwind can compose alpha:
+ * `hsl(var(--surface-raised) / 0.5)` via `bg-surface-raised/50`.
+ */
 :root {
-  /* Tier 1 — primitives. Components never use these names. */
-  --primitive-navy-950: #0f172a;
-  --primitive-navy-900: #1e293b;
-  --primitive-navy-800: #334155;
-  --primitive-orange-500: #f97316;
-  --primitive-orange-600: #ea580c;
-  --primitive-bitcoin: #f7931a;
-  --primitive-paper: #fafafa;
-  --primitive-white: #ffffff;
-  --primitive-raised: #f4f4f5;
-  --primitive-muted: #71717a;
+  /* Tier 1 — primitives. Components never name these. */
+  --bitcoin-orange: #f7931a;
 
-  /* Tier 2 — semantic. Same names as OrangeCat / FleetCrown. */
-  --color-bg: var(--primitive-paper);
-  --color-surface: var(--primitive-white);
-  --color-surface-raised: var(--primitive-raised);
-  --color-text: var(--primitive-navy-900);
-  --color-text-muted: var(--primitive-muted);
-  --color-border: #e4e4e7;
-  --color-brand: var(--primitive-navy-900);
-  --color-action: var(--primitive-orange-500);
-  --color-on-brand: var(--primitive-white);
-  --color-on-brand-muted: #d4d4d8;
+  /* Tier 2 — semantic surfaces, darkest (page) to lightest (overlay). */
+  --surface-public: 0 0% 4%;
+  --surface-page: 0 0% 7%;
+  --surface-base: 0 0% 11%;
+  --surface-raised: 0 0% 14%;
+  --surface-overlay: 0 0% 17%;
+  --surface-hover: 0 0% 13%;
 
-  --background: var(--color-bg);
-  --foreground: var(--color-text);
-  --navy: var(--primitive-navy-900);
-  --navy-light: var(--primitive-navy-800);
-  --navy-dark: var(--primitive-navy-950);
-  --accent: var(--color-surface-raised);
-  --accent-dark: var(--color-border);
-  --solon-orange: var(--primitive-orange-500);
-  --solon-orange-dark: var(--primitive-orange-600);
-  --solon-dark: var(--primitive-navy-950);
-  --solon-bitcoin: var(--primitive-bitcoin);
-  --solon-light: var(--primitive-paper);
-  --solon-gray: var(--color-text-muted);
-  --solon-green: #10b981;
-  --solon-blue: #3b82f6;
+  /* Text ramp */
+  --text-primary: 0 0% 92%;
+  --text-secondary: 0 0% 65%;
+  --text-tertiary: 0 0% 48%;
+  --text-muted: 0 0% 32%;
+  --text-inverted: 0 0% 10%;
 
-  --font-display:
-    var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  /* Borders */
+  --border-subtle: 0 0% 13%;
+  --border-default: 0 0% 20%;
+  --border-strong: 0 0% 24%;
+  --border-interactive: 0 0% 60%;
+
+  /* Accent — the one action colour across all three products. */
+  --public-accent: #ff5c00;
+  --accent-hover: #ff7a33;
+
+  /* Status */
+  --status-positive: 145 55% 50%;
+  --status-warning: 38 92% 60%;
+  --status-negative: 0 75% 60%;
+
+  /* Typography */
+  --font-display: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --tracking-display: -0.03em;
+  --tracking-label: 0.1em;
+  --tracking-caps: 0.16em;
 
-  --radius-sm: 8px;
-  --radius-md: 8px;
-  --radius-lg: 8px;
-  --radius-xl: 8px;
+  /* Geometry */
+  --radius-control: 0.375rem;
+  --radius-surface: 0.5rem;
   --radius-pill: 9999px;
-  --radius-control: 8px;
-  --radius-card: 8px;
+  --shell-max: 90rem;
+  --public-nav-height: 76px;
 }
 
 html,
@@ -63,39 +71,97 @@ body {
 }
 
 body {
-  color: var(--color-text);
-  background: var(--color-bg);
-}
-
-/* The one branded surface. Gradients stay out of components. */
-.solon-hero-navy {
-  background: var(--navy-dark);
+  color: hsl(var(--text-primary));
+  background: hsl(var(--surface-page));
 }
 
 .font-display {
   font-family: var(--font-display);
+  letter-spacing: var(--tracking-display);
 }
 
-.text-solon-primary {
-  color: var(--navy);
+/**
+ * Section rhythm. Marketing sections are full-bleed and own their own inner
+ * container — the root layout must not wrap pages in one, or every hero renders
+ * as a box floating in a gutter instead of reaching the edges of the screen.
+ */
+.section-shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
 }
 
-.btn-primary {
-  @apply px-4 py-2 rounded-md bg-[var(--navy)] text-white font-semibold hover:bg-[var(--navy-light)] transition;
+@media (min-width: 640px) {
+  .section-shell {
+    padding-inline: 1.5rem;
+  }
 }
 
-.text-solon-orange {
-  color: var(--solon-orange);
+@media (min-width: 1024px) {
+  .section-shell {
+    padding-inline: 2rem;
+  }
 }
 
-.bg-solon-orange {
-  background-color: var(--solon-orange);
+/**
+ * Public backdrop — a restrained version of FleetCrown's: one accent glow and a
+ * masked grid over the near-black public surface. Token names match FleetCrown's
+ * so the effect can be compared across repos without translating.
+ */
+.public-backdrop {
+  position: relative;
+  isolation: isolate;
+  background: hsl(var(--surface-public));
+  --public-glow-accent: rgb(255 92 0 / 0.1);
+  --public-grid-stroke: rgb(255 255 255 / 0.04);
+  --public-grid-size: 80px;
 }
 
-.bg-solon-orange-dark {
-  background-color: var(--solon-orange-dark);
+.public-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60rem 30rem at 50% -10%, var(--public-glow-accent), transparent 70%);
 }
 
-.bg-solon-dark {
-  background-color: var(--solon-dark);
+.public-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, var(--public-grid-stroke) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--public-grid-stroke) 1px, transparent 1px);
+  background-size: var(--public-grid-size) var(--public-grid-size);
+  mask-image: radial-gradient(closest-side at 50% 35%, black, transparent);
+}
+
+/**
+ * The eyebrow pill above a hero headline — same primitive OrangeCat and
+ * FleetCrown use to open their marketing pages.
+ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid hsl(var(--border-default));
+  background: hsl(var(--surface-base));
+  padding: 0.375rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: hsl(var(--text-secondary));
+}
+
+.eyebrow::before {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--public-accent);
 }

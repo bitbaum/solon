@@ -102,16 +102,16 @@ export default async function EcosystemPage() {
           {ECOSYSTEM_PILLARS.map((pillar) => (
             <div
               key={pillar.key}
-              className={`rounded-md border shadow-sm p-6 flex flex-col gap-3 ${
+              className={`rounded-control border p-6 flex flex-col gap-3 ${
                 pillar.key === "solon"
-                  ? "bg-navy border-navy text-white"
+                  ? "bg-surface-raised border-default text-white"
                   : "bg-surface-base border-default"
               }`}
             >
               <div className="flex items-baseline justify-between gap-2">
                 <h2
                   className={`text-xl font-bold ${
-                    pillar.key === "solon" ? "text-white" : "text-navy"
+                    pillar.key === "solon" ? "text-white" : "text-fg-primary"
                   }`}
                 >
                   {pillar.name}
@@ -119,7 +119,7 @@ export default async function EcosystemPage() {
                 <span
                   className={`text-xs font-semibold uppercase tracking-wide ${
                     pillar.key === "solon"
-                      ? "text-solon-orange"
+                      ? "text-accent"
                       : "text-fg-secondary"
                   }`}
                 >
@@ -129,7 +129,7 @@ export default async function EcosystemPage() {
               <p
                 className={`text-sm ${
                   pillar.key === "solon"
-                    ? "text-on-brand-muted"
+                    ? "text-fg-secondary"
                     : "text-fg-secondary"
                 }`}
               >
@@ -138,7 +138,7 @@ export default async function EcosystemPage() {
               <p
                 className={`text-sm ${
                   pillar.key === "solon"
-                    ? "text-on-brand-muted"
+                    ? "text-fg-secondary"
                     : "text-fg-secondary"
                 }`}
               >
@@ -146,7 +146,7 @@ export default async function EcosystemPage() {
               </p>
               <div className="mt-auto pt-2">
                 {pillar.key === "solon" ? (
-                  <span className="text-xs text-on-brand-muted">
+                  <span className="text-xs text-fg-secondary">
                     You are here — {pillar.url.replace("https://", "")}
                   </span>
                 ) : (
@@ -154,7 +154,7 @@ export default async function EcosystemPage() {
                     href={pillar.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-semibold text-solon-orange hover:text-solon-orange-dark"
+                    className="text-sm font-semibold text-accent hover:text-accent-dark"
                   >
                     {pillar.url.replace("https://", "")} →
                   </a>
@@ -166,7 +166,7 @@ export default async function EcosystemPage() {
 
         {/* How a decision travels */}
         <section className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-navy text-center mb-6">
+          <h2 className="text-2xl font-bold text-fg-primary text-center mb-6">
             How a decision travels
           </h2>
           <ol className="space-y-3 text-sm text-fg-primary">
@@ -180,9 +180,9 @@ export default async function EcosystemPage() {
             ].map((step, i) => (
               <li
                 key={i}
-                className="flex gap-3 bg-surface-base rounded-md border border-default shadow-sm p-4"
+                className="flex gap-3 bg-surface-base rounded-control border border-default p-4"
               >
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-solon-orange text-white text-xs font-bold flex items-center justify-center">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent text-xs font-bold text-white">
                   {i + 1}
                 </span>
                 <span>{step}</span>
@@ -201,7 +201,7 @@ export default async function EcosystemPage() {
 
         {/* Live governed state */}
         <section className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-2xl font-bold text-navy text-center">
+          <h2 className="text-2xl font-bold text-fg-primary text-center">
             What is governed here, live
           </h2>
           {dbError && (
@@ -224,17 +224,17 @@ export default async function EcosystemPage() {
               </p>
 
               <div>
-                <h3 className="text-lg font-semibold text-navy mb-3">
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">
                   {org.name} — members
                 </h3>
                 <ul className="space-y-3">
                   {members.map((m) => (
                     <li
                       key={m.id}
-                      className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                      className="bg-surface-base rounded-control border border-default p-4"
                     >
                       <div className="flex items-baseline justify-between gap-4">
-                        <span className="font-semibold text-navy">
+                        <span className="font-semibold text-fg-primary">
                           {m.displayName}
                         </span>
                         <span className="text-xs text-fg-secondary uppercase tracking-wide">
@@ -251,7 +251,7 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-navy mb-3">
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">
                   Active policies
                 </h3>
                 {policies.length === 0 ? (
@@ -263,17 +263,17 @@ export default async function EcosystemPage() {
                     {policies.map((p) => (
                       <li
                         key={`${p.key}-v${p.version}`}
-                        className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                        className="bg-surface-base rounded-control border border-default p-4"
                       >
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-navy font-mono text-sm">
+                          <span className="font-semibold text-fg-primary font-mono text-sm">
                             {p.key}
                           </span>
                           <span className="text-xs text-fg-secondary">
                             v{p.version}
                           </span>
                         </div>
-                        <pre className="mt-2 p-2 rounded-md bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
+                        <pre className="mt-2 p-2 rounded-control bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
                           {JSON.stringify(p.content, null, 2)}
                         </pre>
                       </li>
@@ -283,7 +283,7 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-navy mb-3">
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">
                   Recent proposals
                 </h3>
                 {proposals.length === 0 ? (
@@ -293,10 +293,10 @@ export default async function EcosystemPage() {
                     {proposals.map((p) => (
                       <li
                         key={p.id}
-                        className="bg-surface-base rounded-md border border-default shadow-sm p-4"
+                        className="bg-surface-base rounded-control border border-default p-4"
                       >
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-navy">
+                          <span className="font-semibold text-fg-primary">
                             {p.title}
                           </span>
                           <span className="text-xs text-fg-secondary whitespace-nowrap">
@@ -309,7 +309,7 @@ export default async function EcosystemPage() {
                         {p.session?.outcome && (
                           <a
                             href={`/api/v1/decisions/${p.session.id}`}
-                            className="mt-1 inline-block text-xs font-mono text-solon-orange hover:text-solon-orange-dark"
+                            className="mt-1 inline-block text-xs font-mono text-accent hover:text-accent-dark"
                           >
                             self-verifying decision document →
                           </a>

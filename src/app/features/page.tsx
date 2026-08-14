@@ -95,13 +95,13 @@ export default function FeaturesPage() {
           <div className="inline-flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/ecosystem"
-              className="inline-flex items-center justify-center bg-solon-orange text-white px-8 py-3 rounded-sm hover:bg-solon-orange-dark transition-colors font-semibold "
+              className="inline-flex items-center justify-center bg-accent text-white px-8 py-3 rounded-control hover:bg-accent-hover transition-colors font-semibold "
             >
               See the live governed state
             </a>
             <a
               href="/integration"
-              className="inline-flex items-center justify-center bg-navy text-white px-8 py-3 rounded-sm hover:bg-navy-light transition-colors font-semibold"
+              className="inline-flex items-center justify-center bg-surface-raised text-fg-primary px-8 py-3 rounded-control hover:bg-surface-overlay transition-colors font-semibold"
             >
               API &amp; integration docs
             </a>
@@ -124,11 +124,11 @@ function FeatureCard({
   features: string[];
 }) {
   return (
-    <div className="bg-surface-base p-6 rounded-lg border border-default transition-shadow">
-      <span className="flex h-12 w-12 items-center justify-center rounded-md bg-navy mb-4">
-        <Icon className="h-6 w-6 text-solon-bitcoin" />
+    <div className="bg-surface-base p-6 rounded-surface border border-default transition-shadow">
+      <span className="flex h-12 w-12 items-center justify-center rounded-control bg-surface-raised mb-4">
+        <Icon className="h-6 w-6 text-bitcoin" />
       </span>
-      <h3 className="text-xl font-bold font-display text-navy mb-3">{title}</h3>
+      <h3 className="text-xl font-bold font-display text-fg-primary mb-3">{title}</h3>
       <p className="text-fg-secondary mb-4">{description}</p>
       <ul className="space-y-2">
         {features.map((feature) => (
@@ -136,7 +136,7 @@ function FeatureCard({
             key={feature}
             className="flex items-center text-sm text-fg-primary"
           >
-            <Check className="h-4 w-4 text-solon-orange mr-2.5 flex-shrink-0" />
+            <Check className="h-4 w-4 text-accent mr-2.5 flex-shrink-0" />
             {feature}
           </li>
         ))}

@@ -15,12 +15,14 @@ export default function AuthErrorPage({
 }) {
   const denied = searchParams.error === "AccessDenied";
   return (
-    <main className="max-w-xl mx-auto py-24 text-center">
-      <h1 className="text-2xl font-bold text-navy mb-4">
-        {denied ? "This OrangeCat account can’t be recognized" : "Sign-in didn’t complete"}
-      </h1>
+    <main className="section-shell flex items-center justify-center py-20 sm:py-28">
+      <div className="w-full max-w-lg rounded-surface border border-default bg-surface-base p-8">
+        <h1 className="font-display text-2xl font-bold tracking-display text-fg-primary">
+          {denied ? "This OrangeCat account can’t be recognized" : "Sign-in didn’t complete"}
+        </h1>
+        <div className="mt-4 space-y-4 text-sm leading-relaxed text-fg-secondary">
       {denied ? (
-        <div className="text-fg-secondary space-y-4 text-left">
+        <>
           <p>
             Your OrangeCat account has no email address — it is an anonymous
             account. Solon is a governance system: every recognized identity
@@ -28,28 +30,39 @@ export default function AuthErrorPage({
           </p>
           <p>
             Add an email to your account at{" "}
-            <a href="https://orangecat.ch/settings" className="text-navy underline">
+            <a
+              href="https://orangecat.ch/settings"
+              className="text-accent underline underline-offset-2 hover:text-accent-hover"
+            >
               orangecat.ch/settings
             </a>{" "}
             and try again. Note that you never need to sign in to observe —
             all governance data on this site is public — or to vote, which
             works by Bitcoin signature alone.
           </p>
-        </div>
+        </>
       ) : (
-        <p className="text-fg-secondary">
+        <p>
           Something went wrong talking to OrangeCat. Try again from the
           navigation bar; if it keeps failing, the audit trail and all
           governance data remain fully readable without signing in.
         </p>
       )}
-      <div className="mt-8">
-        <Link
-          href="/"
-          className="px-4 py-2 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy-light transition-colors"
-        >
-          Back to Solon
-        </Link>
+        </div>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center rounded-control border border-default bg-surface-raised px-4 py-2.5 text-sm font-medium text-fg-primary transition-colors hover:bg-surface-overlay"
+          >
+            Back to Solon
+          </Link>
+          <Link
+            href="/governance/audit"
+            className="inline-flex items-center justify-center rounded-control px-4 py-2.5 text-sm font-medium text-fg-secondary transition-colors hover:text-fg-primary"
+          >
+            Browse the audit trail →
+          </Link>
+        </div>
       </div>
     </main>
   );

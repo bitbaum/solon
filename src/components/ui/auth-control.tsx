@@ -22,8 +22,8 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
         href="/account"
         className={
           compact
-            ? "block px-3 py-2 text-sm font-medium text-navy hover:bg-surface-raised rounded-md"
-            : "px-4 py-2 text-sm font-medium text-navy hover:text-navy-light transition-colors"
+            ? "block px-3 py-2 text-sm font-medium text-fg-primary hover:bg-surface-raised rounded-control"
+            : "px-4 py-2 text-sm font-medium text-fg-primary hover:text-fg-primary transition-colors"
         }
       >
         {session.user?.name ?? "Account"}
@@ -36,8 +36,8 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
       onClick={() => signIn("orangecat")}
       className={
         compact
-          ? "block w-full text-left px-3 py-2 text-sm font-medium text-navy hover:bg-surface-raised rounded-md"
-          : "px-4 py-2 text-sm font-medium text-navy border border-default rounded-md hover:bg-surface-raised transition-colors"
+          ? "block w-full text-left px-3 py-2 text-sm font-medium text-fg-primary hover:bg-surface-raised rounded-control"
+          : "px-4 py-2 text-sm font-medium text-fg-primary border border-default rounded-control hover:bg-surface-raised transition-colors"
       }
     >
       Sign in with OrangeCat

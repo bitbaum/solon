@@ -11,8 +11,8 @@ export default function BitcoinTreasuryPage() {
       description="A treasury anyone can audit — every claim checkable on-chain"
     >
       <div className="max-w-4xl mx-auto space-y-8">
-        <div className="bg-surface-base rounded-md shadow-sm border border-default p-8">
-          <h2 className="text-2xl font-bold text-navy mb-4">The model</h2>
+        <div className="bg-surface-base rounded-control border border-default p-8">
+          <h2 className="text-2xl font-bold text-fg-primary mb-4">The model</h2>
           <ul className="space-y-3 text-fg-primary">
             <li>
               <span className="font-semibold">Bitcoin-native</span> — the
@@ -37,7 +37,7 @@ export default function BitcoinTreasuryPage() {
         <div className="text-center">
           <a
             href="/dashboard/treasury"
-            className="inline-flex items-center justify-center bg-navy text-white px-8 py-3 rounded-lg hover:bg-navy-light transition-colors font-semibold"
+            className="inline-flex items-center justify-center bg-surface-raised text-fg-primary px-8 py-3 rounded-surface hover:bg-surface-overlay transition-colors font-semibold"
           >
             View the treasury
           </a>
