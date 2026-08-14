@@ -1,5 +1,24 @@
 # Security Policy
 
+## What Solon holds — and does not
+
+This is the most important security property of the project, so it is stated
+before anything else:
+
+- **No private keys.** Members sign votes in their own environment. Solon only
+  ever receives a signature.
+- **No funds.** The treasury is **watch-only**: a treasury source is a label and
+  an address to observe. There is no code path that can spend, and no amount
+  field to drain.
+- **No rewritable history.** Audit events are append-only; there is no update or
+  delete path.
+- **A decision is evidence, not authority.** OrangeCat re-verifies every vote
+  signature against its own pinned keys before honoring a Solon decision. A
+  compromised Solon cannot, by itself, move value on a sibling product.
+
+Vulnerabilities that break any of these four claims are critical, whatever their
+CVSS score would otherwise be.
+
 ## Supported Versions
 
 | Version | Supported          |
