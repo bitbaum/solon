@@ -32,8 +32,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // `dark` is pinned, not toggled. The token package ships :root as light and
+  // `.dark` as the override (OrangeCat's mechanism, so a theme toggle needs no
+  // translation there). Solon is a public ledger with no light theme: remove
+  // that class and the whole site renders light.
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       {/* flex column so the footer sits at the bottom of short pages instead of
           floating mid-screen with dead space beneath it */}
       <body className="flex min-h-screen flex-col antialiased font-sans">
