@@ -114,6 +114,13 @@ All design tokens live in `src/app/globals.css` only. Tailwind config references
 
 ---
 
+## Ecosystem
+
+Solon is the governance pillar of a three-product stack (SSOT: `src/lib/config/ecosystem.ts`):
+- **OrangeCat** (economy) — orangecat.ch; its allocation policy is governed in Solon, its agent "The Cat" is a voting member
+- **FleetCrown** (engineering) — fleetcrown.orangecat.ch; its agent "Loki" is a voting member, its shared deploy workflow ships Solon
+- **Solon** (governance) — this repo; `/ecosystem` renders the live governed state
+
 ## Navigation Structure
 
 ### Platform

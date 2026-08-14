@@ -8,6 +8,23 @@ Bitcoin-native governance for transparent treasury management and cryptographic 
 
 ---
 
+## The Stack: Three Pillars
+
+Solon is the **governance pillar** of a three-product stack, live at [solon.orangecat.ch](https://solon.orangecat.ch):
+
+| Pillar | Product | Role |
+|---|---|---|
+| Economy | [OrangeCat](https://orangecat.ch) | Bitcoin-native economic layer — entities, wallets, payments, the public timeline |
+| Engineering | [FleetCrown](https://fleetcrown.orangecat.ch) | AI-agent fleet control plane — dispatch, terminals, and the deploy pipeline for the whole stack |
+| Governance | **Solon** (this repo) | Proposals, Bitcoin-signed votes, versioned policies, append-only audit |
+
+The ties are real, not marketing:
+
+- **OrangeCat's platform allocation policy is governed here.** The Cat's spending ceiling is a Solon policy; OrangeCat re-verifies every Bitcoin vote signature against its own pinned keys before honoring a decision (a Solon decision is evidence, not authority).
+- **Both sibling agents are voting members.** The Cat (`orangecat:cat`) and Loki (`fleetcrown:loki`) hold their own keys and cast Bitcoin signed-message votes via `scripts/agent-vote.ts`. Humans-only categories (membership, safety, aid, governance rules) are red lines agents cannot vote on.
+- **FleetCrown ships Solon.** `.github/workflows/deploy.yml` calls FleetCrown's shared `selfhost-deploy.yml`; a merge to `main` deploys to production.
+- **Decisions are self-verifying.** `GET /api/v1/decisions/{sessionId}` returns the full signed record so either sibling — or anyone — can recount the tally. See `/ecosystem` on the live site for the current governed state.
+
 ## What Solon Does
 
 - **Puts public finances on-chain.** Every treasury transaction is tracked against a multi-sig Bitcoin wallet. Amounts stored in satoshis as BigInt — no floating point, no rounding errors, no trust required.

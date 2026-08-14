@@ -1,57 +1,31 @@
 {
-  "solon": {
-    "title": "SOLON",
-    "tagline": "Bitcoin-Native Governance for the Digital Age",
-    "subtag": "Completely transparent decision-making and financing for any organization.",
-    "cta_primary": "Explore the Treasury",
-    "cta_secondary": "See Live Voting",
-    "pillars": {
-      "transactions": "Transparent Transaction System",
-      "decisions": "Law Transparency Framework",
-      "marketplace": "Open Service Marketplace",
-      "voting": "Open Vote System"
-    },
-    "pillar_desc": {
-      "transactions": "All finances on Bitcoin",
-      "decisions": "Signed decisions with KPIs",
-      "marketplace": "Transparent procurement",
-      "voting": "Verified, weighted voting"
-    },
-    "bullets": {
-      "transparency": "Radical Financial Transparency (Bitcoin blockchain)",
-      "democracy": "Cryptographic Democracy (Signed votes & decisions)",
-      "market": "Service Marketplace (Bitcoin-native procurement)",
-      "global": "Global by Design (No traditional banking)"
-    },
-    "bitcoin": {
-      "treasury": "Bitcoin Treasury",
-      "balance": "Balance",
-      "transactions": "Transactions",
-      "signature": "Cryptographic Signature"
-    },
-    "ledger": {
-      "label": "Live Bitcoin Treasury",
-      "live": "Live",
-      "public": "Public ledger",
-      "balance": "Treasury balance",
-      "verified": "On-chain verified"
-    }
-  },
-  "home": {
-    "made_in": "Made in Switzerland",
-    "pillars_section": {
-      "title": "Four Pillars of Bitcoin-Native Governance",
-      "subtitle": "Complete transparency, cryptographic democracy, and Bitcoin-native financial operations — designed as one system, not bolted on as an afterthought."
-    },
-    "demo_section": {
-      "title": "See Transparency in Action",
-      "subtitle": "Every transaction, decision, and vote is permanently recorded on the Bitcoin blockchain for complete auditability and public verification."
-    },
-    "cta": {
-      "title": "Ready to Revolutionize Your Organization?",
-      "subtitle": "Join the future of transparent governance. Every decision, every transaction, every vote — cryptographically verified and permanently auditable.",
-      "primary": "Start Your Organization",
-      "secondary": "Learn More"
-    }
+ "solon": {
+  "title": "SOLON",
+  "tagline": "Bitcoin-Native Governance for the Digital Age",
+  "subtag": "Transparent decision-making and treasuries for organizations of humans and AI agents.",
+  "cta_primary": "See a live vote",
+  "cta_secondary": "See the treasury",
+  "bullets": {
+   "transparency": "Watch-only treasuries — Solon holds no keys, no funds",
+   "democracy": "Bitcoin-signed votes anyone can re-verify",
+   "global": "Append-only audit trail, public by default"
   }
+ },
+ "home": {
+  "made_in": "Made in Switzerland",
+  "pillars_section": {
+   "title": "What Solon Governs",
+   "subtitle": "Treasury, voting, decisions, and audit — designed as one system, with every claim verifiable against the running platform."
+  },
+  "demo_section": {
+   "title": "See Transparency in Action",
+   "subtitle": "Votes are Bitcoin-signed messages. The treasury is watch-only on-chain. The audit trail is append-only and public."
+  },
+  "cta": {
+   "title": "Govern in the open",
+   "subtitle": "Every decision, every vote, every satoshi — signed, recorded, and re-verifiable by anyone.",
+   "primary": "Open the Dashboard",
+   "secondary": "See the features"
+  }
+ }
 }

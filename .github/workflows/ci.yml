@@ -1,0 +1,89 @@
+# Golden CI floor — see dotfiles/templates/ci/README.md.
+# solon: npm + Prisma. Floor = verify (lint + typecheck) + build.
+# Lint is `next lint` (eslint + eslint-config-next, config in .eslintrc.json).
+# `next build` is hermetic: the server components that touch Prisma catch DB
+# errors and render demo fallbacks, so no live DB is needed. Prisma has no
+# postinstall, so the client is generated before typecheck/build need its types.
+# The Playwright e2e smoke tests stay deferred (need a running app).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Prisma generate (types for typecheck)
+        run: npx prisma generate
+
+      # SSOT: lint + typecheck, defined in package.json `verify`.
+      - name: Verify
+        run: npm run verify
+
+      # Build gate — hermetic (Prisma calls fall back without a live DB, see header).
+      - name: Build
+        run: npm run build
+
+  # The vote spine against a real database: migration replay on a fresh
+  # postgres (proves the baseline + seed actually apply), then the
+  # propose → open → vote → close → policy-activation integration spec.
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      - name: Migration replay (baseline + seed on a fresh database)
+        run: npx prisma migrate deploy
+
+      - name: Vote spine integration spec
+        run: INTEGRATION=1 npx vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts

@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "design:check": "node scripts/design-system-check.js",
+    "verify": "npm run lint && npm run typecheck && npm run design:check && npm run test",
+    "test": "vitest run",
     "test:e2e": "playwright test",
     "test:puppeteer": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/smoke.mjs",
     "test:puppeteer:mega": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/mega-menu.mjs",
@@ -17,13 +21,16 @@
     "@noble/hashes": "^1.8.0",
     "@noble/secp256k1": "^2.3.0",
     "@prisma/client": "^5.17.0",
+    "@scure/base": "^2.2.0",
     "bs58check": "^3.0.1",
     "clsx": "2.1.1",
     "lucide-react": "0.441.0",
     "next": "14.2.5",
+    "next-auth": "^5.0.0-beta.32",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "tailwindcss": "3.4.9"
+    "tailwindcss": "3.4.9",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",
@@ -31,10 +38,14 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.19",
-    "postcss": "8.4.41",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.5",
+    "postcss": "8.5.23",
     "prisma": "5.17.0",
     "puppeteer": "22.15.0",
     "ts-node": "10.9.2",
-    "typescript": "5.5.3"
+    "tsx": "^4.23.11",
+    "typescript": "5.5.3",
+    "vitest": "^4.1.10"
   }
 }
