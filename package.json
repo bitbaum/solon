@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@fleet/design-tokens": "github:maonakamoto/design-tokens#v1.0.0",
-    "@noble/hashes": "^1.8.0",
-    "@noble/secp256k1": "^2.3.0",
+    "@noble/hashes": "2.3.0",
+    "@noble/secp256k1": "3.1.0",
     "@prisma/client": "^5.17.0",
     "@scure/base": "^2.2.0",
     "bs58check": "^4.0.0",

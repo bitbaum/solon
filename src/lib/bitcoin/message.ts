@@ -17,14 +17,18 @@
  * with no native addons.
  */
 import * as secp from '@noble/secp256k1';
-import { sha256 } from '@noble/hashes/sha256';
-import { ripemd160 } from '@noble/hashes/ripemd160';
-import { hmac } from '@noble/hashes/hmac';
+import { sha256 } from '@noble/hashes/sha2.js';
+import { ripemd160 } from '@noble/hashes/legacy.js';
+import { hmac } from '@noble/hashes/hmac.js';
 import { bech32 } from '@scure/base';
 import bs58check from 'bs58check';
 
-// @noble/secp256k1 v2 needs an HMAC-SHA256 for RFC6979 deterministic signing.
-secp.etc.hmacSha256Sync = (key, ...msgs) => hmac(sha256, key, secp.etc.concatBytes(...msgs));
+// @noble/secp256k1 ships no hash implementation; the synchronous API needs both
+// wired before first use (sha256 for the curve's own checks, HMAC-SHA256 for
+// RFC6979 deterministic nonces). Deterministic nonces are why the same vote
+// signed twice produces identical bytes — asserted by the known-answer tests.
+secp.hashes.sha256 = sha256;
+secp.hashes.hmacSha256 = (key, msg) => hmac(sha256, key, msg);
 
 const MAGIC = new TextEncoder().encode('Bitcoin Signed Message:\n');
 
@@ -89,7 +93,7 @@ export interface BitcoinKeyPair {
 
 /** Generate a fresh secp256k1 key pair + its P2PKH address (for members/tests). */
 export function generateKeyPair(): BitcoinKeyPair {
-  const priv = secp.utils.randomPrivateKey();
+  const priv = secp.utils.randomSecretKey();
   const pub = secp.getPublicKey(priv, true);
   return {
     privateKeyHex: secp.etc.bytesToHex(priv),
@@ -104,10 +108,16 @@ export function generateKeyPair(): BitcoinKeyPair {
  */
 export function signMessage(message: string, privateKeyHex: string): string {
   const digest = messageDigest(message);
-  const sig = secp.sign(digest, privateKeyHex);
+  // `prehash: false` because the Bitcoin digest is already the double-sha256
+  // above; letting the library hash again would sign the wrong value. The
+  // 'recovered' encoding is 65 bytes laid out recovery || r || s.
+  const sig = secp.sign(digest, secp.etc.hexToBytes(privateKeyHex), {
+    prehash: false,
+    format: 'recovered',
+  });
   // Compressed-key recovery header: 31..34 = 27 + recovery + 4 (compressed).
-  const header = 27 + (sig.recovery ?? 0) + 4;
-  const out = secp.etc.concatBytes(Uint8Array.of(header), sig.toCompactRawBytes());
+  const header = 27 + sig[0] + 4;
+  const out = secp.etc.concatBytes(Uint8Array.of(header), sig.subarray(1));
   return Buffer.from(out).toString('base64');
 }
 
@@ -144,9 +154,16 @@ export function verifyMessage(message: string, address: string, signatureBase64:
 
   try {
     const digest = messageDigest(message);
-    const sig = secp.Signature.fromCompact(raw.subarray(1)).addRecoveryBit(recovery);
-    const point = sig.recoverPublicKey(digest);
-    const pub = point.toRawBytes(compressed);
+    // Rebuild the library's 'recovered' encoding (recovery || r || s) from the
+    // Bitcoin layout (header || r || s) — same 64 signature bytes, different
+    // first byte. Copy into a plain Uint8Array: `raw` is a Buffer view over a
+    // pooled allocation, and the length checks are strict about that.
+    const recoveredSig = secp.etc.concatBytes(
+      Uint8Array.of(recovery),
+      Uint8Array.from(raw.subarray(1)),
+    );
+    const recoveredKey = secp.recoverPublicKey(recoveredSig, digest, { prehash: false });
+    const pub = secp.Point.fromBytes(recoveredKey).toBytes(compressed);
 
     const candidates = compressed
       ? [p2pkhAddress(pub), p2wpkhAddress(pub), p2shP2wpkhAddress(pub)]
