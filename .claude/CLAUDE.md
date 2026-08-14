@@ -4,195 +4,50 @@
 
 ---
 
-## Overview
+## Read these, not a copy of them
 
-**Solon** is a Bitcoin-native governance platform for transparent treasury management and democratic decision-making through cryptographic voting.
+This file used to restate the stack, the design tokens, the nav tree and the API
+surface. Every one of those had drifted — it documented a navy palette that no
+longer exists, five routes that were never built, and an entirely fictional API.
+A second copy of the truth is a copy that goes stale, so it is gone.
 
----
+| Question | Read |
+|---|---|
+| What is Solon, what are the models and routes? | `README.md` |
+| How do I work in the repo — commands, CI, Prisma, gotchas? | `AGENTS.md` |
+| What are the design rules? | `docs/development/ui-guidelines.md` |
+| What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
+| What is the schema? | `prisma/schema.prisma` (9 models) |
+| Which env vars exist? | `.env.example` |
 
-## Tech Stack
+## The three that matter most
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 14.2.5 (App Router) |
-| Language | TypeScript 5.5.3 |
-| Styling | Tailwind CSS 3.4.9 |
-| Database | PostgreSQL with Prisma |
-| Testing | Playwright + Puppeteer |
-| Bitcoin | BTCPay/Bitcoin Core |
+**`npm run verify` is the gate.** lint + typecheck + design:check + test. CI runs
+exactly it. Run it before every commit.
 
----
+**Design tokens live in `@fleet/design-tokens`, not in this repo.** One package
+is the SSOT for OrangeCat, FleetCrown and Solon — it owns the tokens *and* the
+self-hosted faces, so changing the display typeface for the whole stack is one
+line in one file. `globals.css` holds no tokens and `tailwind.config.js` defines
+no colours; both would fail `design:check` if they did. Solon is dark-only. The
+`navy` / `solon-*` palette is deleted, not aliased. Never write a hex in a
+component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
 
-## Project Structure
+Two rules the display face imposes, both enforced by `design:check`: it ships
+**one weight**, so never put `font-bold` beside `font-display` (the browser
+fakes it and it looks cheap); and it is high-contrast, so it thins out as it
+shrinks — display type starts at `text-2xl`/`text-display-3`, and below that you
+use the sans at `font-semibold`. The uppercase `.wordmark` is the one exception.
 
-```
-src/
-├── app/
-│   ├── (dashboard)/       # Dashboard routes
-│   ├── (marketing)/       # Landing pages
-│   ├── governance/        # Voting, decisions
-│   └── treasury/          # Bitcoin treasury
-├── components/
-│   ├── ui/               # Core UI
-│   ├── dashboard/        # Dashboard components
-│   └── bitcoin/          # Bitcoin components
-├── lib/
-│   ├── solon/           # Core Solon logic
-│   └── bitcoin/         # Bitcoin integration
-└── i18n/                 # Internationalization
-```
-
----
-
-## Four Pillars
-
-1. **Transparent Treasury** - Bitcoin wallet + transaction history
-2. **Democratic Voting** - Cryptographic vote verification
-3. **Decision Making** - Proposal creation and management
-4. **Audit Trail** - Complete transparency
-
----
-
-## Design System
-
-### Token SSOT: `src/app/globals.css`
-
-All design tokens are CSS custom properties in `globals.css`. `tailwind.config.js` maps Tailwind classes → CSS vars (no literal values).
-
-```css
-:root {
-  --background:        #ffffff;
-  --foreground:        #1e293b;
-  --navy:              #1e293b;
-  --navy-light:        #334155;
-  --navy-dark:         #0f172a;
-  --accent:            #f1f5f9;
-  --accent-dark:       #e2e8f0;
-  --solon-orange:      #f97316;
-  --solon-orange-dark: #ea580c;
-  --solon-dark:        #0f172a;
-  --solon-bitcoin:     #f7931a;
-  --solon-light:       #f8fafc;
-  --solon-gray:        #64748b;
-  --solon-green:       #10b981;
-  --solon-blue:        #3b82f6;
-}
-```
-
-**Tailwind config (`tailwind.config.js`) — all reference CSS vars:**
-```js
-'solon-orange':      'var(--solon-orange)'
-'solon-orange-dark': 'var(--solon-orange-dark)'
-'solon-bitcoin':     'var(--solon-bitcoin)'
-'solon-dark':        'var(--solon-dark)'
-'solon-light':       'var(--solon-light)'
-'solon-gray':        'var(--solon-gray)'
-'solon-green':       'var(--solon-green)'
-'solon-blue':        'var(--solon-blue)'
-```
-
-**Custom utility classes (`globals.css`):**
-- `.solon-gradient` — navy-to-navy-light linear gradient
-- `.solon-text-gradient` — gradient applied as text clip
-- `.text-solon-primary` — `color: var(--navy)`
-- `.text-solon-orange` — `color: var(--solon-orange)`
-- `.bg-solon-orange` — `background-color: var(--solon-orange)`
-- `.bg-solon-orange-dark` — `background-color: var(--solon-orange-dark)`
-- `.bg-solon-dark` — `background-color: var(--solon-dark)`
-- `.btn-primary` — navy background with hover navy-light
-
-### SSOT Rule
-
-All design tokens live in `src/app/globals.css` only. Tailwind config references CSS vars (`'var(--name)'`), never literal values. Components use semantic Tailwind classes, never `bg-[#hex]`.
-
-**Violations to fix when touching UI:**
-- `bg-[#hex]` / `text-[#hex]` in className → CSS var + semantic class
-- `style={{ color: '#hex' }}` → CSS var + className
-- Literal hex in tailwind.config → `'var(--color-name)'`
-
-**Audit:** `grep -r '\[#' src/` — every result is a violation.
-
----
-
-## Ecosystem
-
-Solon is the governance pillar of a three-product stack (SSOT: `src/lib/config/ecosystem.ts`):
-- **OrangeCat** (economy) — orangecat.ch; its allocation policy is governed in Solon, its agent "The Cat" is a voting member
-- **FleetCrown** (engineering) — fleetcrown.orangecat.ch; its agent "Loki" is a voting member, its shared deploy workflow ships Solon
-- **Solon** (governance) — this repo; `/ecosystem` renders the live governed state
-
-## Navigation Structure
-
-### Platform
-- Overview → `/`
-- Features → `/features`
-- Security → `/security`
-- Integration → `/integration`
-
-### Governance
-- Voting System → `/governance/voting`
-- Decision Making → `/governance/decisions`
-- Transparency → `/governance/transparency`
-- Audit Trail → `/governance/audit`
-
-### Treasury
-- Bitcoin Treasury → `/treasury/bitcoin`
-- Transaction History → `/treasury/transactions`
-- Budget Tracking → `/treasury/budget`
-- Financial Reports → `/treasury/reports`
-
----
-
-## API Structure
-
-```typescript
-// Treasury
-GET /api/treasury/balance
-GET /api/treasury/transactions
-POST /api/treasury/proposal
-
-// Voting
-GET /api/voting/active
-POST /api/voting/cast
-GET /api/voting/results
-
-// Governance
-GET /api/governance/decisions
-POST /api/governance/decision
-GET /api/governance/audit
-```
-
----
-
-## Quick Start
-
-```bash
-cp .env.example .env
-npm install
-npm run prisma:generate
-npm run prisma:push
-npm run dev
-```
-
----
-
-## Testing
-
-```bash
-npm run test:e2e           # Playwright tests
-npm run test:puppeteer     # Smoke tests
-npm run test:puppeteer:mega  # Mega menu tests
-```
-
----
+**Some decisions are humans-only.** `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY`
+and `GOVERNANCE_RULES` cannot be voted by agent members. See
+`src/lib/config/governance.ts`. These are red lines, not defaults to tune.
 
 ## Don't
 
-- Skip cryptographic verification for votes
-- Expose private keys or wallet secrets
-- Hardcode Bitcoin addresses
-- Commit .env files
-
----
-
-**Last Updated**: 2026-01-23
+- Skip signature verification on a vote.
+- Add an amount field to the treasury. It is **watch-only** by design — a label
+  and an address, with no code path that can spend.
+- Add an update or delete path to audit events. Append-only is the product.
+- Hard-code a user-facing string; four languages ship from `i18n/`.
+- Commit `.env`.
