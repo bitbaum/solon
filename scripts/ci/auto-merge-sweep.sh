@@ -32,6 +32,18 @@
 # running. Red base => stop adding changes until it is fixed; running CI => the
 # answer is not in yet. Both simply defer to the next sweep.
 #
+# WAKING CHECK-LESS PRs
+# ---------------------
+# "Has at least one check" is load-bearing, and it is also a trap for any PR
+# that predates the repo's CI floor: GitHub never retroactively runs workflows,
+# so such a PR has zero checks, cannot gain any on its own, and the policy parks
+# it forever. It reports as CLEAN — which means "nothing objected", not
+# "verified" — so it looks ready while being the one thing that must not merge.
+#
+# The sweep therefore pushes those branches (update-branch) so CI actually runs,
+# a few per sweep, and judges them next time on real evidence. This loosens
+# nothing: waking a PR only gets it checked, never merged.
+#
 # THE RE-ARM (do not remove)
 #   A push made with the default GITHUB_TOKEN does NOT trigger workflows. Both
 #   CI and the deploy workflow here run on push, so a merge from this script
@@ -49,6 +61,12 @@ REPO="${GH_REPO:?GH_REPO must be set}"
 BASE_BRANCH="${BASE_BRANCH:-main}"
 CI_WORKFLOW="${CI_WORKFLOW:-ci.yml}"
 REARM_WORKFLOWS="${REARM_WORKFLOWS:-$CI_WORKFLOW}"
+
+# How many check-less PRs one sweep may wake. Waking does not touch the
+# base, so the one-car-per-sweep rule below does not apply — but each wake
+# starts a CI run, and a backlog of them would otherwise stampede the runners
+# in a single pass. A few per sweep drains even a large backlog within hours.
+WAKE_MAX_PER_SWEEP="${WAKE_MAX_PER_SWEEP:-3}"
 
 # A PR wearing any of these is never merged automatically.
 HOLD_LABELS='["hold","no-automerge","do-not-merge","wip"]'
@@ -126,6 +144,10 @@ fi
 
 merged_any=0
 
+# Declared here for the same reason base_red_jobs is: `set -u` is on, and the
+# wake site reads this on a path that may never have assigned it.
+woken=0
+
 # OLDEST FIRST. `gh pr list` returns newest-first, and this loop merges the
 # first eligible PR and stops — so the newest green PR wins every sweep and an
 # older one can wait indefinitely. Observed in maonakamoto/fleetcrown on
@@ -167,11 +189,51 @@ for number in $(printf '%s' "$prs_json" | jq -r 'sort_by(.number) | .[].number')
     # "No checks reported yet" is transient for a PR opened seconds ago and
     # PERMANENT for an old one: GitHub does not retroactively run workflows on
     # a PR nobody has pushed to, so it will sit here forever looking patient.
-    # Report it; only a push, or a close/reopen, will ever produce checks.
-    if [ "$verdict" = "skip: no checks reported yet" ] && [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+    # Only a push, or a close/reopen, will ever produce checks.
+    #
+    # Reporting that was not enough. Every repo in this fleet gained its CI
+    # floor in August 2026, and every Dependabot PR opened before that day has
+    # zero checks — so "has at least one check" can never become true and the
+    # policy above parks them permanently. Found on 2026-08-14 in
+    # maonakamoto/solon: 5 PRs from 2026-06-22/06-29, all MERGEABLE, all CLEAN,
+    # none merged, none merge-able, because nothing had ever checked them.
+    # CLEAN there means "nothing objected", not "verified" — the dangerous
+    # reading, and exactly why the no-checks rule must stay.
+    #
+    # So give them the push. update-branch merges the current base into the PR
+    # branch, which fires `pull_request: synchronize` and produces real checks;
+    # the next sweep then judges them on evidence like any other PR. This grants
+    # nothing — a woken PR still has to go green to merge, and a red one
+    # parks itself exactly where it already was.
+    if [ "$verdict" = "skip: no checks reported yet" ]; then
       created=$(printf '%s' "$pr" | jq -r '.createdAt // ""')
       if [ -n "$created" ] && [ "$created" \< "$(date -u -d '2 hours ago' +%Y-%m-%dT%H:%M:%SZ)" ]; then
-        echo "- ⚠️ #${number} has no checks and is over 2h old — it will never gain any on its own — ${title}" >> "$GITHUB_STEP_SUMMARY"
+        if [ "$woken" -ge "$WAKE_MAX_PER_SWEEP" ]; then
+          echo "[auto-merge] #${number} needs waking but this sweep hit its cap (${WAKE_MAX_PER_SWEEP}) — next sweep takes it"
+        else
+          # A conflicted branch cannot be updated; it needs the base merged by
+          # hand (or `@dependabot recreate`). The CONFLICTING report below is
+          # the signal for those, so do not burn a wake slot failing here.
+          if [ "$(printf '%s' "$pr" | jq -r '.mergeable')" = "CONFLICTING" ]; then
+            echo "[auto-merge] #${number} has no checks AND conflicts — cannot be woken until the conflict is resolved: ${title}" >&2
+          else
+            echo "[auto-merge] #${number} has no checks and is over 2h old — waking it so CI runs: ${title}"
+            if gh api -X PUT "repos/${REPO}/pulls/${number}/update-branch" --silent 2>/dev/null; then
+              woken=$((woken + 1))
+              if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+                echo "- 🔁 #${number} had no checks and was woken; CI is running now — ${title}" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            else
+              # Already level with the base, so there is nothing to merge in and
+              # no push to make. Close/reopen is the only remaining trigger, and
+              # that is a human's call — say so instead of retrying every sweep.
+              echo "[auto-merge] #${number} could not be woken (already current with ${BASE_BRANCH}?) — close/reopen it to force checks: ${title}" >&2
+              if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+                echo "- ⚠️ #${number} has no checks and could not be woken — close/reopen it to force CI — ${title}" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            fi
+          fi
+        fi
       fi
     fi
 
