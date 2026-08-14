@@ -63,6 +63,33 @@
   --radius-pill: 9999px;
   --shell-max: 90rem;
   --public-nav-height: 76px;
+
+  /**
+   * Vertical rhythm.
+   *
+   * Pace is one decision, not a `py-20 sm:py-28` guess repeated on every
+   * section — that is how a page ends up with six slightly different rhythms.
+   * Fluid, so the spacing that reads as generous at 1440 does not strand a
+   * phone with half a screen of emptiness.
+   */
+  --section-py: clamp(5rem, 9vw, 9rem);
+  --section-py-tight: clamp(3.5rem, 6vw, 6rem);
+
+  /**
+   * Display scale. Fluid for the same reason: one confident size that resolves
+   * itself per viewport, rather than three breakpoint variants per heading.
+   */
+  --text-display-1: clamp(2.75rem, 5.4vw, 4.5rem);
+  --text-display-2: clamp(2rem, 3.4vw, 3rem);
+  --text-display-3: clamp(1.5rem, 2vw, 1.875rem);
+
+  /**
+   * Measures for running text. Headlines take their width from the column they
+   * sit in — a hero h1 with its own max-width as well ends up with two rules
+   * where only one ever binds.
+   */
+  --measure-lede: 46ch;
+  --measure-copy: 68ch;
 }
 
 html,
@@ -113,9 +140,11 @@ body {
   position: relative;
   isolation: isolate;
   background: hsl(var(--surface-public));
-  --public-glow-accent: rgb(255 92 0 / 0.1);
-  --public-grid-stroke: rgb(255 255 255 / 0.04);
-  --public-grid-size: 80px;
+  /* Deliberately calmer than FleetCrown's: same effect, same token names, dialled
+     down. Solon is a public ledger — the decoration should be felt, not read. */
+  --public-glow-accent: rgb(255 92 0 / 0.07);
+  --public-grid-stroke: rgb(255 255 255 / 0.025);
+  --public-grid-size: 96px;
 }
 
 .public-backdrop::before {

@@ -66,11 +66,22 @@ module.exports = {
         surface: "var(--radius-surface)",
         pill: "var(--radius-pill)",
       },
+      fontSize: {
+        // Fluid display sizes. Line heights ride with them so a headline never
+        // needs a per-breakpoint leading override.
+        "display-1": ["var(--text-display-1)", { lineHeight: "1.04" }],
+        "display-2": ["var(--text-display-2)", { lineHeight: "1.12" }],
+        "display-3": ["var(--text-display-3)", { lineHeight: "1.2" }],
+      },
       maxWidth: {
         shell: "var(--shell-max)",
+        lede: "var(--measure-lede)",
+        copy: "var(--measure-copy)",
       },
       spacing: {
         nav: "var(--public-nav-height)",
+        section: "var(--section-py)",
+        "section-tight": "var(--section-py-tight)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",

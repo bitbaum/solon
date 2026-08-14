@@ -47,6 +47,27 @@ The root layout does **not** wrap pages in a container. Sections are full-bleed
 and own their own width via `.section-shell`, so a hero reaches the edges of the
 screen instead of rendering as a box floating in a gutter.
 
+## Rhythm and display type
+
+Pace is one decision, not a per-section guess. Use the utilities, never a raw
+`py-20 sm:py-28`:
+
+| Utility | Token | Use |
+|---|---|---|
+| `py-section` | `--section-py` | marketing sections |
+| `py-section-tight` | `--section-py-tight` | content pages (`PageLayout`) |
+| `text-display-1` | `--text-display-1` | the one hero headline on a page |
+| `text-display-2` | `--text-display-2` | section headings, content-page `h1` |
+| `text-display-3` | `--text-display-3` | card headings |
+
+All five are `clamp()`, so a heading needs **no breakpoint variants** — one size
+resolves itself per viewport. If you find yourself writing
+`text-3xl sm:text-4xl lg:text-5xl`, reach for a display token instead.
+
+Headlines take their width from the column they sit in. Do not also give an `h1`
+its own `max-width`: you end up with two rules where only one ever binds. Running
+text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
+
 ## Components
 
 | Component | File |

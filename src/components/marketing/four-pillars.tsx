@@ -70,20 +70,20 @@ const AREAS = [
 
 export function FourPillars() {
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-2">
       {AREAS.map((area) => {
         const IconComponent = area.icon;
         return (
           <div
             key={area.title}
-            className="flex flex-col rounded-surface border border-default bg-surface-base p-8 transition-colors hover:border-strong"
+            className="flex flex-col rounded-surface border border-subtle bg-surface-base p-10 transition-colors hover:border-default"
           >
             <div className="flex items-center space-x-4 mb-5">
               <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-control border border-default bg-surface-raised">
                 <IconComponent className="h-5 w-5 text-accent" />
               </span>
               <div>
-                <h3 className="font-display text-lg font-semibold tracking-display text-fg-primary">
+                <h3 className="font-display text-display-3 font-semibold tracking-display text-fg-primary">
                   {area.title}
                 </h3>
                 <p className="text-sm text-fg-tertiary">{area.shortDesc}</p>
