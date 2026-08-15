@@ -117,8 +117,8 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 ## Pages
 
 **Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
-`/ecosystem` (the live governed state), `/governance/voting`,
-`/governance/audit`, `/treasury/bitcoin`
+`/why` (Townsism — why a town), `/ecosystem` (the live governed state),
+`/governance/voting`, `/governance/audit`, `/treasury/bitcoin`
 
 **Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,
 `/account`

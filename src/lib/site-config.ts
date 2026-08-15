@@ -53,6 +53,7 @@ export const NAV_ITEMS: NavSection[] = [
     description: 'About the project',
     children: [
       { title: 'About', href: '/about', description: 'Why Solon exists and who runs it' },
+      { title: 'Why a town', href: '/why', description: 'Townsism — the idea Solon is the organ of' },
     ],
   },
 ];
