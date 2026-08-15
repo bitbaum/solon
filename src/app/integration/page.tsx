@@ -13,7 +13,7 @@ export default function IntegrationPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-6">
+          <h2 className="font-display text-display-3 text-fg-primary mb-6">
             Cast a cryptographic vote
           </h2>
           <p className="text-fg-primary mb-4">
@@ -52,7 +52,7 @@ export default function IntegrationPage() {
         </div>
 
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-4">Live endpoints</h2>
+          <h2 className="font-display text-display-3 text-fg-primary mb-4">Live endpoints</h2>
           <ul className="space-y-2">
             <li>
               <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">

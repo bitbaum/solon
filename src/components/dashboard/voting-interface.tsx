@@ -68,7 +68,7 @@ export default function VotingInterface({
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-fg-primary">{session.title}</h2>
+          <h2 className="font-display text-display-3 text-fg-primary">{session.title}</h2>
           <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-fg-secondary">

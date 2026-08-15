@@ -19,7 +19,7 @@ export default async function VotingPage() {
   if (dbError) {
     return (
       <main className="space-y-6">
-        <h1 className="text-3xl font-bold">Voting</h1>
+        <h1 className="font-display text-display-3">Voting</h1>
         <p className="text-fg-secondary">
           The voting register is currently unreachable. No session data can be
           shown.
@@ -31,7 +31,7 @@ export default async function VotingPage() {
   if (!session) {
     return (
       <main className="space-y-6">
-        <h1 className="text-3xl font-bold">Voting</h1>
+        <h1 className="font-display text-display-3">Voting</h1>
         <p className="text-fg-secondary">
           No voting session has been opened yet. When one opens, registered
           members vote here by signing the canonical vote message with their own
@@ -45,7 +45,7 @@ export default async function VotingPage() {
 
   return (
     <main className="space-y-6">
-      <h1 className="text-3xl font-bold">
+      <h1 className="font-display text-display-3">
         {session.status === "ACTIVE" ? "Open Vote" : "Latest Vote"}
       </h1>
       <VotingInterface

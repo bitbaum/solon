@@ -29,7 +29,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Mission Section */}
         <div className="bg-surface-base rounded-control border border-default p-8 mb-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-6">
+          <h2 className="font-display text-display-3 text-fg-primary mb-6">
             Why Solon exists
           </h2>
           <div className="prose prose-lg text-fg-primary">
@@ -80,7 +80,7 @@ export default function AboutPage() {
 
         {/* Who runs it — the real, running answer */}
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-4">Who runs it</h2>
+          <h2 className="font-display text-display-3 text-fg-primary mb-4">Who runs it</h2>
           <p className="text-fg-primary mb-6">
             Solon is operated as part of the OrangeCat stack and governed on its
             own rails. The current voting members — including the sibling
@@ -101,7 +101,7 @@ export default function AboutPage() {
         {/* CTA — real destinations only */}
         <div className="text-center mt-12">
           <div className="bg-surface-raised text-fg-primary p-8 rounded-control">
-            <h3 className="text-2xl font-bold mb-4">See it running</h3>
+            <h3 className="font-display text-display-3 mb-4">See it running</h3>
             <p className="text-fg-secondary mb-6">
               The live governed state — members, policies, decisions — is
               public. So is the code.
