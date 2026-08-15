@@ -3,7 +3,7 @@
   "title": "SOLON",
   "tagline": "Bitcoin-Native Governance for the Digital Age",
   "subtag": "Transparent decision-making and treasuries for organizations of humans and AI agents.",
-  "cta_primary": "See a live vote",
+  "cta_primary": "See the latest vote",
   "cta_secondary": "See the treasury",
   "bullets": {
    "transparency": "Watch-only treasuries — Solon holds no keys, no funds",
@@ -23,7 +23,7 @@
   },
   "cta": {
    "title": "Govern in the open",
-   "subtitle": "Every decision, every vote, every satoshi — signed, recorded, and re-verifiable by anyone.",
+   "subtitle": "Every decision and every vote — signed, recorded, and re-verifiable by anyone.",
    "primary": "Open the Dashboard",
    "secondary": "See the features"
   }
