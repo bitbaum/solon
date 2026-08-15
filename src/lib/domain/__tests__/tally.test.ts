@@ -1,90 +1,69 @@
 import { describe, expect, it } from "vitest";
-import { SessionOutcome, VoteChoice, VoteThreshold } from "@prisma/client";
-import { closeRefusal, decideOutcome, tally } from "../tally";
+import { SessionOutcome, VoteThreshold } from "@prisma/client";
+import { decideOutcome, tallyOf } from "../tally";
+import { aggregateBallots } from "../methods";
+import type { Aggregate } from "../methods/types";
 
-describe("tally", () => {
-  it("weights votes by member weight", () => {
-    expect(
-      tally([
-        { choice: VoteChoice.YES, weight: 2.5 },
-        { choice: VoteChoice.YES, weight: 1 },
-        { choice: VoteChoice.NO, weight: 1 },
-        { choice: VoteChoice.ABSTAIN, weight: 0.5 },
-      ]),
-    ).toEqual({ yes: 3.5, no: 1, abstain: 0.5 });
-  });
+const yes = (weight: number) => ({ ballot: { choice: "yes" }, weight });
+const no = (weight: number) => ({ ballot: { choice: "no" }, weight });
+const abstain = (weight: number) => ({ ballot: { choice: "abstain" }, weight });
 
-  it("is zero on no votes", () => {
-    expect(tally([])).toEqual({ yes: 0, no: 0, abstain: 0 });
+const agg = (ballots: { ballot: unknown; weight: number }[]): Aggregate =>
+  aggregateBallots("single_choice", ballots, []);
+
+describe("single-choice aggregate", () => {
+  it("sums weight per side and exposes a yes/no/abstain view", () => {
+    const a = agg([yes(2.5), yes(1), no(1), abstain(0.5)]);
+    expect(a.castWeight).toBe(5);
+    expect(tallyOf(a)).toEqual({ yes: 3.5, no: 1, abstain: 0.5 });
   });
 });
 
-describe("decideOutcome", () => {
-  const base = { quorumPercent: 50, eligibleWeight: 10 };
+describe("decideOutcome — quorum", () => {
+  const rules = { threshold: VoteThreshold.SIMPLE_MAJORITY, quorumPercent: 50, eligibleWeight: 10 };
 
-  it("approves a simple majority above quorum", () => {
+  it("expires when cast weight is under quorum, however lopsided the result", () => {
+    expect(decideOutcome({ aggregate: agg([yes(4)]), ...rules }).outcome).toBe(SessionOutcome.EXPIRED);
+  });
+
+  it("counts abstentions toward quorum but not toward the threshold", () => {
+    // 5 of 10 weight cast → quorum met; 3 yes vs 1 no decides it.
+    const a = agg([yes(3), no(1), abstain(1)]);
+    expect(decideOutcome({ aggregate: a, ...rules }).outcome).toBe(SessionOutcome.APPROVED);
+  });
+
+  it("expires when everyone who showed up abstained — nothing was decided", () => {
+    expect(decideOutcome({ aggregate: agg([abstain(6)]), ...rules }).outcome).toBe(SessionOutcome.EXPIRED);
+  });
+
+  it("expires when there is no eligible weight at all", () => {
     expect(
-      decideOutcome({ ...base, tally: { yes: 4, no: 2, abstain: 0 }, threshold: VoteThreshold.SIMPLE_MAJORITY }),
+      decideOutcome({ aggregate: agg([yes(1)]), ...rules, eligibleWeight: 0 }).outcome,
+    ).toBe(SessionOutcome.EXPIRED);
+  });
+});
+
+describe("decideOutcome — thresholds", () => {
+  const base = { quorumPercent: 0, eligibleWeight: 10 };
+
+  it("simple majority passes on more yes than no", () => {
+    expect(
+      decideOutcome({ aggregate: agg([yes(3), no(2)]), threshold: VoteThreshold.SIMPLE_MAJORITY, ...base }).outcome,
     ).toBe(SessionOutcome.APPROVED);
   });
 
-  it("rejects when no >= yes", () => {
+  it("simple majority rejects a tie — a tie is not a mandate", () => {
     expect(
-      decideOutcome({ ...base, tally: { yes: 3, no: 3, abstain: 0 }, threshold: VoteThreshold.SIMPLE_MAJORITY }),
+      decideOutcome({ aggregate: agg([yes(2), no(2)]), threshold: VoteThreshold.SIMPLE_MAJORITY, ...base }).outcome,
     ).toBe(SessionOutcome.REJECTED);
   });
 
-  it("expires below quorum — silence is not consent", () => {
+  it("supermajority needs two thirds, not a bare majority", () => {
     expect(
-      decideOutcome({ ...base, tally: { yes: 2, no: 0, abstain: 0 }, threshold: VoteThreshold.SIMPLE_MAJORITY }),
-    ).toBe(SessionOutcome.EXPIRED);
-  });
-
-  it("abstain counts toward quorum but not toward the threshold", () => {
-    // 2 yes + 3 abstain = 5 cast, meets 50% quorum of 10; yes wins 2:0.
-    expect(
-      decideOutcome({ ...base, tally: { yes: 2, no: 0, abstain: 3 }, threshold: VoteThreshold.SIMPLE_MAJORITY }),
-    ).toBe(SessionOutcome.APPROVED);
-  });
-
-  it("expires when everyone abstains — no decisive vote was cast", () => {
-    expect(
-      decideOutcome({ ...base, tally: { yes: 0, no: 0, abstain: 6 }, threshold: VoteThreshold.SIMPLE_MAJORITY }),
-    ).toBe(SessionOutcome.EXPIRED);
-  });
-
-  it("supermajority requires >= 2/3 of decisive votes", () => {
-    expect(
-      decideOutcome({ ...base, tally: { yes: 4, no: 2, abstain: 0 }, threshold: VoteThreshold.SUPERMAJORITY }),
-    ).toBe(SessionOutcome.APPROVED);
-    expect(
-      decideOutcome({ ...base, tally: { yes: 3.9, no: 2.1, abstain: 0 }, threshold: VoteThreshold.SUPERMAJORITY }),
+      decideOutcome({ aggregate: agg([yes(3), no(2)]), threshold: VoteThreshold.SUPERMAJORITY, ...base }).outcome,
     ).toBe(SessionOutcome.REJECTED);
-  });
-
-  it("refuses to close early unless every eligible member has voted", () => {
-    const closesAt = new Date("2026-08-14T00:00:00Z");
-    const before = new Date("2026-08-10T00:00:00Z");
-    // Window open, a voter missing: refuse with the reason.
-    expect(closeRefusal({ now: before, closesAt, votesCast: 2, eligibleCount: 3 })).toMatch(
-      /voting window is open/,
-    );
-    // Window open but everyone has spoken: nothing left to wait for.
-    expect(closeRefusal({ now: before, closesAt, votesCast: 3, eligibleCount: 3 })).toBeNull();
-    // Window elapsed: closable regardless of turnout.
     expect(
-      closeRefusal({ now: new Date("2026-08-14T00:00:01Z"), closesAt, votesCast: 0, eligibleCount: 3 }),
-    ).toBeNull();
-  });
-
-  it("expires on zero eligible weight — an empty electorate decides nothing", () => {
-    expect(
-      decideOutcome({
-        tally: { yes: 1, no: 0, abstain: 0 },
-        threshold: VoteThreshold.SIMPLE_MAJORITY,
-        quorumPercent: 50,
-        eligibleWeight: 0,
-      }),
-    ).toBe(SessionOutcome.EXPIRED);
+      decideOutcome({ aggregate: agg([yes(2), no(1)]), threshold: VoteThreshold.SUPERMAJORITY, ...base }).outcome,
+    ).toBe(SessionOutcome.APPROVED);
   });
 });

@@ -1,5 +1,7 @@
 import VotingInterface from "@/components/dashboard/voting-interface";
-import { sessionTally } from "@/lib/domain/voting";
+import { readOptions, sessionAggregate } from "@/lib/domain/voting";
+import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import { primaryOrg } from "@/lib/domain/org";
 import { prisma } from "@/lib/db";
 
@@ -48,7 +50,7 @@ export default async function VotingPage() {
     );
   }
 
-  const tally = await sessionTally(session.id);
+  const aggregate = await sessionAggregate(session.id);
 
   return (
     <main className="space-y-6">
@@ -61,8 +63,11 @@ export default async function VotingPage() {
           title: session.proposal.title,
           rules: `${session.threshold} · quorum ${session.quorumPercent}% · electorate ${session.electorate}`,
           status: session.status,
+          method: methodId(session.method),
+          options: readOptions(session.options),
+          dotBudget: session.dotBudget ?? DEFAULT_DOT_BUDGET,
         }}
-        tally={tally}
+        aggregate={aggregate}
       />
     </main>
   );

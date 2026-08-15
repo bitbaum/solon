@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { DecisionCategory } from "@prisma/client";
+import { DecisionCategory, VotingMethod } from "@prisma/client";
 import { createProposal } from "@/lib/domain/proposals";
 
 const BodySchema = z.object({
   orgSlug: z.string().min(1).max(100),
   category: z.enum(DecisionCategory),
+  method: z.enum(VotingMethod).optional(),
+  options: z.array(z.object({ key: z.string(), label: z.string() })).optional(),
   title: z.string().min(3).max(200),
   body: z.string().min(1).max(20000),
   policyKey: z.string().min(1).max(100).optional(),
