@@ -38,9 +38,15 @@ export default async function AccountPage() {
             </button>
           </form>
         ) : (
-          <p className="text-sm text-fg-secondary">
-            Sign-in is not configured in this environment.
-          </p>
+          <div className="space-y-4">
+            <p className="text-sm text-fg-secondary">
+              Sign-in is not configured in this environment — but none of the
+              record needs it.
+            </p>
+            <Link href="/governance/audit" className="btn-primary inline-flex">
+              Read the record
+            </Link>
+          </div>
         )}
       </main>
     );
@@ -98,12 +104,16 @@ export default async function AccountPage() {
             </div>
           </dl>
         ) : (
-          <p className="text-sm text-fg-secondary">
-            You are signed in as an observer. Membership in a Solon
-            organization is granted by a governance vote, not by signing up —
-            there is nothing to register here. Everything on this site is
-            already fully readable to you.
-          </p>
+          <>
+            <p className="text-sm leading-relaxed text-fg-secondary">
+              You are recognized but not on the roster, so you can read
+              everything and vote on nothing. Membership needs one more thing:
+              a Bitcoin key you can sign with.
+            </p>
+            <Link href="/join" className="btn-primary mt-5 inline-flex">
+              Become a member
+            </Link>
+          </>
         )}
       </section>
 
@@ -121,8 +131,8 @@ export default async function AccountPage() {
             Sign out
           </button>
         </form>
-        <Link href="/governance/voting" className="text-sm text-fg-primary underline">
-          Go to voting
+        <Link href="/proposals" className="text-sm text-fg-primary underline">
+          Go to proposals
         </Link>
       </div>
     </main>

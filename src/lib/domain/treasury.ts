@@ -9,10 +9,28 @@ export interface TreasurySourceBalance {
   txCount: number | null;
 }
 
+/**
+ * The four distinct things a treasury reading can mean. A single boolean could
+ * not separate them: with no sources registered, "were all sources resolved?"
+ * is vacuously true while the total is null — so a consumer reading that flag
+ * as "this balance is trustworthy" would be told yes about nothing at all.
+ */
+export type TreasuryStatus =
+  /** Nothing is registered — there is no claim being made. */
+  | "no_sources"
+  /** Every registered source answered. The total is complete. */
+  | "resolved"
+  /** Some answered, some did not. The total is a floor, not the balance. */
+  | "partial"
+  /** Sources exist but none answered. No total can be stated. */
+  | "unavailable";
+
 export interface TreasuryReport {
   sources: TreasurySourceBalance[];
   /** Sum over sources whose lookup succeeded; null if none succeeded. */
   totalSats: number | null;
+  status: TreasuryStatus;
+  /** True only when a complete total is being reported. */
   allSourcesResolved: boolean;
 }
 
@@ -40,9 +58,19 @@ export async function treasuryReport(organizationId: string): Promise<TreasuryRe
   );
 
   const resolved = sources.filter((s) => s.totalSats !== null);
+  const status: TreasuryStatus =
+    sources.length === 0
+      ? "no_sources"
+      : resolved.length === 0
+        ? "unavailable"
+        : resolved.length === sources.length
+          ? "resolved"
+          : "partial";
+
   return {
     sources,
     totalSats: resolved.length ? resolved.reduce((sum, s) => sum + (s.totalSats ?? 0), 0) : null,
-    allSourcesResolved: resolved.length === sources.length,
+    status,
+    allSourcesResolved: status === "resolved",
   };
 }

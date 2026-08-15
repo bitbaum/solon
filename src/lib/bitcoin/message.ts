@@ -199,3 +199,18 @@ export function proposalMessage(params: {
   const base = `Solon proposal\norg:${params.orgSlug}\ncategory:${params.category}\ntitle:${params.title}\nproposer:${params.proposerAddress}`;
   return params.contentHash ? `${base}\ncontent:${params.contentHash}` : base;
 }
+
+/**
+ * Canonical message signed to bind a Bitcoin address to an OrangeCat identity.
+ * The actor id is inside the signed text on purpose: without it a signature
+ * proving control of an address could be replayed by anyone who saw it to bind
+ * that address to *their* account. Signing this says "this OrangeCat account
+ * and this key are the same person", which is exactly what the roster claims.
+ */
+export function registrationMessage(params: {
+  orgSlug: string;
+  actorId: string;
+  memberAddress: string;
+}): string {
+  return `Solon membership\norg:${params.orgSlug}\nactor:${params.actorId}\naddress:${params.memberAddress}`;
+}

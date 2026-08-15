@@ -1,5 +1,6 @@
 import VotingInterface from "@/components/dashboard/voting-interface";
 import { sessionTally } from "@/lib/domain/voting";
+import { primaryOrg } from "@/lib/domain/org";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -8,10 +9,16 @@ export default async function VotingPage() {
   let session = null;
   let dbError = false;
   try {
-    session = await prisma.votingSession.findFirst({
-      orderBy: { opensAt: "desc" },
-      include: { proposal: true },
-    });
+    // Scoped to the organization: unscoped, a second org's session would show
+    // up here as if it were this one's.
+    const org = await primaryOrg();
+    session = org
+      ? await prisma.votingSession.findFirst({
+          where: { proposal: { organizationId: org.id } },
+          orderBy: { opensAt: "desc" },
+          include: { proposal: true },
+        })
+      : null;
   } catch {
     dbError = true;
   }

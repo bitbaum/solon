@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NextAction from "@/components/dashboard/next-action";
 import { prisma } from "@/lib/db";
 import { sessionTally } from "@/lib/domain/voting";
 import { treasuryReport } from "@/lib/domain/treasury";
@@ -27,10 +28,16 @@ export default async function DashboardOverview() {
     org = await prisma.organization.findFirst({
       orderBy: { createdAt: "asc" },
     });
-    const s = await prisma.votingSession.findFirst({
-      orderBy: { opensAt: "desc" },
-      include: { proposal: true },
-    });
+    // Scoped to this organization on purpose: an unscoped findFirst returns
+    // the newest session in the whole database, so a second organization would
+    // silently surface its vote on this one's dashboard.
+    const s = org
+      ? await prisma.votingSession.findFirst({
+          where: { proposal: { organizationId: org.id } },
+          orderBy: { opensAt: "desc" },
+          include: { proposal: true },
+        })
+      : null;
     if (s) {
       session = {
         id: s.id,
@@ -83,6 +90,7 @@ export default async function DashboardOverview() {
           treasury, and audit trail appear here.
         </p>
       )}
+      {org && <NextAction orgSlug={org.slug} />}
       {org && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link

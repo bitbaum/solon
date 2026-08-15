@@ -80,8 +80,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/why" className="transition-colors hover:text-fg-primary">
-                  Why a town
+                <Link href="/integration" className="transition-colors hover:text-fg-primary">
+                  API
                 </Link>
               </li>
               <li>

@@ -48,13 +48,9 @@ export default function AboutPage() {
               registered as voting members and humans holding the red lines.
             </p>
             <p>
-              The idea that stack is an organ of is{" "}
-              <a href="/why" className="underline underline-offset-2">
-                Townsism
-              </a>
-              : a town that can show its books, recount its votes, and keep
-              the door honest. Software is not sovereignty. This is how a
-              community becomes worth recognizing.
+              The aim is a community that can show its books, recount its
+              votes, and keep the door honest — one worth recognizing because
+              its claims survive being checked, not because it says so.
             </p>
           </div>
         </div>
