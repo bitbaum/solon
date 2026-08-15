@@ -80,6 +80,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/why" className="transition-colors hover:text-fg-primary">
+                  Why a town
+                </Link>
+              </li>
+              <li>
                 <a
                   href={SOLON_GITHUB_URL}
                   target="_blank"

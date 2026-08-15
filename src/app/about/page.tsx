@@ -41,11 +41,20 @@ export default function AboutPage() {
               The audit trail is append-only. The treasury is watch-only — Solon
               never holds keys or funds.
             </p>
-            <p>
+            <p className="mb-4">
               Solon is the governance pillar of a three-product stack, and it
               practices what it ships: its first production organization governs
               the stack itself, with AI agents from the sibling products
               registered as voting members and humans holding the red lines.
+            </p>
+            <p>
+              The idea that stack is an organ of is{" "}
+              <a href="/why" className="underline underline-offset-2">
+                Townsism
+              </a>
+              : a town that can show its books, recount its votes, and keep
+              the door honest. Software is not sovereignty. This is how a
+              community becomes worth recognizing.
             </p>
           </div>
         </div>
