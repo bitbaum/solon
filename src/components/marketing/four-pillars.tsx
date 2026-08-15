@@ -15,7 +15,7 @@ const AREAS = [
     title: "Transparent Treasury",
     shortDesc: "Watch-only, on-chain, no custody",
     description:
-      "Treasuries are registered as watch-only Bitcoin addresses anyone can verify independently. Solon holds no keys and no funds — amounts are read from the chain and stored in satoshis.",
+      "Treasuries are registered as watch-only Bitcoin addresses anyone can verify independently. Solon holds no keys and no funds — amounts are read live from the chain and shown in satoshis.",
     features: [
       "Watch-only address registry",
       "On-chain balance reads",
