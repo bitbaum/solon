@@ -1,7 +1,8 @@
 import Link from "next/link";
 import NextAction from "@/components/dashboard/next-action";
 import { prisma } from "@/lib/db";
-import { sessionTally } from "@/lib/domain/voting";
+import { sessionAggregate } from "@/lib/domain/voting";
+import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import { treasuryReport } from "@/lib/domain/treasury";
 
 export const dynamic = "force-dynamic";
@@ -45,8 +46,7 @@ export default async function DashboardOverview() {
         proposalTitle: s.proposal.title,
         outcome: s.outcome,
       };
-      const t = await sessionTally(s.id);
-      tallyLine = `yes ${t.yes} · no ${t.no} · abstain ${t.abstain}`;
+      tallyLine = summarizeAggregate(await sessionAggregate(s.id));
     }
     if (org) {
       const report = await treasuryReport(org.id);

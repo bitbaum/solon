@@ -195,9 +195,20 @@ export function proposalMessage(params: {
   title: string;
   proposerAddress: string;
   contentHash?: string | null;
+  /**
+   * sha256 of the canonical options list, for multi-option questions. Bound in
+   * for the same reason as contentHash: the answer space is part of what is
+   * being proposed, and an unbound options list could be swapped after signing
+   * so that members vote between choices the proposer never put forward.
+   *
+   * Absent for yes/no proposals, so their message is byte-identical to the
+   * form signed before methods existed.
+   */
+  optionsHash?: string | null;
 }): string {
   const base = `Solon proposal\norg:${params.orgSlug}\ncategory:${params.category}\ntitle:${params.title}\nproposer:${params.proposerAddress}`;
-  return params.contentHash ? `${base}\ncontent:${params.contentHash}` : base;
+  const withContent = params.contentHash ? `${base}\ncontent:${params.contentHash}` : base;
+  return params.optionsHash ? `${withContent}\noptions:${params.optionsHash}` : withContent;
 }
 
 /**
