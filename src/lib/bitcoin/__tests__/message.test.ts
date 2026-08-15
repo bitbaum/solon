@@ -5,6 +5,7 @@ import {
   generateKeyPair,
   messageDigest,
   proposalMessage,
+  registrationMessage,
   signMessage,
   verifyMessage,
   voteMessage,
@@ -36,6 +37,18 @@ describe("voteMessage / proposalMessage canonical form", () => {
         contentHash: "deadbeef",
       }),
     ).toBe(`${base}\ncontent:deadbeef`);
+  });
+
+  it("registrationMessage binds the actor, so a signature cannot be replayed", () => {
+    const args = { orgSlug: "orangecat", memberAddress: "1abc" };
+    expect(registrationMessage({ ...args, actorId: "actor-1" })).toBe(
+      "Solon membership\norg:orangecat\nactor:actor-1\naddress:1abc",
+    );
+    // Same key, same address, different OrangeCat account: different bytes,
+    // so a signature seen by an attacker cannot bind that address to theirs.
+    expect(registrationMessage({ ...args, actorId: "actor-2" })).not.toBe(
+      registrationMessage({ ...args, actorId: "actor-1" }),
+    );
   });
 });
 

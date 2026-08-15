@@ -20,6 +20,9 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }
     organization: { id: org.id, slug: org.slug, name: org.name },
     balance_source: "onchain",
     total_sats: report.totalSats,
+    // `status` is the field to read: `all_sources_resolved` alone cannot tell
+    // "nothing is registered" apart from "everything answered".
+    status: report.status,
     all_sources_resolved: report.allSourcesResolved,
     sources: report.sources.map((s) => ({
       label: s.label,

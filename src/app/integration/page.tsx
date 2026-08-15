@@ -1,11 +1,17 @@
 import PageLayout from "@/components/ui/page-layout";
+import { API_ENDPOINTS } from "@/lib/config/api-surface";
+import { primaryOrg } from "@/lib/domain/org";
 
 /**
  * Documents the API that exists today — nothing aspirational. The surface is
  * small on purpose; it grows as governance features ship, and each endpoint is
  * listed here only once it is live.
  */
-export default function IntegrationPage() {
+export const dynamic = "force-dynamic";
+
+export default async function IntegrationPage() {
+  const org = await primaryOrg();
+  const orgSlug = org?.slug ?? "orangecat";
   return (
     <PageLayout
       title="API & Integration"
@@ -52,105 +58,44 @@ export default function IntegrationPage() {
         </div>
 
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-4">Live endpoints</h2>
-          <ul className="space-y-2">
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                POST /api/proposals
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                file a signed proposal
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                POST /api/proposals/[proposalId]/open
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                open the voting session
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/sessions/[sessionId]
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                session, snapshotted rules, live tally
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                POST /api/sessions/[sessionId]/votes
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                cast a signed vote
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                POST /api/sessions/[sessionId]/close
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                close after the window and decide the outcome
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/orgs/[slug]
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                organization + public member roster
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/orgs/[slug]/proposals
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                all proposals with session state
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/orgs/[slug]/policies/[key]
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                policy version history
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/orgs/[slug]/audit
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                append-only audit stream
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/orgs/[slug]/treasury
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                live on-chain treasury balances
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/v1/decisions/[sessionId]
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                self-verifying decision document — re-verify it, don&apos;t
-                trust it
-              </span>
-            </li>
-            <li>
-              <code className="bg-surface-raised px-2 py-1 rounded text-xs text-fg-primary font-mono">
-                GET /api/health
-              </code>
-              <span className="text-sm text-fg-secondary ml-2">
-                service health
-              </span>
-            </li>
+          <h2 className="font-display text-display-3 text-fg-primary mb-2">Live endpoints</h2>
+          <p className="text-sm text-fg-secondary mb-5">
+            Every read is public and auth-free. Open one.
+          </p>
+          <ul className="space-y-1.5">
+            {API_ENDPOINTS.map((e) => {
+              const href = e.sample?.(orgSlug);
+              const row = (
+                <>
+                  <span className="shrink-0 w-12 font-mono text-xs text-fg-tertiary">
+                    {e.method}
+                  </span>
+                  <code className="font-mono text-xs text-fg-primary">{e.path}</code>
+                  <span className="ml-auto hidden text-sm text-fg-secondary sm:inline">
+                    {e.description}
+                  </span>
+                </>
+              );
+              return (
+                <li key={`${e.method} ${e.path}`}>
+                  {href ? (
+                    <a
+                      href={href}
+                      className="flex items-center gap-3 rounded-control border border-default bg-surface-raised px-3 py-2 transition-colors hover:bg-surface-overlay"
+                    >
+                      {row}
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-3 rounded-control border border-default px-3 py-2">
+                      {row}
+                    </div>
+                  )}
+                  <span className="mt-1 block text-sm text-fg-secondary sm:hidden">
+                    {e.description}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
           <p className="text-fg-secondary text-sm mt-4">
             All reads are public and auth-free — transparency is the product. On

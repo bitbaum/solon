@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { TreasuryReport } from "@/lib/domain/treasury";
 
 /**
@@ -40,10 +41,24 @@ export default function BitcoinTreasury({
           Treasury sources (watch-only)
         </h3>
         {report.sources.length === 0 ? (
-          <p className="mt-2 text-sm text-fg-secondary">
-            No treasury source registered yet. When one is, its balance renders
-            here from a live chain lookup and links to a public explorer.
-          </p>
+          <>
+            <p className="mt-2 text-sm text-fg-secondary">
+              No treasury source registered yet, so no balance is being claimed.
+              Registering one is itself a governance decision — the address
+              becomes public and every reading is checked against the chain.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <Link href="/propose" className="btn-primary">
+                Propose a treasury source
+              </Link>
+              <Link
+                href="/treasury/bitcoin"
+                className="text-sm text-fg-secondary transition-colors hover:text-fg-primary"
+              >
+                How the watch-only model works →
+              </Link>
+            </div>
+          </>
         ) : (
           <table className="w-full mt-3 text-sm">
             <thead className="text-fg-secondary">

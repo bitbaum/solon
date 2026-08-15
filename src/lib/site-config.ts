@@ -28,8 +28,11 @@ export const NAV_ITEMS: NavSection[] = [
     title: 'Governance',
     description: 'Voting and the public record',
     children: [
-      { title: 'Voting System', href: '/governance/voting', description: 'Bitcoin-signed votes, verified server-side' },
+      { title: 'Proposals', href: '/proposals', description: 'Everything up for decision, and its next step' },
+      { title: 'File a proposal', href: '/propose', description: 'Put something on the record, signed' },
+      { title: 'Become a member', href: '/join', description: 'Bind a Bitcoin key and get a vote' },
       { title: 'Audit Trail', href: '/governance/audit', description: 'The append-only record itself' },
+      { title: 'How voting works', href: '/governance/voting', description: 'Bitcoin-signed votes, verified server-side' },
     ],
   },
   {
@@ -53,7 +56,7 @@ export const NAV_ITEMS: NavSection[] = [
     description: 'About the project',
     children: [
       { title: 'About', href: '/about', description: 'Why Solon exists and who runs it' },
-      { title: 'Why a town', href: '/why', description: 'Townsism — the idea Solon is the organ of' },
+      { title: 'API', href: '/integration', description: 'Read the governed state programmatically' },
     ],
   },
 ];
