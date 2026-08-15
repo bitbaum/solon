@@ -63,7 +63,7 @@ export default async function DashboardOverview() {
   if (dbError) {
     return (
       <main className="space-y-6">
-        <h1 className="text-3xl font-bold text-fg-primary">Overview</h1>
+        <h1 className="font-display text-display-3 text-fg-primary">Overview</h1>
         <p className="text-fg-secondary">
           The governance register is currently unreachable. No live data can be
           shown.
@@ -74,7 +74,7 @@ export default async function DashboardOverview() {
 
   return (
     <main className="space-y-6">
-      <h1 className="text-3xl font-bold text-fg-primary">
+      <h1 className="font-display text-display-3 text-fg-primary">
         {org ? `${org.name} — Overview` : "Overview"}
       </h1>
       {!org && (

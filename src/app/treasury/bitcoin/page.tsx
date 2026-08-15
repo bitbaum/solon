@@ -13,7 +13,7 @@ export default function BitcoinTreasuryPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-4">The model</h2>
+          <h2 className="font-display text-display-3 text-fg-primary mb-4">The model</h2>
           <ul className="space-y-3 text-fg-primary">
             <li>
               <span className="font-semibold">Watch-only</span> — Solon

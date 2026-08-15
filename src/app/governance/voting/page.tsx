@@ -12,7 +12,7 @@ export default function VotingSystemPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-4">
+          <h2 className="font-display text-display-3 text-fg-primary mb-4">
             How a vote works
           </h2>
           <ol className="list-decimal list-inside space-y-3 text-fg-primary">
@@ -40,7 +40,7 @@ export default function VotingSystemPage() {
         </div>
 
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="text-2xl font-bold text-fg-primary mb-4">
+          <h2 className="font-display text-display-3 text-fg-primary mb-4">
             What this gives you
           </h2>
           <ul className="space-y-3 text-fg-primary">

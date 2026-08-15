@@ -21,7 +21,7 @@ export default function BitcoinTreasury({
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-fg-primary">Bitcoin Treasury</h2>
+          <h2 className="font-display text-display-3 text-fg-primary">Bitcoin Treasury</h2>
           <p className="text-sm text-fg-secondary">Organization: {orgName}</p>
         </div>
         <div className="text-right">

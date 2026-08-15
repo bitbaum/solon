@@ -84,6 +84,29 @@ const FORBIDDEN = [
 ];
 
 /**
+ * The inverse of the size floor, and the rule the other one could never catch:
+ * every rule above only fires once `font-display` is already present, so a
+ * heading that simply never opted in was invisible to the gate. That blind spot
+ * is how 21 headings — the whole dashboard — ended up in bold Inter while the
+ * marketing pages ran the serif, which is the drift this gate exists to stop.
+ *
+ * Above the floor, the display face is the default, not a choice. `font-mono`
+ * is exempt: a balance or a hash is data, and data is set in the mono face at
+ * whatever size it needs.
+ */
+const DISPLAY_SCALE = /\btext-(?:2xl|3xl|4xl|5xl|6xl|7xl|display-[123])\b/;
+function missingDisplayFace(line) {
+  for (const m of line.matchAll(/className=(?:"([^"]*)"|\{`([^`]*)`\})/g)) {
+    const cls = m[1] ?? m[2] ?? '';
+    if (!DISPLAY_SCALE.test(cls)) continue;
+    if (/\bfont-(?:display|mono)\b/.test(cls)) continue;
+    if (/\bwordmark\b/.test(cls)) continue;
+    return true;
+  }
+  return false;
+}
+
+/**
  * Tokens are defined in @fleet/design-tokens and nowhere else. A local
  * redefinition is precisely how the three products drifted apart, so treat any
  * app-level `--token: value` in globals.css as a build failure rather than a
@@ -115,6 +138,15 @@ for (const target of TARGETS) {
         if (rule.pattern.test(line)) {
           violations.push({ file: rel, line: i + 1, message: rule.message, source: line.trim() });
         }
+      }
+      if (missingDisplayFace(line)) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          message:
+            'Heading at display size without font-display. Above text-2xl the display face is the default — add font-display (or font-mono if this is data).',
+          source: line.trim(),
+        });
       }
     });
   }

@@ -18,7 +18,7 @@ export default async function TreasuryPage() {
   if (dbError || !org) {
     return (
       <main className="space-y-6">
-        <h1 className="text-3xl font-bold">Treasury</h1>
+        <h1 className="font-display text-display-3">Treasury</h1>
         <p className="text-fg-secondary">
           {dbError
             ? "The treasury register is currently unreachable. No balance can be shown."
