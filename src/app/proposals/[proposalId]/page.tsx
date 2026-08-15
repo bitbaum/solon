@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { sessionTally } from "@/lib/domain/voting";
+import { readOptions, sessionAggregate } from "@/lib/domain/voting";
+import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import VotingInterface from "@/components/dashboard/voting-interface";
 import OpenSessionButton from "@/components/governance/open-session-button";
 
@@ -24,7 +26,7 @@ export default async function ProposalPage({
   });
   if (!proposal) notFound();
 
-  const tally = proposal.session ? await sessionTally(proposal.session.id) : null;
+  const aggregate = proposal.session ? await sessionAggregate(proposal.session.id) : null;
 
   return (
     <main className="section-shell py-section-tight">
@@ -73,15 +75,18 @@ export default async function ProposalPage({
           </section>
         )}
 
-        {proposal.session && tally && (
+        {proposal.session && (
           <VotingInterface
             session={{
               id: proposal.session.id,
               title: proposal.title,
               rules: `${proposal.session.threshold} · quorum ${proposal.session.quorumPercent}% · electorate ${proposal.session.electorate}`,
               status: proposal.session.status,
+              method: methodId(proposal.session.method),
+              options: readOptions(proposal.session.options),
+              dotBudget: proposal.session.dotBudget ?? DEFAULT_DOT_BUDGET,
             }}
-            tally={tally}
+            aggregate={aggregate}
           />
         )}
       </div>

@@ -116,7 +116,7 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     const cast = async (pair: typeof alice, choice: "yes" | "no" | "abstain") =>
       submitVote(session.id, {
         address: pair.address,
-        choice,
+        ballot: { method: "single_choice", choice },
         signature: signMessage(
           voteMessage({ sessionId: session.id, choice, memberAddress: pair.address }),
           pair.privateKeyHex,
@@ -169,7 +169,10 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     }
     // Recompute the tally from the votes — never trust the server's arithmetic.
     const recomputed = d.votes.reduce(
-      (t, v) => ({ ...t, [v.choice.toLowerCase()]: t[v.choice.toLowerCase() as "yes" | "no" | "abstain"] + v.weight }),
+      (t, v) => {
+        const choice = (v.ballot as { choice: "yes" | "no" | "abstain" }).choice;
+        return { ...t, [choice]: t[choice] + v.weight };
+      },
       { yes: 0, no: 0, abstain: 0 },
     );
     expect(recomputed).toEqual(d.tally);
@@ -237,7 +240,7 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
 
     const agentVote = await submitVote(session.id, {
       address: agent.address,
-      choice: "yes",
+      ballot: { method: "single_choice", choice: "yes" },
       signature: signMessage(
         voteMessage({ sessionId: session.id, choice: "yes", memberAddress: agent.address }),
         agent.privateKeyHex,

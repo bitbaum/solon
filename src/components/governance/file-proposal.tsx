@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { proposalMessage } from "@/lib/bitcoin/message";
+import { canonicalJson, sha256Hex } from "@/lib/domain/canonical";
+import { ALL_METHODS, methodSpec } from "@/lib/domain/methods";
+import { optionsSchema } from "@/lib/domain/methods/types";
+import MethodPicker from "./method-picker";
 
 interface Verdict {
   created: boolean;
@@ -34,6 +38,8 @@ export default function FileProposal({
   memberAddress: string;
 }) {
   const [category, setCategory] = useState<string>("OPERATIONS");
+  const [method, setMethod] = useState<string>("");
+  const [optionText, setOptionText] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [signature, setSignature] = useState("");
@@ -41,9 +47,41 @@ export default function FileProposal({
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const ready = title.trim().length >= 3 && body.trim().length > 0;
+  // The answer space, parsed from one line per option. Kept as text in the UI
+  // and validated by the same schema the server uses, so the proposer sees the
+  // same rejection the API would give rather than a different opinion.
+  const options = useMemo(() => {
+    const parsed = optionText
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((label) => ({
+        key: label
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .slice(0, 32),
+        label,
+      }));
+    const result = optionsSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  }, [optionText]);
+
+  const spec = method ? methodSpec(method as Parameters<typeof methodSpec>[0]) : null;
+  const needsOptions = spec?.needsOptions ?? false;
+  const optionsReady = !needsOptions || options !== null;
+
+  const ready = title.trim().length >= 3 && body.trim().length > 0 && optionsReady;
   const message = ready
-    ? proposalMessage({ orgSlug, category, title: title.trim(), proposerAddress: memberAddress })
+    ? proposalMessage({
+        orgSlug,
+        category,
+        title: title.trim(),
+        proposerAddress: memberAddress,
+        // Bound in only when there is an answer space, so a yes/no proposal
+        // signs exactly the text it always did.
+        optionsHash: needsOptions && options ? sha256Hex(canonicalJson(options)) : null,
+      })
     : null;
 
   async function submit() {
@@ -58,6 +96,8 @@ export default function FileProposal({
           category,
           title: title.trim(),
           body: body.trim(),
+          ...(method ? { method } : {}),
+          ...(needsOptions && options ? { options } : {}),
           proposerAddress: memberAddress,
           signature,
         }),
@@ -118,6 +158,38 @@ export default function FileProposal({
           ))}
         </select>
         {active && <p className="mt-1.5 text-xs text-fg-tertiary">{active.hint}</p>}
+      </div>
+
+      <div>
+        <MethodPicker
+          methods={ALL_METHODS}
+          value={method}
+          onChange={(m) => setMethod(m)}
+        />
+        {needsOptions && (
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-fg-primary" htmlFor="p-options">
+              The options — one per line
+            </label>
+            <textarea
+              id="p-options"
+              rows={4}
+              value={optionText}
+              onChange={(e) => setOptionText(e.target.value)}
+              placeholder={"Solar roof\nHeat pump\nInsulation"}
+              className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+            />
+            {options ? (
+              <p className="mt-1.5 text-xs text-fg-tertiary">
+                Members will vote between: {options.map((o) => o.key).join(", ")}
+              </p>
+            ) : (
+              <p className="mt-1.5 text-xs text-fg-tertiary">
+                At least two options, each on its own line.
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <div>

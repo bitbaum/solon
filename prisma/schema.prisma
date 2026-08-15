@@ -73,10 +73,15 @@ enum SessionOutcome {
   EXPIRED
 }
 
-enum VoteChoice {
-  YES
-  NO
-  ABSTAIN
+/// The shape of the question. See src/lib/domain/methods — each value there
+/// owns its ballot schema, its signed encoding, and how it is counted.
+enum VotingMethod {
+  SINGLE_CHOICE
+  CONSENT
+  APPROVAL
+  DOT
+  SCORE
+  RANKED
 }
 
 enum PolicyStatus {
@@ -100,6 +105,10 @@ model Organization {
   slug        String   @unique
   name        String
   description String?
+  /// Which structure this organization decides by — see
+  /// src/lib/config/governance-profiles.ts. Changing it is itself a
+  /// GOVERNANCE_RULES decision.
+  governanceProfile String @default("TOWN") @map("governance_profile")
   createdAt   DateTime @default(now()) @map("created_at")
 
   members         Member[]
@@ -152,6 +161,13 @@ model Proposal {
   target            String?
   /// …and sha256 of the canonical JSON of proposedContent — what voters sign over.
   contentHash       String?          @map("content_hash")
+  /// How this proposal should be decided. Null falls back to the organization's
+  /// governance profile for this category — the profile is the default, this is
+  /// the deliberate override.
+  method            VotingMethod?
+  /// The answer space for multi-option methods: [{key, label}, …]. Null for
+  /// yes/no questions, which carry their answers in the method itself.
+  options           Json?
   proposerMemberId  String           @map("proposer_member_id")
   /// Bitcoin signed-message signature over proposalMessage() by the proposer.
   proposerSignature String           @map("proposer_signature")
@@ -175,12 +191,22 @@ model VotingSession {
   // Snapshot at open — a past decision must stay explainable after the
   // governance config changes.
   electorate     Electorate
+  method         VotingMethod  @default(SINGLE_CHOICE)
+  /// The exact options put to the members, frozen at open. Editing the
+  /// proposal afterwards cannot change what was voted on.
+  options        Json?
+  /// Dots each member was given, for DOT sessions. Snapshotted for the same
+  /// reason as everything else here: a count run next year must use the budget
+  /// these voters actually had.
+  dotBudget      Int?          @map("dot_budget")
   threshold      VoteThreshold
   quorumPercent  Int           @map("quorum_percent")
   eligibleCount  Int           @map("eligible_count")
   eligibleWeight Decimal       @map("eligible_weight") @db.Decimal(12, 2)
 
   outcome  SessionOutcome?
+  /// For ranking methods: the option that won. Null for yes/no decisions.
+  winningOptionKey String?     @map("winning_option_key")
   closedAt DateTime?       @map("closed_at")
 
   proposal Proposal @relation(fields: [proposalId], references: [id])
@@ -194,7 +220,11 @@ model Vote {
   id            String     @id @default(uuid())
   sessionId     String     @map("session_id")
   memberId      String     @map("member_id")
-  choice        VoteChoice
+  /// The ballot as cast, in the shape its method admits. The single source of
+  /// truth for what this member voted: `signedMessage` carries the canonical
+  /// encoding of exactly this value, so the two can always be checked against
+  /// each other.
+  ballot        Json
   /// Member's weight snapshotted at cast time.
   weight        Decimal    @db.Decimal(10, 2)
   /// The exact canonical message that was signed — stored so anyone can re-verify.

@@ -4,10 +4,14 @@ import {
   MemberStatus,
   MemberType,
   Prisma,
+  VotingMethod,
 } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { proposalMessage, verifyMessage } from "@/lib/bitcoin/message";
-import { contentHashOf, sha256Hex } from "@/lib/domain/canonical";
+import { canonicalJson, contentHashOf, sha256Hex } from "@/lib/domain/canonical";
+import { optionsSchema, type BallotOption } from "@/lib/domain/methods/types";
+import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { methodSpec } from "@/lib/domain/methods";
 
 export interface CreateProposalInput {
   orgSlug: string;
@@ -17,6 +21,10 @@ export interface CreateProposalInput {
   body: string;
   policyKey?: string | null;
   proposedContent?: unknown;
+  /** How this should be decided. Omitted falls back to the org's profile. */
+  method?: VotingMethod | null;
+  /** The answer space for multi-option methods: [{key, label}, …]. */
+  options?: BallotOption[] | null;
   target?: string | null;
   proposerAddress: string;
   /** Bitcoin signed-message signature over proposalMessage() by the proposer. */
@@ -54,13 +62,40 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
   const org = await prisma.organization.findUnique({ where: { slug: input.orgSlug } });
   if (!org) return { created: false, verified: false, reason: "organization not found" };
 
+  // Validate the answer space before it is signed over: an options list that
+  // cannot be voted on is not something a member should be asked to endorse.
+  let options: BallotOption[] | null = null;
+  if (input.options != null && input.options.length > 0) {
+    const parsedOptions = optionsSchema.safeParse(input.options);
+    if (!parsedOptions.success) {
+      return {
+        created: false,
+        verified: false,
+        reason: parsedOptions.error.issues.map((i) => i.message).join("; "),
+      };
+    }
+    options = parsedOptions.data;
+  }
+  if (input.method) {
+    const spec = methodSpec(methodId(input.method));
+    if (spec.needsOptions && (options?.length ?? 0) < 2) {
+      return {
+        created: false,
+        verified: false,
+        reason: `${spec.label} needs at least two options`,
+      };
+    }
+  }
+
   const contentHash = hasContent ? contentHashOf(input.proposedContent) : null;
+  const optionsHash = options ? sha256Hex(canonicalJson(options)) : null;
   const message = proposalMessage({
     orgSlug: input.orgSlug,
     category: input.category,
     title: input.title,
     proposerAddress: input.proposerAddress,
     contentHash,
+    optionsHash,
   });
   const verification = verifyMessage(message, input.proposerAddress, input.signature);
   if (!verification.valid) {
@@ -105,6 +140,8 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         proposedContent: hasContent ? (input.proposedContent as Prisma.InputJsonValue) : Prisma.DbNull,
         target: input.target ?? null,
         contentHash,
+        method: input.method ?? null,
+        options: options ? (options as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
         proposerMemberId: member.id,
         proposerSignature: input.signature,
       },

@@ -1,7 +1,10 @@
 import { SessionStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { proposalMessage } from "@/lib/bitcoin/message";
-import { tally } from "@/lib/domain/tally";
+import { aggregateBallots } from "@/lib/domain/methods";
+import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { readOptions } from "@/lib/domain/voting";
+import { tallyOf } from "@/lib/domain/tally";
 
 /**
  * The self-verifying decision document — Solon's keystone artifact. It carries
@@ -51,6 +54,14 @@ export async function decisionDocument(sessionId: string) {
   }
 
   const p = session.proposal;
+  // Recomputed from the stored ballots rather than read from the session, so
+  // the document states a result that follows from the votes it publishes.
+  const aggregate = aggregateBallots(
+    methodId(session.method),
+    session.votes.map((v) => ({ ballot: v.ballot, weight: Number(v.weight) })),
+    readOptions(session.options),
+    { dotBudget: session.dotBudget },
+  );
   return {
     found: true as const,
     finalized: true as const,
@@ -79,6 +90,9 @@ export async function decisionDocument(sessionId: string) {
       },
       rules: {
         electorate: session.electorate,
+        method: session.method,
+        options: readOptions(session.options),
+        dotBudget: session.dotBudget,
         threshold: session.threshold,
         quorumPercent: session.quorumPercent,
         eligibleCount: session.eligibleCount,
@@ -88,13 +102,14 @@ export async function decisionDocument(sessionId: string) {
       },
       votes: session.votes.map((v) => ({
         member: v.member,
-        choice: v.choice,
+        ballot: v.ballot,
         weight: Number(v.weight),
         signedMessage: v.signedMessage,
         signature: v.signature,
         castAt: v.createdAt,
       })),
-      tally: tally(session.votes.map((v) => ({ choice: v.choice, weight: Number(v.weight) }))),
+      aggregate,
+      tally: tallyOf(aggregate),
       outcome: session.outcome,
       closedAt: session.closedAt,
     },
