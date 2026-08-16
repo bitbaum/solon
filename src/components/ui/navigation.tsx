@@ -123,7 +123,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
             </Link>
             <Link
               href="/dashboard"
-              className="rounded-control bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+              className="rounded-control bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover"
             >
               Open Dashboard
             </Link>
@@ -186,7 +186,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
               {authEnabled && <AuthControl compact />}
               <Link
                 href="/dashboard"
-                className="block rounded-control bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+                className="block rounded-control bg-accent px-3 py-2 text-sm font-semibold text-on-accent hover:bg-accent-hover"
               >
                 Open Dashboard
               </Link>

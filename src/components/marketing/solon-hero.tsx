@@ -48,7 +48,7 @@ export default function SolonHero({ language }: SolonHeroProps) {
 
           <div className="mt-11 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              className="inline-flex w-full items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-on-accent transition-colors hover:bg-accent-hover sm:w-auto"
               href={HERO_CTAS.primary.href}
             >
               {t.cta_primary}

@@ -38,7 +38,7 @@ export default function Home() {
           <div className="mt-11 flex flex-col justify-center gap-3 sm:flex-row">
             <a
               href="/dashboard"
-              className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-hover"
+              className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 font-semibold text-on-accent transition-colors hover:bg-accent-hover"
             >
               {t.cta.primary}
             </a>

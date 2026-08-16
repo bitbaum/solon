@@ -95,7 +95,7 @@ export default function FeaturesPage() {
           <div className="inline-flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/ecosystem"
-              className="inline-flex items-center justify-center bg-accent text-white px-8 py-3 rounded-control hover:bg-accent-hover transition-colors font-semibold "
+              className="inline-flex items-center justify-center bg-accent text-on-accent px-8 py-3 rounded-control hover:bg-accent-hover transition-colors font-semibold "
             >
               See the live governed state
             </a>

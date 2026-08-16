@@ -182,7 +182,7 @@ export default async function EcosystemPage() {
                 key={i}
                 className="flex gap-3 bg-surface-base rounded-control border border-default p-4"
               >
-                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent text-xs font-bold text-white">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent text-xs font-bold text-on-accent">
                   {i + 1}
                 </span>
                 <span>{step}</span>
