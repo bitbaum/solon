@@ -7,6 +7,11 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    # Dependabot cannot order git tags: PR #97 "bumped" this pin from v1.1.0
+    # DOWN to v1.0.0 and auto-merge shipped the downgrade, silently reverting
+    # the --on-accent contrast token. The pin is bumped by hand on release.
+    ignore:
+      - dependency-name: "@fleet/design-tokens"
     commit-message:
       prefix: "deps"
     labels:
