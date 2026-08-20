@@ -12,6 +12,14 @@ updates:
     # the --on-accent contrast token. The pin is bumped by hand on release.
     ignore:
       - dependency-name: "@fleet/design-tokens"
+      # Prisma 7 changed the generated-client model (explicit generator output,
+      # no enum/`Prisma` re-exports from @prisma/client) — a code migration,
+      # not a version bump. PR #102 auto-merged the major and broke the deploy
+      # typecheck while CI stayed green. Majors here are a hand migration.
+      - dependency-name: "prisma"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@prisma/client"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "deps"
     labels:
