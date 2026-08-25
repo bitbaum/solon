@@ -9,6 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import Navigation from "@/components/ui/navigation";
 import Footer from "@/components/ui/footer";
 import { authEnabled } from "@/lib/auth";
+import Script from "next/script";
 
 /**
  * Where this site actually serves. Next resolves the generated og:image against
@@ -51,6 +52,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex-1">{children}</div>
           <Footer />
         </SessionProvider>
+        {/* FleetCrown feedback widget. The project token is a literal on
+            purpose: read from process.env it would be tree-shaken to an empty
+            string at `next build` and the script would never ship. */}
+        <Script
+          src="https://fleetcrown.orangecat.ch/widget.js"
+          data-fc-project="fcw_83beae68488781ec1127c7801b55676d"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
