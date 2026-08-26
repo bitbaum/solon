@@ -88,6 +88,14 @@ enum PolicyStatus {
   SUPERSEDED
 }
 
+/// A member's contribution split is versioned like a policy, but it is theirs:
+/// SUPERSEDED marks the versions they replaced, never a version anyone else
+/// overrode. See src/lib/domain/allocation.
+enum AllocationStatus {
+  ACTIVE
+  SUPERSEDED
+}
+
 enum AuditEventType {
   ORG_CREATED
   MEMBER_ADDED
@@ -97,6 +105,7 @@ enum AuditEventType {
   VOTE_CAST
   SESSION_CLOSED
   POLICY_ACTIVATED
+  ALLOCATION_DECLARED
 }
 
 model Organization {
@@ -115,6 +124,7 @@ model Organization {
   policies        Policy[]
   treasurySources TreasurySource[]
   auditEvents     AuditEvent[]
+  allocations     ContributionAllocation[]
 
   @@map("organizations")
 }
@@ -140,6 +150,7 @@ model Member {
   proposals    Proposal[]
   votes        Vote[]
   apiKeys      AgentApiKey[]
+  allocations  ContributionAllocation[]
 
   @@unique([organizationId, bitcoinAddress])
   @@map("members")
@@ -264,12 +275,64 @@ model TreasurySource {
   organizationId String   @map("organization_id")
   label          String
   address        String   @db.VarChar(90)
+  /// Which contribution tier this address receives for, when it receives for
+  /// one — "local", "state", "federal", or whatever the contribution policy
+  /// names. Still an address and a label and nothing else: tagging a tier says
+  /// where to look on-chain, never how much is there.
+  tierKey        String?  @map("tier_key")
   createdAt      DateTime @default(now()) @map("created_at")
 
   organization Organization @relation(fields: [organizationId], references: [id])
 
   @@unique([organizationId, address])
+  @@index([organizationId, tierKey])
   @@map("treasury_sources")
+}
+
+/// One member's declared split of their own contribution across the tiers of
+/// government — local, state, federal, or whatever the organization's
+/// contribution policy names.
+///
+/// Three properties make this a right rather than a setting:
+///
+/// - **Only the member's key can write it.** Every row carries a Bitcoin
+///   signed message over the exact split, so there is no admin path and no
+///   vote that can put a number here on someone's behalf. A decision can move
+///   the *bounds* (that is an ALLOCATION_POLICY vote); nothing can move a
+///   person's split inside them.
+/// - **Superseding is versioning, not erasure.** Changing your mind writes
+///   version n+1 and marks n SUPERSEDED. Every version keeps its signature, so
+///   the history of what someone directed, and when, stays checkable.
+/// - **It is bound to the rules it was made under.** `policyVersion` and
+///   `contentHash` are inside the signed text, so a declaration cannot be
+///   replayed as consent to bounds the member never saw.
+model ContributionAllocation {
+  id             String           @id @default(uuid())
+  organizationId String           @map("organization_id")
+  memberId       String           @map("member_id")
+  version        Int
+  /// Whole percentage points per tier key, summing to exactly 100. Integers:
+  /// a split is a statement a human makes and checks, not a float to carry
+  /// rounding dust through a signature.
+  splits         Json
+  /// Version of the `contribution_allocation` policy this split was declared
+  /// under. Null when no policy has been enacted yet and the code default is
+  /// in force.
+  policyVersion  Int?             @map("policy_version")
+  /// sha256 of the canonical JSON of `splits` — what the signature covers.
+  contentHash    String           @map("content_hash")
+  /// The exact canonical message that was signed, stored so anyone can re-verify.
+  signedMessage  String           @map("signed_message")
+  signature      String
+  status         AllocationStatus @default(ACTIVE)
+  declaredAt     DateTime         @default(now()) @map("declared_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  member       Member       @relation(fields: [memberId], references: [id])
+
+  @@unique([memberId, version])
+  @@index([organizationId, status])
+  @@map("contribution_allocations")
 }
 
 /// Append-only public audit log. No update or delete path exists in code.

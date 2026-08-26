@@ -212,6 +212,36 @@ export function proposalMessage(params: {
 }
 
 /**
+ * Canonical message a member signs to direct their own contribution across the
+ * tiers of government.
+ *
+ * Three bindings, each closing a different substitution:
+ *
+ * - `split` is the readable allocation itself (`federal=25,local=40,state=35`),
+ *   so a member can check the text against what they meant before signing it,
+ *   and so no intermediary can move a point between tiers in transit.
+ * - `hash` is the sha256 of the canonical JSON of the same split — the form
+ *   OrangeCat re-hashes when it honours a split, checked against the identical
+ *   canonicalisation rules that back every other content hash in Solon.
+ * - `policy` is the version of the bounds this was declared under. Without it,
+ *   a split signed when a tier could take 100% could be replayed after a vote
+ *   capped that tier at 20%, as if the member had agreed to the new rules. A
+ *   declaration is consent to a split *under a stated set of bounds*, and the
+ *   signature has to say which.
+ */
+export function allocationMessage(params: {
+  orgSlug: string;
+  memberAddress: string;
+  /** Policy version in force; "default" when none has been enacted yet. */
+  policyVersion: number | null;
+  split: string;
+  hash: string;
+}): string {
+  const policy = params.policyVersion === null ? 'default' : `v${params.policyVersion}`;
+  return `Solon contribution split\norg:${params.orgSlug}\npolicy:${policy}\nsplit:${params.split}\nhash:${params.hash}\nmember:${params.memberAddress}`;
+}
+
+/**
  * Canonical message signed to bind a Bitcoin address to an OrangeCat identity.
  * The actor id is inside the signed text on purpose: without it a signature
  * proving control of an address could be replayed by anyone who saw it to bind

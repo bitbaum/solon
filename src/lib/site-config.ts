@@ -29,6 +29,7 @@ export const NAV_ITEMS: NavSection[] = [
     description: 'Voting and the public record',
     children: [
       { title: 'Proposals', href: '/proposals', description: 'Everything up for decision, and its next step' },
+      { title: 'Contributions', href: '/contributions', description: 'Direct your own share to local, state or federal' },
       { title: 'File a proposal', href: '/propose', description: 'Put something on the record, signed' },
       { title: 'Become a member', href: '/join', description: 'Bind a Bitcoin key and get a vote' },
       { title: 'Audit Trail', href: '/governance/audit', description: 'The append-only record itself' },

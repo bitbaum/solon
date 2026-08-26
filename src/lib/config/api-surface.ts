@@ -48,6 +48,17 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/orgs/[slug]/allocation",
+    description: "contribution split across local, state and federal, with every declaration behind it",
+    sample: (s) => `/api/orgs/${s}/allocation`,
+  },
+  {
+    method: "GET",
+    path: "/api/orgs/[slug]/allocation/[address]",
+    description: "one member's declarations, every version, each with its signature",
+  },
+  {
+    method: "GET",
     path: "/api/sessions/[sessionId]",
     description: "session, its snapshotted rules, and the live tally",
   },
@@ -66,6 +77,11 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
     method: "POST",
     path: "/api/members/register",
     description: "claim a member seat by signing with a Bitcoin key",
+  },
+  {
+    method: "POST",
+    path: "/api/orgs/[slug]/allocation",
+    description: "declare your own contribution split — only your key can write it",
   },
   { method: "POST", path: "/api/proposals", description: "file a signed proposal" },
   {

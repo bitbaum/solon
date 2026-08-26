@@ -29,7 +29,7 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 
 ## Prisma / database
 
-- Schema SSOT: `prisma/schema.prisma` (9 models). Types flow from it via `@prisma/client`.
+- Schema SSOT: `prisma/schema.prisma` (10 models). Types flow from it via `@prisma/client`.
 - **`prisma generate` is NOT automatic** — no postinstall hook. Run `npm run prisma:generate`
   before `typecheck` or `build` so the client types exist. CI does this explicitly.
 - **`db push` against a real database is manual.** `npm run prisma:push` is run by hand.

@@ -89,3 +89,6 @@ jobs:
 
       - name: Vote spine integration spec
         run: INTEGRATION=1 npx vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts
+
+      - name: Contribution allocation integration spec
+        run: INTEGRATION=1 npx vitest run src/lib/domain/__tests__/allocation.integration.test.ts

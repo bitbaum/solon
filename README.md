@@ -80,7 +80,7 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 
 ## Data model
 
-`prisma/schema.prisma` is the SSOT — **9 models**, with types, validation and API
+`prisma/schema.prisma` is the SSOT — **10 models**, with types, validation and API
 contracts derived from it.
 
 ```
@@ -90,12 +90,60 @@ Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
      ├── Policy            (versioned; what a decision actually changes)
      ├── TreasurySource    (watch-only address — label + address, nothing else)
      ├── AuditEvent        (append-only)
-     └── AgentApiKey       (how a sibling agent authenticates)
+     ├── AgentApiKey       (how a sibling agent authenticates)
+     └── ContributionAllocation
+                           (a member's own split across the tiers of government,
+                            versioned and signed — see below)
 ```
 
 Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
-`decision`, `treasury`, `canonical`) and stays free of HTTP and UI concerns.
-Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
+`decision`, `treasury`, `allocation`, `canonical`) and stays free of HTTP and UI
+concerns. Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
+
+## Contribution allocation
+
+A contribution is not a payment to "the government" — it is a payment to
+several governments at once, and which of them gets what share is a question
+the person paying has standing to answer. Solon splits that question in two,
+and the asymmetry between the halves is the whole design.
+
+| | Who decides | How |
+|---|---|---|
+| **The bounds** — which tiers exist, the floor and ceiling on each, the split that applies to someone who has not spoken | the members | policy content under `contribution_allocation`, changed only by an approved `ALLOCATION_POLICY` session |
+| **The split inside them** | the individual | a Bitcoin signed message from their own key, and nothing else |
+
+A majority can decide that at least a fifth of every contribution goes federal.
+A majority cannot decide where your remaining four fifths go: there is no
+operator route to a member's split and no vote that reaches it. That is what
+makes it a right rather than a setting — it is unexpressible, not merely
+discouraged.
+
+Four properties follow from taking that seriously:
+
+- **The signature covers the whole split, and the bounds it was made under.**
+  `policy:v3` is inside the signed text, so a split signed when a tier could
+  take everything cannot be replayed after a vote capped it, as if the member
+  had agreed to rules they never saw.
+- **Zeros survive canonicalisation.** Directing nothing to a tier is a
+  position, often the whole point of declaring, so `federal=0` and "forgot
+  about federal" never sign the same text.
+- **Changing your mind versions, it does not overwrite.** Version *n+1* is
+  inserted and *n* marked superseded, each keeping its own signature, so what
+  someone was directing last spring stays answerable.
+- **Nothing is clamped.** When a vote narrows the bounds, a split that no
+  longer fits stops being counted and the member falls to the published
+  fallback until they sign again. The record stands untouched — a clamped split
+  would be a statement the member never made, still carrying their signature.
+
+An incoherent bounds policy is rejected before it can be enacted: floors that
+together exceed a whole contribution, ceilings that cannot fill one, or a
+fallback that violates its own bounds all describe a rule no member could obey.
+
+Read `/contributions`, or `GET /api/orgs/{slug}/allocation` — every member's
+weight, split and standing is in the response, so the headline figure is
+recomputable rather than merely reported. `declared_weight_percent` says how
+much of it is anybody's stated choice and how much is the fallback standing in
+for silence.
 
 ## API
 
@@ -106,6 +154,9 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 | `GET` | `/api/orgs/{slug}/policies/{key}` | Current policy version |
 | `GET` | `/api/orgs/{slug}/proposals` | Proposals for an organization |
 | `GET` | `/api/orgs/{slug}/treasury` | Watch-only treasury sources |
+| `GET` | `/api/orgs/{slug}/allocation` | Contribution split, and every declaration behind it |
+| `POST` | `/api/orgs/{slug}/allocation` | Declare your own split — only your key can write it |
+| `GET` | `/api/orgs/{slug}/allocation/{address}` | One member's declarations, every version, signed |
 | `POST` | `/api/proposals` | Create a proposal |
 | `POST` | `/api/proposals/{id}/open` | Open voting |
 | `GET` | `/api/sessions/{id}` | Session state and tally |
@@ -118,6 +169,7 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
 **Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
 `/why` (Townsism — why a town), `/ecosystem` (the live governed state),
+`/contributions` (direct your own share across local, state and federal),
 `/governance/voting`, `/governance/audit`, `/treasury/bitcoin`
 
 **Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,

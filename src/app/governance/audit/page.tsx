@@ -14,6 +14,7 @@ const EVENT_LABEL: Record<AuditEventType, string> = {
   VOTE_CAST: "Vote cast",
   SESSION_CLOSED: "Voting session closed",
   POLICY_ACTIVATED: "Policy version activated",
+  ALLOCATION_DECLARED: "Contribution split declared",
 };
 
 

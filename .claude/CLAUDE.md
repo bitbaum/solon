@@ -17,7 +17,7 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 | How do I work in the repo — commands, CI, Prisma, gotchas? | `AGENTS.md` |
 | What are the design rules? | `docs/development/ui-guidelines.md` |
 | What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
-| What is the schema? | `prisma/schema.prisma` (9 models) |
+| What is the schema? | `prisma/schema.prisma` (10 models) |
 | Which env vars exist? | `.env.example` |
 
 ## The three that matter most
