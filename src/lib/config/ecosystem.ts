@@ -51,6 +51,6 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
   },
 ];
 
-export const SOLON_GITHUB_URL = "https://github.com/maonakamoto/solon";
-export const ORANGECAT_GITHUB_URL = "https://github.com/maonakamoto/orangecat";
-export const FLEETCROWN_GITHUB_URL = "https://github.com/maonakamoto/fleetcrown";
+export const SOLON_GITHUB_URL = "https://github.com/catomean/solon";
+export const ORANGECAT_GITHUB_URL = "https://github.com/catomean/orangecat";
+export const FLEETCROWN_GITHUB_URL = "https://github.com/catomean/fleetcrown";

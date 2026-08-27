@@ -110,7 +110,7 @@ export default function AboutPage() {
                 Live governed state
               </a>
               <a
-                href="https://github.com/maonakamoto/solon"
+                href="https://github.com/catomean/solon"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-control border border-default bg-surface-base px-8 py-3 font-semibold text-fg-primary transition-colors hover:bg-surface-raised"
