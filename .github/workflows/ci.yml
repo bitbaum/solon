@@ -1,4 +1,4 @@
-# Golden CI floor — see dotfiles/templates/ci/README.md.
+# Golden CI floor — see bitbaum/fleet templates/ci/README.md.
 # solon: npm + Prisma. Floor = verify (lint + typecheck + design:check + test) + build.
 # Lint is `eslint .` — Next 16 removed `next lint`, and ESLint 9 wants flat
 # config, so the rules live in eslint.config.mjs (eslint-config-next already
