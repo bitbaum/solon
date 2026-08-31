@@ -27,7 +27,7 @@
     "@noble/hashes": "2.4.0",
     "@noble/secp256k1": "3.1.0",
     "@prisma/adapter-pg": "^7.10.0",
-    "@prisma/client": "^7.9.1",
+    "@prisma/client": "^7.10.0",
     "@scure/base": "^2.3.0",
     "bs58check": "^4.0.0",
     "clsx": "2.1.1",
