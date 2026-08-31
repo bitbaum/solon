@@ -66,3 +66,65 @@ export const HERO_CTAS = {
   primary: { href: '/dashboard/voting', labelKey: 'cta_primary' },
   secondary: { href: '/treasury/bitcoin', labelKey: 'cta_secondary' },
 } as const;
+
+/** Every internal nav destination, flattened — the set of routes that exist. */
+export const NAV_CHILDREN: NavChildItem[] = NAV_ITEMS.flatMap((s) => s.children ?? []);
+
+/**
+ * The footer, derived from NAV_ITEMS rather than hand-written beside it.
+ *
+ * The footer used to restate six of these routes as its own literal <Link>s.
+ * Nothing tied the two lists together, so removing a page from the nav left the
+ * footer pointing at it — the exact "a footer link to a 404 is a lie" the
+ * footer's own comment warns about, with no way to notice.
+ *
+ * A footer entry names an href that must already exist in NAV_ITEMS. `label`
+ * is optional and only for the places the footer deliberately says something
+ * shorter than the nav does ("Voting", not "How voting works"). Everything
+ * else inherits, so a rename in NAV_ITEMS reaches the footer for free.
+ *
+ * Enforced by src/lib/__tests__/site-config.test.ts: an href here that is not
+ * in NAV_ITEMS fails the suite.
+ */
+export interface FooterLink {
+  href: string;
+  /** Only when the footer deliberately differs from the nav's wording. */
+  label?: string;
+}
+
+export interface FooterSection {
+  title: string;
+  links: FooterLink[];
+}
+
+export const FOOTER_SECTIONS: FooterSection[] = [
+  {
+    title: 'Platform',
+    links: [{ href: '/features' }, { href: '/security' }, { href: '/integration' }],
+  },
+  {
+    title: 'Governance',
+    links: [
+      { href: '/governance/voting', label: 'Voting' },
+      { href: '/governance/audit' },
+      { href: '/treasury/bitcoin' },
+    ],
+  },
+  {
+    title: 'Ecosystem',
+    // The sibling products come from ECOSYSTEM_PILLARS in the component — one
+    // pillar SSOT, not restated here.
+    links: [{ href: '/ecosystem' }],
+  },
+  {
+    title: 'Resources',
+    links: [{ href: '/about' }, { href: '/integration', label: 'API' }],
+  },
+];
+
+/** The label a footer link shows: its override, else the nav's own title. */
+export function footerLinkLabel(link: FooterLink): string {
+  if (link.label) return link.label;
+  const item = NAV_CHILDREN.find((c) => c.href === link.href);
+  return item?.title ?? link.href;
+}
