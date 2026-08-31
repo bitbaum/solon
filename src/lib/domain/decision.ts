@@ -50,7 +50,11 @@ export async function decisionDocument(sessionId: string) {
   });
   if (!session) return { found: false as const, reason: "voting session not found" };
   if (session.status !== SessionStatus.CLOSED) {
-    return { found: true as const, finalized: false as const, reason: "session is not closed yet — no decision exists" };
+    return {
+      found: true as const,
+      finalized: false as const,
+      reason: "session is not closed yet — no decision exists",
+    };
   }
 
   const p = session.proposal;

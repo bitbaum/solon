@@ -48,9 +48,7 @@ export const consent: MethodSpec<ConsentBallot> = {
       }),
 
   canonical: (b) =>
-    b.response === "object"
-      ? `object:${rationaleDigest(b.rationale ?? "")}`
-      : b.response,
+    b.response === "object" ? `object:${rationaleDigest(b.rationale ?? "")}` : b.response,
 
   aggregate(ballots: WeightedBallot<ConsentBallot>[]): Aggregate {
     const decisive = { for: 0, against: 0, abstain: 0 };

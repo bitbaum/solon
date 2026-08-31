@@ -9,13 +9,7 @@ import { z } from "zod";
  * one module is what makes adding a method a one-file change instead of a
  * five-file archaeology exercise.
  */
-export type MethodId =
-  | "single_choice"
-  | "consent"
-  | "approval"
-  | "dot"
-  | "score"
-  | "ranked";
+export type MethodId = "single_choice" | "consent" | "approval" | "dot" | "score" | "ranked";
 
 /**
  * Two kinds, and the difference decides how an outcome is read.

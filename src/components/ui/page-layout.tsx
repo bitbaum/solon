@@ -19,12 +19,8 @@ export default function PageLayout({
   return (
     <main className={`section-shell py-section-tight ${className}`}>
       <div className="mx-auto max-w-lede text-center">
-        <h1 className="font-display text-display-2 text-fg-primary">
-          {title}
-        </h1>
-        {description && (
-          <p className="mt-6 text-lg text-fg-secondary">{description}</p>
-        )}
+        <h1 className="font-display text-display-2 text-fg-primary">{title}</h1>
+        {description && <p className="mt-6 text-lg text-fg-secondary">{description}</p>}
       </div>
       <div className="mt-20">{children}</div>
     </main>

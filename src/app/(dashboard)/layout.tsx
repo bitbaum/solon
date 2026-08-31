@@ -9,11 +9,7 @@ const TABS = [
   { title: "Voting", href: "/dashboard/voting" },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
@@ -39,9 +35,7 @@ export default function DashboardLayout({
           })}
         </nav>
       </div>
-      <div className="bg-surface-base border border-default rounded-surface p-6">
-        {children}
-      </div>
+      <div className="bg-surface-base border border-default rounded-surface p-6">{children}</div>
     </div>
   );
 }

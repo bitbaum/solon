@@ -27,7 +27,9 @@ export interface DecisionFinalizedEvent {
 const ATTEMPTS = 3;
 const BACKOFF_MS = [0, 2000, 10000];
 
-export async function emitDecisionFinalized(payload: Omit<DecisionFinalizedEvent, "event" | "event_id">): Promise<void> {
+export async function emitDecisionFinalized(
+  payload: Omit<DecisionFinalizedEvent, "event" | "event_id">,
+): Promise<void> {
   const url = process.env.SOLON_WEBHOOK_URL;
   const secret = process.env.SOLON_WEBHOOK_SECRET;
   if (!url || !secret) return; // not configured — silently inert
@@ -50,9 +52,13 @@ export async function emitDecisionFinalized(payload: Omit<DecisionFinalizedEvent
         body,
       });
       if (res.ok) return;
-      console.error(`webhook decision.finalized ${payload.decision_id}: HTTP ${res.status} (attempt ${attempt + 1}/${ATTEMPTS})`);
+      console.error(
+        `webhook decision.finalized ${payload.decision_id}: HTTP ${res.status} (attempt ${attempt + 1}/${ATTEMPTS})`,
+      );
     } catch (e) {
-      console.error(`webhook decision.finalized ${payload.decision_id}: ${e instanceof Error ? e.message : e} (attempt ${attempt + 1}/${ATTEMPTS})`);
+      console.error(
+        `webhook decision.finalized ${payload.decision_id}: ${e instanceof Error ? e.message : e} (attempt ${attempt + 1}/${ATTEMPTS})`,
+      );
     }
   }
 }

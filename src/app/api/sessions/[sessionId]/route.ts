@@ -9,7 +9,14 @@ export async function GET(_: Request, ctx: { params: Promise<{ sessionId: string
     where: { id: params.sessionId },
     include: {
       proposal: {
-        select: { id: true, title: true, category: true, policyKey: true, contentHash: true, status: true },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          policyKey: true,
+          contentHash: true,
+          status: true,
+        },
       },
     },
   });

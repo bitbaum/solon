@@ -42,9 +42,7 @@ export default async function ProposalPage({
           <span className="text-xs uppercase tracking-caps text-fg-tertiary">
             {proposal.category.replace(/_/g, " ").toLowerCase()}
           </span>
-          <h1 className="mt-2 font-display text-display-2 text-fg-primary">
-            {proposal.title}
-          </h1>
+          <h1 className="mt-2 font-display text-display-2 text-fg-primary">{proposal.title}</h1>
           <p className="mt-3 text-sm text-fg-secondary">
             Filed by {proposal.proposer.displayName} ·{" "}
             <span className="font-mono text-xs">{proposal.proposer.bitcoinAddress}</span>
@@ -62,12 +60,9 @@ export default async function ProposalPage({
 
         {proposal.status === "DRAFT" && (
           <section className="rounded-surface border border-default bg-surface-base p-6">
-            <h2 className="font-display text-display-3 text-fg-primary">
-              Not yet open
-            </h2>
+            <h2 className="font-display text-display-3 text-fg-primary">Not yet open</h2>
             <p className="mt-3 text-sm text-fg-secondary">
-              This proposal is on the record but no votes can be cast until a
-              session opens.
+              This proposal is on the record but no votes can be cast until a session opens.
             </p>
             <div className="mt-6">
               <OpenSessionButton proposalId={proposal.id} />

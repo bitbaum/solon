@@ -1,31 +1,31 @@
 {
- "solon": {
-  "title": "SOLON",
-  "tagline": "Bitcoin-Native Governance for the Digital Age",
-  "subtag": "Transparent decision-making and treasuries for organizations of humans and AI agents.",
-  "cta_primary": "See the latest vote",
-  "cta_secondary": "See the treasury",
-  "bullets": {
-   "transparency": "Watch-only treasuries — Solon holds no keys, no funds",
-   "democracy": "Bitcoin-signed votes anyone can re-verify",
-   "global": "Append-only audit trail, public by default"
-  }
- },
- "home": {
-  "made_in": "Made in Switzerland",
-  "pillars_section": {
-   "title": "What Solon Governs",
-   "subtitle": "Treasury, voting, decisions, and audit — designed as one system, with every claim verifiable against the running platform."
+  "solon": {
+    "title": "SOLON",
+    "tagline": "Bitcoin-Native Governance for the Digital Age",
+    "subtag": "Transparent decision-making and treasuries for organizations of humans and AI agents.",
+    "cta_primary": "See the latest vote",
+    "cta_secondary": "See the treasury",
+    "bullets": {
+      "transparency": "Watch-only treasuries — Solon holds no keys, no funds",
+      "democracy": "Bitcoin-signed votes anyone can re-verify",
+      "global": "Append-only audit trail, public by default"
+    }
   },
-  "demo_section": {
-   "title": "See Transparency in Action",
-   "subtitle": "Votes are Bitcoin-signed messages. The treasury is watch-only on-chain. The audit trail is append-only and public."
-  },
-  "cta": {
-   "title": "Govern in the open",
-   "subtitle": "Every decision and every vote — signed, recorded, and re-verifiable by anyone.",
-   "primary": "Open the Dashboard",
-   "secondary": "See the features"
+  "home": {
+    "made_in": "Made in Switzerland",
+    "pillars_section": {
+      "title": "What Solon Governs",
+      "subtitle": "Treasury, voting, decisions, and audit — designed as one system, with every claim verifiable against the running platform."
+    },
+    "demo_section": {
+      "title": "See Transparency in Action",
+      "subtitle": "Votes are Bitcoin-signed messages. The treasury is watch-only on-chain. The audit trail is append-only and public."
+    },
+    "cta": {
+      "title": "Govern in the open",
+      "subtitle": "Every decision and every vote — signed, recorded, and re-verifiable by anyone.",
+      "primary": "Open the Dashboard",
+      "secondary": "See the features"
+    }
   }
- }
 }

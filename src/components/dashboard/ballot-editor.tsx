@@ -35,8 +35,7 @@ export interface BallotEditorProps {
 }
 
 const fieldLabel = "block text-sm font-medium text-fg-primary";
-const chip =
-  "px-4 py-2 rounded-control border transition-colors border-default text-fg-primary";
+const chip = "px-4 py-2 rounded-control border transition-colors border-default text-fg-primary";
 const chipOn = "bg-surface-raised";
 const chipOff = "bg-surface-base hover:bg-surface-raised";
 
@@ -80,7 +79,13 @@ export default function BallotEditor({
               <button
                 key={r}
                 type="button"
-                onClick={() => onChange((prev) => ({ method, response: r, rationale: (prev as { rationale?: string })?.rationale ?? "" }))}
+                onClick={() =>
+                  onChange((prev) => ({
+                    method,
+                    response: r,
+                    rationale: (prev as { rationale?: string })?.rationale ?? "",
+                  }))
+                }
                 className={`${chip} ${current === r ? chipOn : chipOff}`}
               >
                 {r === "object" ? "OBJECT" : r.toUpperCase()}
@@ -97,7 +102,9 @@ export default function BallotEditor({
               id="objection-rationale"
               rows={3}
               value={b.rationale ?? ""}
-              onChange={(e) => onChange(() => ({ method, response: "object", rationale: e.target.value }))}
+              onChange={(e) =>
+                onChange(() => ({ method, response: "object", rationale: e.target.value }))
+              }
               className="mt-1 w-full px-3 py-2 rounded-control border border-default text-sm bg-surface-base"
             />
           </div>
@@ -133,8 +140,9 @@ export default function BallotEditor({
   }
 
   if (method === "dot") {
-    const allocations: Record<string, number> =
-      ((ballot as { allocations?: Record<string, number> })?.allocations ?? {}) as Record<string, number>;
+    const allocations: Record<string, number> = ((
+      ballot as { allocations?: Record<string, number> }
+    )?.allocations ?? {}) as Record<string, number>;
     const spent = Object.values(allocations).reduce((s, n) => s + (n || 0), 0);
     const remaining = dotBudget - spent;
     const nudge = (key: string, by: number) =>
@@ -183,8 +191,8 @@ export default function BallotEditor({
   }
 
   if (method === "score") {
-    const scores: Record<string, number> =
-      ((ballot as { scores?: Record<string, number> })?.scores ?? {}) as Record<string, number>;
+    const scores: Record<string, number> = ((ballot as { scores?: Record<string, number> })
+      ?.scores ?? {}) as Record<string, number>;
     return (
       <div>
         <span className={fieldLabel}>Rate each option from 0 to 5</span>

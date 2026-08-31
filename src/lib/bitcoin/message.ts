@@ -16,12 +16,12 @@
  * Pure JS (audited @noble primitives) so it builds as a standalone bundle
  * with no native addons.
  */
-import * as secp from '@noble/secp256k1';
-import { sha256 } from '@noble/hashes/sha2.js';
-import { ripemd160 } from '@noble/hashes/legacy.js';
-import { hmac } from '@noble/hashes/hmac.js';
-import { bech32 } from '@scure/base';
-import bs58check from 'bs58check';
+import * as secp from "@noble/secp256k1";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { ripemd160 } from "@noble/hashes/legacy.js";
+import { hmac } from "@noble/hashes/hmac.js";
+import { bech32 } from "@scure/base";
+import bs58check from "bs58check";
 
 // @noble/secp256k1 ships no hash implementation; the synchronous API needs both
 // wired before first use (sha256 for the curve's own checks, HMAC-SHA256 for
@@ -30,7 +30,7 @@ import bs58check from 'bs58check';
 secp.hashes.sha256 = sha256;
 secp.hashes.hmacSha256 = (key, msg) => hmac(sha256, key, msg);
 
-const MAGIC = new TextEncoder().encode('Bitcoin Signed Message:\n');
+const MAGIC = new TextEncoder().encode("Bitcoin Signed Message:\n");
 
 /** Bitcoin varint (CompactSize) for lengths we actually hit (< 0xfd common). */
 function varint(n: number): Uint8Array {
@@ -46,7 +46,12 @@ function doubleSha256(bytes: Uint8Array): Uint8Array {
 /** The 32-byte digest that gets signed for a given UTF-8 message. */
 export function messageDigest(message: string): Uint8Array {
   const msg = new TextEncoder().encode(message);
-  const preimage = secp.etc.concatBytes(MAGIC.length < 0xfd ? Uint8Array.of(MAGIC.length) : varint(MAGIC.length), MAGIC, varint(msg.length), msg);
+  const preimage = secp.etc.concatBytes(
+    MAGIC.length < 0xfd ? Uint8Array.of(MAGIC.length) : varint(MAGIC.length),
+    MAGIC,
+    varint(msg.length),
+    msg,
+  );
   return doubleSha256(preimage);
 }
 
@@ -62,7 +67,7 @@ function p2pkhAddress(pubkey: Uint8Array): string {
 /** Mainnet native-segwit P2WPKH (bech32, bc1q…) for a compressed public key. */
 function p2wpkhAddress(pubkey: Uint8Array): string {
   const words = [0, ...bech32.toWords(hash160(pubkey))];
-  return bech32.encode('bc', words);
+  return bech32.encode("bc", words);
 }
 
 /** Mainnet P2SH-wrapped segwit (3…) for a compressed public key. */
@@ -113,12 +118,12 @@ export function signMessage(message: string, privateKeyHex: string): string {
   // 'recovered' encoding is 65 bytes laid out recovery || r || s.
   const sig = secp.sign(digest, secp.etc.hexToBytes(privateKeyHex), {
     prehash: false,
-    format: 'recovered',
+    format: "recovered",
   });
   // Compressed-key recovery header: 31..34 = 27 + recovery + 4 (compressed).
   const header = 27 + sig[0] + 4;
   const out = secp.etc.concatBytes(Uint8Array.of(header), sig.subarray(1));
-  return Buffer.from(out).toString('base64');
+  return Buffer.from(out).toString("base64");
 }
 
 export interface VerifyResult {
@@ -138,14 +143,19 @@ export interface VerifyResult {
  * that set the segwit header bits (Sparrow, Bitcoin Core) AND wallets that
  * sign segwit addresses with the legacy compressed header (Electrum).
  */
-export function verifyMessage(message: string, address: string, signatureBase64: string): VerifyResult {
+export function verifyMessage(
+  message: string,
+  address: string,
+  signatureBase64: string,
+): VerifyResult {
   let raw: Buffer;
   try {
-    raw = Buffer.from(signatureBase64, 'base64');
+    raw = Buffer.from(signatureBase64, "base64");
   } catch {
-    return { valid: false, reason: 'signature is not valid base64' };
+    return { valid: false, reason: "signature is not valid base64" };
   }
-  if (raw.length !== 65) return { valid: false, reason: `signature must be 65 bytes, got ${raw.length}` };
+  if (raw.length !== 65)
+    return { valid: false, reason: `signature must be 65 bytes, got ${raw.length}` };
 
   const header = raw[0];
   if (header < 27 || header > 42) return { valid: false, reason: `invalid header byte ${header}` };
@@ -169,9 +179,13 @@ export function verifyMessage(message: string, address: string, signatureBase64:
       ? [p2pkhAddress(pub), p2wpkhAddress(pub), p2shP2wpkhAddress(pub)]
       : [p2pkhAddress(pub)];
     const valid = candidates.includes(address);
-    return { valid, recoveredAddress: candidates[0], ...(valid ? {} : { reason: 'recovered key does not derive the claimed address' }) };
+    return {
+      valid,
+      recoveredAddress: candidates[0],
+      ...(valid ? {} : { reason: "recovered key does not derive the claimed address" }),
+    };
   } catch (e) {
-    return { valid: false, reason: e instanceof Error ? e.message : 'recovery failed' };
+    return { valid: false, reason: e instanceof Error ? e.message : "recovery failed" };
   }
 }
 
@@ -180,7 +194,11 @@ export function verifyMessage(message: string, address: string, signatureBase64:
  * choice, and member address into the signed text means a signature can't be
  * lifted onto a different vote, choice, or session.
  */
-export function voteMessage(params: { sessionId: string; choice: string; memberAddress: string }): string {
+export function voteMessage(params: {
+  sessionId: string;
+  choice: string;
+  memberAddress: string;
+}): string {
   return `Solon vote\nsession:${params.sessionId}\nchoice:${params.choice}\nvoter:${params.memberAddress}`;
 }
 

@@ -85,9 +85,7 @@ export function decideOutcome(params: {
   if (agg.method === "consent") {
     const objected = (agg.objections?.length ?? 0) > 0;
     if (objected) return { outcome: SessionOutcome.REJECTED, winningOptionKey: null };
-    return d.for > 0
-      ? { outcome: SessionOutcome.APPROVED, winningOptionKey: null }
-      : none;
+    return d.for > 0 ? { outcome: SessionOutcome.APPROVED, winningOptionKey: null } : none;
   }
 
   const decisive = d.for + d.against;

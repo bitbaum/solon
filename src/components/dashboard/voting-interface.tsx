@@ -110,7 +110,9 @@ export default function VotingInterface({ session, aggregate }: VotingInterfaceP
           <h2 className="font-display text-display-3 text-fg-primary">{session.title}</h2>
           <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
-        <div className="text-right text-sm text-fg-secondary shrink-0">Session: {session.status}</div>
+        <div className="text-right text-sm text-fg-secondary shrink-0">
+          Session: {session.status}
+        </div>
       </header>
 
       <div className="rounded-surface border border-default p-4 bg-surface-raised">
@@ -120,8 +122,8 @@ export default function VotingInterface({ session, aggregate }: VotingInterfaceP
 
       {!isOpen && (
         <div className="rounded-surface border border-default p-4 bg-surface-raised text-sm text-fg-primary">
-          This session is closed — votes are no longer accepted. The final result
-          is below, and the full signed record is published as a{" "}
+          This session is closed — votes are no longer accepted. The final result is below, and the
+          full signed record is published as a{" "}
           <a
             href={`/api/v1/decisions/${session.id}`}
             className="font-semibold text-accent hover:text-accent-dark"
@@ -248,7 +250,10 @@ function Result({ aggregate }: { aggregate: Aggregate | null }) {
                 </span>
               </div>
               <div className="mt-1 h-1 w-full bg-surface-base border border-default">
-                <div className="h-full bg-accent" style={{ width: `${Math.min(100, r.percent)}%` }} />
+                <div
+                  className="h-full bg-accent"
+                  style={{ width: `${Math.min(100, r.percent)}%` }}
+                />
               </div>
             </li>
           ))}
@@ -257,7 +262,10 @@ function Result({ aggregate }: { aggregate: Aggregate | null }) {
 
       {aggregate?.decisive && (
         <div className="mt-3 grid grid-cols-3 gap-4 text-center">
-          <Count label={aggregate.method === "consent" ? "AGREE" : "YES"} value={aggregate.decisive.for} />
+          <Count
+            label={aggregate.method === "consent" ? "AGREE" : "YES"}
+            value={aggregate.decisive.for}
+          />
           <Count
             label={aggregate.method === "consent" ? "OBJECT" : "NO"}
             value={aggregate.decisive.against}

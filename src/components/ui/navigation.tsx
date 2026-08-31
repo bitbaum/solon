@@ -27,11 +27,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           </Link>
 
           {/* Desktop Navigation */}
-          <div
-            className="hidden lg:flex space-x-1"
-            role="menubar"
-            aria-label="Main Navigation"
-          >
+          <div className="hidden lg:flex space-x-1" role="menubar" aria-label="Main Navigation">
             {NAV_ITEMS.map((item) => (
               <div
                 key={item.title}
@@ -46,9 +42,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                     aria-expanded={activeDropdown === item.title}
                     onFocus={() => setActiveDropdown(item.title)}
                     onClick={() =>
-                      setActiveDropdown((prev) =>
-                        prev === item.title ? null : item.title,
-                      )
+                      setActiveDropdown((prev) => (prev === item.title ? null : item.title))
                     }
                   >
                     {item.title}
@@ -74,13 +68,9 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                       aria-label={`${item.title} menu`}
                     >
                       <div className="px-6 pb-3 border-b border-subtle mb-3">
-                        <h3 className="text-base font-semibold text-fg-primary">
-                          {item.title}
-                        </h3>
+                        <h3 className="text-base font-semibold text-fg-primary">{item.title}</h3>
                         {item.description && (
-                          <p className="text-sm text-fg-secondary mt-1">
-                            {item.description}
-                          </p>
+                          <p className="text-sm text-fg-secondary mt-1">{item.description}</p>
                         )}
                       </div>
                       <div className="grid grid-cols-1 gap-1">
@@ -200,30 +190,15 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
 
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M19 9l-7 7-7-7"
-      />
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
   );
 }
 
 function MenuIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"

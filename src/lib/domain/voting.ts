@@ -90,7 +90,9 @@ export async function openSession(proposalId: string) {
     select: { votingWeight: true },
   });
   if (eligible.length === 0) {
-    throw new Error("no eligible members — a session with an empty electorate cannot decide anything");
+    throw new Error(
+      "no eligible members — a session with an empty electorate cannot decide anything",
+    );
   }
   const eligibleWeight = eligible.reduce((s, m) => s + Number(m.votingWeight), 0);
 
@@ -154,7 +156,10 @@ export async function openSession(proposalId: string) {
  * ranking be trusted end to end: change one number in transit and the message
  * no longer matches the signature.
  */
-export async function submitVote(sessionId: string, input: SubmitVoteInput): Promise<SubmitVoteResult> {
+export async function submitVote(
+  sessionId: string,
+  input: SubmitVoteInput,
+): Promise<SubmitVoteResult> {
   const session = await prisma.votingSession.findUnique({
     where: { id: sessionId },
     include: { proposal: true },
@@ -194,7 +199,11 @@ export async function submitVote(sessionId: string, input: SubmitVoteInput): Pro
     },
   });
   if (!member) {
-    return { stored: false, verified: true, reason: "address is not an active member of this organization" };
+    return {
+      stored: false,
+      verified: true,
+      reason: "address is not an active member of this organization",
+    };
   }
   if (session.electorate === Electorate.HUMANS_ONLY && member.memberType !== MemberType.HUMAN) {
     return {
@@ -216,7 +225,12 @@ export async function submitVote(sessionId: string, input: SubmitVoteInput): Pro
         signedMessage: message,
         signature: input.signature,
       },
-      update: { ballot: ballotJson, signedMessage: message, signature: input.signature, createdAt: new Date() },
+      update: {
+        ballot: ballotJson,
+        signedMessage: message,
+        signature: input.signature,
+        createdAt: new Date(),
+      },
     });
     await tx.auditEvent.create({
       data: {

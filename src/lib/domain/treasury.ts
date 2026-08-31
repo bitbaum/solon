@@ -50,7 +50,12 @@ export async function treasuryReport(organizationId: string): Promise<TreasuryRe
     rows.map(async (row): Promise<TreasurySourceBalance> => {
       try {
         const bal = await getAddressBalance(row.address);
-        return { label: row.label, address: row.address, totalSats: bal.total_sats, txCount: bal.tx_count };
+        return {
+          label: row.label,
+          address: row.address,
+          totalSats: bal.total_sats,
+          txCount: bal.tx_count,
+        };
       } catch {
         return { label: row.label, address: row.address, totalSats: null, txCount: null };
       }

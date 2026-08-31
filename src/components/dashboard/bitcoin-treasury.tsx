@@ -13,10 +13,7 @@ export default function BitcoinTreasury({
   orgName: string;
   report: TreasuryReport;
 }) {
-  const totalBtc =
-    report.totalSats !== null
-      ? (report.totalSats / 100_000_000).toFixed(8)
-      : null;
+  const totalBtc = report.totalSats !== null ? (report.totalSats / 100_000_000).toFixed(8) : null;
 
   return (
     <section className="space-y-6">
@@ -30,22 +27,18 @@ export default function BitcoinTreasury({
             On-chain balance (BTC)
             {report.allSourcesResolved ? "" : " — some sources unavailable"}
           </div>
-          <div className="text-2xl font-mono text-fg-primary">
-            {totalBtc ?? "unavailable"}
-          </div>
+          <div className="text-2xl font-mono text-fg-primary">{totalBtc ?? "unavailable"}</div>
         </div>
       </header>
 
       <div className="rounded-surface border border-default p-4 bg-surface-raised">
-        <h3 className="font-semibold text-fg-primary">
-          Treasury sources (watch-only)
-        </h3>
+        <h3 className="font-semibold text-fg-primary">Treasury sources (watch-only)</h3>
         {report.sources.length === 0 ? (
           <>
             <p className="mt-2 text-sm text-fg-secondary">
-              No treasury source registered yet, so no balance is being claimed.
-              Registering one is itself a governance decision — the address
-              becomes public and every reading is checked against the chain.
+              No treasury source registered yet, so no balance is being claimed. Registering one is
+              itself a governance decision — the address becomes public and every reading is checked
+              against the chain.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <Link href="/propose" className="btn-primary">
@@ -73,13 +66,9 @@ export default function BitcoinTreasury({
               {report.sources.map((s) => (
                 <tr key={s.address} className="border-t border-default">
                   <td className="py-2 text-fg-primary">{s.label}</td>
-                  <td className="py-2 font-mono text-xs text-fg-primary break-all">
-                    {s.address}
-                  </td>
+                  <td className="py-2 font-mono text-xs text-fg-primary break-all">{s.address}</td>
                   <td className="py-2 font-mono text-right text-fg-primary">
-                    {s.totalSats !== null
-                      ? s.totalSats.toLocaleString()
-                      : "unavailable"}
+                    {s.totalSats !== null ? s.totalSats.toLocaleString() : "unavailable"}
                   </td>
                   <td className="py-2 text-right">
                     <a

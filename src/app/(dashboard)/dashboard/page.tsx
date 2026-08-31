@@ -72,8 +72,7 @@ export default async function DashboardOverview() {
       <main className="space-y-6">
         <h1 className="font-display text-display-3 text-fg-primary">Overview</h1>
         <p className="text-fg-secondary">
-          The governance register is currently unreachable. No live data can be
-          shown.
+          The governance register is currently unreachable. No live data can be shown.
         </p>
       </main>
     );
@@ -86,8 +85,8 @@ export default async function DashboardOverview() {
       </h1>
       {!org && (
         <p className="text-fg-secondary">
-          No organization is registered yet. Once one exists, its votes,
-          treasury, and audit trail appear here.
+          No organization is registered yet. Once one exists, its votes, treasury, and audit trail
+          appear here.
         </p>
       )}
       {org && <NextAction orgSlug={org.slug} />}
@@ -102,18 +101,14 @@ export default async function DashboardOverview() {
             </div>
             {session ? (
               <>
-                <div className="font-semibold text-fg-primary">
-                  {session.proposalTitle}
-                </div>
+                <div className="font-semibold text-fg-primary">{session.proposalTitle}</div>
                 <div className="mt-1 text-sm text-fg-secondary">
                   {session.outcome ?? session.status}
                   {tallyLine ? ` · ${tallyLine}` : ""}
                 </div>
               </>
             ) : (
-              <div className="text-sm text-fg-secondary">
-                No voting session opened yet.
-              </div>
+              <div className="text-sm text-fg-secondary">No voting session opened yet.</div>
             )}
           </Link>
 
@@ -135,9 +130,7 @@ export default async function DashboardOverview() {
               Recent activity
             </div>
             {events.length === 0 ? (
-              <div className="text-sm text-fg-secondary">
-                No audit events yet.
-              </div>
+              <div className="text-sm text-fg-secondary">No audit events yet.</div>
             ) : (
               <ul className="space-y-1 text-sm text-fg-secondary">
                 {events.map((e) => (

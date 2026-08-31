@@ -30,7 +30,9 @@ describe("governance config completeness", () => {
   });
 
   it("gives agents real suffrage somewhere — ALL_MEMBERS must not be empty", () => {
-    expect(ALL_CATEGORIES.some((c) => CATEGORY_ELECTORATE[c] === Electorate.ALL_MEMBERS)).toBe(true);
+    expect(ALL_CATEGORIES.some((c) => CATEGORY_ELECTORATE[c] === Electorate.ALL_MEMBERS)).toBe(
+      true,
+    );
   });
 
   it("has sane global constants", () => {

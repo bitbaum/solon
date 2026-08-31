@@ -37,8 +37,8 @@ export default function OpenSessionButton({ proposalId }: { proposalId: string }
         {submitting ? "Opening…" : "Open for voting"}
       </button>
       <p className="mt-2 text-xs text-fg-tertiary">
-        Starts the voting window and freezes the electorate, threshold and
-        quorum. This happens once and cannot be undone.
+        Starts the voting window and freezes the electorate, threshold and quorum. This happens once
+        and cannot be undone.
       </p>
       {error && (
         <p className="mt-3 rounded-control border border-status-negative/40 bg-surface-raised p-3 text-sm text-fg-primary">

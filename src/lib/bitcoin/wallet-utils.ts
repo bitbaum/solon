@@ -3,7 +3,6 @@ export function satsToBTC(sats: number) {
 }
 
 export function shorten(str: string, n = 6) {
-  if (!str) return '';
+  if (!str) return "";
   return `${str.slice(0, n)}…${str.slice(-n)}`;
 }
-

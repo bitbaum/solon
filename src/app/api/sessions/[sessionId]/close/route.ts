@@ -35,6 +35,9 @@ export async function POST(_: Request, ctx: { params: Promise<{ sessionId: strin
     return NextResponse.json({ closed: true, outcome: result.outcome, tally: result.tally });
   } catch (e) {
     const message = e instanceof Error ? e.message : "failed to close session";
-    return NextResponse.json({ closed: false, error: message }, { status: message.includes("not found") ? 404 : 409 });
+    return NextResponse.json(
+      { closed: false, error: message },
+      { status: message.includes("not found") ? 404 : 409 },
+    );
   }
 }

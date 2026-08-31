@@ -1,12 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DecisionCategory, Electorate, VoteThreshold } from "@prisma/client";
 import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "../governance";
-import {
-  GOVERNANCE_PROFILES,
-  electorateFor,
-  profileFor,
-  ruleFor,
-} from "../governance-profiles";
+import { GOVERNANCE_PROFILES, electorateFor, profileFor, ruleFor } from "../governance-profiles";
 import { ALL_METHODS } from "@/lib/domain/methods";
 
 const ALL_PROFILES = Object.values(GOVERNANCE_PROFILES);
@@ -81,8 +76,7 @@ describe("every profile is complete and sane", () => {
         const rule = profile.rules[category];
         // Consent is stricter than a majority (one objection stops it), so it
         // qualifies; a bare plurality method would not.
-        const strict =
-          rule.threshold === VoteThreshold.SUPERMAJORITY || rule.method === "consent";
+        const strict = rule.threshold === VoteThreshold.SUPERMAJORITY || rule.method === "consent";
         expect(strict, `${profile.id}/${category} decides a red line too cheaply`).toBe(true);
       }
     }

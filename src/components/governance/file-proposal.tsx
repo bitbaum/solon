@@ -23,11 +23,19 @@ interface Verdict {
  */
 const CATEGORIES = [
   { value: "OPERATIONS", label: "Operations", hint: "Day-to-day decisions. All members vote." },
-  { value: "MEMBERSHIP", label: "Membership", hint: "Admit or remove a member. Humans only, supermajority." },
+  {
+    value: "MEMBERSHIP",
+    label: "Membership",
+    hint: "Admit or remove a member. Humans only, supermajority.",
+  },
   { value: "SAFETY", label: "Safety", hint: "Red lines and limits. Humans only, supermajority." },
   { value: "TREASURY_SPEND", label: "Treasury spend", hint: "Move funds. All members vote." },
   { value: "AID_DISBURSEMENT", label: "Aid disbursement", hint: "Money to people. Humans only." },
-  { value: "GOVERNANCE_RULES", label: "Governance rules", hint: "Change the rules themselves. Humans only." },
+  {
+    value: "GOVERNANCE_RULES",
+    label: "Governance rules",
+    hint: "Change the rules themselves. Humans only.",
+  },
 ] as const;
 
 export default function FileProposal({
@@ -121,8 +129,8 @@ export default function FileProposal({
       <div className="rounded-surface border border-default bg-surface-base p-6">
         <h2 className="font-display text-display-3 text-fg-primary">Proposal filed</h2>
         <p className="mt-3 text-sm text-fg-secondary">
-          Your signature verified and the proposal is on the record as a draft.
-          Opening it starts the voting window and freezes the rules.
+          Your signature verified and the proposal is on the record as a draft. Opening it starts
+          the voting window and freezes the rules.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <Link href={`/proposals/${verdict.proposalId}`} className="btn-primary">
@@ -161,11 +169,7 @@ export default function FileProposal({
       </div>
 
       <div>
-        <MethodPicker
-          methods={ALL_METHODS}
-          value={method}
-          onChange={(m) => setMethod(m)}
-        />
+        <MethodPicker methods={ALL_METHODS} value={method} onChange={(m) => setMethod(m)} />
         {needsOptions && (
           <div className="mt-4">
             <label className="block text-sm font-medium text-fg-primary" htmlFor="p-options">
@@ -218,8 +222,8 @@ export default function FileProposal({
           className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
         />
         <p className="mt-1.5 text-xs text-fg-tertiary">
-          The title and category are bound into your signature; the rationale is
-          not, so it stays editable context rather than a signed claim.
+          The title and category are bound into your signature; the rationale is not, so it stays
+          editable context rather than a signed claim.
         </p>
       </div>
 

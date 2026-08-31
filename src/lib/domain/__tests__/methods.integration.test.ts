@@ -64,7 +64,12 @@ async function fixture() {
 }
 
 /** Sign a ballot the way a member's wallet would. */
-function castable(sessionId: string, ballot: unknown, pair: ReturnType<typeof generateKeyPair>, dotBudget = 5) {
+function castable(
+  sessionId: string,
+  ballot: unknown,
+  pair: ReturnType<typeof generateKeyPair>,
+  dotBudget = 5,
+) {
   const canonical = canonicalBallot("dot", ballot, { dotBudget });
   const message = voteMessage({ sessionId, choice: canonical, memberAddress: pair.address });
   return {

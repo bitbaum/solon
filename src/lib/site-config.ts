@@ -15,56 +15,92 @@ export interface NavSection {
 // Descriptions live here too (SSOT), not in the component that renders them.
 export const NAV_ITEMS: NavSection[] = [
   {
-    title: 'Platform',
-    description: 'What Solon is and how it works',
+    title: "Platform",
+    description: "What Solon is and how it works",
     children: [
-      { title: 'Overview', href: '/', description: 'The platform in one page' },
-      { title: 'Features', href: '/features', description: 'What runs in production today' },
-      { title: 'Security', href: '/security', description: 'No keys, no custody, no rewritable history' },
-      { title: 'Integration', href: '/integration', description: 'API and integration guides' },
+      { title: "Overview", href: "/", description: "The platform in one page" },
+      { title: "Features", href: "/features", description: "What runs in production today" },
+      {
+        title: "Security",
+        href: "/security",
+        description: "No keys, no custody, no rewritable history",
+      },
+      { title: "Integration", href: "/integration", description: "API and integration guides" },
     ],
   },
   {
-    title: 'Governance',
-    description: 'Voting and the public record',
+    title: "Governance",
+    description: "Voting and the public record",
     children: [
-      { title: 'Proposals', href: '/proposals', description: 'Everything up for decision, and its next step' },
-      { title: 'File a proposal', href: '/propose', description: 'Put something on the record, signed' },
-      { title: 'Become a member', href: '/join', description: 'Bind a Bitcoin key and get a vote' },
-      { title: 'Audit Trail', href: '/governance/audit', description: 'The append-only record itself' },
-      { title: 'How voting works', href: '/governance/voting', description: 'Bitcoin-signed votes, verified server-side' },
+      {
+        title: "Proposals",
+        href: "/proposals",
+        description: "Everything up for decision, and its next step",
+      },
+      {
+        title: "File a proposal",
+        href: "/propose",
+        description: "Put something on the record, signed",
+      },
+      { title: "Become a member", href: "/join", description: "Bind a Bitcoin key and get a vote" },
+      {
+        title: "Audit Trail",
+        href: "/governance/audit",
+        description: "The append-only record itself",
+      },
+      {
+        title: "How voting works",
+        href: "/governance/voting",
+        description: "Bitcoin-signed votes, verified server-side",
+      },
     ],
   },
   {
-    title: 'Treasury',
-    description: 'Watch-only Bitcoin treasuries',
+    title: "Treasury",
+    description: "Watch-only Bitcoin treasuries",
     children: [
-      { title: 'Bitcoin Treasury', href: '/treasury/bitcoin', description: 'On-chain, independently verifiable' },
+      {
+        title: "Bitcoin Treasury",
+        href: "/treasury/bitcoin",
+        description: "On-chain, independently verifiable",
+      },
     ],
   },
   {
-    title: 'Ecosystem',
-    description: 'The three-pillar stack Solon governs for',
+    title: "Ecosystem",
+    description: "The three-pillar stack Solon governs for",
     children: [
-      { title: 'Three Pillars', href: '/ecosystem', description: 'Economy, engineering, governance — live state' },
-      { title: 'OrangeCat', href: 'https://orangecat.ch', description: 'The economic pillar' },
-      { title: 'FleetCrown', href: 'https://fleetcrown.orangecat.ch', description: 'The engineering pillar' },
+      {
+        title: "Three Pillars",
+        href: "/ecosystem",
+        description: "Economy, engineering, governance — live state",
+      },
+      { title: "OrangeCat", href: "https://orangecat.ch", description: "The economic pillar" },
+      {
+        title: "FleetCrown",
+        href: "https://fleetcrown.orangecat.ch",
+        description: "The engineering pillar",
+      },
     ],
   },
   {
-    title: 'Resources',
-    description: 'About the project',
+    title: "Resources",
+    description: "About the project",
     children: [
-      { title: 'About', href: '/about', description: 'Why Solon exists and who runs it' },
-      { title: 'API', href: '/integration', description: 'Read the governed state programmatically' },
+      { title: "About", href: "/about", description: "Why Solon exists and who runs it" },
+      {
+        title: "API",
+        href: "/integration",
+        description: "Read the governed state programmatically",
+      },
     ],
   },
 ];
 
 /** Homepage hero destinations — the two outcomes a first visitor can take. */
 export const HERO_CTAS = {
-  primary: { href: '/dashboard/voting', labelKey: 'cta_primary' },
-  secondary: { href: '/treasury/bitcoin', labelKey: 'cta_secondary' },
+  primary: { href: "/dashboard/voting", labelKey: "cta_primary" },
+  secondary: { href: "/treasury/bitcoin", labelKey: "cta_secondary" },
 } as const;
 
 /** Every internal nav destination, flattened — the set of routes that exist. */
@@ -99,26 +135,26 @@ export interface FooterSection {
 
 export const FOOTER_SECTIONS: FooterSection[] = [
   {
-    title: 'Platform',
-    links: [{ href: '/features' }, { href: '/security' }, { href: '/integration' }],
+    title: "Platform",
+    links: [{ href: "/features" }, { href: "/security" }, { href: "/integration" }],
   },
   {
-    title: 'Governance',
+    title: "Governance",
     links: [
-      { href: '/governance/voting', label: 'Voting' },
-      { href: '/governance/audit' },
-      { href: '/treasury/bitcoin' },
+      { href: "/governance/voting", label: "Voting" },
+      { href: "/governance/audit" },
+      { href: "/treasury/bitcoin" },
     ],
   },
   {
-    title: 'Ecosystem',
+    title: "Ecosystem",
     // The sibling products come from ECOSYSTEM_PILLARS in the component — one
     // pillar SSOT, not restated here.
-    links: [{ href: '/ecosystem' }],
+    links: [{ href: "/ecosystem" }],
   },
   {
-    title: 'Resources',
-    links: [{ href: '/about' }, { href: '/integration', label: 'API' }],
+    title: "Resources",
+    links: [{ href: "/about" }, { href: "/integration", label: "API" }],
   },
 ];
 

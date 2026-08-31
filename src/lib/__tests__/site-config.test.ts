@@ -12,12 +12,7 @@
  * what makes that structural rather than a convention.
  */
 import { describe, it, expect } from "vitest";
-import {
-  NAV_ITEMS,
-  NAV_CHILDREN,
-  FOOTER_SECTIONS,
-  footerLinkLabel,
-} from "@/lib/site-config";
+import { NAV_ITEMS, NAV_CHILDREN, FOOTER_SECTIONS, footerLinkLabel } from "@/lib/site-config";
 
 const internal = (href: string) => href.startsWith("/");
 

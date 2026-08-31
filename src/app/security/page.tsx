@@ -58,23 +58,22 @@ export default function SecurityPage() {
             <div>
               <h4 className="font-semibold mb-2">Nothing to seize</h4>
               <p className="text-fg-secondary text-sm">
-                Compromising Solon&apos;s servers yields no keys and no funds —
-                only records that were already public.
+                Compromising Solon&apos;s servers yields no keys and no funds — only records that
+                were already public.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Nothing to forge</h4>
               <p className="text-fg-secondary text-sm">
-                A vote that doesn&apos;t verify against the member&apos;s
-                Bitcoin address is rejected. Solon cannot invent votes, and
-                neither can an attacker.
+                A vote that doesn&apos;t verify against the member&apos;s Bitcoin address is
+                rejected. Solon cannot invent votes, and neither can an attacker.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Nothing to rewrite</h4>
               <p className="text-fg-secondary text-sm">
-                Decisions travel with their evidence. Consumers recount the
-                tally themselves — Solon&apos;s word is evidence, not authority.
+                Decisions travel with their evidence. Consumers recount the tally themselves —
+                Solon&apos;s word is evidence, not authority.
               </p>
             </div>
           </div>

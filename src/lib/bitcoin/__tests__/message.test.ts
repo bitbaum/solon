@@ -14,7 +14,11 @@ import {
 describe("voteMessage / proposalMessage canonical form", () => {
   it("voteMessage matches the golden string exactly (wallets sign these bytes)", () => {
     expect(
-      voteMessage({ sessionId: "sess-1", choice: "yes", memberAddress: "1BitcoinEaterAddressDontSendf59kuE" }),
+      voteMessage({
+        sessionId: "sess-1",
+        choice: "yes",
+        memberAddress: "1BitcoinEaterAddressDontSendf59kuE",
+      }),
     ).toBe("Solon vote\nsession:sess-1\nchoice:yes\nvoter:1BitcoinEaterAddressDontSendf59kuE");
   });
 
@@ -80,7 +84,9 @@ describe("sign/verify roundtrip", () => {
 
   it("rejects garbage signatures without throwing", () => {
     expect(verifyMessage(message, pair.address, "not-base64!!").valid).toBe(false);
-    expect(verifyMessage(message, pair.address, Buffer.from("short").toString("base64")).valid).toBe(false);
+    expect(
+      verifyMessage(message, pair.address, Buffer.from("short").toString("base64")).valid,
+    ).toBe(false);
   });
 });
 

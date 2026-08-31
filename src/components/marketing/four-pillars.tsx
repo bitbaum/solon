@@ -58,11 +58,7 @@ const AREAS = [
     shortDesc: "Append-only, public, complete",
     description:
       "Every governance event lands in an append-only log with no update or delete path in code. The public audit page shows the record itself — not a summary of it.",
-    features: [
-      "Append-only by construction",
-      "Every step recorded",
-      "Public audit page and API",
-    ],
+    features: ["Append-only by construction", "Every step recorded", "Public audit page and API"],
     href: "/governance/audit",
     linkLabel: "Browse the audit trail",
   },
@@ -86,23 +82,16 @@ export function FourPillars() {
                 {/* text-display-3 bottoms out at 1.5rem — exactly the display
                     face's size floor — so the serif is safe here, unlike the
                     text-lg this replaced. */}
-                <h3 className="font-display text-display-3 text-fg-primary">
-                  {area.title}
-                </h3>
+                <h3 className="font-display text-display-3 text-fg-primary">{area.title}</h3>
                 <p className="text-sm text-fg-tertiary">{area.shortDesc}</p>
               </div>
             </div>
 
-            <p className="text-fg-secondary mb-5 leading-relaxed">
-              {area.description}
-            </p>
+            <p className="text-fg-secondary mb-5 leading-relaxed">{area.description}</p>
 
             <ul className="space-y-2 mb-6">
               {area.features.map((feature) => (
-                <li
-                  key={feature}
-                  className="flex items-center text-sm text-fg-secondary"
-                >
+                <li key={feature} className="flex items-center text-sm text-fg-secondary">
                   <span className="mr-3 h-1 w-1 flex-shrink-0 rounded-pill bg-border-interactive" />
                   {feature}
                 </li>

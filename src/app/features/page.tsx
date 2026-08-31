@@ -1,14 +1,5 @@
 import PageLayout from "@/components/ui/page-layout";
-import {
-  Bitcoin,
-  Vote,
-  Eye,
-  ScrollText,
-  Bot,
-  Plug,
-  Check,
-  type LucideIcon,
-} from "lucide-react";
+import { Bitcoin, Vote, Eye, ScrollText, Bot, Plug, Check, type LucideIcon } from "lucide-react";
 
 /**
  * Every feature listed here exists in this repo today. If a capability is
@@ -132,10 +123,7 @@ function FeatureCard({
       <p className="text-fg-secondary mb-4">{description}</p>
       <ul className="space-y-2">
         {features.map((feature) => (
-          <li
-            key={feature}
-            className="flex items-center text-sm text-fg-primary"
-          >
+          <li key={feature} className="flex items-center text-sm text-fg-primary">
             <Check className="h-4 w-4 text-accent mr-2.5 flex-shrink-0" />
             {feature}
           </li>

@@ -30,10 +30,7 @@ export const ALL_METHODS: MethodId[] = Object.keys(REGISTRY) as MethodId[];
  * snapshotted on the session at open, so a session counted a year from now
  * still uses the budget its voters were actually given.
  */
-export function methodSpec(
-  id: MethodId,
-  params?: { dotBudget?: number | null },
-): AnyMethodSpec {
+export function methodSpec(id: MethodId, params?: { dotBudget?: number | null }): AnyMethodSpec {
   const key = id;
   if (key === "dot" && params?.dotBudget) {
     return dotMethod(params.dotBudget) as AnyMethodSpec;

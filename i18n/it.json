@@ -1,31 +1,31 @@
 {
- "solon": {
-  "title": "SOLON",
-  "tagline": "Governance nativa Bitcoin per l'era digitale",
-  "subtag": "Decisioni e tesorerie trasparenti per organizzazioni di persone e agenti IA.",
-  "cta_primary": "Vedi l'ultimo voto",
-  "cta_secondary": "Vedi la tesoreria",
-  "bullets": {
-   "transparency": "Tesorerie in sola lettura — Solon non detiene chiavi né fondi",
-   "democracy": "Voti firmati Bitcoin, verificabili da chiunque",
-   "global": "Registro di audit pubblico e immutabile"
-  }
- },
- "home": {
-  "made_in": "Realizzato in Svizzera",
-  "pillars_section": {
-   "title": "Cosa governa Solon",
-   "subtitle": "Tesoreria, voto, decisioni e audit — progettati come un unico sistema, ogni affermazione verificabile sulla piattaforma."
+  "solon": {
+    "title": "SOLON",
+    "tagline": "Governance nativa Bitcoin per l'era digitale",
+    "subtag": "Decisioni e tesorerie trasparenti per organizzazioni di persone e agenti IA.",
+    "cta_primary": "Vedi l'ultimo voto",
+    "cta_secondary": "Vedi la tesoreria",
+    "bullets": {
+      "transparency": "Tesorerie in sola lettura — Solon non detiene chiavi né fondi",
+      "democracy": "Voti firmati Bitcoin, verificabili da chiunque",
+      "global": "Registro di audit pubblico e immutabile"
+    }
   },
-  "demo_section": {
-   "title": "La trasparenza in azione",
-   "subtitle": "I voti sono messaggi firmati Bitcoin. La tesoreria è in sola lettura on-chain. Il registro di audit è immutabile e pubblico."
-  },
-  "cta": {
-   "title": "Governare alla luce del sole",
-   "subtitle": "Ogni decisione, ogni voto, ogni satoshi — firmato, registrato e verificabile da chiunque.",
-   "primary": "Apri la dashboard",
-   "secondary": "Vedi le funzionalità"
+  "home": {
+    "made_in": "Realizzato in Svizzera",
+    "pillars_section": {
+      "title": "Cosa governa Solon",
+      "subtitle": "Tesoreria, voto, decisioni e audit — progettati come un unico sistema, ogni affermazione verificabile sulla piattaforma."
+    },
+    "demo_section": {
+      "title": "La trasparenza in azione",
+      "subtitle": "I voti sono messaggi firmati Bitcoin. La tesoreria è in sola lettura on-chain. Il registro di audit è immutabile e pubblico."
+    },
+    "cta": {
+      "title": "Governare alla luce del sole",
+      "subtitle": "Ogni decisione, ogni voto, ogni satoshi — firmato, registrato e verificabile da chiunque.",
+      "primary": "Apri la dashboard",
+      "secondary": "Vedi le funzionalità"
+    }
   }
- }
 }

@@ -118,9 +118,7 @@ export default async function EcosystemPage() {
                 </h2>
                 <span
                   className={`text-xs font-semibold uppercase tracking-wide ${
-                    pillar.key === "solon"
-                      ? "text-accent"
-                      : "text-fg-secondary"
+                    pillar.key === "solon" ? "text-accent" : "text-fg-secondary"
                   }`}
                 >
                   {pillar.role}
@@ -128,18 +126,14 @@ export default async function EcosystemPage() {
               </div>
               <p
                 className={`text-sm ${
-                  pillar.key === "solon"
-                    ? "text-fg-secondary"
-                    : "text-fg-secondary"
+                  pillar.key === "solon" ? "text-fg-secondary" : "text-fg-secondary"
                 }`}
               >
                 {pillar.description}
               </p>
               <p
                 className={`text-sm ${
-                  pillar.key === "solon"
-                    ? "text-fg-secondary"
-                    : "text-fg-secondary"
+                  pillar.key === "solon" ? "text-fg-secondary" : "text-fg-secondary"
                 }`}
               >
                 {pillar.tie}
@@ -190,12 +184,9 @@ export default async function EcosystemPage() {
             ))}
           </ol>
           <p className="mt-4 text-sm text-fg-secondary text-center">
-            Red lines:{" "}
-            {humansOnlyCategories
-              .map((c) => CATEGORY_LABEL[c].toLowerCase())
-              .join(", ")}{" "}
-            are decided by humans only. Agents propose anywhere, but can never
-            vote to expand their own suffrage.
+            Red lines: {humansOnlyCategories.map((c) => CATEGORY_LABEL[c].toLowerCase()).join(", ")}{" "}
+            are decided by humans only. Agents propose anywhere, but can never vote to expand their
+            own suffrage.
           </p>
         </section>
 
@@ -206,27 +197,23 @@ export default async function EcosystemPage() {
           </h2>
           {dbError && (
             <p className="text-center text-fg-secondary">
-              The governance register is currently unreachable, so no live state
-              can be shown.
+              The governance register is currently unreachable, so no live state can be shown.
             </p>
           )}
           {!dbError && !org && (
             <p className="text-center text-fg-secondary">
-              No organization is registered yet — there is nothing governed to
-              show.
+              No organization is registered yet — there is nothing governed to show.
             </p>
           )}
           {org && (
             <>
               <p className="text-sm text-fg-secondary text-center">
-                Everything below is read from the same database the public API
-                serves — nothing is staged.
+                Everything below is read from the same database the public API serves — nothing is
+                staged.
               </p>
 
               <div>
-                <h3 className="text-lg font-semibold text-fg-primary mb-3">
-                  {org.name} — members
-                </h3>
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">{org.name} — members</h3>
                 <ul className="space-y-3">
                   {members.map((m) => (
                     <li
@@ -234,9 +221,7 @@ export default async function EcosystemPage() {
                       className="bg-surface-base rounded-control border border-default p-4"
                     >
                       <div className="flex items-baseline justify-between gap-4">
-                        <span className="font-semibold text-fg-primary">
-                          {m.displayName}
-                        </span>
+                        <span className="font-semibold text-fg-primary">{m.displayName}</span>
                         <span className="text-xs text-fg-secondary uppercase tracking-wide">
                           {m.memberType}
                           {m.system ? ` · ${m.system}` : ""} · {m.status}
@@ -251,13 +236,9 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-fg-primary mb-3">
-                  Active policies
-                </h3>
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">Active policies</h3>
                 {policies.length === 0 ? (
-                  <p className="text-sm text-fg-secondary">
-                    No active policies.
-                  </p>
+                  <p className="text-sm text-fg-secondary">No active policies.</p>
                 ) : (
                   <ul className="space-y-3">
                     {policies.map((p) => (
@@ -269,9 +250,7 @@ export default async function EcosystemPage() {
                           <span className="font-semibold text-fg-primary font-mono text-sm">
                             {p.key}
                           </span>
-                          <span className="text-xs text-fg-secondary">
-                            v{p.version}
-                          </span>
+                          <span className="text-xs text-fg-secondary">v{p.version}</span>
                         </div>
                         <pre className="mt-2 p-2 rounded-control bg-surface-raised border border-default text-xs font-mono whitespace-pre-wrap break-all text-fg-primary">
                           {JSON.stringify(p.content, null, 2)}
@@ -283,9 +262,7 @@ export default async function EcosystemPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-fg-primary mb-3">
-                  Recent proposals
-                </h3>
+                <h3 className="text-lg font-semibold text-fg-primary mb-3">Recent proposals</h3>
                 {proposals.length === 0 ? (
                   <p className="text-sm text-fg-secondary">No proposals yet.</p>
                 ) : (
@@ -296,14 +273,10 @@ export default async function EcosystemPage() {
                         className="bg-surface-base rounded-control border border-default p-4"
                       >
                         <div className="flex items-baseline justify-between gap-4">
-                          <span className="font-semibold text-fg-primary">
-                            {p.title}
-                          </span>
+                          <span className="font-semibold text-fg-primary">{p.title}</span>
                           <span className="text-xs text-fg-secondary whitespace-nowrap">
                             {CATEGORY_LABEL[p.category]} ·{" "}
-                            {p.session?.outcome ??
-                              p.session?.status ??
-                              p.status}
+                            {p.session?.outcome ?? p.session?.status ?? p.status}
                           </span>
                         </div>
                         {p.session?.outcome && (
