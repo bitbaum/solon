@@ -52,7 +52,7 @@
     "postcss": "8.5.26",
     "prettier": "3.9.6",
     "prisma": "7.9.1",
-    "puppeteer": "25.8.0",
+    "puppeteer": "25.9.0",
     "ts-node": "10.9.2",
     "tsx": "^4.23.12",
     "typescript": "5.5.3",
