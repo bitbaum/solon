@@ -21,11 +21,7 @@ export interface SolonHeroProps {
 export default function SolonHero({ language }: SolonHeroProps) {
   const t = dict[language]?.solon ?? dict.en.solon;
 
-  const bullets = [
-    t.bullets?.transparency,
-    t.bullets?.democracy,
-    t.bullets?.global,
-  ];
+  const bullets = [t.bullets?.transparency, t.bullets?.democracy, t.bullets?.global];
 
   return (
     <section className="public-backdrop border-b border-subtle">
@@ -39,12 +35,8 @@ export default function SolonHero({ language }: SolonHeroProps) {
               the h1 its own max-width as well just adds a rule that never binds.
               No weight or tracking here: .font-display owns both, because the
               display face has exactly one weight. */}
-          <h1 className="mx-auto mt-8 font-display text-display-1 text-fg-primary">
-            {t.tagline}
-          </h1>
-          <p className="mx-auto mt-7 max-w-lede text-lg text-fg-secondary">
-            {t.subtag}
-          </p>
+          <h1 className="mx-auto mt-8 font-display text-display-1 text-fg-primary">{t.tagline}</h1>
+          <p className="mx-auto mt-7 max-w-lede text-lg text-fg-secondary">{t.subtag}</p>
 
           <div className="mt-11 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a

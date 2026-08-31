@@ -26,8 +26,8 @@ export default async function ProposePage() {
     return (
       <Shell title="File a proposal">
         <p className="text-sm leading-relaxed text-fg-secondary">
-          Proposals are signed by a member, so the record always says who asked
-          for the change. You are not on the roster yet.
+          Proposals are signed by a member, so the record always says who asked for the change. You
+          are not on the roster yet.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {session?.actorId || !authEnabled ? (
@@ -59,12 +59,9 @@ export default async function ProposePage() {
 
   return (
     <main className="section-shell py-section-tight">
-      <h1 className="text-center font-display text-display-2 text-fg-primary">
-        File a proposal
-      </h1>
+      <h1 className="text-center font-display text-display-2 text-fg-primary">File a proposal</h1>
       <p className="mx-auto mt-5 max-w-lede text-center text-fg-secondary">
-        Filing puts it on the record as a draft. Opening it starts the clock and
-        freezes the rules.
+        Filing puts it on the record as a draft. Opening it starts the clock and freezes the rules.
       </p>
       <div className="mx-auto mt-12 max-w-2xl">
         <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} />

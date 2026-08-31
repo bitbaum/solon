@@ -30,74 +30,73 @@ const MUTED = "#A6A6A6"; // --text-secondary: 0 0% 65%
 
 export default function OGImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          background: INK,
-          padding: "72px 80px",
-          fontFamily: "sans-serif",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 999,
-              background: BITCOIN,
-              display: "flex",
-            }}
-          />
-          <div
-            style={{
-              fontSize: 26,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: MUTED,
-            }}
-          >
-            Solon
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              fontSize: 92,
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.02,
-              color: "#FFFFFF",
-              maxWidth: 960,
-            }}
-          >
-            Bitcoin-Native Governance
-          </div>
-          <div
-            style={{
-              marginTop: 28,
-              fontSize: 34,
-              lineHeight: 1.3,
-              color: MUTED,
-              maxWidth: 880,
-            }}
-          >
-            Transparent decision-making and treasuries for organizations of
-            humans and AI agents.
-          </div>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ width: 64, height: 5, borderRadius: 999, background: ORANGE, display: "flex" }} />
-          <div style={{ fontSize: 24, color: MUTED }}>solon.orangecat.ch</div>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        background: INK,
+        padding: "72px 80px",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: 999,
+            background: BITCOIN,
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            fontSize: 26,
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            color: MUTED,
+          }}
+        >
+          Solon
         </div>
       </div>
-    ),
+
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            fontSize: 92,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            color: "#FFFFFF",
+            maxWidth: 960,
+          }}
+        >
+          Bitcoin-Native Governance
+        </div>
+        <div
+          style={{
+            marginTop: 28,
+            fontSize: 34,
+            lineHeight: 1.3,
+            color: MUTED,
+            maxWidth: 880,
+          }}
+        >
+          Transparent decision-making and treasuries for organizations of humans and AI agents.
+        </div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div
+          style={{ width: 64, height: 5, borderRadius: 999, background: ORANGE, display: "flex" }}
+        />
+        <div style={{ fontSize: 24, color: MUTED }}>solon.orangecat.ch</div>
+      </div>
+    </div>,
     { ...size },
   );
 }

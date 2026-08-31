@@ -16,7 +16,6 @@ const EVENT_LABEL: Record<AuditEventType, string> = {
   POLICY_ACTIVATED: "Policy version activated",
 };
 
-
 /** Where a given audit subject can actually be inspected. */
 const SUBJECT_ACTION: Record<string, string> = {
   proposal: "Open the proposal",
@@ -42,7 +41,9 @@ function summarize(payload: unknown): string | null {
     .filter(([k, v]) => k !== "note" && v !== null && typeof v !== "object")
     .slice(0, 4);
   if (entries.length === 0) return null;
-  return entries.map(([k, v]) => `${k.replace(/([A-Z])/g, " $1").toLowerCase()}: ${String(v)}`).join(" · ");
+  return entries
+    .map(([k, v]) => `${k.replace(/([A-Z])/g, " $1").toLowerCase()}: ${String(v)}`)
+    .join(" · ");
 }
 
 /**
@@ -82,8 +83,7 @@ export default async function AuditPage() {
         )}
         {!dbError && !org && (
           <p className="text-center text-fg-secondary">
-            No organization is registered yet, so there is no audit trail to
-            show.
+            No organization is registered yet, so there is no audit trail to show.
           </p>
         )}
         {org && (
@@ -91,8 +91,8 @@ export default async function AuditPage() {
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-surface border border-default bg-surface-raised p-4">
               <p className="text-sm text-fg-secondary">
                 {events.length} most recent events for{" "}
-                <span className="font-semibold text-fg-primary">{org.name}</span>
-                . Append-only: no code path updates or deletes them.
+                <span className="font-semibold text-fg-primary">{org.name}</span>. Append-only: no
+                code path updates or deletes them.
               </p>
               <div className="flex shrink-0 items-center gap-4">
                 <Link
@@ -127,9 +127,7 @@ export default async function AuditPage() {
                       </time>
                     </div>
 
-                    {summary && (
-                      <p className="mt-1.5 text-sm text-fg-secondary">{summary}</p>
-                    )}
+                    {summary && <p className="mt-1.5 text-sm text-fg-secondary">{summary}</p>}
 
                     <div className="mt-3 flex flex-wrap items-center gap-4">
                       {href && (
@@ -138,9 +136,7 @@ export default async function AuditPage() {
                         </Link>
                       )}
                       <details className="text-xs">
-                        <summary className="cursor-pointer text-fg-tertiary">
-                          Raw event
-                        </summary>
+                        <summary className="cursor-pointer text-fg-tertiary">Raw event</summary>
                         <pre className="mt-2 whitespace-pre-wrap break-all rounded-control border border-default bg-surface-raised p-2 font-mono text-fg-primary">
                           {e.subjectType}:{e.subjectId}
                           {"\n"}

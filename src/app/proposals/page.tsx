@@ -57,8 +57,7 @@ export default async function ProposalsPage() {
               <div className="min-w-0">
                 <h2 className="font-display text-display-3 text-fg-primary">{p.title}</h2>
                 <p className="mt-1 text-sm text-fg-secondary">
-                  {p.category.replace(/_/g, " ").toLowerCase()} · filed by{" "}
-                  {p.proposer.displayName}
+                  {p.category.replace(/_/g, " ").toLowerCase()} · filed by {p.proposer.displayName}
                   {p.session?.outcome ? ` · ${p.session.outcome.toLowerCase()}` : ""}
                 </p>
               </div>

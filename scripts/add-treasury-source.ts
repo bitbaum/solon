@@ -57,9 +57,7 @@ async function main() {
       address,
     },
   });
-  console.log(
-    `treasury source created: ${source.id} (${source.label} ${source.address})`,
-  );
+  console.log(`treasury source created: ${source.id} (${source.label} ${source.address})`);
 }
 
 main()

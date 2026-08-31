@@ -16,22 +16,19 @@ export default function BitcoinTreasuryPage() {
           <h2 className="font-display text-display-3 text-fg-primary mb-4">The model</h2>
           <ul className="space-y-3 text-fg-primary">
             <li>
-              <span className="font-semibold">Watch-only</span> — Solon
-              registers Bitcoin addresses and never holds keys. A balance
-              that cannot be fetched from the chain is shown as unavailable,
-              never guessed.
+              <span className="font-semibold">Watch-only</span> — Solon registers Bitcoin addresses
+              and never holds keys. A balance that cannot be fetched from the chain is shown as
+              unavailable, never guessed.
             </li>
             <li>
-              <span className="font-semibold">Live from the chain</span> —
-              each registered address is looked up on mempool.space when you
-              open the dashboard. Solon does not store a transaction ledger
-              or invent txids.
+              <span className="font-semibold">Live from the chain</span> — each registered address
+              is looked up on mempool.space when you open the dashboard. Solon does not store a
+              transaction ledger or invent txids.
             </li>
             <li>
-              <span className="font-semibold">Governed spending</span> —
-              spending decisions go through the same signed-vote process as
-              everything else: proposal, open session, cryptographically
-              verified votes, recorded outcome.
+              <span className="font-semibold">Governed spending</span> — spending decisions go
+              through the same signed-vote process as everything else: proposal, open session,
+              cryptographically verified votes, recorded outcome.
             </li>
           </ul>
         </div>

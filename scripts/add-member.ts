@@ -50,11 +50,15 @@ async function main() {
     process.exit(1);
   }
   if (type === "AGENT" && !values.system) {
-    console.error("agents need --system (e.g. orangecat:cat) — which system attests this member's votes");
+    console.error(
+      "agents need --system (e.g. orangecat:cat) — which system attests this member's votes",
+    );
     process.exit(1);
   }
   if (type === "AGENT" && values["oc-actor"]) {
-    console.error("--oc-actor is for HUMAN members only — agents are recognized by their API key, not a login");
+    console.error(
+      "--oc-actor is for HUMAN members only — agents are recognized by their API key, not a login",
+    );
     process.exit(1);
   }
 
@@ -65,7 +69,9 @@ async function main() {
   }
 
   const existing = await prisma.member.findUnique({
-    where: { organizationId_bitcoinAddress: { organizationId: organization.id, bitcoinAddress: address } },
+    where: {
+      organizationId_bitcoinAddress: { organizationId: organization.id, bitcoinAddress: address },
+    },
   });
   if (existing) {
     console.log(`member already registered: ${existing.id} (${existing.displayName})`);
@@ -113,7 +119,9 @@ async function main() {
       process.exit(1);
     }
     const plaintext = `sk_solon_${randomBytes(24).toString("hex")}`;
-    await prisma.agentApiKey.create({ data: { memberId: member.id, keyHash: sha256Hex(plaintext) } });
+    await prisma.agentApiKey.create({
+      data: { memberId: member.id, keyHash: sha256Hex(plaintext) },
+    });
     console.log(`API key (shown once, store it in the agent's env now):\n${plaintext}`);
   }
 }

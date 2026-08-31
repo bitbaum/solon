@@ -41,7 +41,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ sessionId: str
     return NextResponse.json({ error: "a ballot is required" }, { status: 400 });
   }
 
-  const result = await submitVote(params.sessionId, { address, signature, ballot: effectiveBallot });
+  const result = await submitVote(params.sessionId, {
+    address,
+    signature,
+    ballot: effectiveBallot,
+  });
   if (!result.stored) {
     // 401 when the signature itself failed; 422 when it verified but the
     // voter/session wasn't eligible.

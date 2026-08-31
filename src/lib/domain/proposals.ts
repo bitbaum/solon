@@ -55,7 +55,8 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     return {
       created: false,
       verified: false,
-      reason: "policyKey and proposedContent must be provided together — a policy change needs both",
+      reason:
+        "policyKey and proposedContent must be provided together — a policy change needs both",
     };
   }
 
@@ -114,18 +115,30 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     },
   });
   if (!member) {
-    return { created: false, verified: true, reason: "address is not an active member of this organization" };
+    return {
+      created: false,
+      verified: true,
+      reason: "address is not an active member of this organization",
+    };
   }
 
   if (member.memberType === MemberType.AGENT) {
     if (!input.apiKey) {
-      return { created: false, verified: true, reason: "agent proposers must present their API key" };
+      return {
+        created: false,
+        verified: true,
+        reason: "agent proposers must present their API key",
+      };
     }
     const key = await prisma.agentApiKey.findFirst({
       where: { memberId: member.id, keyHash: sha256Hex(input.apiKey), revokedAt: null },
     });
     if (!key) {
-      return { created: false, verified: true, reason: "API key does not belong to this agent member or is revoked" };
+      return {
+        created: false,
+        verified: true,
+        reason: "API key does not belong to this agent member or is revoked",
+      };
     }
   }
 
@@ -137,7 +150,9 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         title: input.title,
         body: input.body,
         policyKey: hasPolicyKey ? input.policyKey : null,
-        proposedContent: hasContent ? (input.proposedContent as Prisma.InputJsonValue) : Prisma.DbNull,
+        proposedContent: hasContent
+          ? (input.proposedContent as Prisma.InputJsonValue)
+          : Prisma.DbNull,
         target: input.target ?? null,
         contentHash,
         method: input.method ?? null,
@@ -164,5 +179,10 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     return p;
   });
 
-  return { created: true, verified: true, proposalId: proposal.id, ...(contentHash ? { contentHash } : {}) };
+  return {
+    created: true,
+    verified: true,
+    proposalId: proposal.id,
+    ...(contentHash ? { contentHash } : {}),
+  };
 }

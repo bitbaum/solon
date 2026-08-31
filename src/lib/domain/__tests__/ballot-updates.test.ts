@@ -39,7 +39,10 @@ describe("dot allocation edits", () => {
   });
 
   it("refuses the tap that would overspend, however fast they arrive", () => {
-    const full = applyAll({}, Array.from({ length: 5 }, () => (p: unknown) => nudgeDot(p, "a", 1, 5)));
+    const full = applyAll(
+      {},
+      Array.from({ length: 5 }, () => (p: unknown) => nudgeDot(p, "a", 1, 5)),
+    );
     expect(spentDots(full)).toBe(5);
     const overspent = nudgeDot(full, "b", 1, 5);
     expect(spentDots(overspent)).toBe(5);

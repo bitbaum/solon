@@ -17,7 +17,8 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string; key
     where: { organizationId: org.id, key: params.key },
     orderBy: { version: "desc" },
   });
-  if (versions.length === 0) return NextResponse.json({ error: "Policy not found" }, { status: 404 });
+  if (versions.length === 0)
+    return NextResponse.json({ error: "Policy not found" }, { status: 404 });
 
   return NextResponse.json({
     organization: { id: org.id, slug: org.slug },

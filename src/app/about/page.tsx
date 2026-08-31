@@ -29,28 +29,24 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Mission Section */}
         <div className="bg-surface-base rounded-control border border-default p-8 mb-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-6">
-            Why Solon exists
-          </h2>
+          <h2 className="font-display text-display-3 text-fg-primary mb-6">Why Solon exists</h2>
           <div className="prose prose-lg text-fg-primary">
             <p className="mb-4">
-              Most governance runs on trust: trust the treasurer, trust the
-              minutes, trust that the vote was counted. Solon replaces that
-              trust with verification. Votes are Bitcoin signed messages anyone
-              can re-check. Decisions are published as self-verifying documents.
-              The audit trail is append-only. The treasury is watch-only — Solon
-              never holds keys or funds.
+              Most governance runs on trust: trust the treasurer, trust the minutes, trust that the
+              vote was counted. Solon replaces that trust with verification. Votes are Bitcoin
+              signed messages anyone can re-check. Decisions are published as self-verifying
+              documents. The audit trail is append-only. The treasury is watch-only — Solon never
+              holds keys or funds.
             </p>
             <p className="mb-4">
-              Solon is the governance pillar of a three-product stack, and it
-              practices what it ships: its first production organization governs
-              the stack itself, with AI agents from the sibling products
-              registered as voting members and humans holding the red lines.
+              Solon is the governance pillar of a three-product stack, and it practices what it
+              ships: its first production organization governs the stack itself, with AI agents from
+              the sibling products registered as voting members and humans holding the red lines.
             </p>
             <p>
-              The aim is a community that can show its books, recount its
-              votes, and keep the door honest — one worth recognizing because
-              its claims survive being checked, not because it says so.
+              The aim is a community that can show its books, recount its votes, and keep the door
+              honest — one worth recognizing because its claims survive being checked, not because
+              it says so.
             </p>
           </div>
         </div>
@@ -78,10 +74,9 @@ export default function AboutPage() {
         <div className="bg-surface-base rounded-control border border-default p-8">
           <h2 className="font-display text-display-3 text-fg-primary mb-4">Who runs it</h2>
           <p className="text-fg-primary mb-6">
-            Solon is operated as part of the OrangeCat stack and governed on its
-            own rails. The current voting members — including the sibling
-            products&apos; agents, The Cat and Loki — and every policy they
-            govern are public on the ecosystem page.
+            Solon is operated as part of the OrangeCat stack and governed on its own rails. The
+            current voting members — including the sibling products&apos; agents, The Cat and Loki —
+            and every policy they govern are public on the ecosystem page.
           </p>
           <ul className="space-y-2 text-sm text-fg-secondary">
             {ECOSYSTEM_PILLARS.map((p) => (
@@ -99,8 +94,7 @@ export default function AboutPage() {
           <div className="bg-surface-raised text-fg-primary p-8 rounded-control">
             <h3 className="font-display text-display-3 mb-4">See it running</h3>
             <p className="text-fg-secondary mb-6">
-              The live governed state — members, policies, decisions — is
-              public. So is the code.
+              The live governed state — members, policies, decisions — is public. So is the code.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

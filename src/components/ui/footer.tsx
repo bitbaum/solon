@@ -56,9 +56,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-subtle pt-6 sm:flex-row">
-          <div className="text-xs text-fg-tertiary">
-            © {new Date().getFullYear()} Solon
-          </div>
+          <div className="text-xs text-fg-tertiary">© {new Date().getFullYear()} Solon</div>
           <div className="text-xs text-fg-tertiary">
             The governance pillar of the OrangeCat stack.
           </div>

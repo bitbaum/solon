@@ -1,9 +1,4 @@
-import {
-  AuditEventType,
-  KeyCustody,
-  MemberStatus,
-  MemberType,
-} from "@prisma/client";
+import { AuditEventType, KeyCustody, MemberStatus, MemberType } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { registrationMessage, verifyMessage } from "@/lib/bitcoin/message";
 
@@ -41,9 +36,7 @@ export interface RegisterMemberResult {
  * permanently by its own success, because it only fires while the human roster
  * is empty.
  */
-export async function registerMember(
-  input: RegisterMemberInput,
-): Promise<RegisterMemberResult> {
+export async function registerMember(input: RegisterMemberInput): Promise<RegisterMemberResult> {
   const org = await prisma.organization.findUnique({ where: { slug: input.orgSlug } });
   if (!org) return { registered: false, verified: false, reason: "organization not found" };
 

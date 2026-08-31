@@ -1,8 +1,4 @@
-import {
-  DecisionCategory,
-  Electorate,
-  VoteThreshold,
-} from "@prisma/client";
+import { DecisionCategory, Electorate, VoteThreshold } from "@prisma/client";
 
 /**
  * SSOT for who decides what, and how.

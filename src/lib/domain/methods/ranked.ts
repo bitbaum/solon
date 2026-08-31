@@ -59,7 +59,8 @@ export const ranked: MethodSpec<RankedBallot> = {
       for (const o of options) {
         const rank = place.get(o.key);
         // Borda: first of n earns n-1, each later place one fewer, unranked earns 0.
-        if (rank !== undefined) points.set(o.key, (points.get(o.key) ?? 0) + (n - 1 - rank) * weight);
+        if (rank !== undefined)
+          points.set(o.key, (points.get(o.key) ?? 0) + (n - 1 - rank) * weight);
       }
       for (const a of options) {
         for (const b of options) {
@@ -89,7 +90,8 @@ export const ranked: MethodSpec<RankedBallot> = {
     const condorcetKey =
       options.find((a) =>
         options.every(
-          (b) => a.key === b.key || pairwise.get(a.key)!.get(b.key)! > pairwise.get(b.key)!.get(a.key)!,
+          (b) =>
+            a.key === b.key || pairwise.get(a.key)!.get(b.key)! > pairwise.get(b.key)!.get(a.key)!,
         ),
       )?.key ?? null;
 

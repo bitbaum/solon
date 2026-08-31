@@ -5,71 +5,74 @@
  * no palette utilities, no arbitrary hex, no pillowy radii, no shadows
  * standing in for hierarchy.
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const ROOT = process.cwd();
-const TARGETS = ['src'];
-const EXTENSIONS = new Set(['.ts', '.tsx']);
-const SKIP_NAMES = new Set(['opengraph-image.tsx']);
+const TARGETS = ["src"];
+const EXTENSIONS = new Set([".ts", ".tsx"]);
+const SKIP_NAMES = new Set(["opengraph-image.tsx"]);
 
 const FORBIDDEN = [
   {
     pattern: /\b(?:text|bg|border|ring|divide)-(?:slate|gray|zinc|neutral)-\d+\b/,
-    message: 'Use text-fg-primary / text-fg-secondary / bg-surface-* / border-default.',
+    message: "Use text-fg-primary / text-fg-secondary / bg-surface-* / border-default.",
   },
   {
     pattern: /(?:bg|text|border)-\[[#']/,
-    message: 'No arbitrary hex. Define a CSS var in globals.css.',
+    message: "No arbitrary hex. Define a CSS var in globals.css.",
   },
   {
     pattern: /\b(?:text|bg|border|ring)-white\/\d+\b/,
-    message: 'Use bg-surface-* / border-* tokens, not white with an opacity.',
+    message: "Use bg-surface-* / border-* tokens, not white with an opacity.",
   },
   {
     // The vocabulary is shared with OrangeCat and FleetCrown. These were Solon's
     // private, blue-tinted palette — the reason the three sites looked like three
     // companies. They are gone from tailwind.config.js; this keeps them gone.
-    pattern: /\b(?:text|bg|border|ring|from|to|via|divide)-(?:navy|navy-light|navy-dark|solon-[a-z]+)\b/,
+    pattern:
+      /\b(?:text|bg|border|ring|from|to|via|divide)-(?:navy|navy-light|navy-dark|solon-[a-z]+)\b/,
     message:
-      'Legacy Solon palette. Use the shared tokens: bg-surface-*, text-fg-*, bg-accent, text-bitcoin.',
+      "Legacy Solon palette. Use the shared tokens: bg-surface-*, text-fg-*, bg-accent, text-bitcoin.",
   },
   {
     // Radii are named by role so all three products round corners the same way.
     pattern: /\brounded-(?:sm|md|lg|xl|2xl|3xl|full)\b/,
-    message: 'Use rounded-control / rounded-surface / rounded-pill.',
+    message: "Use rounded-control / rounded-surface / rounded-pill.",
   },
   {
     pattern: /\bshadow-(?:sm|md|lg|xl|2xl|navy|card)\b/,
-    message: 'Hierarchy is border + type, not drop shadow.',
+    message: "Hierarchy is border + type, not drop shadow.",
   },
   {
     pattern: /\b(?:bg-gradient|linear-gradient)\b/,
-    message: 'No component gradients. Brand surfaces live in globals.css.',
+    message: "No component gradients. Brand surfaces live in globals.css.",
   },
   {
     // max-w-7xl was the old per-page container. Width is one decision now.
     pattern: /\bmax-w-7xl\b/,
-    message: 'Use the .section-shell class (or max-w-shell) so every page lines up.',
+    message: "Use the .section-shell class (or max-w-shell) so every page lines up.",
   },
   {
     // The display face (Instrument Serif) ships ONE weight. Asking for a bolder
     // one makes the browser synthesize a fake bold, which looks cheap and is
     // invisible in code review. Weight belongs to the face, in the token
     // package, not to the component — that is what keeps a face swap one line.
-    pattern: /\bfont-display\b[^"']*\bfont-(?:medium|semibold|bold|extrabold|black)\b|\bfont-(?:medium|semibold|bold|extrabold|black)\b[^"']*\bfont-display\b/,
+    pattern:
+      /\bfont-display\b[^"']*\bfont-(?:medium|semibold|bold|extrabold|black)\b|\bfont-(?:medium|semibold|bold|extrabold|black)\b[^"']*\bfont-display\b/,
     message:
-      'Do not set a weight next to font-display — the display face has one weight, owned by @fleet/design-tokens.',
+      "Do not set a weight next to font-display — the display face has one weight, owned by @fleet/design-tokens.",
   },
   {
     // .font-display already applies the face's tracking. Re-declaring it means
     // a future face swap silently keeps the OLD face's tracking.
-    pattern: /\bfont-display\b[^"']*\btracking-display\b|\btracking-display\b[^"']*\bfont-display\b/,
-    message: 'Redundant: .font-display already applies --tracking-display.',
+    pattern:
+      /\bfont-display\b[^"']*\btracking-display\b|\btracking-display\b[^"']*\bfont-display\b/,
+    message: "Redundant: .font-display already applies --tracking-display.",
   },
   {
     pattern: /font-\[['"]?[A-Z]/,
-    message: 'Never name a typeface in a component. Use font-display / font-sans / font-mono.',
+    message: "Never name a typeface in a component. Use font-display / font-sans / font-mono.",
   },
   {
     // Size floor. The display face is a high-contrast serif: its thin strokes
@@ -77,9 +80,10 @@ const FORBIDDEN = [
     // LIGHTER than the 16px sans paragraph under it and the hierarchy inverts.
     // Display type starts at text-2xl; below that use the sans at font-semibold.
     // The uppercase, open-tracked wordmark is the sanctioned exception (.wordmark).
-    pattern: /\bfont-display\b[^"']*\btext-(?:xs|sm|base|lg|xl)\b|\btext-(?:xs|sm|base|lg|xl)\b[^"']*\bfont-display\b/,
+    pattern:
+      /\bfont-display\b[^"']*\btext-(?:xs|sm|base|lg|xl)\b|\btext-(?:xs|sm|base|lg|xl)\b[^"']*\bfont-display\b/,
     message:
-      'Display face below its size floor — use text-2xl+ with font-display, or the sans at font-semibold.',
+      "Display face below its size floor — use text-2xl+ with font-display, or the sans at font-semibold.",
   },
 ];
 
@@ -97,7 +101,7 @@ const FORBIDDEN = [
 const DISPLAY_SCALE = /\btext-(?:2xl|3xl|4xl|5xl|6xl|7xl|display-[123])\b/;
 function missingDisplayFace(line) {
   for (const m of line.matchAll(/className=(?:"([^"]*)"|\{`([^`]*)`\})/g)) {
-    const cls = m[1] ?? m[2] ?? '';
+    const cls = m[1] ?? m[2] ?? "";
     if (!DISPLAY_SCALE.test(cls)) continue;
     if (/\bfont-(?:display|mono)\b/.test(cls)) continue;
     if (/\bwordmark\b/.test(cls)) continue;
@@ -118,7 +122,7 @@ const TOKEN_REDEFINITION =
 function walk(dir, files = []) {
   if (!fs.existsSync(dir)) return files;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === 'node_modules' || entry.name === '.next') continue;
+    if (entry.name === "node_modules" || entry.name === ".next") continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full, files);
     else if (EXTENSIONS.has(path.extname(entry.name)) && !SKIP_NAMES.has(entry.name)) {
@@ -132,7 +136,7 @@ const violations = [];
 for (const target of TARGETS) {
   for (const file of walk(path.join(ROOT, target))) {
     const rel = path.relative(ROOT, file);
-    const lines = fs.readFileSync(file, 'utf8').split('\n');
+    const lines = fs.readFileSync(file, "utf8").split("\n");
     lines.forEach((line, i) => {
       for (const rule of FORBIDDEN) {
         if (rule.pattern.test(line)) {
@@ -144,7 +148,7 @@ for (const target of TARGETS) {
           file: rel,
           line: i + 1,
           message:
-            'Heading at display size without font-display. Above text-2xl the display face is the default — add font-display (or font-mono if this is data).',
+            "Heading at display size without font-display. Above text-2xl the display face is the default — add font-display (or font-mono if this is data).",
           source: line.trim(),
         });
       }
@@ -153,17 +157,17 @@ for (const target of TARGETS) {
 }
 
 // globals.css must stay free of token definitions — the package owns them.
-const GLOBALS = path.join(ROOT, 'src/app/globals.css');
+const GLOBALS = path.join(ROOT, "src/app/globals.css");
 if (fs.existsSync(GLOBALS)) {
-  fs.readFileSync(GLOBALS, 'utf8')
-    .split('\n')
+  fs.readFileSync(GLOBALS, "utf8")
+    .split("\n")
     .forEach((line, i) => {
       if (TOKEN_REDEFINITION.test(line)) {
         violations.push({
-          file: 'src/app/globals.css',
+          file: "src/app/globals.css",
           line: i + 1,
           message:
-            'Token redefined locally. Tokens live in @fleet/design-tokens so all three products share them.',
+            "Token redefined locally. Tokens live in @fleet/design-tokens so all three products share them.",
           source: line.trim(),
         });
       }
@@ -177,4 +181,4 @@ if (violations.length) {
   }
   process.exit(1);
 }
-console.log('design-system check: ok');
+console.log("design-system check: ok");

@@ -37,7 +37,9 @@ async function main() {
   const keyEnv = values["key-env"] ?? "SOLON_AGENT_PRIVKEY";
   const privateKeyHex = process.env[keyEnv];
   if (!privateKeyHex) {
-    console.error(`env ${keyEnv} is not set — the agent's private key lives in its own env, nowhere else`);
+    console.error(
+      `env ${keyEnv} is not set — the agent's private key lives in its own env, nowhere else`,
+    );
     process.exit(1);
   }
 

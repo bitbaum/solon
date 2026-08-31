@@ -19,9 +19,8 @@ export default async function AccountPage() {
       <main className="max-w-xl mx-auto py-24 text-center">
         <h1 className="font-display text-display-3 text-fg-primary mb-4">Account</h1>
         <p className="text-fg-secondary mb-8">
-          Solon has no accounts of its own — no passwords, no registration.
-          Sign in with OrangeCat to be recognized; voting itself never needs
-          a login, only a Bitcoin signature.
+          Solon has no accounts of its own — no passwords, no registration. Sign in with OrangeCat
+          to be recognized; voting itself never needs a login, only a Bitcoin signature.
         </p>
         {authEnabled ? (
           <form
@@ -40,8 +39,7 @@ export default async function AccountPage() {
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-fg-secondary">
-              Sign-in is not configured in this environment — but none of the
-              record needs it.
+              Sign-in is not configured in this environment — but none of the record needs it.
             </p>
             <Link href="/governance/audit" className="btn-primary inline-flex">
               Read the record
@@ -106,9 +104,8 @@ export default async function AccountPage() {
         ) : (
           <>
             <p className="text-sm leading-relaxed text-fg-secondary">
-              You are recognized but not on the roster, so you can read
-              everything and vote on nothing. Membership needs one more thing:
-              a Bitcoin key you can sign with.
+              You are recognized but not on the roster, so you can read everything and vote on
+              nothing. Membership needs one more thing: a Bitcoin key you can sign with.
             </p>
             <Link href="/join" className="btn-primary mt-5 inline-flex">
               Become a member

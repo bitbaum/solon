@@ -51,13 +51,19 @@ describe("the signed encoding", () => {
 
   it("preserves order where order is the meaning", () => {
     expect(canonicalBallot("ranked", { ranking: ["a", "b"] })).not.toBe(
-      canonicalBallot("ranked", { ranking: ["b", "a"] })
+      canonicalBallot("ranked", { ranking: ["b", "a"] }),
     );
   });
 
   it("binds an objection's reason, so the reason cannot be rewritten in transit", () => {
-    const one = canonicalBallot("consent", { response: "object", rationale: "this breaks the lease" });
-    const two = canonicalBallot("consent", { response: "object", rationale: "looks fine actually" });
+    const one = canonicalBallot("consent", {
+      response: "object",
+      rationale: "this breaks the lease",
+    });
+    const two = canonicalBallot("consent", {
+      response: "object",
+      rationale: "looks fine actually",
+    });
     expect(one).not.toBe(two);
     expect(one.startsWith("object:")).toBe(true);
   });
@@ -101,7 +107,9 @@ describe("ballot validation", () => {
   });
 
   it("rejects a ranking that lists the same option twice", () => {
-    expect(parseBallot("ranked", { ranking: ["solar-roof", "solar-roof"] }, OPTIONS).ok).toBe(false);
+    expect(parseBallot("ranked", { ranking: ["solar-roof", "solar-roof"] }, OPTIONS).ok).toBe(
+      false,
+    );
   });
 });
 
@@ -109,10 +117,7 @@ describe("counting", () => {
   it("approval counts weight per option, not ballots", () => {
     const agg = aggregateBallots(
       "approval",
-      [
-        w({ approved: ["solar-roof", "heat-pump"] }, 3),
-        w({ approved: ["heat-pump"] }, 1),
-      ],
+      [w({ approved: ["solar-roof", "heat-pump"] }, 3), w({ approved: ["heat-pump"] }, 1)],
       OPTIONS,
     );
     expect(agg.ranked?.[0]).toMatchObject({ key: "heat-pump", score: 4 });

@@ -9,12 +9,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
-import {
-  AuditEventType,
-  DecisionCategory,
-  PolicyStatus,
-  SessionOutcome,
-} from "@prisma/client";
+import { AuditEventType, DecisionCategory, PolicyStatus, SessionOutcome } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import {
   generateKeyPair,
@@ -100,7 +95,9 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
       where: { organizationId: org.id, bitcoinAddress: agent.address },
     });
     const apiKey = `sk_solon_test_${randomUUID()}`;
-    await prisma.agentApiKey.create({ data: { memberId: agentMember.id, keyHash: sha256Hex(apiKey) } });
+    await prisma.agentApiKey.create({
+      data: { memberId: agentMember.id, keyHash: sha256Hex(apiKey) },
+    });
 
     const filed = await createProposal({ ...base, apiKey });
     expect(filed.created).toBe(true);
@@ -139,13 +136,25 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
 
     // --- Policy v2 exists, references the session, v1 superseded ---
     const v2 = await prisma.policy.findUniqueOrThrow({
-      where: { organizationId_key_version: { organizationId: org.id, key: "allocation_policy", version: 2 } },
+      where: {
+        organizationId_key_version: {
+          organizationId: org.id,
+          key: "allocation_policy",
+          version: 2,
+        },
+      },
     });
     expect(v2.status).toBe(PolicyStatus.ACTIVE);
     expect(v2.approvedBySessionId).toBe(session.id);
     expect(v2.content).toEqual(proposedContent);
     const v1 = await prisma.policy.findUniqueOrThrow({
-      where: { organizationId_key_version: { organizationId: org.id, key: "allocation_policy", version: 1 } },
+      where: {
+        organizationId_key_version: {
+          organizationId: org.id,
+          key: "allocation_policy",
+          version: 1,
+        },
+      },
     });
     expect(v1.status).toBe(PolicyStatus.SUPERSEDED);
 
@@ -157,8 +166,11 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(d.proposal.contentHash).toBe(contentHash);
     expect(contentHashOf(d.proposal.proposedContent)).toBe(d.proposal.contentHash);
     expect(
-      verifyMessage(d.proposal.proposerMessage, d.proposal.proposer.bitcoinAddress, d.proposal.proposerSignature)
-        .valid,
+      verifyMessage(
+        d.proposal.proposerMessage,
+        d.proposal.proposer.bitcoinAddress,
+        d.proposal.proposerSignature,
+      ).valid,
     ).toBe(true);
     expect(d.votes).toHaveLength(3);
     for (const v of d.votes) {

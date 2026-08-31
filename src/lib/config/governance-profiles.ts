@@ -24,12 +24,7 @@ export interface CategoryRule {
   quorumPercent: number;
 }
 
-export type GovernanceProfileId =
-  | "TOWN"
-  | "ASSOCIATION"
-  | "COOPERATIVE"
-  | "COLLECTIVE"
-  | "COMPANY";
+export type GovernanceProfileId = "TOWN" | "ASSOCIATION" | "COOPERATIVE" | "COLLECTIVE" | "COMPANY";
 
 export interface GovernanceProfile {
   id: GovernanceProfileId;
@@ -76,7 +71,8 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
   ASSOCIATION: {
     id: "ASSOCIATION",
     label: "Association (Verein)",
-    suitedTo: "A member association where the assembly is sovereign and the statutes are hard to change.",
+    suitedTo:
+      "A member association where the assembly is sovereign and the statutes are hard to change.",
     rules: {
       ALLOCATION_POLICY: decision("dot", SIMPLE, 40),
       TREASURY_SPEND: decision("consent", SIMPLE, 40),
@@ -169,6 +165,9 @@ export function electorateFor(category: DecisionCategory): Electorate {
   return CATEGORY_ELECTORATE[category];
 }
 
-export function ruleFor(profileId: string | null | undefined, category: DecisionCategory): CategoryRule {
+export function ruleFor(
+  profileId: string | null | undefined,
+  category: DecisionCategory,
+): CategoryRule {
   return profileFor(profileId).rules[category];
 }

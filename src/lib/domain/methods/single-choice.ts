@@ -19,7 +19,8 @@ export const singleChoice: MethodSpec<SingleChoiceBallot> = {
   id: "single_choice",
   kind: "decision",
   label: "Yes / no",
-  summary: "Each member votes yes, no, or abstain. Abstaining counts toward quorum but not toward the result.",
+  summary:
+    "Each member votes yes, no, or abstain. Abstaining counts toward quorum but not toward the result.",
   needsOptions: false,
 
   schema: () => z.object({ choice: z.enum(["yes", "no", "abstain"]) }),

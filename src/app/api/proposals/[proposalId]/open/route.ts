@@ -14,6 +14,9 @@ export async function POST(_: Request, ctx: { params: Promise<{ proposalId: stri
     return NextResponse.json({ opened: true, session }, { status: 201 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "failed to open session";
-    return NextResponse.json({ opened: false, error: message }, { status: message.includes("not found") ? 404 : 409 });
+    return NextResponse.json(
+      { opened: false, error: message },
+      { status: message.includes("not found") ? 404 : 409 },
+    );
   }
 }

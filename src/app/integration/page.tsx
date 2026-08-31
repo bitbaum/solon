@@ -23,14 +23,11 @@ export default async function IntegrationPage() {
             Cast a cryptographic vote
           </h2>
           <p className="text-fg-primary mb-4">
-            A vote is a Bitcoin signed message. Sign the canonical vote message
-            with the wallet that holds your registered member address, then POST
-            the signature:
+            A vote is a Bitcoin signed message. Sign the canonical vote message with the wallet that
+            holds your registered member address, then POST the signature:
           </p>
           <div className="bg-surface-public text-green-400 p-4 rounded-surface font-mono text-sm overflow-x-auto">
-            <div className="text-fg-secondary">
-              # Message to sign (exact text):
-            </div>
+            <div className="text-fg-secondary"># Message to sign (exact text):</div>
             <div className="text-fg-primary">Solon vote</div>
             <div className="text-fg-primary">session:&lt;sessionId&gt;</div>
             <div className="text-fg-primary">choice:&lt;yes|no|abstain&gt;</div>
@@ -50,10 +47,9 @@ export default async function IntegrationPage() {
             </div>
           </div>
           <p className="text-fg-secondary text-sm mt-3">
-            The server recovers the public key from the signature and only
-            stores the vote if it resolves to a registered member. Invalid
-            signatures return 401; verified but ineligible votes return 422 —
-            with the reason in both cases.
+            The server recovers the public key from the signature and only stores the vote if it
+            resolves to a registered member. Invalid signatures return 401; verified but ineligible
+            votes return 422 — with the reason in both cases.
           </p>
         </div>
 
@@ -98,12 +94,10 @@ export default async function IntegrationPage() {
             })}
           </ul>
           <p className="text-fg-secondary text-sm mt-4">
-            All reads are public and auth-free — transparency is the product. On
-            finalization Solon emits a{" "}
-            <code className="font-mono text-xs">decision.finalized</code>{" "}
-            webhook (HMAC-signed); consumers are expected to fetch the decision
-            document and re-verify every signature locally rather than trust the
-            notification.
+            All reads are public and auth-free — transparency is the product. On finalization Solon
+            emits a <code className="font-mono text-xs">decision.finalized</code> webhook
+            (HMAC-signed); consumers are expected to fetch the decision document and re-verify every
+            signature locally rather than trust the notification.
           </p>
         </div>
       </div>

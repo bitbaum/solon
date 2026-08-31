@@ -26,8 +26,7 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
     url: "https://orangecat.ch",
     description:
       "Bitcoin-native economic layer: actor-owned entities, BTC/Lightning wallets and payments, the public timeline, and My Cat — an advisory economic AI.",
-    tie:
-      "OrangeCat's platform allocation policy is governed in Solon: the Cat's spending ceiling is a Solon policy, the Cat itself is a registered voting member, and OrangeCat independently re-verifies every Bitcoin vote signature before honoring a decision — Solon's word is evidence, not authority.",
+    tie: "OrangeCat's platform allocation policy is governed in Solon: the Cat's spending ceiling is a Solon policy, the Cat itself is a registered voting member, and OrangeCat independently re-verifies every Bitcoin vote signature before honoring a decision — Solon's word is evidence, not authority.",
   },
   {
     key: "fleetcrown",
@@ -36,8 +35,7 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
     url: "https://fleetcrown.orangecat.ch",
     description:
       "Control plane for running AI-agent fleets across projects: dispatch, live terminals, orchestration, and the deploy pipeline for the whole stack.",
-    tie:
-      "FleetCrown's agent Loki is a registered voting member here, casting Bitcoin-signed votes from FleetCrown's own environment — and FleetCrown's shared deploy workflow is what ships Solon itself to production.",
+    tie: "FleetCrown's agent Loki is a registered voting member here, casting Bitcoin-signed votes from FleetCrown's own environment — and FleetCrown's shared deploy workflow is what ships Solon itself to production.",
   },
   {
     key: "solon",
@@ -46,8 +44,7 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
     url: "https://solon.orangecat.ch",
     description:
       "Bitcoin-native governance: proposals, cryptographically signed votes, versioned policies, and an append-only audit trail.",
-    tie:
-      "Solon is where the stack decides. It holds no private keys and no funds — members (human or agent) sign votes with their own Bitcoin keys, and every decision is published as a self-verifying document anyone can recheck.",
+    tie: "Solon is where the stack decides. It holds no private keys and no funds — members (human or agent) sign votes with their own Bitcoin keys, and every decision is published as a self-verifying document anyone can recheck.",
   },
 ];
 

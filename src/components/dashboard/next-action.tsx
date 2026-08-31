@@ -26,8 +26,7 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
   if (!session?.actorId) {
     return {
       headline: "Sign in to take part",
-      detail:
-        "Reading needs no account. Voting needs an identity on the roster and a Bitcoin key.",
+      detail: "Reading needs no account. Voting needs an identity on the roster and a Bitcoin key.",
       href: "/join",
       cta: "Get started",
     };
@@ -70,9 +69,7 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     if (!alreadyVoted) {
       return {
         headline: "A vote is open and you have not cast one",
-        detail: `${active.proposal.title} — closes ${active.closesAt
-          .toISOString()
-          .slice(0, 10)}.`,
+        detail: `${active.proposal.title} — closes ${active.closesAt.toISOString().slice(0, 10)}.`,
         href: `/proposals/${active.proposalId}`,
         cta: "Cast your vote",
       };

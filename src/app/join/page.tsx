@@ -37,9 +37,8 @@ export default async function JoinPage() {
       <Shell title="Become a member">
         <Card>
           <p className="text-sm leading-relaxed text-fg-secondary">
-            Membership needs two things: an OrangeCat identity, so the roster
-            says who you are, and a Bitcoin key, so your votes verify. Start
-            with the first.
+            Membership needs two things: an OrangeCat identity, so the roster says who you are, and
+            a Bitcoin key, so your votes verify. Start with the first.
           </p>
           <Actions>
             {authEnabled ? (
@@ -93,10 +92,9 @@ export default async function JoinPage() {
       <Shell title="Admission is by vote">
         <Card>
           <p className="text-sm leading-relaxed text-fg-secondary">
-            {org.name} has seated members, so new admissions are decided by a
-            MEMBERSHIP vote rather than claimed. You are signed in and can read
-            everything: the roster, every proposal, every signature, and the
-            treasury.
+            {org.name} has seated members, so new admissions are decided by a MEMBERSHIP vote rather
+            than claimed. You are signed in and can read everything: the roster, every proposal,
+            every signature, and the treasury.
           </p>
           <Actions>
             <Link href="/governance/audit" className="btn-primary">
@@ -114,10 +112,9 @@ export default async function JoinPage() {
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="rounded-surface border border-default bg-surface-raised p-5 text-sm leading-relaxed text-fg-secondary">
           <p>
-            {org.name} has no human members yet. A membership vote cannot open
-            without one, so the founding seat is granted on proof instead of by
-            decision — sign a message with a Bitcoin key you control and the
-            seat is yours. It is recorded in the audit trail as a founding
+            {org.name} has no human members yet. A membership vote cannot open without one, so the
+            founding seat is granted on proof instead of by decision — sign a message with a Bitcoin
+            key you control and the seat is yours. It is recorded in the audit trail as a founding
             grant, and every admission after it is an ordinary vote.
           </p>
         </div>

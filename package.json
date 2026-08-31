@@ -12,13 +12,15 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "design:check": "node scripts/design-system-check.js",
-    "verify": "npm run lint && npm run typecheck && npm run design:check && npm run test",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run design:check && npm run test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:puppeteer": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/smoke.mjs",
     "test:puppeteer:mega": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/mega-menu.mjs",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@fleet/design-tokens": "github:catomean/design-tokens#v1.1.0",
@@ -48,6 +50,7 @@
     "eslint": "10.9.1",
     "eslint-config-next": "16.3.2",
     "postcss": "8.5.26",
+    "prettier": "3.9.6",
     "prisma": "7.9.1",
     "puppeteer": "25.8.0",
     "ts-node": "10.9.2",

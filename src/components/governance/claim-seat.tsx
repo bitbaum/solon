@@ -84,8 +84,8 @@ export default function ClaimSeat({
           className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 font-mono text-sm text-fg-primary"
         />
         <p className="mt-1.5 text-xs text-fg-tertiary">
-          This becomes your voting credential. Every vote you cast must recover
-          to it, so use a key you control and can sign with again.
+          This becomes your voting credential. Every vote you cast must recover to it, so use a key
+          you control and can sign with again.
         </p>
       </div>
 

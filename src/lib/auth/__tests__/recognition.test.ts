@@ -7,7 +7,10 @@ import { isRecognizableProfile } from "../recognition";
 describe("isRecognizableProfile", () => {
   it("accepts a profile with actor id and email", () => {
     expect(
-      isRecognizableProfile({ sub: "5f2716c8-1111-2222-3333-444455556666", email: "g@example.com" }),
+      isRecognizableProfile({
+        sub: "5f2716c8-1111-2222-3333-444455556666",
+        email: "g@example.com",
+      }),
     ).toBe(true);
   });
 
@@ -16,9 +19,9 @@ describe("isRecognizableProfile", () => {
     expect(
       isRecognizableProfile({ sub: "5f2716c8-1111-2222-3333-444455556666", email: null }),
     ).toBe(false);
-    expect(
-      isRecognizableProfile({ sub: "5f2716c8-1111-2222-3333-444455556666", email: "" }),
-    ).toBe(false);
+    expect(isRecognizableProfile({ sub: "5f2716c8-1111-2222-3333-444455556666", email: "" })).toBe(
+      false,
+    );
   });
 
   it("rejects a profile without an actor id", () => {

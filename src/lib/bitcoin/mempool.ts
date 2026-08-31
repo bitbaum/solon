@@ -3,7 +3,7 @@
  * holds keys or moves funds — it observes a treasury address the same way any
  * member could, so the displayed balance is verifiable, not asserted.
  */
-const MEMPOOL_BASE = process.env.MEMPOOL_API_BASE || 'https://mempool.space/api';
+const MEMPOOL_BASE = process.env.MEMPOOL_API_BASE || "https://mempool.space/api";
 
 export interface AddressBalance {
   address: string;
@@ -17,7 +17,7 @@ export interface AddressBalance {
 export async function getAddressBalance(address: string): Promise<AddressBalance> {
   const res = await fetch(`${MEMPOOL_BASE}/address/${encodeURIComponent(address)}`, {
     // Treasury balance is live data; don't let Next cache it.
-    cache: 'no-store',
+    cache: "no-store",
   });
   if (!res.ok) throw new Error(`mempool.space ${res.status} for ${address}`);
   const data = (await res.json()) as {
