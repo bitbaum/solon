@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { ECOSYSTEM_PILLARS, SOLON_GITHUB_URL } from "@/lib/config/ecosystem";
+import { FOOTER_SECTIONS, footerLinkLabel } from "@/lib/site-config";
 
 // Only routes that actually exist belong here — a footer link to a 404 is a lie.
+// That is now structural rather than a promise: every destination below comes
+// from NAV_ITEMS, so a page removed from the nav cannot survive in the footer.
 export default function Footer() {
   const siblings = ECOSYSTEM_PILLARS.filter((p) => p.key !== "solon");
 
@@ -9,93 +12,47 @@ export default function Footer() {
     <footer className="border-t border-subtle bg-surface-public">
       <div className="section-shell py-14">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-          <div>
-            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Platform</div>
-            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
-              <li>
-                <Link href="/features" className="transition-colors hover:text-fg-primary">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link href="/security" className="transition-colors hover:text-fg-primary">
-                  Security
-                </Link>
-              </li>
-              <li>
-                <Link href="/integration" className="transition-colors hover:text-fg-primary">
-                  Integration
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Governance</div>
-            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
-              <li>
-                <Link href="/governance/voting" className="transition-colors hover:text-fg-primary">
-                  Voting
-                </Link>
-              </li>
-              <li>
-                <Link href="/governance/audit" className="transition-colors hover:text-fg-primary">
-                  Audit Trail
-                </Link>
-              </li>
-              <li>
-                <Link href="/treasury/bitcoin" className="transition-colors hover:text-fg-primary">
-                  Bitcoin Treasury
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Ecosystem</div>
-            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
-              <li>
-                <Link href="/ecosystem" className="transition-colors hover:text-fg-primary">
-                  Three Pillars
-                </Link>
-              </li>
-              {siblings.map((p) => (
-                <li key={p.key}>
-                  <a
-                    href={p.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-fg-primary"
-                  >
-                    {p.name} — {p.role}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">Resources</div>
-            <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
-              <li>
-                <Link href="/about" className="transition-colors hover:text-fg-primary">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/integration" className="transition-colors hover:text-fg-primary">
-                  API
-                </Link>
-              </li>
-              <li>
-                <a
-                  href={SOLON_GITHUB_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-fg-primary"
-                >
-                  Source Code
-                </a>
-              </li>
-            </ul>
-          </div>
+          {FOOTER_SECTIONS.map((section) => (
+            <div key={section.title}>
+              <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">
+                {section.title}
+              </div>
+              <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
+                {section.links.map((link) => (
+                  <li key={`${section.title}:${link.href}`}>
+                    <Link href={link.href} className="transition-colors hover:text-fg-primary">
+                      {footerLinkLabel(link)}
+                    </Link>
+                  </li>
+                ))}
+                {section.title === "Ecosystem" &&
+                  siblings.map((p) => (
+                    <li key={p.key}>
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-fg-primary"
+                      >
+                        {p.name} — {p.role}
+                      </a>
+                    </li>
+                  ))}
+                {section.title === "Resources" && (
+                  <li>
+                    <a
+                      href={SOLON_GITHUB_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-fg-primary"
+                    >
+                      Source Code
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-subtle pt-6 sm:flex-row">
