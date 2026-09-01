@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SessionOutcome, VoteThreshold } from "@prisma/client";
+import { SessionOutcome, VoteThreshold } from "@/lib/db/enums";
 import { decideOutcome, tallyOf } from "../tally";
 import { aggregateBallots } from "../methods";
 import type { Aggregate } from "../methods/types";

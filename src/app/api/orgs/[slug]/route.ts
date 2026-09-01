@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { members, organizations } from "@/lib/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +12,11 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
   const params = await ctx.params;
-  const org = await prisma.organization.findUnique({
-    where: { slug: params.slug },
-    include: {
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, params.slug),
+    with: {
       members: {
-        select: {
+        columns: {
           id: true,
           displayName: true,
           memberType: true,
@@ -26,7 +28,7 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }
           system: true,
           joinedAt: true,
         },
-        orderBy: { joinedAt: "asc" },
+        orderBy: asc(members.joinedAt),
       },
     },
   });

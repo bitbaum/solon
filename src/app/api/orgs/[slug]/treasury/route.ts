@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { orgBySlug } from "@/lib/domain/org";
 import { treasuryReport } from "@/lib/domain/treasury";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
   const params = await ctx.params;
-  const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
+  const org = await orgBySlug(params.slug);
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 
   const report = await treasuryReport(org.id);

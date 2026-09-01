@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { policies } from "@/lib/db/schema";
+import { orgBySlug } from "@/lib/domain/org";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +13,12 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(_: Request, ctx: { params: Promise<{ slug: string; key: string }> }) {
   const params = await ctx.params;
-  const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
+  const org = await orgBySlug(params.slug);
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 
-  const versions = await prisma.policy.findMany({
-    where: { organizationId: org.id, key: params.key },
-    orderBy: { version: "desc" },
+  const versions = await db.query.policies.findMany({
+    where: and(eq(policies.organizationId, org.id), eq(policies.key, params.key)),
+    orderBy: desc(policies.version),
   });
   if (versions.length === 0)
     return NextResponse.json({ error: "Policy not found" }, { status: 404 });

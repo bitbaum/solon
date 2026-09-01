@@ -1,9 +1,11 @@
 import VotingInterface from "@/components/dashboard/voting-interface";
 import { readOptions, sessionAggregate } from "@/lib/domain/voting";
-import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { methodId } from "@/lib/domain/methods/db-enum";
 import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import { primaryOrg } from "@/lib/domain/org";
-import { prisma } from "@/lib/db";
+import { desc, eq, inArray } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { proposals, votingSessions } from "@/lib/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +17,17 @@ export default async function VotingPage() {
     // up here as if it were this one's.
     const org = await primaryOrg();
     session = org
-      ? await prisma.votingSession.findFirst({
-          where: { proposal: { organizationId: org.id } },
-          orderBy: { opensAt: "desc" },
-          include: { proposal: true },
-        })
+      ? ((await db.query.votingSessions.findFirst({
+          where: inArray(
+            votingSessions.proposalId,
+            db
+              .select({ id: proposals.id })
+              .from(proposals)
+              .where(eq(proposals.organizationId, org.id)),
+          ),
+          orderBy: desc(votingSessions.opensAt),
+          with: { proposal: true },
+        })) ?? null)
       : null;
   } catch {
     dbError = true;

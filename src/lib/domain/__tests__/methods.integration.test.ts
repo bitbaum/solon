@@ -8,8 +8,10 @@
  */
 import { describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
-import { DecisionCategory, SessionOutcome, VotingMethod } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { DecisionCategory, SessionOutcome, VotingMethod } from "@/lib/db/enums";
+import { db } from "@/lib/db/client";
+import { members, organizations, proposals, votes } from "@/lib/db/schema";
 import { generateKeyPair, signMessage, voteMessage } from "@/lib/bitcoin/message";
 import { canonicalBallot } from "@/lib/domain/methods";
 import { closeSession, openSession, submitVote } from "@/lib/domain/voting";
@@ -24,42 +26,45 @@ const OPTIONS = [
 
 async function fixture() {
   const slug = `dot-${randomUUID().slice(0, 8)}`;
-  const org = await prisma.organization.create({
-    data: { slug, name: "Dot Vote Org", governanceProfile: "COOPERATIVE" },
-  });
+  const [org] = await db
+    .insert(organizations)
+    .values({ slug, name: "Dot Vote Org", governanceProfile: "COOPERATIVE" })
+    .returning();
   const alice = generateKeyPair();
   const bob = generateKeyPair();
-  const members: Record<string, string> = {};
+  const roster: Record<string, string> = {};
   for (const [name, pair, weight] of [
     ["Alice", alice, 1],
     ["Bob", bob, 2],
   ] as const) {
-    const m = await prisma.member.create({
-      data: {
+    const [m] = await db
+      .insert(members)
+      .values({
         organizationId: org.id,
         displayName: name,
         memberType: "HUMAN",
         keyCustody: "SELF",
         bitcoinAddress: pair.address,
-        votingWeight: weight,
+        votingWeight: String(weight),
         status: "ACTIVE",
-      },
-    });
-    members[name] = m.id;
+      })
+      .returning();
+    roster[name] = m.id;
   }
-  const proposal = await prisma.proposal.create({
-    data: {
+  const [proposal] = await db
+    .insert(proposals)
+    .values({
       organizationId: org.id,
       category: DecisionCategory.ALLOCATION_POLICY,
       title: "How should we split the retrofit budget?",
       body: "Three candidate works.",
       method: VotingMethod.DOT,
       options: OPTIONS,
-      proposerMemberId: members.Alice,
+      proposerMemberId: roster.Alice,
       proposerSignature: "sig",
       status: "DRAFT",
-    },
-  });
+    })
+    .returning();
   return { org, alice, bob, proposal };
 }
 
@@ -127,7 +132,7 @@ describe.runIf(RUN)("dot allocation (database integration)", () => {
     const result = await submitVote(session.id, tampered);
     expect(result.stored).toBe(false);
     expect(result.verified).toBe(false);
-    expect(await prisma.vote.count({ where: { sessionId: session.id } })).toBe(0);
+    expect(await db.$count(votes, eq(votes.sessionId, session.id))).toBe(0);
   });
 
   it("refuses a ballot that overspends the budget, before any signature check", async () => {
@@ -145,7 +150,7 @@ describe.runIf(RUN)("dot allocation (database integration)", () => {
 
   it("will not open a multi-option session without options to choose between", async () => {
     const { proposal } = await fixture();
-    await prisma.proposal.update({ where: { id: proposal.id }, data: { options: [] } });
+    await db.update(proposals).set({ options: [] }).where(eq(proposals.id, proposal.id));
     await expect(openSession(proposal.id)).rejects.toThrow(/at least two options/);
   });
 });

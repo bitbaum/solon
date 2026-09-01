@@ -22,7 +22,9 @@
  */
 import { parseArgs } from "node:util";
 import { randomBytes } from "node:crypto";
-import { prisma } from "../src/lib/db";
+import { and, eq } from "drizzle-orm";
+import { db } from "../src/lib/db/client";
+import { agentApiKeys, auditEvents, members, organizations } from "../src/lib/db/schema";
 import { sha256Hex } from "../src/lib/domain/canonical";
 
 const { values } = parseArgs({
@@ -62,25 +64,26 @@ async function main() {
     process.exit(1);
   }
 
-  const organization = await prisma.organization.findUnique({ where: { slug: org } });
+  const organization = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, org),
+  });
   if (!organization) {
     console.error(`organization "${org}" not found`);
     process.exit(1);
   }
 
-  const existing = await prisma.member.findUnique({
-    where: {
-      organizationId_bitcoinAddress: { organizationId: organization.id, bitcoinAddress: address },
-    },
+  const existing = await db.query.members.findFirst({
+    where: and(eq(members.organizationId, organization.id), eq(members.bitcoinAddress, address)),
   });
   if (existing) {
     console.log(`member already registered: ${existing.id} (${existing.displayName})`);
     process.exit(0);
   }
 
-  const member = await prisma.$transaction(async (tx) => {
-    const m = await tx.member.create({
-      data: {
+  const member = await db.transaction(async (tx) => {
+    const [m] = await tx
+      .insert(members)
+      .values({
         organizationId: organization.id,
         displayName: name,
         memberType: type,
@@ -91,22 +94,20 @@ async function main() {
         votingWeight: values.weight,
         system: values.system ?? null,
         ocActorId: values["oc-actor"] ?? null,
-      },
-    });
-    await tx.auditEvent.create({
-      data: {
-        organizationId: organization.id,
-        eventType: "MEMBER_ADDED",
-        subjectType: "member",
-        subjectId: m.id,
-        payload: {
-          displayName: name,
-          memberType: type,
-          bitcoinAddress: address,
-          ...(values.system ? { system: values.system } : {}),
-          ...(values["oc-actor"] ? { ocActorId: values["oc-actor"] } : {}),
-          note: "operator bootstrap — roster changes after genesis go through MEMBERSHIP votes",
-        },
+      })
+      .returning();
+    await tx.insert(auditEvents).values({
+      organizationId: organization.id,
+      eventType: "MEMBER_ADDED",
+      subjectType: "member",
+      subjectId: m.id,
+      payload: {
+        displayName: name,
+        memberType: type,
+        bitcoinAddress: address,
+        ...(values.system ? { system: values.system } : {}),
+        ...(values["oc-actor"] ? { ocActorId: values["oc-actor"] } : {}),
+        note: "operator bootstrap — roster changes after genesis go through MEMBERSHIP votes",
       },
     });
     return m;
@@ -119,9 +120,7 @@ async function main() {
       process.exit(1);
     }
     const plaintext = `sk_solon_${randomBytes(24).toString("hex")}`;
-    await prisma.agentApiKey.create({
-      data: { memberId: member.id, keyHash: sha256Hex(plaintext) },
-    });
+    await db.insert(agentApiKeys).values({ memberId: member.id, keyHash: sha256Hex(plaintext) });
     console.log(`API key (shown once, store it in the agent's env now):\n${plaintext}`);
   }
 }
@@ -131,4 +130,4 @@ main()
     console.error(e);
     process.exit(1);
   })
-  .finally(() => prisma.$disconnect());
+  .finally(() => db.$client.end());

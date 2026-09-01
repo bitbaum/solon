@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { votingSessions } from "@/lib/db/schema";
 import { closeSession } from "@/lib/domain/voting";
 import { emitDecisionFinalized } from "@/lib/webhooks";
 
@@ -17,10 +19,11 @@ export async function POST(_: Request, ctx: { params: Promise<{ sessionId: strin
   try {
     const result = await closeSession(params.sessionId);
 
-    const proposal = await prisma.proposal.findFirst({
-      where: { session: { id: params.sessionId } },
-      include: { organization: { select: { id: true, slug: true } } },
+    const closedSession = await db.query.votingSessions.findFirst({
+      where: eq(votingSessions.id, params.sessionId),
+      with: { proposal: { with: { organization: { columns: { id: true, slug: true } } } } },
     });
+    const proposal = closedSession?.proposal;
     if (proposal) {
       await emitDecisionFinalized({
         decision_id: params.sessionId,

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import PageLayout from "@/components/ui/page-layout";
-import { prisma } from "@/lib/db";
-import type { AuditEvent, AuditEventType } from "@prisma/client";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { auditEvents } from "@/lib/db/schema";
+import { primaryOrg } from "@/lib/domain/org";
+import type { AuditEvent, AuditEventType } from "@/lib/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -56,14 +59,12 @@ export default async function AuditPage() {
   let events: AuditEvent[] = [];
   let dbError = false;
   try {
-    org = await prisma.organization.findFirst({
-      orderBy: { createdAt: "asc" },
-    });
+    org = (await primaryOrg()) ?? null;
     if (org) {
-      events = await prisma.auditEvent.findMany({
-        where: { organizationId: org.id },
-        orderBy: { createdAt: "desc" },
-        take: 200,
+      events = await db.query.auditEvents.findMany({
+        where: eq(auditEvents.organizationId, org.id),
+        orderBy: desc(auditEvents.createdAt),
+        limit: 200,
       });
     }
   } catch {

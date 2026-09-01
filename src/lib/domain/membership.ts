@@ -1,5 +1,14 @@
-import { AuditEventType, KeyCustody, MemberStatus, MemberType } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { and, count, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import {
+  AuditEventType,
+  KeyCustody,
+  MemberStatus,
+  MemberType,
+  auditEvents,
+  members,
+  organizations,
+} from "@/lib/db/schema";
 import { registrationMessage, verifyMessage } from "@/lib/bitcoin/message";
 
 export interface RegisterMemberInput {
@@ -20,6 +29,13 @@ export interface RegisterMemberResult {
   memberId?: string;
 }
 
+const activeHumansOf = (organizationId: string) =>
+  and(
+    eq(members.organizationId, organizationId),
+    eq(members.memberType, MemberType.HUMAN),
+    eq(members.status, MemberStatus.ACTIVE),
+  );
+
 /**
  * Why this exists at all: `MEMBERSHIP` is a HUMANS_ONLY category, and
  * `openSession` refuses an empty electorate. With zero human members, a
@@ -37,7 +53,9 @@ export interface RegisterMemberResult {
  * is empty.
  */
 export async function registerMember(input: RegisterMemberInput): Promise<RegisterMemberResult> {
-  const org = await prisma.organization.findUnique({ where: { slug: input.orgSlug } });
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, input.orgSlug),
+  });
   if (!org) return { registered: false, verified: false, reason: "organization not found" };
 
   const message = registrationMessage({
@@ -57,8 +75,8 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   // One actor is at most one member, and one address is at most one member.
   // Both are checked before the genesis race so a double-submit is a no-op
   // rather than a second founding seat.
-  const existingByActor = await prisma.member.findUnique({
-    where: { ocActorId: input.actorId },
+  const existingByActor = await db.query.members.findFirst({
+    where: eq(members.ocActorId, input.actorId),
   });
   if (existingByActor) {
     return {
@@ -68,8 +86,8 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
       memberId: existingByActor.id,
     };
   }
-  const existingByAddress = await prisma.member.findFirst({
-    where: { organizationId: org.id, bitcoinAddress: input.memberAddress },
+  const existingByAddress = await db.query.members.findFirst({
+    where: and(eq(members.organizationId, org.id), eq(members.bitcoinAddress, input.memberAddress)),
   });
   if (existingByAddress) {
     return {
@@ -79,13 +97,10 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
     };
   }
 
-  const humanCount = await prisma.member.count({
-    where: {
-      organizationId: org.id,
-      memberType: MemberType.HUMAN,
-      status: MemberStatus.ACTIVE,
-    },
-  });
+  const [{ humanCount }] = await db
+    .select({ humanCount: count() })
+    .from(members)
+    .where(activeHumansOf(org.id));
   if (humanCount > 0) {
     return {
       registered: false,
@@ -101,18 +116,16 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   // writer of an identical pair fails; the count is re-read inside the
   // transaction to close the distinct-pair race the constraints cannot catch.
   try {
-    const member = await prisma.$transaction(async (tx) => {
-      const stillEmpty = await tx.member.count({
-        where: {
-          organizationId: org.id,
-          memberType: MemberType.HUMAN,
-          status: MemberStatus.ACTIVE,
-        },
-      });
+    const member = await db.transaction(async (tx) => {
+      const [{ stillEmpty }] = await tx
+        .select({ stillEmpty: count() })
+        .from(members)
+        .where(activeHumansOf(org.id));
       if (stillEmpty > 0) throw new Error("GENESIS_TAKEN");
 
-      const created = await tx.member.create({
-        data: {
+      const [created] = await tx
+        .insert(members)
+        .values({
           organizationId: org.id,
           displayName: input.displayName,
           memberType: MemberType.HUMAN,
@@ -120,22 +133,20 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
           bitcoinAddress: input.memberAddress,
           ocActorId: input.actorId,
           status: MemberStatus.ACTIVE,
-        },
-      });
-      await tx.auditEvent.create({
-        data: {
-          organizationId: org.id,
-          eventType: AuditEventType.MEMBER_ADDED,
-          actorMemberId: created.id,
-          subjectType: "member",
-          subjectId: created.id,
-          payload: {
-            displayName: created.displayName,
-            memberType: MemberType.HUMAN,
-            bitcoinAddress: created.bitcoinAddress,
-            genesis: true,
-            note: "founding human seat — claimed by proving control of the key and an OrangeCat identity, because a membership vote cannot open with an empty human electorate. Later admissions go through MEMBERSHIP votes.",
-          },
+        })
+        .returning();
+      await tx.insert(auditEvents).values({
+        organizationId: org.id,
+        eventType: AuditEventType.MEMBER_ADDED,
+        actorMemberId: created.id,
+        subjectType: "member",
+        subjectId: created.id,
+        payload: {
+          displayName: created.displayName,
+          memberType: MemberType.HUMAN,
+          bitcoinAddress: created.bitcoinAddress,
+          genesis: true,
+          note: "founding human seat — claimed by proving control of the key and an OrangeCat identity, because a membership vote cannot open with an empty human electorate. Later admissions go through MEMBERSHIP votes.",
         },
       });
       return created;
@@ -155,14 +166,13 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
 
 /** Is the founding seat still unclaimed? Drives what /join offers. */
 export async function genesisOpen(orgSlug: string): Promise<boolean> {
-  const org = await prisma.organization.findUnique({ where: { slug: orgSlug } });
-  if (!org) return false;
-  const humanCount = await prisma.member.count({
-    where: {
-      organizationId: org.id,
-      memberType: MemberType.HUMAN,
-      status: MemberStatus.ACTIVE,
-    },
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, orgSlug),
   });
+  if (!org) return false;
+  const [{ humanCount }] = await db
+    .select({ humanCount: count() })
+    .from(members)
+    .where(activeHumansOf(org.id));
   return humanCount === 0;
 }

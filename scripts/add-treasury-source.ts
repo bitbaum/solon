@@ -10,7 +10,9 @@
  *     --label "OrangeCat platform" --address <btc-address>
  */
 import { parseArgs } from "node:util";
-import { prisma } from "../src/lib/db";
+import { and, eq } from "drizzle-orm";
+import { db } from "../src/lib/db/client";
+import { organizations, treasurySources } from "../src/lib/db/schema";
 
 const { values } = parseArgs({
   options: {
@@ -27,21 +29,19 @@ async function main() {
     process.exit(1);
   }
 
-  const organization = await prisma.organization.findUnique({
-    where: { slug: org },
+  const organization = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, org),
   });
   if (!organization) {
     console.error(`organization "${org}" not found`);
     process.exit(1);
   }
 
-  const existing = await prisma.treasurySource.findUnique({
-    where: {
-      organizationId_address: {
-        organizationId: organization.id,
-        address,
-      },
-    },
+  const existing = await db.query.treasurySources.findFirst({
+    where: and(
+      eq(treasurySources.organizationId, organization.id),
+      eq(treasurySources.address, address),
+    ),
   });
   if (existing) {
     console.log(
@@ -50,13 +50,10 @@ async function main() {
     process.exit(0);
   }
 
-  const source = await prisma.treasurySource.create({
-    data: {
-      organizationId: organization.id,
-      label,
-      address,
-    },
-  });
+  const [source] = await db
+    .insert(treasurySources)
+    .values({ organizationId: organization.id, label, address })
+    .returning();
   console.log(`treasury source created: ${source.id} (${source.label} ${source.address})`);
 }
 
@@ -65,4 +62,4 @@ main()
     console.error(e);
     process.exit(1);
   })
-  .finally(() => prisma.$disconnect());
+  .finally(() => db.$client.end());

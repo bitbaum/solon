@@ -1,4 +1,4 @@
-import { VoteThreshold, SessionOutcome } from "@prisma/client";
+import { VoteThreshold, SessionOutcome } from "@/lib/db/enums";
 import { SUPERMAJORITY_FRACTION } from "@/lib/config/governance";
 import type { Aggregate } from "@/lib/domain/methods/types";
 

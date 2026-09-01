@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { SessionStatus } from "@prisma/client";
+import { and, desc, eq, inArray } from "drizzle-orm";
+import { SessionStatus } from "@/lib/db/enums";
 import { auth } from "@/lib/auth";
 import { memberForActor } from "@/lib/auth/recognition";
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/db/client";
+import { organizations, proposals, votes, votingSessions } from "@/lib/db/schema";
 import { genesisOpen } from "@/lib/domain/membership";
 
 interface NextStep {
@@ -53,18 +55,25 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
         };
   }
 
-  const active = await prisma.votingSession.findFirst({
-    where: {
-      status: SessionStatus.ACTIVE,
-      proposal: { organization: { slug: orgSlug } },
-    },
-    orderBy: { opensAt: "desc" },
-    include: { proposal: true },
+  const active = await db.query.votingSessions.findFirst({
+    where: and(
+      eq(votingSessions.status, SessionStatus.ACTIVE),
+      inArray(
+        votingSessions.proposalId,
+        db
+          .select({ id: proposals.id })
+          .from(proposals)
+          .innerJoin(organizations, eq(proposals.organizationId, organizations.id))
+          .where(eq(organizations.slug, orgSlug)),
+      ),
+    ),
+    orderBy: desc(votingSessions.opensAt),
+    with: { proposal: true },
   });
 
   if (active) {
-    const alreadyVoted = await prisma.vote.findFirst({
-      where: { sessionId: active.id, memberId: member.id },
+    const alreadyVoted = await db.query.votes.findFirst({
+      where: and(eq(votes.sessionId, active.id), eq(votes.memberId, member.id)),
     });
     if (!alreadyVoted) {
       return {
@@ -76,9 +85,18 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     }
   }
 
-  const draft = await prisma.proposal.findFirst({
-    where: { status: "DRAFT", organization: { slug: orgSlug } },
-    orderBy: { createdAt: "desc" },
+  const draft = await db.query.proposals.findFirst({
+    where: and(
+      eq(proposals.status, "DRAFT"),
+      inArray(
+        proposals.organizationId,
+        db
+          .select({ id: organizations.id })
+          .from(organizations)
+          .where(eq(organizations.slug, orgSlug)),
+      ),
+    ),
+    orderBy: desc(proposals.createdAt),
   });
   if (draft) {
     return {

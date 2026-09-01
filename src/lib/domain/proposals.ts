@@ -1,16 +1,21 @@
+import { and, eq, isNull } from "drizzle-orm";
+import { db } from "@/lib/db/client";
 import {
   AuditEventType,
-  DecisionCategory,
   MemberStatus,
   MemberType,
-  Prisma,
-  VotingMethod,
-} from "@prisma/client";
-import { prisma } from "@/lib/db";
+  agentApiKeys,
+  auditEvents,
+  members,
+  organizations,
+  proposals,
+  type DecisionCategory,
+  type VotingMethod,
+} from "@/lib/db/schema";
 import { proposalMessage, verifyMessage } from "@/lib/bitcoin/message";
 import { canonicalJson, contentHashOf, sha256Hex } from "@/lib/domain/canonical";
 import { optionsSchema, type BallotOption } from "@/lib/domain/methods/types";
-import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { methodId } from "@/lib/domain/methods/db-enum";
 import { methodSpec } from "@/lib/domain/methods";
 
 export interface CreateProposalInput {
@@ -60,7 +65,9 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     };
   }
 
-  const org = await prisma.organization.findUnique({ where: { slug: input.orgSlug } });
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.slug, input.orgSlug),
+  });
   if (!org) return { created: false, verified: false, reason: "organization not found" };
 
   // Validate the answer space before it is signed over: an options list that
@@ -107,12 +114,12 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     };
   }
 
-  const member = await prisma.member.findFirst({
-    where: {
-      organizationId: org.id,
-      bitcoinAddress: input.proposerAddress,
-      status: MemberStatus.ACTIVE,
-    },
+  const member = await db.query.members.findFirst({
+    where: and(
+      eq(members.organizationId, org.id),
+      eq(members.bitcoinAddress, input.proposerAddress),
+      eq(members.status, MemberStatus.ACTIVE),
+    ),
   });
   if (!member) {
     return {
@@ -130,8 +137,12 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         reason: "agent proposers must present their API key",
       };
     }
-    const key = await prisma.agentApiKey.findFirst({
-      where: { memberId: member.id, keyHash: sha256Hex(input.apiKey), revokedAt: null },
+    const key = await db.query.agentApiKeys.findFirst({
+      where: and(
+        eq(agentApiKeys.memberId, member.id),
+        eq(agentApiKeys.keyHash, sha256Hex(input.apiKey)),
+        isNull(agentApiKeys.revokedAt),
+      ),
     });
     if (!key) {
       return {
@@ -142,38 +153,35 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     }
   }
 
-  const proposal = await prisma.$transaction(async (tx) => {
-    const p = await tx.proposal.create({
-      data: {
+  const proposal = await db.transaction(async (tx) => {
+    const [p] = await tx
+      .insert(proposals)
+      .values({
         organizationId: org.id,
         category: input.category,
         title: input.title,
         body: input.body,
         policyKey: hasPolicyKey ? input.policyKey : null,
-        proposedContent: hasContent
-          ? (input.proposedContent as Prisma.InputJsonValue)
-          : Prisma.DbNull,
+        proposedContent: hasContent ? input.proposedContent : null,
         target: input.target ?? null,
         contentHash,
         method: input.method ?? null,
-        options: options ? (options as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
+        options: options ?? null,
         proposerMemberId: member.id,
         proposerSignature: input.signature,
-      },
-    });
-    await tx.auditEvent.create({
-      data: {
-        organizationId: org.id,
-        eventType: AuditEventType.PROPOSAL_CREATED,
-        actorMemberId: member.id,
-        subjectType: "proposal",
-        subjectId: p.id,
-        payload: {
-          category: input.category,
-          title: input.title,
-          memberType: member.memberType,
-          ...(contentHash ? { policyKey: input.policyKey, contentHash } : {}),
-        },
+      })
+      .returning();
+    await tx.insert(auditEvents).values({
+      organizationId: org.id,
+      eventType: AuditEventType.PROPOSAL_CREATED,
+      actorMemberId: member.id,
+      subjectType: "proposal",
+      subjectId: p.id,
+      payload: {
+        category: input.category,
+        title: input.title,
+        memberType: member.memberType,
+        ...(contentHash ? { policyKey: input.policyKey, contentHash } : {}),
       },
     });
     return p;

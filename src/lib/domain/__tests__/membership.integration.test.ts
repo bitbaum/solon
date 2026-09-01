@@ -10,8 +10,10 @@
  */
 import { describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
-import { MemberStatus, MemberType } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { and, eq } from "drizzle-orm";
+import { MemberStatus, MemberType } from "@/lib/db/enums";
+import { db } from "@/lib/db/client";
+import { auditEvents, members, organizations } from "@/lib/db/schema";
 import { generateKeyPair, registrationMessage, signMessage } from "@/lib/bitcoin/message";
 import { genesisOpen, registerMember } from "@/lib/domain/membership";
 
@@ -19,7 +21,7 @@ const RUN = process.env.INTEGRATION === "1";
 
 async function freshOrg() {
   const slug = `mem-${randomUUID().slice(0, 8)}`;
-  await prisma.organization.create({ data: { slug, name: "Membership Test Org" } });
+  await db.insert(organizations).values({ slug, name: "Membership Test Org" });
   return slug;
 }
 
@@ -51,15 +53,16 @@ describe.runIf(RUN)("founding seat", () => {
     const seated = await registerMember(first.input);
     expect(seated).toMatchObject({ registered: true, verified: true, genesis: true });
 
-    const member = await prisma.member.findUniqueOrThrow({
-      where: { id: seated.memberId! },
+    const member = await db.query.members.findFirst({
+      where: eq(members.id, seated.memberId!),
     });
+    if (!member) throw new Error("seated member missing");
     expect(member.memberType).toBe(MemberType.HUMAN);
     expect(member.status).toBe(MemberStatus.ACTIVE);
 
     // The grant is on the record, flagged as what it is.
-    const event = await prisma.auditEvent.findFirst({
-      where: { subjectId: member.id, subjectType: "member" },
+    const event = await db.query.auditEvents.findFirst({
+      where: and(eq(auditEvents.subjectId, member.id), eq(auditEvents.subjectType, "member")),
     });
     expect((event?.payload as { genesis?: boolean })?.genesis).toBe(true);
 
@@ -109,9 +112,7 @@ describe.runIf(RUN)("founding seat", () => {
     expect(again.registered).toBe(false);
     expect(again.reason).toMatch(/already linked|already registered|founding seat is taken/);
 
-    const count = await prisma.member.count({
-      where: { bitcoinAddress: first.pair.address },
-    });
+    const count = await db.$count(members, eq(members.bitcoinAddress, first.pair.address));
     expect(count).toBe(1);
   });
 });

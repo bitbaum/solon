@@ -14,10 +14,10 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 | Question | Read |
 |---|---|
 | What is Solon, what are the models and routes? | `README.md` |
-| How do I work in the repo — commands, CI, Prisma, gotchas? | `AGENTS.md` |
+| How do I work in the repo — commands, CI, Drizzle, gotchas? | `AGENTS.md` |
 | What are the design rules? | `docs/development/ui-guidelines.md` |
 | What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
-| What is the schema? | `prisma/schema.prisma` (9 models) |
+| What is the schema? | `src/lib/db/schema.ts` (9 models) |
 | Which env vars exist? | `.env.example` |
 
 ## The three that matter most

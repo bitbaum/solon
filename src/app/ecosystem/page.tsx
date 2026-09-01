@@ -1,8 +1,15 @@
 import PageLayout from "@/components/ui/page-layout";
-import { prisma } from "@/lib/db";
+import { and, asc, desc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import {
+  members as membersTable,
+  policies as policiesTable,
+  proposals as proposalsTable,
+} from "@/lib/db/schema";
+import { primaryOrg } from "@/lib/domain/org";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { CATEGORY_ELECTORATE } from "@/lib/config/governance";
-import { Electorate, type DecisionCategory } from "@prisma/client";
+import { Electorate, type DecisionCategory } from "@/lib/db/enums";
 
 export const dynamic = "force-dynamic";
 
@@ -43,15 +50,13 @@ export default async function EcosystemPage() {
   let dbError = false;
 
   try {
-    org = await prisma.organization.findFirst({
-      orderBy: { createdAt: "asc" },
-    });
+    org = (await primaryOrg()) ?? null;
     if (org) {
       [members, policies, proposals] = await Promise.all([
-        prisma.member.findMany({
-          where: { organizationId: org.id },
-          orderBy: { joinedAt: "asc" },
-          select: {
+        db.query.members.findMany({
+          where: eq(membersTable.organizationId, org.id),
+          orderBy: asc(membersTable.joinedAt),
+          columns: {
             id: true,
             displayName: true,
             memberType: true,
@@ -60,22 +65,24 @@ export default async function EcosystemPage() {
             status: true,
           },
         }),
-        prisma.policy.findMany({
-          where: { organizationId: org.id, status: "ACTIVE" },
-          orderBy: { key: "asc" },
-          select: { key: true, version: true, content: true },
+        db.query.policies.findMany({
+          where: and(eq(policiesTable.organizationId, org.id), eq(policiesTable.status, "ACTIVE")),
+          orderBy: asc(policiesTable.key),
+          columns: { key: true, version: true, content: true },
         }),
-        prisma.proposal.findMany({
-          where: { organizationId: org.id },
-          orderBy: { createdAt: "desc" },
-          take: 10,
-          select: {
+        db.query.proposals.findMany({
+          where: eq(proposalsTable.organizationId, org.id),
+          orderBy: desc(proposalsTable.createdAt),
+          limit: 10,
+          columns: {
             id: true,
             title: true,
             category: true,
             status: true,
+          },
+          with: {
             session: {
-              select: { id: true, status: true, outcome: true },
+              columns: { id: true, status: true, outcome: true },
             },
           },
         }),

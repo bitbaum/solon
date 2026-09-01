@@ -1,21 +1,24 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { proposals as proposalsTable } from "@/lib/db/schema";
+import { orgBySlug } from "@/lib/domain/org";
 
 export const dynamic = "force-dynamic";
 
 /** Public read: all proposals of an organization, newest first. */
 export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }) {
   const params = await ctx.params;
-  const org = await prisma.organization.findUnique({ where: { slug: params.slug } });
+  const org = await orgBySlug(params.slug);
   if (!org) return NextResponse.json({ error: "Organization not found" }, { status: 404 });
 
-  const proposals = await prisma.proposal.findMany({
-    where: { organizationId: org.id },
-    orderBy: { createdAt: "desc" },
-    take: 200,
-    include: {
-      proposer: { select: { displayName: true, memberType: true, bitcoinAddress: true } },
-      session: { select: { id: true, status: true, outcome: true, closesAt: true } },
+  const proposals = await db.query.proposals.findMany({
+    where: eq(proposalsTable.organizationId, org.id),
+    orderBy: desc(proposalsTable.createdAt),
+    limit: 200,
+    with: {
+      proposer: { columns: { displayName: true, memberType: true, bitcoinAddress: true } },
+      session: { columns: { id: true, status: true, outcome: true, closesAt: true } },
     },
   });
 

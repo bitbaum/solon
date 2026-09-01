@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/db";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { treasurySources } from "@/lib/db/schema";
 import { getAddressBalance } from "@/lib/bitcoin/mempool";
 
 export interface TreasurySourceBalance {
@@ -41,9 +43,9 @@ export interface TreasuryReport {
  * as "unavailable".
  */
 export async function treasuryReport(organizationId: string): Promise<TreasuryReport> {
-  const rows = await prisma.treasurySource.findMany({
-    where: { organizationId },
-    orderBy: { createdAt: "asc" },
+  const rows = await db.query.treasurySources.findMany({
+    where: eq(treasurySources.organizationId, organizationId),
+    orderBy: asc(treasurySources.createdAt),
   });
 
   const sources = await Promise.all(

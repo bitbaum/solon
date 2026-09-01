@@ -1,4 +1,4 @@
-import { DecisionCategory, Electorate, VoteThreshold } from "@prisma/client";
+import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 
 /**
  * SSOT for who decides what, and how.

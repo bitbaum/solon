@@ -7,7 +7,7 @@
       "Bash(npm run typecheck)",
       "Bash(npm run lint)",
       "Bash(npm run test)",
-      "Bash(npm run prisma:generate)",
+      "Bash(npm run db:generate)",
       "mcp__github__actions_list",
       "mcp__github__pull_request_read"
     ]

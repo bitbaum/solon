@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DecisionCategory, Electorate, VoteThreshold } from "@prisma/client";
+import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "../governance";
 import { GOVERNANCE_PROFILES, electorateFor, profileFor, ruleFor } from "../governance-profiles";
 import { ALL_METHODS } from "@/lib/domain/methods";
