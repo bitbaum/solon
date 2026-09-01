@@ -4,13 +4,15 @@
  * electorate rules, early-close refusal, quorum).
  *
  * Runs only with INTEGRATION=1 and a DATABASE_URL whose schema is migrated
- * (CI: postgres service container + `prisma migrate deploy` — which also
+ * (CI: postgres service container + `drizzle-kit migrate` — which also
  * proves the migrations replay on a fresh database). Plain `npm test` skips it.
  */
 import { describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
-import { AuditEventType, DecisionCategory, PolicyStatus, SessionOutcome } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { and, eq } from "drizzle-orm";
+import { AuditEventType, DecisionCategory, PolicyStatus, SessionOutcome } from "@/lib/db/enums";
+import { db } from "@/lib/db/client";
+import { agentApiKeys, auditEvents, members, organizations, policies } from "@/lib/db/schema";
 import {
   generateKeyPair,
   proposalMessage,
@@ -28,18 +30,17 @@ const RUN = process.env.INTEGRATION === "1";
 describe.runIf(RUN)("vote spine (database integration)", () => {
   it("carries a policy proposal from signature to activated version", async () => {
     const slug = `it-${randomUUID().slice(0, 8)}`;
-    const org = await prisma.organization.create({
-      data: { slug, name: "Integration Test Org" },
-    });
+    const [org] = await db
+      .insert(organizations)
+      .values({ slug, name: "Integration Test Org" })
+      .returning();
     // Bootstrap policy v1 — the version the vote will supersede.
-    await prisma.policy.create({
-      data: {
-        organizationId: org.id,
-        key: "allocation_policy",
-        version: 1,
-        content: { max_cat_daily_spend_btc: 0.001 },
-        status: PolicyStatus.ACTIVE,
-      },
+    await db.insert(policies).values({
+      organizationId: org.id,
+      key: "allocation_policy",
+      version: 1,
+      content: { max_cat_daily_spend_btc: 0.001 },
+      status: PolicyStatus.ACTIVE,
     });
 
     const alice = generateKeyPair();
@@ -50,16 +51,14 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
       ["Bob", bob, "HUMAN", null],
       ["Cat", agent, "AGENT", "orangecat:cat"],
     ] as const) {
-      await prisma.member.create({
-        data: {
-          organizationId: org.id,
-          displayName: name,
-          memberType: type,
-          keyCustody: type === "HUMAN" ? "SELF" : "SERVICE",
-          bitcoinAddress: pair.address,
-          publicKeyHex: pair.publicKeyHex,
-          system,
-        },
+      await db.insert(members).values({
+        organizationId: org.id,
+        displayName: name,
+        memberType: type,
+        keyCustody: type === "HUMAN" ? "SELF" : "SERVICE",
+        bitcoinAddress: pair.address,
+        publicKeyHex: pair.publicKeyHex,
+        system,
       });
     }
 
@@ -91,13 +90,12 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(noKey).toMatchObject({ created: false, verified: true });
     expect(noKey.reason).toMatch(/API key/);
 
-    const agentMember = await prisma.member.findFirstOrThrow({
-      where: { organizationId: org.id, bitcoinAddress: agent.address },
+    const agentMember = await db.query.members.findFirst({
+      where: and(eq(members.organizationId, org.id), eq(members.bitcoinAddress, agent.address)),
     });
+    if (!agentMember) throw new Error("agent member missing");
     const apiKey = `sk_solon_test_${randomUUID()}`;
-    await prisma.agentApiKey.create({
-      data: { memberId: agentMember.id, keyHash: sha256Hex(apiKey) },
-    });
+    await db.insert(agentApiKeys).values({ memberId: agentMember.id, keyHash: sha256Hex(apiKey) });
 
     const filed = await createProposal({ ...base, apiKey });
     expect(filed.created).toBe(true);
@@ -135,27 +133,25 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(closed.outcome).toBe(SessionOutcome.APPROVED);
 
     // --- Policy v2 exists, references the session, v1 superseded ---
-    const v2 = await prisma.policy.findUniqueOrThrow({
-      where: {
-        organizationId_key_version: {
-          organizationId: org.id,
-          key: "allocation_policy",
-          version: 2,
-        },
-      },
+    const v2 = await db.query.policies.findFirst({
+      where: and(
+        eq(policies.organizationId, org.id),
+        eq(policies.key, "allocation_policy"),
+        eq(policies.version, 2),
+      ),
     });
+    if (!v2) throw new Error("policy v2 missing");
     expect(v2.status).toBe(PolicyStatus.ACTIVE);
     expect(v2.approvedBySessionId).toBe(session.id);
     expect(v2.content).toEqual(proposedContent);
-    const v1 = await prisma.policy.findUniqueOrThrow({
-      where: {
-        organizationId_key_version: {
-          organizationId: org.id,
-          key: "allocation_policy",
-          version: 1,
-        },
-      },
+    const v1 = await db.query.policies.findFirst({
+      where: and(
+        eq(policies.organizationId, org.id),
+        eq(policies.key, "allocation_policy"),
+        eq(policies.version, 1),
+      ),
     });
+    if (!v1) throw new Error("policy v1 missing");
     expect(v1.status).toBe(PolicyStatus.SUPERSEDED);
 
     // --- The decision document self-verifies, the way a consumer would ---
@@ -190,9 +186,9 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(recomputed).toEqual(d.tally);
 
     // --- The audit trail recorded every step ---
-    const events = await prisma.auditEvent.findMany({
-      where: { organizationId: org.id },
-      select: { eventType: true },
+    const events = await db.query.auditEvents.findMany({
+      where: eq(auditEvents.organizationId, org.id),
+      columns: { eventType: true },
     });
     const types = events.map((e) => e.eventType);
     for (const expected of [
@@ -208,23 +204,24 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
 
   it("keeps agents out of HUMANS_ONLY sessions", async () => {
     const slug = `it-${randomUUID().slice(0, 8)}`;
-    const org = await prisma.organization.create({ data: { slug, name: "Humans Only Org" } });
+    const [org] = await db
+      .insert(organizations)
+      .values({ slug, name: "Humans Only Org" })
+      .returning();
     const human = generateKeyPair();
     const agent = generateKeyPair();
     for (const [name, pair, type] of [
       ["Human", human, "HUMAN"],
       ["Agent", agent, "AGENT"],
     ] as const) {
-      await prisma.member.create({
-        data: {
-          organizationId: org.id,
-          displayName: name,
-          memberType: type,
-          keyCustody: type === "HUMAN" ? "SELF" : "SERVICE",
-          bitcoinAddress: pair.address,
-          publicKeyHex: pair.publicKeyHex,
-          system: type === "AGENT" ? "test:agent" : null,
-        },
+      await db.insert(members).values({
+        organizationId: org.id,
+        displayName: name,
+        memberType: type,
+        keyCustody: type === "HUMAN" ? "SELF" : "SERVICE",
+        bitcoinAddress: pair.address,
+        publicKeyHex: pair.publicKeyHex,
+        system: type === "AGENT" ? "test:agent" : null,
       });
     }
 

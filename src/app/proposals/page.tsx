@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { proposals as proposalsTable } from "@/lib/db/schema";
 import { primaryOrg } from "@/lib/domain/org";
 
 export const metadata = { title: "Proposals — Solon" };
@@ -14,10 +16,10 @@ const STATUS_ACTION: Record<string, string> = {
 export default async function ProposalsPage() {
   const org = await primaryOrg();
   const proposals = org
-    ? await prisma.proposal.findMany({
-        where: { organizationId: org.id },
-        orderBy: { createdAt: "desc" },
-        include: { proposer: true, session: true },
+    ? await db.query.proposals.findMany({
+        where: eq(proposalsTable.organizationId, org.id),
+        orderBy: desc(proposalsTable.createdAt),
+        with: { proposer: true, session: true },
       })
     : [];
 

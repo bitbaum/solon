@@ -1,6 +1,6 @@
 import BitcoinTreasury from "@/components/dashboard/bitcoin-treasury";
 import { treasuryReport } from "@/lib/domain/treasury";
-import { prisma } from "@/lib/db";
+import { primaryOrg } from "@/lib/domain/org";
 
 export const dynamic = "force-dynamic";
 
@@ -8,9 +8,7 @@ export default async function TreasuryPage() {
   let org = null;
   let dbError = false;
   try {
-    org = await prisma.organization.findFirst({
-      orderBy: { createdAt: "asc" },
-    });
+    org = (await primaryOrg()) ?? null;
   } catch {
     dbError = true;
   }

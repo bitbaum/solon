@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DecisionCategory, Electorate } from "@prisma/client";
+import { DecisionCategory, Electorate } from "@/lib/db/enums";
 import {
   CATEGORY_ELECTORATE,
   CATEGORY_QUORUM_PERCENT,

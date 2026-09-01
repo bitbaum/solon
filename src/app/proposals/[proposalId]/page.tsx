@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { proposals } from "@/lib/db/schema";
 import { readOptions, sessionAggregate } from "@/lib/domain/voting";
-import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { methodId } from "@/lib/domain/methods/db-enum";
 import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import VotingInterface from "@/components/dashboard/voting-interface";
 import OpenSessionButton from "@/components/governance/open-session-button";
@@ -20,9 +22,9 @@ export default async function ProposalPage({
   params: Promise<{ proposalId: string }>;
 }) {
   const { proposalId } = await params;
-  const proposal = await prisma.proposal.findUnique({
-    where: { id: proposalId },
-    include: { proposer: true, session: true, organization: true },
+  const proposal = await db.query.proposals.findFirst({
+    where: eq(proposals.id, proposalId),
+    with: { proposer: true, session: true, organization: true },
   });
   if (!proposal) notFound();
 

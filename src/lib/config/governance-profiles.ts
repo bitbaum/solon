@@ -1,4 +1,4 @@
-import { DecisionCategory, Electorate, VoteThreshold } from "@prisma/client";
+import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 import type { MethodId } from "@/lib/domain/methods/types";
 import { CATEGORY_ELECTORATE } from "./governance";
 

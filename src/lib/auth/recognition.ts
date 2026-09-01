@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { members } from "@/lib/db/schema";
 
 /**
  * Login on Solon is recognition, not authority. A session shows you your
@@ -32,8 +34,8 @@ export function isRecognizableProfile(profile: OrangeCatProfile | undefined | nu
  * most one member.
  */
 export function memberForActor(actorId: string) {
-  return prisma.member.findUnique({
-    where: { ocActorId: actorId },
-    include: { organization: { select: { slug: true, name: true } } },
+  return db.query.members.findFirst({
+    where: eq(members.ocActorId, actorId),
+    with: { organization: { columns: { slug: true, name: true } } },
   });
 }

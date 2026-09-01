@@ -1,8 +1,9 @@
-import { SessionStatus } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { SessionStatus, votes, votingSessions } from "@/lib/db/schema";
 import { proposalMessage } from "@/lib/bitcoin/message";
 import { aggregateBallots } from "@/lib/domain/methods";
-import { methodId } from "@/lib/domain/methods/prisma-enum";
+import { methodId } from "@/lib/domain/methods/db-enum";
 import { readOptions } from "@/lib/domain/voting";
 import { tallyOf } from "@/lib/domain/tally";
 
@@ -15,14 +16,14 @@ import { tallyOf } from "@/lib/domain/tally";
  * trust this server's arithmetic.
  */
 export async function decisionDocument(sessionId: string) {
-  const session = await prisma.votingSession.findUnique({
-    where: { id: sessionId },
-    include: {
+  const session = await db.query.votingSessions.findFirst({
+    where: eq(votingSessions.id, sessionId),
+    with: {
       proposal: {
-        include: {
-          organization: { select: { id: true, slug: true, name: true } },
+        with: {
+          organization: { columns: { id: true, slug: true, name: true } },
           proposer: {
-            select: {
+            columns: {
               id: true,
               displayName: true,
               memberType: true,
@@ -33,9 +34,9 @@ export async function decisionDocument(sessionId: string) {
         },
       },
       votes: {
-        include: {
+        with: {
           member: {
-            select: {
+            columns: {
               id: true,
               displayName: true,
               memberType: true,
@@ -44,7 +45,7 @@ export async function decisionDocument(sessionId: string) {
             },
           },
         },
-        orderBy: { createdAt: "asc" },
+        orderBy: asc(votes.createdAt),
       },
     },
   });

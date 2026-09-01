@@ -10,7 +10,7 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 
 - **Framework**: Next.js 16.3 (App Router, `output: 'standalone'` for the Hetzner deploy)
 - **Language**: TypeScript 5.5 (strict)
-- **Database**: PostgreSQL via Prisma 5.17
+- **Database**: PostgreSQL via Drizzle ORM (`drizzle-orm/node-postgres` + `pg` Pool)
 - **Auth**: NextAuth v5 (beta) — sign in with OrangeCat (OAuth)
 - **Styling**: Tailwind CSS 3.4, tokens in `src/app/globals.css`
 - **Bitcoin**: `@noble/*`, `bs58check` (message signing / signature verification)
@@ -20,21 +20,26 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 
 ```bash
 npm run dev          # next dev (localhost:3000)
-npm run build        # next build (standalone) — run `prisma:generate` first (no postinstall)
+npm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
 npm run verify       # lint + typecheck + design:check + test — run before every commit
 ```
 
 `npm run verify` is the single source of truth for "is this change clean?" CI
 calls it verbatim. Green `verify` locally ⇒ green CI.
 
-## Prisma / database
+## Drizzle / database
 
-- Schema SSOT: `prisma/schema.prisma` (9 models). Types flow from it via `@prisma/client`.
-- **`prisma generate` is NOT automatic** — no postinstall hook. Run `npm run prisma:generate`
-  before `typecheck` or `build` so the client types exist. CI does this explicitly.
-- **`db push` against a real database is manual.** `npm run prisma:push` is run by hand.
-  Do not add a push step to the workflow.
-- Migration history begins at `prisma/migrations/0_init` (versioned baseline).
+- Schema SSOT: `src/lib/db/schema.ts` (9 models). Types flow from it via `$inferSelect`;
+  enum vocabulary lives in `src/lib/db/enums.ts` (dependency-free, safe for client code).
+- **There is no codegen.** Typecheck and build read the schema module directly.
+- Migrations live in `drizzle/` (`npm run db:generate` after a schema change;
+  `npm run db:migrate` applies them). **Running migrations against a real
+  database is manual / deploy-time only** — do not add a push step to CI's verify job.
+- Migration history begins at `drizzle/0000_init` (baseline matching the tables the
+  retired Prisma migrations created — byte-identical names, proven by pg_dump diff)
+  plus `drizzle/0001_seed_org1` (org #1 reference data). The production database
+  predates this history and is baselined in the deploy ledger
+  (`public._deploy_schema_history`), so these two files never run there.
 
 ## CI
 
@@ -42,8 +47,8 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 
 | Job | What it does |
 |---|---|
-| `verify` | `npm ci` → `prisma generate` → `npm run verify` → `npm run build` |
-| `integration` | `prisma migrate deploy` on a **fresh** Postgres, then the vote-spine integration spec |
+| `verify` | `npm ci` → `npm run verify` → `npm run build` |
+| `integration` | `drizzle-kit migrate` on a **fresh** Postgres, then the vote-spine integration spec |
 
 The integration job is why migrations must replay cleanly from the baseline: it
 builds the database from scratch every run.

@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { votingSessions } from "@/lib/db/schema";
 import { sessionTally } from "@/lib/domain/voting";
 
 /** Public read: a voting session, its snapshotted rules, and the live tally. */
 export async function GET(_: Request, ctx: { params: Promise<{ sessionId: string }> }) {
   const params = await ctx.params;
-  const session = await prisma.votingSession.findUnique({
-    where: { id: params.sessionId },
-    include: {
+  const session = await db.query.votingSessions.findFirst({
+    where: eq(votingSessions.id, params.sessionId),
+    with: {
       proposal: {
-        select: {
+        columns: {
           id: true,
           title: true,
           category: true,

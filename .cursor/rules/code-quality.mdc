@@ -11,7 +11,7 @@ Next.js 16 Bitcoin governance platform:
 - `src/app/` - Pages and API routes
 - `src/components/` - UI components
 - `src/lib/` - Business logic, Bitcoin integration
-- `prisma/` - Database schema
+- `src/lib/db/` - Database schema (Drizzle), client, enums
 
 ## Core Principles
 
@@ -25,7 +25,7 @@ Next.js 16 Bitcoin governance platform:
 |------|----------|
 | Navigation | `lib/site-config.ts` |
 | Design Tokens | Tailwind config |
-| Database | `prisma/schema.prisma` |
+| Database | `src/lib/db/schema.ts` |
 | Bitcoin Config | Environment variables |
 
 ### 3. Security First
@@ -53,10 +53,10 @@ className="bg-slate-800 shadow-lg"      // Wrong
 
 ## TypeScript Standards
 
-Derive types from the Prisma schema — never redeclare a model by hand:
+Derive types from the Drizzle schema — never redeclare a model by hand:
 
 ```typescript
-import type { Vote, Proposal, TreasurySource } from '@prisma/client';
+import type { Vote, Proposal, TreasurySource } from '@/lib/db/schema';
 ```
 
 There is **no transaction model**. The treasury is watch-only: a

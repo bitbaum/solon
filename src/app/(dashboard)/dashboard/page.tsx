@@ -1,6 +1,9 @@
 import Link from "next/link";
 import NextAction from "@/components/dashboard/next-action";
-import { prisma } from "@/lib/db";
+import { desc, eq, inArray } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { auditEvents, proposals, votingSessions } from "@/lib/db/schema";
+import { primaryOrg } from "@/lib/domain/org";
 import { sessionAggregate } from "@/lib/domain/voting";
 import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import { treasuryReport } from "@/lib/domain/treasury";
@@ -26,17 +29,21 @@ export default async function DashboardOverview() {
   let dbError = false;
 
   try {
-    org = await prisma.organization.findFirst({
-      orderBy: { createdAt: "asc" },
-    });
+    org = (await primaryOrg()) ?? null;
     // Scoped to this organization on purpose: an unscoped findFirst returns
     // the newest session in the whole database, so a second organization would
     // silently surface its vote on this one's dashboard.
     const s = org
-      ? await prisma.votingSession.findFirst({
-          where: { proposal: { organizationId: org.id } },
-          orderBy: { opensAt: "desc" },
-          include: { proposal: true },
+      ? await db.query.votingSessions.findFirst({
+          where: inArray(
+            votingSessions.proposalId,
+            db
+              .select({ id: proposals.id })
+              .from(proposals)
+              .where(eq(proposals.organizationId, org.id)),
+          ),
+          orderBy: desc(votingSessions.opensAt),
+          with: { proposal: true },
         })
       : null;
     if (s) {
@@ -56,11 +63,11 @@ export default async function DashboardOverview() {
             ? `${report.sources.length} source(s), ${report.totalSats.toString()} sats on-chain`
             : `${report.sources.length} source(s) registered; balance currently unresolved`;
       }
-      events = await prisma.auditEvent.findMany({
-        where: { organizationId: org.id },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        select: { id: true, eventType: true, createdAt: true },
+      events = await db.query.auditEvents.findMany({
+        where: eq(auditEvents.organizationId, org.id),
+        orderBy: desc(auditEvents.createdAt),
+        limit: 3,
+        columns: { id: true, eventType: true, createdAt: true },
       });
     }
   } catch {

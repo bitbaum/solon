@@ -1,11 +1,11 @@
 # Golden CI floor — see bitbaum/fleet templates/ci/README.md.
-# solon: npm + Prisma. Floor = verify (lint + typecheck + design:check + test) + build.
+# solon: npm + Drizzle. Floor = verify (lint + typecheck + design:check + test) + build.
 # Lint is `eslint .` — Next 16 removed `next lint`, and ESLint 9 wants flat
 # config, so the rules live in eslint.config.mjs (eslint-config-next already
 # exports a flat array). `.eslintrc.json` is gone.
-# `next build` is hermetic: the server components that touch Prisma catch DB
-# errors and render demo fallbacks, so no live DB is needed. Prisma has no
-# postinstall, so the client is generated before typecheck/build need its types.
+# `next build` is hermetic: the server components that touch the database catch
+# errors and render demo fallbacks, so no live DB is needed. Drizzle has no
+# codegen at all — types flow from src/lib/db/schema.ts at typecheck time.
 # The Playwright e2e smoke tests stay deferred (need a running app).
 name: CI
 
@@ -37,14 +37,11 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Prisma generate (types for typecheck)
-        run: npx prisma generate
-
       # SSOT: lint + typecheck, defined in package.json `verify`.
       - name: Verify
         run: npm run verify
 
-      # Build gate — hermetic (Prisma calls fall back without a live DB, see header).
+      # Build gate — hermetic (DB calls fall back without a live database, see header).
       - name: Build
         run: npm run build
 
@@ -81,11 +78,8 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Prisma generate
-        run: npx prisma generate
-
       - name: Migration replay (baseline + seed on a fresh database)
-        run: npx prisma migrate deploy
+        run: npx drizzle-kit migrate
 
       - name: Vote spine integration spec
         run: INTEGRATION=1 npx vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts

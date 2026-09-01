@@ -80,8 +80,8 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 
 ## Data model
 
-`prisma/schema.prisma` is the SSOT — **9 models**, with types, validation and API
-contracts derived from it.
+`src/lib/db/schema.ts` is the SSOT — **9 models** (Drizzle), with types, validation
+and API contracts derived from it.
 
 ```
 Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
@@ -129,7 +129,7 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 |---|---|
 | Framework | Next.js 16.3 (App Router, `output: 'standalone'`) |
 | Language | TypeScript 5.5 (strict) |
-| Database | PostgreSQL + Prisma 5.17 |
+| Database | PostgreSQL + Drizzle ORM |
 | Auth | NextAuth v5 (beta) |
 | Styling | Tailwind CSS 3.4 — tokens in `src/app/globals.css` |
 | Bitcoin | `@noble/*` + `bs58check` (signing / verification) |
@@ -147,8 +147,7 @@ cd solon
 npm install
 
 cp .env.example .env          # set DATABASE_URL
-npm run prisma:generate       # no postinstall hook — run this before typecheck/build
-npm run prisma:push
+npm run db:migrate            # applies drizzle/ migrations (baseline + seed)
 
 npm run dev                   # http://localhost:3000
 ```

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { DecisionCategory, VotingMethod } from "@prisma/client";
+import { DecisionCategory, VotingMethod } from "@/lib/db/enums";
 import { createProposal } from "@/lib/domain/proposals";
 
 const BodySchema = z.object({
