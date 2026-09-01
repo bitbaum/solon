@@ -10,6 +10,16 @@ coverage
 *.min.js
 *.min.css
 
+# Nested git worktrees. The agent harness checks a second copy of this repo out
+# under .claude/worktrees/<branch>/; prettier reads it as ordinary files and a
+# clean tree fails --check on 80+ files that are not in this commit. Formatting
+# them there is also wrong — that checkout has its own branch and its own gate.
+.claude/worktrees
+
+# Per-machine agent settings. Never committed, absent in CI — so checking it
+# locally can only ever produce a failure CI cannot see.
+.claude/settings.local.json
+
 # Generated during a build, so it is absent locally and present in CI — which
 # makes a clean local --check no evidence at all. Contentlayer's output also
 # uses import assertions, which prettier's parser rejects outright.

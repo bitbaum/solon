@@ -12,6 +12,9 @@ const config = [
     ignores: [
       ".next/**",
       "node_modules/**",
+      // Nested git worktrees — a second checkout of this repo on its own
+      // branch, linted by its own gate, not by this one.
+      ".claude/worktrees/**",
       "next-env.d.ts",
       "playwright-report/**",
       "test-results/**",
