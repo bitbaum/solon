@@ -142,7 +142,7 @@ Solon shares OrangeCat's tokens by name and value, and is dark-only.
 ## Quick start
 
 ```bash
-git clone https://github.com/catomean/solon.git
+git clone https://github.com/bitbaum/solon.git
 cd solon
 npm install
 

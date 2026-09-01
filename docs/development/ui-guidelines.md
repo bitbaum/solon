@@ -8,7 +8,7 @@ Not in this repo, and not in this document:
 
 | Where | Role |
 |---|---|
-| **`@fleet/design-tokens`** ([repo](https://github.com/catomean/design-tokens)) | **Token SSOT** for all three products — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
+| **`@fleet/design-tokens`** ([repo](https://github.com/bitbaum/design-tokens)) | **Token SSOT** for all three products — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
 | `src/app/globals.css` | Solon-specific rules only. Defining a token here **fails the build**. |
 | `tailwind.config.js` | Consumes the shared preset. Defines no colours, fonts or geometry. |
 | `scripts/design-system-check.js` | **Enforcement.** Run by `npm run design:check`, which `npm run verify` runs. |
