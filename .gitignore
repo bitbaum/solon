@@ -42,3 +42,10 @@ playwright-report/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# nested git worktrees — the agent harness checks this repo out a second time
+# under .claude/worktrees/<branch>/, on its own branch with its own gate
+.claude/worktrees/
+
+# per-machine agent settings; the shared .claude/settings.json is committed
+.claude/settings.local.json

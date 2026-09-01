@@ -98,7 +98,7 @@ export default function SecurityPage() {
             </a>
             {" · "}
             <a
-              href="https://github.com/catomean/solon"
+              href="https://github.com/bitbaum/solon"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-accent hover:text-accent-dark"
