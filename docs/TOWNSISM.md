@@ -5,8 +5,9 @@ Public-repo copy of the Townsism manifesto. The personal SSOT also lives at
 the essay — do not fork a second thesis.
 
 Solon is the governance organ of this thesis. It does not rebrand as Deyville
-or Mightville until that product decision is made. The marketing site speaks
-the thesis in empowerment language (`/why`); this file is the full essay.
+or Mightville until that product decision is made. The marketing site no
+longer carries a `/why` thesis page (removed in #90); this file is the full
+essay.
 
 ---
 
