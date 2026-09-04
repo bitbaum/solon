@@ -1,6 +1,7 @@
 {
   "name": "solon",
   "version": "0.1.0",
+  "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=20"
   },
@@ -12,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "design:check": "node scripts/design-system-check.js",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run design:check && npm run test",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:puppeteer": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/smoke.mjs",

@@ -6,7 +6,7 @@
  * cast with it is that system's attested judgment.
  *
  * Usage:
- *   SOLON_AGENT_PRIVKEY=<hex> npx tsx scripts/agent-vote.ts \
+ *   SOLON_AGENT_PRIVKEY=<hex> pnpm exec tsx scripts/agent-vote.ts \
  *     --base-url https://solon.orangecat.ch --session <sessionId> --choice yes
  *
  * --key-env <NAME> reads the key from a different env var (e.g. CAT_SOLON_PRIVKEY).

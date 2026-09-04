@@ -1,5 +1,5 @@
 # Golden CI floor — see bitbaum/fleet templates/ci/README.md.
-# solon: npm + Drizzle. Floor = verify (lint + typecheck + design:check + test) + build.
+# solon: pnpm + Drizzle. Floor = verify (lint + typecheck + design:check + test) + build.
 # Lint is `eslint .` — Next 16 removed `next lint`, and ESLint 9 wants flat
 # config, so the rules live in eslint.config.mjs (eslint-config-next already
 # exports a flat array). `.eslintrc.json` is gone.
@@ -29,21 +29,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Install
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # SSOT: lint + typecheck, defined in package.json `verify`.
       - name: Verify
-        run: npm run verify
+        run: pnpm run verify
 
       # Build gate — hermetic (DB calls fall back without a live database, see header).
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
   # The vote spine against a real database: migration replay on a fresh
   # postgres (proves the baseline + seed actually apply), then the
@@ -70,16 +72,18 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Install
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Migration replay (baseline + seed on a fresh database)
-        run: npx drizzle-kit migrate
+        run: pnpm exec drizzle-kit migrate
 
       - name: Vote spine integration spec
-        run: INTEGRATION=1 npx vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts
+        run: INTEGRATION=1 pnpm exec vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts

@@ -144,32 +144,32 @@ Solon shares OrangeCat's tokens by name and value, and is dark-only.
 ```bash
 git clone https://github.com/bitbaum/solon.git
 cd solon
-npm install
+pnpm install
 
 cp .env.example .env          # set DATABASE_URL
-npm run db:migrate            # applies drizzle/ migrations (baseline + seed)
+pnpm run db:migrate            # applies drizzle/ migrations (baseline + seed)
 
-npm run dev                   # http://localhost:3000
+pnpm run dev                   # http://localhost:3000
 ```
 
 Add a member or cast an agent vote:
 
 ```bash
-npx tsx scripts/add-member.ts
-npx tsx scripts/agent-vote.ts
+pnpm exec tsx scripts/add-member.ts
+pnpm exec tsx scripts/agent-vote.ts
 ```
 
 ## Verifying a change
 
-`npm run verify` is the single gate, and CI runs exactly it:
+`pnpm run verify` is the single gate, and CI runs exactly it:
 
 ```bash
-npm run verify   # lint && typecheck && design:check && test
+pnpm run verify   # lint && typecheck && design:check && test
 ```
 
 ```bash
-npm run test:e2e         # Playwright (needs a running app)
-npm run test:puppeteer   # smoke against BASE_URL
+pnpm run test:e2e         # Playwright (needs a running app)
+pnpm run test:puppeteer   # smoke against BASE_URL
 ```
 
 Merging to `main` deploys to production automatically. Green PRs merge
