@@ -1,6 +1,7 @@
 {
   "name": "solon",
   "version": "0.1.0",
+  "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=20"
   },
@@ -12,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "design:check": "node scripts/design-system-check.js",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run design:check && npm run test",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:puppeteer": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/smoke.mjs",
@@ -50,6 +51,7 @@
     "drizzle-kit": "^0.31.9",
     "eslint": "10.9.1",
     "eslint-config-next": "16.3.3",
+    "espree": "^11.2.0",
     "postcss": "8.5.26",
     "prettier": "3.9.6",
     "puppeteer": "25.9.0",

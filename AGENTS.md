@@ -19,12 +19,12 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ## Everyday commands
 
 ```bash
-npm run dev          # next dev (localhost:3000)
-npm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-npm run verify       # lint + typecheck + design:check + test — run before every commit
+pnpm run dev          # next dev (localhost:3000)
+pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
+pnpm run verify       # lint + typecheck + design:check + test — run before every commit
 ```
 
-`npm run verify` is the single source of truth for "is this change clean?" CI
+`pnpm run verify` is the single source of truth for "is this change clean?" CI
 calls it verbatim. Green `verify` locally ⇒ green CI.
 
 ## Drizzle / database
@@ -32,8 +32,8 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 - Schema SSOT: `src/lib/db/schema.ts` (9 models). Types flow from it via `$inferSelect`;
   enum vocabulary lives in `src/lib/db/enums.ts` (dependency-free, safe for client code).
 - **There is no codegen.** Typecheck and build read the schema module directly.
-- Migrations live in `drizzle/` (`npm run db:generate` after a schema change;
-  `npm run db:migrate` applies them). **Running migrations against a real
+- Migrations live in `drizzle/` (`pnpm run db:generate` after a schema change;
+  `pnpm run db:migrate` applies them). **Running migrations against a real
   database is manual / deploy-time only** — do not add a push step to CI's verify job.
 - Migration history begins at `drizzle/0000_init` (baseline matching the tables the
   retired Prisma migrations created — byte-identical names, proven by pg_dump diff)
@@ -47,7 +47,7 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 
 | Job | What it does |
 |---|---|
-| `verify` | `npm ci` → `npm run verify` → `npm run build` |
+| `verify` | `pnpm install --frozen-lockfile` → `pnpm run verify` → `pnpm run build` |
 | `integration` | `drizzle-kit migrate` on a **fresh** Postgres, then the vote-spine integration spec |
 
 The integration job is why migrations must replay cleanly from the baseline: it
@@ -62,7 +62,7 @@ the policy, and merging to `main` deploys via FleetCrown's `selfhost-deploy.yml`
   utilities onto them and never holds a literal value.
 - Solon shares OrangeCat's token names and values, and is **dark-only**.
   The legacy `navy` / `solon-*` palette is deleted — using it fails the build.
-- `npm run design:check` (part of `verify`) enforces this. See
+- `pnpm run design:check` (part of `verify`) enforces this. See
   `docs/development/ui-guidelines.md`.
 
 ## Notes for agents

@@ -7,7 +7,7 @@
  * a MEMBER_ADDED audit event like every other roster change.
  *
  * Usage:
- *   npx tsx scripts/add-member.ts --org orangecat --name "George" \
+ *   pnpm exec tsx scripts/add-member.ts --org orangecat --name "George" \
  *     --type HUMAN --address <bitcoin-address> [--pubkey <hex>] \
  *     [--system orangecat:cat] [--weight 1] [--mint-key] \
  *     [--oc-actor <orangecat-actor-uuid>]

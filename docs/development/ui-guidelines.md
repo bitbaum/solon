@@ -11,7 +11,7 @@ Not in this repo, and not in this document:
 | **`@fleet/design-tokens`** ([repo](https://github.com/bitbaum/design-tokens)) | **Token SSOT** for all three products — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
 | `src/app/globals.css` | Solon-specific rules only. Defining a token here **fails the build**. |
 | `tailwind.config.js` | Consumes the shared preset. Defines no colours, fonts or geometry. |
-| `scripts/design-system-check.js` | **Enforcement.** Run by `npm run design:check`, which `npm run verify` runs. |
+| `scripts/design-system-check.js` | **Enforcement.** Run by `pnpm run design:check`, which `pnpm run verify` runs. |
 
 This page describes conventions a linter cannot check. It deliberately lists **no
 colour values** — a palette written down twice is a palette that will disagree
@@ -50,7 +50,7 @@ same near-black canvas. There is no light theme to keep in sync.
 
 ## Rules the checker enforces
 
-`npm run design:check` fails the build on any of these, so you will find out
+`pnpm run design:check` fails the build on any of these, so you will find out
 before CI does:
 
 - No Tailwind greys (`slate` / `gray` / `zinc` / `neutral`) — use `text-fg-*`,

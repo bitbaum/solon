@@ -22,7 +22,7 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 
 ## The three that matter most
 
-**`npm run verify` is the gate.** lint + typecheck + design:check + test. CI runs
+**`pnpm run verify` is the gate.** lint + typecheck + design:check + test. CI runs
 exactly it. Run it before every commit.
 
 **Design tokens live in `@fleet/design-tokens`, not in this repo.** One package

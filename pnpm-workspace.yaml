@@ -1,0 +1,9 @@
+# pnpm 11 blocks dependency postinstall scripts by default. Allowed:
+# - esbuild installs its platform binary (vitest/tsx toolchain)
+# - unrs-resolver builds its native resolver (eslint-config-next)
+# - puppeteer's postinstall downloads the Chrome it drives — the
+#   tests/puppeteer/*.mjs smokes need it.
+allowBuilds:
+  esbuild: true
+  puppeteer: true
+  unrs-resolver: true

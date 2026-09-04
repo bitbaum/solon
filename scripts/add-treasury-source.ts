@@ -6,7 +6,7 @@
  * use a voting member's key as the treasury. Run on the box with DATABASE_URL.
  *
  * Usage:
- *   npx tsx scripts/add-treasury-source.ts --org orangecat \
+ *   pnpm exec tsx scripts/add-treasury-source.ts --org orangecat \
  *     --label "OrangeCat platform" --address <btc-address>
  */
 import { parseArgs } from "node:util";
