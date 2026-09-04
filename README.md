@@ -4,7 +4,7 @@ Governance you can verify instead of trust — proposals, Bitcoin-signed votes,
 versioned policies and an append-only audit trail.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000.svg)](https://nextjs.org/)
 
 Live at **[solon.orangecat.ch](https://solon.orangecat.ch)**.
@@ -94,7 +94,8 @@ Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
 ```
 
 Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
-`decision`, `treasury`, `canonical`) and stays free of HTTP and UI concerns.
+`decision`, `treasury`, `membership`, `org`, `canonical`) and stays free of
+HTTP and UI concerns.
 Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
 ## API
@@ -117,7 +118,7 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 ## Pages
 
 **Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
-`/why` (Townsism — why a town), `/ecosystem` (the live governed state),
+`/ecosystem` (the live governed state), `/join`, `/propose`, `/proposals`,
 `/governance/voting`, `/governance/audit`, `/treasury/bitcoin`
 
 **Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,
@@ -128,16 +129,17 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 16.3 (App Router, `output: 'standalone'`) |
-| Language | TypeScript 5.5 (strict) |
+| Language | TypeScript 6.0 (strict) |
 | Database | PostgreSQL + Drizzle ORM |
 | Auth | NextAuth v5 (beta) |
-| Styling | Tailwind CSS 3.4 — tokens in `src/app/globals.css` |
+| Styling | Tailwind CSS 4 — tokens from `@fleet/design-tokens` |
 | Bitcoin | `@noble/*` + `bs58check` (signing / verification) |
 | Tests | Vitest (unit + integration), Playwright e2e, Puppeteer smoke |
 | i18n | English, German, French, Italian |
 
 Design system: see [`docs/development/ui-guidelines.md`](docs/development/ui-guidelines.md).
-Solon shares OrangeCat's tokens by name and value, and is dark-only.
+Tokens are imported from the shared `@fleet/design-tokens` package (one SSOT
+for OrangeCat, FleetCrown and Solon), and Solon is dark-only.
 
 ## Quick start
 
@@ -164,7 +166,7 @@ pnpm exec tsx scripts/agent-vote.ts
 `pnpm run verify` is the single gate, and CI runs exactly it:
 
 ```bash
-pnpm run verify   # lint && typecheck && design:check && test
+pnpm run verify   # format:check && lint && typecheck && design:check && test
 ```
 
 ```bash

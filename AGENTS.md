@@ -9,10 +9,10 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ## Stack
 
 - **Framework**: Next.js 16.3 (App Router, `output: 'standalone'` for the Hetzner deploy)
-- **Language**: TypeScript 5.5 (strict)
+- **Language**: TypeScript 6.0 (strict)
 - **Database**: PostgreSQL via Drizzle ORM (`drizzle-orm/node-postgres` + `pg` Pool)
 - **Auth**: NextAuth v5 (beta) — sign in with OrangeCat (OAuth)
-- **Styling**: Tailwind CSS 3.4, tokens in `src/app/globals.css`
+- **Styling**: Tailwind CSS 4, tokens from `@fleet/design-tokens`
 - **Bitcoin**: `@noble/*`, `bs58check` (message signing / signature verification)
 - **Tests**: Vitest (unit + integration), Playwright e2e, Puppeteer smoke (`tests/`)
 
@@ -21,7 +21,7 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ```bash
 pnpm run dev          # next dev (localhost:3000)
 pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-pnpm run verify       # lint + typecheck + design:check + test — run before every commit
+pnpm run verify       # format:check + lint + typecheck + design:check + test — run before every commit
 ```
 
 `pnpm run verify` is the single source of truth for "is this change clean?" CI
@@ -58,8 +58,9 @@ the policy, and merging to `main` deploys via FleetCrown's `selfhost-deploy.yml`
 
 ## Design
 
-- Tokens live in `src/app/globals.css` **only**; `tailwind.config.js` maps
-  utilities onto them and never holds a literal value.
+- Tokens live in the shared `@fleet/design-tokens` package **only**;
+  `tailwind.config.js` consumes its Tailwind preset and never holds a literal
+  value, and `src/app/globals.css` carries Solon-specific rules, no tokens.
 - Solon shares OrangeCat's token names and values, and is **dark-only**.
   The legacy `navy` / `solon-*` palette is deleted — using it fails the build.
 - `pnpm run design:check` (part of `verify`) enforces this. See
