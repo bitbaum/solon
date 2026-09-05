@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@fleet/design-tokens':
-        specifier: github:bitbaum/design-tokens#v1.1.0
-        version: https://codeload.github.com/bitbaum/design-tokens/tar.gz/dedda604c526dc35ae552b6b4616048ad16e8b59
+        specifier: npm:@bitbaum/design-tokens@^1.1.0
+        version: '@bitbaum/design-tokens@1.1.0'
       '@noble/hashes':
         specifier: 2.4.0
         version: 2.4.0
@@ -192,6 +192,10 @@ packages:
   '@babel/types@7.29.8':
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
+
+  '@bitbaum/design-tokens@1.1.0':
+    resolution: {integrity: sha512-sDVplKP4jKe0WHCOnW7xk75RC46JsAYqUngcVlctyAs9f1TQqZqbYTfbmyYipYCOaCIHMflnzAneQTbqrQbtBw==}
+    engines: {node: '>=20'}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -699,10 +703,6 @@ packages:
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-
-  '@fleet/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/dedda604c526dc35ae552b6b4616048ad16e8b59':
-    resolution: {gitHosted: true, integrity: sha512-ZmYTTldyU9g5QXQJM91jXnCKzDriZSTHo04H2I7N/EPu2FS50dIPspf1h0I5T1m3s5rCfsfnMrvTYkhtgYKPCg==, tarball: https://codeload.github.com/bitbaum/design-tokens/tar.gz/dedda604c526dc35ae552b6b4616048ad16e8b59}
-    version: 1.1.0
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3395,6 +3395,8 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
+  '@bitbaum/design-tokens@1.1.0': {}
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -3688,8 +3690,6 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
-
-  '@fleet/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/dedda604c526dc35ae552b6b4616048ad16e8b59': {}
 
   '@humanfs/core@0.19.2':
     dependencies:
