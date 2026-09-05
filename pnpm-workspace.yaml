@@ -7,3 +7,8 @@ allowBuilds:
   esbuild: true
   puppeteer: true
   unrs-resolver: true
+
+# Own package published to npm <24h ago; exempt from the minimum-release-age
+# supply-chain window. Redundant once the release ages past the window.
+minimumReleaseAgeExclude:
+  - "@bitbaum/design-tokens"
