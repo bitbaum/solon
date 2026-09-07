@@ -36,6 +36,21 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      # Next keeps its compiler output in .next/cache. Without restoring it this
+      # job recompiles the whole app every run. Measured across the fleet on
+      # 2026-09-07: of eight repos, exactly one cached this.
+      #
+      # Deliberately only in `verify` — the `integration` job installs but never
+      # builds, so a cache there would restore an entry nothing reads.
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            nextjs-${{ runner.os }}-
+
       - name: Install
         run: pnpm install --frozen-lockfile
 
