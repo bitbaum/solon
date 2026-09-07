@@ -53,8 +53,10 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 The integration job is why migrations must replay cleanly from the baseline: it
 builds the database from scratch every run.
 
-Green PRs merge and deploy themselves — `scripts/ci/auto-merge-sweep.sh` holds
-the policy, and merging to `main` deploys via FleetCrown's `selfhost-deploy.yml`.
+Green PRs merge and deploy themselves — the fleet-wide sweep in `bitbaum/fleet` (`.github/workflows/auto-merge-sweep.yml`) holds the policy for every
+repo in the fleet, and merging to `main` deploys via FleetCrown's
+`selfhost-deploy.yml`. This repo used to keep its own copy of that script; it
+was deleted so a fix to the sweep reaches here without being re-ported.
 
 ## Design
 
