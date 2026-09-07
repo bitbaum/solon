@@ -175,7 +175,7 @@ pnpm run test:puppeteer   # smoke against BASE_URL
 ```
 
 Merging to `main` deploys to production automatically. Green PRs merge
-themselves — see `scripts/ci/auto-merge-sweep.sh` for the exact policy.
+themselves — the exact policy lives once in the fleet-wide sweep in `bitbaum/fleet` (`.github/workflows/auto-merge-sweep.yml`), which this repo calls.
 
 ## License
 
