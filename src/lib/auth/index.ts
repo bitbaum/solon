@@ -12,7 +12,7 @@ import { isRecognizableProfile } from "./recognition";
  * and profile claims, and membership is looked up fresh from the members
  * table wherever it matters.
  *
- * The provider mirrors FleetCrown's proven config (fleetcrown src/auth.ts):
+ * The provider mirrors Loki's proven config (loki src/auth.ts):
  * OC's token endpoint accepts only client_secret_post, and requires PKCE
  * even for confidential clients.
  */
@@ -56,7 +56,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt({ token, profile }) {
       if (profile?.sub) {
         // id_token.sub is the OrangeCat actor id — the cross-product
-        // identity boundary (never email; see fleetcrown's provider note).
+        // identity boundary (never email; see loki's provider note).
         token.actorId = profile.sub;
       }
       return token;

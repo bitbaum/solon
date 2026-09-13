@@ -3,7 +3,7 @@ import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 /**
  * SSOT for who decides what, and how.
  *
- * Agents (the Cat, FleetCrown's agents) are full members: they may PROPOSE in
+ * Agents (the Cat, Loki's agents) are full members: they may PROPOSE in
  * any category, and they VOTE wherever the electorate is ALL_MEMBERS. The
  * HUMANS_ONLY categories are the red lines from the OC↔Solon spec: money
  * moving to people, membership, safety — and GOVERNANCE_RULES itself, so

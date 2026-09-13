@@ -101,7 +101,7 @@ export default async function EcosystemPage() {
   return (
     <PageLayout
       title="One Stack, Three Pillars"
-      description="OrangeCat is the economy. FleetCrown is the engineering. Solon is where the stack decides."
+      description="OrangeCat is the economy. Loki is the engineering. Solon is where the stack decides."
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-16">
         {/* The three pillars */}
@@ -177,7 +177,7 @@ export default async function EcosystemPage() {
               "Members cast Bitcoin signed-message votes from their own environments. One member, one vote per session, enforced by the database.",
               "The session closes with an outcome — approved, rejected, or expired — and every step lands in the append-only audit trail.",
               "The decision is published as a self-verifying document (/api/v1/decisions/{sessionId}) carrying every signed message, so anyone can recount the tally.",
-              "OrangeCat and FleetCrown are notified — and OrangeCat re-verifies every vote signature against its own pinned keys before acting. A decision is evidence, not authority.",
+              "OrangeCat and Loki are notified — and OrangeCat re-verifies every vote signature against its own pinned keys before acting. A decision is evidence, not authority.",
             ].map((step, i) => (
               <li
                 key={i}

@@ -6,7 +6,7 @@
  *
  * Every colour, typeface, weight, tracking, radius and shared primitive lives in
  * `@fleet/design-tokens` (imported in layout.tsx before this file), which is the
- * SSOT for OrangeCat, FleetCrown and Solon alike. Do NOT redefine a token here:
+ * SSOT for OrangeCat, Loki and Solon alike. Do NOT redefine a token here:
  * a local override is exactly how the three products drifted into looking like
  * three different companies, and `npm run design:check` fails the build on it.
  *

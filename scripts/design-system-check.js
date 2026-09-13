@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Ironclad design gate. Same contract as OrangeCat / FleetCrown:
+ * Ironclad design gate. Same contract as OrangeCat / Loki:
  * tokens live in globals.css; components use semantic Tailwind names;
  * no palette utilities, no arbitrary hex, no pillowy radii, no shadows
  * standing in for hierarchy.
@@ -27,7 +27,7 @@ const FORBIDDEN = [
     message: "Use bg-surface-* / border-* tokens, not white with an opacity.",
   },
   {
-    // The vocabulary is shared with OrangeCat and FleetCrown. These were Solon's
+    // The vocabulary is shared with OrangeCat and Loki. These were Solon's
     // private, blue-tinted palette — the reason the three sites looked like three
     // companies. They are gone from tailwind.config.js; this keeps them gone.
     pattern:

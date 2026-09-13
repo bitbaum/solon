@@ -30,7 +30,7 @@ export default function SolonHero({ language }: SolonHeroProps) {
           <p className="eyebrow">{t.title}</p>
 
           {/* The headline is the proposition, not the brand name — the wordmark
-              is already in the nav, exactly as on OrangeCat and FleetCrown.
+              is already in the nav, exactly as on OrangeCat and Loki.
               The column above is what holds it to two lines at desktop; giving
               the h1 its own max-width as well just adds a rule that never binds.
               No weight or tracking here: .font-display owns both, because the
