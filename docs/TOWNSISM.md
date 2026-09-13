@@ -74,7 +74,15 @@ The Cat proposes; Solon disposes. Money-movement without a legislature becomes r
 
 Compelled tax and chosen contribution must never be merged. The reserve is what your real jurisdiction requires. The contribution is what you freely give — to a person, a public good, a town. Honesty is the product.
 
-## 6 · How to start without asking permission
+## 6 · Justice
+
+A town that cannot judge its own is administered by someone else. Judging is the organ people most expect to be delegated upward, and it is the one where the middle layer's record is worst: cages that cost a fortune, produce nothing, and return people worse than they arrived.
+
+Townsism's answer is not leniency. It is that **pain is never the product**. Containment is justified by the harm it prevents and by nothing else. The person owes the town value, and the town makes it possible for them to produce it. The floor under every human being — food, health, safety, family, a written way up — is unconditional and never a lever. A door that cannot open is the one thing we refuse to build.
+
+The full design, including what keeps "they must add value" from becoming a labour camp, is [`JUSTICE.md`](JUSTICE.md). In Solon it lands as the `SAFETY` category: humans-only, supermajority, versioned, audited — because a machine that can vote on who gets caged is exactly what this stack exists to prevent.
+
+## 7 · How to start without asking permission
 
 Do the legal thing that is already a town in miniature:
 
@@ -85,11 +93,11 @@ Do the legal thing that is already a town in miniature:
 
 Run the books where anyone can see them. Sign the votes. Publish the decisions. Keep the guest sacred and the door yours. That is Townsism this quarter. "Sovereign Deyville" is the name of the destination, not the next ticket.
 
-## 7 · What success looks like
+## 8 · What success looks like
 
 Not a follower count. Not a flag.
 
-A stranger can open a town's books and finish them. A member can recount last month's vote with the published signatures. A guest can arrive and be fed. A dissenter can leave with their keys and their name. A neighboring town can trade without a ministry in the middle.
+A stranger can open a town's books and finish them. A member can recount last month's vote with the published signatures. A guest can arrive and be fed. A dissenter can leave with their keys and their name. A person who did harm can work, repay what they owe, and be let back in. A neighboring town can trade without a ministry in the middle.
 
 When that is ordinary, the middle layer will have less to do. That is the whole dream.
 
