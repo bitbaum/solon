@@ -66,7 +66,7 @@ A self-governing town needs four organs. They already have names in this stack:
 | Organ | What it does | What we are building |
 |---|---|---|
 | Economy | Move value without asking a bank | **OrangeCat** — Bitcoin / Lightning, maker profiles, pay links |
-| Capability | Get work done without an employer | **FleetCrown** — an AI fleet a town (or a person) can run |
+| Capability | Get work done without an employer | **Loki** — an AI fleet a town (or a person) can run |
 | Governance | Decide without a silent veto | **Solon** — Bitcoin-signed votes, watch-only treasury, append-only audit |
 | Belonging | A why people will actually join | **Townsism** (this essay) → **Mightville** (the movement) → **Deyville** (the OS a town runs) |
 

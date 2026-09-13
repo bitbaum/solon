@@ -106,7 +106,7 @@ export const members = pgTable(
     status: memberStatusEnum("status").notNull().default("ACTIVE"),
     /** OrangeCat actor id once the member linked via OIDC login (humans only). */
     ocActorId: text("oc_actor_id"),
-    /** For agents: which system runs them, e.g. "orangecat:cat", "fleetcrown:loki". */
+    /** For agents: which system runs them, e.g. "orangecat:cat", "loki:loki". */
     system: text("system"),
     joinedAt: timestamp("joined_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },

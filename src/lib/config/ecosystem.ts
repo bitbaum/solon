@@ -1,7 +1,7 @@
 /**
  * SSOT for the three-pillar stack Solon belongs to.
  *
- * OrangeCat is the economic pillar, FleetCrown the engineering pillar, Solon
+ * OrangeCat is the economic pillar, Loki the engineering pillar, Solon
  * the governance pillar. Every claim in `tie` is verifiable against running
  * systems — the live org in this database, the sibling products' public
  * sites, or this repo's own deploy workflow — so keep it that way: nothing
@@ -9,7 +9,7 @@
  */
 
 export interface EcosystemPillar {
-  key: "orangecat" | "fleetcrown" | "solon";
+  key: "orangecat" | "loki" | "solon";
   name: string;
   role: string;
   url: string;
@@ -29,13 +29,13 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
     tie: "OrangeCat's platform allocation policy is governed in Solon: the Cat's spending ceiling is a Solon policy, the Cat itself is a registered voting member, and OrangeCat independently re-verifies every Bitcoin vote signature before honoring a decision — Solon's word is evidence, not authority.",
   },
   {
-    key: "fleetcrown",
-    name: "FleetCrown",
+    key: "loki",
+    name: "Loki",
     role: "Engineering",
-    url: "https://fleetcrown.orangecat.ch",
+    url: "https://loki.orangecat.ch",
     description:
       "Control plane for running AI-agent fleets across projects: dispatch, live terminals, orchestration, and the deploy pipeline for the whole stack.",
-    tie: "FleetCrown's agent Loki is a registered voting member here, casting Bitcoin-signed votes from FleetCrown's own environment — and FleetCrown's shared deploy workflow is what ships Solon itself to production.",
+    tie: "Loki's agent Loki is a registered voting member here, casting Bitcoin-signed votes from Loki's own environment — and Loki's shared deploy workflow is what ships Solon itself to production.",
   },
   {
     key: "solon",
@@ -50,4 +50,4 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
 
 export const SOLON_GITHUB_URL = "https://github.com/bitbaum/solon";
 export const ORANGECAT_GITHUB_URL = "https://github.com/bitbaum/orangecat";
-export const FLEETCROWN_GITHUB_URL = "https://github.com/bitbaum/fleetcrown";
+export const LOKI_GITHUB_URL = "https://github.com/bitbaum/loki";

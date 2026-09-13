@@ -77,8 +77,8 @@ export const NAV_ITEMS: NavSection[] = [
       },
       { title: "OrangeCat", href: "https://orangecat.ch", description: "The economic pillar" },
       {
-        title: "FleetCrown",
-        href: "https://fleetcrown.orangecat.ch",
+        title: "Loki",
+        href: "https://loki.orangecat.ch",
         description: "The engineering pillar",
       },
     ],

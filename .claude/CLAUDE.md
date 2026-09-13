@@ -26,7 +26,7 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 exactly it. Run it before every commit.
 
 **Design tokens live in `@fleet/design-tokens`, not in this repo.** One package
-is the SSOT for OrangeCat, FleetCrown and Solon — it owns the tokens *and* the
+is the SSOT for OrangeCat, Loki and Solon — it owns the tokens *and* the
 self-hosted faces, so changing the display typeface for the whole stack is one
 line in one file. `globals.css` holds no tokens and `tailwind.config.js` defines
 no colours; both would fail `design:check` if they did. Solon is dark-only. The

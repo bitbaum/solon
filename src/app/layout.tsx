@@ -1,4 +1,4 @@
-// The design SSOT for OrangeCat, FleetCrown and Solon: tokens AND the self-hosted
+// The design SSOT for OrangeCat, Loki and Solon: tokens AND the self-hosted
 // faces they name. It must load before globals.css so app rules can override it.
 // Typefaces are deliberately NOT declared here — changing the display face is a
 // stack-wide decision made once in the package, not three times in three repos.
@@ -52,11 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex-1">{children}</div>
           <Footer />
         </SessionProvider>
-        {/* FleetCrown feedback widget. The project token is a literal on
+        {/* Loki feedback widget. The project token is a literal on
             purpose: read from process.env it would be tree-shaken to an empty
             string at `next build` and the script would never ship. */}
         <Script
-          src="https://fleetcrown.orangecat.ch/widget.js"
+          src="https://loki.orangecat.ch/widget.js"
           data-fc-project="fcw_83beae68488781ec1127c7801b55676d"
           strategy="afterInteractive"
         />
