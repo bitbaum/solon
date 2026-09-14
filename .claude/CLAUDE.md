@@ -19,6 +19,7 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 | What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
 | What is the schema? | `src/lib/db/schema.ts` (9 models) |
 | Which env vars exist? | `.env.example` |
+| Why does the stack exist, what is the philosophy behind all three products? | `docs/philosophy/README.md` in the OrangeCat repo — the SSOT; Solon's red lines are its worked example |
 
 ## The three that matter most
 
