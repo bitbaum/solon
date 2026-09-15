@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { registrationMessage } from "@/lib/bitcoin/message";
+import SignatureStep from "./signature-step";
 
 interface Verdict {
   registered: boolean;
@@ -29,7 +30,6 @@ export default function ClaimSeat({
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const message = address
     ? registrationMessage({ orgSlug, actorId, memberAddress: address })
@@ -89,58 +89,21 @@ export default function ClaimSeat({
         </p>
       </div>
 
-      {message && (
-        <div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-sm font-medium text-fg-primary">
-              Sign exactly this text with that address
-            </span>
-            <button
-              type="button"
-              className="text-xs text-accent underline"
-              onClick={async () => {
-                await navigator.clipboard.writeText(message);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
-          <pre className="mt-1 whitespace-pre-wrap break-all rounded-control border border-default bg-surface-raised p-3 font-mono text-xs text-fg-primary">
-            {message}
-          </pre>
-        </div>
-      )}
-
-      <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="join-signature">
-          Signature
-        </label>
-        <textarea
-          id="join-signature"
-          value={signature}
-          onChange={(e) => setSignature(e.target.value.trim())}
-          rows={3}
-          placeholder="Paste the base64 signature from your wallet's Sign Message tool"
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 font-mono text-xs text-fg-primary"
-        />
-      </div>
-
-      <button
-        type="button"
-        disabled={submitting || !address || !signature || displayName.trim().length < 2}
-        onClick={submit}
-        className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {submitting ? "Verifying signature…" : "Claim the founding seat"}
-      </button>
-
-      {verdict && !verdict.registered && (
-        <p className="rounded-control border border-status-negative/40 bg-surface-raised p-3 text-sm text-fg-primary">
-          {verdict.reason ?? "Registration failed."}
-        </p>
-      )}
+      <SignatureStep
+        message={message}
+        signHint="that address"
+        signatureId="join-signature"
+        signature={signature}
+        onSignatureChange={setSignature}
+        placeholder="Paste the base64 signature from your wallet's Sign Message tool"
+        disabled={!address || displayName.trim().length < 2}
+        submitting={submitting}
+        submitLabel="Claim the founding seat"
+        onSubmit={submit}
+        rejection={
+          verdict && !verdict.registered ? (verdict.reason ?? "Registration failed.") : null
+        }
+      />
     </div>
   );
 }
