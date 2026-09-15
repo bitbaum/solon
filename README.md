@@ -24,6 +24,7 @@ Solon is the **governance pillar** of a three-product stack:
 The ties are real, not marketing:
 
 - **OrangeCat's platform allocation policy is governed here.** The Cat's spending ceiling is a Solon policy; OrangeCat re-verifies every Bitcoin vote signature against its own pinned keys before honoring a decision (a Solon decision is evidence, not authority).
+- **So is the originator share.** `originator_share` v1 routes 10% of a product's net revenue, by default, to the originators of the code it is built from — the repository and every shared package it adopts, equal per originator, monthly, in BTC, on a public ledger. Who originated what is read from the fleet's [origin register](https://github.com/bitbaum/fleet/blob/main/registers/origin.json), derived from OpenTimestamps proofs, never typed into the policy. `src/lib/domain/originator-share.ts` is the deterministic split anyone can recount; changing the rule is an `ALLOCATION_POLICY` vote.
 - **Both sibling agents are voting members.** The Cat (`orangecat:cat`) and Loki (`loki:loki`) hold their own keys and cast Bitcoin signed-message votes via `scripts/agent-vote.ts`.
 - **Loki ships Solon.** `.github/workflows/deploy.yml` calls Loki's shared `selfhost-deploy.yml`; a merge to `main` deploys to production.
 - **Decisions are self-verifying.** `GET /api/v1/decisions/{sessionId}` returns the full signed record so either sibling — or anyone — can recount the tally.

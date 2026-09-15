@@ -44,7 +44,7 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
     method: "GET",
     path: "/api/orgs/[slug]/policies/[key]",
     description: "policy version history",
-    sample: (s) => `/api/orgs/${s}/policies/allocation_policy`,
+    sample: (s) => `/api/orgs/${s}/policies/allocation_policy`, // also: originator_share
   },
   {
     method: "GET",
