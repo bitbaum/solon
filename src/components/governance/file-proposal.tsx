@@ -7,6 +7,7 @@ import { canonicalJson, sha256Hex } from "@/lib/domain/canonical";
 import { ALL_METHODS, methodSpec } from "@/lib/domain/methods";
 import { optionsSchema } from "@/lib/domain/methods/types";
 import MethodPicker from "./method-picker";
+import SignatureStep from "./signature-step";
 
 interface Verdict {
   created: boolean;
@@ -53,7 +54,6 @@ export default function FileProposal({
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
-  const [copied, setCopied] = useState(false);
 
   // The answer space, parsed from one line per option. Kept as text in the UI
   // and validated by the same schema the server uses, so the proposer sees the
@@ -227,57 +227,18 @@ export default function FileProposal({
         </p>
       </div>
 
-      {message && (
-        <div>
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-sm font-medium text-fg-primary">
-              Sign exactly this text with {memberAddress.slice(0, 10)}…
-            </span>
-            <button
-              type="button"
-              className="text-xs text-accent underline"
-              onClick={async () => {
-                await navigator.clipboard.writeText(message);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
-          <pre className="mt-1 whitespace-pre-wrap break-all rounded-control border border-default bg-surface-raised p-3 font-mono text-xs text-fg-primary">
-            {message}
-          </pre>
-        </div>
-      )}
-
-      <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="p-sig">
-          Signature
-        </label>
-        <textarea
-          id="p-sig"
-          value={signature}
-          onChange={(e) => setSignature(e.target.value.trim())}
-          rows={3}
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 font-mono text-xs text-fg-primary"
-        />
-      </div>
-
-      <button
-        type="button"
-        disabled={submitting || !ready || !signature}
-        onClick={submit}
-        className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {submitting ? "Verifying signature…" : "File proposal"}
-      </button>
-
-      {verdict && !verdict.created && (
-        <p className="rounded-control border border-status-negative/40 bg-surface-raised p-3 text-sm text-fg-primary">
-          {verdict.reason ?? "Proposal rejected."}
-        </p>
-      )}
+      <SignatureStep
+        message={message}
+        signHint={<>{memberAddress.slice(0, 10)}…</>}
+        signatureId="p-sig"
+        signature={signature}
+        onSignatureChange={setSignature}
+        disabled={!ready}
+        submitting={submitting}
+        submitLabel="File proposal"
+        onSubmit={submit}
+        rejection={verdict && !verdict.created ? (verdict.reason ?? "Proposal rejected.") : null}
+      />
     </div>
   );
 }
