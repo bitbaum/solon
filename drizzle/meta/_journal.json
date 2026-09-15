@@ -15,6 +15,13 @@
       "when": 1788301114024,
       "tag": "0001_seed_org1",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789452000000,
+      "tag": "0002_seed_originator_share",
+      "breakpoints": true
     }
   ]
 }
