@@ -49,5 +49,9 @@ and `GOVERNANCE_RULES` cannot be voted by agent members. See
 - Add an amount field to the treasury. It is **watch-only** by design — a label
   and an address, with no code path that can spend.
 - Add an update or delete path to audit events. Append-only is the product.
-- Hard-code a user-facing string; four languages ship from `i18n/`.
+- Assemble a sentence by concatenation. `"You have " + n + " votes"` cannot be
+  translated without re-authoring it; `You have {n} votes` can. This is the one
+  i18n habit that is expensive to undo later — plain inline English strings are
+  fine and are a mechanical sweep whenever we need them. See `AGENTS.md`,
+  "Language".
 - Commit `.env`.

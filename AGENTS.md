@@ -96,3 +96,47 @@ that can hold value is the thing a vote is about.
 - Some decision categories are **humans-only** (`AID_DISBURSEMENT`, `MEMBERSHIP`,
   `SAFETY`, `GOVERNANCE_RULES`). See `src/lib/config/governance.ts`; these are
   red lines, not defaults to tune.
+
+## Language
+
+**Solon is English-only, on purpose, and there is no i18n machinery here.**
+
+There used to be an `i18n/` directory with four dictionaries. It was not
+localization: `page.tsx` called `<SolonHero language="en" />` with a literal, so
+that was the only call site and the German, French and Italian strings shipped
+in the bundle where no visitor could ever reach them. Meanwhile the other 18
+pages hard-coded English and `CLAUDE.md` told every agent that four languages
+shipped from `i18n/` — a rule that sent work into a dead file. Removed
+2026-09-17; the English copy moved into the two components that used it.
+
+**The one habit to keep.** Never assemble a sentence by concatenation. A string
+built as `"You have " + n + " votes"` has to be re-authored to translate,
+because word order is not shared across languages; `You have {n} votes` does
+not. That is the only i18n cost here that is expensive to undo. Plain inline
+English is fine — moving inline strings into dictionaries is a mechanical sweep
+whose cost is linear in the number of pages and does not grow worse with time,
+which is exactly why deferring this is safe.
+
+**What would bring it back.** A real organization that needs to govern in
+German, French or Italian. The case is genuine and specific rather than
+hypothetical: `governance-profiles.ts` ships an `ASSOCIATION` profile written
+for the Swiss Verein (Art. 60 ZGB), and Swiss associations, cooperatives and
+communes do not all work in English.
+
+**When that happens, extract — do not reimplement.** `heidi` already has a
+mature implementation: `lib/i18n/` with `app/[locale]/` routing and seven typed
+dictionaries (de, en, fr, gsw, it, rm, ru), a `fill()` that leaves an unknown
+placeholder VISIBLE rather than blanking it, and `fill.test.ts` pinning that
+every locale keeps the placeholders its template was given — the silent failure
+a type system cannot catch, because the type of a string containing `{word}` is
+`string`. It is not a package yet (nothing in `fleet: registers/packages.json`),
+because so far it has exactly one consumer. Solon becoming the second consumer
+is the event that justifies extracting it, per the one-package-one-job rule in
+`fleet: AGENTS.md`.
+
+**Translate the product surface first, not the essays.** Nav, forms, the ballot,
+the buttons — the words someone must read to cast a vote correctly. The
+`/governance` teaching pages are precision prose about terms of art, and a
+machine translation that renders sociocratic *consent* as *Zustimmung* rather
+than *Konsent* teaches the opposite of what the page exists to teach. Those get
+a human or they stay English.
