@@ -47,3 +47,33 @@ export const VOTING_WINDOW_DAYS = 7;
 
 /** SUPERMAJORITY means at least this fraction of yes among yes+no. */
 export const SUPERMAJORITY_FRACTION = 2 / 3;
+
+/**
+ * Human-readable names for the categories, and what each one actually covers.
+ *
+ * These live here, beside the rules they name, because the label and the rule
+ * are the same fact seen twice: a page that renders "Aid disbursement — humans
+ * only" is reading one row, not joining two lists that can drift. This map was
+ * a private copy inside the ecosystem page until /governance needed it too.
+ */
+export const CATEGORY_LABEL: Record<DecisionCategory, string> = {
+  ALLOCATION_POLICY: "Allocation policy",
+  TREASURY_SPEND: "Treasury spend",
+  OPERATIONS: "Operations",
+  AID_DISBURSEMENT: "Aid disbursement",
+  MEMBERSHIP: "Membership",
+  SAFETY: "Safety",
+  GOVERNANCE_RULES: "Governance rules",
+};
+
+export const CATEGORY_MEANING: Record<DecisionCategory, string> = {
+  ALLOCATION_POLICY:
+    "The standing rule for how value is divided, decided before anyone asks for a share of it.",
+  TREASURY_SPEND: "Moving funds out of the treasury for a named purpose.",
+  OPERATIONS:
+    "The ordinary running of the organization — the decisions that have to be cheap to make.",
+  AID_DISBURSEMENT: "Money reaching a person.",
+  MEMBERSHIP: "Who joins the roster, and who leaves it.",
+  SAFETY: "Anything bearing on the safety of people.",
+  GOVERNANCE_RULES: "The rules themselves — including this table.",
+};

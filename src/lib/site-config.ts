@@ -30,7 +30,44 @@ export const NAV_ITEMS: NavSection[] = [
   },
   {
     title: "Governance",
-    description: "Voting and the public record",
+    description:
+      "The art and science of it — how groups decide, and what changes when they decide differently",
+    children: [
+      {
+        title: "The art and science of governance",
+        href: "/governance",
+        description: "The four questions every organization answers",
+      },
+      {
+        title: "How the question decides the answer",
+        href: "/governance/methods",
+        description: "One room, five ways of counting, four winners",
+      },
+      {
+        title: "Quorum and threshold",
+        href: "/governance/thresholds",
+        description: "How many had to turn up, and how much had to agree",
+      },
+      {
+        title: "Who may vote, and on what",
+        href: "/governance/who-decides",
+        description: "Electorates, categories, and the four humans-only red lines",
+      },
+      {
+        title: "Five ways to be an organization",
+        href: "/governance/profiles",
+        description: "Town, association, co-op, collective, company board",
+      },
+      {
+        title: "How voting works",
+        href: "/governance/voting",
+        description: "Bitcoin-signed votes, verified server-side",
+      },
+    ],
+  },
+  {
+    title: "Participate",
+    description: "Put something on the record",
     children: [
       {
         title: "Proposals",
@@ -44,14 +81,14 @@ export const NAV_ITEMS: NavSection[] = [
       },
       { title: "Become a member", href: "/join", description: "Bind a Bitcoin key and get a vote" },
       {
+        title: "Found an organization",
+        href: "/orgs/new",
+        description: "Sign it into existence with your own key",
+      },
+      {
         title: "Audit Trail",
         href: "/governance/audit",
         description: "The append-only record itself",
-      },
-      {
-        title: "How voting works",
-        href: "/governance/voting",
-        description: "Bitcoin-signed votes, verified server-side",
       },
     ],
   },
@@ -141,6 +178,8 @@ export const FOOTER_SECTIONS: FooterSection[] = [
   {
     title: "Governance",
     links: [
+      { href: "/governance", label: "Art and science" },
+      { href: "/governance/methods", label: "Voting methods" },
       { href: "/governance/voting", label: "Voting" },
       { href: "/governance/audit" },
       { href: "/treasury/bitcoin" },

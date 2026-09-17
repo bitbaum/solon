@@ -135,6 +135,23 @@ when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`
 `/governance/voting`, `/governance/audit`, `/treasury/bitcoin`,
 `/orgs/{slug}` (an organization's roster and record), `/orgs/new` (found one)
 
+**Governance, explained** — the teaching section. Every tally on these pages is
+produced by the same `aggregate()` that counts a real session, so a change to
+how Solon counts changes the lesson rather than leaving it stale:
+
+| Page | What it demonstrates |
+|---|---|
+| `/governance` | The four questions every organization answers; Condorcet's paradox drawn |
+| `/governance/methods` | One room, five ways of counting, two different winners (interactive) |
+| `/governance/thresholds` | Quorum and threshold as two knobs over one vote (interactive) |
+| `/governance/who-decides` | Every category's electorate, threshold and quorum; the humans-only red lines |
+| `/governance/profiles` | The five shipped profiles compared rule by rule |
+
+The worked examples live in `src/lib/governance/worked-example.ts` and supply
+*ballots only* — never a result. `src/lib/__tests__/worked-example.test.ts`
+pins the conclusions the pages state, so a published lesson cannot quietly
+become false.
+
 **Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,
 `/account`
 
