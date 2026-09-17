@@ -68,6 +68,24 @@ was deleted so a fix to the sweep reaches here without being re-ported.
 - `pnpm run design:check` (part of `verify`) enforces this. See
   `docs/development/ui-guidelines.md`.
 
+## What Solon governs
+
+Solon is the **governance plane** of an entity. An entity is anything that can
+hold a wallet and is better for holding one — a test rather than a list, so the
+list is open in principle. The same entity sits on three planes: **OrangeCat**
+is its economy (it can hold, receive and send value), **Solon** its governance
+(its decisions can be put to a signed vote), **Loki** its engineering (it can
+be built and shipped by agents).
+
+Producer, and the only place the list of types lives:
+`orangecat/src/config/entity-registry.ts`, where every type carries
+`wallet: { holds, why }`. Do not restate that list here — three copies of it
+lived in orangecat's own agent-read docs and all three had drifted. See
+`bitbaum/fleet` `AGENTS.md` → Producers.
+
+This is why "who may decide" is not Solon's to invent per surface: an entity
+that can hold value is the thing a vote is about.
+
 ## Notes for agents
 
 - **Never commit secrets.** `.env.example` lists every variable the app reads;
