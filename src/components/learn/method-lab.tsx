@@ -47,15 +47,30 @@ const TABS: Tab[] = [
   { id: "ranked", label: "Ranked", asks: "Put them in your order of preference.", unit: "points" },
 ];
 
-function Rating({ value }: { value: number }) {
+/**
+ * One member's appetite for one option, 0-5.
+ *
+ * When the approval tab is showing, the dots also answer the question that tab
+ * raises — which of these counted as "acceptable"? An option rated below the
+ * floor dims, so the reader can see the approval tally being assembled out of
+ * the same table rather than having to take the bar chart on faith.
+ */
+function Rating({ value, floorApplies }: { value: number; floorApplies: boolean }) {
+  const approved = value >= APPROVAL_FLOOR;
+  const filled = floorApplies && !approved ? "bg-border-strong" : "bg-accent";
   return (
-    <span className="inline-flex gap-0.5" aria-label={`${value} out of 5`}>
+    <span
+      className="inline-flex gap-0.5"
+      aria-label={
+        floorApplies
+          ? `${value} out of 5 — ${approved ? "approved" : "not approved"}`
+          : `${value} out of 5`
+      }
+    >
       {[1, 2, 3, 4, 5].map((n) => (
         <span
           key={n}
-          className={`h-2.5 w-2.5 rounded-pill ${
-            n <= value ? "bg-accent" : "bg-surface-overlay"
-          } ${n <= value && n >= APPROVAL_FLOOR ? "" : ""}`}
+          className={`h-2.5 w-2.5 rounded-pill ${n <= value ? filled : "bg-surface-overlay"}`}
           aria-hidden
         />
       ))}
@@ -113,7 +128,7 @@ export function MethodLab() {
                 </th>
                 {FUND_OPTIONS.map((o) => (
                   <td key={o.key} className="px-3 py-4">
-                    <Rating value={camp.ratings[o.key] ?? 0} />
+                    <Rating value={camp.ratings[o.key] ?? 0} floorApplies={tab === "approval"} />
                   </td>
                 ))}
               </tr>
@@ -148,6 +163,12 @@ export function MethodLab() {
         </div>
         <p className="mt-4 text-sm text-fg-secondary">
           <span className="text-fg-muted">The ballot asks:</span> {active.asks}
+          {tab === "approval" && (
+            <span className="text-fg-muted">
+              {" "}
+              Anything rated {APPROVAL_FLOOR} or more counts as acceptable; the rest dim above.
+            </span>
+          )}
         </p>
       </div>
 
