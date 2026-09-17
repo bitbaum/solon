@@ -110,7 +110,8 @@ describe.runIf(RUN)("founding seat", () => {
 
     const again = await registerMember(first.input);
     expect(again.registered).toBe(false);
-    expect(again.reason).toMatch(/already linked|already registered|founding seat is taken/);
+    // Seats are per organization now, so the refusal names this organization's roster.
+    expect(again.reason).toMatch(/already holds a seat|already registered|founding seat is taken/);
 
     const count = await db.$count(members, eq(members.bitcoinAddress, first.pair.address));
     expect(count).toBe(1);

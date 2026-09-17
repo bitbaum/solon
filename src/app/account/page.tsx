@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { auth, signIn, signOut, authEnabled } from "@/lib/auth";
-import { memberForActor } from "@/lib/auth/recognition";
+import { membershipsForActor } from "@/lib/auth/recognition";
 
 export const metadata = { title: "Account — Solon" };
 export const dynamic = "force-dynamic";
 
 /**
  * The one personal page. It answers exactly two questions — who does
- * OrangeCat say you are, and are you a voting member — and is honest about
- * the boundary between them: membership is granted by a vote (or the
- * documented operator bootstrap), never by signing up.
+ * OrangeCat say you are, and where do you hold a seat — and is honest about
+ * the boundary between them: a seat comes from proof (the founding seat, or
+ * founding your own organization) or from a vote, never from signing up.
  */
 export default async function AccountPage() {
   const session = await auth();
@@ -50,7 +50,7 @@ export default async function AccountPage() {
     );
   }
 
-  const member = await memberForActor(session.actorId);
+  const memberships = await membershipsForActor(session.actorId);
 
   return (
     <main className="max-w-xl mx-auto py-16">
@@ -80,38 +80,57 @@ export default async function AccountPage() {
         <h2 className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-4">
           Governance membership
         </h2>
-        {member ? (
-          <dl className="space-y-2 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-fg-secondary">Member</dt>
-              <dd className="text-fg-primary font-medium">{member.displayName}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-fg-secondary">Organization</dt>
-              <dd className="text-fg-primary">{member.organization.name}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-fg-secondary">Voting weight</dt>
-              <dd className="text-fg-primary">{member.votingWeight.toString()}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-fg-secondary">Bitcoin address</dt>
-              <dd className="text-fg-primary font-mono text-xs break-all">
-                {member.bitcoinAddress}
-              </dd>
-            </div>
-          </dl>
+        {memberships.length > 0 ? (
+          <ul className="space-y-6">
+            {memberships.map((member) => (
+              <li key={member.id}>
+                <dl className="space-y-2 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-fg-secondary">Organization</dt>
+                    <dd>
+                      <Link
+                        href={`/orgs/${member.organization.slug}`}
+                        className="text-fg-primary font-medium underline"
+                      >
+                        {member.organization.name}
+                      </Link>
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-fg-secondary">Member</dt>
+                    <dd className="text-fg-primary">{member.displayName}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-fg-secondary">Voting weight</dt>
+                    <dd className="text-fg-primary">{member.votingWeight.toString()}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-fg-secondary">Bitcoin address</dt>
+                    <dd className="text-fg-primary font-mono text-xs break-all">
+                      {member.bitcoinAddress}
+                    </dd>
+                  </div>
+                </dl>
+              </li>
+            ))}
+          </ul>
         ) : (
           <>
             <p className="text-sm leading-relaxed text-fg-secondary">
-              You are recognized but not on the roster, so you can read everything and vote on
-              nothing. Membership needs one more thing: a Bitcoin key you can sign with.
+              You are recognized but not on a roster, so you can read everything and vote on
+              nothing. A seat needs one more thing: a Bitcoin key you can sign with.
             </p>
             <Link href="/join" className="btn-primary mt-5 inline-flex">
               Become a member
             </Link>
           </>
         )}
+        <Link
+          href="/orgs/new"
+          className="mt-5 block text-sm text-fg-secondary transition-colors hover:text-fg-primary"
+        >
+          Found an organization →
+        </Link>
       </section>
 
       <div className="flex items-center gap-4">

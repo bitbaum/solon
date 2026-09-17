@@ -72,17 +72,19 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
     };
   }
 
-  // One actor is at most one member, and one address is at most one member.
-  // Both are checked before the genesis race so a double-submit is a no-op
-  // rather than a second founding seat.
+  // One actor holds at most one seat in an organization, and one address is at
+  // most one member of it. Both are checked before the genesis race so a
+  // double-submit is a no-op rather than a second founding seat. The actor
+  // check is per organization, not global: the same person may sit on the
+  // rosters of several organizations, one seat each.
   const existingByActor = await db.query.members.findFirst({
-    where: eq(members.ocActorId, input.actorId),
+    where: and(eq(members.organizationId, org.id), eq(members.ocActorId, input.actorId)),
   });
   if (existingByActor) {
     return {
       registered: false,
       verified: true,
-      reason: "this OrangeCat account is already linked to a member",
+      reason: "this OrangeCat account already holds a seat in this organization",
       memberId: existingByActor.id,
     };
   }
@@ -112,8 +114,8 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
 
   // The count and the insert must be one atomic step: two people submitting at
   // the same instant would otherwise both read zero and both be seated.
-  // `bitcoinAddress` is unique per org and `ocActorId` globally, so the second
-  // writer of an identical pair fails; the count is re-read inside the
+  // `bitcoinAddress` and `ocActorId` are each unique per organization, so the
+  // second writer of an identical pair fails; the count is re-read inside the
   // transaction to close the distinct-pair race the constraints cannot catch.
   try {
     const member = await db.transaction(async (tx) => {

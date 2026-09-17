@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function ProposePage() {
   const org = await primaryOrg();
   const session = await auth();
-  const member = session?.actorId ? await memberForActor(session.actorId) : null;
+  const member = session?.actorId && org ? await memberForActor(session.actorId, org.id) : null;
 
   if (!org) {
     return (

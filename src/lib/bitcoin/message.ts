@@ -243,3 +243,24 @@ export function registrationMessage(params: {
 }): string {
   return `Solon membership\norg:${params.orgSlug}\nactor:${params.actorId}\naddress:${params.memberAddress}`;
 }
+
+/**
+ * Canonical message a founder signs to create an organization.
+ *
+ * Its first line differs from every other signed message on purpose, so a
+ * membership or vote signature can never be replayed as a founding. The actor
+ * id is inside it for the same reason as in registrationMessage: the signature
+ * binds this key to this OrangeCat identity. When Loki vouched that the founder
+ * owns a project, the project is inside it too — so the audit trail itself
+ * proves the founder's key attested which product the organization governs.
+ */
+export function organizationMessage(params: {
+  slug: string;
+  name: string;
+  actorId: string;
+  founderAddress: string;
+  project?: string | null;
+}): string {
+  const base = `Solon organization\norg:${params.slug}\nname:${params.name}\nactor:${params.actorId}\naddress:${params.founderAddress}`;
+  return params.project ? `${base}\nproject:${params.project}` : base;
+}

@@ -6,6 +6,7 @@ import { memberForActor } from "@/lib/auth/recognition";
 import { db } from "@/lib/db/client";
 import { organizations, proposals, votes, votingSessions } from "@/lib/db/schema";
 import { genesisOpen } from "@/lib/domain/membership";
+import { orgBySlug } from "@/lib/domain/org";
 
 interface NextStep {
   headline: string;
@@ -34,7 +35,11 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     };
   }
 
-  const member = await memberForActor(session.actorId);
+  // The seat is looked up on THIS organization's roster. A seat elsewhere is
+  // not a vote here, and treating it as one would offer a ballot the vote
+  // spine refuses.
+  const org = await orgBySlug(orgSlug);
+  const member = org ? await memberForActor(session.actorId, org.id) : null;
 
   if (!member) {
     const open = await genesisOpen(orgSlug);
