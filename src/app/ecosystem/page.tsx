@@ -8,20 +8,10 @@ import {
 } from "@/lib/db/schema";
 import { primaryOrg } from "@/lib/domain/org";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
-import { CATEGORY_ELECTORATE } from "@/lib/config/governance";
+import { CATEGORY_ELECTORATE, CATEGORY_LABEL } from "@/lib/config/governance";
 import { Electorate, type DecisionCategory } from "@/lib/db/enums";
 
 export const dynamic = "force-dynamic";
-
-const CATEGORY_LABEL: Record<DecisionCategory, string> = {
-  ALLOCATION_POLICY: "Allocation policy",
-  TREASURY_SPEND: "Treasury spend",
-  OPERATIONS: "Operations",
-  AID_DISBURSEMENT: "Aid disbursement",
-  MEMBERSHIP: "Membership",
-  SAFETY: "Safety",
-  GOVERNANCE_RULES: "Governance rules",
-};
 
 /**
  * The three-pillar page: what Solon governs, for whom, and the live proof.
