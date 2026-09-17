@@ -82,9 +82,23 @@ export const organizations = pgTable(
      * GOVERNANCE_RULES decision.
      */
     governanceProfile: text("governance_profile").notNull().default("TOWN"),
+    /**
+     * The Loki project this organization governs, when Loki vouched for it.
+     *
+     * Set only from a grant Loki signed for the founder's own OrangeCat
+     * identity (src/lib/loki-grant.ts) — never from a typed field — so a
+     * register can attribute an organization to a project by consent rather
+     * than by a name coincidence. Anyone may found an organization called
+     * `heidi`; only the owner of the heidi project can make it heidi's.
+     * At most one organization governs a given project.
+     */
+    claimedProject: text("claimed_project"),
     createdAt: timestamp("created_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
-  (t) => [uniqueIndex("organizations_slug_key").on(t.slug)],
+  (t) => [
+    uniqueIndex("organizations_slug_key").on(t.slug),
+    uniqueIndex("organizations_claimed_project_key").on(t.claimedProject),
+  ],
 );
 
 export const members = pgTable(
@@ -111,7 +125,12 @@ export const members = pgTable(
     joinedAt: timestamp("joined_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex("members_oc_actor_id_key").on(t.ocActorId),
+    // One seat per identity PER ORGANIZATION. This was a global unique index
+    // until 2026-09-15, which meant an OrangeCat identity could sit on exactly
+    // one roster, ever — so a builder who founded a second organization could
+    // not be its founding member. Per-organization keeps the property that
+    // mattered (nobody holds two votes in the same electorate) without that.
+    uniqueIndex("members_organization_id_oc_actor_id_key").on(t.organizationId, t.ocActorId),
     uniqueIndex("members_organization_id_bitcoin_address_key").on(
       t.organizationId,
       t.bitcoinAddress,

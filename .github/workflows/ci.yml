@@ -112,5 +112,9 @@ jobs:
       - name: Migration replay (baseline + seed on a fresh database)
         run: pnpm exec drizzle-kit migrate
 
-      - name: Vote spine integration spec
-        run: INTEGRATION=1 pnpm exec vitest run src/lib/domain/__tests__/vote-spine.integration.test.ts
+      # Every *.integration.test.ts, matched by name — not a hand-kept list.
+      # This step used to name the vote-spine spec alone, so the membership
+      # spec that guards the founding seat existed and was never once run by
+      # CI. A list of files is how the next spec is born dead.
+      - name: Database integration specs
+        run: INTEGRATION=1 pnpm exec vitest run .integration.test.ts

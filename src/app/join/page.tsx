@@ -64,7 +64,7 @@ export default async function JoinPage() {
     );
   }
 
-  const member = await memberForActor(session.actorId);
+  const member = await memberForActor(session.actorId, org.id);
   if (member) {
     return (
       <Shell title="You are a member">

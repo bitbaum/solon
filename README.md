@@ -95,14 +95,26 @@ Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
 ```
 
 Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
-`decision`, `treasury`, `membership`, `org`, `canonical`) and stays free of
-HTTP and UI concerns.
+`decision`, `treasury`, `membership`, `organization`, `org`, `canonical`) and
+stays free of HTTP and UI concerns.
 Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
+
+**Identity is one seat per organization.** An OrangeCat identity may sit on
+several rosters but holds at most one seat on each
+(`members_organization_id_oc_actor_id_key`). **Founding is permissionless;
+everything after it is voted.** Any recognized identity with a Bitcoin key may
+found an organization, and the organization, the founder's seat and both audit
+events land in one transaction (`src/lib/domain/organization.ts`). An
+organization is recorded as governing a Loki project (`claimed_project`) only
+when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`)
+— never because the names happen to match.
 
 ## API
 
 | Method | Route | Purpose |
 |---|---|---|
+| `GET` | `/api/orgs` | Every organization, and the Loki project each governs by consent |
+| `POST` | `/api/orgs` | Found an organization (OrangeCat session + Bitcoin signature) |
 | `GET` | `/api/orgs/{slug}` | Organization and its members |
 | `GET` | `/api/orgs/{slug}/audit` | Append-only audit trail |
 | `GET` | `/api/orgs/{slug}/policies/{key}` | Current policy version |
@@ -120,7 +132,8 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
 **Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
 `/ecosystem` (the live governed state), `/join`, `/propose`, `/proposals`,
-`/governance/voting`, `/governance/audit`, `/treasury/bitcoin`
+`/governance/voting`, `/governance/audit`, `/treasury/bitcoin`,
+`/orgs/{slug}` (an organization's roster and record), `/orgs/new` (found one)
 
 **Authenticated:** `/dashboard`, `/dashboard/treasury`, `/dashboard/voting`,
 `/account`
