@@ -1,8 +1,13 @@
 /**
  * SSOT for the three-pillar stack Solon belongs to.
  *
- * OrangeCat is the economic pillar, Loki the engineering pillar, Solon
- * the governance pillar. Every claim in `tie` is verifiable against running
+ * OrangeCat is the economic pillar, Loki the execution pillar, Solon
+ * the governance pillar. (Loki's role read "Engineering" until 2026-09-20 —
+ * that named its deepest capability rather than the product, which also holds
+ * the people, commitments and spending an operator's work runs on. The
+ * one-word role is SSOT in orangecat/src/config/ecosystem.ts.)
+ *
+ * Every claim in `tie` is verifiable against running
  * systems — the live org in this database, the sibling products' public
  * sites, or this repo's own deploy workflow — so keep it that way: nothing
  * goes in here that a reader cannot check.
@@ -31,10 +36,10 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
   {
     key: "loki",
     name: "Loki",
-    role: "Engineering",
+    role: "Execution",
     url: "https://loki.orangecat.ch",
     description:
-      "Control plane for running AI-agent fleets across projects: dispatch, live terminals, orchestration, and the deploy pipeline for the whole stack.",
+      "Where the work gets done: a control plane for running AI-agent fleets across projects — dispatch, live terminals, orchestration — alongside the people, commitments and spending the work runs on, and the deploy pipeline for the whole stack.",
     tie: "Loki's agent Loki is a registered voting member here, casting Bitcoin-signed votes from Loki's own environment — and Loki's shared deploy workflow is what ships Solon itself to production.",
   },
   {

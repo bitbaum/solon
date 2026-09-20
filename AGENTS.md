@@ -74,8 +74,15 @@ Solon is the **governance plane** of an entity. An entity is anything that can
 hold a wallet and is better for holding one — a test rather than a list, so the
 list is open in principle. The same entity sits on three planes: **OrangeCat**
 is its economy (it can hold, receive and send value), **Solon** its governance
-(its decisions can be put to a signed vote), **Loki** its engineering (it can
-be built and shipped by agents).
+(its decisions can be put to a signed vote), **Loki** its execution (it can be
+worked on, built and shipped).
+
+Loki's plane was called "engineering" until 2026-09-20. The rename matters here
+because the old word made two thirds of that product look misplaced: Loki also
+holds the people an operator works with, what they owe and what they spend, and
+no other product has a surface for those. What separates the three planes is
+AUDIENCE — OrangeCat is public by design, Loki private by default, Solon shared
+with its members — not subject matter.
 
 Producer, and the only place the list of types lives:
 `orangecat/src/config/entity-registry.ts`, where every type carries
