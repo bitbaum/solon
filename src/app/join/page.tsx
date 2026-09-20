@@ -4,16 +4,27 @@ import { memberForActor } from "@/lib/auth/recognition";
 import { genesisOpen } from "@/lib/domain/membership";
 import { primaryOrg } from "@/lib/domain/org";
 import ClaimSeat from "@/components/governance/claim-seat";
+import { isSafePath, type Query } from "@/lib/domain/proposal-draft";
 
 export const metadata = { title: "Join — Solon" };
 export const dynamic = "force-dynamic";
+
+const one = (v: string | string[] | undefined): string => (Array.isArray(v) ? v[0] : v) ?? "";
 
 /**
  * Every branch of this page ends in something the visitor can do right now:
  * sign in, claim the seat, cast a vote, or read the roster. "Nothing to do
  * here" is not one of the states.
+ *
+ * `?next=` is where the visitor was going when membership got in the way — a
+ * pre-filled proposal, usually. It rides through sign-in and the seat claim
+ * (ClaimSeat reloads this URL, so it survives), and once they are a member it
+ * is the first thing offered. Same-origin paths only.
  */
-export default async function JoinPage() {
+export default async function JoinPage({ searchParams }: { searchParams: Promise<Query> }) {
+  const q = await searchParams;
+  const next = isSafePath(one(q.next)) ? one(q.next) : null;
+  const here = next ? `/join?next=${encodeURIComponent(next)}` : "/join";
   const org = await primaryOrg();
   if (!org) {
     return (
@@ -45,7 +56,7 @@ export default async function JoinPage() {
               <form
                 action={async () => {
                   "use server";
-                  await signIn("orangecat", { redirectTo: "/join" });
+                  await signIn("orangecat", { redirectTo: here });
                 }}
               >
                 <button type="submit" className="btn-primary">
@@ -76,10 +87,21 @@ export default async function JoinPage() {
             <Row label="Address" value={member.bitcoinAddress} mono />
           </dl>
           <Actions>
-            <Link href="/dashboard/voting" className="btn-primary">
-              Go to the current vote
-            </Link>
-            <Secondary href="/propose">File a proposal →</Secondary>
+            {next ? (
+              <>
+                <Link href={next} className="btn-primary">
+                  Continue where you left off
+                </Link>
+                <Secondary href="/dashboard/voting">Or go to the current vote →</Secondary>
+              </>
+            ) : (
+              <>
+                <Link href="/dashboard/voting" className="btn-primary">
+                  Go to the current vote
+                </Link>
+                <Secondary href="/propose">File a proposal →</Secondary>
+              </>
+            )}
           </Actions>
         </Card>
       </Shell>

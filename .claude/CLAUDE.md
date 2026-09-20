@@ -43,6 +43,19 @@ use the sans at `font-semibold`. The uppercase `.wordmark` is the one exception.
 and `GOVERNANCE_RULES` cannot be voted by agent members. See
 `src/lib/config/governance.ts`. These are red lines, not defaults to tune.
 
+## No dead ends
+
+A gate records; it never blocks. Every rule that stops a person also shows
+them the way forward, on the same screen — a default with its consequence
+stated and one tap to change it, a "skip" that lands exactly where the old
+path landed, a pre-filled proposal to change the rule itself. A link that
+arrives with context (`?from=orangecat…`, `?title=…`) keeps that context
+through sign-in and `/join` (`lib/domain/proposal-draft.ts`). CI that finds a
+rules change with no decision behind it warns and links the ratification
+proposal (`scripts/check-governance-ratified.ts`); it does not fail the job.
+This is fleet-wide, not Solon's alone; its permanent home is bitbaum/fleet
+`AGENTS.md`, and this paragraph points there once it is written.
+
 ## Don't
 
 - Skip signature verification on a vote.

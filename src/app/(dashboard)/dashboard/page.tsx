@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import NextAction from "@/components/dashboard/next-action";
 import { desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db/client";
@@ -7,15 +8,29 @@ import { primaryOrg } from "@/lib/domain/org";
 import { sessionAggregate } from "@/lib/domain/voting";
 import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import { treasuryReport } from "@/lib/domain/treasury";
+import { rawQueryString, type Query } from "@/lib/domain/proposal-draft";
 
 export const dynamic = "force-dynamic";
+
+const one = (v: string | string[] | undefined): string => (Array.isArray(v) ? v[0] : v) ?? "";
 
 /**
  * The overview is a real summary: latest voting session with its tally,
  * treasury standing, and the most recent audit events — each linking to
  * its full view. Every number is read live; empty states say so.
  */
-export default async function DashboardOverview() {
+export default async function DashboardOverview({
+  searchParams,
+}: {
+  searchParams: Promise<Query>;
+}) {
+  // OrangeCat's "Govern it with Solon" button pointed here for months with the
+  // entity in the query, and this page never read it. The button now targets
+  // /propose directly; this keeps the links already in the wild from landing
+  // on a dashboard that has forgotten what they were about.
+  const q = await searchParams;
+  if (one(q.from) === "orangecat") redirect(`/propose?${rawQueryString(q)}`);
+
   let org = null;
   let session: {
     id: string;
