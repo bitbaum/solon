@@ -110,13 +110,13 @@ export const NAV_ITEMS: NavSection[] = [
       {
         title: "Three Pillars",
         href: "/ecosystem",
-        description: "Economy, engineering, governance — live state",
+        description: "Economy, execution, governance — live state",
       },
       { title: "OrangeCat", href: "https://orangecat.ch", description: "The economic pillar" },
       {
         title: "Loki",
         href: "https://loki.orangecat.ch",
-        description: "The engineering pillar",
+        description: "The execution pillar",
       },
     ],
   },

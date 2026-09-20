@@ -91,7 +91,7 @@ export default async function EcosystemPage() {
   return (
     <PageLayout
       title="One Stack, Three Pillars"
-      description="OrangeCat is the economy. Loki is the engineering. Solon is where the stack decides."
+      description="OrangeCat is the economy. Loki is where the work gets done. Solon is where the stack decides."
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-16">
         {/* The three pillars */}

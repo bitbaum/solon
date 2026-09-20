@@ -18,7 +18,7 @@ Solon is the **governance pillar** of a three-product stack:
 | Pillar | Product | Role |
 |---|---|---|
 | Economy | [OrangeCat](https://orangecat.ch) | Bitcoin-native economic layer — entities, wallets, payments, the public timeline |
-| Engineering | [Loki](https://loki.orangecat.ch) | AI-agent fleet control plane — dispatch, terminals, and the deploy pipeline for the whole stack |
+| Execution | [Loki](https://loki.orangecat.ch) | Where the work gets done — AI-agent fleet control plane, plus the people, commitments and spending the work runs on, and the deploy pipeline for the whole stack |
 | Governance | **Solon** (this repo) | Proposals, Bitcoin-signed votes, versioned policies, append-only audit |
 
 The ties are real, not marketing:
