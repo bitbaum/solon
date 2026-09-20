@@ -6,6 +6,13 @@ import { proposalMessage } from "@/lib/bitcoin/message";
 import { canonicalJson, sha256Hex } from "@/lib/domain/canonical";
 import { ALL_METHODS, methodSpec } from "@/lib/domain/methods";
 import { optionsSchema } from "@/lib/domain/methods/types";
+import { CATEGORY_LABEL } from "@/lib/config/governance";
+import {
+  DEFAULT_CATEGORY,
+  FILEABLE_CATEGORIES,
+  categoryConsequence,
+  type ProposalDraft,
+} from "@/lib/domain/proposal-draft";
 import MethodPicker from "./method-picker";
 import SignatureStep from "./signature-step";
 
@@ -16,41 +23,32 @@ interface Verdict {
   proposalId?: string;
 }
 
-/**
- * Categories a member can file from the UI. Policy changes are deliberately
- * absent: they must carry an exact JSON body whose sha256 is bound into the
- * signature, and a free-text box would invite signing content that does not
- * parse. Those go through the API, where the content is explicit.
- */
-const CATEGORIES = [
-  { value: "OPERATIONS", label: "Operations", hint: "Day-to-day decisions. All members vote." },
-  {
-    value: "MEMBERSHIP",
-    label: "Membership",
-    hint: "Admit or remove a member. Humans only, supermajority.",
-  },
-  { value: "SAFETY", label: "Safety", hint: "Red lines and limits. Humans only, supermajority." },
-  { value: "TREASURY_SPEND", label: "Treasury spend", hint: "Move funds. All members vote." },
-  { value: "AID_DISBURSEMENT", label: "Aid disbursement", hint: "Money to people. Humans only." },
-  {
-    value: "GOVERNANCE_RULES",
-    label: "Governance rules",
-    hint: "Change the rules themselves. Humans only.",
-  },
-] as const;
+// Which categories can be filed here, and what each one commits the proposer
+// to, both come from the rules themselves (lib/domain/proposal-draft reads
+// lib/config/governance). This file used to carry its own copy of the hints —
+// "Humans only, supermajority" — which is a sentence that must never drift from
+// the table it describes, because a member reads it right before signing.
+const CATEGORIES = FILEABLE_CATEGORIES.map((value) => ({
+  value,
+  label: CATEGORY_LABEL[value],
+  hint: categoryConsequence(value),
+}));
 
 export default function FileProposal({
   orgSlug,
   memberAddress,
+  initial = null,
 }: {
   orgSlug: string;
   memberAddress: string;
+  /** Pre-filled from a link (OrangeCat, a ratification link). Everything stays editable. */
+  initial?: ProposalDraft | null;
 }) {
-  const [category, setCategory] = useState<string>("OPERATIONS");
+  const [category, setCategory] = useState<string>(initial?.category ?? DEFAULT_CATEGORY);
   const [method, setMethod] = useState<string>("");
   const [optionText, setOptionText] = useState("");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [body, setBody] = useState(initial?.body ?? "");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
@@ -149,6 +147,20 @@ export default function FileProposal({
 
   return (
     <div className="space-y-5 rounded-surface border border-default bg-surface-base p-6">
+      {initial?.origin && (
+        <p className="text-sm text-fg-secondary">
+          Pre-filled from{" "}
+          <a
+            href={initial.origin.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-fg-primary underline underline-offset-2"
+          >
+            your {initial.origin.entityType} on OrangeCat
+          </a>
+          . Change anything before you sign.
+        </p>
+      )}
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="p-category">
           Category

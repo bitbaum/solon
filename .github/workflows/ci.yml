@@ -70,6 +70,26 @@ jobs:
       - name: Verify
         run: pnpm run verify
 
+      # Did this PR change the constitution, and was that decided? governance.ts
+      # says of itself that changing it IS a GOVERNANCE_RULES matter; this is the
+      # check behind the sentence. It records — a warning in the PR with a
+      # pre-filled ratification proposal — and never blocks: a rules change
+      # without a decision is a fact the record must show, not a build failure.
+      # See scripts/check-governance-ratified.ts. Needs the PR's history, hence
+      # the second, full-depth fetch only on pull requests.
+      - name: Fetch PR history for the governance check
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags --depth=200 origin ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+
+      - name: Governance rules ratified?
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: pnpm exec tsx scripts/check-governance-ratified.ts
+
       # Build gate — hermetic (DB calls fall back without a live database, see header).
       - name: Build
         run: pnpm run build

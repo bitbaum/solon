@@ -3,11 +3,23 @@ import { auth, signIn, authEnabled } from "@/lib/auth";
 import { memberForActor } from "@/lib/auth/recognition";
 import { primaryOrg } from "@/lib/domain/org";
 import FileProposal from "@/components/governance/file-proposal";
+import { draftFromQuery, rawQueryString, type Query } from "@/lib/domain/proposal-draft";
 
 export const metadata = { title: "File a proposal — Solon" };
 export const dynamic = "force-dynamic";
 
-export default async function ProposePage() {
+/**
+ * Reachable directly, and pre-filled from a link: OrangeCat's "Govern it with
+ * Solon" button, a ratification link, a Loki page. Whatever the link carried
+ * must still be here after the sign-in round trip and after /join — a person
+ * who pressed a button about a specific thing must never arrive at a blank
+ * form that has forgotten it.
+ */
+export default async function ProposePage({ searchParams }: { searchParams: Promise<Query> }) {
+  const q = await searchParams;
+  const draft = draftFromQuery(q);
+  const query = rawQueryString(q);
+  const here = query ? `/propose?${query}` : "/propose";
   const org = await primaryOrg();
   const session = await auth();
   const member = session?.actorId && org ? await memberForActor(session.actorId, org.id) : null;
@@ -31,14 +43,14 @@ export default async function ProposePage() {
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {session?.actorId || !authEnabled ? (
-            <Link href="/join" className="btn-primary">
+            <Link href={`/join?next=${encodeURIComponent(here)}`} className="btn-primary">
               Become a member
             </Link>
           ) : (
             <form
               action={async () => {
                 "use server";
-                await signIn("orangecat", { redirectTo: "/propose" });
+                await signIn("orangecat", { redirectTo: here });
               }}
             >
               <button type="submit" className="btn-primary">
@@ -64,7 +76,7 @@ export default async function ProposePage() {
         Filing puts it on the record as a draft. Opening it starts the clock and freezes the rules.
       </p>
       <div className="mx-auto mt-12 max-w-2xl">
-        <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} />
+        <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} initial={draft} />
       </div>
     </main>
   );
