@@ -43,9 +43,15 @@ jobs:
 
       - uses: pnpm/action-setup@v6
 
+      # Node version comes from .nvmrc, never from a literal here. The deploy
+      # (bitbaum/loki selfhost-deploy.yml) reads the same file and only falls
+      # back to its own input when a repo commits none — which is how a repo
+      # ends up verified on one Node major and built on another. npm/pnpm
+      # majors disagree about optional platform deps, so that split shows up
+      # as a lockfile "out of sync" failure at deploy time, after the merge.
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: pnpm
 
       # Next keeps its compiler output in .next/cache. Without restoring it this
@@ -121,9 +127,10 @@ jobs:
 
       - uses: pnpm/action-setup@v6
 
+      # .nvmrc, as in `verify` above — one declaration for both jobs.
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: pnpm
 
       - name: Install
