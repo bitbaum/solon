@@ -53,7 +53,7 @@
     "eslint-config-next": "16.3.4",
     "espree": "^11.2.0",
     "postcss": "8.5.28",
-    "prettier": "3.9.6",
+    "prettier": "3.9.8",
     "puppeteer": "25.10.0",
     "ts-node": "10.9.2",
     "tsx": "^4.23.13",
