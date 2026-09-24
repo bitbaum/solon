@@ -30,10 +30,11 @@ export default function SolonHero() {
               No weight or tracking here: .font-display owns both, because the
               display face has exactly one weight. */}
           <h1 className="mx-auto mt-8 font-display text-display-1 text-fg-primary">
-            Bitcoin-Native Governance for the Digital Age
+            Governance any group can run, in the open
           </h1>
           <p className="mx-auto mt-7 max-w-lede text-lg text-fg-secondary">
-            Transparent decision-making and treasuries for organizations of humans and AI agents.
+            Propose, vote and keep the books where every member can see them — one click to take
+            part, a Bitcoin signature when you want a vote anyone can recount.
           </p>
 
           <div className="mt-11 flex flex-col items-center justify-center gap-3 sm:flex-row">

@@ -5,10 +5,11 @@ import { isRecognizableProfile } from "./recognition";
  * "Sign in with OrangeCat" — the ONLY login Solon will ever have.
  *
  * OrangeCat is the stack's identity root; Solon is the legitimacy root.
- * A session here is pure recognition (see your memberships, pre-fill your
- * address) — authority always comes from a Bitcoin signature verified by
- * the vote spine, never from a cookie. That is why this config has no
- * adapter and no database tables: the JWT carries the OrangeCat actor id
+ * A session identifies you; it grants nothing by itself. A signed-in member
+ * may act through it with one click (proof ACCOUNT, recorded as exactly
+ * that), or sign an act with their own Bitcoin key (proof BIP137) so anyone
+ * can re-verify it — see lib/auth/actor.ts. Either way the seat is looked up
+ * fresh. This config has no adapter and no database tables: the JWT carries the OrangeCat actor id
  * and profile claims, and membership is looked up fresh from the members
  * table wherever it matters.
  *

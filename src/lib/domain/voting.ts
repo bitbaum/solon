@@ -30,12 +30,13 @@ import {
 import { methodEnum, methodId } from "@/lib/domain/methods/db-enum";
 import { optionsSchema, type Aggregate, type BallotOption } from "@/lib/domain/methods/types";
 import { closeRefusal, decideOutcome, tallyOf, type Tally } from "@/lib/domain/tally";
+import { proofOf, voterRef, type Actor } from "@/lib/domain/proof";
 
 export interface SubmitVoteInput {
-  address: string;
+  /** Who is voting and how they prove it — see lib/domain/proof. */
+  by: Actor;
   /** The ballot in the shape this session's method admits. */
   ballot: unknown;
-  signature: string;
 }
 
 export interface SubmitVoteResult {
@@ -156,14 +157,16 @@ export async function openSession(proposalId: string) {
 }
 
 /**
- * Cast a vote. The Bitcoin signature is the authorization: the voter is
- * resolved by the address the signature recovers to — never by any claim the
- * caller makes.
+ * Cast a vote, or change one: until the session closes, a member's latest
+ * ballot is the one that counts.
  *
- * The signature covers the ballot's canonical encoding, not merely the fact
- * that a ballot was cast. That is the property that lets a dot allocation or a
- * ranking be trusted end to end: change one number in transit and the message
- * no longer matches the signature.
+ * Two ways to prove the vote is yours, resolved to a seat without trusting any
+ * claim the caller makes:
+ * - key: a Bitcoin signature; the voter is whoever the signature recovers to.
+ *   It covers the ballot's canonical encoding, not merely the fact that a
+ *   ballot was cast — change one number in transit and it no longer verifies.
+ * - account: the voter is the seat held by the signed-in OrangeCat identity
+ *   (the actor id comes from the server session). Humans only; agents sign.
  */
 export async function submitVote(
   sessionId: string,
@@ -189,21 +192,24 @@ export async function submitVote(
   }
 
   const canonical = canonicalBallot(methodId(session.method), parsed.ballot, params);
-  const message = voteMessage({ sessionId, choice: canonical, memberAddress: input.address });
-  const verification = verifyMessage(message, input.address, input.signature);
-  if (!verification.valid) {
-    return {
-      stored: false,
-      verified: false,
-      reason: verification.reason ?? "signature does not match address",
-      recoveredAddress: verification.recoveredAddress,
-    };
+  const by = input.by;
+  if (by.via === "key") {
+    const signed = voteMessage({ sessionId, choice: canonical, memberAddress: by.address });
+    const verification = verifyMessage(signed, by.address, by.signature);
+    if (!verification.valid) {
+      return {
+        stored: false,
+        verified: false,
+        reason: verification.reason ?? "signature does not match address",
+        recoveredAddress: verification.recoveredAddress,
+      };
+    }
   }
 
   const member = await db.query.members.findFirst({
     where: and(
       eq(members.organizationId, session.proposal.organizationId),
-      eq(members.bitcoinAddress, input.address),
+      by.via === "key" ? eq(members.bitcoinAddress, by.address) : eq(members.ocActorId, by.actorId),
       eq(members.status, MemberStatus.ACTIVE),
     ),
   });
@@ -211,9 +217,18 @@ export async function submitVote(
     return {
       stored: false,
       verified: true,
-      reason: "address is not an active member of this organization",
+      reason:
+        by.via === "key"
+          ? "address is not an active member of this organization"
+          : "you do not hold a seat in this organization",
     };
   }
+  if (by.via === "account" && member.memberType !== MemberType.HUMAN) {
+    return { stored: false, verified: true, reason: "agent members vote with their key" };
+  }
+  const message = voteMessage({ sessionId, choice: canonical, memberAddress: voterRef(member) });
+  const proof = proofOf(by);
+  const signature = by.via === "key" ? by.signature : null;
   if (session.electorate === Electorate.HUMANS_ONLY && member.memberType !== MemberType.HUMAN) {
     return {
       stored: false,
@@ -232,14 +247,19 @@ export async function submitVote(
         ballot: ballotJson,
         weight: member.votingWeight,
         signedMessage: message,
-        signature: input.signature,
+        proof,
+        signature,
       })
+      // A changed vote replaces the earlier ballot entirely — including the
+      // weight, which is re-read at the moment of the change.
       .onConflictDoUpdate({
         target: [votes.sessionId, votes.memberId],
         set: {
           ballot: ballotJson,
+          weight: member.votingWeight,
           signedMessage: message,
-          signature: input.signature,
+          proof,
+          signature,
           createdAt: new Date(),
         },
       })
@@ -255,6 +275,7 @@ export async function submitVote(
         method: session.method,
         memberType: member.memberType,
         weight: Number(member.votingWeight),
+        proof,
       },
     });
     return v;

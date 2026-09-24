@@ -19,7 +19,7 @@
  */
 
 import { verifyMessage } from "@/lib/bitcoin/message";
-import { DecisionCategory, SessionOutcome } from "@/lib/db/enums";
+import { DecisionCategory, Proof, SessionOutcome } from "@/lib/db/enums";
 import type { DecisionDocument } from "@/lib/domain/decision";
 import { proposeHref, TITLE_MAX } from "@/lib/domain/proposal-draft";
 
@@ -70,16 +70,28 @@ export function assessDecision(doc: DecisionDocument): Assessment {
       reason: `decision ${doc.decision_id} was ${doc.outcome}, not approved`,
     };
   }
-  const proposer = verifyMessage(
-    doc.proposal.proposerMessage,
-    doc.proposal.proposer.bitcoinAddress,
-    doc.proposal.proposerSignature,
-  );
-  if (!proposer.valid) {
-    return { ratified: false, reason: `proposer signature does not verify: ${proposer.reason}` };
+  // Every act is recounted UNLESS it is explicitly an ACCOUNT act, which carries
+  // no signature and is Solon's own record. Fail closed: a document that omits
+  // `proof` (an older server, or a stripped field) is checked as signed, never
+  // waved through.
+  const p = doc.proposal;
+  if (p.proof !== Proof.ACCOUNT) {
+    const proposer = verifyMessage(
+      p.proposerMessage ?? "",
+      p.proposer.bitcoinAddress ?? "",
+      p.proposerSignature ?? "",
+    );
+    if (!proposer.valid) {
+      return { ratified: false, reason: `proposer signature does not verify: ${proposer.reason}` };
+    }
   }
   for (const vote of doc.votes) {
-    const v = verifyMessage(vote.signedMessage, vote.member.bitcoinAddress, vote.signature);
+    if (vote.proof === Proof.ACCOUNT) continue;
+    const v = verifyMessage(
+      vote.signedMessage,
+      vote.member.bitcoinAddress ?? "",
+      vote.signature ?? "",
+    );
     if (!v.valid) {
       return {
         ratified: false,

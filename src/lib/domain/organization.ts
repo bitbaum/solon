@@ -26,9 +26,9 @@ import { descriptionProblem, nameProblem, slugProblem } from "./organization-rul
  * developer writing a SQL migration, which does not survive a second builder.
  *
  * What makes it safe to leave open is the thing that makes the founding seat
- * safe in membership.ts: proof instead of permission. The founder signs with a
- * Bitcoin key they control, bound to their OrangeCat identity, and the
- * organization, the founding seat and both audit events are written in ONE
+ * safe in membership.ts: proof instead of permission. The founder is a
+ * recognized OrangeCat identity (optionally also signing with a Bitcoin key),
+ * and the organization, the founding seat and both audit events are written in ONE
  * transaction. There is no instant at which an organization exists with an
  * unclaimed founding seat someone else could take.
  *
@@ -39,8 +39,8 @@ import { descriptionProblem, nameProblem, slugProblem } from "./organization-rul
 /**
  * How many organizations one identity may found.
  *
- * A Bitcoin key costs nothing to generate, so without a ceiling one account
- * could script thousands of founding signatures. This is an abuse floor, not a
+ * Founding costs nothing, so without a ceiling one account could script
+ * thousands of organizations. This is an abuse floor, not a
  * policy about how much a builder should run: high enough that no real person
  * meets it, low enough that a runaway script stops quickly. It is read inside
  * the founding transaction but not serialized against it, so two simultaneous
@@ -56,9 +56,12 @@ export interface CreateOrganizationInput {
   /** OrangeCat actor id from the session — never taken from the request body. */
   actorId: string;
   founderName: string;
-  founderAddress: string;
-  /** Bitcoin signed-message signature over organizationMessage(). */
-  signature: string;
+  /**
+   * Optional: the founder's Bitcoin key, proven by a signature over
+   * organizationMessage(). Without one the founder's seat is held by their
+   * OrangeCat identity alone.
+   */
+  founderKey?: { address: string; signature: string } | null;
   /** Loki vouching that this actor owns a project, when the organization governs one. */
   grant?: LokiGrant | null;
   now?: Date;
@@ -116,21 +119,26 @@ export async function createOrganization(
     claimedProject = verdict.project;
   }
 
-  const message = organizationMessage({
-    slug,
-    name,
-    actorId: input.actorId,
-    founderAddress: input.founderAddress,
-    project: claimedProject,
-  });
-  const verification = verifyMessage(message, input.founderAddress, input.signature);
-  if (!verification.valid) {
-    return {
-      created: false,
-      verified: false,
-      refusal: "bad_signature",
-      reason: verification.reason ?? "signature does not match the address",
-    };
+  const key = input.founderKey ?? null;
+  const message = key
+    ? organizationMessage({
+        slug,
+        name,
+        actorId: input.actorId,
+        founderAddress: key.address,
+        project: claimedProject,
+      })
+    : null;
+  if (key && message) {
+    const verification = verifyMessage(message, key.address, key.signature);
+    if (!verification.valid) {
+      return {
+        created: false,
+        verified: false,
+        refusal: "bad_signature",
+        reason: verification.reason ?? "signature does not match the address",
+      };
+    }
   }
 
   try {
@@ -158,8 +166,8 @@ export async function createOrganization(
           organizationId: org.id,
           displayName: input.founderName.trim(),
           memberType: MemberType.HUMAN,
-          keyCustody: KeyCustody.SELF,
-          bitcoinAddress: input.founderAddress,
+          keyCustody: key ? KeyCustody.SELF : null,
+          bitcoinAddress: key?.address ?? null,
           ocActorId: input.actorId,
           status: MemberStatus.ACTIVE,
         })
@@ -176,10 +184,11 @@ export async function createOrganization(
             slug,
             name,
             claimedProject,
-            founderAddress: founder.bitcoinAddress,
-            signedMessage: message,
-            signature: input.signature,
-            note: "founded on proof, not permission — any recognized identity with a Bitcoin key may found an organization; everything after founding is decided by vote",
+            proof: key ? "BIP137" : "ACCOUNT",
+            ...(key
+              ? { founderAddress: key.address, signedMessage: message, signature: key.signature }
+              : {}),
+            note: "founded on proof, not permission — any recognized OrangeCat identity may found an organization; everything after founding is decided by vote",
           },
         },
         {

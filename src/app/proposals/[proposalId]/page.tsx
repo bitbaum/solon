@@ -8,6 +8,8 @@ import { methodId } from "@/lib/domain/methods/db-enum";
 import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import VotingInterface from "@/components/dashboard/voting-interface";
 import OpenSessionButton from "@/components/governance/open-session-button";
+import { auth } from "@/lib/auth";
+import { viewerFor } from "@/lib/auth/recognition";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +31,7 @@ export default async function ProposalPage({
   if (!proposal) notFound();
 
   const aggregate = proposal.session ? await sessionAggregate(proposal.session.id) : null;
+  const viewer = await viewerFor((await auth())?.actorId, proposal.organizationId);
 
   return (
     <main className="section-shell py-section-tight">
@@ -46,8 +49,13 @@ export default async function ProposalPage({
           </span>
           <h1 className="mt-2 font-display text-display-2 text-fg-primary">{proposal.title}</h1>
           <p className="mt-3 text-sm text-fg-secondary">
-            Filed by {proposal.proposer.displayName} ·{" "}
-            <span className="font-mono text-xs">{proposal.proposer.bitcoinAddress}</span>
+            Filed by {proposal.proposer.displayName}
+            {proposal.proposer.bitcoinAddress && (
+              <>
+                {" · "}
+                <span className="font-mono text-xs">{proposal.proposer.bitcoinAddress}</span>
+              </>
+            )}
           </p>
         </header>
 
@@ -84,6 +92,8 @@ export default async function ProposalPage({
               dotBudget: proposal.session.dotBudget ?? DEFAULT_DOT_BUDGET,
             }}
             aggregate={aggregate}
+            viewer={viewer}
+            here={`/proposals/${proposal.id}`}
           />
         )}
       </div>

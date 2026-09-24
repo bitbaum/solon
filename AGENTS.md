@@ -1,6 +1,6 @@
 # AGENTS.md — Solon
 
-Governance rail for the OrangeCat stack: proposals, Bitcoin-signed votes,
+Governance rail for the OrangeCat stack: proposals, one-click or Bitcoin-signed votes,
 versioned policies, append-only audit. The treasury is **watch-only** — Solon
 stores addresses to observe and never holds keys or funds.
 

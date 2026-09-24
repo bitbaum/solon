@@ -14,7 +14,7 @@ import {
   type ProposalDraft,
 } from "@/lib/domain/proposal-draft";
 import MethodPicker from "./method-picker";
-import SignatureStep from "./signature-step";
+import ActStep from "./act-step";
 
 interface Verdict {
   created: boolean;
@@ -40,7 +40,8 @@ export default function FileProposal({
   initial = null,
 }: {
   orgSlug: string;
-  memberAddress: string;
+  /** The member's Bitcoin address, when they have one to sign with. */
+  memberAddress: string | null;
   /** Pre-filled from a link (OrangeCat, a ratification link). Everything stays editable. */
   initial?: ProposalDraft | null;
 }) {
@@ -78,19 +79,20 @@ export default function FileProposal({
   const optionsReady = !needsOptions || options !== null;
 
   const ready = title.trim().length >= 3 && body.trim().length > 0 && optionsReady;
-  const message = ready
-    ? proposalMessage({
-        orgSlug,
-        category,
-        title: title.trim(),
-        proposerAddress: memberAddress,
-        // Bound in only when there is an answer space, so a yes/no proposal
-        // signs exactly the text it always did.
-        optionsHash: needsOptions && options ? sha256Hex(canonicalJson(options)) : null,
-      })
-    : null;
+  const message =
+    ready && memberAddress
+      ? proposalMessage({
+          orgSlug,
+          category,
+          title: title.trim(),
+          proposerAddress: memberAddress,
+          // Bound in only when there is an answer space, so a yes/no proposal
+          // signs exactly the text it always did.
+          optionsHash: needsOptions && options ? sha256Hex(canonicalJson(options)) : null,
+        })
+      : null;
 
-  async function submit() {
+  async function submit(withKey: boolean) {
     setSubmitting(true);
     setVerdict(null);
     try {
@@ -104,8 +106,7 @@ export default function FileProposal({
           body: body.trim(),
           ...(method ? { method } : {}),
           ...(needsOptions && options ? { options } : {}),
-          proposerAddress: memberAddress,
-          signature,
+          ...(withKey && memberAddress ? { proposerAddress: memberAddress, signature } : {}),
         }),
       });
       setVerdict((await res.json()) as Verdict);
@@ -127,8 +128,8 @@ export default function FileProposal({
       <div className="rounded-surface border border-default bg-surface-base p-6">
         <h2 className="font-display text-display-3 text-fg-primary">Proposal filed</h2>
         <p className="mt-3 text-sm text-fg-secondary">
-          Your signature verified and the proposal is on the record as a draft. Opening it starts
-          the voting window and freezes the rules.
+          The proposal is on the record as a draft. Opening it starts the voting window and freezes
+          the rules.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <Link href={`/proposals/${verdict.proposalId}`} className="btn-primary">
@@ -158,7 +159,7 @@ export default function FileProposal({
           >
             your {initial.origin.entityType} on OrangeCat
           </a>
-          . Change anything before you sign.
+          . Change anything before you file it.
         </p>
       )}
       <div>
@@ -233,23 +234,31 @@ export default function FileProposal({
           placeholder="Why this, and what changes if it passes."
           className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
         />
-        <p className="mt-1.5 text-xs text-fg-tertiary">
-          The title and category are bound into your signature; the rationale is not, so it stays
-          editable context rather than a signed claim.
-        </p>
+        {memberAddress && (
+          <p className="mt-1.5 text-xs text-fg-tertiary">
+            If you sign, the title and category are bound into your signature; the rationale is not,
+            so it stays editable context rather than a signed claim.
+          </p>
+        )}
       </div>
 
-      <SignatureStep
-        message={message}
-        signHint={<>{memberAddress.slice(0, 10)}…</>}
-        signatureId="p-sig"
-        signature={signature}
-        onSignatureChange={setSignature}
+      <ActStep
+        label="File proposal"
+        onAct={() => submit(false)}
         disabled={!ready}
         submitting={submitting}
-        submitLabel="File proposal"
-        onSubmit={submit}
         rejection={verdict && !verdict.created ? (verdict.reason ?? "Proposal rejected.") : null}
+        signing={
+          memberAddress
+            ? {
+                message,
+                hint: <>{memberAddress.slice(0, 10)}…</>,
+                signature,
+                onSignatureChange: setSignature,
+                onSubmitSigned: () => submit(true),
+              }
+            : undefined
+        }
       />
     </div>
   );

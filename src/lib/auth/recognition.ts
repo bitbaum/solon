@@ -3,13 +3,38 @@ import { db } from "@/lib/db/client";
 import { members } from "@/lib/db/schema";
 
 /**
- * Login on Solon is recognition, not authority. A session shows you your
- * memberships and pre-fills your address; every vote and proposal still
- * requires a Bitcoin signature. There are therefore no passwords, no
- * registration, and no auth tables here — the only identity provider is
- * OrangeCat (the stack's identity root), and the only thing a session
- * stores is the OrangeCat actor id.
+ * Login on Solon is recognition: it says who you are, and a seat you hold
+ * lets you act with one click (see lib/auth/actor.ts). There are no
+ * passwords, no registration, and no auth tables here — the only identity
+ * provider is OrangeCat (the stack's identity root), and the only thing a
+ * session stores is the OrangeCat actor id.
  */
+
+/** What a page needs to know about whoever is looking at it, for one organization. */
+export interface Viewer {
+  signedIn: boolean;
+  /** Their seat in this organization, when they hold one. */
+  seat: { displayName: string; bitcoinAddress: string | null; memberType: string } | null;
+}
+
+export async function viewerFor(
+  actorId: string | null | undefined,
+  organizationId: string,
+): Promise<Viewer> {
+  if (!actorId) return { signedIn: false, seat: null };
+  const member = await memberForActor(actorId, organizationId);
+  const active = member && member.status === "ACTIVE" ? member : null;
+  return {
+    signedIn: true,
+    seat: active
+      ? {
+          displayName: active.displayName,
+          bitcoinAddress: active.bitcoinAddress,
+          memberType: active.memberType,
+        }
+      : null,
+  };
+}
 
 export interface OrangeCatProfile {
   sub?: string | null;

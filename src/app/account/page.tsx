@@ -105,9 +105,9 @@ export default async function AccountPage() {
                     <dd className="text-fg-primary">{member.votingWeight.toString()}</dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-fg-secondary">Bitcoin address</dt>
+                    <dt className="text-fg-secondary">How you vote</dt>
                     <dd className="text-fg-primary font-mono text-xs break-all">
-                      {member.bitcoinAddress}
+                      {member.bitcoinAddress ?? "one click, with this account"}
                     </dd>
                   </div>
                 </dl>
@@ -117,8 +117,8 @@ export default async function AccountPage() {
         ) : (
           <>
             <p className="text-sm leading-relaxed text-fg-secondary">
-              You are recognized but not on a roster, so you can read everything and vote on
-              nothing. A seat needs one more thing: a Bitcoin key you can sign with.
+              You are recognized but not on a roster, so you can read everything and vote on nothing
+              yet.
             </p>
             <Link href="/join" className="btn-primary mt-5 inline-flex">
               Become a member

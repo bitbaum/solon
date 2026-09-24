@@ -48,8 +48,8 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
       <Shell title="Become a member">
         <Card>
           <p className="text-sm leading-relaxed text-fg-secondary">
-            Membership needs two things: an OrangeCat identity, so the roster says who you are, and
-            a Bitcoin key, so your votes verify. Start with the first.
+            Sign in with OrangeCat, so the roster says who you are. That is all membership needs —
+            you vote with one click.
           </p>
           <Actions>
             {authEnabled ? (
@@ -84,7 +84,11 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
             <Row label="Roster name" value={member.displayName} />
             <Row label="Organization" value={member.organization.name} />
             <Row label="Voting weight" value={member.votingWeight.toString()} />
-            <Row label="Address" value={member.bitcoinAddress} mono />
+            <Row
+              label="How you vote"
+              value={member.bitcoinAddress ?? "one click, with this account"}
+              mono={Boolean(member.bitcoinAddress)}
+            />
           </dl>
           <Actions>
             {next ? (
@@ -135,9 +139,8 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
         <div className="rounded-surface border border-default bg-surface-raised p-5 text-sm leading-relaxed text-fg-secondary">
           <p>
             {org.name} has no human members yet. A membership vote cannot open without one, so the
-            founding seat is granted on proof instead of by decision — sign a message with a Bitcoin
-            key you control and the seat is yours. It is recorded in the audit trail as a founding
-            grant, and every admission after it is an ordinary vote.
+            founding seat is granted to the first signed-in person who claims it. It is recorded in
+            the audit trail as a founding grant, and every admission after it is an ordinary vote.
           </p>
         </div>
         <ClaimSeat

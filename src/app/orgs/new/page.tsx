@@ -42,7 +42,7 @@ export default async function NewOrganizationPage({
   const here = query ? `/orgs/new?${query}` : "/orgs/new";
 
   const description =
-    "Anyone with an OrangeCat identity and a Bitcoin key may found one. You take the founding seat in the same step; everything after — admitting members, spending, changing the rules — is decided by vote.";
+    "Anyone with an OrangeCat identity may found one. You take the founding seat in the same step; everything after — admitting members, spending, changing the rules — is decided by vote.";
 
   if (!authEnabled) {
     return (

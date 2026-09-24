@@ -14,7 +14,7 @@ import { ImageResponse } from "next/og";
 
 // No `runtime` export: Next 16 deprecates the Edge Runtime, and Node is the
 // default. `next/og` renders identically on it.
-export const alt = "Solon — Bitcoin-Native Governance";
+export const alt = "Solon — Governance any group can run";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -75,7 +75,7 @@ export default function OGImage() {
             maxWidth: 960,
           }}
         >
-          Bitcoin-Native Governance
+          Governance any group can run
         </div>
         <div
           style={{

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
 import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
 import type { LokiGrant } from "@/lib/loki-grant";
-import SignatureStep from "./signature-step";
+import ActStep from "./act-step";
 
 interface Verdict {
   created: boolean;
@@ -15,9 +15,9 @@ interface Verdict {
 }
 
 /**
- * Founding is the same shape as claiming a seat: fill in the fields, sign the
- * exact text shown, paste the signature. No wallet-connect step to fail — the
- * same fields work in Sparrow, Electrum and Bitcoin Core.
+ * Founding is the same shape as claiming a seat: fill in the fields and press
+ * the button. Signing with a Bitcoin key is optional; when chosen, the same
+ * fields work in Sparrow, Electrum and Bitcoin Core.
  *
  * The signed text binds the address, the name, the identity and (when Loki
  * vouched) the project, so editing any of them after signing changes the text
@@ -46,20 +46,20 @@ export default function CreateOrganization({
 
   const slugIssue = slug ? slugProblem(slug) : null;
   const nameIssue = name ? nameProblem(name) : null;
-  const ready =
-    !!slug && !slugIssue && !!name && !nameIssue && !!address && founderName.trim().length >= 2;
+  const ready = !!slug && !slugIssue && !!name && !nameIssue && founderName.trim().length >= 2;
 
-  const message = ready
-    ? organizationMessage({
-        slug,
-        name: name.trim(),
-        actorId,
-        founderAddress: address,
-        project: grant?.project ?? null,
-      })
-    : null;
+  const message =
+    ready && address
+      ? organizationMessage({
+          slug,
+          name: name.trim(),
+          actorId,
+          founderAddress: address,
+          project: grant?.project ?? null,
+        })
+      : null;
 
-  async function submit() {
+  async function submit(withKey: boolean) {
     setSubmitting(true);
     setVerdict(null);
     try {
@@ -71,8 +71,7 @@ export default function CreateOrganization({
           name,
           description: description.trim() || null,
           founderName,
-          address,
-          signature,
+          ...(withKey ? { address, signature } : {}),
           grant,
         }),
       });
@@ -150,35 +149,37 @@ export default function CreateOrganization({
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-address">
-          Your Bitcoin address
-        </label>
-        <input
-          id="org-address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value.trim())}
-          placeholder="bc1… or 1…"
-          className={`${field} font-mono`}
-        />
-        <p className="mt-1.5 text-xs text-fg-tertiary">
-          This becomes your voting credential in this organization. Every vote you cast must recover
-          to it, so use a key you control and can sign with again.
-        </p>
-      </div>
-
-      <SignatureStep
-        message={message}
-        signHint="that address"
-        signatureId="org-signature"
-        signature={signature}
-        onSignatureChange={setSignature}
-        placeholder="Paste the base64 signature from your wallet's Sign Message tool"
+      <ActStep
+        label="Found the organization"
+        onAct={() => submit(false)}
         disabled={!ready}
         submitting={submitting}
-        submitLabel="Found the organization"
-        onSubmit={submit}
         rejection={verdict && !verdict.created ? (verdict.reason ?? "Founding failed.") : null}
+        signing={{
+          fields: (
+            <div>
+              <label className="block text-sm font-medium text-fg-primary" htmlFor="org-address">
+                Your Bitcoin address
+              </label>
+              <input
+                id="org-address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value.trim())}
+                placeholder="bc1… or 1…"
+                className={`${field} font-mono`}
+              />
+              <p className="mt-1.5 text-xs text-fg-tertiary">
+                Your signed votes in this organization must recover to this address, so use a key
+                you control and can sign with again.
+              </p>
+            </div>
+          ),
+          message,
+          hint: "that address",
+          signature,
+          onSignatureChange: setSignature,
+          onSubmitSigned: () => submit(true),
+        }}
       />
     </div>
   );

@@ -71,8 +71,7 @@ function founding(
       name,
       actorId,
       founderName: "Founder",
-      founderAddress: pair.address,
-      signature: signMessage(message, pair.privateKeyHex),
+      founderKey: { address: pair.address, signature: signMessage(message, pair.privateKeyHex) },
       grant,
     },
   };
@@ -119,7 +118,10 @@ describe.runIf(RUN)("founding an organization", () => {
       registrationMessage({ orgSlug: f.slug, actorId: f.actorId, memberAddress: f.pair.address }),
       f.pair.privateKeyHex,
     );
-    const result = await createOrganization({ ...f.input, signature: wrong });
+    const result = await createOrganization({
+      ...f.input,
+      founderKey: { address: f.pair.address, signature: wrong },
+    });
     expect(result).toMatchObject({ created: false, refusal: "bad_signature" });
     expect(await orgRow(f.slug)).toBeUndefined();
   });
@@ -169,11 +171,17 @@ describe.runIf(RUN)("one identity, several rosters", () => {
       orgSlug: f.slug,
       actorId: f.actorId,
       displayName: "Second seat",
-      memberAddress: other.address,
-      signature: signMessage(
-        registrationMessage({ orgSlug: f.slug, actorId: f.actorId, memberAddress: other.address }),
-        other.privateKeyHex,
-      ),
+      key: {
+        address: other.address,
+        signature: signMessage(
+          registrationMessage({
+            orgSlug: f.slug,
+            actorId: f.actorId,
+            memberAddress: other.address,
+          }),
+          other.privateKeyHex,
+        ),
+      },
     });
     expect(again).toMatchObject({ registered: false, verified: true });
     expect(again.reason).toContain("already holds a seat in this organization");
@@ -191,11 +199,13 @@ describe.runIf(RUN)("one identity, several rosters", () => {
       orgSlug: slug,
       actorId,
       displayName: "Founder elsewhere",
-      memberAddress: pair.address,
-      signature: signMessage(
-        registrationMessage({ orgSlug: slug, actorId, memberAddress: pair.address }),
-        pair.privateKeyHex,
-      ),
+      key: {
+        address: pair.address,
+        signature: signMessage(
+          registrationMessage({ orgSlug: slug, actorId, memberAddress: pair.address }),
+          pair.privateKeyHex,
+        ),
+      },
     });
     expect(claimed).toMatchObject({ registered: true, genesis: true });
   });
