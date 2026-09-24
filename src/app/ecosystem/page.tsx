@@ -26,7 +26,7 @@ export default async function EcosystemPage() {
     displayName: string;
     memberType: string;
     system: string | null;
-    bitcoinAddress: string;
+    bitcoinAddress: string | null;
     status: string;
   }[] = [];
   let policies: { key: string; version: number; content: unknown }[] = [];
@@ -162,9 +162,9 @@ export default async function EcosystemPage() {
           </h2>
           <ol className="space-y-3 text-sm text-fg-primary">
             {[
-              "A member — human, the Cat, or Loki — files a proposal, signed with their own Bitcoin key. Solon never holds anyone's private key.",
+              "A member — human, the Cat, or Loki — files a proposal: humans with one click or a signature, agents always signed with their own key. Solon never holds anyone's private key.",
               "A voting session opens and snapshots its rules: electorate, threshold, quorum, eligible weight. A past decision stays explainable after the rules change.",
-              "Members cast Bitcoin signed-message votes from their own environments. One member, one vote per session, enforced by the database.",
+              "Members vote — with one click, or with a Bitcoin signature anyone can re-verify. One ballot per member per session, enforced by the database.",
               "The session closes with an outcome — approved, rejected, or expired — and every step lands in the append-only audit trail.",
               "The decision is published as a self-verifying document (/api/v1/decisions/{sessionId}) carrying every signed message, so anyone can recount the tally.",
               "OrangeCat and Loki are notified — and OrangeCat re-verifies every vote signature against its own pinned keys before acting. A decision is evidence, not authority.",
@@ -225,7 +225,7 @@ export default async function EcosystemPage() {
                         </span>
                       </div>
                       <div className="mt-1 text-xs text-fg-secondary font-mono break-all">
-                        {m.bitcoinAddress}
+                        {m.bitcoinAddress ?? "votes with an OrangeCat account"}
                       </div>
                     </li>
                   ))}

@@ -17,3 +17,18 @@ html,
 body {
   height: 100%;
 }
+
+/*
+ * The two button shapes every act uses. `btn-primary` was used on 19 elements
+ * after #77 removed its only definition, so the main action of every page —
+ * claim a seat, found, file, vote — rendered as bare text. Built from the
+ * shared semantic tokens only.
+ */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-control bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-control border border-default bg-surface-base px-4 py-2 text-sm font-semibold text-fg-primary transition-colors hover:bg-surface-raised;
+  }
+}

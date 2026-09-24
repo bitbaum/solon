@@ -1,7 +1,8 @@
 # Solon
 
-Governance you can verify instead of trust — proposals, Bitcoin-signed votes,
-versioned policies and an append-only audit trail.
+Governance any group can use — one-click proposals and votes for anyone with an
+OrangeCat account, Bitcoin signatures for anyone who wants a vote others can
+recount without trusting Solon, versioned policies and an append-only audit trail.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6.svg)](https://www.typescriptlang.org/)
@@ -19,7 +20,7 @@ Solon is the **governance pillar** of a three-product stack:
 |---|---|---|
 | Economy | [OrangeCat](https://orangecat.ch) | Bitcoin-native economic layer — entities, wallets, payments, the public timeline |
 | Execution | [Loki](https://loki.orangecat.ch) | Where the work gets done — AI-agent fleet control plane, plus the people, commitments and spending the work runs on, and the deploy pipeline for the whole stack |
-| Governance | **Solon** (this repo) | Proposals, Bitcoin-signed votes, versioned policies, append-only audit |
+| Governance | **Solon** (this repo) | Proposals, one-click or Bitcoin-signed votes, versioned policies, append-only audit |
 
 The ties are real, not marketing:
 
@@ -38,12 +39,15 @@ silently decides who eats, that is rule-by-algorithm.
 
 Four properties do the work:
 
-- **No keys, no custody.** Members sign votes with their own Bitcoin keys. The
-  treasury is **watch-only** — Solon stores addresses to observe, never funds or
-  keys. There is no code path that can spend.
-- **Verify, don't trust.** Every vote is a Bitcoin signed message. The full
-  signed record is published, so anyone can recount a tally independently rather
-  than believe the number Solon reports.
+- **Easy by default.** A member signs in with OrangeCat and votes with one
+  click — no wallet, no key. That vote is recorded with `proof: ACCOUNT`: it is
+  Solon's record, and every published document says so.
+- **Verify, don't trust — when you want to.** A member (and every agent) can
+  instead sign with their own Bitcoin key (`proof: BIP137`). Those acts are
+  published with their signatures, so anyone can recount them independently.
+- **No keys, no custody.** Solon never holds a private key. The treasury is
+  **watch-only** — Solon stores addresses to observe, never funds or keys.
+  There is no code path that can spend.
 - **Append-only record.** Audit events are never updated or deleted.
 - **Red lines agents cannot cross.** Some categories are constitutionally
   humans-only (below).
@@ -74,8 +78,9 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 
 1. A proposal is drafted against an organization and a decision category.
 2. Opening it creates a voting session; the category fixes the electorate.
-3. Members cast Bitcoin signed messages. One vote per member per session,
-   enforced by a unique constraint on `[sessionId, memberId]`.
+3. Members vote — one click, or a Bitcoin signed message. One ballot per member
+   per session, enforced by a unique constraint on `[sessionId, memberId]`;
+   voting again before close replaces the earlier ballot.
 4. Closing tallies the result, writes the decision, versions the affected
    policy, and appends an audit event.
 
@@ -85,7 +90,7 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 and API contracts derived from it.
 
 ```
-Organization ── has many ──> Member (HUMAN | AGENT, own Bitcoin key)
+Organization ── has many ──> Member (HUMAN | AGENT; OrangeCat identity and/or own Bitcoin key)
      │                          │
      ├── Proposal ──> VotingSession ──> Vote (signed, unique per session)
      ├── Policy            (versioned; what a decision actually changes)
@@ -101,9 +106,9 @@ Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
 **Identity is one seat per organization.** An OrangeCat identity may sit on
 several rosters but holds at most one seat on each
-(`members_organization_id_oc_actor_id_key`). **Founding is permissionless;
-everything after it is voted.** Any recognized identity with a Bitcoin key may
-found an organization, and the organization, the founder's seat and both audit
+(`members_organization_id_oc_actor_id_key`). **Founding is permissionless.**
+Any recognized OrangeCat identity may found an organization (a Bitcoin key is
+optional), and the organization, the founder's seat and both audit
 events land in one transaction (`src/lib/domain/organization.ts`). An
 organization is recorded as governing a Loki project (`claimed_project`) only
 when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`)
@@ -114,7 +119,7 @@ when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`
 | Method | Route | Purpose |
 |---|---|---|
 | `GET` | `/api/orgs` | Every organization, and the Loki project each governs by consent |
-| `POST` | `/api/orgs` | Found an organization (OrangeCat session + Bitcoin signature) |
+| `POST` | `/api/orgs` | Found an organization (OrangeCat session; Bitcoin signature optional) |
 | `GET` | `/api/orgs/{slug}` | Organization and its members |
 | `GET` | `/api/orgs/{slug}/audit` | Append-only audit trail |
 | `GET` | `/api/orgs/{slug}/policies/{key}` | Current policy version |
@@ -123,7 +128,7 @@ when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`
 | `POST` | `/api/proposals` | Create a proposal |
 | `POST` | `/api/proposals/{id}/open` | Open voting |
 | `GET` | `/api/sessions/{id}` | Session state and tally |
-| `POST` | `/api/sessions/{id}/votes` | Cast a Bitcoin-signed vote |
+| `POST` | `/api/sessions/{id}/votes` | Cast or change a vote (signed-in member, or Bitcoin signature) |
 | `POST` | `/api/sessions/{id}/close` | Close and record the decision |
 | `GET` | `/api/v1/decisions/{sessionId}` | **Self-verifying** signed record |
 | `GET` | `/api/health` | Liveness |

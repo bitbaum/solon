@@ -78,9 +78,12 @@ function castable(
   const canonical = canonicalBallot("dot", ballot, { dotBudget });
   const message = voteMessage({ sessionId, choice: canonical, memberAddress: pair.address });
   return {
-    address: pair.address,
+    by: {
+      via: "key" as const,
+      address: pair.address,
+      signature: signMessage(message, pair.privateKeyHex),
+    },
     ballot,
-    signature: signMessage(message, pair.privateKeyHex),
   };
 }
 
@@ -140,9 +143,8 @@ describe.runIf(RUN)("dot allocation (database integration)", () => {
     const session = await openSession(proposal.id);
 
     const result = await submitVote(session.id, {
-      address: alice.address,
+      by: { via: "key", address: alice.address, signature: "irrelevant" },
       ballot: { allocations: { insulation: 4, "heat-pump": 4 } },
-      signature: "irrelevant",
     });
     expect(result.stored).toBe(false);
     expect(result.reason).toContain("dots");

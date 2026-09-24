@@ -157,17 +157,23 @@ credential), and let the charter set the **minimum assurance per category**:
 
 | Level | How a member signs | What a recount proves | Needs |
 |---|---|---|---|
-| **A: Account** | Signed in (OrangeCat account, or an emailed one-time ballot link for invited members); Solon signs the ballot with its own key | That Solon recorded this ballot for this seat. It proves the operator's word, not the member's | an email address |
-| **B: Passkey** (proposed default) | Face ID / fingerprint / device PIN (WebAuthn). The device signs the ballot hash as the challenge | That **the member's own device** signed exactly this ballot. Anyone holding the published public key can re-verify it; no operator trust | a phone or laptop made in the last ~5 years |
+| **A: Account** (the default — decided 2026-09-24: "as easy to use as possible") | Signed in with OrangeCat, one click (later also an emailed one-time ballot link for invited members). Nothing is signed | That Solon recorded this ballot for this seat. It proves the operator's word, not the member's — and the record says so | an email address |
+| **B: Passkey** | Face ID / fingerprint / device PIN (WebAuthn). The device signs the ballot hash as the challenge | That **the member's own device** signed exactly this ballot. Anyone holding the published public key can re-verify it; no operator trust | a phone or laptop made in the last ~5 years |
 | **C: Own key** | Nostr (NIP-07 extension, one click) or Bitcoin message signing (today's path) | Same as B, with a key the member holds independently of any device vendor or Solon | a key the member manages |
 
-Passkeys are the important discovery here: they give ordinary people
-**cryptographic, recountable votes with no blockchain, no wallet and no seed
-phrase**. A charter might say: polls and operations at level A, spending and
-membership at level B, charter amendments at B or C. A group that later wants
-Bitcoin-grade independence raises the bar by vote.
+**Ease wins by default; strength is opt-in.** Every act starts at level A, one
+click, labelled `proof: ACCOUNT` on the record. Passkeys are the natural next
+step up: they give ordinary people **cryptographic, recountable votes with no
+blockchain, no wallet and no seed phrase**. A group that wants more raises its
+own bar by vote, per category (the charter's minimum assurance, §2.1).
 
-The data model follows:
+**Shipped (level A + C, 2026-09-24):** `members.bitcoin_address` is optional,
+every proposal and vote carries `proof` (`ACCOUNT` | `BIP137`), every form leads
+with one button and folds Bitcoin signing underneath, and the decision
+document labels each act. Passkeys (B), Nostr and per-category minimums are
+next.
+
+The data model for B and beyond:
 
 - `members.bitcoin_address` becomes one row in a `member_credentials` table
   (`scheme: account | webauthn | nostr | bip137`, public key, enrolled-at).
@@ -285,12 +291,11 @@ with a decision behind it.
 Each step is shippable on its own and leaves the record more honest than before.
 
 **Phase 0: make the current claims true (days)**
-1. Decouple the seat from Bitcoin: `member_credentials`, with passkey (WebAuthn)
-   as the first new scheme (§2.4). This also unblocks org #1, because George
-   can take the genesis human seat with a passkey instead of a wallet.
-   Humans-only categories have been dead until a human seat exists.
-2. Decide vote changes: either refuse a second ballot or re-snapshot weight on
-   change. Then fix the README to match.
+1. ✅ Decouple the seat from Bitcoin: one-click ACCOUNT acts (§2.4). This also
+   unblocks org #1 — George can claim the founding human seat with one click
+   at /join. Humans-only categories have been dead until a human seat exists.
+2. ✅ Vote changes: a second ballot replaces the first until close, and the
+   weight is re-read at the change. README fixed to match.
 3. One source for thresholds. The ratification check watches
    `governance-profiles.ts` too.
 4. Ratify `originator_share` v1 and `claimed_project` by vote, so no rule stands
@@ -315,8 +320,10 @@ Each step is shippable on its own and leaves the record more honest than before.
 - Unmandated-outflow detection on watched treasuries → SAFETY motion.
 
 **Phase 3: Usable membership and deliberation**
-- Account-level (A) ballots incl. emailed ballot links; Nostr signer;
-  per-category minimum assurance in the charter.
+- Admission by vote (`member.admit`), so a signed-in visitor can ask to join
+  and the members decide — the next biggest ease win after one-click voting.
+- Emailed ballot links; passkey and Nostr signers; per-category minimum
+  assurance in the charter.
 - Bank-statement import (camt.053) as a treasury ledger.
 - threadkit discussions and amendments.
 - AI Clerk, then the Advocate pair.
@@ -332,12 +339,11 @@ Each step is shippable on its own and leaves the record more honest than before.
 
 ## 8. Decisions that are George's
 
-1. **Default assurance level.** Passkey (B) as the default for new orgs, with
-   account-level (A) allowed for low-stakes categories? Or A as the default,
-   so a member needs nothing but an email?
-2. **Account-level votes at all.** Level A is operator-attested, so a recount
-   proves Solon's word rather than the member's. Offer it (lowest friction,
-   honestly labelled), or require at least a passkey everywhere?
+1. ~~Default assurance level~~ — **decided 2026-09-24:** "make it as easy to
+   use as possible". Account (A) is the default everywhere; stronger proof is
+   opt-in per member now and per category once charters exist.
+2. ~~Account-level votes at all~~ — **decided, same day:** yes, honestly
+   labelled `proof: ACCOUNT` on every record.
 3. **Is a mandate an approval?** Loki's iron rule is "no auto-approve, no
    bypass". Does a verified community decision count as the approval
    (enforcement mode 3), or does it always land as a draft for an officer

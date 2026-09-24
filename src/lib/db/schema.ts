@@ -9,8 +9,10 @@
  * change wearing a refactor's clothes.
  *
  * Design invariants (unchanged from v2):
- * - Solon never holds private keys: members (human OR agent) register a Bitcoin
- *   address; every vote and proposal carries a Bitcoin signed-message signature.
+ * - Solon never holds private keys. A member MAY register a Bitcoin address and
+ *   sign every act with it (proof BIP137, re-verifiable by anyone); a human
+ *   member may also act simply by being signed in with their OrangeCat identity
+ *   (proof ACCOUNT, recorded as Solon's word). Agents always sign.
  * - VotingSession snapshots its rules (electorate/threshold/quorum/eligibility)
  *   at open, so a past decision stays explainable after policy changes.
  * - AuditEvent is append-only: no code path may update or delete rows.
@@ -22,6 +24,7 @@
  */
 import { relations, sql } from "drizzle-orm";
 import {
+  check,
   foreignKey,
   index,
   integer,
@@ -44,6 +47,7 @@ import {
   MEMBER_TYPES,
   POLICY_STATUSES,
   PROPOSAL_STATUSES,
+  PROOFS,
   SESSION_OUTCOMES,
   SESSION_STATUSES,
   VOTE_THRESHOLDS,
@@ -66,6 +70,7 @@ export const sessionOutcomeEnum = pgEnum("SessionOutcome", SESSION_OUTCOMES);
 export const votingMethodEnum = pgEnum("VotingMethod", VOTING_METHODS);
 export const policyStatusEnum = pgEnum("PolicyStatus", POLICY_STATUSES);
 export const auditEventTypeEnum = pgEnum("AuditEventType", AUDIT_EVENT_TYPES);
+export const proofEnum = pgEnum("Proof", PROOFS);
 
 const uuid = () => randomUUID();
 
@@ -109,10 +114,16 @@ export const members = pgTable(
     displayName: text("display_name").notNull(),
     memberType: memberTypeEnum("member_type").notNull(),
     /** Who holds the member's private key. Never Solon — SELF is a human's own
-     * wallet, SERVICE is an agent system's own environment (OC box, FC box). */
-    keyCustody: keyCustodyEnum("key_custody").notNull(),
-    /** The address votes must recover to. The only voting credential there is. */
-    bitcoinAddress: varchar("bitcoin_address", { length: 90 }).notNull(),
+     * wallet, SERVICE is an agent system's own environment (OC box, FC box).
+     * Null when the member has no key and acts through their account. */
+    keyCustody: keyCustodyEnum("key_custody"),
+    /**
+     * The address signed acts must recover to, when the member has a key.
+     * Optional: a Bitcoin wallet is one way to take part, not the price of a
+     * seat. A member without one is identified by `ocActorId` instead, and
+     * members_credential_check requires one of the two.
+     */
+    bitcoinAddress: varchar("bitcoin_address", { length: 90 }),
     publicKeyHex: text("public_key_hex"),
     votingWeight: numeric("voting_weight", { precision: 10, scale: 2 })
       .notNull()
@@ -134,6 +145,10 @@ export const members = pgTable(
     uniqueIndex("members_organization_id_bitcoin_address_key").on(
       t.organizationId,
       t.bitcoinAddress,
+    ),
+    check(
+      "members_credential_check",
+      sql`${t.bitcoinAddress} IS NOT NULL OR ${t.ocActorId} IS NOT NULL`,
     ),
     foreignKey({
       columns: [t.organizationId],
@@ -174,8 +189,10 @@ export const proposals = pgTable(
      */
     options: jsonb("options"),
     proposerMemberId: text("proposer_member_id").notNull(),
-    /** Bitcoin signed-message signature over proposalMessage() by the proposer. */
-    proposerSignature: text("proposer_signature").notNull(),
+    /** How the proposer proved they filed it. See PROOFS in ./enums. */
+    proof: proofEnum("proof").notNull().default("BIP137"),
+    /** Bitcoin signed-message signature over proposalMessage(); null for ACCOUNT. */
+    proposerSignature: text("proposer_signature"),
     status: proposalStatusEnum("status").notNull().default("DRAFT"),
     createdAt: timestamp("created_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
@@ -258,9 +275,16 @@ export const votes = pgTable(
     ballot: jsonb("ballot").notNull(),
     /** Member's weight snapshotted at cast time. */
     weight: numeric("weight", { precision: 10, scale: 2 }).notNull(),
-    /** The exact canonical message that was signed — stored so anyone can re-verify. */
+    /**
+     * The exact canonical text of this act. For BIP137 it is what the signature
+     * covers, so anyone can re-verify; for ACCOUNT it is the same record of what
+     * was cast, with no signature over it.
+     */
     signedMessage: text("signed_message").notNull(),
-    signature: text("signature").notNull(),
+    /** How the voter proved the vote was theirs. See PROOFS in ./enums. */
+    proof: proofEnum("proof").notNull().default("BIP137"),
+    /** Bitcoin signed-message signature; null for ACCOUNT votes. */
+    signature: text("signature"),
     createdAt: timestamp("created_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
   (t) => [

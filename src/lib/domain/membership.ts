@@ -16,9 +16,12 @@ export interface RegisterMemberInput {
   /** OrangeCat actor id from the session — never taken from the request body. */
   actorId: string;
   displayName: string;
-  memberAddress: string;
-  /** Bitcoin signed-message signature over registrationMessage(). */
-  signature: string;
+  /**
+   * Optional: a Bitcoin key to sign with, proven by a signature over
+   * registrationMessage(). Without one the seat is held by the OrangeCat
+   * identity alone, and the member acts by being signed in.
+   */
+  key?: { address: string; signature: string } | null;
 }
 
 export interface RegisterMemberResult {
@@ -44,9 +47,9 @@ const activeHumansOf = (organizationId: string) =>
  * only way in was an operator with database access.
  *
  * The founding seat is the one admission that cannot itself be voted on, so it
- * is granted on proof rather than by decision: the first person to prove they
- * control a Bitcoin key *and* an OrangeCat identity becomes the founding
- * member, and that grant is written into the append-only audit trail where
+ * is granted on proof rather than by decision: the first recognized OrangeCat
+ * identity to claim it becomes the founding member (with a Bitcoin key if they
+ * choose to add one), and that grant is written into the append-only audit trail where
  * anyone can see it happened and when. Every later admission is an ordinary
  * MEMBERSHIP vote by the humans already seated — the genesis branch is closed
  * permanently by its own success, because it only fires while the human roster
@@ -58,18 +61,21 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   });
   if (!org) return { registered: false, verified: false, reason: "organization not found" };
 
-  const message = registrationMessage({
-    orgSlug: input.orgSlug,
-    actorId: input.actorId,
-    memberAddress: input.memberAddress,
-  });
-  const verification = verifyMessage(message, input.memberAddress, input.signature);
-  if (!verification.valid) {
-    return {
-      registered: false,
-      verified: false,
-      reason: verification.reason ?? "signature does not match the address",
-    };
+  const key = input.key ?? null;
+  if (key) {
+    const message = registrationMessage({
+      orgSlug: input.orgSlug,
+      actorId: input.actorId,
+      memberAddress: key.address,
+    });
+    const verification = verifyMessage(message, key.address, key.signature);
+    if (!verification.valid) {
+      return {
+        registered: false,
+        verified: false,
+        reason: verification.reason ?? "signature does not match the address",
+      };
+    }
   }
 
   // One actor holds at most one seat in an organization, and one address is at
@@ -88,9 +94,11 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
       memberId: existingByActor.id,
     };
   }
-  const existingByAddress = await db.query.members.findFirst({
-    where: and(eq(members.organizationId, org.id), eq(members.bitcoinAddress, input.memberAddress)),
-  });
+  const existingByAddress = key
+    ? await db.query.members.findFirst({
+        where: and(eq(members.organizationId, org.id), eq(members.bitcoinAddress, key.address)),
+      })
+    : null;
   if (existingByAddress) {
     return {
       registered: false,
@@ -131,8 +139,8 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
           organizationId: org.id,
           displayName: input.displayName,
           memberType: MemberType.HUMAN,
-          keyCustody: KeyCustody.SELF,
-          bitcoinAddress: input.memberAddress,
+          keyCustody: key ? KeyCustody.SELF : null,
+          bitcoinAddress: key?.address ?? null,
           ocActorId: input.actorId,
           status: MemberStatus.ACTIVE,
         })
@@ -148,7 +156,9 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
           memberType: MemberType.HUMAN,
           bitcoinAddress: created.bitcoinAddress,
           genesis: true,
-          note: "founding human seat — claimed by proving control of the key and an OrangeCat identity, because a membership vote cannot open with an empty human electorate. Later admissions go through MEMBERSHIP votes.",
+          note: key
+            ? "founding human seat — claimed by a recognized OrangeCat identity that also proved control of this Bitcoin key, because a membership vote cannot open with an empty human electorate. Later admissions go through MEMBERSHIP votes."
+            : "founding human seat — claimed by a recognized OrangeCat identity (no Bitcoin key), because a membership vote cannot open with an empty human electorate. Later admissions go through MEMBERSHIP votes.",
         },
       });
       return created;

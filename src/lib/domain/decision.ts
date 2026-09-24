@@ -1,6 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
-import { SessionStatus, votes, votingSessions } from "@/lib/db/schema";
+import { Proof, SessionStatus, votes, votingSessions } from "@/lib/db/schema";
+import { ACCOUNT_PROOF_NOTE } from "@/lib/domain/proof";
 import { proposalMessage } from "@/lib/bitcoin/message";
 import { aggregateBallots } from "@/lib/domain/methods";
 import { methodId } from "@/lib/domain/methods/db-enum";
@@ -83,14 +84,19 @@ export async function decisionDocument(sessionId: string) {
         target: p.target,
         contentHash: p.contentHash,
         proposer: p.proposer,
-        // The exact message the proposer signed, reconstructable from fields above.
-        proposerMessage: proposalMessage({
-          orgSlug: p.organization.slug,
-          category: p.category,
-          title: p.title,
-          proposerAddress: p.proposer.bitcoinAddress,
-          contentHash: p.contentHash,
-        }),
+        proof: p.proof,
+        // The exact message the proposer signed, reconstructable from fields
+        // above. Null for ACCOUNT proposals: nothing was signed.
+        proposerMessage:
+          p.proof === Proof.BIP137 && p.proposer.bitcoinAddress
+            ? proposalMessage({
+                orgSlug: p.organization.slug,
+                category: p.category,
+                title: p.title,
+                proposerAddress: p.proposer.bitcoinAddress,
+                contentHash: p.contentHash,
+              })
+            : null,
         proposerSignature: p.proposerSignature,
       },
       rules: {
@@ -109,10 +115,17 @@ export async function decisionDocument(sessionId: string) {
         member: v.member,
         ballot: v.ballot,
         weight: Number(v.weight),
+        proof: v.proof,
         signedMessage: v.signedMessage,
         signature: v.signature,
         castAt: v.createdAt,
       })),
+      // What each `proof` value on this document means, so a reader never has
+      // to guess which acts they can recount themselves.
+      proofs: {
+        BIP137: "Bitcoin signed message — verify signedMessage against the member's address",
+        ACCOUNT: ACCOUNT_PROOF_NOTE,
+      },
       aggregate,
       tally: tallyOf(aggregate),
       outcome: session.outcome,

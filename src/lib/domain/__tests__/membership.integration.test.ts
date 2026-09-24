@@ -38,8 +38,7 @@ function claim(slug: string, actorId: string) {
       orgSlug: slug,
       actorId,
       displayName: "Claimant",
-      memberAddress: pair.address,
-      signature: signMessage(message, pair.privateKeyHex),
+      key: { address: pair.address, signature: signMessage(message, pair.privateKeyHex) },
     },
   };
 }
@@ -82,7 +81,8 @@ describe.runIf(RUN)("founding seat", () => {
 
     const result = await registerMember({
       ...honest.input,
-      memberAddress: impostor.address, // signature was made by a different key
+      // signature was made by a different key
+      key: { address: impostor.address, signature: honest.input.key.signature },
     });
     expect(result).toMatchObject({ registered: false, verified: false });
     expect(await genesisOpen(slug)).toBe(true);

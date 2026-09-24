@@ -2,22 +2,22 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { registerMember } from "@/lib/domain/membership";
+import { isSameOrigin } from "@/lib/auth/actor";
 
 const BodySchema = z.object({
   orgSlug: z.string().min(1).max(100),
   displayName: z.string().min(2).max(80),
-  address: z.string().min(20).max(90),
-  signature: z.string().min(1).max(200),
+  address: z.string().min(20).max(90).optional(),
+  signature: z.string().min(1).max(200).optional(),
 });
 
 /**
- * Claim a member seat by proving control of a Bitcoin key.
- *
- * Two credentials are required and neither substitutes for the other: an
- * OrangeCat session (who you are) and a Bitcoin signature (which key is
- * yours). The actor id is read from the session and never from the body —
- * accepting it as input would let a caller bind their own key to somebody
- * else's identity, which is the whole property the roster depends on.
+ * Claim a member seat. An OrangeCat session (who you are) is required and is
+ * enough; a Bitcoin key (address + signature) is optional, for members who
+ * want to sign their acts. The actor id is read from the session and never
+ * from the body — accepting it as input would let a caller bind a seat or a
+ * key to somebody else's identity, which is the whole property the roster
+ * depends on.
  */
 export async function POST(req: Request) {
   const session = await auth();
@@ -36,12 +36,29 @@ export async function POST(req: Request) {
     );
   }
 
+  const { address, signature } = parsed.data;
+  if (Boolean(address) !== Boolean(signature)) {
+    return NextResponse.json(
+      {
+        registered: false,
+        verified: false,
+        reason: "a key needs both the address and the signature",
+      },
+      { status: 400 },
+    );
+  }
+  if (!address && !isSameOrigin(req)) {
+    return NextResponse.json(
+      { registered: false, verified: false, reason: "this request did not come from Solon" },
+      { status: 403 },
+    );
+  }
+
   const result = await registerMember({
     orgSlug: parsed.data.orgSlug,
     actorId: session.actorId,
     displayName: parsed.data.displayName,
-    memberAddress: parsed.data.address,
-    signature: parsed.data.signature,
+    key: address && signature ? { address, signature } : null,
   });
 
   if (!result.registered) {

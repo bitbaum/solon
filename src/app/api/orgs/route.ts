@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { isSameOrigin } from "@/lib/auth/actor";
 import {
   createOrganization,
   listPublicOrganizations,
@@ -23,8 +24,8 @@ const BodySchema = z.object({
   name: z.string().min(1).max(80),
   description: z.string().max(500).nullish(),
   founderName: z.string().min(2).max(80),
-  address: z.string().min(20).max(90),
-  signature: z.string().min(1).max(200),
+  address: z.string().min(20).max(90).optional(),
+  signature: z.string().min(1).max(200).optional(),
   grant: z
     .object({
       project: z.string().min(1).max(100),
@@ -46,9 +47,9 @@ const STATUS: Record<CreateOrganizationRefusal, number> = {
 /**
  * Found an organization.
  *
- * The same two credentials as claiming a seat, for the same reason: an
- * OrangeCat session says who you are, a Bitcoin signature says which key is
- * yours. The actor id is read from the session and never from the body, so
+ * The same credentials as claiming a seat: an OrangeCat session says who you
+ * are (required), and a Bitcoin signature says which key is yours (optional).
+ * The actor id is read from the session and never from the body, so
  * nobody can found an organization as somebody else — or present somebody
  * else's grant from Loki as their own.
  */
@@ -69,14 +70,27 @@ export async function POST(req: Request) {
     );
   }
 
+  const { address, signature } = parsed.data;
+  if (Boolean(address) !== Boolean(signature)) {
+    return NextResponse.json(
+      { created: false, verified: false, reason: "a key needs both the address and the signature" },
+      { status: 400 },
+    );
+  }
+  if (!address && !isSameOrigin(req)) {
+    return NextResponse.json(
+      { created: false, verified: false, reason: "this request did not come from Solon" },
+      { status: 403 },
+    );
+  }
+
   const result = await createOrganization({
     slug: parsed.data.slug,
     name: parsed.data.name,
     description: parsed.data.description ?? null,
     actorId: session.actorId,
     founderName: parsed.data.founderName,
-    founderAddress: parsed.data.address,
-    signature: parsed.data.signature,
+    founderKey: address && signature ? { address, signature } : null,
     grant: parsed.data.grant ?? null,
   });
 

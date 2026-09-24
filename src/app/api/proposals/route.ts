@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { DecisionCategory, VotingMethod } from "@/lib/db/enums";
 import { createProposal } from "@/lib/domain/proposals";
+import { auth } from "@/lib/auth";
+import { resolveActor, selfOriginOf } from "@/lib/auth/actor";
 
 const BodySchema = z.object({
   orgSlug: z.string().min(1).max(100),
@@ -13,13 +15,14 @@ const BodySchema = z.object({
   policyKey: z.string().min(1).max(100).optional(),
   proposedContent: z.unknown().optional(),
   target: z.string().max(200).optional(),
-  proposerAddress: z.string().min(20).max(90),
-  signature: z.string().min(1).max(200),
+  proposerAddress: z.string().min(20).max(90).optional(),
+  signature: z.string().min(1).max(200).optional(),
 });
 
 /**
- * File a proposal. Authorization is the Bitcoin signature over
- * proposalMessage() — see lib/domain/proposals.ts. Agent members must also
+ * File a proposal. Either signed (`proposerAddress` + a Bitcoin signature over
+ * proposalMessage(), no session needed) or with one click by the signed-in
+ * member — see lib/auth/actor.ts. Agent members always sign and must also
  * present their transport API key as `Authorization: Bearer sk_solon_…`.
  */
 export async function POST(req: Request) {
@@ -31,10 +34,26 @@ export async function POST(req: Request) {
     );
   }
 
-  const auth = req.headers.get("authorization");
-  const apiKey = auth?.startsWith("Bearer ") ? auth.slice("Bearer ".length) : null;
+  const authorization = req.headers.get("authorization");
+  const apiKey = authorization?.startsWith("Bearer ")
+    ? authorization.slice("Bearer ".length)
+    : null;
 
-  const result = await createProposal({ ...parsed.data, apiKey });
+  const { proposerAddress, signature, ...fields } = parsed.data;
+  const who = resolveActor({
+    key: { address: proposerAddress, signature },
+    sessionActorId: proposerAddress || signature ? null : (await auth())?.actorId,
+    requestOrigin: req.headers.get("origin"),
+    selfOrigin: selfOriginOf(req),
+  });
+  if (!who.ok) {
+    return NextResponse.json(
+      { created: false, verified: false, reason: who.reason },
+      { status: who.status },
+    );
+  }
+
+  const result = await createProposal({ ...fields, by: who.actor, apiKey });
   if (!result.created) {
     // 401 when the signature itself failed; 422 when it verified but the
     // proposer/org/key wasn't eligible.

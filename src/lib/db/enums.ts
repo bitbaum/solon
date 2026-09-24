@@ -23,6 +23,20 @@ export const KEY_CUSTODIES = ["SELF", "SERVICE"] as const;
 export const KeyCustody = enumLike(KEY_CUSTODIES);
 export type KeyCustody = (typeof KEY_CUSTODIES)[number];
 
+/**
+ * What proves that a member really did an act (filed a proposal, cast a vote).
+ *
+ * - BIP137: a Bitcoin signed message from the member's own key. Anyone can
+ *   re-verify it without trusting Solon.
+ * - ACCOUNT: the member was signed in with their OrangeCat identity and pressed
+ *   the button. Nothing is signed; the record is Solon's word that the seat
+ *   holding that identity acted. It is the easy default, and it is labelled as
+ *   exactly what it is wherever it is published.
+ */
+export const PROOFS = ["BIP137", "ACCOUNT"] as const;
+export const Proof = enumLike(PROOFS);
+export type Proof = (typeof PROOFS)[number];
+
 export const MEMBER_STATUSES = ["ACTIVE", "SUSPENDED", "RETIRED"] as const;
 export const MemberStatus = enumLike(MEMBER_STATUSES);
 export type MemberStatus = (typeof MEMBER_STATUSES)[number];

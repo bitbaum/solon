@@ -3,6 +3,8 @@ import { readOptions, sessionAggregate } from "@/lib/domain/voting";
 import { methodId } from "@/lib/domain/methods/db-enum";
 import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import { primaryOrg } from "@/lib/domain/org";
+import { auth } from "@/lib/auth";
+import { viewerFor } from "@/lib/auth/recognition";
 import { desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { proposals, votingSessions } from "@/lib/db/schema";
@@ -49,14 +51,14 @@ export default async function VotingPage() {
       <main className="space-y-6">
         <h1 className="font-display text-display-3">Voting</h1>
         <p className="text-fg-secondary">
-          No voting session has been opened yet. When one opens, registered members vote here by
-          signing the canonical vote message with their own Bitcoin wallet.
+          No voting session has been opened yet. When one opens, members vote here with one click.
         </p>
       </main>
     );
   }
 
   const aggregate = await sessionAggregate(session.id);
+  const viewer = await viewerFor((await auth())?.actorId, session.proposal.organizationId);
 
   return (
     <main className="space-y-6">
@@ -74,6 +76,8 @@ export default async function VotingPage() {
           dotBudget: session.dotBudget ?? DEFAULT_DOT_BUDGET,
         }}
         aggregate={aggregate}
+        viewer={viewer}
+        here="/dashboard/voting"
       />
     </main>
   );

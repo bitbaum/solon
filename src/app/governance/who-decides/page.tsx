@@ -116,7 +116,7 @@ export default function WhoDecidesPage() {
               href: "/join",
               kind: "do",
               title: "Become a member",
-              blurb: "Bind a Bitcoin key to your seat and get a vote in the categories above.",
+              blurb: "Sign in with OrangeCat, hold a seat, and get a vote in the categories above.",
             },
           ]}
         />

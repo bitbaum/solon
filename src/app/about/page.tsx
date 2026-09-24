@@ -55,7 +55,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <PrincipleCard
             title="No keys, no custody"
-            description="Members sign votes with their own Bitcoin keys. Solon only ever sees signatures, and the treasury is watch-only."
+            description="Members vote with one click, or sign with their own Bitcoin keys when they want a vote anyone can recount. Solon never holds a key, and the treasury is watch-only."
             icon={<Bitcoin className="w-8 h-8 text-bitcoin" />}
           />
           <PrincipleCard

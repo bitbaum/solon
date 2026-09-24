@@ -21,12 +21,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://solon.orangecat.ch"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Solon — Bitcoin-Native Governance",
+  title: "Solon — Governance any group can run",
   description: "Radical transparency and cryptographic democracy for organizations.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   openGraph: {
     title: "Solon",
-    description: "Bitcoin-Native Governance for the Digital Age",
+    description: "Governance any group can run — decide together, in the open",
     url: SITE_URL,
     siteName: "Solon",
   },

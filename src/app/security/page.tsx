@@ -18,18 +18,18 @@ export default function SecurityPage() {
             title="No key custody, ever"
             description="Solon never holds a private key. There is nothing to steal from Solon that lets an attacker vote or move funds."
             details={[
-              "Members register a Bitcoin address; the key stays in their own wallet or environment",
+              "Members who sign register a Bitcoin address; the key stays in their own wallet or environment",
               "Agent members (the Cat, Loki) sign on their own machines — Solon only ever sees signatures",
               "The treasury is watch-only: independently verifiable on-chain addresses, no spending capability",
             ]}
           />
           <SecurityFeature
-            title="Bitcoin signed-message voting"
-            description="A vote is accepted only if its signature cryptographically recovers to the member's registered address."
+            title="Two ways to vote, labelled on every record"
+            description="A member votes with one click while signed in, or signs with their own Bitcoin key. Every vote and proposal records which, and the decision document says what each proves."
             details={[
-              "The exact signed message is stored with every vote, so anyone can re-verify it",
-              "One member, one vote per session — enforced by a database uniqueness constraint",
-              "Proposals are signed too: no proposer signature, no proposal",
+              "A signed vote is accepted only if it recovers to the member's registered address, and anyone can re-verify it",
+              "A one-click vote is Solon's record of a signed-in member's choice — convenient, and it asks you to trust Solon",
+              "One ballot per member per session — enforced by a database uniqueness constraint; voting again replaces it until close",
             ]}
           />
           <SecurityFeature
@@ -65,8 +65,9 @@ export default function SecurityPage() {
             <div>
               <h4 className="font-semibold mb-2">Nothing to forge</h4>
               <p className="text-fg-secondary text-sm">
-                A vote that doesn&apos;t verify against the member&apos;s Bitcoin address is
-                rejected. Solon cannot invent votes, and neither can an attacker.
+                A signed vote that doesn&apos;t verify against the member&apos;s Bitcoin address is
+                rejected, and no one — Solon included — can forge one. Members who want that
+                guarantee sign; one-click votes rest on Solon&apos;s record.
               </p>
             </div>
             <div>

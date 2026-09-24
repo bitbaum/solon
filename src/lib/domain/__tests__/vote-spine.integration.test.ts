@@ -72,17 +72,20 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
       body: "Double the daily ceiling.",
       policyKey: "allocation_policy",
       proposedContent,
-      proposerAddress: agent.address,
-      signature: signMessage(
-        proposalMessage({
-          orgSlug: slug,
-          category: DecisionCategory.ALLOCATION_POLICY,
-          title: "Raise the Cat's ceiling",
-          proposerAddress: agent.address,
-          contentHash,
-        }),
-        agent.privateKeyHex,
-      ),
+      by: {
+        via: "key" as const,
+        address: agent.address,
+        signature: signMessage(
+          proposalMessage({
+            orgSlug: slug,
+            category: DecisionCategory.ALLOCATION_POLICY,
+            title: "Raise the Cat's ceiling",
+            proposerAddress: agent.address,
+            contentHash,
+          }),
+          agent.privateKeyHex,
+        ),
+      },
     };
 
     // Agent without its API key: signature verifies, transport refused.
@@ -110,12 +113,15 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     // --- Vote: two humans + the agent, each with their own signature ---
     const cast = async (pair: typeof alice, choice: "yes" | "no" | "abstain") =>
       submitVote(session.id, {
-        address: pair.address,
+        by: {
+          via: "key",
+          address: pair.address,
+          signature: signMessage(
+            voteMessage({ sessionId: session.id, choice, memberAddress: pair.address }),
+            pair.privateKeyHex,
+          ),
+        },
         ballot: { method: "single_choice", choice },
-        signature: signMessage(
-          voteMessage({ sessionId: session.id, choice, memberAddress: pair.address }),
-          pair.privateKeyHex,
-        ),
       });
 
     expect((await cast(alice, "yes")).stored).toBe(true);
@@ -163,14 +169,17 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(contentHashOf(d.proposal.proposedContent)).toBe(d.proposal.contentHash);
     expect(
       verifyMessage(
-        d.proposal.proposerMessage,
-        d.proposal.proposer.bitcoinAddress,
-        d.proposal.proposerSignature,
+        d.proposal.proposerMessage ?? "",
+        d.proposal.proposer.bitcoinAddress ?? "",
+        d.proposal.proposerSignature ?? "",
       ).valid,
     ).toBe(true);
     expect(d.votes).toHaveLength(3);
     for (const v of d.votes) {
-      expect(verifyMessage(v.signedMessage, v.member.bitcoinAddress, v.signature).valid).toBe(true);
+      expect(v.proof).toBe("BIP137");
+      expect(
+        verifyMessage(v.signedMessage, v.member.bitcoinAddress ?? "", v.signature ?? "").valid,
+      ).toBe(true);
       // The signed message must bind THIS session and THIS voter.
       expect(v.signedMessage).toContain(`session:${session.id}`);
       expect(v.signedMessage).toContain(`voter:${v.member.bitcoinAddress}`);
@@ -230,16 +239,19 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
       category: DecisionCategory.MEMBERSHIP,
       title: "Admit a new member",
       body: "Roster change — humans only.",
-      proposerAddress: human.address,
-      signature: signMessage(
-        proposalMessage({
-          orgSlug: slug,
-          category: DecisionCategory.MEMBERSHIP,
-          title: "Admit a new member",
-          proposerAddress: human.address,
-        }),
-        human.privateKeyHex,
-      ),
+      by: {
+        via: "key",
+        address: human.address,
+        signature: signMessage(
+          proposalMessage({
+            orgSlug: slug,
+            category: DecisionCategory.MEMBERSHIP,
+            title: "Admit a new member",
+            proposerAddress: human.address,
+          }),
+          human.privateKeyHex,
+        ),
+      },
     });
     expect(filed.created).toBe(true);
 
@@ -248,12 +260,15 @@ describe.runIf(RUN)("vote spine (database integration)", () => {
     expect(session.eligibleCount).toBe(1); // the agent is not in the electorate
 
     const agentVote = await submitVote(session.id, {
-      address: agent.address,
+      by: {
+        via: "key",
+        address: agent.address,
+        signature: signMessage(
+          voteMessage({ sessionId: session.id, choice: "yes", memberAddress: agent.address }),
+          agent.privateKeyHex,
+        ),
+      },
       ballot: { method: "single_choice", choice: "yes" },
-      signature: signMessage(
-        voteMessage({ sessionId: session.id, choice: "yes", memberAddress: agent.address }),
-        agent.privateKeyHex,
-      ),
     });
     expect(agentVote).toMatchObject({ stored: false, verified: true });
     expect(agentVote.reason).toMatch(/humans-only/);

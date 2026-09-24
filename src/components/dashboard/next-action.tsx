@@ -29,7 +29,8 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
   if (!session?.actorId) {
     return {
       headline: "Sign in to take part",
-      detail: "Reading needs no account. Voting needs an identity on the roster and a Bitcoin key.",
+      detail:
+        "Reading needs no account. Voting needs an OrangeCat identity with a seat on the roster.",
       href: "/join",
       cta: "Get started",
     };
@@ -46,8 +47,7 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     return open
       ? {
           headline: "The founding seat is unclaimed",
-          detail:
-            "No human is on this roster yet. Sign a message with a Bitcoin key you control and the seat is yours.",
+          detail: "No human is on this roster yet. Claim it with one click and the seat is yours.",
           href: "/join",
           cta: "Claim the seat",
         }

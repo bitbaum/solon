@@ -6,6 +6,8 @@ import { canonicalBallot, methodSpec, parseBallot } from "@/lib/domain/methods";
 import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import type { Aggregate, BallotOption, MethodId } from "@/lib/domain/methods/types";
 import BallotEditor from "./ballot-editor";
+import ActStep from "@/components/governance/act-step";
+import type { Viewer } from "@/lib/auth/recognition";
 
 export interface VotingInterfaceProps {
   session: {
@@ -18,6 +20,10 @@ export interface VotingInterfaceProps {
     dotBudget: number;
   };
   aggregate: Aggregate | null;
+  /** Who is looking — decides whether they get the one-click vote. */
+  viewer: Viewer;
+  /** Where "sign in" should bring them back to. */
+  here: string;
 }
 
 interface VoteVerdict {
@@ -46,24 +52,28 @@ function emptyBallot(method: MethodId): unknown {
 }
 
 /**
- * Casting a vote requires a real Bitcoin signed-message signature: the member
- * signs the canonical vote message with their own wallet (Sparrow, Electrum,
- * Bitcoin Core `signmessage`) and pastes the signature here. The server
- * verifies it; nothing is stored on failure and the verdict is shown as-is.
+ * A member votes with one click: they are signed in, the seat is theirs, and
+ * pressing Vote is the vote. Voting again before the session closes replaces
+ * the earlier ballot.
  *
- * The message shown is built by the same `canonicalBallot` the server verifies
- * against, so "sign exactly this" is a guarantee rather than a hope — and
- * because option keys are readable slugs, a voter can check that the text they
- * are signing says what they think it says.
+ * Signing is the optional stronger path, for a member with a registered key:
+ * they sign the canonical vote message with their own wallet (Sparrow,
+ * Electrum, Bitcoin Core `signmessage`) and paste the signature. The message is
+ * built by the same `canonicalBallot` the server verifies against, so "sign
+ * exactly this" is a guarantee rather than a hope.
  */
-export default function VotingInterface({ session, aggregate }: VotingInterfaceProps) {
+export default function VotingInterface({
+  session,
+  aggregate,
+  viewer,
+  here,
+}: VotingInterfaceProps) {
   const spec = methodSpec(session.method);
   const [ballot, setBallot] = useState<unknown>(() => emptyBallot(session.method));
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState(viewer.seat?.bitcoinAddress ?? "");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [verdict, setVerdict] = useState<VoteVerdict | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const isOpen = session.status === "ACTIVE";
 
@@ -86,14 +96,14 @@ export default function VotingInterface({ session, aggregate }: VotingInterfaceP
 
   const liveAggregate = verdict?.aggregate ?? aggregate;
 
-  async function submit() {
+  async function submit(withKey: boolean) {
     setSubmitting(true);
     setVerdict(null);
     try {
       const res = await fetch(`/api/sessions/${session.id}/votes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ballot, address, signature }),
+        body: JSON.stringify({ ballot, ...(withKey ? { address, signature } : {}) }),
       });
       setVerdict(await res.json());
     } catch {
@@ -136,18 +146,23 @@ export default function VotingInterface({ session, aggregate }: VotingInterfaceP
 
       {isOpen && (
         <div className="rounded-surface border border-default p-4 bg-surface-raised space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-fg-primary" htmlFor="vote-address">
-              Your Bitcoin address (registered member)
-            </label>
-            <input
-              id="vote-address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value.trim())}
-              placeholder="1..."
-              className="mt-1 w-full px-3 py-2 rounded-control border border-default font-mono text-sm"
-            />
-          </div>
+          {!viewer.seat && (
+            <p className="text-sm text-fg-secondary">
+              {viewer.signedIn ? (
+                "You do not hold a seat in this organization, so you can follow this vote but not cast it."
+              ) : (
+                <>
+                  Members vote here with one click.{" "}
+                  <a
+                    href={`/join?next=${encodeURIComponent(here)}`}
+                    className="font-semibold text-fg-primary underline underline-offset-2"
+                  >
+                    Sign in to vote
+                  </a>
+                </>
+              )}
+            </p>
+          )}
 
           <BallotEditor
             method={session.method}
@@ -159,64 +174,51 @@ export default function VotingInterface({ session, aggregate }: VotingInterfaceP
 
           {invalid && <p className="text-sm text-fg-secondary">{invalid}</p>}
 
-          {message && (
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="block text-sm font-medium text-fg-primary">
-                  Sign exactly this message with your wallet
-                </span>
-                <button
-                  type="button"
-                  className="text-xs text-fg-primary underline"
-                  onClick={async () => {
-                    await navigator.clipboard.writeText(message);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
-                >
-                  {copied ? "Copied" : "Copy message"}
-                </button>
-              </div>
-              <pre className="mt-1 p-3 rounded-control bg-surface-base border border-default text-xs font-mono whitespace-pre-wrap break-all">
-                {message}
-              </pre>
-            </div>
-          )}
+          <ActStep
+            label={verdict?.stored ? "Change my vote" : "Vote"}
+            onAct={viewer.seat ? () => submit(false) : undefined}
+            disabled={invalid !== null}
+            submitting={submitting}
+            rejection={
+              verdict && !verdict.stored
+                ? `Vote not recorded: ${verdict.reason ?? "unknown reason"}`
+                : null
+            }
+            signing={
+              // A seat without a key has nothing to sign with; everyone else may sign.
+              viewer.seat && !viewer.seat.bitcoinAddress
+                ? undefined
+                : {
+                    fields: viewer.seat ? undefined : (
+                      <div>
+                        <label
+                          className="block text-sm font-medium text-fg-primary"
+                          htmlFor="vote-address"
+                        >
+                          Your registered Bitcoin address
+                        </label>
+                        <input
+                          id="vote-address"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value.trim())}
+                          placeholder="bc1… or 1…"
+                          className="mt-1 w-full rounded-control border border-default bg-surface-base px-3 py-2 font-mono text-sm text-fg-primary"
+                        />
+                      </div>
+                    ),
+                    message,
+                    hint: "your wallet",
+                    signature,
+                    onSignatureChange: setSignature,
+                    onSubmitSigned: () => submit(true),
+                  }
+            }
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-fg-primary" htmlFor="vote-signature">
-              Signature (base64, from your wallet&apos;s Sign Message tool)
-            </label>
-            <textarea
-              id="vote-signature"
-              value={signature}
-              onChange={(e) => setSignature(e.target.value.trim())}
-              rows={3}
-              className="mt-1 w-full px-3 py-2 rounded-control border border-default font-mono text-xs"
-            />
-          </div>
-
-          <button
-            type="button"
-            disabled={submitting || !address || !signature || !message}
-            onClick={submit}
-            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitting ? "Verifying signature…" : "Submit signed vote"}
-          </button>
-
-          {verdict && (
-            <div
-              className={`rounded-control p-3 text-sm border ${
-                verdict.stored
-                  ? "bg-green-50 text-green-800 border-green-200"
-                  : "bg-red-50 text-red-800 border-red-200"
-              }`}
-            >
-              {verdict.stored
-                ? "Vote verified and recorded."
-                : `Vote rejected: ${verdict.reason ?? "signature did not verify"}`}
-            </div>
+          {verdict?.stored && (
+            <p className="rounded-control border border-status-positive/40 bg-surface-base p-3 text-sm text-fg-primary">
+              Your vote is recorded. You can change it until the session closes.
+            </p>
           )}
         </div>
       )}

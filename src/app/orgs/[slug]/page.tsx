@@ -100,7 +100,7 @@ export default async function OrganizationPage({ params }: { params: Params }) {
                     </span>
                   </div>
                   <p className="mt-1.5 break-all font-mono text-xs text-fg-secondary">
-                    {m.bitcoinAddress}
+                    {m.bitcoinAddress ?? "votes with an OrangeCat account"}
                   </p>
                 </li>
               ))}

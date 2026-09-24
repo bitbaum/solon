@@ -35,9 +35,11 @@ export interface BallotEditorProps {
 }
 
 const fieldLabel = "block text-sm font-medium text-fg-primary";
-const chip = "px-4 py-2 rounded-control border transition-colors border-default text-fg-primary";
-const chipOn = "bg-surface-raised";
-const chipOff = "bg-surface-base hover:bg-surface-raised";
+const chip = "px-4 py-2 rounded-control border transition-colors";
+// The chosen answer must read as chosen: it was bg-surface-raised on a
+// surface-raised card, so a voter could not see which answer they had picked.
+const chipOn = "border-accent bg-accent font-semibold text-on-accent";
+const chipOff = "border-default bg-surface-base text-fg-primary hover:bg-surface-raised";
 
 export default function BallotEditor({
   method,
@@ -57,6 +59,7 @@ export default function BallotEditor({
               key={c}
               type="button"
               onClick={() => onChange(() => ({ method, choice: c }))}
+              aria-pressed={current === c}
               className={`${chip} ${current === c ? chipOn : chipOff}`}
             >
               {c.toUpperCase()}
@@ -86,6 +89,7 @@ export default function BallotEditor({
                     rationale: (prev as { rationale?: string })?.rationale ?? "",
                   }))
                 }
+                aria-pressed={current === r}
                 className={`${chip} ${current === r ? chipOn : chipOff}`}
               >
                 {r === "object" ? "OBJECT" : r.toUpperCase()}

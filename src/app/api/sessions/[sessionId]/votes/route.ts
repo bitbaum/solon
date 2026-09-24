@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { submitVote } from "@/lib/domain/voting";
+import { auth } from "@/lib/auth";
+import { resolveActor, selfOriginOf } from "@/lib/auth/actor";
 
 /**
  * The ballot is validated against the session's method downstream, not here —
@@ -14,16 +16,15 @@ import { submitVote } from "@/lib/domain/voting";
 const BodySchema = z.object({
   ballot: z.unknown().optional(),
   choice: z.enum(["yes", "no", "abstain"]).optional(),
-  address: z.string().min(20).max(90),
-  signature: z.string().min(1).max(200),
+  address: z.string().min(20).max(90).optional(),
+  signature: z.string().min(1).max(200).optional(),
 });
 
 /**
- * Cast a cryptographically-signed vote. The body carries the member's Bitcoin
- * address and a Bitcoin signed-message signature over the canonical vote
- * message (see lib/bitcoin/message.ts). The server verifies the signature; an
- * invalid one is rejected and never stored. No transport auth: the signature
- * IS the authorization, and votes are public record anyway.
+ * Cast (or change) a vote. With `address` + `signature` the vote is signed:
+ * the server verifies the Bitcoin signature over the canonical vote message
+ * (lib/bitcoin/message.ts), no session needed. Without them, the signed-in
+ * member votes with one click — see lib/auth/actor.ts.
  */
 export async function POST(req: Request, ctx: { params: Promise<{ sessionId: string }> }) {
   const params = await ctx.params;
@@ -41,11 +42,20 @@ export async function POST(req: Request, ctx: { params: Promise<{ sessionId: str
     return NextResponse.json({ error: "a ballot is required" }, { status: 400 });
   }
 
-  const result = await submitVote(params.sessionId, {
-    address,
-    signature,
-    ballot: effectiveBallot,
+  const who = resolveActor({
+    key: { address, signature },
+    sessionActorId: address || signature ? null : (await auth())?.actorId,
+    requestOrigin: req.headers.get("origin"),
+    selfOrigin: selfOriginOf(req),
   });
+  if (!who.ok) {
+    return NextResponse.json(
+      { stored: false, verified: false, reason: who.reason },
+      { status: who.status },
+    );
+  }
+
+  const result = await submitVote(params.sessionId, { by: who.actor, ballot: effectiveBallot });
   if (!result.stored) {
     // 401 when the signature itself failed; 422 when it verified but the
     // voter/session wasn't eligible.
