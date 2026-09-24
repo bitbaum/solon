@@ -19,7 +19,7 @@ Measured 2026-09-24 against the code and `solon.orangecat.ch`:
 | Policies are voted | `originator_share` v1 and `claimed_project` arrived by migration, with no decision behind them |
 | Humans-only red lines | Correct in code, but with no human seat a humans-only session can never open. Org #1 cannot amend its own rules |
 
-**What is genuinely good and must survive:** Bitcoin-signed proposals and votes;
+**What is genuinely good and must survive:** signed proposals and votes (Bitcoin-only today; §2.4 opens that up);
 rules snapshotted at open; six counting methods; an append-only audit; the
 self-verifying decision document; and the principle — already practised by
 OrangeCat — that **a Solon decision is evidence, not authority**: the executor
@@ -28,7 +28,7 @@ it acts. That principle is the whole architecture below.
 
 What is missing is not more governance theory. The site has plenty. Solon lacks
 four things: **rules as data, decisions with effects, executors that enforce
-them, and people who can vote without pasting base64.**
+them, and a way to take part that does not require owning Bitcoin.**
 
 ## 1. The shape: separation of powers across the three planes
 
@@ -38,7 +38,7 @@ The stack already has the organs of a polity. It has not wired them as one.
 |---|---|---|---|
 | **Legislative**: makes and amends rules | Solon | the charter, proposals, signed votes, decisions | votes are real, effects are not |
 | **Executive**: carries decisions out | Loki | agents, the `actions` approval queue, Crew `human_tasks`, provisioning | `/api/solon/events` receives decisions and only logs them |
-| **Treasury**: moves value | OrangeCat | entity + group wallets, NWC/Lightning, the Cat's spend caps | enforces exactly one Solon policy (`allocation_policy`) |
+| **Treasury**: moves value | OrangeCat, or the group's own bank account | OrangeCat wallets (CHF or sats), or an ordinary bank account kept as a ledger; the Cat's spend caps | enforces exactly one Solon policy (`allocation_policy`) |
 | **Judicial**: resolves disputes, checks execution | Solon | — | absent |
 
 Each executor **re-verifies** before acting (OrangeCat's `decision-verify.ts`
@@ -120,14 +120,21 @@ The user's "if agreed" is the design. The charter picks one mode per category:
    clicks, but only on a mandate, and the click is receipted.
 3. **Automatic.** The executor acts on a re-verified mandate. It stays bounded by
    caps the charter itself sets (as the Cat's ceiling is bounded today).
-4. **Keyholder multisig: treasury without custody.** A `treasury.spend`
+A treasury is **whatever money the group already has**. Usually that is a bank
+account, and it enters Solon as a ledger: statements imported (Swiss banks
+export camt.053), each outflow matched to the mandate that authorised it. An
+OrangeCat wallet or an on-chain address is an option, not a precondition.
+
+4. **Keyholder multisig: treasury without custody.** For groups that choose
+   an on-chain treasury. A `treasury.spend`
    decision produces a PSBT. The elected keyholders sign it in their own
    wallets, and Solon never holds a key.
 
-    Solon already *watches* treasury addresses. Combining watching with mandates
-    gives the strongest transparency feature available: **any outflow that no
-    mandate authorised is detected and raised automatically as a SAFETY motion.**
-    Custody-free enforcement is detection plus consequence, and it is public.
+    Whatever the treasury is, combining a watched ledger with mandates gives the
+    strongest transparency feature available: **any outflow that no mandate
+    authorised is detected and raised automatically as a SAFETY motion.** On-chain
+    this is live; for a bank account it happens at each statement import.
+    Enforcement without custody is detection plus consequence, and it is public.
 
 Further tools, each opt-in per charter:
 
@@ -135,25 +142,51 @@ Further tools, each opt-in per charter:
 - publish decisions to Nostr, for a record no host can silently rewrite;
 - AI auditors (§2.5).
 
-### 2.4 Membership people can actually use
+### 2.4 Participation without Bitcoin: assurance levels
 
-Today, voting means copying a message into Sparrow and pasting a base64
-signature back. That is the adoption wall. The fix is to keep verifiability and
-add signers:
+**Solon's promise is a vote anyone can recount, not a vote signed with Bitcoin.**
+Today the two are welded together. `members.bitcoin_address` is `NOT NULL`, and
+every proposal and vote needs a BIP-137 signature pasted in from Sparrow or
+Electrum. That makes owning a self-custody Bitcoin wallet the price of a seat.
+Almost every group of people who need governance (an association, a house, a
+club, a parent council) would be excluded on day one. Bitcoin should be one way
+to sign, not the door.
 
-- **Self-custody (today):** BIP-137 message signing, which stays the gold standard.
-- **Nostr (NIP-07):** one click from a browser extension. It is still a
-  verifiable Schnorr signature, and OrangeCat already has `src/lib/nostr/`.
-- **Service key:** `key_custody: SERVICE` already exists in the schema. OrangeCat
-  holds a per-member voting key and signs on the member's click, which gives
-  one-tap voting. The trust in OrangeCat is explicit, and **the charter can
-  require SELF custody** for chosen categories (e.g. GOVERNANCE_RULES, TREASURY).
-  This is a voting key, not money.
+The fix is to separate **who you are** (the seat) from **how you sign** (the
+credential), and let the charter set the **minimum assurance per category**:
 
-Admission follows the charter (§2.1), and one seat per OrangeCat actor is
-already enforced. Sybil resistance comes from sponsorship or a vote, never from
-a KYC gate. This is consistent with the no-auth-friction standing rule: fix the
-exposure, do not add steps.
+| Level | How a member signs | What a recount proves | Needs |
+|---|---|---|---|
+| **A: Account** | Signed in (OrangeCat account, or an emailed one-time ballot link for invited members); Solon signs the ballot with its own key | That Solon recorded this ballot for this seat. It proves the operator's word, not the member's | an email address |
+| **B: Passkey** (proposed default) | Face ID / fingerprint / device PIN (WebAuthn). The device signs the ballot hash as the challenge | That **the member's own device** signed exactly this ballot. Anyone holding the published public key can re-verify it; no operator trust | a phone or laptop made in the last ~5 years |
+| **C: Own key** | Nostr (NIP-07 extension, one click) or Bitcoin message signing (today's path) | Same as B, with a key the member holds independently of any device vendor or Solon | a key the member manages |
+
+Passkeys are the important discovery here: they give ordinary people
+**cryptographic, recountable votes with no blockchain, no wallet and no seed
+phrase**. A charter might say: polls and operations at level A, spending and
+membership at level B, charter amendments at B or C. A group that later wants
+Bitcoin-grade independence raises the bar by vote.
+
+The data model follows:
+
+- `members.bitcoin_address` becomes one row in a `member_credentials` table
+  (`scheme: account | webauthn | nostr | bip137`, public key, enrolled-at).
+- Enrolling a credential is itself an audited `member.credential` event, so a
+  key cannot appear silently.
+- Every ballot records its `scheme`.
+- The decision document carries whatever each scheme needs to re-verify it: for
+  WebAuthn, the `authenticatorData` and `clientDataJSON`.
+- The verifier (§3 `solon-verify`) handles all four schemes.
+
+OrangeCat's `decision-verify.ts` handles BIP-137 only today, so it must move to
+that package rather than grow a second implementation.
+
+The Cat and Loki keep their Bitcoin keys. Nothing that works today is removed.
+
+Admission follows the charter (§2.1), and one seat per identity is already
+enforced. Sybil resistance comes from sponsorship or a vote, never from a KYC
+gate or a hardware requirement. This is consistent with the no-auth-friction
+standing rule: fix the exposure, do not add steps.
 
 ### 2.5 Deliberation, and AI agents in defined roles
 
@@ -252,15 +285,19 @@ with a decision behind it.
 Each step is shippable on its own and leaves the record more honest than before.
 
 **Phase 0: make the current claims true (days)**
-1. George takes the genesis human seat. His self-custody address is the one
-   input only he can give; until then humans-only categories are dead.
+1. Decouple the seat from Bitcoin: `member_credentials`, with passkey (WebAuthn)
+   as the first new scheme (§2.4). This also unblocks org #1, because George
+   can take the genesis human seat with a passkey instead of a wallet.
+   Humans-only categories have been dead until a human seat exists.
 2. Decide vote changes: either refuse a second ballot or re-snapshot weight on
    change. Then fix the README to match.
 3. One source for thresholds. The ratification check watches
    `governance-profiles.ts` too.
 4. Ratify `originator_share` v1 and `claimed_project` by vote, so no rule stands
    without a decision.
-5. Stale e2e headings; AGENTS/README i18n contradiction; react/react-dom mismatch.
+5. Copy: the homepage says "Bitcoin-Native Governance". Lead with verifiable
+   governance for any group, and keep Bitcoin as one option among the signers.
+6. Stale e2e headings; AGENTS/README i18n contradiction; react/react-dom mismatch.
 
 **Phase 1: Charter + internal effects**
 - `charters` table (versioned), with profiles as templates and a migration from
@@ -278,7 +315,9 @@ Each step is shippable on its own and leaves the record more honest than before.
 - Unmandated-outflow detection on watched treasuries → SAFETY motion.
 
 **Phase 3: Usable membership and deliberation**
-- Nostr and service-key signers; charter-gated custody requirements.
+- Account-level (A) ballots incl. emailed ballot links; Nostr signer;
+  per-category minimum assurance in the charter.
+- Bank-statement import (camt.053) as a treasury ledger.
 - threadkit discussions and amendments.
 - AI Clerk, then the Advocate pair.
 
@@ -293,10 +332,12 @@ Each step is shippable on its own and leaves the record more honest than before.
 
 ## 8. Decisions that are George's
 
-1. **Genesis seat.** Your self-custody Bitcoin address (Phase 0.1). Everything
-   humans-only waits on it.
-2. **Service-custodied voting keys.** Allow them (one-tap voting, trust in
-   OrangeCat, charter can forbid per category), or self-custody/Nostr only?
+1. **Default assurance level.** Passkey (B) as the default for new orgs, with
+   account-level (A) allowed for low-stakes categories? Or A as the default,
+   so a member needs nothing but an email?
+2. **Account-level votes at all.** Level A is operator-attested, so a recount
+   proves Solon's word rather than the member's. Offer it (lowest friction,
+   honestly labelled), or require at least a passkey everywhere?
 3. **Is a mandate an approval?** Loki's iron rule is "no auto-approve, no
    bypass". Does a verified community decision count as the approval
    (enforcement mode 3), or does it always land as a draft for an officer
