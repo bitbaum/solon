@@ -27,7 +27,8 @@ export default function Home() {
         <div className="section-shell py-section text-center">
           <h2 className="font-display text-display-2 text-fg-primary">Govern in the open</h2>
           <p className="mx-auto mt-6 max-w-lede text-lg text-fg-secondary">
-            Every decision and every vote — signed, recorded, and re-verifiable by anyone.
+            Every decision and every vote — recorded in public, and labelled with exactly what
+            proves it.
           </p>
           <div className="mt-11 flex flex-col justify-center gap-3 sm:flex-row">
             <a

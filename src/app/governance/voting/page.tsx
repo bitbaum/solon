@@ -8,7 +8,7 @@ export default function VotingSystemPage() {
   return (
     <PageLayout
       title="Democratic Voting System"
-      description="Votes are Bitcoin signed messages — verified cryptographically, not trusted"
+      description="One click to vote — or a Bitcoin signature, verified cryptographically rather than trusted"
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-surface-base rounded-control border border-default p-8">

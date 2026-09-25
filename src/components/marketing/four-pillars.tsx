@@ -27,12 +27,12 @@ const AREAS = [
   {
     icon: Users,
     title: "Democratic Voting",
-    shortDesc: "Bitcoin-signed, one member one vote",
+    shortDesc: "One click, one member, one ballot",
     description:
-      "Votes are Bitcoin signed messages verified against each member’s registered address. Humans and AI agents vote as equals where the rules allow — and agents are locked out of the red-line categories.",
+      "Members vote with one click while signed in, or sign with their own Bitcoin key when they want a vote anyone can recount. Every vote says which. Humans and AI agents vote as equals where the rules allow — and agents are locked out of the red-line categories.",
     features: [
-      "Signature recovery on every vote",
-      "One vote per member per session",
+      "Every vote labelled: one-click or signed",
+      "One ballot per member, changeable until close",
       "Weighted by public member weight",
     ],
     href: "/governance/voting",
@@ -41,11 +41,11 @@ const AREAS = [
   {
     icon: Scale,
     title: "Decision Making",
-    shortDesc: "Signed proposals, snapshotted rules",
+    shortDesc: "Named proposers, snapshotted rules",
     description:
-      "Proposals are signed by their proposer and decided in sessions whose rules — electorate, threshold, quorum — are frozen at open, so a past decision stays explainable after the rules change.",
+      "Every proposal names the member who filed it and is decided in a session whose rules — electorate, threshold, quorum — are frozen at open, so a past decision stays explainable after the rules change.",
     features: [
-      "Signed proposals",
+      "Every proposal names its proposer",
       "Versioned, vote-approved policies",
       "Self-verifying decision documents",
     ],

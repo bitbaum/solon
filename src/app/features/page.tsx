@@ -14,13 +14,13 @@ export default function FeaturesPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <FeatureCard
-            title="Bitcoin-Signed Voting"
-            description="Votes are Bitcoin signed messages, verified server-side against each member's registered address"
+            title="One-Click Voting"
+            description="Signed-in members vote with one click; anyone who wants more signs with their own Bitcoin key, verified against their registered address"
             icon={Vote}
             features={[
-              "Signature recovery on every vote",
-              "One member, one vote per session",
-              "Signed proposals",
+              "Every vote labelled: one-click or signed",
+              "One ballot per member, changeable until close",
+              "Optional signed proposals",
               "Yes / no / abstain with weights",
             ]}
           />
