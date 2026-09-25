@@ -55,6 +55,11 @@ body {
     @apply inline-flex items-center justify-center rounded-control border border-default bg-surface-base px-4 py-2 text-sm font-semibold text-fg-primary transition-colors hover:bg-surface-raised;
   }
 
+  /* A text field. One definition, so every form on the site looks the same. */
+  .field {
+    @apply block w-full min-h-12 rounded-control border border-default bg-surface-raised px-4 text-base text-fg-primary placeholder:text-fg-tertiary focus:border-accent focus:outline-none;
+  }
+
   /*
    * The call to action on a full-screen section: an uppercase label in a thin
    * light frame that fills on hover. Square corners on purpose — it sits on a

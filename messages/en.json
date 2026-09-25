@@ -920,5 +920,27 @@
       "orangecat": "Visit OrangeCat",
       "loki": "Visit Loki"
     }
+  },
+  "Entry": {
+    "kicker": "Your account",
+    "signInTitle": "Sign in to Solon",
+    "signUpTitle": "Create your Solon account",
+    "lede": "One account for Solon, OrangeCat and Loki. Free, and no wallet needed.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.org",
+    "continue": "Continue",
+    "or": "or",
+    "with": {
+      "google": "Continue with Google",
+      "github": "Continue with GitHub",
+      "orangecat": "I already have an OrangeCat account"
+    },
+    "toSignUp": "New here? Create an account",
+    "toSignIn": "Already have an account? Sign in",
+    "howTitle": "What happens next",
+    "how": "You finish on OrangeCat's sign-in page, which keeps the one account for Solon, OrangeCat and Loki, and come straight back here. Solon never sees your password.",
+    "readFreely": "You never need an account to read anything on Solon: every decision and its record are public.",
+    "unavailable": "Sign-in is not switched on for this copy of Solon. Everything here is still readable without an account.",
+    "photoLine": "Decided in the open."
   }
 }

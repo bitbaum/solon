@@ -354,5 +354,27 @@
     "kicker": "Crediti fotografici",
     "title": "Le fotografie di questo sito",
     "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere."
+  },
+  "Entry": {
+    "kicker": "Il tuo account",
+    "signInTitle": "Accedi a Solon",
+    "signUpTitle": "Crea il tuo account Solon",
+    "lede": "Un solo account per Solon, OrangeCat e Loki. Gratuito, senza wallet.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "tu@esempio.ch",
+    "continue": "Continua",
+    "or": "oppure",
+    "with": {
+      "google": "Continua con Google",
+      "github": "Continua con GitHub",
+      "orangecat": "Ho già un account OrangeCat"
+    },
+    "toSignUp": "Sei nuovo? Crea un account",
+    "toSignIn": "Hai già un account? Accedi",
+    "howTitle": "Cosa succede dopo",
+    "how": "Completi l’accesso sulla pagina di OrangeCat, che custodisce l’unico account per Solon, OrangeCat e Loki, e torni subito qui. Solon non vede mai la tua password.",
+    "readFreely": "Per leggere qualsiasi cosa su Solon non serve un account: ogni decisione e il suo registro sono pubblici.",
+    "unavailable": "L’accesso non è attivo su questa istanza di Solon. Tutto resta leggibile senza account.",
+    "photoLine": "Deciso alla luce del sole."
   }
 }

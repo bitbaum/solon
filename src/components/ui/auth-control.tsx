@@ -1,20 +1,21 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useSession } from "next-auth/react";
 
 /**
- * The header's session corner. Signed out: "Sign in" — OrangeCat is the only
- * identity provider, so there is nothing to choose between. Signed in: your
- * name, linking to /account. Session state is fetched client-side so the
- * marketing pages stay static; until it arrives the signed-out label shows,
- * because most visitors are signed out.
+ * The header's session corner. Signed out: "Sign in", which opens Solon's own
+ * sign-in page and remembers this page so the reader comes back to it. Signed
+ * in: your name, linking to /account. Session state is fetched client-side so
+ * the marketing pages stay static; until it arrives the signed-out label
+ * shows, because most visitors are signed out.
  *
  * `compact` is the full-width version the mobile menu uses.
  */
 export default function AuthControl({ compact = false }: { compact?: boolean }) {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const t = useTranslations("Nav");
 
   const className = compact
@@ -29,9 +30,13 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
     );
   }
 
+  const onEntryPage = pathname === "/sign-in" || pathname === "/sign-up";
   return (
-    <button type="button" onClick={() => signIn("orangecat")} className={className}>
+    <Link
+      href={onEntryPage ? "/sign-in" : { pathname: "/sign-in", query: { from: pathname } }}
+      className={className}
+    >
       {t("signIn")}
-    </button>
+    </Link>
   );
 }
