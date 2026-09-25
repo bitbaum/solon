@@ -1,23 +1,24 @@
 import { test, expect } from "@playwright/test";
+import { PRIMARY_NAV, SITE_SECTIONS } from "../../src/lib/site-config";
 
 test.describe("Header & Footer", () => {
-  test("header renders logo, nav, and CTAs, footer renders columns", async ({ page }) => {
-    await page.goto("/");
+  test("header carries the primary links and one call to action; footer lists the site", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    // Header
-    await expect(page.getByRole("navigation", { name: "Main Navigation" })).toBeVisible();
-    await expect(page.getByText("SOLON").first()).toBeVisible();
-    // At least one top-level menu button is visible
-    await expect(page.getByRole("button", { name: "Platform" }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: "Open Dashboard" })).toBeVisible();
+    const nav = page.getByRole("navigation", { name: "Main" });
+    await expect(nav).toBeVisible();
+    for (const item of PRIMARY_NAV) {
+      await expect(nav.getByRole("link", { name: item.title, exact: true })).toBeVisible();
+    }
+    await expect(nav.getByRole("link", { name: "Hire Solon" })).toBeVisible();
 
-    // Footer
-    // Pick the white footer (site footer), not any dark section footer
-    const siteFooter = page.locator("footer.mt-16");
-    await expect(siteFooter).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Platform")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Governance")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Ecosystem")')).toBeVisible();
-    await expect(siteFooter.locator('div:text-is("Resources")')).toBeVisible();
+    const footer = page.locator("footer");
+    await expect(footer).toBeVisible();
+    for (const section of SITE_SECTIONS) {
+      await expect(footer.getByText(section.title, { exact: true }).first()).toBeVisible();
+    }
   });
 });

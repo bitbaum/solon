@@ -1,64 +1,70 @@
 import Link from "next/link";
+import Logo from "./logo";
 import { ECOSYSTEM_PILLARS, SOLON_GITHUB_URL } from "@/lib/config/ecosystem";
-import { FOOTER_SECTIONS, footerLinkLabel } from "@/lib/site-config";
+import { CONTACT_EMAIL, SITE_SECTIONS } from "@/lib/site-config";
 
-// Only routes that actually exist belong here — a footer link to a 404 is a lie.
-// That is now structural rather than a promise: every destination below comes
-// from NAV_ITEMS, so a page removed from the nav cannot survive in the footer.
+/**
+ * The whole site, one scroll away. The header carries three links; this is
+ * where every other page is found, rendered from the same SITE_SECTIONS the
+ * mobile menu uses — so a page removed there cannot linger here.
+ */
 export default function Footer() {
   const siblings = ECOSYSTEM_PILLARS.filter((p) => p.key !== "solon");
 
   return (
     <footer className="border-t border-subtle bg-surface-public">
-      <div className="section-shell py-14">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-          {FOOTER_SECTIONS.map((section) => (
+      <div className="section-shell py-16">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
+          <div className="col-span-2 md:col-span-1">
+            <Logo size="sm" />
+            <p className="mt-4 max-w-xs text-sm text-fg-secondary">
+              Governance for any group of people. Beta — running, not released.
+            </p>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-4 inline-block text-sm text-fg-primary underline underline-offset-4"
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </div>
+          {SITE_SECTIONS.map((section) => (
             <div key={section.title}>
-              <div className="text-xs font-medium uppercase tracking-caps text-fg-tertiary">
-                {section.title}
-              </div>
+              <div className="kicker">{section.title}</div>
               <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
-                {section.links.map((link) => (
-                  <li key={`${section.title}:${link.href}`}>
+                {section.children.map((link) => (
+                  <li key={link.href}>
                     <Link href={link.href} className="transition-colors hover:text-fg-primary">
-                      {footerLinkLabel(link)}
+                      {link.title}
                     </Link>
                   </li>
                 ))}
-                {section.title === "Ecosystem" &&
-                  siblings.map((p) => (
-                    <li key={p.key}>
-                      <a
-                        href={p.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="transition-colors hover:text-fg-primary"
-                      >
-                        {p.name} — {p.role}
-                      </a>
-                    </li>
-                  ))}
-                {section.title === "Resources" && (
-                  <li>
-                    <a
-                      href={SOLON_GITHUB_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-fg-primary"
-                    >
-                      Source Code
-                    </a>
-                  </li>
-                )}
               </ul>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-subtle pt-6 sm:flex-row">
-          <div className="text-xs text-fg-tertiary">© {new Date().getFullYear()} Solon</div>
-          <div className="text-xs text-fg-tertiary">
-            The governance pillar of the OrangeCat stack.
+        <div className="mt-14 flex flex-col gap-3 border-t border-subtle pt-6 text-xs text-fg-tertiary sm:flex-row sm:items-center sm:justify-between">
+          <div>© {new Date().getFullYear()} Solon</div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {siblings.map((p) => (
+              <a
+                key={p.key}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-fg-primary"
+              >
+                {p.name} — {p.role}
+              </a>
+            ))}
+            <a
+              href={SOLON_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-fg-primary"
+            >
+              Source code
+            </a>
           </div>
         </div>
       </div>

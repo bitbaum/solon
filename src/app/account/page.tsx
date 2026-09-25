@@ -17,7 +17,7 @@ export default async function AccountPage() {
   if (!session?.actorId) {
     return (
       <main className="max-w-xl mx-auto py-24 text-center">
-        <h1 className="font-display text-display-3 text-fg-primary mb-4">Account</h1>
+        <h1 className="headline text-display-3 text-fg-primary mb-4">Account</h1>
         <p className="text-fg-secondary mb-8">
           Solon has no accounts of its own — no passwords, no registration. Sign in with OrangeCat
           to be recognized; voting itself never needs a login, only a Bitcoin signature.
@@ -54,7 +54,7 @@ export default async function AccountPage() {
 
   return (
     <main className="max-w-xl mx-auto py-16">
-      <h1 className="font-display text-display-3 text-fg-primary mb-8">Account</h1>
+      <h1 className="headline text-display-3 text-fg-primary mb-8">Account</h1>
 
       <section className="bg-surface-base border border-default rounded-surface p-6 mb-6">
         <h2 className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-4">

@@ -27,7 +27,7 @@ const KIND_LABEL: Record<NonNullable<TrailStop["kind"]>, string> = {
 export function Trail({ stops, title = "Keep going" }: { stops: TrailStop[]; title?: string }) {
   return (
     <nav aria-label={title} className="border-t border-default pt-10">
-      <h2 className="font-display text-2xl text-fg-primary">{title}</h2>
+      <h2 className="headline text-2xl text-fg-primary">{title}</h2>
       <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {stops.map((stop) => (
           <li key={stop.href}>

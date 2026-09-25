@@ -27,7 +27,7 @@ export default async function ProposalsPage() {
     <main className="section-shell py-section-tight">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-display-2 text-fg-primary">Proposals</h1>
+          <h1 className="headline text-display-2 text-fg-primary">Proposals</h1>
           <p className="mt-3 text-fg-secondary">
             Everything {org?.name ?? "this organization"} has been asked to decide.
           </p>
@@ -57,7 +57,7 @@ export default async function ProposalsPage() {
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <h2 className="font-display text-display-3 text-fg-primary">{p.title}</h2>
+                <h2 className="headline text-display-3 text-fg-primary">{p.title}</h2>
                 <p className="mt-1 text-sm text-fg-secondary">
                   {p.category.replace(/_/g, " ").toLowerCase()} · filed by {p.proposer.displayName}
                   {p.session?.outcome ? ` · ${p.session.outcome.toLowerCase()}` : ""}

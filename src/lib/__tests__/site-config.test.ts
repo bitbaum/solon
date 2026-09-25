@@ -1,74 +1,57 @@
 /**
- * The footer may only point at routes the nav says exist.
+ * The site's link map is one list, and the header may only use part of it.
  *
- * `NAV_ITEMS` carries the comment "only routes that actually exist belong here
- * — a nav link to a 404 is a lie", and the footer carried the same sentence
- * about itself. But the footer restated six of those routes as its own literal
- * `<Link>`s, and nothing tied the two lists together: removing a page from the
- * nav left the footer pointing at it, with no way to notice. Both files
- * promised the same thing and only one could keep it.
- *
- * `FOOTER_SECTIONS` now names hrefs instead of repeating them, and this test is
- * what makes that structural rather than a convention.
+ * The header and the footer used to keep separate lists of routes, and a page
+ * removed from one survived in the other. Now SITE_SECTIONS is the only list,
+ * and these tests are what make "a subset of it" structural rather than a hope.
  */
 import { describe, it, expect } from "vitest";
-import { NAV_ITEMS, NAV_CHILDREN, FOOTER_SECTIONS, footerLinkLabel } from "@/lib/site-config";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { HIRE_HREF, PRIMARY_NAV, SITE_LINKS, SITE_SECTIONS } from "@/lib/site-config";
 
 const internal = (href: string) => href.startsWith("/");
 
-describe("FOOTER_SECTIONS", () => {
-  it("only points at routes NAV_ITEMS declares", () => {
-    const known = new Set(NAV_CHILDREN.filter((c) => internal(c.href)).map((c) => c.href));
-    const unknown = FOOTER_SECTIONS.flatMap((s) =>
-      s.links.filter((l) => !known.has(l.href)).map((l) => `${s.title} → ${l.href}`),
-    );
-    expect(unknown, `not in NAV_ITEMS:\n${unknown.join("\n")}`).toEqual([]);
+/** The page file a route would render from, across route groups. */
+function routeExists(href: string): boolean {
+  const app = path.join(process.cwd(), "src/app");
+  const segments = href === "/" ? [] : href.slice(1).split("/");
+  const candidates = [
+    path.join(app, ...segments, "page.tsx"),
+    path.join(app, "(dashboard)", ...segments, "page.tsx"),
+  ];
+  return candidates.some((c) => existsSync(c));
+}
+
+describe("SITE_SECTIONS", () => {
+  it("links only to pages that exist", () => {
+    const missing = SITE_LINKS.filter((l) => internal(l.href) && !routeExists(l.href));
+    expect(missing.map((l) => l.href)).toEqual([]);
   });
 
-  it("inherits the nav's wording unless it deliberately overrides it", () => {
-    // /features carries no label, so it must read exactly as the nav does. If
-    // someone renames it in NAV_ITEMS, the footer follows without an edit.
-    const navFeatures = NAV_CHILDREN.find((c) => c.href === "/features");
-    const footFeatures = FOOTER_SECTIONS.flatMap((s) => s.links).find(
-      (l) => l.href === "/features" && !l.label,
-    );
-    expect(navFeatures).toBeDefined();
-    expect(footFeatures).toBeDefined();
-    expect(footerLinkLabel(footFeatures!)).toBe(navFeatures!.title);
+  it("names every page once", () => {
+    const hrefs = SITE_LINKS.map((l) => l.href);
+    expect(new Set(hrefs).size).toBe(hrefs.length);
   });
 
-  it("keeps the deliberate short labels", () => {
-    // The footer says "Voting" where the nav says "How voting works". That is a
-    // choice, not drift — so it is written down as an override rather than as a
-    // second copy of the route.
-    const voting = FOOTER_SECTIONS.flatMap((s) => s.links).find(
-      (l) => l.href === "/governance/voting",
-    );
-    expect(voting?.label).toBe("Voting");
-    expect(footerLinkLabel(voting!)).toBe("Voting");
-  });
-
-  it("has no duplicate href within one footer section", () => {
-    for (const section of FOOTER_SECTIONS) {
-      const hrefs = section.links.map((l) => l.href);
-      expect(new Set(hrefs).size, `duplicate in ${section.title}`).toBe(hrefs.length);
+  it("gives every section a title and at least one link", () => {
+    for (const section of SITE_SECTIONS) {
+      expect(section.title.trim()).not.toBe("");
+      expect(section.children.length).toBeGreaterThan(0);
     }
   });
 });
 
-describe("NAV_ITEMS", () => {
-  it("declares no duplicate internal href", () => {
-    const hrefs = NAV_CHILDREN.filter((c) => internal(c.href)).map((c) => c.href);
-    // /integration is deliberately reachable as both "Integration" and "API",
-    // so compare the (href,title) pair rather than the href alone.
-    const pairs = NAV_CHILDREN.filter((c) => internal(c.href)).map((c) => `${c.href}|${c.title}`);
-    expect(new Set(pairs).size).toBe(pairs.length);
-    expect(hrefs.length).toBeGreaterThan(0);
+describe("PRIMARY_NAV", () => {
+  it("is a subset of the site map", () => {
+    const known = new Set(SITE_LINKS.map((l) => l.href));
+    expect(PRIMARY_NAV.filter((l) => !known.has(l.href))).toEqual([]);
+    expect(known.has(HIRE_HREF)).toBe(true);
   });
 
-  it("gives every section a title", () => {
-    for (const section of NAV_ITEMS) {
-      expect(section.title.trim()).not.toBe("");
-    }
+  it("stays short enough to fit on one line", () => {
+    // Six mega-menus wrapped the header onto two lines at 1440px. Three links
+    // plus sign-in plus one call to action is the budget.
+    expect(PRIMARY_NAV.length).toBeLessThanOrEqual(4);
   });
 });

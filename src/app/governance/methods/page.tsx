@@ -75,7 +75,7 @@ export default function MethodsPage() {
 
         <section className="space-y-8">
           <div className="mx-auto max-w-copy">
-            <h2 className="font-display text-display-3 text-fg-primary">
+            <h2 className="headline text-display-3 text-fg-primary">
               Counting heads, or asking about harm
             </h2>
             <p className="mt-4 text-base leading-relaxed text-fg-secondary">
@@ -133,7 +133,7 @@ export default function MethodsPage() {
 
         <section className="space-y-8">
           <div className="mx-auto max-w-copy">
-            <h2 className="font-display text-display-3 text-fg-primary">
+            <h2 className="headline text-display-3 text-fg-primary">
               The {ALL_METHODS.length} methods, and what each is for
             </h2>
             <p className="mt-4 text-base leading-relaxed text-fg-secondary">

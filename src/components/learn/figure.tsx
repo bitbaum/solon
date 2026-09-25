@@ -30,7 +30,7 @@ export function Figure({
     <figure className="rounded-surface border border-default bg-surface-base">
       <figcaption className="border-b border-subtle px-5 py-4 sm:px-7">
         <span className="font-mono text-xs uppercase tracking-caps text-accent-text">{label}</span>
-        <h3 className="mt-2 font-display text-2xl text-fg-primary">{title}</h3>
+        <h3 className="mt-2 headline text-2xl text-fg-primary">{title}</h3>
         {caption && (
           <p className="mt-2 max-w-copy text-sm leading-relaxed text-fg-secondary">{caption}</p>
         )}

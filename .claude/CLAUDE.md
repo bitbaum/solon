@@ -33,11 +33,15 @@ no colours; both would fail `design:check` if they did. Solon is dark-only. The
 `navy` / `solon-*` palette is deleted, not aliased. Never write a hex in a
 component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
 
-Two rules the display face imposes, both enforced by `design:check`: it ships
-**one weight**, so never put `font-bold` beside `font-display` (the browser
-fakes it and it looks cheap); and it is high-contrast, so it thins out as it
-shrinks — display type starts at `text-2xl`/`text-display-3`, and below that you
-use the sans at `font-semibold`. The uppercase `.wordmark` is the one exception.
+**Headlines are the sans, like OrangeCat's and Loki's** — `.headline` (sentence
+case) or `.headline-caps` (a short uppercase statement), both in `globals.css`.
+`design:check` fails on `font-display` (the shared serif) and on display-size
+type without a headline style. Full-screen photo sections use `FullBleed`
+(`src/components/site/`); every photograph comes from `src/lib/content/photos.ts`
+with its licence, and `/credits` renders that list. **CSS is invisible to lint
+and typecheck** — `tests/e2e/render.spec.ts` (run in CI's `integration` job)
+checks styled buttons, a one-line header and no sideways scroll on phones. Look
+at a page before shipping it.
 
 **Some decisions are humans-only.** `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY`
 and `GOVERNANCE_RULES` cannot be voted by agent members. See

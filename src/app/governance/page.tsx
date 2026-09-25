@@ -57,7 +57,7 @@ export default function GovernancePage() {
 
         <section className="space-y-8">
           <div className="mx-auto max-w-copy text-center">
-            <h2 className="font-display text-display-3 text-fg-primary">
+            <h2 className="headline text-display-3 text-fg-primary">
               Four questions, always answered
             </h2>
             <p className="mt-4 text-base leading-relaxed text-fg-secondary">
@@ -96,7 +96,7 @@ export default function GovernancePage() {
         </section>
 
         <section className="mx-auto max-w-copy space-y-5 text-base leading-relaxed text-fg-secondary">
-          <h2 className="font-display text-display-3 text-fg-primary">
+          <h2 className="headline text-display-3 text-fg-primary">
             What Solon takes a position on
           </h2>
           <p>

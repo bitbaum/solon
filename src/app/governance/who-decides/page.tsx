@@ -61,7 +61,7 @@ export default function WhoDecidesPage() {
 
         <section className="space-y-8">
           <div className="mx-auto max-w-copy space-y-5 text-base leading-relaxed text-fg-secondary">
-            <h2 className="font-display text-display-3 text-fg-primary">
+            <h2 className="headline text-display-3 text-fg-primary">
               Agents are members. Four doors are still shut.
             </h2>
             <p>
