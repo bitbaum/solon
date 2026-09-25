@@ -97,8 +97,9 @@ that can hold value is the thing a vote is about.
 
 - **Never commit secrets.** `.env.example` lists every variable the app reads;
   copy it to `.env` and fill it in.
-- All user-facing copy lives in `i18n/{en,de,fr,it}.json` — four languages ship,
-  so never hard-code a string in a component.
+- User-facing copy on translated pages lives in `messages/<locale>.json`
+  (see "Language" below) — never hard-code a sentence on a page that is in
+  `TRANSLATED_ROUTES`.
 - Domain logic belongs in `src/lib/domain/` and stays free of HTTP and UI.
 - Some decision categories are **humans-only** (`AID_DISBURSEMENT`, `MEMBERSHIP`,
   `SAFETY`, `GOVERNANCE_RULES`). See `src/lib/config/governance.ts`; these are
@@ -106,47 +107,33 @@ that can hold value is the thing a vote is about.
 
 ## Language
 
-**Solon is English-only, on purpose, and there is no i18n machinery here.**
+**Five languages: English, German, French, Italian, Russian** — `next-intl`, the
+fleet's choice for i18n (fleet `STACK.md`; evig, hirnli and four others use it).
 
-There used to be an `i18n/` directory with four dictionaries. It was not
-localization: `page.tsx` called `<SolonHero language="en" />` with a literal, so
-that was the only call site and the German, French and Italian strings shipped
-in the bundle where no visitor could ever reach them. Meanwhile the other 18
-pages hard-coded English and `CLAUDE.md` told every agent that four languages
-shipped from `i18n/` — a rule that sent work into a dead file. Removed
-2026-09-17; the English copy moved into the two components that used it.
+- `src/i18n/routing.ts` is the one list of locales. English is the source and
+  the default: unprefixed (`/hire`); the others are prefixed (`/de/hire`). The
+  URL decides, never the browser.
+- Every sentence lives in `messages/<locale>.json`. `src/i18n/types.d.ts` types
+  `t()` keys against `en.json`, so a misspelt or missing key fails typecheck.
+- `src/i18n/__tests__/parity.test.ts` fails if a language lacks a key English
+  has, has one English lacks, drops a `{placeholder}`, or leaves a string empty.
+- Pages move under `src/app/[locale]/`; API routes stay outside it. Link with
+  `Link` / `useRouter` / `redirect` from `@/i18n/navigation`, never `next/link`,
+  or a German reader clicks into English.
+- A page not yet translated stays English and shows a notice in the reader's
+  language. `TRANSLATED_ROUTES` in `site-config.ts` lists the ones that are.
+- German uses Swiss spelling (ss, never ß).
 
-**The one habit to keep.** Never assemble a sentence by concatenation. A string
-built as `"You have " + n + " votes"` has to be re-authored to translate,
-because word order is not shared across languages; `You have {n} votes` does
-not. That is the only i18n cost here that is expensive to undo. Plain inline
-English is fine — moving inline strings into dictionaries is a mechanical sweep
-whose cost is linear in the number of pages and does not grow worse with time,
-which is exactly why deferring this is safe.
-
-**What would bring it back.** A real organization that needs to govern in
-German, French or Italian. The case is genuine and specific rather than
-hypothetical: `governance-profiles.ts` ships an `ASSOCIATION` profile written
-for the Swiss Verein (Art. 60 ZGB), and Swiss associations, cooperatives and
-communes do not all work in English.
-
-**When that happens, extract — do not reimplement.** `heidi` already has a
-mature implementation: `lib/i18n/` with `app/[locale]/` routing and seven typed
-dictionaries (de, en, fr, gsw, it, rm, ru), a `fill()` that leaves an unknown
-placeholder VISIBLE rather than blanking it, and `fill.test.ts` pinning that
-every locale keeps the placeholders its template was given — the silent failure
-a type system cannot catch, because the type of a string containing `{word}` is
-`string`. It is not a package yet (nothing in `fleet: registers/packages.json`),
-because so far it has exactly one consumer. Solon becoming the second consumer
-is the event that justifies extracting it, per the one-package-one-job rule in
-`fleet: AGENTS.md`.
+**The one habit that matters:** never assemble a sentence by concatenation.
+`"You have " + n + " votes"` cannot be translated; `You have {n} votes` can.
 
 **Translate the product surface first, not the essays.** Nav, forms, the ballot,
 the buttons — the words someone must read to cast a vote correctly. The
 `/governance` teaching pages are precision prose about terms of art, and a
 machine translation that renders sociocratic *consent* as *Zustimmung* rather
-than *Konsent* teaches the opposite of what the page exists to teach. Those get
-a human or they stay English.
+than *Konsent* teaches the opposite of what the page exists to teach. Terms of
+art get one fixed translation per language, in the glossary, reviewed by a
+native speaker before an essay ships in that language.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

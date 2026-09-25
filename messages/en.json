@@ -1,0 +1,304 @@
+{
+  "Meta": {
+    "title": "Solon — Governance any group can run",
+    "description": "Proposals, votes and the books, where every member can see them — for companies, towns, associations and communities."
+  },
+  "Site": {
+    "sections": {
+      "solon": "Solon",
+      "howItWorks": "How it works",
+      "takePart": "Take part",
+      "more": "More"
+    },
+    "links": {
+      "hire": "Hire Solon",
+      "security": "Security",
+      "features": "Features",
+      "about": "About",
+      "api": "API",
+      "governance": "How it works",
+      "methods": "Voting methods",
+      "thresholds": "Quorum and threshold",
+      "whoDecides": "Who decides what",
+      "profiles": "Five kinds of organization",
+      "voting": "How a vote is cast",
+      "dashboard": "Dashboard",
+      "decisions": "Decisions",
+      "propose": "File a proposal",
+      "join": "Become a member",
+      "newOrg": "Start an organization",
+      "record": "The record",
+      "treasury": "Treasury",
+      "liveState": "Live state",
+      "credits": "Photo credits"
+    }
+  },
+  "Nav": {
+    "home": "Solon — home",
+    "main": "Main",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "hire": "Hire Solon",
+    "signIn": "Sign in",
+    "account": "Account",
+    "language": "Language"
+  },
+  "Footer": {
+    "tagline": "Governance for any group of people. Beta — running, not released.",
+    "sourceCode": "Source code"
+  },
+  "Notice": {
+    "untranslated": "This page has not been translated yet, so it is shown in English."
+  },
+  "Photos": {
+    "earthAtNight": "Europe's towns and cities lit up at night, seen from orbit beneath the glow of the horizon.",
+    "landsgemeinde": "The Landsgemeinde of Glarus: thousands of citizens gathered in the town square beneath the Alps, deciding their laws in the open.",
+    "assemblySeated": "Rows of members seated side by side at an open-air assembly, papers in hand.",
+    "village": "A small village and its castle on a snowy hillside, seen from the air.",
+    "city": "A city's business district at night, towers lit along the water.",
+    "europeFromOrbit": "Southern Europe at night from orbit — towns and cities strung across the continent and down Italy.",
+    "mountainValley": "A town spread across an Alpine valley floor at first light, mountains rising on every side."
+  },
+  "Home": {
+    "hero": {
+      "kicker": "Solon · Beta",
+      "line1": "Decide together.",
+      "line2": "In the open.",
+      "lede": "Solon runs governance for companies, towns, associations and communities — proposals, votes and the books, where every member can see them.",
+      "hire": "Hire Solon",
+      "how": "How it works"
+    },
+    "glarus": {
+      "kicker": "Glarus, Switzerland",
+      "title": "The whole town. One square. Every hand counted.",
+      "body": "Since at least 1387 the citizens of Glarus have met in their town square to make their own laws. Anyone may speak; anyone may propose a change. In 2006 one citizen's amendment from the floor merged twenty-five municipalities into three. Solon brings that to any group — at any size, from anywhere.",
+      "cta": "The art and science of governance"
+    },
+    "how": {
+      "kicker": "How it works",
+      "title": "Three steps. Nothing hidden.",
+      "propose": {
+        "title": "Propose",
+        "body": "Anyone with a seat puts a question on the record, in plain words, with exactly what would change."
+      },
+      "decide": {
+        "title": "Decide",
+        "body": "Members vote with one click, under rules the group chose: who votes, how votes are counted, how many must agree."
+      },
+      "carryOut": {
+        "title": "Carry out",
+        "body": "The result is published with every vote behind it — so everyone knows what was decided, and can hold the people carrying it out to it."
+      }
+    },
+    "rules": {
+      "kicker": "The rules matter",
+      "title": "Same people. Different rules. Different winner.",
+      "body": "Seven members, one shared fund, four ways to spend it. Change only how the question is asked and watch the winner change. Nothing here is a mock-up — it runs the same counting code as a real vote.",
+      "cta": "Choose how you count"
+    },
+    "agent": {
+      "kicker": "The governance agent",
+      "title": "Works for all of you. Never for one of you.",
+      "body": "Every group has more to keep track of than anyone has time for. Solon's governance agent does the clerk's work — in the open, under the same rules as everyone else.",
+      "note": "It proposes and reminds; people decide. Some decisions — who may join, and the rules themselves — only people can vote on. Being built with our first pilot groups.",
+      "writes": {
+        "title": "Writes it up",
+        "body": "Turns a request in plain words into a clear proposal that says exactly what would change."
+      },
+      "informs": {
+        "title": "Keeps everyone in the loop",
+        "body": "Tells members what is up for decision, reminds them before a vote closes, and keeps the minutes."
+      },
+      "money": {
+        "title": "Follows the money",
+        "body": "Checks what was spent against what was decided, and raises anything nobody voted for."
+      },
+      "explains": {
+        "title": "Explains, never persuades",
+        "body": "Sets out the case for and against every proposal, and explains every result in plain language."
+      }
+    },
+    "audiences": {
+      "kicker": "Who it's for",
+      "title": "Any group that decides together.",
+      "companies": {
+        "title": "Companies",
+        "body": "Board and shareholder decisions, with a record nobody can quietly edit."
+      },
+      "towns": {
+        "title": "Villages and towns",
+        "body": "Assemblies, budgets and local rules — open to every resident, wherever they are."
+      },
+      "associations": {
+        "title": "Associations and co-ops",
+        "body": "General meetings, elections and member votes, minuted as they happen."
+      },
+      "communities": {
+        "title": "Communities and new towns",
+        "body": "Groups online and new kinds of towns that want to govern themselves from day one."
+      }
+    },
+    "trust": {
+      "kicker": "Why trust it",
+      "title": "Nothing hidden. Nothing rewritten.",
+      "record": {
+        "title": "Every vote on the record",
+        "body": "Members see every proposal, every vote and how it was counted."
+      },
+      "grows": {
+        "title": "A record that only grows",
+        "body": "Nothing on the record can be edited or deleted — not even by us."
+      },
+      "money": {
+        "title": "We never hold your money",
+        "body": "Solon watches the accounts you register and shows where money went. It cannot spend."
+      },
+      "proof": {
+        "title": "Proof when you need it",
+        "body": "Members can sign their votes with their own key, so anyone can recount them without trusting Solon."
+      },
+      "cta": "How Solon keeps itself honest"
+    },
+    "hire": {
+      "kicker": "Hire Solon",
+      "title": "We'll run your governance with you.",
+      "body": "Tell us about your group. We set up your rules together, run your first decisions, and keep the record. Free for pilot groups while Solon is in beta.",
+      "talk": "Talk to us",
+      "own": "Start on your own"
+    }
+  },
+  "Hire": {
+    "metaTitle": "Hire Solon — governance, run with you",
+    "metaDescription": "Solon sets up your group's rules with you, runs your decisions and keeps the record — for companies, towns, associations and communities.",
+    "mailSubject": "Governance for our group",
+    "hero": {
+      "kicker": "Hire Solon",
+      "title": "Governance, run with you.",
+      "lede": "You decide. We make sure every decision is asked clearly, counted fairly, and kept on a record your members can trust.",
+      "talk": "Talk to us",
+      "whatYouGet": "What you get"
+    },
+    "offer": {
+      "kicker": "What you get",
+      "title": "Software, an agent, and people.",
+      "rules": {
+        "title": "Your rules, written down",
+        "body": "We work out with you how your group decides today — who votes, on what, how many must agree — and set it up so everyone can read it and change it by vote."
+      },
+      "decisions": {
+        "title": "Decisions, run end to end",
+        "body": "Proposals, votes, reminders and minutes, for meetings in a room, online, or both. Members vote with one click from wherever they are."
+      },
+      "agent": {
+        "title": "The governance agent",
+        "body": "Drafts proposals from plain requests, keeps members informed, and checks what was spent against what was decided. It never takes a side, and never decides."
+      },
+      "person": {
+        "title": "A person when it matters",
+        "body": "A facilitator who knows how groups decide — for the founding meeting, the difficult vote, and the disagreement nobody wants to have."
+      }
+    },
+    "suits": {
+      "kicker": "Who it suits",
+      "title": "From a board of five to a town of thousands.",
+      "companies": {
+        "title": "Companies",
+        "body": "Board resolutions, shareholder votes and policies, on a record nobody can quietly edit."
+      },
+      "towns": {
+        "title": "Villages and towns",
+        "body": "Assemblies, budgets and local rules, open to every resident — in the hall and from home."
+      },
+      "associations": {
+        "title": "Associations and co-ops",
+        "body": "General meetings, elections and member votes, with the minutes written as it happens."
+      },
+      "communities": {
+        "title": "Communities and new towns",
+        "body": "Online groups and new kinds of towns that want fair rules and an open record from the start."
+      }
+    },
+    "start": {
+      "kicker": "How it starts",
+      "title": "Three conversations, then your first decision.",
+      "tell": {
+        "title": "Tell us",
+        "body": "Who your group is, how it decides today, and what goes wrong. Half an hour, no forms."
+      },
+      "write": {
+        "title": "Write the rules",
+        "body": "We draft your rules together — plainly enough that every member can read them."
+      },
+      "decide": {
+        "title": "Decide",
+        "body": "Your first real decision runs on Solon, with us alongside. After that, it is yours."
+      }
+    },
+    "cost": {
+      "title": "What it costs",
+      "body": "Nothing, for pilot groups, while Solon is in beta. You get the full service; we learn what your group needs and build it. When pricing exists, it will be on this page before anyone is asked to pay it.",
+      "write": "Write to {email}",
+      "own": "Or start an organization on your own — it takes a minute"
+    }
+  },
+  "Security": {
+    "metaTitle": "Security — Solon",
+    "metaDescription": "Why Solon can be trusted with a group's decisions: what it refuses to hold, and what anyone can check.",
+    "kicker": "Security",
+    "title": "What we refuse to hold",
+    "lede": "Solon's security comes from what it cannot do: it holds no money, keeps no one's keys, and cannot rewrite what happened.",
+    "money": {
+      "title": "We never hold your money",
+      "body": "Solon watches the accounts a group registers and shows where money went. There is no code path that can spend.",
+      "d1": "A treasury is an address to observe — a label and an address, nothing more",
+      "d2": "Balances are read from the public chain, not from Solon's own numbers"
+    },
+    "keys": {
+      "title": "We never hold anyone's keys",
+      "body": "Nothing on Solon's servers lets an attacker vote as someone else with a signature, or move a single coin.",
+      "d1": "Members who sign keep their key in their own wallet",
+      "d2": "Agent members (the Cat, Loki) sign on their own machines — Solon only ever sees signatures"
+    },
+    "proof": {
+      "title": "Every vote says what proves it",
+      "body": "A member votes with one click while signed in, or signs with their own key. Every vote and proposal records which.",
+      "d1": "A one-click vote is Solon's record of a signed-in member's choice — convenient, and it asks you to trust Solon",
+      "d2": "A signed vote is accepted only if it matches the member's registered key, and anyone can re-check it",
+      "d3": "One ballot per member per vote; voting again replaces it until the vote closes"
+    },
+    "record": {
+      "title": "The record only grows",
+      "body": "Every step — a proposal, a vote opening, each ballot, the result — is written once. Nothing in the code can edit or delete it.",
+      "d1": "The public record shows the entries themselves, not a summary of them",
+      "d2": "The rules a vote ran under are frozen when it opens, so a later change cannot rewrite a past decision",
+      "d3": "Every decision is published as one document with everything needed to recount it"
+    },
+    "buys": {
+      "title": "What this buys you",
+      "seize": {
+        "title": "Nothing to seize",
+        "body": "Breaking into Solon's servers yields no keys and no money — only records that were already public."
+      },
+      "forge": {
+        "title": "Nothing to forge",
+        "body": "A signed vote cannot be faked by anyone, Solon included. Groups that want that guarantee for a decision can ask members to sign."
+      },
+      "rewrite": {
+        "title": "Nothing to rewrite",
+        "body": "A decision travels with its evidence. Anyone relying on it can recount it themselves — Solon's word is evidence, not authority."
+      }
+    },
+    "links": {
+      "voting": "How a vote is cast",
+      "record": "The live record",
+      "source": "The source code"
+    }
+  },
+  "Credits": {
+    "metaTitle": "Photo credits — Solon",
+    "metaDescription": "Who made the photographs on this site, and under what licence.",
+    "kicker": "Photo credits",
+    "title": "The photographs on this site",
+    "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one."
+  }
+}

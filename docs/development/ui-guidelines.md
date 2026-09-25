@@ -132,7 +132,7 @@ shipping it.
 
 ## Copy
 
-Plain, inline English — no i18n layer ships. Write for the person who will run a
+Every sentence on a translated page lives in `messages/<locale>.json` (five languages; see `AGENTS.md`, "Language"). Write for the person who will run a
 group, not for engineers: no crypto or protocol vocabulary on the front pages
 (the details live on `/security` and `/governance/voting`). Never assemble a
 sentence by concatenation; see `AGENTS.md`, "Language".

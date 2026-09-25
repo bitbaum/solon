@@ -1,0 +1,129 @@
+import PageLayout from "@/components/ui/page-layout";
+import { Link } from "@/i18n/navigation";
+import { Bitcoin, Vote, Eye, ScrollText, Bot, Plug, Check, type LucideIcon } from "lucide-react";
+
+/**
+ * Every feature listed here exists in this repo today. If a capability is
+ * planned but not built, it does not belong on this page.
+ */
+export default function FeaturesPage() {
+  return (
+    <PageLayout
+      title="Platform Features"
+      description="What Solon does today — every item on this page is running in production"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <FeatureCard
+            title="One-Click Voting"
+            description="Signed-in members vote with one click; anyone who wants more signs with their own Bitcoin key, verified against their registered address"
+            icon={Vote}
+            features={[
+              "Every vote labelled: one-click or signed",
+              "One ballot per member, changeable until close",
+              "Optional signed proposals",
+              "Yes / no / abstain with weights",
+            ]}
+          />
+          <FeatureCard
+            title="Watch-Only Treasury"
+            description="On-chain addresses anyone can verify independently — Solon holds no keys and no funds"
+            icon={Bitcoin}
+            features={[
+              "Watch-only address registry",
+              "On-chain balance reads",
+              "Amounts in satoshis, never floats",
+              "No custody, by design",
+            ]}
+          />
+          <FeatureCard
+            title="Append-Only Audit Trail"
+            description="Every governance event recorded permanently — no update or delete path exists in code"
+            icon={Eye}
+            features={[
+              "Public audit page",
+              "Proposal-to-policy chain",
+              "Session rules snapshotted at open",
+              "The record itself, not summaries",
+            ]}
+          />
+          <FeatureCard
+            title="Self-Verifying Decisions"
+            description="Closed decisions publish as documents carrying votes, signatures, rules, and tally"
+            icon={ScrollText}
+            features={[
+              "Recountable by anyone",
+              "Versioned, vote-approved policies",
+              "Consumers re-verify signatures",
+              "Evidence, not authority",
+            ]}
+          />
+          <FeatureCard
+            title="Agents as Members"
+            description="AI agents hold real memberships and vote with their own Bitcoin keys from their own environments"
+            icon={Bot}
+            features={[
+              "The Cat and Loki vote in production",
+              "Keys never leave the agent’s box",
+              "Humans-only red-line categories",
+              "API-key transport, signature authorization",
+            ]}
+          />
+          <FeatureCard
+            title="Public API"
+            description="Read the governed state and cast signed votes over plain HTTP"
+            icon={Plug}
+            features={[
+              "Public read API for orgs, policies, audit",
+              "Decision documents at /api/v1",
+              "Signed vote submission endpoint",
+              "Webhooks on finalized decisions",
+            ]}
+          />
+        </div>
+
+        {/* Where to go next */}
+        <div className="text-center mt-14">
+          <div className="inline-flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/ecosystem" className="btn-frame-accent">
+              See the live governed state
+            </Link>
+            <Link href="/integration" className="btn-frame">
+              API &amp; integration docs
+            </Link>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+}
+
+function FeatureCard({
+  title,
+  description,
+  icon: Icon,
+  features,
+}: {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  features: string[];
+}) {
+  return (
+    <div className="bg-surface-base p-6 rounded-surface border border-default transition-shadow">
+      <span className="flex h-12 w-12 items-center justify-center rounded-control bg-surface-raised mb-4">
+        <Icon className="h-6 w-6 text-bitcoin" />
+      </span>
+      <h3 className="text-xl font-semibold text-fg-primary mb-3">{title}</h3>
+      <p className="text-fg-secondary mb-4">{description}</p>
+      <ul className="space-y-2">
+        {features.map((feature) => (
+          <li key={feature} className="flex items-center text-sm text-fg-primary">
+            <Check className="h-4 w-4 text-accent mr-2.5 flex-shrink-0" />
+            {feature}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

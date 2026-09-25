@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
 import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
 import type { LokiGrant } from "@/lib/loki-grant";

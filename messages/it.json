@@ -1,0 +1,304 @@
+{
+  "Meta": {
+    "title": "Solon — Una governance che ogni gruppo può gestire",
+    "description": "Proposte, votazioni e conti, visibili a ogni membro — per aziende, comuni, associazioni e comunità."
+  },
+  "Site": {
+    "sections": {
+      "solon": "Solon",
+      "howItWorks": "Come funziona",
+      "takePart": "Partecipare",
+      "more": "Altro"
+    },
+    "links": {
+      "hire": "Incaricare Solon",
+      "security": "Sicurezza",
+      "features": "Funzionalità",
+      "about": "Chi siamo",
+      "api": "API",
+      "governance": "Come funziona",
+      "methods": "Metodi di voto",
+      "thresholds": "Quorum e maggioranza",
+      "whoDecides": "Chi decide cosa",
+      "profiles": "Cinque tipi di organizzazione",
+      "voting": "Come si esprime un voto",
+      "dashboard": "Panoramica",
+      "decisions": "Decisioni",
+      "propose": "Presentare una proposta",
+      "join": "Diventare membro",
+      "newOrg": "Fondare un'organizzazione",
+      "record": "Il registro",
+      "treasury": "Cassa",
+      "liveState": "Stato in tempo reale",
+      "credits": "Crediti fotografici"
+    }
+  },
+  "Nav": {
+    "home": "Solon — pagina iniziale",
+    "main": "Navigazione principale",
+    "openMenu": "Apri il menu",
+    "closeMenu": "Chiudi il menu",
+    "hire": "Incaricare Solon",
+    "signIn": "Accedi",
+    "account": "Account",
+    "language": "Lingua"
+  },
+  "Footer": {
+    "tagline": "Governance per qualsiasi gruppo di persone. Beta — in funzione, non ancora rilasciato.",
+    "sourceCode": "Codice sorgente"
+  },
+  "Notice": {
+    "untranslated": "Questa pagina non è ancora stata tradotta, perciò è mostrata in inglese."
+  },
+  "Photos": {
+    "earthAtNight": "Le città e i paesi d'Europa illuminati di notte, visti dall'orbita sotto il bagliore dell'orizzonte.",
+    "landsgemeinde": "La Landsgemeinde di Glarona: migliaia di cittadine e cittadini riuniti in piazza sotto le Alpi, che decidono le proprie leggi all'aperto.",
+    "assemblySeated": "File di membri seduti fianco a fianco a un'assemblea all'aperto, con i documenti in mano.",
+    "village": "Un piccolo villaggio con il suo castello su un pendio innevato, visto dall'alto.",
+    "city": "Il quartiere degli affari di una città di notte, torri illuminate lungo l'acqua.",
+    "europeFromOrbit": "L'Europa meridionale di notte dall'orbita — città e paesi sparsi nel continente fino all'Italia.",
+    "mountainValley": "Un paese disteso sul fondovalle alpino alle prime luci, circondato dalle montagne."
+  },
+  "Home": {
+    "hero": {
+      "kicker": "Solon · Beta",
+      "line1": "Decidere insieme.",
+      "line2": "Alla luce del sole.",
+      "lede": "Solon gestisce la governance di aziende, comuni, associazioni e comunità — proposte, votazioni e conti, visibili a ogni membro.",
+      "hire": "Incaricare Solon",
+      "how": "Come funziona"
+    },
+    "glarus": {
+      "kicker": "Glarona, Svizzera",
+      "title": "Tutto il comune. Una piazza. Ogni mano contata.",
+      "body": "Almeno dal 1387 i cittadini di Glarona si riuniscono nella loro piazza per darsi le proprie leggi. Chiunque può prendere la parola, chiunque può proporre una modifica. Nel 2006 un solo emendamento dall'assemblea ha fuso venticinque comuni in tre. Solon porta tutto questo a ogni gruppo — di qualsiasi dimensione, da qualsiasi luogo.",
+      "cta": "L'arte e la scienza della governance"
+    },
+    "how": {
+      "kicker": "Come funziona",
+      "title": "Tre passi. Niente di nascosto.",
+      "propose": {
+        "title": "Proporre",
+        "body": "Chi ha un seggio mette una questione a registro, in parole semplici, con esattamente ciò che cambierebbe."
+      },
+      "decide": {
+        "title": "Decidere",
+        "body": "I membri votano con un clic, secondo regole scelte dal gruppo: chi vota, come si contano i voti, quanti devono approvare."
+      },
+      "carryOut": {
+        "title": "Attuare",
+        "body": "Il risultato viene pubblicato con ogni voto che lo sostiene — così tutti sanno cosa è stato deciso e possono chiederne conto a chi lo attua."
+      }
+    },
+    "rules": {
+      "kicker": "Le regole contano",
+      "title": "Stesse persone. Regole diverse. Vincitore diverso.",
+      "body": "Sette membri, una cassa comune, quattro modi di spenderla. Cambiate solo il modo di porre la domanda e guardate cambiare il vincitore. Niente qui è una simulazione — è lo stesso codice di conteggio di una votazione reale.",
+      "cta": "Scegliere come contare"
+    },
+    "agent": {
+      "kicker": "L'agente di governance",
+      "title": "Lavora per tutti voi. Mai per uno solo.",
+      "body": "Ogni gruppo ha più cose da seguire di quanto chiunque abbia tempo. L'agente di governance di Solon svolge il lavoro di segreteria — alla luce del sole, con le stesse regole di tutti.",
+      "note": "Propone e ricorda; a decidere sono le persone. Alcune decisioni — chi può aderire e le regole stesse — possono essere votate solo da persone. In sviluppo con i nostri primi gruppi pilota.",
+      "writes": {
+        "title": "Mette per iscritto",
+        "body": "Trasforma una richiesta in parole semplici in una proposta chiara che dice esattamente cosa cambierebbe."
+      },
+      "informs": {
+        "title": "Tiene tutti informati",
+        "body": "Dice ai membri cosa è in decisione, li avvisa prima della chiusura di una votazione e redige il verbale."
+      },
+      "money": {
+        "title": "Segue il denaro",
+        "body": "Confronta le spese con quanto deciso e segnala tutto ciò che nessuno ha votato."
+      },
+      "explains": {
+        "title": "Spiega, senza persuadere",
+        "body": "Espone le ragioni a favore e contro ogni proposta e spiega ogni risultato in linguaggio semplice."
+      }
+    },
+    "audiences": {
+      "kicker": "Per chi",
+      "title": "Ogni gruppo che decide insieme.",
+      "companies": {
+        "title": "Aziende",
+        "body": "Decisioni del consiglio e degli azionisti, con un registro che nessuno può modificare di nascosto."
+      },
+      "towns": {
+        "title": "Villaggi e comuni",
+        "body": "Assemblee, bilanci e regole locali — aperti a ogni residente, ovunque si trovi."
+      },
+      "associations": {
+        "title": "Associazioni e cooperative",
+        "body": "Assemblee generali, elezioni e votazioni dei membri, verbalizzate mentre si svolgono."
+      },
+      "communities": {
+        "title": "Comunità e nuove città",
+        "body": "Gruppi online e nuove forme di città che vogliono autogovernarsi fin dal primo giorno."
+      }
+    },
+    "trust": {
+      "kicker": "Perché fidarsi",
+      "title": "Niente di nascosto. Niente di riscritto.",
+      "record": {
+        "title": "Ogni voto a registro",
+        "body": "I membri vedono ogni proposta, ogni voto e come è stato contato."
+      },
+      "grows": {
+        "title": "Un registro che cresce soltanto",
+        "body": "Nulla nel registro può essere modificato o cancellato — nemmeno da noi."
+      },
+      "money": {
+        "title": "Non custodiamo mai il vostro denaro",
+        "body": "Solon osserva i conti che registrate e mostra dove è andato il denaro. Non può spendere nulla."
+      },
+      "proof": {
+        "title": "Una prova quando serve",
+        "body": "I membri possono firmare il proprio voto con la propria chiave, così chiunque può ricontarlo senza fidarsi di Solon."
+      },
+      "cta": "Come Solon resta onesto"
+    },
+    "hire": {
+      "kicker": "Incaricare Solon",
+      "title": "Gestiamo la vostra governance insieme a voi.",
+      "body": "Raccontateci del vostro gruppo. Definiamo insieme le vostre regole, accompagniamo le prime decisioni e teniamo il registro. Gratuito per i gruppi pilota finché Solon è in beta.",
+      "talk": "Scriveteci",
+      "own": "Iniziare da soli"
+    }
+  },
+  "Hire": {
+    "metaTitle": "Incaricare Solon — governance gestita con voi",
+    "metaDescription": "Solon definisce con voi le regole del vostro gruppo, gestisce le vostre decisioni e tiene il registro — per aziende, comuni, associazioni e comunità.",
+    "mailSubject": "Governance per il nostro gruppo",
+    "hero": {
+      "kicker": "Incaricare Solon",
+      "title": "Governance, gestita con voi.",
+      "lede": "Voi decidete. Noi facciamo in modo che ogni decisione sia posta con chiarezza, contata con equità e conservata in un registro di cui i vostri membri possano fidarsi.",
+      "talk": "Scriveteci",
+      "whatYouGet": "Cosa ottenete"
+    },
+    "offer": {
+      "kicker": "Cosa ottenete",
+      "title": "Software, un agente e persone.",
+      "rules": {
+        "title": "Le vostre regole, per iscritto",
+        "body": "Stabiliamo con voi come il vostro gruppo decide oggi — chi vota, su cosa, quanti devono approvare — e lo mettiamo per iscritto perché tutti possano leggerlo e modificarlo con un voto."
+      },
+      "decisions": {
+        "title": "Decisioni gestite dall'inizio alla fine",
+        "body": "Proposte, votazioni, promemoria e verbali, per riunioni in sala, online o entrambe. I membri votano con un clic, ovunque si trovino."
+      },
+      "agent": {
+        "title": "L'agente di governance",
+        "body": "Redige proposte a partire da richieste semplici, tiene informati i membri e confronta le spese con le decisioni. Non prende mai parte e non decide mai."
+      },
+      "person": {
+        "title": "Una persona quando conta",
+        "body": "Una facilitatrice o un facilitatore che sa come decidono i gruppi — per l'assemblea costitutiva, il voto difficile e il disaccordo che nessuno vuole affrontare."
+      }
+    },
+    "suits": {
+      "kicker": "Per chi è adatto",
+      "title": "Da un consiglio di cinque a un comune di migliaia.",
+      "companies": {
+        "title": "Aziende",
+        "body": "Delibere del consiglio, votazioni degli azionisti e regolamenti, in un registro che nessuno può modificare di nascosto."
+      },
+      "towns": {
+        "title": "Villaggi e comuni",
+        "body": "Assemblee, bilanci e regole locali, aperti a ogni residente — in sala e da casa."
+      },
+      "associations": {
+        "title": "Associazioni e cooperative",
+        "body": "Assemblee generali, elezioni e votazioni dei membri, con il verbale scritto mentre si svolgono."
+      },
+      "communities": {
+        "title": "Comunità e nuove città",
+        "body": "Gruppi online e nuove forme di città che vogliono regole eque e un registro aperto fin dall'inizio."
+      }
+    },
+    "start": {
+      "kicker": "Come si inizia",
+      "title": "Tre conversazioni, poi la vostra prima decisione.",
+      "tell": {
+        "title": "Raccontateci",
+        "body": "Chi è il vostro gruppo, come decide oggi e cosa non funziona. Mezz'ora, nessun modulo."
+      },
+      "write": {
+        "title": "Scrivere le regole",
+        "body": "Redigiamo insieme le vostre regole — abbastanza chiare perché ogni membro possa leggerle."
+      },
+      "decide": {
+        "title": "Decidere",
+        "body": "La vostra prima vera decisione passa da Solon, con noi al vostro fianco. Dopo, è vostra."
+      }
+    },
+    "cost": {
+      "title": "Quanto costa",
+      "body": "Niente, per i gruppi pilota, finché Solon è in beta. Ricevete il servizio completo; noi impariamo di cosa ha bisogno il vostro gruppo e lo costruiamo. Quando esisteranno dei prezzi, saranno su questa pagina prima che a qualcuno venga chiesto di pagare.",
+      "write": "Scrivere a {email}",
+      "own": "Oppure fondate da soli un'organizzazione — basta un minuto"
+    }
+  },
+  "Security": {
+    "metaTitle": "Sicurezza — Solon",
+    "metaDescription": "Perché affidare a Solon le decisioni di un gruppo: cosa si rifiuta di custodire, e cosa chiunque può verificare.",
+    "kicker": "Sicurezza",
+    "title": "Ciò che ci rifiutiamo di custodire",
+    "lede": "La sicurezza di Solon deriva da ciò che non può fare: non custodisce denaro, non conserva le chiavi di nessuno e non può riscrivere ciò che è accaduto.",
+    "money": {
+      "title": "Non custodiamo mai il vostro denaro",
+      "body": "Solon osserva i conti che un gruppo registra e mostra dove è andato il denaro. Nessun codice può spendere.",
+      "d1": "Una cassa è un indirizzo da osservare — un'etichetta e un indirizzo, nient'altro",
+      "d2": "I saldi vengono letti dalla blockchain pubblica, non dai numeri di Solon"
+    },
+    "keys": {
+      "title": "Non custodiamo le chiavi di nessuno",
+      "body": "Nulla sui server di Solon permette a un attaccante di votare al posto di qualcun altro con una firma, né di spostare una sola moneta.",
+      "d1": "I membri che firmano tengono la propria chiave nel proprio portafoglio",
+      "d2": "I membri agenti (la Cat, Loki) firmano sulle proprie macchine — Solon vede solo firme"
+    },
+    "proof": {
+      "title": "Ogni voto dice cosa lo prova",
+      "body": "Un membro vota con un clic dopo aver effettuato l'accesso, oppure firma con la propria chiave. Ogni voto e ogni proposta registra quale dei due.",
+      "d1": "Un voto con un clic è la registrazione da parte di Solon della scelta di un membro connesso — comodo, e richiede fiducia in Solon",
+      "d2": "Un voto firmato viene accettato solo se corrisponde alla chiave registrata del membro, e chiunque può ricontrollarlo",
+      "d3": "Una scheda per membro e per votazione; votare di nuovo la sostituisce fino alla chiusura"
+    },
+    "record": {
+      "title": "Il registro cresce soltanto",
+      "body": "Ogni passo — una proposta, l'apertura di una votazione, ogni scheda, il risultato — viene scritto una sola volta. Nulla nel codice può modificarlo o cancellarlo.",
+      "d1": "Il registro pubblico mostra le voci stesse, non un riassunto",
+      "d2": "Le regole di una votazione vengono fissate alla sua apertura, così una modifica successiva non può riscrivere una decisione passata",
+      "d3": "Ogni decisione viene pubblicata come un documento con tutto il necessario per ricontarla"
+    },
+    "buys": {
+      "title": "Cosa vi garantisce",
+      "seize": {
+        "title": "Niente da sottrarre",
+        "body": "Violare i server di Solon non frutta né chiavi né denaro — solo registri che erano già pubblici."
+      },
+      "forge": {
+        "title": "Niente da falsificare",
+        "body": "Nessuno può falsificare un voto firmato, nemmeno Solon. I gruppi che vogliono questa garanzia per una decisione possono chiedere ai membri di firmare."
+      },
+      "rewrite": {
+        "title": "Niente da riscrivere",
+        "body": "Una decisione viaggia con le sue prove. Chiunque vi faccia affidamento può ricontarla da sé — la parola di Solon è una prova, non un'autorità."
+      }
+    },
+    "links": {
+      "voting": "Come si esprime un voto",
+      "record": "Il registro in tempo reale",
+      "source": "Il codice sorgente"
+    }
+  },
+  "Credits": {
+    "metaTitle": "Crediti fotografici — Solon",
+    "metaDescription": "Chi ha scattato le fotografie di questo sito, e con quale licenza.",
+    "kicker": "Crediti fotografici",
+    "title": "Le fotografie di questo sito",
+    "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere."
+  }
+}

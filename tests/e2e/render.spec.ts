@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { PRIMARY_NAV, SITE_LINKS } from "../../src/lib/site-config";
+import en from "../../messages/en.json";
 
 /**
  * What lint, typecheck and unit tests cannot see: how the site actually
@@ -55,7 +56,7 @@ test("the header fits on one line at 1440px", async ({ page }) => {
   expect(headerHeight).toBeLessThanOrEqual(navHeight + 1);
   const header = page.locator("header").first();
   for (const item of PRIMARY_NAV) {
-    const link = header.getByRole("link", { name: item.title, exact: true });
+    const link = header.getByRole("link", { name: en.Site.links[item.key], exact: true });
     const b = await link.boundingBox();
     // One line of text: a wrapped label is roughly twice as tall.
     expect(b?.height ?? 0).toBeLessThan(28);

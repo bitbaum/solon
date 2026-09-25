@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import Logo from "./logo";
 import AuthControl from "./auth-control";
+import LanguageSwitcher from "@/components/site/language-switcher";
 import { HIRE_HREF, PRIMARY_NAV, SITE_SECTIONS } from "@/lib/site-config";
 
 /**
@@ -16,6 +18,8 @@ import { HIRE_HREF, PRIMARY_NAV, SITE_SECTIONS } from "@/lib/site-config";
 export default function Navigation({ authEnabled = false }: { authEnabled?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const t = useTranslations("Nav");
+  const site = useTranslations("Site");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -41,9 +45,9 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
       >
         <nav
           className="section-shell flex h-nav items-center justify-between gap-6"
-          aria-label="Main"
+          aria-label={t("main")}
         >
-          <Link href="/" aria-label="Solon — home" onClick={() => setMenuOpen(false)}>
+          <Link href="/" aria-label={t("home")} onClick={() => setMenuOpen(false)}>
             <Logo size="sm" />
           </Link>
 
@@ -54,23 +58,24 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                   href={item.href}
                   className="text-xs font-bold uppercase tracking-caps text-fg-primary transition-opacity hover:opacity-70"
                 >
-                  {item.title}
+                  {site(`links.${item.key}`)}
                 </Link>
               </li>
             ))}
           </ul>
 
           <div className="hidden items-center gap-6 lg:flex">
+            <LanguageSwitcher />
             {authEnabled && <AuthControl />}
             <Link href={HIRE_HREF} className="btn-frame min-h-10 px-5">
-              Hire Solon
+              {t("hire")}
             </Link>
           </div>
 
           <button
             type="button"
             className="flex h-11 w-11 items-center justify-center text-fg-primary lg:hidden"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
             aria-controls="site-menu"
             onClick={() => setMenuOpen((open) => !open)}
@@ -101,13 +106,14 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                 className="btn-frame-accent"
                 onClick={() => setMenuOpen(false)}
               >
-                Hire Solon
+                {t("hire")}
               </Link>
               {authEnabled && <AuthControl compact />}
             </div>
+            <LanguageSwitcher list onChange={() => setMenuOpen(false)} />
             {SITE_SECTIONS.map((section) => (
-              <div key={section.title}>
-                <div className="kicker">{section.title}</div>
+              <div key={section.key}>
+                <div className="kicker">{site(`sections.${section.key}`)}</div>
                 <ul className="mt-3 space-y-1">
                   {section.children.map((link) => (
                     <li key={link.href}>
@@ -116,7 +122,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                         onClick={() => setMenuOpen(false)}
                         className="block py-2 text-lg font-semibold text-fg-primary"
                       >
-                        {link.title}
+                        {site(`links.${link.key}`)}
                       </Link>
                     </li>
                   ))}

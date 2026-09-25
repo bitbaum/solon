@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import type { Photo } from "@/lib/content/photos";
 
@@ -26,13 +27,14 @@ export default function FullBleed({
   daylight?: boolean;
   children: ReactNode;
 }) {
+  const alt = useTranslations("Photos");
   return (
     <section
       className={`relative flex min-h-svh items-end overflow-hidden bg-surface-public ${under ? "-mt-nav" : ""}`}
     >
       <Image
         src={photo.image}
-        alt={photo.alt}
+        alt={alt(photo.id)}
         fill
         priority={priority}
         placeholder="blur"

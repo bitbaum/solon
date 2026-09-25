@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import Logo from "./logo";
 import { ECOSYSTEM_PILLARS, SOLON_GITHUB_URL } from "@/lib/config/ecosystem";
 import { CONTACT_EMAIL, SITE_SECTIONS } from "@/lib/site-config";
@@ -10,6 +11,8 @@ import { CONTACT_EMAIL, SITE_SECTIONS } from "@/lib/site-config";
  */
 export default function Footer() {
   const siblings = ECOSYSTEM_PILLARS.filter((p) => p.key !== "solon");
+  const t = useTranslations("Footer");
+  const site = useTranslations("Site");
 
   return (
     <footer className="border-t border-subtle bg-surface-public">
@@ -17,9 +20,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
             <Logo size="sm" />
-            <p className="mt-4 max-w-xs text-sm text-fg-secondary">
-              Governance for any group of people. Beta — running, not released.
-            </p>
+            <p className="mt-4 max-w-xs text-sm text-fg-secondary">{t("tagline")}</p>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
               className="mt-4 inline-block text-sm text-fg-primary underline underline-offset-4"
@@ -28,13 +29,13 @@ export default function Footer() {
             </a>
           </div>
           {SITE_SECTIONS.map((section) => (
-            <div key={section.title}>
-              <div className="kicker">{section.title}</div>
+            <div key={section.key}>
+              <div className="kicker">{site(`sections.${section.key}`)}</div>
               <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
                 {section.children.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="transition-colors hover:text-fg-primary">
-                      {link.title}
+                      {site(`links.${link.key}`)}
                     </Link>
                   </li>
                 ))}
@@ -63,7 +64,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="transition-colors hover:text-fg-primary"
             >
-              Source code
+              {t("sourceCode")}
             </a>
           </div>
         </div>

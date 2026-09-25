@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { signIn, useSession } from "next-auth/react";
 
 /**
@@ -14,6 +15,7 @@ import { signIn, useSession } from "next-auth/react";
  */
 export default function AuthControl({ compact = false }: { compact?: boolean }) {
   const { data: session } = useSession();
+  const t = useTranslations("Nav");
 
   const className = compact
     ? "btn-frame w-full"
@@ -22,14 +24,14 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
   if (session?.actorId) {
     return (
       <Link href="/account" className={className}>
-        {session.user?.name ?? "Account"}
+        {session.user?.name ?? t("account")}
       </Link>
     );
   }
 
   return (
     <button type="button" onClick={() => signIn("orangecat")} className={className}>
-      Sign in
+      {t("signIn")}
     </button>
   );
 }
