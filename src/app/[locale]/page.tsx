@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
@@ -6,7 +5,9 @@ import { use } from "react";
 import { Link } from "@/i18n/navigation";
 import FullBleed from "@/components/site/full-bleed";
 import { MethodLab } from "@/components/learn/method-lab";
-import { PHOTOS, type Photo } from "@/lib/content/photos";
+import { PHOTOS } from "@/lib/content/photos";
+import AudienceTile from "@/components/site/audience-tile";
+import { USE_CASES, type UseCase } from "@/lib/content/use-cases";
 import { HIRE_HREF } from "@/lib/site-config";
 
 /**
@@ -123,15 +124,22 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
             {t("audiences.title")}
           </h2>
           <div className="mt-14 grid gap-4 md:grid-cols-2">
-            {AUDIENCES.map((a) => (
+            {HOME_AUDIENCES.map((u) => (
               <AudienceTile
-                key={a.key}
-                title={t(`audiences.${a.key}.title`)}
-                body={t(`audiences.${a.key}.body`)}
-                photo={a.photo}
-                position={a.position}
+                key={u.key}
+                title={t(`audiences.${u.key}.title`)}
+                body={t(`audiences.${u.key}.body`)}
+                photo={u.photo}
+                position={u.position}
+                href={`/for/${u.slug}`}
+                more={t("audiences.more")}
               />
             ))}
+          </div>
+          <div className="mt-10">
+            <Link href="/for" className="btn-frame">
+              {t("audiences.all")}
+            </Link>
           </div>
         </div>
       </section>
@@ -175,45 +183,8 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
   );
 }
 
-const AUDIENCES: {
-  key: "companies" | "towns" | "associations" | "communities";
-  photo: Photo;
-  position: string;
-}[] = [
-  { key: "companies", photo: PHOTOS.city, position: "center" },
-  { key: "towns", photo: PHOTOS.village, position: "center 45%" },
-  { key: "associations", photo: PHOTOS.assemblySeated, position: "center 30%" },
-  { key: "communities", photo: PHOTOS.europeFromOrbit, position: "center" },
-];
-
-function AudienceTile({
-  title,
-  body,
-  photo,
-  position,
-}: {
-  title: string;
-  body: string;
-  photo: Photo;
-  position: string;
-}) {
-  const alt = useTranslations("Photos");
-  return (
-    <div className="relative flex min-h-[26rem] items-end overflow-hidden bg-surface-public">
-      <Image
-        src={photo.image}
-        alt={alt(photo.id)}
-        fill
-        placeholder="blur"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        className="object-cover"
-        style={{ objectPosition: position }}
-      />
-      <div className="scrim absolute inset-0" aria-hidden="true" />
-      <div className="relative p-7 sm:p-9">
-        <h3 className="headline-caps text-3xl">{title}</h3>
-        <p className="mt-3 max-w-sm text-fg-primary">{body}</p>
-      </div>
-    </div>
-  );
-}
+/** The four groups the front page shows; network states and the comparison live on /for. */
+const HOME_AUDIENCES = USE_CASES.filter(
+  (u): u is UseCase & { key: "companies" | "towns" | "associations" | "communities" } =>
+    u.key !== "networkStates",
+);

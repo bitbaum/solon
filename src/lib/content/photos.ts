@@ -6,6 +6,8 @@ import villageKyburg from "@/assets/images/village-kyburg.webp";
 import cityAtNight from "@/assets/images/city-at-night.webp";
 import europeFromOrbit from "@/assets/images/europe-from-orbit.webp";
 import mountainValley from "@/assets/images/mountain-valley.webp";
+import starlinkTownHall from "@/assets/images/starlink-town-hall.webp";
+import landsgemeindePainting from "@/assets/images/landsgemeinde-painting.webp";
 
 /**
  * Every photograph on the site, with who made it and under what licence.
@@ -33,7 +35,9 @@ export type PhotoId =
   | "village"
   | "city"
   | "europeFromOrbit"
-  | "mountainValley";
+  | "mountainValley"
+  | "starlinkTownHall"
+  | "landsgemeindePainting";
 
 export const PHOTOS = {
   earthAtNight: {
@@ -99,5 +103,24 @@ export const PHOTOS = {
     license: "Public domain",
     licenseUrl: null,
     source: "https://commons.wikimedia.org/wiki/File:A_Swiss_Mountain_Village_(12137111955).jpg",
+  },
+  starlinkTownHall: {
+    id: "starlinkTownHall",
+    image: starlinkTownHall,
+    title: "Starlink über dem Rathaus in Tübingen",
+    author: "Dktue",
+    license: "CC0",
+    licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Starlink_%C3%BCber_dem_Rathaus_in_T%C3%BCbingen.jpg",
+  },
+  landsgemeindePainting: {
+    id: "landsgemeindePainting",
+    image: landsgemeindePainting,
+    title: "Landsgemeinde, late 18th century (Museum Appenzell)",
+    author: "Unknown painter",
+    license: "Public domain",
+    licenseUrl: null,
+    source: "https://commons.wikimedia.org/wiki/File:Landsgemeinde_Ende_18._Jhr.jpg",
   },
 } satisfies Record<string, Photo>;
