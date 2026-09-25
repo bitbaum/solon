@@ -9,12 +9,13 @@ import { describe, it, expect } from "vitest";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { HIRE_HREF, PRIMARY_NAV, SITE_LINKS, SITE_SECTIONS } from "@/lib/site-config";
+import en from "../../../messages/en.json";
 
 const internal = (href: string) => href.startsWith("/");
 
 /** The page file a route would render from, across route groups. */
 function routeExists(href: string): boolean {
-  const app = path.join(process.cwd(), "src/app");
+  const app = path.join(process.cwd(), "src/app", "[locale]");
   const segments = href === "/" ? [] : href.slice(1).split("/");
   const candidates = [
     path.join(app, ...segments, "page.tsx"),
@@ -34,9 +35,10 @@ describe("SITE_SECTIONS", () => {
     expect(new Set(hrefs).size).toBe(hrefs.length);
   });
 
-  it("gives every section a title and at least one link", () => {
+  it("gives every section and link an English name", () => {
     for (const section of SITE_SECTIONS) {
-      expect(section.title.trim()).not.toBe("");
+      expect(en.Site.sections[section.key].trim()).not.toBe("");
+      for (const link of section.children) expect(en.Site.links[link.key].trim()).not.toBe("");
       expect(section.children.length).toBeGreaterThan(0);
     }
   });

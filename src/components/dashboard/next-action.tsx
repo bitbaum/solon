@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { SessionStatus } from "@/lib/db/enums";
 import { auth } from "@/lib/auth";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { proposalMessage } from "@/lib/bitcoin/message";
 import { canonicalJson, sha256Hex } from "@/lib/domain/canonical";
 import { ALL_METHODS, methodSpec } from "@/lib/domain/methods";

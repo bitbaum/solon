@@ -16,8 +16,9 @@ import mountainValley from "@/assets/images/mountain-valley.webp";
  * (attribution, given on /credits). None shows a customer or implies one.
  */
 export interface Photo {
+  /** Its key in messages `Photos.<id>` — where its alt text lives, per language. */
+  id: PhotoId;
   image: StaticImageData;
-  alt: string;
   title: string;
   author: string;
   license: string;
@@ -25,10 +26,19 @@ export interface Photo {
   source: string;
 }
 
+export type PhotoId =
+  | "earthAtNight"
+  | "landsgemeinde"
+  | "assemblySeated"
+  | "village"
+  | "city"
+  | "europeFromOrbit"
+  | "mountainValley";
+
 export const PHOTOS = {
   earthAtNight: {
     image: earthAtNight,
-    alt: "Europe's towns and cities lit up at night, seen from orbit beneath the glow of the horizon.",
+    id: "earthAtNight",
     title: "Europe, city lights from space",
     author: "NASA",
     license: "Public domain",
@@ -37,7 +47,7 @@ export const PHOTOS = {
   },
   landsgemeinde: {
     image: landsgemeinde,
-    alt: "The Landsgemeinde of Glarus: thousands of citizens gathered in the town square beneath the Alps, deciding their laws in the open.",
+    id: "landsgemeinde",
     title: "Landsgemeinde Glarus",
     author: "Glarus",
     license: "CC BY 2.0",
@@ -46,7 +56,7 @@ export const PHOTOS = {
   },
   assemblySeated: {
     image: assemblySeated,
-    alt: "Rows of members seated side by side at an open-air assembly, papers in hand.",
+    id: "assemblySeated",
     title: "Glarus Landsgemeinde",
     author: "Glarus",
     license: "CC BY 2.0",
@@ -55,7 +65,7 @@ export const PHOTOS = {
   },
   village: {
     image: villageKyburg,
-    alt: "A small village and its castle on a snowy hillside, seen from the air.",
+    id: "village",
     title: "Kyburg aerial view",
     author: "Albinfo",
     license: "CC0",
@@ -64,7 +74,7 @@ export const PHOTOS = {
   },
   city: {
     image: cityAtNight,
-    alt: "A city's business district at night, towers lit along the water.",
+    id: "city",
     title: "City at night",
     author: "Slaffka Che",
     license: "CC BY 3.0",
@@ -73,7 +83,7 @@ export const PHOTOS = {
   },
   europeFromOrbit: {
     image: europeFromOrbit,
-    alt: "Southern Europe at night from orbit — towns and cities strung across the continent and down Italy.",
+    id: "europeFromOrbit",
     title: "Southern Europe at night",
     author: "NASA",
     license: "Public domain",
@@ -83,7 +93,7 @@ export const PHOTOS = {
   },
   mountainValley: {
     image: mountainValley,
-    alt: "A town spread across an Alpine valley floor at first light, mountains rising on every side.",
+    id: "mountainValley",
     title: "A Swiss mountain village",
     author: "U.S. Department of State",
     license: "Public domain",

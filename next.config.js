@@ -1,3 +1,9 @@
+const createNextIntlPlugin = require("next-intl/plugin");
+
+// Points next-intl at the request config that picks each request's language
+// and loads its messages (English underneath, the translation on top).
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Standalone output is required by the self-hosted Hetzner deploy
@@ -6,4 +12,4 @@ const nextConfig = {
   output: "standalone",
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

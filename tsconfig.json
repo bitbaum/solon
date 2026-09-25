@@ -16,6 +16,7 @@
     "incremental": true,
     "paths": {
       "@/assets/*": ["./src/assets/*"],
+      "@/i18n/*": ["./src/i18n/*"],
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"]
     },

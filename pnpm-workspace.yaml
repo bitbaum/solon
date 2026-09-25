@@ -3,7 +3,11 @@
 # - unrs-resolver builds its native resolver (eslint-config-next)
 # - puppeteer's postinstall downloads the Chrome it drives — the
 #   tests/puppeteer/*.mjs smokes need it.
+# Denied: pulled in by next-intl for its optional message-extraction tooling,
+# which Solon does not use — so their install scripts need not run.
 allowBuilds:
+  "@parcel/watcher": false
+  "@swc/core": false
   esbuild: true
   puppeteer: true
   unrs-resolver: true
