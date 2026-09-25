@@ -1,9 +1,9 @@
 # One account across OrangeCat, Loki and Solon
 
-_Proposal, 2026-09-25. George: "we need a robust auth on orangecat, loki and
-solon. we need uniformity … registration on solon should not require oc, just
-like on loki. but one can log in or register with oc." Needs his go-ahead:
-it changes how every OrangeCat user signs in._
+_Decided 2026-09-25: option A. George: "go with option A for auth, build it.
+It should be easy for people to create accounts in any way they prefer … I
+would really prefer not to pay for things and … to use open source." Status
+at the end._
 
 ## What exists (surveyed 2026-09-25)
 
@@ -68,3 +68,39 @@ calls it a stopgap.
 - `sub` is the only cross-product key; email never links accounts.
 - No product stores another product's password or session.
 - Every screen that stops a person shows the way forward (fleet rule: no dead ends).
+
+## Status (2026-09-25)
+
+Everything below is free and self-hosted: GoTrue v2.189 and OrangeCat's own
+OIDC provider on the box, no paid identity service.
+
+**Shipped**
+
+- OrangeCat (bitbaum/orangecat#1153): `/oauth/authorize` honours
+  `prompt=create`, `login_hint` and `idp_hint`; `/auth` names the app that sent
+  you (looked up server-side) and hides the anonymous lead there; Google/GitHub
+  sign-in from another app now returns to it (it used to drop you on
+  OrangeCat's welcome page); an anonymous account adds its email inline instead
+  of hitting a dead end. Discovery advertises `prompt_values_supported`.
+- Solon (#191): `/sign-up` and `/sign-in` in five languages, email first, then
+  Google, GitHub or an existing OrangeCat account; the header remembers the
+  page you were on; `/account` signed out goes to `/sign-in`.
+- Already true before this work: email + password sign-up with no
+  confirmation step (auto-confirm on), Google, GitHub and X enabled on GoTrue.
+
+**Not done, on purpose**
+
+- An IP rate limit on `/oauth/token`: every relying party calls it from the
+  same box address, so a per-IP budget would throttle all sign-ins to Solon,
+  Loki and Heidi together. Codes are single-use, PKCE-bound and need the client
+  secret; there is nothing to brute-force there.
+
+**Next**
+
+1. Six-digit email code as a password-free option: GoTrue supports it; it needs
+   the magic-link mail template to carry `{{ .Token }}` (box config) and a code
+   field on `/auth`.
+2. Passkeys for returning people.
+3. Loki: send new sign-ups through the same flow; keep its users table keyed by
+   `sub`.
+4. Solon: `/me` with seats across organizations; limitkit on writes.
