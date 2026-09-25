@@ -19,7 +19,7 @@ export default async function IntegrationPage() {
     >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-6">
+          <h2 className="headline text-display-3 text-fg-primary mb-6">
             Cast a cryptographic vote
           </h2>
           <p className="text-fg-primary mb-4">
@@ -55,7 +55,7 @@ export default async function IntegrationPage() {
         </div>
 
         <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-2">Live endpoints</h2>
+          <h2 className="headline text-display-3 text-fg-primary mb-2">Live endpoints</h2>
           <p className="text-sm text-fg-secondary mb-5">
             Every read is public and auth-free. Open one.
           </p>

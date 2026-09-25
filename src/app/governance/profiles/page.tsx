@@ -47,7 +47,7 @@ export default function ProfilesPage() {
               key={profile.id}
               className="rounded-control border border-default bg-surface-raised p-6"
             >
-              <h2 className="font-display text-2xl text-fg-primary">{profile.label}</h2>
+              <h2 className="headline text-2xl text-fg-primary">{profile.label}</h2>
               <p className="mt-3 text-sm leading-relaxed text-fg-secondary">{profile.suitedTo}</p>
               {profile.id === DEFAULT_PROFILE && (
                 <p className="mt-4 inline-flex rounded-pill border border-default px-3 py-1 font-mono text-xs uppercase tracking-caps text-fg-secondary">

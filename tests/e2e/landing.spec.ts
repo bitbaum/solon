@@ -1,10 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-test("landing shows Solon hero and pillars", async ({ page }) => {
-  await page.goto("/");
+test("landing states what Solon is and offers the way in", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("h1")).toContainText("Decide together.");
+  await expect(page.getByRole("heading", { name: "Three steps. Nothing hidden." })).toBeVisible();
   await expect(
-    page.locator("h1").getByText("Governance any group can run, in the open"),
+    page.getByRole("heading", { name: "Any group that decides together." }),
   ).toBeVisible();
-  await expect(page.locator("h3").getByText("Transparent Treasury")).toBeVisible();
-  await expect(page.locator("h3").getByText("Democratic Voting")).toBeVisible();
+  await expect(page.locator("main").getByRole("link", { name: "Hire Solon" })).toBeVisible();
 });

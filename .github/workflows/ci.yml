@@ -6,7 +6,7 @@
 # `next build` is hermetic: the server components that touch the database catch
 # errors and render demo fallbacks, so no live DB is needed. Drizzle has no
 # codegen at all — types flow from src/lib/db/schema.ts at typecheck time.
-# The Playwright e2e smoke tests stay deferred (need a running app).
+# Playwright render checks run in the `integration` job, against a built app.
 name: CI
 
 on:
@@ -105,7 +105,7 @@ jobs:
   # propose → open → vote → close → policy-activation integration spec.
   integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     services:
       postgres:
         image: postgres:16
@@ -145,3 +145,27 @@ jobs:
       # CI. A list of files is how the next spec is born dead.
       - name: Database integration specs
         run: INTEGRATION=1 pnpm exec vitest run .integration.test.ts
+
+      # How the site actually renders — the one thing lint, typecheck and unit
+      # tests cannot see. A button class with no CSS behind it shipped to
+      # production for weeks; tests/e2e/render.spec.ts names each bug it
+      # guards. Runs here because this job already has a migrated database,
+      # so data pages render for real rather than as fallbacks.
+      - name: Build for the render checks
+        run: pnpm run build
+        env:
+          AUTH_SECRET: ci-render-check-secret-not-a-real-one
+          AUTH_URL: http://localhost:3000
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Render checks (Playwright, Chromium)
+        env:
+          AUTH_SECRET: ci-render-check-secret-not-a-real-one
+          AUTH_URL: http://localhost:3000
+          BASE_URL: http://localhost:3000
+        run: |
+          pnpm exec next start -p 3000 > server.log 2>&1 &
+          for i in $(seq 1 60); do curl -fsS -o /dev/null http://localhost:3000/api/health && break; sleep 1; done
+          pnpm exec playwright test tests/e2e --project=chromium --reporter=line

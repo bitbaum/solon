@@ -157,7 +157,7 @@ export default async function EcosystemPage() {
 
         {/* How a decision travels */}
         <section className="max-w-3xl mx-auto">
-          <h2 className="font-display text-display-3 text-fg-primary text-center mb-6">
+          <h2 className="headline text-display-3 text-fg-primary text-center mb-6">
             How a decision travels
           </h2>
           <ol className="space-y-3 text-sm text-fg-primary">
@@ -189,7 +189,7 @@ export default async function EcosystemPage() {
 
         {/* Live governed state */}
         <section className="max-w-3xl mx-auto space-y-8">
-          <h2 className="font-display text-display-3 text-fg-primary text-center">
+          <h2 className="headline text-display-3 text-fg-primary text-center">
             What is governed here, live
           </h2>
           {dbError && (

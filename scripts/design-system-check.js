@@ -54,57 +54,37 @@ const FORBIDDEN = [
     message: "Use the .section-shell class (or max-w-shell) so every page lines up.",
   },
   {
-    // The display face (Instrument Serif) ships ONE weight. Asking for a bolder
-    // one makes the browser synthesize a fake bold, which looks cheap and is
-    // invisible in code review. Weight belongs to the face, in the token
-    // package, not to the component — that is what keeps a face swap one line.
-    pattern:
-      /\bfont-display\b[^"']*\bfont-(?:medium|semibold|bold|extrabold|black)\b|\bfont-(?:medium|semibold|bold|extrabold|black)\b[^"']*\bfont-display\b/,
+    // Solon's headings are the sans, like OrangeCat's and Loki's. It was the one
+    // product setting them in the shared serif, which made it read as a
+    // different company from its siblings. The serif stays in the token package
+    // for anything that wants it; Solon does not.
+    pattern: /\bfont-display\b/,
     message:
-      "Do not set a weight next to font-display — the display face has one weight, owned by @fleet/design-tokens.",
-  },
-  {
-    // .font-display already applies the face's tracking. Re-declaring it means
-    // a future face swap silently keeps the OLD face's tracking.
-    pattern:
-      /\bfont-display\b[^"']*\btracking-display\b|\btracking-display\b[^"']*\bfont-display\b/,
-    message: "Redundant: .font-display already applies --tracking-display.",
+      "Solon headings are the sans — use .headline (sentence case) or .headline-caps (a short statement).",
   },
   {
     pattern: /font-\[['"]?[A-Z]/,
-    message: "Never name a typeface in a component. Use font-display / font-sans / font-mono.",
-  },
-  {
-    // Size floor. The display face is a high-contrast serif: its thin strokes
-    // thin out further as type shrinks, so an 18px display heading renders
-    // LIGHTER than the 16px sans paragraph under it and the hierarchy inverts.
-    // Display type starts at text-2xl; below that use the sans at font-semibold.
-    // The uppercase, open-tracked wordmark is the sanctioned exception (.wordmark).
-    pattern:
-      /\bfont-display\b[^"']*\btext-(?:xs|sm|base|lg|xl)\b|\btext-(?:xs|sm|base|lg|xl)\b[^"']*\bfont-display\b/,
-    message:
-      "Display face below its size floor — use text-2xl+ with font-display, or the sans at font-semibold.",
+    message: "Never name a typeface in a component. Use .headline / font-sans / font-mono.",
   },
 ];
 
 /**
- * The inverse of the size floor, and the rule the other one could never catch:
- * every rule above only fires once `font-display` is already present, so a
- * heading that simply never opted in was invisible to the gate. That blind spot
- * is how 21 headings — the whole dashboard — ended up in bold Inter while the
- * marketing pages ran the serif, which is the drift this gate exists to stop.
+ * Large type must be a headline, set one way. Without this, a heading that
+ * simply picked a size and a weight drifts from the rest — which is how the
+ * dashboard once ended up in a different face from the marketing pages.
  *
- * Above the floor, the display face is the default, not a choice. `font-mono`
- * is exempt: a balance or a hash is data, and data is set in the mono face at
- * whatever size it needs.
+ * `font-mono` is exempt: a balance or a hash is data, and data is set in the
+ * mono face at whatever size it needs. The wordmark is its own thing.
  */
-const DISPLAY_SCALE = /\btext-(?:2xl|3xl|4xl|5xl|6xl|7xl|display-[123])\b/;
+const DISPLAY_SCALE = /\btext-(?:2xl|3xl|4xl|5xl|6xl|7xl|8xl|display-[123])\b/;
 function missingDisplayFace(line) {
   for (const m of line.matchAll(/className=(?:"([^"]*)"|\{`([^`]*)`\})/g)) {
     const cls = m[1] ?? m[2] ?? "";
     if (!DISPLAY_SCALE.test(cls)) continue;
-    if (/\bfont-(?:display|mono)\b/.test(cls)) continue;
-    if (/\bwordmark\b/.test(cls)) continue;
+    if (/\b(?:headline|headline-caps|font-mono|wordmark)\b/.test(cls)) continue;
+    // A semibold sans at display size is a headline in all but name — allowed
+    // for sub-headings that sit inside a section, not above one.
+    if (/\bfont-(?:semibold|bold)\b/.test(cls)) continue;
     return true;
   }
   return false;
@@ -148,7 +128,7 @@ for (const target of TARGETS) {
           file: rel,
           line: i + 1,
           message:
-            "Heading at display size without font-display. Above text-2xl the display face is the default — add font-display (or font-mono if this is data).",
+            "Heading at display size without a headline style. Add .headline / .headline-caps (or font-mono if this is data).",
           source: line.trim(),
         });
       }

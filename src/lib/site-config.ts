@@ -1,205 +1,83 @@
-export interface NavChildItem {
+export interface NavLink {
   title: string;
   href: string;
-  description?: string;
 }
 
 export interface NavSection {
   title: string;
-  description?: string;
-  children?: NavChildItem[];
-  href?: string;
+  children: NavLink[];
 }
-
-// Only routes that actually exist belong here — a nav link to a 404 is a lie.
-// Descriptions live here too (SSOT), not in the component that renders them.
-export const NAV_ITEMS: NavSection[] = [
-  {
-    title: "Platform",
-    description: "What Solon is and how it works",
-    children: [
-      { title: "Overview", href: "/", description: "The platform in one page" },
-      { title: "Features", href: "/features", description: "What runs in production today" },
-      {
-        title: "Security",
-        href: "/security",
-        description: "No keys, no custody, no rewritable history",
-      },
-      { title: "Integration", href: "/integration", description: "API and integration guides" },
-    ],
-  },
-  {
-    title: "Governance",
-    description:
-      "The art and science of it — how groups decide, and what changes when they decide differently",
-    children: [
-      {
-        title: "The art and science of governance",
-        href: "/governance",
-        description: "The four questions every organization answers",
-      },
-      {
-        title: "How the question decides the answer",
-        href: "/governance/methods",
-        description: "One room, five ways of counting, four winners",
-      },
-      {
-        title: "Quorum and threshold",
-        href: "/governance/thresholds",
-        description: "How many had to turn up, and how much had to agree",
-      },
-      {
-        title: "Who may vote, and on what",
-        href: "/governance/who-decides",
-        description: "Electorates, categories, and the four humans-only red lines",
-      },
-      {
-        title: "Five ways to be an organization",
-        href: "/governance/profiles",
-        description: "Town, association, co-op, collective, company board",
-      },
-      {
-        title: "How voting works",
-        href: "/governance/voting",
-        description: "Bitcoin-signed votes, verified server-side",
-      },
-    ],
-  },
-  {
-    title: "Participate",
-    description: "Put something on the record",
-    children: [
-      {
-        title: "Proposals",
-        href: "/proposals",
-        description: "Everything up for decision, and its next step",
-      },
-      {
-        title: "File a proposal",
-        href: "/propose",
-        description: "Put something on the record, signed",
-      },
-      { title: "Become a member", href: "/join", description: "Bind a Bitcoin key and get a vote" },
-      {
-        title: "Found an organization",
-        href: "/orgs/new",
-        description: "Sign it into existence with your own key",
-      },
-      {
-        title: "Audit Trail",
-        href: "/governance/audit",
-        description: "The append-only record itself",
-      },
-    ],
-  },
-  {
-    title: "Treasury",
-    description: "Watch-only Bitcoin treasuries",
-    children: [
-      {
-        title: "Bitcoin Treasury",
-        href: "/treasury/bitcoin",
-        description: "On-chain, independently verifiable",
-      },
-    ],
-  },
-  {
-    title: "Ecosystem",
-    description: "The three-pillar stack Solon governs for",
-    children: [
-      {
-        title: "Three Pillars",
-        href: "/ecosystem",
-        description: "Economy, execution, governance — live state",
-      },
-      { title: "OrangeCat", href: "https://orangecat.ch", description: "The economic pillar" },
-      {
-        title: "Loki",
-        href: "https://loki.orangecat.ch",
-        description: "The execution pillar",
-      },
-    ],
-  },
-  {
-    title: "Resources",
-    description: "About the project",
-    children: [
-      { title: "About", href: "/about", description: "Why Solon exists and who runs it" },
-      {
-        title: "API",
-        href: "/integration",
-        description: "Read the governed state programmatically",
-      },
-    ],
-  },
-];
-
-/** Homepage hero destinations — the two outcomes a first visitor can take. */
-export const HERO_CTAS = {
-  primary: { href: "/dashboard/voting", labelKey: "cta_primary" },
-  secondary: { href: "/treasury/bitcoin", labelKey: "cta_secondary" },
-} as const;
-
-/** Every internal nav destination, flattened — the set of routes that exist. */
-export const NAV_CHILDREN: NavChildItem[] = NAV_ITEMS.flatMap((s) => s.children ?? []);
 
 /**
- * The footer, derived from NAV_ITEMS rather than hand-written beside it.
+ * Every page on the site, grouped — the SSOT the footer and the mobile menu
+ * render. Only routes that exist belong here: a link to a 404 is a lie.
  *
- * The footer used to restate six of these routes as its own literal <Link>s.
- * Nothing tied the two lists together, so removing a page from the nav left the
- * footer pointing at it — the exact "a footer link to a 404 is a lie" the
- * footer's own comment warns about, with no way to notice.
- *
- * A footer entry names an href that must already exist in NAV_ITEMS. `label`
- * is optional and only for the places the footer deliberately says something
- * shorter than the nav does ("Voting", not "How voting works"). Everything
- * else inherits, so a rename in NAV_ITEMS reaches the footer for free.
- *
- * Enforced by src/lib/__tests__/site-config.test.ts: an href here that is not
- * in NAV_ITEMS fails the suite.
+ * The header does NOT render this. It used to — six mega-menus across the top
+ * of every page, whose buttons wrapped onto two lines at 1440px. The header now
+ * carries PRIMARY_NAV (a handful of links, tested to be a subset of this), and
+ * everything else is one scroll away in the footer.
  */
-export interface FooterLink {
-  href: string;
-  /** Only when the footer deliberately differs from the nav's wording. */
-  label?: string;
-}
-
-export interface FooterSection {
-  title: string;
-  links: FooterLink[];
-}
-
-export const FOOTER_SECTIONS: FooterSection[] = [
+export const SITE_SECTIONS: NavSection[] = [
   {
-    title: "Platform",
-    links: [{ href: "/features" }, { href: "/security" }, { href: "/integration" }],
-  },
-  {
-    title: "Governance",
-    links: [
-      { href: "/governance", label: "Art and science" },
-      { href: "/governance/methods", label: "Voting methods" },
-      { href: "/governance/voting", label: "Voting" },
-      { href: "/governance/audit" },
-      { href: "/treasury/bitcoin" },
+    title: "Solon",
+    children: [
+      { title: "Hire Solon", href: "/hire" },
+      { title: "Security", href: "/security" },
+      { title: "Features", href: "/features" },
+      { title: "About", href: "/about" },
+      { title: "API", href: "/integration" },
     ],
   },
   {
-    title: "Ecosystem",
-    // The sibling products come from ECOSYSTEM_PILLARS in the component — one
-    // pillar SSOT, not restated here.
-    links: [{ href: "/ecosystem" }],
+    title: "How it works",
+    children: [
+      { title: "The art and science", href: "/governance" },
+      { title: "Voting methods", href: "/governance/methods" },
+      { title: "Quorum and threshold", href: "/governance/thresholds" },
+      { title: "Who decides what", href: "/governance/who-decides" },
+      { title: "Five kinds of organization", href: "/governance/profiles" },
+      { title: "How a vote is cast", href: "/governance/voting" },
+    ],
   },
   {
-    title: "Resources",
-    links: [{ href: "/about" }, { href: "/integration", label: "API" }],
+    title: "Take part",
+    children: [
+      { title: "Dashboard", href: "/dashboard" },
+      { title: "Decisions", href: "/proposals" },
+      { title: "File a proposal", href: "/propose" },
+      { title: "Become a member", href: "/join" },
+      { title: "Start an organization", href: "/orgs/new" },
+      { title: "The record", href: "/governance/audit" },
+    ],
+  },
+  {
+    title: "More",
+    children: [
+      { title: "Treasury", href: "/treasury/bitcoin" },
+      { title: "Live state", href: "/ecosystem" },
+      { title: "Photo credits", href: "/credits" },
+    ],
   },
 ];
 
-/** The label a footer link shows: its override, else the nav's own title. */
-export function footerLinkLabel(link: FooterLink): string {
-  if (link.label) return link.label;
-  const item = NAV_CHILDREN.find((c) => c.href === link.href);
-  return item?.title ?? link.href;
-}
+/** Every page, flattened — the set of routes that exist. */
+export const SITE_LINKS: NavLink[] = SITE_SECTIONS.flatMap((s) => s.children);
+
+/**
+ * The header's links. Few on purpose: a first-time visitor needs to know how it
+ * works, see real decisions, and trust it. "Hire Solon" is the header's one
+ * call to action and is rendered separately from these.
+ */
+export const PRIMARY_NAV: NavLink[] = [
+  { title: "How it works", href: "/governance" },
+  { title: "Decisions", href: "/proposals" },
+  { title: "Security", href: "/security" },
+];
+
+export const HIRE_HREF = "/hire";
+
+/**
+ * Where a message to the people behind Solon arrives. An @orangecat.ch apex
+ * address — the only domain on the box that receives mail.
+ */
+export const CONTACT_EMAIL = "cato@orangecat.ch";

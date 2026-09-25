@@ -30,23 +30,33 @@ To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in th
 Solon is **dark-only**. It is a public ledger; marketing and dashboard share the
 same near-black canvas. There is no light theme to keep in sync.
 
-## The display face has one weight
+## Headlines are the sans
 
-The display face is a high-contrast serif with a **single weight (400)**. Two
-consequences, both enforced:
+Solon sets headlines in the sans, heavy and tight — the same voice OrangeCat and
+Loki speak in. It used to be the one product setting them in the shared serif,
+which made it read as a different company from its siblings.
 
-- Never put `font-bold` / `font-semibold` beside `font-display`. There is no
-  bolder cut, so the browser synthesizes one, and a fake bold looks cheap.
-  Weight and tracking are declared *with the face* in the package — which is
-  what keeps swapping the face a one-line change.
-- Never use it below `text-2xl` / `text-display-3`. Its thin strokes thin out
-  further as type shrinks: at 18px the card titles rendered *lighter* than the
-  16px body copy beneath them and the hierarchy inverted. Below the floor, use
-  the sans at `font-semibold`. The uppercase, open-tracked `.wordmark` is the
-  one sanctioned exception.
+- `.headline` — sentence case, for app screens and long titles.
+- `.headline-caps` — uppercase, for the short statement a full-screen section
+  makes. A few words, never a sentence.
+- `.kicker` — the small uppercase label above a headline.
 
-Solon is **dark-only**. It is a public ledger; marketing and dashboard share the
-same near-black canvas. There is no light theme to keep in sync.
+Both are defined once in `globals.css`. `design:check` fails on `font-display`
+and on any display-size text without a headline style (or `font-mono` for data).
+
+## Full-screen sections and photographs
+
+The front page and `/hire` are built from `FullBleed` sections
+(`src/components/site/full-bleed.tsx`): one photograph, one statement bottom-left
+over a scrim, one action. Pass `daylight` for bright photographs — the heavier
+scrim keeps text readable over sky and facades. Actions on a photograph use
+`.btn-frame` / `.btn-frame-accent`; inside forms use `.btn-primary` /
+`.btn-secondary`.
+
+Every photograph is registered in `src/lib/content/photos.ts` with its author,
+licence and source, and `/credits` renders that list — a page cannot use a photo
+the credits page does not know about. Only public-domain, CC0 or CC BY images,
+and none that shows or implies a customer.
 
 ## Rules the checker enforces
 
@@ -61,10 +71,10 @@ before CI does:
 - No drop shadows. **Hierarchy is border and type**, not elevation.
 - No component gradients. Brand surfaces belong in the token package.
 - No `max-w-7xl`. Width is one decision: `.section-shell`.
-- No typeface named in a component (`font-['…']`) — use `font-display` /
+- No typeface named in a component (`font-['…']`) — use `.headline` /
   `font-sans` / `font-mono`.
-- No weight or `tracking-display` beside `font-display`; no `font-display` below
-  its size floor. See above.
+- No `font-display` (the serif) anywhere in Solon, and no display-size text
+  without a headline style. See above.
 - No token redefined in `globals.css`. The package owns them.
 
 The legacy `navy` / `solon-*` palette is **deleted, not aliased** — any leftover
@@ -106,11 +116,23 @@ text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
 | Logo | `src/components/ui/logo.tsx` |
 | Auth control | `src/components/ui/auth-control.tsx` |
 | Page shell | `src/components/ui/page-layout.tsx` |
+| Full-screen section | `src/components/site/full-bleed.tsx` |
 
-Nav items come from `src/lib/site-config.ts`. Keep components small, prefer
+Links come from `src/lib/site-config.ts`: `SITE_SECTIONS` (footer, mobile menu) and `PRIMARY_NAV` (the header's three links, tested to be a subset). Keep components small, prefer
 semantic HTML, and keep ARIA roles on the menu primitives.
+
+## What the checker cannot see
+
+CSS is invisible to lint, typecheck and unit tests: a class with no rule behind
+it renders as nothing and every gate stays green. `tests/e2e/render.spec.ts`
+runs in CI's `integration` job against a built app and checks that the main
+actions are styled, the header fits on one line at 1440px, no page scrolls
+sideways at 390px, and the mobile menu opens. Still: look at a page before
+shipping it.
 
 ## Copy
 
-All user-facing strings live in `i18n/{en,de,fr,it}.json`. Four languages ship,
-so **never hard-code a string in a component** — add the key and translate it.
+Plain, inline English — no i18n layer ships. Write for the person who will run a
+group, not for engineers: no crypto or protocol vocabulary on the front pages
+(the details live on `/security` and `/governance/voting`). Never assemble a
+sentence by concatenation; see `AGENTS.md`, "Language".

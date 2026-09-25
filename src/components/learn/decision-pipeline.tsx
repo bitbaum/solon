@@ -53,7 +53,7 @@ export function DecisionPipeline() {
             className="group flex h-full flex-col rounded-control border border-default bg-surface-raised p-5 transition-colors hover:border-interactive"
           >
             <span className="font-mono text-xs text-fg-muted">{stage.step}</span>
-            <span className="mt-3 font-display text-2xl text-fg-primary">{stage.question}</span>
+            <span className="mt-3 headline text-2xl text-fg-primary">{stage.question}</span>
             <span className="mt-3 inline-flex w-fit rounded-pill border border-accent px-3 py-1 font-mono text-xs uppercase tracking-caps text-accent-text">
               {stage.solon}
             </span>

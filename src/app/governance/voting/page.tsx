@@ -1,66 +1,83 @@
+import Link from "next/link";
 import PageLayout from "@/components/ui/page-layout";
 
+export const metadata = { title: "How a vote is cast — Solon" };
+
 /**
- * Explains the voting mechanism honestly. Live sessions and tallies render in
- * /dashboard/voting from the database — this page fabricates nothing.
+ * How a vote is cast, honestly: one click by default, a signature when a member
+ * wants a vote anyone can recount. Live sessions render in /dashboard/voting
+ * from the database — this page fabricates nothing.
  */
 export default function VotingSystemPage() {
   return (
     <PageLayout
-      title="Democratic Voting System"
-      description="One click to vote — or a Bitcoin signature, verified cryptographically rather than trusted"
+      kicker="How it works"
+      title="How a vote is cast"
+      description="One click for every member. A signature for anyone who wants a vote that can be recounted without trusting us."
     >
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-4">How a vote works</h2>
-          <ol className="list-decimal list-inside space-y-3 text-fg-primary">
-            <li>
-              A voting session opens on a proposal. Its rules — who is eligible, the threshold, the
-              quorum — are fixed when it opens.
-            </li>
-            <li>
-              A member signs the canonical vote message (session id, choice, and their own address)
-              with their Bitcoin wallet — Sparrow, Electrum, or Bitcoin Core&apos;s{" "}
-              <code className="font-mono text-sm">signmessage</code>.
-            </li>
-            <li>
-              The server recovers the public key from the signature and checks it resolves to a
-              registered member. No signature, no vote — there is no other way in.
-            </li>
-            <li>
-              The weighted tally is computed from stored, verified votes only, and every vote&apos;s
-              signature stays on record so anyone can re-verify it.
-            </li>
-          </ol>
-        </div>
+      <ol className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+        {STEPS.map((s, i) => (
+          <li key={s.title} className="border-t border-strong pt-6">
+            <div className="font-mono text-sm text-fg-tertiary">0{i + 1}</div>
+            <h2 className="mt-3 text-xl font-semibold text-fg-primary">{s.title}</h2>
+            <p className="mt-3 text-fg-secondary">{s.body}</p>
+          </li>
+        ))}
+      </ol>
 
-        <div className="bg-surface-base rounded-control border border-default p-8">
-          <h2 className="font-display text-display-3 text-fg-primary mb-4">What this gives you</h2>
-          <ul className="space-y-3 text-fg-primary">
-            <li>
-              <span className="font-semibold">Cryptographic verification</span> — a vote is valid
-              because the math says so, not because an administrator does.
-            </li>
-            <li>
-              <span className="font-semibold">Replay protection</span> — the signed text binds
-              session, choice, and voter, so a signature cannot be lifted onto another vote.
-            </li>
-            <li>
-              <span className="font-semibold">Weighted voting</span> — members carry a voting
-              weight; the tally is weighted accordingly and the weights are public.
-            </li>
-          </ul>
+      <section className="mt-24 grid gap-12 border-t border-subtle pt-16 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <h2 className="headline text-3xl sm:text-4xl">Two ways to prove a vote</h2>
+          <p className="mt-5 text-fg-secondary">
+            Both count the same. Every vote on the record says which one it used, so nobody ever
+            mistakes one for the other.
+          </p>
         </div>
+        <div className="divide-y divide-subtle border-y border-subtle">
+          <div className="py-6">
+            <h3 className="text-lg font-semibold text-fg-primary">One click</h3>
+            <p className="mt-2 text-fg-secondary">
+              You are signed in and hold a seat; pressing Vote is the vote. The record is
+              Solon&apos;s word that your seat cast it — which is how almost every group votes
+              today, only with every ballot on the record.
+            </p>
+          </div>
+          <div className="py-6">
+            <h3 className="text-lg font-semibold text-fg-primary">A signature</h3>
+            <p className="mt-2 text-fg-secondary">
+              You sign the exact text of your ballot with a key only you hold. The signature is
+              published with the vote, so anyone can check it came from you and was not changed —
+              without trusting Solon at all. The signed text names the session, the choice and the
+              voter, so it cannot be lifted onto another vote.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <div className="text-center">
-          <a
-            href="/dashboard/voting"
-            className="inline-flex items-center justify-center bg-surface-raised text-fg-primary px-8 py-3 rounded-surface hover:bg-surface-overlay transition-colors font-semibold"
-          >
-            Go to live voting
-          </a>
-        </div>
+      <div className="mt-20">
+        <Link href="/dashboard/voting" className="btn-frame">
+          Go to the current vote
+        </Link>
       </div>
     </PageLayout>
   );
 }
+
+const STEPS = [
+  {
+    title: "The rules are fixed",
+    body: "A vote opens on a proposal. Who may vote, how votes are counted and how many must agree are frozen at that moment.",
+  },
+  {
+    title: "Members vote",
+    body: "Each member votes once — and may change their mind until the vote closes. Only the last ballot counts.",
+  },
+  {
+    title: "Counted in the open",
+    body: "The tally is computed from the stored ballots only, weighted by each member's public voting weight.",
+  },
+  {
+    title: "Published for good",
+    body: "The result and every ballot behind it go on the record, where nothing can be edited or removed.",
+  },
+];

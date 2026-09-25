@@ -71,7 +71,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
 
   return (
     <main className="section-shell py-section-tight">
-      <h1 className="text-center font-display text-display-2 text-fg-primary">File a proposal</h1>
+      <h1 className="text-center headline text-display-2 text-fg-primary">File a proposal</h1>
       <p className="mx-auto mt-5 max-w-lede text-center text-fg-secondary">
         Filing puts it on the record as a draft. Opening it starts the clock and freezes the rules.
       </p>
@@ -85,7 +85,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
 function Shell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <main className="section-shell py-section-tight">
-      <h1 className="text-center font-display text-display-2 text-fg-primary">{title}</h1>
+      <h1 className="text-center headline text-display-2 text-fg-primary">{title}</h1>
       <div className="mx-auto mt-12 max-w-2xl rounded-surface border border-default bg-surface-base p-6">
         {children}
       </div>

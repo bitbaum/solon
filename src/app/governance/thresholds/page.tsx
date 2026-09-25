@@ -81,7 +81,7 @@ export default function ThresholdsPage() {
 
         <section className="space-y-8">
           <div className="mx-auto max-w-copy">
-            <h2 className="font-display text-display-3 text-fg-primary">
+            <h2 className="headline text-display-3 text-fg-primary">
               What Solon asks for, by category
             </h2>
             <p className="mt-4 text-base leading-relaxed text-fg-secondary">
