@@ -19,41 +19,33 @@ export default async function AuthErrorPage({
     <main className="section-shell flex items-center justify-center py-20 sm:py-28">
       <div className="w-full max-w-lg rounded-surface border border-default bg-surface-base p-8">
         <h1 className="headline text-3xl text-fg-primary">
-          {denied ? "This OrangeCat account can’t be recognized" : "Sign-in didn’t complete"}
+          {denied ? "Add an email to continue" : "Sign-in didn’t complete"}
         </h1>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-fg-secondary">
           {denied ? (
             <>
               <p>
-                Your OrangeCat account has no email address — it is an anonymous account. Solon is a
-                governance system: every recognized identity must be attributable, so anonymous
-                accounts can’t sign in here.
+                You signed in with an OrangeCat account that has no email yet. Solon needs one, so
+                that the people you decide things with know it is you.
               </p>
               <p>
-                Add an email to your account at{" "}
-                <a
-                  href="https://orangecat.ch/settings"
-                  className="text-accent underline underline-offset-2 hover:text-accent-hover"
-                >
-                  orangecat.ch/settings
-                </a>{" "}
-                and try again. Note that you never need to sign in to observe — all governance data
-                on this site is public — or to vote, which works by Bitcoin signature alone.
+                Sign in again: OrangeCat now asks for the email on the way, keeps everything you
+                already did on that account, and brings you straight back. Reading anything here
+                never needs an account.
               </p>
             </>
           ) : (
             <p>
-              Something went wrong talking to OrangeCat. Try again from the navigation bar; if it
-              keeps failing, the audit trail and all governance data remain fully readable without
-              signing in.
+              Something went wrong talking to OrangeCat. Try again; if it keeps failing, the audit
+              trail and all governance data remain fully readable without signing in.
             </p>
           )}
         </div>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-control border border-default bg-surface-raised px-4 py-2.5 text-sm font-medium text-fg-primary transition-colors hover:bg-surface-overlay"
-          >
+          <Link href="/sign-in" className="btn-primary min-h-11">
+            Sign in again
+          </Link>
+          <Link href="/" className="btn-secondary min-h-11">
             Back to Solon
           </Link>
           <Link

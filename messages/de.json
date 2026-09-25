@@ -354,5 +354,27 @@
     "kicker": "Bildnachweise",
     "title": "Die Fotografien auf dieser Website",
     "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an."
+  },
+  "Entry": {
+    "kicker": "Ihr Konto",
+    "signInTitle": "Bei Solon anmelden",
+    "signUpTitle": "Solon-Konto erstellen",
+    "lede": "Ein Konto für Solon, OrangeCat und Loki. Kostenlos, ohne Wallet.",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "sie@beispiel.ch",
+    "continue": "Weiter",
+    "or": "oder",
+    "with": {
+      "google": "Weiter mit Google",
+      "github": "Weiter mit GitHub",
+      "orangecat": "Ich habe schon ein OrangeCat-Konto"
+    },
+    "toSignUp": "Neu hier? Konto erstellen",
+    "toSignIn": "Schon ein Konto? Anmelden",
+    "howTitle": "Was als Nächstes passiert",
+    "how": "Sie schliessen die Anmeldung auf der Seite von OrangeCat ab, die das eine Konto für Solon, OrangeCat und Loki führt, und kommen direkt hierher zurück. Solon sieht Ihr Passwort nie.",
+    "readFreely": "Zum Lesen brauchen Sie auf Solon nie ein Konto: Jeder Entscheid und sein Protokoll sind öffentlich.",
+    "unavailable": "Die Anmeldung ist für diese Solon-Instanz nicht eingeschaltet. Alles hier bleibt ohne Konto lesbar.",
+    "photoLine": "Offen entschieden."
   }
 }

@@ -4,10 +4,10 @@ import { members } from "@/lib/db/schema";
 
 /**
  * Login on Solon is recognition: it says who you are, and a seat you hold
- * lets you act with one click (see lib/auth/actor.ts). There are no
- * passwords, no registration, and no auth tables here — the only identity
- * provider is OrangeCat (the stack's identity root), and the only thing a
- * session stores is the OrangeCat actor id.
+ * lets you act with one click (see lib/auth/actor.ts). Solon has its own
+ * sign-up and sign-in screens (/sign-up, /sign-in) but no passwords and no
+ * auth tables: the one account lives at OrangeCat (the stack's identity root),
+ * and the only thing a session stores is the OrangeCat actor id.
  */
 
 /** What a page needs to know about whoever is looking at it, for one organization. */

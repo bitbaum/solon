@@ -1,5 +1,6 @@
-import { Link } from "@/i18n/navigation";
-import { auth, signIn, signOut, authEnabled } from "@/lib/auth";
+import { getLocale } from "next-intl/server";
+import { Link, redirect } from "@/i18n/navigation";
+import { auth, signOut } from "@/lib/auth";
 import { membershipsForActor } from "@/lib/auth/recognition";
 
 export const metadata = { title: "Account — Solon" };
@@ -14,40 +15,12 @@ export const dynamic = "force-dynamic";
 export default async function AccountPage() {
   const session = await auth();
 
+  // Signed out: the sign-in page does this job, and brings them back here.
   if (!session?.actorId) {
-    return (
-      <main className="max-w-xl mx-auto py-24 text-center">
-        <h1 className="headline text-display-3 text-fg-primary mb-4">Account</h1>
-        <p className="text-fg-secondary mb-8">
-          Solon has no accounts of its own — no passwords, no registration. Sign in with OrangeCat
-          to be recognized; voting itself never needs a login, only a Bitcoin signature.
-        </p>
-        {authEnabled ? (
-          <form
-            action={async () => {
-              "use server";
-              await signIn("orangecat", { redirectTo: "/account" });
-            }}
-          >
-            <button
-              type="submit"
-              className="px-5 py-2.5 text-sm font-medium bg-surface-raised text-fg-primary rounded-control hover:bg-surface-overlay transition-colors"
-            >
-              Sign in with OrangeCat
-            </button>
-          </form>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-sm text-fg-secondary">
-              Sign-in is not configured in this environment — but none of the record needs it.
-            </p>
-            <Link href="/governance/audit" className="btn-primary inline-flex">
-              Read the record
-            </Link>
-          </div>
-        )}
-      </main>
-    );
+    return redirect({
+      href: { pathname: "/sign-in", query: { from: "/account" } },
+      locale: await getLocale(),
+    });
   }
 
   const memberships = await membershipsForActor(session.actorId);

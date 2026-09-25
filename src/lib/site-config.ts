@@ -115,7 +115,14 @@ export const HIRE_HREF = "/hire";
  * English text in every language — and says so, in the reader's language,
  * rather than pretending (components/site/translation-notice.tsx).
  */
-export const TRANSLATED_ROUTES = new Set<string>(["/", "/hire", "/security", "/credits"]);
+export const TRANSLATED_ROUTES = new Set<string>([
+  "/",
+  "/hire",
+  "/security",
+  "/credits",
+  "/sign-in",
+  "/sign-up",
+]);
 
 /**
  * Where a message to the people behind Solon arrives. An @orangecat.ch apex

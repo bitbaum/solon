@@ -17,7 +17,9 @@ import en from "../../messages/en.json";
 const internal = SITE_LINKS.filter((l) => l.href.startsWith("/"));
 
 test.describe("every page renders", () => {
-  for (const link of [{ href: "/" }, ...internal]) {
+  // The account pages are not in the site map, so they are listed here.
+  const entry = ["/sign-in", "/sign-up", "/de/sign-up"].map((href) => ({ href }));
+  for (const link of [{ href: "/" }, ...internal, ...entry]) {
     test(`${link.href} answers 200`, async ({ page }) => {
       const res = await page.goto(link.href, { waitUntil: "domcontentloaded" });
       expect(res?.status()).toBe(200);
@@ -67,7 +69,15 @@ test("the header fits on one line at 1440px", async ({ page }) => {
 test.describe("phones", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  for (const href of ["/", "/hire", "/security", "/governance", "/proposals", "/dashboard"]) {
+  for (const href of [
+    "/",
+    "/hire",
+    "/security",
+    "/governance",
+    "/proposals",
+    "/dashboard",
+    "/sign-up",
+  ]) {
     test(`${href} does not scroll sideways`, async ({ page }) => {
       await page.goto(href, { waitUntil: "domcontentloaded" });
       const overflow = await page.evaluate(
