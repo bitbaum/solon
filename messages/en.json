@@ -5,10 +5,18 @@
   },
   "Site": {
     "sections": {
-      "solon": "Solon",
-      "howItWorks": "How it works",
-      "takePart": "Take part",
+      "useCases": "Use cases",
+      "governance": "Governance",
+      "platform": "Platform",
+      "decisions": "Decisions",
       "more": "More"
+    },
+    "sectionDesc": {
+      "useCases": "Every kind of group decides. Find yours.",
+      "governance": "The art and science of deciding together.",
+      "platform": "Solon decides, OrangeCat pays, Loki does the work.",
+      "decisions": "The public record — and your part in it.",
+      "more": "Everything else."
     },
     "links": {
       "hire": "Hire Solon",
@@ -16,7 +24,7 @@
       "features": "Features",
       "about": "About",
       "api": "API",
-      "governance": "How it works",
+      "governance": "The art and science",
       "methods": "Voting methods",
       "thresholds": "Quorum and threshold",
       "whoDecides": "Who decides what",
@@ -30,7 +38,47 @@
       "record": "The record",
       "treasury": "Treasury",
       "liveState": "Live state",
-      "credits": "Photo credits"
+      "credits": "Photo credits",
+      "useCases": "All use cases",
+      "platform": "How it fits together",
+      "ideas": "The ideas behind Solon",
+      "newEra": "A new era",
+      "forCompanies": "Companies",
+      "forTowns": "Villages and towns",
+      "forAssociations": "Associations and co-ops",
+      "forCommunities": "Communities",
+      "forNetworkStates": "Network states"
+    },
+    "desc": {
+      "hire": "Have Solon run your group's governance",
+      "security": "What Solon refuses to hold, and what anyone can check",
+      "features": "Everything Solon does today",
+      "about": "Who is behind Solon, and why",
+      "api": "Read the record and build on it",
+      "governance": "How groups decide, and why the method matters",
+      "methods": "Six ways to count, and when to use each",
+      "thresholds": "How many must turn up, and how many must agree",
+      "whoDecides": "Which decisions belong to whom",
+      "profiles": "Rule templates for five kinds of group",
+      "voting": "One click, or a signature anyone can recount",
+      "dashboard": "Your group at a glance",
+      "decisions": "Everything up for decision, and its next step",
+      "propose": "Put a question on the record",
+      "join": "Take a seat in an organization",
+      "newOrg": "Found one in a minute",
+      "record": "Every step, written once",
+      "treasury": "Open books, read from the chain",
+      "liveState": "The organizations Solon governs right now",
+      "credits": "Who made the photographs",
+      "useCases": "Every kind of group, compared",
+      "platform": "Solon, OrangeCat and Loki as one system",
+      "ideas": "From Solon of Athens to the network state",
+      "newEra": "Why governing yourselves is newly possible",
+      "forCompanies": "Boards and shareholders",
+      "forTowns": "Assemblies, budgets, local rules",
+      "forAssociations": "General meetings, done properly",
+      "forCommunities": "Online groups and collectives",
+      "forNetworkStates": "From startup society to recognition"
     }
   },
   "Nav": {
@@ -41,7 +89,9 @@
     "hire": "Hire Solon",
     "signIn": "Sign in",
     "account": "Account",
-    "language": "Language"
+    "language": "Language",
+    "overview": "Overview",
+    "featured": "Featured"
   },
   "Footer": {
     "tagline": "Governance for any group of people. Beta — running, not released.",
@@ -57,7 +107,9 @@
     "village": "A small village and its castle on a snowy hillside, seen from the air.",
     "city": "A city's business district at night, towers lit along the water.",
     "europeFromOrbit": "Southern Europe at night from orbit — towns and cities strung across the continent and down Italy.",
-    "mountainValley": "A town spread across an Alpine valley floor at first light, mountains rising on every side."
+    "mountainValley": "A town spread across an Alpine valley floor at first light, mountains rising on every side.",
+    "starlinkTownHall": "A train of satellites crossing the night sky above an old town hall and its square.",
+    "landsgemeindePainting": "A painting of a Landsgemeinde in the late eighteenth century: the whole community gathered in the square, the officials on a platform above them."
   },
   "Home": {
     "hero": {
@@ -136,7 +188,9 @@
       "communities": {
         "title": "Communities and new towns",
         "body": "Groups online and new kinds of towns that want to govern themselves from day one."
-      }
+      },
+      "more": "Read more",
+      "all": "Every kind of group — including network states"
     },
     "trust": {
       "kicker": "Why trust it",
@@ -300,5 +354,571 @@
     "kicker": "Photo credits",
     "title": "The photographs on this site",
     "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one."
+  },
+  "Status": {
+    "available": "Available now",
+    "inDevelopment": "In development",
+    "planned": "Planned"
+  },
+  "Capabilities": {
+    "founding": {
+      "name": "Start an organization",
+      "body": "Anyone with an OrangeCat account can found one in a minute and take the first seat."
+    },
+    "proposalsAndVotes": {
+      "name": "Proposals and votes",
+      "body": "Members propose in plain words and vote with one click; they can change their vote until it closes."
+    },
+    "countingMethods": {
+      "name": "Six ways to count",
+      "body": "Yes or no, consent, approval, dots, scores and ranked choice — chosen per decision."
+    },
+    "ruleTemplates": {
+      "name": "Rule templates",
+      "body": "Five ready-made rule sets — town, association, co-op, collective, company board — to start from."
+    },
+    "publicRecord": {
+      "name": "A record that only grows",
+      "body": "Every step is written once and published; every decision comes with everything needed to recount it."
+    },
+    "signedVotes": {
+      "name": "Signed votes",
+      "body": "Members who want to can sign with their own key, so anyone can recount without trusting Solon."
+    },
+    "treasuryWatch": {
+      "name": "Open books",
+      "body": "Register the group's Bitcoin addresses and every member sees the balance, read straight from the chain."
+    },
+    "languages": {
+      "name": "Five languages",
+      "body": "English, German, French, Italian and Russian."
+    },
+    "governanceAgent": {
+      "name": "The governance agent",
+      "body": "Drafts proposals, keeps members informed, writes the minutes and checks spending against decisions."
+    },
+    "admissionByVote": {
+      "name": "Admission by vote",
+      "body": "Someone asks to join; the members decide, and the record shows who admitted whom."
+    },
+    "charterByVote": {
+      "name": "Rules you change by vote",
+      "body": "The group's own rulebook — who votes on what, by how much — amended through the group's own votes."
+    },
+    "mandates": {
+      "name": "Decisions that carry themselves out",
+      "body": "A decision hands a signed instruction to OrangeCat (money) or Loki (work), and their report comes back to the record."
+    },
+    "bankLedger": {
+      "name": "Bank accounts, not only Bitcoin",
+      "body": "Import bank statements so every payment is matched against the decision that allowed it."
+    },
+    "passkeys": {
+      "name": "Passkeys",
+      "body": "Sign a vote with your face or fingerprint — cryptographic proof without a wallet."
+    },
+    "federation": {
+      "name": "Groups of groups",
+      "body": "Organizations join a larger one as members, each voting by its own internal decision."
+    },
+    "exportAndFork": {
+      "name": "Leave with your record",
+      "body": "Export the whole signed history and take it to another host, where it can be checked again."
+    }
+  },
+  "UseCases": {
+    "index": {
+      "metaTitle": "Use cases — Solon",
+      "metaDescription": "How Solon serves companies, villages and towns, associations and co-ops, communities, and network states.",
+      "kicker": "Use cases",
+      "title": "Every kind of group decides.",
+      "lede": "The rules differ; the problems are the same. Pick the kind of group that is yours.",
+      "more": "Read more"
+    },
+    "common": {
+      "problems": "What goes wrong today",
+      "how": "How Solon helps",
+      "examples": "Decisions groups like yours make",
+      "rules": "A place to start",
+      "rulesBody": "Solon's rule template for this kind of group sets who may vote on what, how votes are counted, and how many must agree. It is a starting point: your group changes it by vote.",
+      "rulesLink": "Compare the templates",
+      "status": "What works today",
+      "deeper": "How this works in detail",
+      "technical": "Technical reference",
+      "cta": "Talk to us about your group",
+      "ctaOwn": "Start on your own"
+    },
+    "companies": {
+      "metaTitle": "Solon for companies",
+      "kicker": "For companies",
+      "title": "Board decisions with a record nobody can quietly edit.",
+      "lede": "From a start-up's first board to shareholder votes: resolutions proposed in the open, counted by the rules in your articles, kept on a record every director can check.",
+      "problems": {
+        "p1": {
+          "title": "Decided in the corridor",
+          "body": "The real decision happens before the meeting; the minutes record something tidier."
+        },
+        "p2": {
+          "title": "Minutes nobody can check",
+          "body": "Who voted how lives in one person's notes, written after the fact."
+        },
+        "p3": {
+          "title": "Circular resolutions by email",
+          "body": "Signatures scattered across threads, and no single place that says what was decided."
+        }
+      },
+      "how": {
+        "h1": {
+          "title": "Resolutions in plain words",
+          "body": "Each proposal states exactly what changes — a budget, a hire, a policy — before anyone votes."
+        },
+        "h2": {
+          "title": "Your articles, applied",
+          "body": "Quorum, majorities and who may vote on what follow the rules you set, the same way every time."
+        },
+        "h3": {
+          "title": "Votes that can be proven",
+          "body": "Directors can sign a vote with their own key, so the result stands up without trusting any one person."
+        },
+        "h4": {
+          "title": "The record, kept",
+          "body": "Every resolution and every vote lands on a record that can only grow — ready for the auditor."
+        }
+      },
+      "examples": {
+        "e1": "Approve the annual budget",
+        "e2": "Appoint a new managing director",
+        "e3": "Adopt a spending policy with limits per person",
+        "e4": "Authorise a capital increase"
+      },
+      "deeper": {
+        "p1": "Solon records each resolution as a proposal with a category (policy, spending, membership…). Opening a vote freezes the rules that apply — who may vote, the threshold, the quorum — so a later change to the rules cannot reach back into a past decision.",
+        "p2": "Each vote records how it was proven: one click by a signed-in director (Solon's record), or a signature with the director's own key (anyone can verify it). Solon does not replace your legal obligations: where the law requires a signed paper resolution, Solon is the record behind it, not a substitute."
+      }
+    },
+    "towns": {
+      "metaTitle": "Solon for villages and towns",
+      "kicker": "For villages and towns",
+      "title": "An assembly anyone can join. A budget anyone can read.",
+      "lede": "The Landsgemeinde works because everyone is in the square. Solon puts the square online — for residents in the hall, at home, or abroad.",
+      "problems": {
+        "p1": {
+          "title": "Only some can come",
+          "body": "Evening assemblies select for those who can be there, not for those who are affected."
+        },
+        "p2": {
+          "title": "Budgets nobody can follow",
+          "body": "The numbers arrive as a PDF; where the money went is anyone's guess."
+        },
+        "p3": {
+          "title": "Proposals lost in committee",
+          "body": "A resident's idea disappears between the meeting and the minutes."
+        }
+      },
+      "how": {
+        "h1": {
+          "title": "Anyone may propose",
+          "body": "Residents with a seat put a question on the record — as any citizen of Glarus may from the floor."
+        },
+        "h2": {
+          "title": "Vote from anywhere",
+          "body": "One click from home, alongside the vote in the hall; every ballot counted by the same rules."
+        },
+        "h3": {
+          "title": "Open books",
+          "body": "Register the community's accounts and every resident sees the balance and where money went."
+        },
+        "h4": {
+          "title": "In your language",
+          "body": "Proposals and results in the languages your residents speak."
+        }
+      },
+      "examples": {
+        "e1": "Adopt next year's budget",
+        "e2": "Choose between three plans for the school building",
+        "e3": "Set the rules for the community hall",
+        "e4": "Merge two committees"
+      },
+      "deeper": {
+        "p1": "The town template counts yes/no questions by simple majority with a quorum, and uses ranked or approval voting when there are several options — where a simple majority can elect the option most people rank last (see the counting page).",
+        "p2": "Solon does not replace the law your municipality answers to. Where cantonal or national law sets how a vote must be held, Solon runs the consultation, the record and the books around it, and the official vote stays where the law puts it."
+      }
+    },
+    "associations": {
+      "metaTitle": "Solon for associations and co-ops",
+      "kicker": "For associations and co-ops",
+      "title": "The general meeting, done properly — with half the work.",
+      "lede": "Clubs, associations and cooperatives run on volunteers. Solon does the paperwork: the notice, the vote, the count and the minutes.",
+      "problems": {
+        "p1": {
+          "title": "The meeting nobody attends",
+          "body": "Quorum is missed, the vote is postponed, and the board decides alone."
+        },
+        "p2": {
+          "title": "Minutes weeks later",
+          "body": "Written from memory by a volunteer who would rather be doing anything else."
+        },
+        "p3": {
+          "title": "Who is actually a member?",
+          "body": "The list lives in a spreadsheet, and nobody is sure it is current."
+        }
+      },
+      "how": {
+        "h1": {
+          "title": "Your statutes as rules",
+          "body": "Start from the association template and set your own quorums and majorities."
+        },
+        "h2": {
+          "title": "Members vote from home",
+          "body": "The meeting happens in the room and online at the same time; every vote is counted."
+        },
+        "h3": {
+          "title": "Minutes written as it happens",
+          "body": "Every proposal and result is on the record the moment it is decided."
+        },
+        "h4": {
+          "title": "A roster you can trust",
+          "body": "One seat per member, and a clear record of who joined and when."
+        }
+      },
+      "examples": {
+        "e1": "Elect the board",
+        "e2": "Approve the annual accounts",
+        "e3": "Change the membership fee",
+        "e4": "Amend the statutes"
+      },
+      "deeper": {
+        "p1": "The association template follows the structure of the Swiss Verein (Art. 60 ff. Civil Code): the general meeting as the supreme body, simple majorities for ordinary business, and a higher bar for changing the statutes.",
+        "p2": "Whether a vote held on Solon satisfies your statutes and the law depends on what your statutes allow — many permit written or electronic votes, some do not. We will look at yours with you before your first real decision."
+      }
+    },
+    "communities": {
+      "metaTitle": "Solon for communities",
+      "kicker": "For communities",
+      "title": "Fair rules and an open record from day one.",
+      "lede": "Online groups, co-living houses, open-source projects, collectives: groups that form fast and need to decide together before anyone has written anything down.",
+      "problems": {
+        "p1": {
+          "title": "The founders decide everything",
+          "body": "Nobody meant it that way, but there were never any other rules."
+        },
+        "p2": {
+          "title": "The loudest voice wins",
+          "body": "A chat thread is not a vote; whoever posts most sets the direction."
+        },
+        "p3": {
+          "title": "No way to leave well",
+          "body": "When members disagree, the only choices are to stay quiet or walk out with nothing."
+        }
+      },
+      "how": {
+        "h1": {
+          "title": "Start in a minute",
+          "body": "Found the organization, take the first seat, invite the others."
+        },
+        "h2": {
+          "title": "Choose how you count",
+          "body": "Consent for a small team, approval or ranked voting when there are many options."
+        },
+        "h3": {
+          "title": "Change your own rules",
+          "body": "As the group grows, it changes its rules by vote — on the record."
+        },
+        "h4": {
+          "title": "Take your history with you",
+          "body": "The record belongs to the group: it can be exported and checked anywhere."
+        }
+      },
+      "examples": {
+        "e1": "Adopt a code of conduct",
+        "e2": "Choose where to meet in person next year",
+        "e3": "Share out a small fund",
+        "e4": "Admit a new member"
+      },
+      "deeper": {
+        "p1": "The collective template favours consent decisions — a proposal passes unless someone raises a reasoned objection — which suits small groups that work closely together. As a group grows, it can move to majority or ranked voting by amending its rules.",
+        "p2": "Exit matters as much as voice. Solon's record is designed so that a group, or a member, can take their signed history elsewhere and have it verified again without Solon."
+      }
+    },
+    "networkStates": {
+      "metaTitle": "Solon for network states",
+      "kicker": "For network states",
+      "title": "Governance infrastructure for a new kind of country.",
+      "lede": "A network state starts as an online community and grows toward land and recognition. Every step of that path is a governance problem. Solon is built to carry it from the first member onward.",
+      "definition": {
+        "title": "What a network state is",
+        "quote": "A network state is a highly aligned online community with a capacity for collective action that crowdfunds territory around the world and eventually gains diplomatic recognition from pre-existing states.",
+        "cite": "Balaji Srinivasan, The Network State (2022)",
+        "body": "Srinivasan's path runs from a startup society to a network union to a network state — \"cloud first, land last, but not land never.\" No network state has been recognized yet. What exists today are the early stages, and they are exactly where governance decides whether a community holds together.",
+        "stance": "Solon does not take a side on any community's cause. It is neutral infrastructure: the same rules engine and the same open record for any group that wants to govern itself."
+      },
+      "path": {
+        "title": "The path, and what each step needs",
+        "s1": {
+          "step": "Found a startup society",
+          "needs": "A founding record and a roll of members.",
+          "solon": "Found the organization and take the first seat; every later admission is on the record."
+        },
+        "s2": {
+          "step": "Organize for collective action",
+          "needs": "A way to decide together that members trust.",
+          "solon": "Proposals, votes and counting methods the community chooses — and can change by vote."
+        },
+        "s3": {
+          "step": "Build trust offline and an economy online",
+          "needs": "Open books and money that moves without a bank.",
+          "solon": "Open treasuries on Solon; payments and funding through OrangeCat."
+        },
+        "s4": {
+          "step": "Crowdfund physical places",
+          "needs": "Pooled money spent only as the members decided.",
+          "solon": "Spending decided by vote, carried out through OrangeCat, receipts on the record."
+        },
+        "s5": {
+          "step": "Connect them into an archipelago",
+          "needs": "Local groups that govern themselves and decide some things together.",
+          "solon": "Groups of groups: each place its own organization, all members of a larger one."
+        },
+        "s6": {
+          "step": "Take an on-chain census",
+          "needs": "A membership count anyone can verify.",
+          "solon": "A signed roll: members who sign their seat can be counted without trusting a clerk."
+        },
+        "s7": {
+          "step": "Seek recognition",
+          "needs": "Evidence of legitimate, accountable self-government.",
+          "solon": "Years of decisions anyone can recount. Recognition is political; the record is how a community earns the conversation."
+        }
+      },
+      "deeper": {
+        "p1": "Srinivasan's own definition includes \"a consensual government limited by a social smart contract\". Solon's approach to that phrase is deliberately plain: the rules are data the members can read and amend by vote, every decision is published with the evidence to recount it, and the executors — money and work — act only on a verified decision.",
+        "p2": "Two cautions carried over from history. A majority can wrongly decide who counts — Appenzell Innerrhoden's assembly refused women the vote until a federal court intervened in 1990 — so decisions about membership are reserved to people and recorded in full. And software is not sovereignty: Solon can make a community legible and accountable; it cannot make a border move."
+      }
+    },
+    "compare": {
+      "title": "How Solon differs by group",
+      "lede": "The same engine; different defaults. Every default is a starting point your group changes by vote.",
+      "rows": {
+        "who": "Who decides",
+        "typical": "Typical decisions",
+        "count": "How votes are counted",
+        "money": "Money",
+        "law": "The law around it"
+      },
+      "companies": {
+        "who": "Directors and shareholders, weighted by shares where your articles say so",
+        "typical": "Budgets, appointments, policies, capital",
+        "count": "Majorities and quorums from your articles",
+        "money": "Company accounts, reported against decisions",
+        "law": "Company law and your articles; Solon is the record behind your resolutions"
+      },
+      "towns": {
+        "who": "Every resident with a seat",
+        "typical": "Budgets, local rules, building projects",
+        "count": "Majority with a quorum; ranked choice between several options",
+        "money": "The community's accounts, open to every resident",
+        "law": "Municipal and cantonal law decide the official vote; Solon runs the consultation and the books"
+      },
+      "associations": {
+        "who": "Members, one seat each",
+        "typical": "Board elections, accounts, fees, statutes",
+        "count": "Simple majority; a higher bar for the statutes",
+        "money": "The association's accounts, approved at the general meeting",
+        "law": "Your statutes and association law (in Switzerland Art. 60 ff. Civil Code)"
+      },
+      "communities": {
+        "who": "Members, one seat each",
+        "typical": "Codes of conduct, shared funds, admissions",
+        "count": "Consent for small teams; approval or ranked choice as you grow",
+        "money": "A shared fund, open to all members",
+        "law": "Usually informal; you choose whether and when to become a legal entity"
+      },
+      "networkStates": {
+        "who": "Members worldwide, each place governing itself too",
+        "typical": "Admissions, crowdfunding, places to build, the constitution",
+        "count": "Chosen by the community and changed by vote; signed votes for what matters most",
+        "money": "Open treasuries and crowdfunding through OrangeCat",
+        "law": "Every member still lives under the law of their place; recognition is a political path"
+      }
+    }
+  },
+  "Ideas": {
+    "metaTitle": "The ideas behind Solon",
+    "metaDescription": "Solon stands on old ideas: public law, open assemblies, fair counting, the commons, exit and voice, and new ones like the network state.",
+    "kicker": "The art and science of governance",
+    "title": "The ideas behind Solon",
+    "lede": "Nothing here is new, and that is the point. People have been working out how to decide together for thousands of years. Solon is built on what they learned.",
+    "meaning": "What Solon takes from it",
+    "source": "Source",
+    "solon": {
+      "era": "Athens, c. 594 BC",
+      "title": "Solon: laws anyone can read",
+      "story": "Solon of Athens, whose name this project borrows, reformed the laws of a city on the edge of civil war. According to ancient sources he freed Athenians who had been enslaved for debt, and he had the laws written on wooden tablets set up in public, where anyone could read them. Then he left the city for ten years, so that nobody could press him to change them.",
+      "meaning": "Rules must be readable by the people they bind — and the person who writes them must be bound by them too.",
+      "note": "Our sources on Solon are late and incomplete; historians still debate the details."
+    },
+    "landsgemeinde": {
+      "era": "Switzerland, since 1387",
+      "title": "The Landsgemeinde: the whole community in one square",
+      "story": "In Glarus, citizens have met in the open air to make their laws since at least 1387. Anyone may speak and propose a change on the day: in 2006 one citizen's amendment from the floor merged twenty-five municipalities into three, going further than the government had proposed. In 2007 Glarus became the first Swiss canton to let sixteen-year-olds vote on cantonal matters.",
+      "story2": "Appenzell Innerrhoden holds its own assembly on the last Sunday of April, where men may still show a sword instead of a voting card. It is also the warning: its assembly voted down women's right to vote until 1990, when the Federal Supreme Court ruled that excluding women broke the constitution. Women first voted there in 1991.",
+      "meaning": "Open assemblies work. And the first question of any group — who counts? — is too important to leave to a simple majority. On Solon, decisions about membership are for people only, and recorded in full.",
+      "caption": "A Landsgemeinde in the late eighteenth century (Museum Appenzell)."
+    },
+    "counting": {
+      "era": "1785 and 1951",
+      "title": "Condorcet and Arrow: the count is never neutral",
+      "story": "In 1785 the Marquis de Condorcet showed that a group can prefer A to B, B to C and C to A — even when every member's own preferences are perfectly consistent. In 1951 Kenneth Arrow proved that with three or more options no ranked voting rule meets a short list of reasonable fairness conditions all at once.",
+      "meaning": "How you count is a choice, and it changes the result. Solon offers six methods, shows what each one does, and records which one each decision used.",
+      "note": "Arrow's theorem concerns ranked methods; score methods fall outside its conditions. It does not mean no vote can be fair."
+    },
+    "ostrom": {
+      "era": "Nobel Prize, 2009",
+      "title": "Elinor Ostrom: communities can govern their commons",
+      "story": "Elinor Ostrom studied fisheries, forests and irrigation systems that communities had run well for generations, without a state or a market taking over. She found eight design principles they shared: clear boundaries; rules fitted to local conditions; the people affected help make the rules; monitoring; graduated sanctions; ways to resolve conflict; outside recognition of the right to organize; and nested layers for larger systems.",
+      "meaning": "These principles are Solon's checklist: a clear roll of members, rules the group writes and changes itself, a public record anyone can monitor, and — still to build — graduated sanctions, dispute resolution and groups of groups.",
+      "note": "Ostrom's own warning: there are no panaceas. Principles, not a recipe."
+    },
+    "exit": {
+      "era": "1956 and 1970",
+      "title": "Exit and voice",
+      "story": "Albert Hirschman observed that members of a failing organization have two responses: leave (exit) or speak up (voice) — and that loyalty delays exit and gives voice time to work. Charles Tiebout modelled people choosing among local governments the way they choose among goods, an idea often summed up as voting with your feet.",
+      "meaning": "Voice needs a place to be heard, and exit needs to stay possible. Solon gives members a vote on the record — and is designed so a member or a whole group can leave with their history.",
+      "note": "Tiebout's model assumes people can move freely and at no cost; real life is harder, which is why exit has to be designed for."
+    },
+    "panarchy": {
+      "era": "1860 and 1974",
+      "title": "Panarchy and the framework for utopias",
+      "story": "In 1860 the Belgian botanist Paul-Émile de Puydt proposed that people should be able to choose their government the way they choose an insurer — without moving house. A century later the philosopher Robert Nozick described the minimal state as \"a framework for utopias\": a place where people form and leave communities of their own design.",
+      "meaning": "Solon takes no side on which rules are best. It is infrastructure for any rules a group chooses — consensus or majority, assembly or board."
+    },
+    "charterCities": {
+      "era": "2009",
+      "title": "Charter cities: new rules need trust",
+      "story": "The economist Paul Romer proposed building new cities under new charters — different rules, chosen in advance, that people could opt into by moving there. The early attempts showed how much depends on legitimacy: in Honduras he resigned from the project's transparency commission in 2012 after agreements were signed without it.",
+      "meaning": "New rules only work if the people living under them can see how they are made and enforced. Transparency is not a feature; it is the condition."
+    },
+    "networkState": {
+      "era": "2022",
+      "title": "The network state",
+      "story": "Balaji Srinivasan's The Network State describes communities that form online around a shared purpose, organize for collective action, crowdfund land around the world, and seek diplomatic recognition — cloud first, land last.",
+      "meaning": "If communities are going to be founded online, they need governance from their first day: a roll, rules, a record and open books. That is what Solon is.",
+      "link": "Solon for network states"
+    },
+    "closing": {
+      "title": "What Solon takes from all of it",
+      "t1": "Rules anyone can read, and change by vote.",
+      "t2": "A count the group chose, applied the same way every time.",
+      "t3": "A record that only grows, and anyone can check.",
+      "t4": "Membership decided by people, never by default.",
+      "t5": "The door stays open: you can leave with your history."
+    }
+  },
+  "NewEra": {
+    "metaTitle": "A new era for self-government — Solon",
+    "metaDescription": "Why governing yourselves is newly possible: cryptography, open money, AI, connection, local making and energy — and what technology still cannot do.",
+    "kicker": "A new era",
+    "title": "What once needed a centre, no longer does.",
+    "lede": "For most of history, a few things needed a central authority: keeping records, holding money, doing the work, connecting people, making things, producing energy. One by one they are becoming possible at the scale of a town — or of a group scattered across the world. When those functions no longer need a centre, neither does governance.",
+    "changed": "What changed",
+    "means": "What it means for governing",
+    "limit": "The limit",
+    "records": {
+      "title": "Records",
+      "changed": "Cryptographic signatures and public ledgers let anyone check a record without trusting whoever keeps it.",
+      "means": "A vote, a membership roll or a set of accounts can be verified by every member — not only by a clerk.",
+      "limit": "A signature proves who decided. It cannot prove the decision was wise."
+    },
+    "money": {
+      "title": "Money",
+      "changed": "Bitcoin and the Lightning network let a group hold and move money without asking a bank.",
+      "means": "A community can keep its treasury in the open and pay directly — through OrangeCat — only as its members decided.",
+      "limit": "Taxes and the laws of the place you live still apply. Open money is not a way around them."
+    },
+    "work": {
+      "title": "Work",
+      "changed": "AI agents can draft, translate, summarize and check — the clerk's work that used to need an office.",
+      "means": "A small group can run its governance properly without paid staff; Loki's agents and people carry decisions out.",
+      "limit": "Agents propose; people decide. Some decisions — who belongs, and the rules themselves — are reserved to people."
+    },
+    "connection": {
+      "title": "Connection",
+      "changed": "Phones and satellite internet reach almost everywhere — a mountain village, a ship, another continent.",
+      "means": "An assembly no longer needs everyone in one room. Members can take part from wherever they are.",
+      "limit": "Being able to vote is not the same as taking part. Good design still has to make participation easy."
+    },
+    "making": {
+      "title": "Making",
+      "changed": "3D printing and small-scale manufacturing move some production closer to where people live.",
+      "means": "Communities can make more of what they need locally — and decide together what to make.",
+      "limit": "Most things are still made in large factories, and will be for a long time."
+    },
+    "energy": {
+      "title": "Energy",
+      "changed": "Local solar and batteries are already common. Small modular reactors promise compact nuclear power: two are generating commercial electricity today (in Russia and China); the first Western units are under construction.",
+      "means": "Communities can hold more of their own energy — and will need to govern it together.",
+      "limit": "Small reactors are not yet proven at scale or cheap. This is a direction, not an arrival."
+    },
+    "choose": {
+      "title": "Choose your rules",
+      "body": "If the functions no longer need a centre, the rules can be chosen by the people who live under them — as easily as joining a club, and as openly as a Landsgemeinde. Consensus or majority, assembly or board, a village or a network spread across continents: Solon provides the infrastructure, not the ideology."
+    },
+    "cannot": {
+      "title": "What technology cannot do",
+      "c1": "It cannot grant sovereignty. Recognition is a political fact, earned from people and governments.",
+      "c2": "It does not replace the law of the place you live. Taxes owed are owed.",
+      "c3": "It cannot make a decision wise — only visible, fair to count, and possible to check.",
+      "c4": "It cannot make people take part. Design can make it easier; the rest is up to the group."
+    },
+    "links": {
+      "platform": "How Solon, OrangeCat and Loki work together",
+      "networkStates": "Solon for network states"
+    }
+  },
+  "Platform": {
+    "metaTitle": "Platform — Solon, OrangeCat and Loki",
+    "metaDescription": "One account, three jobs: Solon decides, OrangeCat holds and moves the money, Loki does the work.",
+    "kicker": "Platform",
+    "title": "One account. Three jobs.",
+    "lede": "Solon decides. OrangeCat holds and moves the money. Loki does the work. Each does one thing, and each checks the others.",
+    "solon": {
+      "name": "Solon",
+      "role": "Decides",
+      "body": "Proposals, votes, the rules and the record. Nothing happens to the group's money or work that was not decided here."
+    },
+    "orangecat": {
+      "name": "OrangeCat",
+      "role": "Holds and moves the money",
+      "body": "Wallets, payments and funding for people and groups. It moves the group's money only as a decision allowed."
+    },
+    "loki": {
+      "name": "Loki",
+      "role": "Does the work",
+      "body": "AI agents and people who carry a decision out — and report every step back to the record."
+    },
+    "story": {
+      "title": "One decision, start to finish",
+      "lede": "A village decides to repair its roof.",
+      "s1": "A resident proposes the repair on Solon, with the quote attached and the amount stated.",
+      "s2": "Residents vote. The rules the village chose decide how the count works and how many must agree.",
+      "s3": "The decision goes to OrangeCat, which pays the roofer from the village's account — exactly the amount decided, and no more.",
+      "s4": "Loki keeps the work on track: schedules, reminders, photos of the finished roof.",
+      "s5": "Each step reports back to Solon's record, where every resident can see it happened as decided."
+    },
+    "today": {
+      "title": "What works today, and what is next",
+      "body": "Today one account signs you into all three, and OrangeCat already checks Solon's decisions before applying one of its own spending limits. Decisions that hand a signed instruction to OrangeCat and Loki — and receive their report back — are the next step."
+    },
+    "deeper": {
+      "title": "Evidence, not authority",
+      "p1": "No product simply obeys another. When Solon publishes a decision, OrangeCat and Loki each re-check it themselves: the signatures, who was allowed to vote, the count, and that the content was not changed. Only then do they act. A decision is evidence they can verify, not an order they must trust.",
+      "p2": "This matters when something goes wrong. If Solon's servers were compromised, a forged decision would fail those checks. If a payment happened that no decision allowed, the record would show the gap."
+    },
+    "links": {
+      "security": "Security",
+      "api": "API and integration",
+      "orangecat": "Visit OrangeCat",
+      "loki": "Visit Loki"
+    }
   }
 }

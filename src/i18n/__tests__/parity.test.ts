@@ -29,7 +29,18 @@ function leaves(tree: Tree, prefix = ""): Map<string, string> {
 
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
 
-const source = leaves(en);
+/**
+ * Namespaces written in English first and not yet translated. Their pages
+ * stay out of TRANSLATED_ROUTES, so a reader in another language sees the
+ * English text with a notice saying so. The essays wait for a native review
+ * of their terms of art (AGENTS.md, "Language"). Removing a name here is how
+ * a translation becomes required.
+ */
+const PENDING_TRANSLATION = ["Status", "Capabilities", "UseCases", "Ideas", "NewEra", "Platform"];
+
+const pending = (key: string) => PENDING_TRANSLATION.some((ns) => key.startsWith(`${ns}.`));
+
+const source = new Map([...leaves(en)].filter(([k]) => !pending(k)));
 
 describe("message catalogs", () => {
   it("has a catalog for every declared locale", () => {
@@ -38,7 +49,7 @@ describe("message catalogs", () => {
 
   for (const locale of locales.filter((l) => l !== "en")) {
     describe(locale, () => {
-      const target = leaves(CATALOGS[locale]);
+      const target = new Map([...leaves(CATALOGS[locale])].filter(([k]) => !pending(k)));
 
       it("has every key English has", () => {
         const missing = [...source.keys()].filter((k) => !target.has(k));

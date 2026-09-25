@@ -169,3 +169,25 @@ jobs:
           pnpm exec next start -p 3000 > server.log 2>&1 &
           for i in $(seq 1 60); do curl -fsS -o /dev/null http://localhost:3000/api/health && break; sleep 1; done
           pnpm exec playwright test tests/e2e --project=chromium --reporter=line
+
+      # The server production runs is not `next start`: it is the standalone
+      # server.js, behind Caddy, which adds X-Forwarded-Proto: https. On
+      # 2026-09-25 that combination 500'd every English page — next-intl's
+      # rewrite looked external to Next under HOSTNAME=127.0.0.1 — while every
+      # check above stayed green, because none of them sent the header. This
+      # runs the app the way the box does (HOSTNAME mirrors Solon's BIND_HOST
+      # in /opt/solon/shared/.env) and requires 200 on pages that rewrite.
+      - name: Production-shaped smoke (standalone behind a TLS proxy)
+        env:
+          AUTH_SECRET: ci-render-check-secret-not-a-real-one
+          AUTH_URL: https://solon.orangecat.ch
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
+          HOSTNAME=0.0.0.0 PORT=3100 node .next/standalone/server.js > standalone.log 2>&1 &
+          for i in $(seq 1 60); do curl -fsS -o /dev/null http://127.0.0.1:3100/api/health && break; sleep 1; done
+          for p in / /hire /governance /for/network-states /de /de/hire; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: solon.orangecat.ch' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:3100$p")
+            echo "$p -> $code"
+            if [ "$code" != "200" ]; then tail -30 standalone.log; exit 1; fi
+          done

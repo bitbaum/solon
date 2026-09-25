@@ -5,10 +5,18 @@
   },
   "Site": {
     "sections": {
-      "solon": "Solon",
-      "howItWorks": "Comment ça marche",
-      "takePart": "Participer",
+      "useCases": "Cas d'usage",
+      "governance": "Gouvernance",
+      "platform": "Plateforme",
+      "decisions": "Décisions",
       "more": "Plus"
+    },
+    "sectionDesc": {
+      "useCases": "Tout groupe décide. Trouvez le vôtre.",
+      "governance": "L'art et la science de décider ensemble.",
+      "platform": "Solon décide, OrangeCat paie, Loki fait le travail.",
+      "decisions": "Le registre public — et votre rôle.",
+      "more": "Tout le reste."
     },
     "links": {
       "hire": "Engager Solon",
@@ -16,7 +24,7 @@
       "features": "Fonctionnalités",
       "about": "À propos",
       "api": "API",
-      "governance": "Comment ça marche",
+      "governance": "L'art et la science",
       "methods": "Modes de scrutin",
       "thresholds": "Quorum et majorité",
       "whoDecides": "Qui décide de quoi",
@@ -30,7 +38,47 @@
       "record": "Le registre",
       "treasury": "Trésorerie",
       "liveState": "État en direct",
-      "credits": "Crédits photo"
+      "credits": "Crédits photo",
+      "useCases": "Tous les cas d'usage",
+      "platform": "Comment tout s'articule",
+      "ideas": "Les idées derrière Solon",
+      "newEra": "Une nouvelle ère",
+      "forCompanies": "Entreprises",
+      "forTowns": "Villages et communes",
+      "forAssociations": "Associations et coopératives",
+      "forCommunities": "Communautés",
+      "forNetworkStates": "États en réseau"
+    },
+    "desc": {
+      "hire": "Confier à Solon la gouvernance de votre groupe",
+      "security": "Ce que Solon refuse de détenir, et ce que chacun peut vérifier",
+      "features": "Tout ce que Solon fait aujourd'hui",
+      "about": "Qui est derrière Solon, et pourquoi",
+      "api": "Lire le registre et bâtir dessus",
+      "governance": "Comment les groupes décident, et pourquoi la méthode compte",
+      "methods": "Six façons de compter, et quand utiliser chacune",
+      "thresholds": "Combien doivent venir, et combien doivent approuver",
+      "whoDecides": "Quelles décisions appartiennent à qui",
+      "profiles": "Des modèles de règles pour cinq types de groupes",
+      "voting": "Un clic, ou une signature que chacun peut recompter",
+      "dashboard": "Votre groupe en un coup d'œil",
+      "decisions": "Tout ce qui est soumis à décision, et l'étape suivante",
+      "propose": "Inscrire une question au registre",
+      "join": "Prendre un siège dans une organisation",
+      "newOrg": "Fondée en une minute",
+      "record": "Chaque étape, écrite une seule fois",
+      "treasury": "Des comptes ouverts, lus sur la blockchain",
+      "liveState": "Les organisations que Solon gouverne en ce moment",
+      "credits": "Qui a pris les photographies",
+      "useCases": "Chaque type de groupe, comparé",
+      "platform": "Solon, OrangeCat et Loki comme un seul système",
+      "ideas": "De Solon d'Athènes à l'État en réseau",
+      "newEra": "Pourquoi se gouverner soi-même devient possible",
+      "forCompanies": "Conseils et actionnaires",
+      "forTowns": "Assemblées, budgets, règles locales",
+      "forAssociations": "Des assemblées générales bien menées",
+      "forCommunities": "Groupes en ligne et collectifs",
+      "forNetworkStates": "De la société startup à la reconnaissance"
     }
   },
   "Nav": {
@@ -41,7 +89,9 @@
     "hire": "Engager Solon",
     "signIn": "Se connecter",
     "account": "Compte",
-    "language": "Langue"
+    "language": "Langue",
+    "overview": "Vue d'ensemble",
+    "featured": "À la une"
   },
   "Footer": {
     "tagline": "La gouvernance pour tout groupe de personnes. Bêta — en service, pas encore publié.",
@@ -57,7 +107,9 @@
     "village": "Un petit village et son château sur une colline enneigée, vus du ciel.",
     "city": "Le quartier d'affaires d'une ville la nuit, des tours éclairées au bord de l'eau.",
     "europeFromOrbit": "L'Europe du Sud de nuit depuis l'orbite — villes et villages égrenés à travers le continent jusqu'en Italie.",
-    "mountainValley": "Une localité étalée au fond d'une vallée alpine aux premières lueurs, entourée de montagnes."
+    "mountainValley": "Une localité étalée au fond d'une vallée alpine aux premières lueurs, entourée de montagnes.",
+    "starlinkTownHall": "Un train de satellites traverse le ciel nocturne au-dessus d'un vieil hôtel de ville et de sa place.",
+    "landsgemeindePainting": "Peinture d'une Landsgemeinde à la fin du XVIIIe siècle : toute la communauté réunie sur la place, les magistrats sur une estrade au-dessus."
   },
   "Home": {
     "hero": {
@@ -136,7 +188,9 @@
       "communities": {
         "title": "Communautés et nouvelles villes",
         "body": "Des groupes en ligne et de nouvelles formes de villes qui veulent se gouverner dès le premier jour."
-      }
+      },
+      "more": "En savoir plus",
+      "all": "Tous les types de groupes — y compris les États en réseau"
     },
     "trust": {
       "kicker": "Pourquoi faire confiance",
