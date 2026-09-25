@@ -23,8 +23,9 @@ export default async function IntegrationPage() {
             Cast a cryptographic vote
           </h2>
           <p className="text-fg-primary mb-4">
-            A vote is a Bitcoin signed message. Sign the canonical vote message with the wallet that
-            holds your registered member address, then POST the signature:
+            From outside a browser — an agent, a script — a vote is a Bitcoin signed message. Sign
+            the canonical vote message with the wallet that holds your registered member address,
+            then POST the signature:
           </p>
           <div className="bg-surface-public text-green-400 p-4 rounded-surface font-mono text-sm overflow-x-auto">
             <div className="text-fg-secondary"># Message to sign (exact text):</div>

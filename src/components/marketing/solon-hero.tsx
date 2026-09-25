@@ -12,7 +12,7 @@ import { HERO_CTAS } from "@/lib/site-config";
  */
 const BULLETS = [
   "Watch-only treasuries — Solon holds no keys, no funds",
-  "Bitcoin-signed votes anyone can re-verify",
+  "One-click votes, or Bitcoin-signed ones anyone can re-verify",
   "Append-only audit trail, public by default",
 ];
 

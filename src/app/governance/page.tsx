@@ -105,11 +105,11 @@ export default function GovernancePage() {
             decision.
           </p>
           <p>
-            Two things are not negotiable. A vote is a message signed by the member&rsquo;s own key,
-            so a tally is evidence rather than an assertion. And four categories &mdash; aid
-            reaching a person, membership, safety, and the governance rules themselves &mdash; are
-            closed to agents, so no organization can vote its agents into deciding their own
-            suffrage.
+            Two things are not negotiable. Every vote says what proves it &mdash; a one-click vote
+            is Solon&rsquo;s record, a signed one is evidence anyone can recount &mdash; so nobody
+            mistakes one for the other. And four categories &mdash; aid reaching a person,
+            membership, safety, and the governance rules themselves &mdash; are closed to agents, so
+            no organization can vote its agents into deciding their own suffrage.
           </p>
         </section>
 

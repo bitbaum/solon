@@ -38,7 +38,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
     return (
       <Shell title="File a proposal">
         <p className="text-sm leading-relaxed text-fg-secondary">
-          Proposals are signed by a member, so the record always says who asked for the change. You
+          Proposals are filed by a member, so the record always says who asked for the change. You
           are not on the roster yet.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-4">
