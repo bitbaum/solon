@@ -56,10 +56,11 @@ test("the header fits on one line at 1440px", async ({ page }) => {
   expect(headerHeight).toBeLessThanOrEqual(navHeight + 1);
   const header = page.locator("header").first();
   for (const item of PRIMARY_NAV) {
-    const link = header.getByRole("link", { name: en.Site.links[item.key], exact: true });
-    const b = await link.boundingBox();
-    // One line of text: a wrapped label is roughly twice as tall.
-    expect(b?.height ?? 0).toBeLessThan(28);
+    const trigger = header.getByRole("button", { name: en.Site.sections[item.key] });
+    const b = await trigger.boundingBox();
+    // One line of text: the trigger is 16px of text plus 16px of padding
+    // (32px); a label wrapped onto a second line adds ~16px.
+    expect(b?.height ?? 0).toBeLessThan(40);
   }
 });
 

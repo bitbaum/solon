@@ -5,10 +5,18 @@
   },
   "Site": {
     "sections": {
-      "solon": "Solon",
-      "howItWorks": "So funktioniert es",
-      "takePart": "Mitmachen",
+      "useCases": "Anwendungen",
+      "governance": "Governance",
+      "platform": "Plattform",
+      "decisions": "Entscheide",
       "more": "Mehr"
+    },
+    "sectionDesc": {
+      "useCases": "Jede Art von Gruppe entscheidet. Finden Sie Ihre.",
+      "governance": "Kunst und Wissenschaft des gemeinsamen Entscheidens.",
+      "platform": "Solon entscheidet, OrangeCat zahlt, Loki erledigt die Arbeit.",
+      "decisions": "Das öffentliche Protokoll — und Ihr Teil darin.",
+      "more": "Alles Weitere."
     },
     "links": {
       "hire": "Solon beauftragen",
@@ -16,7 +24,7 @@
       "features": "Funktionen",
       "about": "Über Solon",
       "api": "API",
-      "governance": "So funktioniert es",
+      "governance": "Kunst und Wissenschaft",
       "methods": "Abstimmungsverfahren",
       "thresholds": "Quorum und Mehrheit",
       "whoDecides": "Wer entscheidet was",
@@ -30,7 +38,47 @@
       "record": "Das Protokoll",
       "treasury": "Kasse",
       "liveState": "Aktueller Stand",
-      "credits": "Bildnachweise"
+      "credits": "Bildnachweise",
+      "useCases": "Alle Anwendungen",
+      "platform": "Wie alles zusammenspielt",
+      "ideas": "Die Ideen hinter Solon",
+      "newEra": "Eine neue Ära",
+      "forCompanies": "Unternehmen",
+      "forTowns": "Dörfer und Gemeinden",
+      "forAssociations": "Vereine und Genossenschaften",
+      "forCommunities": "Gemeinschaften",
+      "forNetworkStates": "Netzwerkstaaten"
+    },
+    "desc": {
+      "hire": "Lassen Sie Solon die Governance Ihrer Gruppe führen",
+      "security": "Was Solon nicht hält, und was jeder prüfen kann",
+      "features": "Alles, was Solon heute kann",
+      "about": "Wer hinter Solon steht, und warum",
+      "api": "Das Protokoll lesen und darauf bauen",
+      "governance": "Wie Gruppen entscheiden, und warum das Verfahren zählt",
+      "methods": "Sechs Arten zu zählen, und wann welche passt",
+      "thresholds": "Wie viele kommen müssen, und wie viele zustimmen müssen",
+      "whoDecides": "Welche Entscheide wem gehören",
+      "profiles": "Regelvorlagen für fünf Arten von Gruppen",
+      "voting": "Ein Klick oder eine Signatur, die jeder nachzählen kann",
+      "dashboard": "Ihre Gruppe auf einen Blick",
+      "decisions": "Alles, worüber entschieden wird, und der nächste Schritt",
+      "propose": "Eine Frage ins Protokoll bringen",
+      "join": "Einen Sitz in einer Organisation einnehmen",
+      "newOrg": "In einer Minute gegründet",
+      "record": "Jeder Schritt, einmal geschrieben",
+      "treasury": "Offene Bücher, direkt von der Blockchain gelesen",
+      "liveState": "Die Organisationen, die Solon gerade führt",
+      "credits": "Wer die Fotografien gemacht hat",
+      "useCases": "Jede Art von Gruppe im Vergleich",
+      "platform": "Solon, OrangeCat und Loki als ein System",
+      "ideas": "Von Solon von Athen bis zum Netzwerkstaat",
+      "newEra": "Warum Selbstverwaltung neu möglich wird",
+      "forCompanies": "Verwaltungsrat und Aktionäre",
+      "forTowns": "Versammlungen, Budgets, lokale Regeln",
+      "forAssociations": "Generalversammlungen, richtig gemacht",
+      "forCommunities": "Gruppen im Netz und Kollektive",
+      "forNetworkStates": "Von der Startup-Gesellschaft zur Anerkennung"
     }
   },
   "Nav": {
@@ -41,7 +89,9 @@
     "hire": "Solon beauftragen",
     "signIn": "Anmelden",
     "account": "Konto",
-    "language": "Sprache"
+    "language": "Sprache",
+    "overview": "Übersicht",
+    "featured": "Im Fokus"
   },
   "Footer": {
     "tagline": "Governance für jede Gruppe von Menschen. Beta — in Betrieb, noch nicht veröffentlicht.",
@@ -57,7 +107,9 @@
     "village": "Ein kleines Dorf mit seinem Schloss an einem verschneiten Hang, aus der Luft gesehen.",
     "city": "Das Geschäftsviertel einer Stadt bei Nacht, beleuchtete Türme am Wasser.",
     "europeFromOrbit": "Südeuropa bei Nacht aus der Umlaufbahn — Städte und Dörfer über den Kontinent und bis hinunter nach Italien.",
-    "mountainValley": "Eine Ortschaft im Talboden der Alpen im ersten Morgenlicht, ringsum steigen die Berge an."
+    "mountainValley": "Eine Ortschaft im Talboden der Alpen im ersten Morgenlicht, ringsum steigen die Berge an.",
+    "starlinkTownHall": "Ein Zug von Satelliten zieht über den Nachthimmel, über einem alten Rathaus und seinem Platz.",
+    "landsgemeindePainting": "Gemälde einer Landsgemeinde im späten 18. Jahrhundert: die ganze Gemeinde auf dem Platz, die Amtsträger auf einer Bühne darüber."
   },
   "Home": {
     "hero": {
@@ -136,7 +188,9 @@
       "communities": {
         "title": "Gemeinschaften und neue Orte",
         "body": "Gruppen im Netz und neue Arten von Gemeinwesen, die sich vom ersten Tag an selbst regieren wollen."
-      }
+      },
+      "more": "Mehr erfahren",
+      "all": "Jede Art von Gruppe — auch Netzwerkstaaten"
     },
     "trust": {
       "kicker": "Warum vertrauen",
