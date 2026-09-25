@@ -12,11 +12,18 @@ updates:
     # the --on-accent contrast token. The pin is bumped by hand on release.
     ignore:
       - dependency-name: "@fleet/design-tokens"
+    # One PR for every patch/minor bump. Separate PRs each rewrite
+    # pnpm-lock.yaml, so merging one conflicts the rest — and closing a
+    # conflicted Dependabot PR does not requeue it, it tells Dependabot to
+    # skip that release (#177-#180 dropped next, react-dom, prettier and
+    # vitest that way). Majors still arrive alone, to be read on their own.
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     commit-message:
       prefix: "deps"
-    labels:
-      - "dependencies"
-      - "security"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -26,6 +33,3 @@ updates:
       day: "monday"
     commit-message:
       prefix: "ci"
-    labels:
-      - "ci"
-      - "dependencies"
