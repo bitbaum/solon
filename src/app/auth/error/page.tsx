@@ -18,7 +18,7 @@ export default async function AuthErrorPage({
   return (
     <main className="section-shell flex items-center justify-center py-20 sm:py-28">
       <div className="w-full max-w-lg rounded-surface border border-default bg-surface-base p-8">
-        <h1 className="font-display text-3xl text-fg-primary">
+        <h1 className="headline text-3xl text-fg-primary">
           {denied ? "This OrangeCat account can’t be recognized" : "Sign-in didn’t complete"}
         </h1>
         <div className="mt-4 space-y-4 text-sm leading-relaxed text-fg-secondary">

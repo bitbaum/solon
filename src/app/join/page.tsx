@@ -156,7 +156,7 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
 function Shell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <main className="section-shell py-section-tight">
-      <h1 className="text-center font-display text-display-2 text-fg-primary">{title}</h1>
+      <h1 className="text-center headline text-display-2 text-fg-primary">{title}</h1>
       <div className="mt-12">{children}</div>
     </main>
   );

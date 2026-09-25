@@ -1,210 +1,131 @@
 "use client";
 
-import { useState } from "react";
-import Logo from "./logo";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { NAV_ITEMS } from "@/lib/site-config";
+import Logo from "./logo";
 import AuthControl from "./auth-control";
+import { HIRE_HREF, PRIMARY_NAV, SITE_SECTIONS } from "@/lib/site-config";
 
-// Structure and copy both come from the site-config SSOT. Sign-in is
-// recognition only (one provider: OrangeCat, the stack's identity root) —
-// every page and vote works without it, so nothing here is gated on it.
-
+/**
+ * The header: the mark, three links, sign-in, and one call to action.
+ *
+ * It is transparent at the top of a page, so a full-screen photograph can run
+ * underneath it, and turns solid once the reader scrolls. Everything that is
+ * not one of the three links lives in the menu (small screens) and the footer.
+ */
 export default function Navigation({ authEnabled = false }: { authEnabled?: boolean }) {
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // A menu covering the page must not leave the page scrolling underneath it.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const solid = scrolled || menuOpen;
 
   return (
-    <nav
-      className="sticky top-0 z-50 border-b border-subtle bg-surface-page/80 backdrop-blur-lg"
-      aria-label="Main Navigation"
-    >
-      <div className="section-shell">
-        <div className="flex h-nav items-center justify-between gap-4">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <Logo size="md" />
+    <>
+      <header
+        className={`sticky top-0 z-50 transition-colors duration-300 ${solid ? "header-solid" : ""}`}
+      >
+        <nav
+          className="section-shell flex h-nav items-center justify-between gap-6"
+          aria-label="Main"
+        >
+          <Link href="/" aria-label="Solon — home" onClick={() => setMenuOpen(false)}>
+            <Logo size="sm" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex space-x-1" role="menubar" aria-label="Main Navigation">
-            {NAV_ITEMS.map((item) => (
-              <div
-                key={item.title}
-                className="relative group"
-                onMouseEnter={() => setActiveDropdown(item.title)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                {item.children ? (
-                  <button
-                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-secondary hover:text-fg-primary hover:bg-surface-raised rounded-control transition-colors"
-                    aria-haspopup="true"
-                    aria-expanded={activeDropdown === item.title}
-                    onFocus={() => setActiveDropdown(item.title)}
-                    onClick={() =>
-                      setActiveDropdown((prev) => (prev === item.title ? null : item.title))
-                    }
-                  >
-                    {item.title}
-                    <ChevronDownIcon className="ml-1 w-4 h-4" />
-                  </button>
-                ) : (
-                  <Link
-                    href={item.href || "#"}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-fg-secondary hover:text-fg-primary hover:bg-surface-raised rounded-control transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                )}
-
-                {/* Mega menu dropdown with hover bridge */}
-                {item.children && activeDropdown === item.title && (
-                  <>
-                    <div className="absolute top-full left-0 w-96 h-2 bg-transparent z-40"></div>
-
-                    <div
-                      className="absolute top-full left-0 w-96 rounded-surface border border-default bg-surface-base py-6 mt-2 z-50"
-                      role="menu"
-                      aria-label={`${item.title} menu`}
-                    >
-                      <div className="px-6 pb-3 border-b border-subtle mb-3">
-                        <h3 className="text-base font-semibold text-fg-primary">{item.title}</h3>
-                        {item.description && (
-                          <p className="text-sm text-fg-secondary mt-1">{item.description}</p>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-1 gap-1">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.title}
-                            href={child.href || "#"}
-                            className="group mx-2 flex items-start rounded-control px-6 py-3 text-sm transition-colors hover:bg-surface-raised"
-                            role="menuitem"
-                          >
-                            <div className="mr-4 mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-pill bg-border-strong transition-colors group-hover:bg-accent"></div>
-                            <div className="min-w-0">
-                              <div className="font-medium text-fg-secondary group-hover:text-fg-primary">
-                                {child.title}
-                              </div>
-                              {child.description && (
-                                <div className="text-xs text-fg-secondary mt-1">
-                                  {child.description}
-                                </div>
-                              )}
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
+          <ul className="hidden items-center gap-9 lg:flex">
+            {PRIMARY_NAV.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-xs font-bold uppercase tracking-caps text-fg-primary transition-opacity hover:opacity-70"
+                >
+                  {item.title}
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          {/* CTA */}
-          <div className="hidden lg:flex items-center space-x-3">
+          <div className="hidden items-center gap-6 lg:flex">
             {authEnabled && <AuthControl />}
-            <Link
-              href="/ecosystem"
-              className="px-3 py-2 text-sm font-medium text-fg-secondary transition-colors hover:text-fg-primary"
-            >
-              Live State
-            </Link>
-            <Link
-              href="/dashboard"
-              className="rounded-control bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover"
-            >
-              Open Dashboard
+            <Link href={HIRE_HREF} className="btn-frame min-h-10 px-5">
+              Hire Solon
             </Link>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
-            <button
-              className="rounded-control p-2 text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <MenuIcon className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </div>
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center text-fg-primary lg:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="site-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+              {menuOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" />
+              ) : (
+                <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" strokeWidth="2" />
+              )}
+            </svg>
+          </button>
+        </nav>
+      </header>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
+      {/* A sibling of the header, not a child: the solid header's
+          backdrop-filter makes it the containing block for any fixed
+          descendant, which collapsed this menu to the header's own height. */}
+      {menuOpen && (
         <div
-          className="lg:hidden border-t border-subtle bg-surface-page"
-          role="menu"
-          aria-label="Mobile Navigation"
+          id="site-menu"
+          className="fixed inset-x-0 bottom-0 top-nav z-40 overflow-y-auto bg-surface-page lg:hidden"
         >
-          <div className="px-4 py-2 space-y-1">
-            {NAV_ITEMS.map((item) => (
-              <div key={item.title}>
-                {item.children ? (
-                  <div className="space-y-1">
-                    <div className="px-3 py-2 text-sm font-medium text-fg-primary">
-                      {item.title}
-                    </div>
-                    <div className="ml-4 space-y-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.title}
-                          href={child.href || "#"}
-                          className="block rounded-control px-3 py-2 text-sm text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
-                          role="menuitem"
-                        >
-                          {child.title}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    href={item.href || "#"}
-                    className="block rounded-control px-3 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-raised hover:text-fg-primary"
-                    role="menuitem"
-                  >
-                    {item.title}
-                  </Link>
-                )}
+          <div className="section-shell space-y-10 py-8">
+            <div className="flex flex-col gap-3">
+              <Link
+                href={HIRE_HREF}
+                className="btn-frame-accent"
+                onClick={() => setMenuOpen(false)}
+              >
+                Hire Solon
+              </Link>
+              {authEnabled && <AuthControl compact />}
+            </div>
+            {SITE_SECTIONS.map((section) => (
+              <div key={section.title}>
+                <div className="kicker">{section.title}</div>
+                <ul className="mt-3 space-y-1">
+                  {section.children.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="block py-2 text-lg font-semibold text-fg-primary"
+                      >
+                        {link.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
-            <div className="border-t border-subtle pt-2 mt-2 space-y-1">
-              {authEnabled && <AuthControl compact />}
-              <Link
-                href="/dashboard"
-                className="block rounded-control bg-accent px-3 py-2 text-sm font-semibold text-on-accent hover:bg-accent-hover"
-              >
-                Open Dashboard
-              </Link>
-            </div>
           </div>
         </div>
       )}
-    </nav>
-  );
-}
-
-function ChevronDownIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-}
-
-function MenuIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 6h16M4 12h16M4 18h16"
-      />
-    </svg>
+    </>
   );
 }

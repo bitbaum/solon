@@ -1,151 +1,122 @@
+import Link from "next/link";
 import PageLayout from "@/components/ui/page-layout";
+import { SOLON_GITHUB_URL } from "@/lib/config/ecosystem";
+
+export const metadata = {
+  title: "Security — Solon",
+  description:
+    "Why Solon can be trusted with a group's decisions: what it refuses to hold, and what anyone can check.",
+};
 
 /**
- * The real security model, stated plainly. Every claim on this page maps to
- * code in this repo — nothing aspirational, nothing borrowed from a future
- * roadmap. The strongest claim Solon can make is what it does NOT have:
- * no private keys, no custody, no way to rewrite history.
+ * The trust page, stated plainly for someone deciding whether to put their
+ * group's decisions here. Every claim maps to code in this repo — nothing
+ * aspirational. The strongest claims are what Solon does NOT have: your money,
+ * your keys, or a way to rewrite what happened.
  */
 export default function SecurityPage() {
   return (
     <PageLayout
-      title="Security Model"
-      description="Solon's security comes from what it refuses to hold: no keys, no funds, no rewritable history"
+      kicker="Security"
+      title="What we refuse to hold"
+      description="Solon's security comes from what it cannot do: it holds no money, keeps no one's keys, and cannot rewrite what happened."
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <SecurityFeature
-            title="No key custody, ever"
-            description="Solon never holds a private key. There is nothing to steal from Solon that lets an attacker vote or move funds."
-            details={[
-              "Members who sign register a Bitcoin address; the key stays in their own wallet or environment",
-              "Agent members (the Cat, Loki) sign on their own machines — Solon only ever sees signatures",
-              "The treasury is watch-only: independently verifiable on-chain addresses, no spending capability",
-            ]}
-          />
-          <SecurityFeature
-            title="Two ways to vote, labelled on every record"
-            description="A member votes with one click while signed in, or signs with their own Bitcoin key. Every vote and proposal records which, and the decision document says what each proves."
-            details={[
-              "A signed vote is accepted only if it recovers to the member's registered address, and anyone can re-verify it",
-              "A one-click vote is Solon's record of a signed-in member's choice — convenient, and it asks you to trust Solon",
-              "One ballot per member per session — enforced by a database uniqueness constraint; voting again replaces it until close",
-            ]}
-          />
-          <SecurityFeature
-            title="Append-only audit trail"
-            description="Governance events are written once. No code path exists that updates or deletes an audit event."
-            details={[
-              "Every step — proposal, session open, vote, close, policy activation — lands in the log",
-              "The public audit page renders the record itself, not a summary of it",
-              "Policy versions chain to the approved voting session that legitimated them",
-            ]}
-          />
-          <SecurityFeature
-            title="Self-verifying decisions"
-            description="A closed decision is published as a document carrying everything needed to recount it from scratch."
-            details={[
-              "Votes, signatures, snapshotted rules, and tally in one document",
-              "Session rules are frozen at open — later rule changes cannot rewrite a past decision",
-              "OrangeCat re-verifies every signature against its own pinned keys before acting on a decision",
-            ]}
-          />
-        </div>
-
-        <div className="bg-surface-raised text-fg-primary p-8 rounded-control">
-          <h3 className="font-display text-display-3 mb-4">What this buys you</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="font-semibold mb-2">Nothing to seize</h4>
-              <p className="text-fg-secondary text-sm">
-                Compromising Solon&apos;s servers yields no keys and no funds — only records that
-                were already public.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Nothing to forge</h4>
-              <p className="text-fg-secondary text-sm">
-                A signed vote that doesn&apos;t verify against the member&apos;s Bitcoin address is
-                rejected, and no one — Solon included — can forge one. Members who want that
-                guarantee sign; one-click votes rest on Solon&apos;s record.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Nothing to rewrite</h4>
-              <p className="text-fg-secondary text-sm">
-                Decisions travel with their evidence. Consumers recount the tally themselves —
-                Solon&apos;s word is evidence, not authority.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Where to verify the claims */}
-        <div className="mt-10 text-center text-sm text-fg-secondary">
-          <p>
-            Verify, don&apos;t trust:{" "}
-            <a
-              href="/governance/voting"
-              className="font-semibold text-accent hover:text-accent-dark"
-            >
-              how voting works
-            </a>
-            {" · "}
-            <a
-              href="/governance/audit"
-              className="font-semibold text-accent hover:text-accent-dark"
-            >
-              the live audit trail
-            </a>
-            {" · "}
-            <a
-              href="https://github.com/bitbaum/solon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-accent hover:text-accent-dark"
-            >
-              the source code
-            </a>
-          </p>
-        </div>
+      <div className="grid gap-x-10 gap-y-14 md:grid-cols-2">
+        {GUARANTEES.map((g) => (
+          <section key={g.title} className="border-t border-strong pt-6">
+            <h2 className="text-2xl font-semibold text-fg-primary">{g.title}</h2>
+            <p className="mt-3 max-w-xl text-fg-secondary">{g.body}</p>
+            <ul className="mt-5 space-y-2 text-sm text-fg-secondary">
+              {g.details.map((d) => (
+                <li key={d} className="flex gap-3">
+                  <span className="mt-2 h-1 w-3 shrink-0 bg-accent" aria-hidden="true" />
+                  <span>{d}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
+
+      <section className="mt-24 border-t border-subtle pt-16">
+        <h2 className="headline-caps text-3xl sm:text-4xl">What this buys you</h2>
+        <div className="mt-10 grid gap-10 md:grid-cols-3">
+          {OUTCOMES.map((o) => (
+            <div key={o.title}>
+              <h3 className="text-lg font-semibold text-fg-primary">{o.title}</h3>
+              <p className="mt-2 text-fg-secondary">{o.body}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-14 flex flex-col gap-3 sm:flex-row">
+          <Link href="/governance/voting" className="btn-frame">
+            How a vote is cast
+          </Link>
+          <Link href="/governance/audit" className="btn-frame">
+            The live record
+          </Link>
+          <a
+            href={SOLON_GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-frame"
+          >
+            The source code
+          </a>
+        </div>
+      </section>
     </PageLayout>
   );
 }
 
-function SecurityFeature({
-  title,
-  description,
-  details,
-}: {
-  title: string;
-  description: string;
-  details: string[];
-}) {
-  return (
-    <div className="bg-surface-base p-6 rounded-control border border-default">
-      <h3 className="text-xl font-bold text-fg-primary mb-3">{title}</h3>
-      <p className="text-fg-secondary mb-4">{description}</p>
-      <ul className="space-y-2">
-        {details.map((detail, index) => (
-          <li key={index} className="flex items-start text-sm text-fg-primary">
-            <svg
-              className="w-4 h-4 text-status-positive mr-3 mt-0.5 flex-shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {detail}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+const GUARANTEES = [
+  {
+    title: "We never hold your money",
+    body: "Solon watches the accounts a group registers and shows where money went. There is no code path that can spend.",
+    details: [
+      "A treasury is an address to observe — a label and an address, nothing more",
+      "Balances are read from the public chain, not from Solon's own numbers",
+    ],
+  },
+  {
+    title: "We never hold anyone's keys",
+    body: "Nothing on Solon's servers lets an attacker vote as someone else with a signature, or move a single coin.",
+    details: [
+      "Members who sign keep their key in their own wallet",
+      "Agent members (the Cat, Loki) sign on their own machines — Solon only ever sees signatures",
+    ],
+  },
+  {
+    title: "Every vote says what proves it",
+    body: "A member votes with one click while signed in, or signs with their own key. Every vote and proposal records which.",
+    details: [
+      "A one-click vote is Solon's record of a signed-in member's choice — convenient, and it asks you to trust Solon",
+      "A signed vote is accepted only if it matches the member's registered key, and anyone can re-check it",
+      "One ballot per member per vote; voting again replaces it until the vote closes",
+    ],
+  },
+  {
+    title: "The record only grows",
+    body: "Every step — a proposal, a vote opening, each ballot, the result — is written once. Nothing in the code can edit or delete it.",
+    details: [
+      "The public record shows the entries themselves, not a summary of them",
+      "The rules a vote ran under are frozen when it opens, so a later change cannot rewrite a past decision",
+      "Every decision is published as one document with everything needed to recount it",
+    ],
+  },
+];
+
+const OUTCOMES = [
+  {
+    title: "Nothing to seize",
+    body: "Breaking into Solon's servers yields no keys and no money — only records that were already public.",
+  },
+  {
+    title: "Nothing to forge",
+    body: "A signed vote cannot be faked by anyone, Solon included. Groups that want that guarantee for a decision can ask members to sign.",
+  },
+  {
+    title: "Nothing to rewrite",
+    body: "A decision travels with its evidence. Anyone relying on it can recount it themselves — Solon's word is evidence, not authority.",
+  },
+];

@@ -10,7 +10,8 @@
  * a local override is exactly how the three products drifted into looking like
  * three different companies, and `npm run design:check` fails the build on it.
  *
- * Only genuinely Solon-specific rules belong below.
+ * Only genuinely Solon-specific rules belong below: how the shared tokens are
+ * composed into Solon's few recurring shapes.
  */
 
 html,
@@ -18,17 +19,102 @@ body {
   height: 100%;
 }
 
-/*
- * The two button shapes every act uses. `btn-primary` was used on 19 elements
- * after #77 removed its only definition, so the main action of every page —
- * claim a seat, found, file, vote — rendered as bare text. Built from the
- * shared semantic tokens only.
- */
 @layer components {
+  /*
+   * Headlines are the sans, heavy and tight — the voice OrangeCat and Loki
+   * already speak in. Solon was the one product setting headings in the serif,
+   * which made it read as a different company from its siblings.
+   *
+   * `.headline` is sentence case, for app screens and long titles.
+   * `.headline-caps` is the short, uppercase statement a full-screen section
+   * makes — a few words, never a sentence.
+   */
+  .headline {
+    @apply font-sans font-bold tracking-tight text-fg-primary;
+    line-height: 1.05;
+  }
+  .headline-caps {
+    @apply font-sans font-bold uppercase text-fg-primary;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+  /* The small uppercase label above a headline. */
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-caps text-fg-secondary;
+  }
+
+  /*
+   * The two button shapes every act uses. `btn-primary` was used on 19 elements
+   * after #77 removed its only definition, so the main action of every page —
+   * claim a seat, found, file, vote — rendered as bare text.
+   */
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-control bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-control border border-default bg-surface-base px-4 py-2 text-sm font-semibold text-fg-primary transition-colors hover:bg-surface-raised;
+  }
+
+  /*
+   * The call to action on a full-screen section: an uppercase label in a thin
+   * light frame that fills on hover. Square corners on purpose — it sits on a
+   * photograph, where a rounded chip reads as an app control.
+   */
+  .btn-frame {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 px-7 text-xs font-bold uppercase tracking-caps transition-colors;
+    color: hsl(var(--text-primary));
+    border: 2px solid hsl(var(--text-primary));
+  }
+  .btn-frame:hover {
+    color: hsl(var(--text-inverted));
+    background-color: hsl(var(--text-primary));
+  }
+  .btn-frame-accent {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 bg-accent px-7 text-xs font-bold uppercase tracking-caps text-on-accent transition-colors hover:bg-accent-hover;
+    border: 2px solid transparent;
+  }
+
+  /*
+   * Darkening over a photograph so type set on it stays readable at every
+   * width. The heaviest shade sits where the text does (bottom-left), the
+   * photograph stays itself everywhere else.
+   */
+  .scrim {
+    background:
+      linear-gradient(to top, rgb(0 0 0 / 0.85) 0%, rgb(0 0 0 / 0.35) 45%, rgb(0 0 0 / 0) 70%),
+      linear-gradient(to right, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0) 60%);
+  }
+  /* For daylight photographs, where a bright sky or facade sits behind the text. */
+  .scrim-strong {
+    background:
+      linear-gradient(to top, rgb(0 0 0 / 0.9) 0%, rgb(0 0 0 / 0.55) 50%, rgb(0 0 0 / 0.2) 80%),
+      linear-gradient(to right, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 65%);
+  }
+  /* A lighter shade for the top of a section the header floats over. */
+  .scrim-top {
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0) 100%);
+  }
+
+  /* The header, once the page has scrolled past the first screen. */
+  .header-solid {
+    background-color: hsl(var(--surface-page) / 0.92);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Sections rise into place as they arrive — unless the reader asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }

@@ -126,7 +126,7 @@ export default function FileProposal({
   if (verdict?.created) {
     return (
       <div className="rounded-surface border border-default bg-surface-base p-6">
-        <h2 className="font-display text-display-3 text-fg-primary">Proposal filed</h2>
+        <h2 className="headline text-display-3 text-fg-primary">Proposal filed</h2>
         <p className="mt-3 text-sm text-fg-secondary">
           The proposal is on the record as a draft. Opening it starts the voting window and freezes
           the rules.
