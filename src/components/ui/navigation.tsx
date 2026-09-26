@@ -85,7 +85,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           className="section-shell flex h-nav items-center justify-between gap-6"
           aria-label={t("main")}
         >
-          <Link href="/" aria-label={t("home")}>
+          <Link href="/" aria-label={t("home")} className="inline-flex min-h-11 items-center">
             <Logo size="sm" />
           </Link>
 
@@ -99,7 +99,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                     aria-expanded={isOpen}
                     aria-controls={`panel-${section.key}`}
                     onClick={() => setOpen(isOpen ? null : section.key)}
-                    className={`flex items-center gap-1.5 py-2 text-xs font-bold uppercase tracking-caps transition-opacity hover:opacity-70 ${
+                    className={`flex min-h-11 items-center gap-1.5 text-xs font-bold uppercase tracking-caps transition-opacity hover:opacity-70 ${
                       isOpen ? "text-accent" : "text-fg-primary"
                     }`}
                   >
@@ -120,7 +120,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           <div className="hidden items-center gap-6 lg:flex">
             <LanguageSwitcher />
             {authEnabled && <AuthControl />}
-            <Link href={HIRE_HREF} className="btn-frame min-h-10 px-5">
+            <Link href={HIRE_HREF} className="btn-frame min-h-11 px-5">
               {t("hire")}
             </Link>
           </div>
@@ -208,7 +208,7 @@ function MegaPanel({ section, onNavigate }: { section: MenuSection; onNavigate: 
           <Link
             href={section.href}
             onClick={onNavigate}
-            className="mt-6 inline-block text-xs font-bold uppercase tracking-caps text-fg-primary underline underline-offset-4"
+            className="mt-4 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-caps text-fg-primary underline underline-offset-4"
           >
             {t("overview")} →
           </Link>

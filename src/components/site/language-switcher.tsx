@@ -62,7 +62,7 @@ export default function LanguageSwitcher({
         value={locale}
         disabled={pending}
         onChange={(e) => go(e.target.value as Locale)}
-        className="cursor-pointer appearance-none bg-transparent py-2 pr-4 text-xs font-bold uppercase tracking-caps text-fg-primary"
+        className="min-h-11 cursor-pointer appearance-none bg-transparent pr-4 text-xs font-bold uppercase tracking-caps text-fg-primary"
       >
         {routing.locales.map((l) => (
           <option key={l} value={l} lang={l} className="bg-surface-base normal-case">
