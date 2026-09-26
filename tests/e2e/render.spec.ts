@@ -59,10 +59,20 @@ test("the header fits on one line at 1440px", async ({ page }) => {
   const header = page.locator("header").first();
   for (const item of PRIMARY_NAV) {
     const trigger = header.getByRole("button", { name: en.Site.sections[item.key] });
+    // One line of text. The trigger's own height cannot say so any more: it
+    // is a 44px touch target (nav contract rule 3), and two lines of 12px
+    // text fit inside that. Count the label's line boxes instead.
+    const lines = await trigger.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      // The chevron is smaller type on the same line, so its box starts a
+      // few px lower; a wrapped line starts a whole line (~16px) lower.
+      const tops = [...range.getClientRects()].map((r) => r.top).sort((a, b) => a - b);
+      return tops.filter((t, i) => i === 0 || t - tops[i - 1] > 8).length;
+    });
+    expect(lines).toBe(1);
     const b = await trigger.boundingBox();
-    // One line of text: the trigger is 16px of text plus 16px of padding
-    // (32px); a label wrapped onto a second line adds ~16px.
-    expect(b?.height ?? 0).toBeLessThan(40);
+    expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
   }
 });
 
