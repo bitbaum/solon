@@ -20,7 +20,7 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
 
   const className = compact
     ? "btn-frame w-full"
-    : "text-xs font-bold uppercase tracking-caps text-fg-primary transition-opacity hover:opacity-70";
+    : "inline-flex min-h-11 min-w-11 items-center justify-center text-xs font-bold uppercase tracking-caps text-fg-primary transition-opacity hover:opacity-70";
 
   if (session?.actorId) {
     return (
