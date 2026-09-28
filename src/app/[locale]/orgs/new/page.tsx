@@ -60,8 +60,9 @@ export default async function NewOrganizationPage({
       <PageLayout title="Found an organization" description={description}>
         <div className="mx-auto max-w-2xl rounded-surface border border-default bg-surface-base p-6">
           <p className="text-sm leading-relaxed text-fg-secondary">
-            The roster says who you are through OrangeCat, and your votes verify through a Bitcoin
-            key. Start with the first.
+            Sign in with OrangeCat and you can found an organization, choose who decides, and vote
+            with one tap. A Bitcoin key is optional &mdash; add one if you want votes anyone can
+            recount without trusting Solon.
           </p>
           <form
             className="mt-6"
