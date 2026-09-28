@@ -81,6 +81,7 @@ export async function decisionDocument(sessionId: string) {
         body: p.body,
         policyKey: p.policyKey,
         proposedContent: p.proposedContent,
+        effect: p.effect ?? null,
         target: p.target,
         contentHash: p.contentHash,
         proposer: p.proposer,
@@ -101,6 +102,10 @@ export async function decisionDocument(sessionId: string) {
       },
       rules: {
         electorate: session.electorate,
+        // Who within the electorate decided, and — for mandate holders — which
+        // seats, so a recount can check every ballot came from the roll.
+        decidedBy: session.decidedBy,
+        mandateRoll: session.mandateRoll ?? null,
         method: session.method,
         options: readOptions(session.options),
         dotBudget: session.dotBudget,

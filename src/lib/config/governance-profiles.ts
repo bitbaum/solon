@@ -1,36 +1,75 @@
-import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
+import { DecisionBody, DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 import type { MethodId } from "@/lib/domain/methods/types";
 import { CATEGORY_ELECTORATE } from "./governance";
 
 /**
  * SSOT for how different kinds of organization decide things.
  *
- * A profile answers, for each category of decision: by what method, at what
- * threshold, with what quorum. It deliberately does NOT answer "who may vote" —
- * see HUMANS_ONLY below.
+ * A profile answers, for each category of decision: WHO within the electorate
+ * decides it (every member, or the members holding a mandate), by what method,
+ * at what threshold, with what quorum. It deliberately does NOT answer who is
+ * in the electorate at all — see HUMANS_ONLY below.
  *
- * One organization, one profile. An organization changing its profile is a
- * GOVERNANCE_RULES decision like any other: humans-only, supermajority. That is
- * why profiles live in code and ship through review rather than sitting in a
- * settings table where one admin could quietly restructure the constitution
- * between two votes.
+ * The WHO axis is what lets Solon hold every structure people actually run,
+ * named for what it does rather than borrowed from political history:
+ *
+ * - "One person decides": the founder holds the only mandate and every
+ *   category goes to it. Legitimate and common — a sole proprietor, a founder
+ *   building in the open — provided it is stated to everyone who joins, which
+ *   the organization page does. Exit is the counterweight: the code and the
+ *   tools are open, so anyone who wants a different structure can found one.
+ * - "Everyone decides": every member votes on everything (TOWN).
+ * - "Elected delegates decide": members grant mandates for a term, delegates
+ *   decide the day-to-day, and the members keep the roster, safety and the
+ *   rules. When a term lapses, those categories come back to the members
+ *   until they elect someone again — the organization never stalls.
+ *
+ * One organization, one profile. Changing it is a GOVERNANCE_RULES decision
+ * taken under the profile the organization already has (a proposal carrying a
+ * `profile` effect — src/lib/domain/effects.ts). That is why profiles live in
+ * code and ship through review rather than sitting in a settings table where
+ * one admin could quietly restructure the constitution between two votes.
  */
 
 /** What a profile may decide for one category. */
 export interface CategoryRule {
+  /** Every eligible member, or only the eligible members holding a live mandate. */
+  decidedBy: DecisionBody;
   method: MethodId;
   threshold: VoteThreshold;
   /** Percent of eligible weight that must cast a ballot for the result to bind. */
   quorumPercent: number;
 }
 
-export type GovernanceProfileId = "TOWN" | "ASSOCIATION" | "COOPERATIVE" | "COLLECTIVE" | "COMPANY";
+/** Display order too: the three structures first, then the house styles. */
+export const GOVERNANCE_PROFILE_IDS = [
+  "SOLE",
+  "TOWN",
+  "DELEGATED",
+  "ASSOCIATION",
+  "COOPERATIVE",
+  "COLLECTIVE",
+  "COMPANY",
+] as const;
+
+export type GovernanceProfileId = (typeof GOVERNANCE_PROFILE_IDS)[number];
 
 export interface GovernanceProfile {
   id: GovernanceProfileId;
   label: string;
   /** Who this is for, in one sentence a non-lawyer can act on. */
   suitedTo: string;
+  /**
+   * Who holds the decisions, in one plain sentence. This is what the
+   * organization page shows a prospective member before they join, so it
+   * must be true of the rules below and never flattering.
+   */
+  whoDecides: string;
+  /**
+   * How long a mandate lasts when a decision grants one without naming an end.
+   * Null: mandates under this profile carry no term.
+   */
+  mandateTermDays: number | null;
   rules: Record<DecisionCategory, CategoryRule>;
 }
 
@@ -38,20 +77,76 @@ const decision = (
   method: MethodId,
   threshold: VoteThreshold,
   quorumPercent: number,
-): CategoryRule => ({ method, threshold, quorumPercent });
+  decidedBy: DecisionBody = DecisionBody.MEMBERS,
+): CategoryRule => ({ decidedBy, method, threshold, quorumPercent });
 
 const SIMPLE = VoteThreshold.SIMPLE_MAJORITY;
 const SUPER = VoteThreshold.SUPERMAJORITY;
+const MANDATE = DecisionBody.MANDATE;
+
+const EVERYONE = "Every member votes on every decision.";
 
 export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile> = {
+  /**
+   * The founder holds the only mandate and decides every category — including
+   * who else may hold one and whether to change this profile. The thresholds
+   * are still set as if several people held mandates, so a founder who
+   * appoints co-deciders gets real rules rather than a blank cheque.
+   */
+  SOLE: {
+    id: "SOLE",
+    label: "One person decides",
+    suitedTo:
+      "A founder or owner who keeps every decision, and says so plainly to everyone who joins.",
+    whoDecides:
+      "The mandate holder — at founding, the founder alone — decides everything, including these rules. Members can propose; they do not vote.",
+    mandateTermDays: null,
+    rules: {
+      ALLOCATION_POLICY: decision("single_choice", SIMPLE, 50, MANDATE),
+      TREASURY_SPEND: decision("single_choice", SIMPLE, 50, MANDATE),
+      OPERATIONS: decision("single_choice", SIMPLE, 50, MANDATE),
+      AID_DISBURSEMENT: decision("single_choice", SIMPLE, 50, MANDATE),
+      MEMBERSHIP: decision("single_choice", SUPER, 50, MANDATE),
+      SAFETY: decision("single_choice", SUPER, 50, MANDATE),
+      GOVERNANCE_RULES: decision("single_choice", SUPER, 50, MANDATE),
+    },
+  },
+
+  /**
+   * Members elect delegates for a term. Delegates decide the running of the
+   * organization; the members keep the three questions that define it — who
+   * belongs, safety, and the rules — which is also how they elect and recall.
+   */
+  DELEGATED: {
+    id: "DELEGATED",
+    label: "Elected delegates decide",
+    suitedTo:
+      "Members who want someone to run things day to day, and to answer for it at the next election.",
+    whoDecides:
+      "Delegates the members elected for a term decide money and operations. The members decide membership, safety and the rules, which is how they elect and recall. While no delegate holds a live mandate, the members decide everything.",
+    mandateTermDays: 365,
+    rules: {
+      ALLOCATION_POLICY: decision("single_choice", SIMPLE, 50, MANDATE),
+      TREASURY_SPEND: decision("single_choice", SIMPLE, 50, MANDATE),
+      OPERATIONS: decision("single_choice", SIMPLE, 50, MANDATE),
+      AID_DISBURSEMENT: decision("single_choice", SIMPLE, 50, MANDATE),
+      MEMBERSHIP: decision("single_choice", SUPER, 40),
+      SAFETY: decision("single_choice", SUPER, 50),
+      GOVERNANCE_RULES: decision("single_choice", SUPER, 60),
+    },
+  },
+
   /**
    * The profile Solon shipped with — preserved exactly, so every organization
    * created before profiles existed keeps deciding the way it always has.
    */
   TOWN: {
     id: "TOWN",
-    label: "Town",
-    suitedTo: "A civic body deciding by majority, with the bar raised for its own rules.",
+    label: "Everyone decides",
+    suitedTo:
+      "A town meeting, a network, any group where every member votes directly, with the bar raised for its own rules.",
+    whoDecides: EVERYONE,
+    mandateTermDays: null,
     rules: {
       ALLOCATION_POLICY: decision("single_choice", SIMPLE, 50),
       TREASURY_SPEND: decision("single_choice", SIMPLE, 50),
@@ -73,6 +168,8 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
     label: "Association (Verein)",
     suitedTo:
       "A member association where the assembly is sovereign and the statutes are hard to change.",
+    whoDecides: EVERYONE,
+    mandateTermDays: null,
     rules: {
       ALLOCATION_POLICY: decision("dot", SIMPLE, 40),
       TREASURY_SPEND: decision("consent", SIMPLE, 40),
@@ -93,6 +190,8 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
     id: "COOPERATIVE",
     label: "Cooperative",
     suitedTo: "A co-op where every member counts equally and turnout has to be real.",
+    whoDecides: EVERYONE,
+    mandateTermDays: null,
     rules: {
       ALLOCATION_POLICY: decision("dot", SIMPLE, 50),
       TREASURY_SPEND: decision("single_choice", SIMPLE, 50),
@@ -112,6 +211,8 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
     id: "COLLECTIVE",
     label: "Collective",
     suitedTo: "A sociocratic group that moves on consent rather than counting heads.",
+    whoDecides: EVERYONE,
+    mandateTermDays: null,
     rules: {
       ALLOCATION_POLICY: decision("dot", SIMPLE, 40),
       TREASURY_SPEND: decision("consent", SIMPLE, 40),
@@ -132,6 +233,8 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
     id: "COMPANY",
     label: "Company board",
     suitedTo: "A board with weighted shareholdings that needs to decide quickly.",
+    whoDecides: EVERYONE,
+    mandateTermDays: null,
     rules: {
       ALLOCATION_POLICY: decision("score", SIMPLE, 30),
       TREASURY_SPEND: decision("single_choice", SIMPLE, 30),
@@ -146,6 +249,15 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
 
 export const DEFAULT_PROFILE: GovernanceProfileId = "TOWN";
 
+export function isGovernanceProfileId(id: unknown): id is GovernanceProfileId {
+  return typeof id === "string" && (GOVERNANCE_PROFILE_IDS as readonly string[]).includes(id);
+}
+
+/** Whether any category under this profile is decided by mandate holders. */
+export function usesMandates(profile: GovernanceProfile): boolean {
+  return Object.values(profile.rules).some((r) => r.decidedBy === DecisionBody.MANDATE);
+}
+
 export function profileFor(id: string | null | undefined): GovernanceProfile {
   const key = (id ?? DEFAULT_PROFILE) as GovernanceProfileId;
   return GOVERNANCE_PROFILES[key] ?? GOVERNANCE_PROFILES[DEFAULT_PROFILE];
@@ -154,7 +266,8 @@ export function profileFor(id: string | null | undefined): GovernanceProfile {
 /**
  * Who may vote is NOT a profile's decision.
  *
- * A profile picks methods and thresholds. It cannot widen an electorate,
+ * A profile picks methods, thresholds, and whether the mandate holders or all
+ * members decide — a narrowing inside the electorate. It cannot widen one,
  * because the four HUMANS_ONLY categories — aid to people, membership, safety,
  * and the governance rules themselves — are the product's red lines. Reading
  * eligibility from `CATEGORY_ELECTORATE` here rather than from the profile is

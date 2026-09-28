@@ -5,7 +5,9 @@ import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
 import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
 import type { LokiGrant } from "@/lib/loki-grant";
+import { DEFAULT_PROFILE, type GovernanceProfileId } from "@/lib/config/governance-profiles";
 import ActStep from "./act-step";
+import StructurePicker from "./structure-picker";
 
 interface Verdict {
   created: boolean;
@@ -39,6 +41,7 @@ export default function CreateOrganization({
   const [name, setName] = useState(prefill.name);
   const [description, setDescription] = useState(prefill.description);
   const [founderName, setFounderName] = useState(defaultFounderName);
+  const [governanceProfile, setGovernanceProfile] = useState<GovernanceProfileId>(DEFAULT_PROFILE);
   const [address, setAddress] = useState("");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -71,6 +74,7 @@ export default function CreateOrganization({
           name,
           description: description.trim() || null,
           founderName,
+          governanceProfile,
           ...(withKey ? { address, signature } : {}),
           grant,
         }),
@@ -148,6 +152,8 @@ export default function CreateOrganization({
           className={field}
         />
       </div>
+
+      <StructurePicker value={governanceProfile} onChange={setGovernanceProfile} />
 
       <ActStep
         label="Found the organization"

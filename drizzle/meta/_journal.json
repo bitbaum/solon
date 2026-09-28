@@ -43,6 +43,13 @@
       "when": 1790280785598,
       "tag": "0005_account_proof",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790584512197,
+      "tag": "0006_governance_structures",
+      "breakpoints": true
     }
   ]
 }

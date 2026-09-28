@@ -11,6 +11,14 @@ import {
 } from "@/lib/db/schema";
 import { organizationMessage, verifyMessage } from "@/lib/bitcoin/message";
 import { verifyLokiGrant, type LokiGrant } from "@/lib/loki-grant";
+import {
+  DEFAULT_PROFILE,
+  isGovernanceProfileId,
+  profileFor,
+  usesMandates,
+  type GovernanceProfileId,
+} from "@/lib/config/governance-profiles";
+import { mandateEnd } from "./mandate";
 import { descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
 
 /**
@@ -62,6 +70,12 @@ export interface CreateOrganizationInput {
    * OrangeCat identity alone.
    */
   founderKey?: { address: string; signature: string } | null;
+  /**
+   * How the organization decides, from the start. Omitted: the default. The
+   * founder picks it because there is nobody else yet to ask; every change
+   * after this is a GOVERNANCE_RULES decision under the profile chosen here.
+   */
+  governanceProfile?: string | null;
   /** Loki vouching that this actor owns a project, when the organization governs one. */
   grant?: LokiGrant | null;
   now?: Date;
@@ -103,6 +117,27 @@ export async function createOrganization(
     descriptionProblem(description) ??
     (input.founderName.trim().length < 2 ? "use a display name of at least 2 characters" : null);
   if (problem) return { created: false, verified: false, refusal: "invalid", reason: problem };
+
+  const requested = input.governanceProfile ?? DEFAULT_PROFILE;
+  if (!isGovernanceProfileId(requested)) {
+    return {
+      created: false,
+      verified: false,
+      refusal: "invalid",
+      reason: `"${requested}" is not a governance structure Solon offers`,
+    };
+  }
+  const profileId: GovernanceProfileId = requested;
+  // Under a structure that gives decisions to mandate holders, the founder
+  // holds the first mandate — otherwise "one person decides" would open with
+  // nobody deciding. Under DELEGATED it carries the profile's term, so the
+  // founder's mandate lapses into an election rather than lasting forever.
+  const profile = profileFor(profileId);
+  const founderMandate = usesMandates(profile);
+  const foundedAt = input.now ?? new Date();
+  const founderMandateUntil = founderMandate
+    ? mandateEnd(null, profile.mandateTermDays, foundedAt)
+    : null;
 
   // A grant that is PRESENT but fails refuses the founding outright. Creating the
   // organization anyway, unattributed, would leave someone who came from their
@@ -157,7 +192,7 @@ export async function createOrganization(
 
       const [org] = await tx
         .insert(organizations)
-        .values({ slug, name, description, claimedProject })
+        .values({ slug, name, description, claimedProject, governanceProfile: profileId })
         .returning();
 
       const [founder] = await tx
@@ -170,6 +205,8 @@ export async function createOrganization(
           bitcoinAddress: key?.address ?? null,
           ocActorId: input.actorId,
           status: MemberStatus.ACTIVE,
+          holdsMandate: founderMandate,
+          mandateUntil: founderMandateUntil,
         })
         .returning();
 
@@ -184,6 +221,7 @@ export async function createOrganization(
             slug,
             name,
             claimedProject,
+            governanceProfile: profileId,
             proof: key ? "BIP137" : "ACCOUNT",
             ...(key
               ? { founderAddress: key.address, signedMessage: message, signature: key.signature }
@@ -202,6 +240,12 @@ export async function createOrganization(
             memberType: MemberType.HUMAN,
             bitcoinAddress: founder.bitcoinAddress,
             genesis: true,
+            ...(founderMandate
+              ? {
+                  holdsMandate: true,
+                  mandateUntil: founderMandateUntil?.toISOString() ?? null,
+                }
+              : {}),
             note: "founding human seat — granted in the same transaction that created the organization, so it can never be claimed by anyone but the founder. Later admissions go through MEMBERSHIP votes.",
           },
         },

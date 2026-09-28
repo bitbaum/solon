@@ -24,6 +24,8 @@ const BodySchema = z.object({
   name: z.string().min(1).max(80),
   description: z.string().max(500).nullish(),
   founderName: z.string().min(2).max(80),
+  /** One of GOVERNANCE_PROFILE_IDS; the domain refuses anything else. Omitted: the default. */
+  governanceProfile: z.string().max(40).nullish(),
   address: z.string().min(20).max(90).optional(),
   signature: z.string().min(1).max(200).optional(),
   grant: z
@@ -91,6 +93,7 @@ export async function POST(req: Request) {
     actorId: session.actorId,
     founderName: parsed.data.founderName,
     founderKey: address && signature ? { address, signature } : null,
+    governanceProfile: parsed.data.governanceProfile ?? null,
     grant: parsed.data.grant ?? null,
   });
 

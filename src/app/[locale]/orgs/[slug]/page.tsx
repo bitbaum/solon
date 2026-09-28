@@ -6,6 +6,8 @@ import AuditTrail from "@/components/governance/audit-trail";
 import { db } from "@/lib/db/client";
 import { auditEvents, members } from "@/lib/db/schema";
 import { orgBySlug, primaryOrg } from "@/lib/domain/org";
+import { profileFor, usesMandates } from "@/lib/config/governance-profiles";
+import { isMandateLive } from "@/lib/domain/mandate";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +45,8 @@ export default async function OrganizationPage({ params }: { params: Params }) {
     primaryOrg(),
   ]);
   const isPrimary = primary?.id === org.id;
+  const profile = profileFor(org.governanceProfile);
+  const now = new Date();
 
   const fact = (label: string, value: React.ReactNode) => (
     <div className="flex justify-between gap-4">
@@ -57,10 +61,22 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         <dl className="mx-auto max-w-2xl space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">
           {fact("Address", <span className="font-mono">/orgs/{org.slug}</span>)}
           {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
-          {fact("Decides by", org.governanceProfile)}
+          {fact(
+            "Who decides",
+            <Link href="/governance/profiles" className="hover:underline">
+              {profile.label}
+            </Link>,
+          )}
           {org.claimedProject &&
             fact("Governs", <span className="font-mono">{org.claimedProject}</span>)}
         </dl>
+
+        {/* Said before the roster, in the profile's own words, because it is
+            what someone deciding whether to join most needs to know — and the
+            one thing an organization should never leave to be inferred. */}
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-fg-secondary">
+          {profile.whoDecides}
+        </p>
 
         {/* Written only for an organization that is not #1, because only there is
             it true: the proposal and voting screens on this site are built for
@@ -97,6 +113,13 @@ export default async function OrganizationPage({ params }: { params: Params }) {
                         : "Human"}
                       {" · "}weight {Number(m.votingWeight)}
                       {m.status !== "ACTIVE" && ` · ${m.status.toLowerCase()}`}
+                      {usesMandates(profile) &&
+                        isMandateLive(m, now) &&
+                        ` · holds a mandate${
+                          m.mandateUntil
+                            ? ` until ${m.mandateUntil.toISOString().slice(0, 10)}`
+                            : ""
+                        }`}
                     </span>
                   </div>
                   <p className="mt-1.5 break-all font-mono text-xs text-fg-secondary">

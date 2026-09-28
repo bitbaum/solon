@@ -18,6 +18,7 @@ import { optionsSchema, type BallotOption } from "@/lib/domain/methods/types";
 import { methodId } from "@/lib/domain/methods/db-enum";
 import { methodSpec } from "@/lib/domain/methods";
 import { proofOf, voterRef, type Actor } from "@/lib/domain/proof";
+import { effectPairingProblem, parseEffect } from "@/lib/domain/effects";
 
 export interface CreateProposalInput {
   orgSlug: string;
@@ -32,6 +33,12 @@ export interface CreateProposalInput {
   /** The answer space for multi-option methods: [{key, label}, …]. */
   options?: BallotOption[] | null;
   target?: string | null;
+  /**
+   * What the decision does when it passes — a mandate grant/end or a profile
+   * switch (src/lib/domain/effects.ts). Mutually exclusive with a policy
+   * change; when present, contentHash is the hash of the effect.
+   */
+  effect?: unknown;
   /** Who is filing and how they prove it — see lib/domain/proof. */
   by: Actor;
   /** Transport auth, required for AGENT proposers (`sk_solon_…`). */
@@ -66,10 +73,47 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     };
   }
 
+  const effectParse = parseEffect(input.effect);
+  if (!effectParse.ok) {
+    return { created: false, verified: false, reason: `invalid effect: ${effectParse.error}` };
+  }
+  const effect = effectParse.effect;
+  if (effect) {
+    if (hasContent) {
+      return {
+        created: false,
+        verified: false,
+        reason: "a proposal changes a policy or carries an effect, not both — file them separately",
+      };
+    }
+    const pairing = effectPairingProblem(effect, input.category);
+    if (pairing) return { created: false, verified: false, reason: pairing };
+  }
+
   const org = await db.query.organizations.findFirst({
     where: eq(organizations.slug, input.orgSlug),
   });
   if (!org) return { created: false, verified: false, reason: "organization not found" };
+
+  if (effect?.kind === "mandate") {
+    const subject = await db.query.members.findFirst({
+      where: and(eq(members.id, effect.memberId), eq(members.organizationId, org.id)),
+    });
+    if (!subject) {
+      return {
+        created: false,
+        verified: false,
+        reason: "the member named in the mandate change does not hold a seat here",
+      };
+    }
+    if (effect.grant && subject.status !== MemberStatus.ACTIVE) {
+      return {
+        created: false,
+        verified: false,
+        reason: "a mandate can only be granted to an active member",
+      };
+    }
+  }
 
   // Validate the answer space before it is signed over: an options list that
   // cannot be voted on is not something a member should be asked to endorse.
@@ -96,7 +140,13 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
     }
   }
 
-  const contentHash = hasContent ? contentHashOf(input.proposedContent) : null;
+  // Voters sign over the hash of what the decision would change: the policy
+  // content, or the effect. Never both — refused above.
+  const contentHash = hasContent
+    ? contentHashOf(input.proposedContent)
+    : effect
+      ? contentHashOf(effect)
+      : null;
   const optionsHash = options ? sha256Hex(canonicalJson(options)) : null;
   const by = input.by;
   if (by.via === "key") {
@@ -177,6 +227,7 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         contentHash,
         method: input.method ?? null,
         options: options ?? null,
+        effect,
         proposerMemberId: member.id,
         proof: proofOf(by),
         proposerSignature: by.via === "key" ? by.signature : null,
@@ -194,7 +245,8 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         memberType: member.memberType,
         proof: proofOf(by),
         proposer: voterRef(member),
-        ...(contentHash ? { policyKey: input.policyKey, contentHash } : {}),
+        ...(contentHash ? { policyKey: input.policyKey ?? null, contentHash } : {}),
+        ...(effect ? { effect } : {}),
       },
     });
     return p;

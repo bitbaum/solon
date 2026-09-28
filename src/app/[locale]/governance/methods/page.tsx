@@ -212,7 +212,7 @@ export default function MethodsPage() {
               kind: "read",
               title: "Which method for which decision",
               blurb:
-                "The five shipped profiles assign methods per category. See what a co-op picks where a company board does not.",
+                "Every shipped profile assigns methods per category. See what a co-op picks where a company board does not.",
             },
             {
               href: "/governance",
