@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
-import { auth, signIn, authEnabled } from "@/lib/auth";
+import { auth, authEnabled } from "@/lib/auth";
+import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { memberForActor } from "@/lib/auth/recognition";
 import { genesisOpen } from "@/lib/domain/membership";
 import { primaryOrg } from "@/lib/domain/org";
@@ -48,21 +49,12 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
       <Shell title="Become a member">
         <Card>
           <p className="text-sm leading-relaxed text-fg-secondary">
-            Sign in with OrangeCat, so the roster says who you are. That is all membership needs —
-            you vote with one click.
+            Sign in so the roster says who you are. That is all membership needs &mdash; you vote
+            with one click. {ENTRY_COST}
           </p>
           <Actions>
             {authEnabled ? (
-              <form
-                action={async () => {
-                  "use server";
-                  await signIn("orangecat", { redirectTo: here });
-                }}
-              >
-                <button type="submit" className="btn-primary">
-                  Sign in with OrangeCat
-                </button>
-              </form>
+              <EntryLinks from={here} />
             ) : (
               <p className="text-sm text-fg-secondary">
                 Sign-in is not configured in this environment.

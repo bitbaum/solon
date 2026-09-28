@@ -116,7 +116,8 @@ export default function WhoDecidesPage() {
               href: "/join",
               kind: "do",
               title: "Become a member",
-              blurb: "Sign in with OrangeCat, hold a seat, and get a vote in the categories above.",
+              blurb:
+                "Create an account with an email, hold a seat, and get a vote in the categories above.",
             },
           ]}
         />

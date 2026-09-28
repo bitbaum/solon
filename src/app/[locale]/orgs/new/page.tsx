@@ -1,7 +1,8 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import CreateOrganization from "@/components/governance/create-organization";
-import { auth, signIn, authEnabled } from "@/lib/auth";
+import { auth, authEnabled } from "@/lib/auth";
+import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { verifyLokiGrant, type LokiGrant } from "@/lib/loki-grant";
 
 export const metadata = { title: "Found an organization — Solon" };
@@ -60,21 +61,13 @@ export default async function NewOrganizationPage({
       <PageLayout title="Found an organization" description={description}>
         <div className="mx-auto max-w-2xl rounded-surface border border-default bg-surface-base p-6">
           <p className="text-sm leading-relaxed text-fg-secondary">
-            Sign in with OrangeCat and you can found an organization, choose who decides, and vote
-            with one tap. A Bitcoin key is optional &mdash; add one if you want votes anyone can
+            With an account you can found an organization, choose who decides, and vote with one
+            tap. {ENTRY_COST} A Bitcoin key is optional &mdash; add one if you want votes anyone can
             recount without trusting Solon.
           </p>
-          <form
-            className="mt-6"
-            action={async () => {
-              "use server";
-              await signIn("orangecat", { redirectTo: here });
-            }}
-          >
-            <button type="submit" className="btn-primary">
-              Sign in with OrangeCat
-            </button>
-          </form>
+          <div className="mt-6">
+            <EntryLinks from={here} />
+          </div>
         </div>
       </PageLayout>
     );
