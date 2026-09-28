@@ -14,6 +14,8 @@ const BodySchema = z.object({
   body: z.string().min(1).max(20000),
   policyKey: z.string().min(1).max(100).optional(),
   proposedContent: z.unknown().optional(),
+  /** A mandate grant/end or a profile switch — see lib/domain/effects.ts. */
+  effect: z.unknown().optional(),
   target: z.string().max(200).optional(),
   proposerAddress: z.string().min(20).max(90).optional(),
   signature: z.string().min(1).max(200).optional(),

@@ -4,14 +4,10 @@ import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
 import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
-import {
-  DEFAULT_PROFILE,
-  GOVERNANCE_PROFILE_LIST,
-  GOVERNANCE_PROFILES,
-} from "@/lib/config/governance-profiles";
-import type { GovernanceProfileId } from "@/lib/db/enums";
 import type { LokiGrant } from "@/lib/loki-grant";
+import { DEFAULT_PROFILE, type GovernanceProfileId } from "@/lib/config/governance-profiles";
 import ActStep from "./act-step";
+import StructurePicker from "./structure-picker";
 
 interface Verdict {
   created: boolean;
@@ -146,29 +142,9 @@ export default function CreateOrganization({
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-profile">
-          How it decides
-        </label>
-        <select
-          id="org-profile"
-          value={profile}
-          onChange={(e) => setProfile(e.target.value as GovernanceProfileId)}
-          className={field}
-        >
-          {GOVERNANCE_PROFILE_LIST.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.label}
-            </option>
-          ))}
-        </select>
-        {/* The one line a non-lawyer can act on, from the same registry the
-            votes will be counted by. Changing it later is a humans-only
-            supermajority vote, so it is said here, before signing. */}
-        <p className="mt-1.5 text-xs text-fg-tertiary">
-          {GOVERNANCE_PROFILES[profile].suitedTo} Changing this later takes a governance-rules vote.
-        </p>
-      </div>
+      {/* Chosen before signing: the choice is part of the signed text
+          (`decides:`), so a founder who signs with a key signs the structure too. */}
+      <StructurePicker value={profile} onChange={setProfile} />
 
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="org-founder">

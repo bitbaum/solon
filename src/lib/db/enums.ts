@@ -23,7 +23,11 @@ function enumLike<const T extends readonly [string, ...string[]]>(values: T) {
  * its rules there; a test fails if either half is missing.
  */
 export const GOVERNANCE_PROFILE_IDS = [
+  // The three structures first — who decides — then the house styles of
+  // "everyone decides". This is also the order every list renders.
+  "SOLE",
   "TOWN",
+  "DELEGATED",
   "ASSOCIATION",
   "COOPERATIVE",
   "COLLECTIVE",
@@ -75,6 +79,20 @@ export const ELECTORATES = ["ALL_MEMBERS", "HUMANS_ONLY"] as const;
 export const Electorate = enumLike(ELECTORATES);
 export type Electorate = (typeof ELECTORATES)[number];
 
+/**
+ * WHO within the electorate decides a category.
+ *
+ * - MEMBERS: every eligible member votes.
+ * - MANDATE: only members holding a live mandate vote — one founder who keeps
+ *   every decision, or delegates the members elected for a term.
+ *
+ * This narrows the electorate and never widens it: a mandate holder who is an
+ * agent still cannot vote on a HUMANS_ONLY category.
+ */
+export const DECISION_BODIES = ["MEMBERS", "MANDATE"] as const;
+export const DecisionBody = enumLike(DECISION_BODIES);
+export type DecisionBody = (typeof DECISION_BODIES)[number];
+
 export const VOTE_THRESHOLDS = ["SIMPLE_MAJORITY", "SUPERMAJORITY"] as const;
 export const VoteThreshold = enumLike(VOTE_THRESHOLDS);
 export type VoteThreshold = (typeof VOTE_THRESHOLDS)[number];
@@ -119,6 +137,8 @@ export const AUDIT_EVENT_TYPES = [
   "VOTE_CAST",
   "SESSION_CLOSED",
   "POLICY_ACTIVATED",
+  "MANDATE_CHANGED",
+  "PROFILE_CHANGED",
 ] as const;
 export const AuditEventType = enumLike(AUDIT_EVENT_TYPES);
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number];

@@ -104,7 +104,7 @@ export default function WhoDecidesPage() {
               kind: "read",
               title: "What an organization does choose",
               blurb:
-                "Five profiles, seven categories, and the methods and bars each one sets for them.",
+                "Who holds each kind of decision, and the methods and bars each structure sets for it.",
             },
             {
               href: "/governance/thresholds",

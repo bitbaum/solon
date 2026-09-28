@@ -3,40 +3,63 @@ import PageLayout from "@/components/ui/page-layout";
 import { Figure, Aside } from "@/components/learn/figure";
 import { ProfileGrid } from "@/components/learn/profile-grid";
 import { Trail } from "@/components/learn/trail";
-import { GOVERNANCE_PROFILES, DEFAULT_PROFILE } from "@/lib/config/governance-profiles";
+import {
+  GOVERNANCE_PROFILE_IDS,
+  GOVERNANCE_PROFILES,
+  DEFAULT_PROFILE,
+} from "@/lib/config/governance-profiles";
 import { DECISION_CATEGORIES } from "@/lib/db/enums";
 
 export const metadata: Metadata = {
-  title: "Five ways to be an organization",
+  title: "Who decides, and how",
   description:
-    "A town, an association, a cooperative, a collective and a company board — the same seven questions, five different constitutions.",
+    "One person decides, everyone decides, or elected delegates decide — plus the house styles of an association, a cooperative, a collective and a company board.",
 };
 
 /**
- * The profiles page. The argument is the comparison itself: five reasonable
+ * The profiles page. The argument is the comparison itself: reasonable
  * organizations answering identical questions differently, none of them wrong.
+ *
+ * The labels say what a structure does, never what it resembles. "One person
+ * decides" is not called a monarchy and "elected delegates decide" is not
+ * called a republic: those words carry centuries of verdicts, and a founder
+ * choosing how their project runs deserves a description, not a judgement.
  *
  * A reader arriving here has already seen that methods and thresholds change
  * outcomes. This is where that becomes a choice they have to make.
  */
 export default function ProfilesPage() {
-  const profiles = Object.values(GOVERNANCE_PROFILES);
+  const profiles = GOVERNANCE_PROFILE_IDS.map((id) => GOVERNANCE_PROFILES[id]);
 
   return (
     <PageLayout
-      title="Five ways to be an organization"
-      description="The same seven questions. Five constitutions. None of them wrong — they are answering to different people."
+      title="Who decides, and how"
+      description="The same questions, answered by one person, by everyone, or by people the members elected. None of them wrong — they are answering to different people."
     >
       <div className="mx-auto max-w-shell space-y-20">
         <section className="mx-auto max-w-copy space-y-5 text-base leading-relaxed text-fg-secondary">
           <p>
             A profile answers, for each of the {DECISION_CATEGORIES.length} categories of decision:
-            by what method, at what threshold, with what turnout. One organization runs one profile.
+            who decides it, by what method, at what threshold, with what turnout. One organization
+            runs one profile.
           </p>
           <p>
-            They are deliberately not a settings screen. A profile lives in code and ships through
-            review, and an organization changing its own is a governance-rules decision like any
-            other &mdash; humans only, two thirds. The alternative is a constitution one
+            The first question is the one that separates structures. In some, one person decides
+            everything &mdash; a founder building in the open is entitled to that, provided everyone
+            who joins is told, and the organization&apos;s page tells them. In others every member
+            votes on everything. In between, members grant mandates for a term to delegates who run
+            things day to day and answer for it at the next election; when a term lapses, the
+            decisions come back to the members until they elect someone again.
+          </p>
+          <p>
+            None of this needs protecting from copying. Solon is open source: anyone who wants a
+            different structure can take the whole thing, change it, and run their own. What keeps a
+            structure honest is that it is stated plainly and that leaving is always possible.
+          </p>
+          <p>
+            Profiles are deliberately not a settings screen. A profile lives in code and ships
+            through review, and an organization changing its own is a governance-rules decision
+            taken under the profile it already has. The alternative is a constitution one
             administrator can quietly restructure between two votes.
           </p>
         </section>
@@ -49,6 +72,7 @@ export default function ProfilesPage() {
             >
               <h2 className="headline text-2xl text-fg-primary">{profile.label}</h2>
               <p className="mt-3 text-sm leading-relaxed text-fg-secondary">{profile.suitedTo}</p>
+              <p className="mt-3 text-sm leading-relaxed text-fg-tertiary">{profile.whoDecides}</p>
               {profile.id === DEFAULT_PROFILE && (
                 <p className="mt-4 inline-flex rounded-pill border border-default px-3 py-1 font-mono text-xs uppercase tracking-caps text-fg-secondary">
                   Default
@@ -60,7 +84,7 @@ export default function ProfilesPage() {
 
         <Figure
           label="Figure 6"
-          title="The same seven questions, five answers each"
+          title="The same questions, answered by each profile"
           caption="Read a row to see how differently reasonable organizations treat one kind of decision. Read a column to see a whole constitution."
           source="src/lib/config/governance-profiles.ts"
         >
@@ -102,7 +126,7 @@ export default function ProfilesPage() {
               kind: "do",
               title: "Found an organization",
               blurb:
-                "Pick a profile and sign it into existence with your own key. No permission needed; everything after is voted.",
+                "Pick who decides and found it — no permission needed. Everything after is decided under the structure you picked.",
             },
           ]}
         />
