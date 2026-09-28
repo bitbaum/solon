@@ -47,10 +47,10 @@ export function placeKeys(place: Place): {
 export const PLACE_NAME_MAX = 80;
 
 export function isCountryCode(value: unknown): value is string {
-  return typeof value === "string" && /^[A-Z]{2}$/.test(value);
+  return typeof value === 'string' && /^[A-Z]{2}$/.test(value);
 }
 
-export type PlaceProblem = "country_code" | "region" | "locality";
+export type PlaceProblem = 'country_code' | 'region' | 'locality';
 
 /**
  * Why a place is not usable, or null when it is. One reason at a time, in the
@@ -58,13 +58,13 @@ export type PlaceProblem = "country_code" | "region" | "locality";
  */
 export function placeProblem(place: Partial<Place> | null | undefined): PlaceProblem | null {
   if (!place) {
-    return "country_code";
+    return 'country_code';
   }
-  if (!isCountryCode((place.country_code ?? "").trim().toUpperCase())) {
-    return "country_code";
+  if (!isCountryCode((place.country_code ?? '').trim().toUpperCase())) {
+    return 'country_code';
   }
-  for (const field of ["region", "locality"] as const) {
-    const v = place[field]?.trim() ?? "";
+  for (const field of ['region', 'locality'] as const) {
+    const v = place[field]?.trim() ?? '';
     if (v.length < 1 || v.length > PLACE_NAME_MAX) {
       return field;
     }

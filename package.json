@@ -22,7 +22,8 @@
     "format:check": "prettier --check .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "check:kinds-drift": "node scripts/check-collective-kinds-drift.mjs"
   },
   "dependencies": {
     "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.1.0",

@@ -43,3 +43,7 @@ yarn.lock
 # drizzle-kit owns these files and rewrites them on every generate; formatting
 # them creates a fight between two writers over generated output.
 drizzle/meta
+
+# Vendored byte for byte from bitbaum/orangecat packages/collective-kinds; CI diffs it against upstream,
+# so OrangeCat's formatting is the formatting.
+src/lib/collective-kinds/

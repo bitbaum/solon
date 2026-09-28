@@ -76,6 +76,12 @@ jobs:
       - name: Verify
         run: pnpm run verify
 
+      # The kinds of collective are OrangeCat's package, vendored here byte for
+      # byte until it ships on its own. A copy that can drift silently is the
+      # one thing SSOT forbids, so CI compares it with OrangeCat's main.
+      - name: Kinds are OrangeCat's kinds (no drift in the vendored copy)
+        run: pnpm run check:kinds-drift
+
       # Did this PR change the constitution, and was that decided? governance.ts
       # says of itself that changing it IS a GOVERNANCE_RULES matter; this is the
       # check behind the sentence. It records — a warning in the PR with a

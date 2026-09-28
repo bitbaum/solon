@@ -15,7 +15,7 @@ export {
   kindOf,
   type CollectiveKind,
   type CollectiveKindId,
-} from "./kinds";
+} from './kinds';
 export {
   PLACE_NAME_MAX,
   formatPlace,
@@ -26,7 +26,7 @@ export {
   placeProblem,
   type Place,
   type PlaceProblem,
-} from "./place";
+} from './place';
 export {
   LEGAL_STATUSES,
   LEGAL_STATUS_LABEL,
@@ -36,4 +36,4 @@ export {
   type LegalProblem,
   type LegalRecord,
   type LegalStatus,
-} from "./legal";
+} from './legal';
