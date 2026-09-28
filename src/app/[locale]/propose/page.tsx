@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
-import { auth, signIn, authEnabled } from "@/lib/auth";
+import { auth, authEnabled } from "@/lib/auth";
+import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { memberForActor } from "@/lib/auth/recognition";
 import { primaryOrg } from "@/lib/domain/org";
 import FileProposal from "@/components/governance/file-proposal";
@@ -47,16 +48,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
               Become a member
             </Link>
           ) : (
-            <form
-              action={async () => {
-                "use server";
-                await signIn("orangecat", { redirectTo: here });
-              }}
-            >
-              <button type="submit" className="btn-primary">
-                Sign in with OrangeCat
-              </button>
-            </form>
+            <EntryLinks from={here} />
           )}
           <Link
             href="/proposals"
