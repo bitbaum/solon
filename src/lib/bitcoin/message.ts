@@ -260,7 +260,19 @@ export function organizationMessage(params: {
   actorId: string;
   founderAddress: string;
   project?: string | null;
+  /** How the organization decides, when the founder chose it (a profile id). */
+  decides?: string | null;
 }): string {
-  const base = `Solon organization\norg:${params.slug}\nname:${params.name}\nactor:${params.actorId}\naddress:${params.founderAddress}`;
-  return params.project ? `${base}\nproject:${params.project}` : base;
+  const lines = [
+    "Solon organization",
+    `org:${params.slug}`,
+    `name:${params.name}`,
+    `actor:${params.actorId}`,
+    `address:${params.founderAddress}`,
+  ];
+  if (params.project) lines.push(`project:${params.project}`);
+  // Appended last and only when chosen, so every message signed before the
+  // choice existed still verifies byte for byte.
+  if (params.decides) lines.push(`decides:${params.decides}`);
+  return lines.join("\n");
 }

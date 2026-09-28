@@ -1,4 +1,4 @@
-import { GOVERNANCE_PROFILES, type GovernanceProfileId } from "@/lib/config/governance-profiles";
+import { GOVERNANCE_PROFILES, GOVERNANCE_PROFILE_IDS } from "@/lib/config/governance-profiles";
 import { CATEGORY_LABEL } from "@/lib/config/governance";
 import { DECISION_CATEGORIES, VoteThreshold } from "@/lib/db/enums";
 import { methodSpec } from "@/lib/domain/methods";
@@ -12,13 +12,7 @@ import { methodSpec } from "@/lib/domain/methods";
  * up for gets the whole rule set, because a constitution summarised is a
  * constitution misread.
  */
-const ORDER: GovernanceProfileId[] = [
-  "TOWN",
-  "ASSOCIATION",
-  "COOPERATIVE",
-  "COLLECTIVE",
-  "COMPANY",
-];
+const ORDER = GOVERNANCE_PROFILE_IDS;
 
 export function ProfileGrid() {
   return (

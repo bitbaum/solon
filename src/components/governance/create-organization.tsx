@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
 import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
+import {
+  DEFAULT_PROFILE,
+  GOVERNANCE_PROFILE_LIST,
+  GOVERNANCE_PROFILES,
+} from "@/lib/config/governance-profiles";
+import type { GovernanceProfileId } from "@/lib/db/enums";
 import type { LokiGrant } from "@/lib/loki-grant";
 import ActStep from "./act-step";
 
@@ -39,6 +45,7 @@ export default function CreateOrganization({
   const [name, setName] = useState(prefill.name);
   const [description, setDescription] = useState(prefill.description);
   const [founderName, setFounderName] = useState(defaultFounderName);
+  const [profile, setProfile] = useState<GovernanceProfileId>(DEFAULT_PROFILE);
   const [address, setAddress] = useState("");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +63,7 @@ export default function CreateOrganization({
           actorId,
           founderAddress: address,
           project: grant?.project ?? null,
+          decides: profile,
         })
       : null;
 
@@ -71,6 +79,7 @@ export default function CreateOrganization({
           name,
           description: description.trim() || null,
           founderName,
+          governanceProfile: profile,
           ...(withKey ? { address, signature } : {}),
           grant,
         }),
@@ -135,6 +144,30 @@ export default function CreateOrganization({
           maxLength={500}
           className={field}
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-profile">
+          How it decides
+        </label>
+        <select
+          id="org-profile"
+          value={profile}
+          onChange={(e) => setProfile(e.target.value as GovernanceProfileId)}
+          className={field}
+        >
+          {GOVERNANCE_PROFILE_LIST.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.label}
+            </option>
+          ))}
+        </select>
+        {/* The one line a non-lawyer can act on, from the same registry the
+            votes will be counted by. Changing it later is a humans-only
+            supermajority vote, so it is said here, before signing. */}
+        <p className="mt-1.5 text-xs text-fg-tertiary">
+          {GOVERNANCE_PROFILES[profile].suitedTo} Changing this later takes a governance-rules vote.
+        </p>
       </div>
 
       <div>
