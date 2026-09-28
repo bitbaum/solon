@@ -41,7 +41,7 @@ export default function CreateOrganization({
   const [name, setName] = useState(prefill.name);
   const [description, setDescription] = useState(prefill.description);
   const [founderName, setFounderName] = useState(defaultFounderName);
-  const [governanceProfile, setGovernanceProfile] = useState<GovernanceProfileId>(DEFAULT_PROFILE);
+  const [profile, setProfile] = useState<GovernanceProfileId>(DEFAULT_PROFILE);
   const [address, setAddress] = useState("");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -59,6 +59,7 @@ export default function CreateOrganization({
           actorId,
           founderAddress: address,
           project: grant?.project ?? null,
+          decides: profile,
         })
       : null;
 
@@ -74,7 +75,7 @@ export default function CreateOrganization({
           name,
           description: description.trim() || null,
           founderName,
-          governanceProfile,
+          governanceProfile: profile,
           ...(withKey ? { address, signature } : {}),
           grant,
         }),
@@ -141,6 +142,10 @@ export default function CreateOrganization({
         />
       </div>
 
+      {/* Chosen before signing: the choice is part of the signed text
+          (`decides:`), so a founder who signs with a key signs the structure too. */}
+      <StructurePicker value={profile} onChange={setProfile} />
+
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="org-founder">
           Your name on the roster
@@ -152,8 +157,6 @@ export default function CreateOrganization({
           className={field}
         />
       </div>
-
-      <StructurePicker value={governanceProfile} onChange={setGovernanceProfile} />
 
       <ActStep
         label="Found the organization"

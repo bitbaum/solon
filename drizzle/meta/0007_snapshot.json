@@ -1,6 +1,6 @@
 {
-  "id": "1dd0a7d8-ab85-40b8-aa16-bc56a6e1d0fe",
-  "prevId": "53125d3c-1b8a-46f9-8490-701c5eed0ca4",
+  "id": "3c290d1e-1ff0-4e51-84a7-c86f0ad997c2",
+  "prevId": "1dd0a7d8-ab85-40b8-aa16-bc56a6e1d0fe",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -252,6 +252,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "holds_mandate": {
+          "name": "holds_mandate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "mandate_until": {
+          "name": "mandate_until",
+          "type": "timestamp (3)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "joined_at": {
           "name": "joined_at",
           "type": "timestamp (3)",
@@ -418,7 +431,7 @@
       "checkConstraints": {
         "organizations_governance_profile_check": {
           "name": "organizations_governance_profile_check",
-          "value": "\"organizations\".\"governance_profile\" IN ('TOWN', 'ASSOCIATION', 'COOPERATIVE', 'COLLECTIVE', 'COMPANY')"
+          "value": "\"organizations\".\"governance_profile\" IN ('SOLE', 'TOWN', 'DELEGATED', 'ASSOCIATION', 'COOPERATIVE', 'COLLECTIVE', 'COMPANY')"
         }
       },
       "isRLSEnabled": false
@@ -609,6 +622,12 @@
         },
         "options": {
           "name": "options",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "effect": {
+          "name": "effect",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
@@ -927,6 +946,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "decided_by": {
+          "name": "decided_by",
+          "type": "DecisionBody",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'MEMBERS'"
+        },
+        "mandate_roll": {
+          "name": "mandate_roll",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "method": {
           "name": "method",
           "type": "VotingMethod",
@@ -1043,7 +1076,17 @@
         "SESSION_OPENED",
         "VOTE_CAST",
         "SESSION_CLOSED",
-        "POLICY_ACTIVATED"
+        "POLICY_ACTIVATED",
+        "MANDATE_CHANGED",
+        "PROFILE_CHANGED"
+      ]
+    },
+    "public.DecisionBody": {
+      "name": "DecisionBody",
+      "schema": "public",
+      "values": [
+        "MEMBERS",
+        "MANDATE"
       ]
     },
     "public.DecisionCategory": {

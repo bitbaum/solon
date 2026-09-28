@@ -1,6 +1,15 @@
-import { DecisionBody, DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
+import {
+  DEFAULT_GOVERNANCE_PROFILE,
+  DECISION_CATEGORIES,
+  DecisionBody,
+  DecisionCategory,
+  Electorate,
+  GOVERNANCE_PROFILE_IDS,
+  VoteThreshold,
+  type GovernanceProfileId,
+} from "@/lib/db/enums";
 import type { MethodId } from "@/lib/domain/methods/types";
-import { CATEGORY_ELECTORATE } from "./governance";
+import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "./governance";
 
 /**
  * SSOT for how different kinds of organization decide things.
@@ -41,18 +50,8 @@ export interface CategoryRule {
   quorumPercent: number;
 }
 
-/** Display order too: the three structures first, then the house styles. */
-export const GOVERNANCE_PROFILE_IDS = [
-  "SOLE",
-  "TOWN",
-  "DELEGATED",
-  "ASSOCIATION",
-  "COOPERATIVE",
-  "COLLECTIVE",
-  "COMPANY",
-] as const;
-
-export type GovernanceProfileId = (typeof GOVERNANCE_PROFILE_IDS)[number];
+export type { GovernanceProfileId };
+export { GOVERNANCE_PROFILE_IDS };
 
 export interface GovernanceProfile {
   id: GovernanceProfileId;
@@ -139,6 +138,11 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
   /**
    * The profile Solon shipped with — preserved exactly, so every organization
    * created before profiles existed keeps deciding the way it always has.
+   *
+   * Its thresholds and quorums ARE the flat tables in ./governance.ts, read
+   * from them rather than typed again: those tables still drive the rule
+   * matrix, the thresholds page and the proposal form, and a second copy here
+   * had already drifted once in spirit (identical today, guaranteed by nothing).
    */
   TOWN: {
     id: "TOWN",
@@ -147,15 +151,12 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
       "A town meeting, a network, any group where every member votes directly, with the bar raised for its own rules.",
     whoDecides: EVERYONE,
     mandateTermDays: null,
-    rules: {
-      ALLOCATION_POLICY: decision("single_choice", SIMPLE, 50),
-      TREASURY_SPEND: decision("single_choice", SIMPLE, 50),
-      OPERATIONS: decision("single_choice", SIMPLE, 30),
-      AID_DISBURSEMENT: decision("single_choice", SIMPLE, 50),
-      MEMBERSHIP: decision("single_choice", SUPER, 50),
-      SAFETY: decision("single_choice", SUPER, 50),
-      GOVERNANCE_RULES: decision("single_choice", SUPER, 60),
-    },
+    rules: Object.fromEntries(
+      DECISION_CATEGORIES.map((c) => [
+        c,
+        decision("single_choice", CATEGORY_THRESHOLD[c], CATEGORY_QUORUM_PERCENT[c]),
+      ]),
+    ) as Record<DecisionCategory, CategoryRule>,
   },
 
   /**
@@ -247,10 +248,15 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
   },
 };
 
-export const DEFAULT_PROFILE: GovernanceProfileId = "TOWN";
+export const DEFAULT_PROFILE: GovernanceProfileId = DEFAULT_GOVERNANCE_PROFILE;
 
-export function isGovernanceProfileId(id: unknown): id is GovernanceProfileId {
-  return typeof id === "string" && (GOVERNANCE_PROFILE_IDS as readonly string[]).includes(id);
+/** The profiles in the order they are declared — the one order every list uses. */
+export const GOVERNANCE_PROFILE_LIST: readonly GovernanceProfile[] = GOVERNANCE_PROFILE_IDS.map(
+  (id) => GOVERNANCE_PROFILES[id],
+);
+
+export function isGovernanceProfileId(value: unknown): value is GovernanceProfileId {
+  return typeof value === "string" && (GOVERNANCE_PROFILE_IDS as readonly string[]).includes(value);
 }
 
 /** Whether any category under this profile is decided by mandate holders. */

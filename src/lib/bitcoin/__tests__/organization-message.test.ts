@@ -37,6 +37,18 @@ describe("organizationMessage", () => {
     );
   });
 
+  it("binds how the organization decides, after the project, only when chosen", () => {
+    const base = { slug: "heidi", name: "Heidi", actorId: ACTOR, founderAddress: "1abc" };
+    expect(organizationMessage({ ...base, decides: "ASSOCIATION" })).toBe(
+      `Solon organization\norg:heidi\nname:Heidi\nactor:${ACTOR}\naddress:1abc\ndecides:ASSOCIATION`,
+    );
+    expect(organizationMessage({ ...base, project: "heidi", decides: "COMPANY" })).toBe(
+      `Solon organization\norg:heidi\nname:Heidi\nactor:${ACTOR}\naddress:1abc\nproject:heidi\ndecides:COMPANY`,
+    );
+    // Not chosen: the text every founder signed before the choice existed.
+    expect(organizationMessage({ ...base, decides: null })).toBe(organizationMessage(base));
+  });
+
   it("cannot be satisfied by a membership signature over the same fields", () => {
     // Domain separation: the first line differs, so claiming a seat never
     // doubles as founding an organization.

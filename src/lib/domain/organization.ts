@@ -70,14 +70,16 @@ export interface CreateOrganizationInput {
    * OrangeCat identity alone.
    */
   founderKey?: { address: string; signature: string } | null;
-  /**
-   * How the organization decides, from the start. Omitted: the default. The
-   * founder picks it because there is nobody else yet to ask; every change
-   * after this is a GOVERNANCE_RULES decision under the profile chosen here.
-   */
-  governanceProfile?: string | null;
   /** Loki vouching that this actor owns a project, when the organization governs one. */
   grant?: LokiGrant | null;
+  /**
+   * How the organization decides — one of the governance profiles. Chosen at
+   * founding because there is nobody else yet to ask; every change after this
+   * is a GOVERNANCE_RULES decision taken under the profile chosen here.
+   * Omitted = the default, which is what every organization founded before the
+   * choice existed got.
+   */
+  governanceProfile?: GovernanceProfileId | null;
   now?: Date;
 }
 
@@ -93,6 +95,7 @@ export interface CreateOrganizationResult {
   slug?: string;
   memberId?: string;
   claimedProject?: string | null;
+  governanceProfile?: GovernanceProfileId;
 }
 
 /** A unique-constraint violation's constraint name, or null. Drizzle wraps pg errors. */
@@ -115,24 +118,18 @@ export async function createOrganization(
     slugProblem(slug) ??
     nameProblem(input.name) ??
     descriptionProblem(description) ??
-    (input.founderName.trim().length < 2 ? "use a display name of at least 2 characters" : null);
+    (input.founderName.trim().length < 2 ? "use a display name of at least 2 characters" : null) ??
+    (input.governanceProfile != null && !isGovernanceProfileId(input.governanceProfile)
+      ? "choose one of the governance profiles"
+      : null);
   if (problem) return { created: false, verified: false, refusal: "invalid", reason: problem };
+  const governanceProfile: GovernanceProfileId = input.governanceProfile ?? DEFAULT_PROFILE;
 
-  const requested = input.governanceProfile ?? DEFAULT_PROFILE;
-  if (!isGovernanceProfileId(requested)) {
-    return {
-      created: false,
-      verified: false,
-      refusal: "invalid",
-      reason: `"${requested}" is not a governance structure Solon offers`,
-    };
-  }
-  const profileId: GovernanceProfileId = requested;
   // Under a structure that gives decisions to mandate holders, the founder
   // holds the first mandate — otherwise "one person decides" would open with
   // nobody deciding. Under DELEGATED it carries the profile's term, so the
   // founder's mandate lapses into an election rather than lasting forever.
-  const profile = profileFor(profileId);
+  const profile = profileFor(governanceProfile);
   const founderMandate = usesMandates(profile);
   const foundedAt = input.now ?? new Date();
   const founderMandateUntil = founderMandate
@@ -162,6 +159,9 @@ export async function createOrganization(
         actorId: input.actorId,
         founderAddress: key.address,
         project: claimedProject,
+        // Signed only when chosen: a founder who took the default signs the
+        // same text a founder signed before the choice existed.
+        decides: input.governanceProfile ?? null,
       })
     : null;
   if (key && message) {
@@ -192,7 +192,7 @@ export async function createOrganization(
 
       const [org] = await tx
         .insert(organizations)
-        .values({ slug, name, description, claimedProject, governanceProfile: profileId })
+        .values({ slug, name, description, claimedProject, governanceProfile })
         .returning();
 
       const [founder] = await tx
@@ -221,7 +221,7 @@ export async function createOrganization(
             slug,
             name,
             claimedProject,
-            governanceProfile: profileId,
+            governanceProfile,
             proof: key ? "BIP137" : "ACCOUNT",
             ...(key
               ? { founderAddress: key.address, signedMessage: message, signature: key.signature }
@@ -260,6 +260,7 @@ export async function createOrganization(
       slug: result.org.slug,
       memberId: result.founder.id,
       claimedProject,
+      governanceProfile,
     };
   } catch (e) {
     if (e instanceof Error && e.message === "FOUNDING_LIMIT") {
@@ -302,6 +303,7 @@ export function listPublicOrganizations() {
       slug: organizations.slug,
       name: organizations.name,
       claimedProject: organizations.claimedProject,
+      governanceProfile: organizations.governanceProfile,
       createdAt: organizations.createdAt,
     })
     .from(organizations)

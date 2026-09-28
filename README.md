@@ -151,6 +151,10 @@ events land in one transaction (`src/lib/domain/organization.ts`). An
 organization is recorded as governing a Loki project (`claimed_project`) only
 when Loki signed a grant for the founder's own identity (`src/lib/loki-grant.ts`)
 — never because the names happen to match.
+**Founding chooses how the organization decides**: one of the governance
+profiles (`src/lib/config/governance-profiles.ts`; ids in `src/lib/db/enums.ts`
+and `CHECK`ed on the column), bound into the signed text as `decides:` when the
+founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 
 ## API
 

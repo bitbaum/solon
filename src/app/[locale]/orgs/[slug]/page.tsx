@@ -63,7 +63,7 @@ export default async function OrganizationPage({ params }: { params: Params }) {
           {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
           {fact(
             "Who decides",
-            <Link href="/governance/profiles" className="hover:underline">
+            <Link href="/governance/profiles" className="hover:underline" title={profile.suitedTo}>
               {profile.label}
             </Link>,
           )}

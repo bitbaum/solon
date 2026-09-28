@@ -21,6 +21,7 @@ import {
   MemberType,
   SessionOutcome,
 } from "@/lib/db/enums";
+import type { GovernanceProfileId } from "@/lib/db/enums";
 import { db } from "@/lib/db/client";
 import { auditEvents, members, organizations } from "@/lib/db/schema";
 import { createOrganization } from "@/lib/domain/organization";
@@ -34,7 +35,7 @@ const newSlug = () => `gs-${randomUUID().slice(0, 8)}`;
 const account = (actorId: string) => ({ via: "account" as const, actorId });
 const yes = { method: "single_choice", choice: "yes" };
 
-async function found(governanceProfile: string) {
+async function found(governanceProfile: GovernanceProfileId) {
   const founder = newActor();
   const slug = newSlug();
   const result = await createOrganization({
@@ -90,7 +91,8 @@ describe.runIf(RUN)("governance structures (database integration)", () => {
       name: "Nope",
       actorId: newActor(),
       founderName: "Founder",
-      governanceProfile: "MONARCHY",
+      // A client that bypasses the API's own validation still meets the domain's.
+      governanceProfile: "MONARCHY" as GovernanceProfileId,
     });
     expect(result).toMatchObject({ created: false, refusal: "invalid" });
   });
