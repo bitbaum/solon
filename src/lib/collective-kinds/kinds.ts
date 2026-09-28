@@ -27,17 +27,17 @@
  */
 
 export const COLLECTIVE_KIND_IDS = [
-  "circle",
-  "family",
-  "association",
-  "cooperative",
-  "collective",
-  "company",
-  "guild",
-  "dao",
-  "town",
-  "network_state",
-  "local_fund",
+  'circle',
+  'family',
+  'association',
+  'cooperative',
+  'collective',
+  'company',
+  'guild',
+  'dao',
+  'town',
+  'network_state',
+  'local_fund',
 ] as const;
 
 export type CollectiveKindId = (typeof COLLECTIVE_KIND_IDS)[number];
@@ -70,109 +70,109 @@ export interface CollectiveKind {
 
 export const COLLECTIVE_KINDS: Readonly<Record<CollectiveKindId, CollectiveKind>> = {
   circle: {
-    id: "circle",
-    name: "Circle",
-    description: "An informal group of people who trust each other.",
+    id: 'circle',
+    name: 'Circle',
+    description: 'An informal group of people who trust each other.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   family: {
-    id: "family",
-    name: "Family",
-    description: "A household deciding and saving together.",
+    id: 'family',
+    name: 'Family',
+    description: 'A household deciding and saving together.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   association: {
-    id: "association",
-    name: "Association",
-    description: "A member association: the assembly is sovereign and the statutes bind it.",
+    id: 'association',
+    name: 'Association',
+    description: 'A member association: the assembly is sovereign and the statutes bind it.',
     needsPlace: false,
     canBeTaxExempt: true,
-    usualLegalForms: { CH: ["Verein (Art. 60 ZGB)"], DE: ["eingetragener Verein (e.V.)"] },
+    usualLegalForms: { CH: ['Verein (Art. 60 ZGB)'], DE: ['eingetragener Verein (e.V.)'] },
   },
   cooperative: {
-    id: "cooperative",
-    name: "Cooperative",
-    description: "Member-owned: one member, one vote, and the surplus returns to the members.",
+    id: 'cooperative',
+    name: 'Cooperative',
+    description: 'Member-owned: one member, one vote, and the surplus returns to the members.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {
-      CH: ["Genossenschaft (Art. 828 OR)"],
-      DE: ["eingetragene Genossenschaft (eG)"],
+      CH: ['Genossenschaft (Art. 828 OR)'],
+      DE: ['eingetragene Genossenschaft (eG)'],
     },
   },
   collective: {
-    id: "collective",
-    name: "Collective",
-    description: "A group that moves on consent rather than by counting heads.",
+    id: 'collective',
+    name: 'Collective',
+    description: 'A group that moves on consent rather than by counting heads.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   company: {
-    id: "company",
-    name: "Company",
-    description: "A business with owners, a board and weighted say.",
+    id: 'company',
+    name: 'Company',
+    description: 'A business with owners, a board and weighted say.',
     needsPlace: false,
     canBeTaxExempt: false,
-    usualLegalForms: { CH: ["GmbH", "AG"], DE: ["GmbH", "AG", "UG"] },
+    usualLegalForms: { CH: ['GmbH', 'AG'], DE: ['GmbH', 'AG', 'UG'] },
   },
   guild: {
-    id: "guild",
-    name: "Guild",
-    description: "A professional association: people of one craft, setting their own bar.",
+    id: 'guild',
+    name: 'Guild',
+    description: 'A professional association: people of one craft, setting their own bar.',
     needsPlace: false,
     canBeTaxExempt: true,
-    usualLegalForms: { CH: ["Verein (Art. 60 ZGB)"] },
+    usualLegalForms: { CH: ['Verein (Art. 60 ZGB)'] },
   },
   dao: {
-    id: "dao",
-    name: "DAO",
-    description: "A body whose rules run as code and whose votes are signed.",
+    id: 'dao',
+    name: 'DAO',
+    description: 'A body whose rules run as code and whose votes are signed.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   town: {
-    id: "town",
-    name: "Town",
-    description: "A civic body for a place: small enough to be known, large enough to run itself.",
+    id: 'town',
+    name: 'Town',
+    description: 'A civic body for a place: small enough to be known, large enough to run itself.',
     needsPlace: true,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   network_state: {
-    id: "network_state",
-    name: "Network state",
-    description: "A digital-first community with shared values and a real membership roll.",
+    id: 'network_state',
+    name: 'Network state',
+    description: 'A digital-first community with shared values and a real membership roll.',
     needsPlace: false,
     canBeTaxExempt: false,
     usualLegalForms: {},
   },
   local_fund: {
-    id: "local_fund",
-    name: "Local fund",
+    id: 'local_fund',
+    name: 'Local fund',
     description:
-      "Money residents direct to their own place, governed by them, on top of what the law takes.",
+      'Money residents direct to their own place, governed by them, on top of what the law takes.',
     needsPlace: true,
     canBeTaxExempt: true,
     usualLegalForms: {
-      CH: ["Verein (Art. 60 ZGB)", "Stiftung"],
-      DE: ["eingetragener Verein (e.V.)"],
+      CH: ['Verein (Art. 60 ZGB)', 'Stiftung'],
+      DE: ['eingetragener Verein (e.V.)'],
     },
   },
 };
 
 /** The kinds as an array, in the order they are declared. */
 export const COLLECTIVE_KIND_LIST: readonly CollectiveKind[] = COLLECTIVE_KIND_IDS.map(
-  (id) => COLLECTIVE_KINDS[id],
+  id => COLLECTIVE_KINDS[id]
 );
 
 export function isCollectiveKindId(value: unknown): value is CollectiveKindId {
-  return typeof value === "string" && (COLLECTIVE_KIND_IDS as readonly string[]).includes(value);
+  return typeof value === 'string' && (COLLECTIVE_KIND_IDS as readonly string[]).includes(value);
 }
 
 /** The kind, or undefined for a string that is not one. Total: never throws. */

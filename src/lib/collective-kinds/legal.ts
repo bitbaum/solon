@@ -18,9 +18,9 @@
  * neither. This is the same rule evig follows for its own Verein "in
  * Gründung": until recognition is real, no page promises a receipt.
  */
-import type { CollectiveKind } from "./kinds";
+import type { CollectiveKind } from './kinds';
 
-export const LEGAL_STATUSES = ["informal", "registered", "tax_exempt"] as const;
+export const LEGAL_STATUSES = ['informal', 'registered', 'tax_exempt'] as const;
 export type LegalStatus = (typeof LEGAL_STATUSES)[number];
 
 export interface LegalRecord {
@@ -36,9 +36,9 @@ export interface LegalRecord {
 }
 
 export const LEGAL_STATUS_LABEL: Readonly<Record<LegalStatus, string>> = {
-  informal: "Informal",
-  registered: "Registered",
-  tax_exempt: "Recognised tax-exempt",
+  informal: 'Informal',
+  registered: 'Registered',
+  tax_exempt: 'Recognised tax-exempt',
 };
 
 /** 0, 1, 2 — so "at least registered" is a comparison, not a list. */
@@ -47,7 +47,7 @@ export function legalRank(status: LegalStatus): number {
 }
 
 export type LegalProblem =
-  "legal_form" | "jurisdiction" | "register_id" | "recognised_on" | "kind_cannot_be_tax_exempt";
+  'legal_form' | 'jurisdiction' | 'register_id' | 'recognised_on' | 'kind_cannot_be_tax_exempt';
 
 /**
  * What a record is missing for the status it claims, or null when it is
@@ -56,23 +56,23 @@ export type LegalProblem =
  * silently recorded as "registered".
  */
 export function legalProblem(record: LegalRecord, kind?: CollectiveKind): LegalProblem | null {
-  if (legalRank(record.status) >= legalRank("registered")) {
+  if (legalRank(record.status) >= legalRank('registered')) {
     if (!record.legal_form?.trim()) {
-      return "legal_form";
+      return 'legal_form';
     }
     if (!record.jurisdiction || !/^[A-Z]{2}$/.test(record.jurisdiction)) {
-      return "jurisdiction";
+      return 'jurisdiction';
     }
     if (!record.register_id?.trim()) {
-      return "register_id";
+      return 'register_id';
     }
   }
-  if (record.status === "tax_exempt") {
+  if (record.status === 'tax_exempt') {
     if (kind && !kind.canBeTaxExempt) {
-      return "kind_cannot_be_tax_exempt";
+      return 'kind_cannot_be_tax_exempt';
     }
     if (!record.recognised_on || !/^\d{4}-\d{2}-\d{2}$/.test(record.recognised_on)) {
-      return "recognised_on";
+      return 'recognised_on';
     }
   }
   return null;
@@ -84,5 +84,5 @@ export function legalProblem(record: LegalRecord, kind?: CollectiveKind): LegalP
  * hold one.
  */
 export function mayClaimDeductibleGifts(record: LegalRecord, kind?: CollectiveKind): boolean {
-  return record.status === "tax_exempt" && legalProblem(record, kind) === null;
+  return record.status === 'tax_exempt' && legalProblem(record, kind) === null;
 }
