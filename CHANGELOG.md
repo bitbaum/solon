@@ -8,6 +8,24 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **An organization says what kind of body it is, and where.** Founding now
+  asks the one question it never asked: what ARE you — a circle, a family, an
+  association, a cooperative, a collective, a company, a guild, a DAO, a town,
+  a network state or a local fund. The list is the same one OrangeCat uses
+  (bitbaum/orangecat `packages/collective-kinds`), so the word here is the word
+  there. A town or a local fund cannot be founded without a place (country,
+  region, locality); everything else may name one. Picking a kind suggests how
+  it decides; the founder can still choose otherwise. The organization page
+  names the kind, the place and — when it is more than informal — the legal
+  status.
+- **One body, two records: bind an organization to its OrangeCat organisation.**
+  Give its OrangeCat address at founding; OrangeCat confirms the founder owns
+  it, and its kind and place fill in what was left blank. The wallet lives
+  there, the decisions live here, and the page links across.
+- **What you can do — the map.** `/what-you-can-do` lists everything Solon does
+  in plain words, with an example, three steps and a start for each, and opens
+  with a box: type the question you want decided and a proposal is drafted
+  from it. Linked from the footer.
 - **Public roadmap and changelog.** `/roadmap` and `/changelog` render this
   repository's `ROADMAP.md` and `CHANGELOG.md` through the fleet map, without
   signing in, and are linked from the footer.

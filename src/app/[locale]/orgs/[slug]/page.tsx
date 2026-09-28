@@ -7,6 +7,8 @@ import { db } from "@/lib/db/client";
 import { auditEvents, members } from "@/lib/db/schema";
 import { orgBySlug, primaryOrg } from "@/lib/domain/org";
 import { profileFor, usesMandates } from "@/lib/config/governance-profiles";
+import { COLLECTIVE_KINDS, LEGAL_STATUS_LABEL, formatPlace } from "@/lib/collective-kinds";
+import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { isMandateLive } from "@/lib/domain/mandate";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +63,33 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         <dl className="mx-auto max-w-2xl space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">
           {fact("Address", <span className="font-mono">/orgs/{org.slug}</span>)}
           {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
+          {fact("Kind of body", COLLECTIVE_KINDS[org.kind].name)}
+          {org.countryCode &&
+            org.region &&
+            org.locality &&
+            fact(
+              "Place",
+              formatPlace({
+                country_code: org.countryCode,
+                region: org.region,
+                locality: org.locality,
+              }),
+            )}
+          {org.legalStatus !== "informal" &&
+            fact(
+              "Legal status",
+              `${LEGAL_STATUS_LABEL[org.legalStatus]}${org.legalForm ? ` · ${org.legalForm}` : ""}`,
+            )}
+          {org.orangecatGroupId &&
+            fact(
+              "Wallet",
+              <a
+                href={`${ECOSYSTEM_PILLARS.find((p) => p.key === "orangecat")!.url}/groups/${org.slug}`}
+                className="hover:underline"
+              >
+                on OrangeCat
+              </a>,
+            )}
           {fact(
             "Who decides",
             <Link href="/governance/profiles" className="hover:underline" title={profile.suitedTo}>

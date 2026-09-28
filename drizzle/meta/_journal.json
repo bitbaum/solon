@@ -57,6 +57,13 @@
       "when": 1790591813069,
       "tag": "0007_governance_structures",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790598165258,
+      "tag": "0008_a_body_has_a_kind_a_place_and_a_wallet",
+      "breakpoints": true
     }
   ]
 }
