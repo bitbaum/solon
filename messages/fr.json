@@ -47,7 +47,9 @@
       "forTowns": "Villages et communes",
       "forAssociations": "Associations et coopératives",
       "forCommunities": "Communautés",
-      "forNetworkStates": "États en réseau"
+      "forNetworkStates": "États en réseau",
+      "roadmap": "Feuille de route",
+      "changelog": "Changements"
     },
     "desc": {
       "hire": "Confier à Solon la gouvernance de votre groupe",
@@ -78,7 +80,9 @@
       "forTowns": "Assemblées, budgets, règles locales",
       "forAssociations": "Des assemblées générales bien menées",
       "forCommunities": "Groupes en ligne et collectifs",
-      "forNetworkStates": "De la société startup à la reconnaissance"
+      "forNetworkStates": "De la société startup à la reconnaissance",
+      "roadmap": "Où va Solon, dans l'ordre",
+      "changelog": "Ce qui a changé, du plus récent au plus ancien"
     }
   },
   "Nav": {
@@ -354,6 +358,12 @@
     "kicker": "Crédits photo",
     "title": "Les photographies de ce site",
     "lede": "Toutes proviennent de Wikimedia Commons et sont utilisées sous les licences ci-dessous. Aucune ne montre un client de Solon ni ne le laisse entendre."
+  },
+  "Development": {
+    "roadmapTitle": "Feuille de route — Solon",
+    "changelogTitle": "Changements — Solon",
+    "roadmapDescription": "Où va Solon, dans l'ordre où il y va — lu depuis le registre de référence de la flotte.",
+    "changelogDescription": "Ce qui a changé dans Solon pour celles et ceux qui l'utilisent, du plus récent au plus ancien — lu depuis le registre de référence de la flotte."
   },
   "Entry": {
     "kicker": "Votre compte",
