@@ -19,6 +19,7 @@
       "more": "Alles Weitere."
     },
     "links": {
+      "whatYouCanDo": "Was Sie hier tun können",
       "hire": "Solon beauftragen",
       "security": "Sicherheit",
       "features": "Funktionen",
@@ -52,6 +53,7 @@
       "changelog": "Änderungen"
     },
     "desc": {
+      "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
       "hire": "Lassen Sie Solon die Governance Ihrer Gruppe führen",
       "security": "Was Solon nicht hält, und was jeder prüfen kann",
       "features": "Alles, was Solon heute kann",

@@ -3,10 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
-import { nameProblem, slugProblem } from "@/lib/domain/organization-rules";
+import {
+  DEFAULT_PROFILE,
+  GOVERNANCE_PROFILE_LIST,
+  GOVERNANCE_PROFILES,
+  defaultProfileForKind,
+} from "@/lib/config/governance-profiles";
+import type { GovernanceProfileId } from "@/lib/db/enums";
 import type { LokiGrant } from "@/lib/loki-grant";
-import { DEFAULT_PROFILE, type GovernanceProfileId } from "@/lib/config/governance-profiles";
+import { COLLECTIVE_KINDS, type CollectiveKindId } from "@/lib/collective-kinds";
+import { DEFAULT_COLLECTIVE_KIND } from "@/lib/db/enums";
+import { bodyProblem, nameProblem, slugProblem } from "@/lib/domain/organization-rules";
 import ActStep from "./act-step";
+import KindPicker from "./kind-picker";
 import StructurePicker from "./structure-picker";
 
 interface Verdict {
@@ -42,6 +51,9 @@ export default function CreateOrganization({
   const [description, setDescription] = useState(prefill.description);
   const [founderName, setFounderName] = useState(defaultFounderName);
   const [profile, setProfile] = useState<GovernanceProfileId>(DEFAULT_PROFILE);
+  const [kind, setKind] = useState<CollectiveKindId>(DEFAULT_COLLECTIVE_KIND);
+  const [place, setPlace] = useState({ country_code: "", region: "", locality: "" });
+  const [orangecatGroup, setOrangecatGroup] = useState("");
   const [address, setAddress] = useState("");
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +61,30 @@ export default function CreateOrganization({
 
   const slugIssue = slug ? slugProblem(slug) : null;
   const nameIssue = name ? nameProblem(name) : null;
-  const ready = !!slug && !slugIssue && !!name && !nameIssue && founderName.trim().length >= 2;
+  const bodyIssue = bodyProblem({ kind, place });
+  const ready =
+    !!slug && !slugIssue && !!name && !nameIssue && !bodyIssue && founderName.trim().length >= 2;
+
+  // Picking a kind suggests how it decides; the founder may still override
+  // below, and the override is what gets signed.
+  function chooseKind(next: CollectiveKindId) {
+    setKind(next);
+    setProfile(defaultProfileForKind(next));
+  }
+  const placeField = (key: keyof typeof place, label: string, placeholder: string) => (
+    <div>
+      <label className="block text-sm font-medium text-fg-primary" htmlFor={`org-${key}`}>
+        {label}
+      </label>
+      <input
+        id={`org-${key}`}
+        value={place[key]}
+        onChange={(e) => setPlace({ ...place, [key]: e.target.value })}
+        placeholder={placeholder}
+        className={field}
+      />
+    </div>
+  );
 
   const message =
     ready && address
@@ -76,6 +111,9 @@ export default function CreateOrganization({
           description: description.trim() || null,
           founderName,
           governanceProfile: profile,
+          kind,
+          place: place.locality || place.region || place.country_code ? place : null,
+          orangecatGroup: orangecatGroup.trim() || null,
           ...(withKey ? { address, signature } : {}),
           grant,
         }),
@@ -142,9 +180,69 @@ export default function CreateOrganization({
         />
       </div>
 
+      <KindPicker value={kind} onChange={chooseKind} />
+
+      {/* Where it belongs. Required for a place-bound kind, offered to all:
+          an association in Witikon is still in Witikon. */}
+      <fieldset>
+        <legend className="block text-sm font-medium text-fg-primary">
+          Where it belongs{" "}
+          {!COLLECTIVE_KINDS[kind].needsPlace && (
+            <span className="text-fg-tertiary">(optional)</span>
+          )}
+        </legend>
+        <div className="mt-2 grid gap-3 sm:grid-cols-3">
+          {placeField("country_code", "Country", "CH")}
+          {placeField("region", "Region", "Zürich")}
+          {placeField("locality", "Locality", "Witikon")}
+        </div>
+        {bodyIssue && <p className="mt-1.5 text-xs text-fg-tertiary">{bodyIssue}</p>}
+      </fieldset>
+
+      <div>
+        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-oc-group">
+          Your OrangeCat organisation <span className="text-fg-tertiary">(optional)</span>
+        </label>
+        <input
+          id="org-oc-group"
+          value={orangecatGroup}
+          onChange={(e) => setOrangecatGroup(e.target.value.toLowerCase())}
+          placeholder="its address on orangecat.ch, e.g. witikon-fund"
+          className={`${field} font-mono`}
+        />
+        <p className="mt-1.5 text-xs text-fg-tertiary">
+          Binds the two into one body: its wallet there, its decisions here. OrangeCat must confirm
+          the organisation is yours; its kind and place fill in what you leave blank.
+        </p>
+      </div>
+
       {/* Chosen before signing: the choice is part of the signed text
           (`decides:`), so a founder who signs with a key signs the structure too. */}
       <StructurePicker value={profile} onChange={setProfile} />
+
+      <div>
+        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-profile">
+          How it decides
+        </label>
+        <select
+          id="org-profile"
+          value={profile}
+          onChange={(e) => setProfile(e.target.value as GovernanceProfileId)}
+          className={field}
+        >
+          {GOVERNANCE_PROFILE_LIST.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.label}
+            </option>
+          ))}
+        </select>
+        {/* The one line a non-lawyer can act on, from the same registry the
+            votes will be counted by. Changing it later is a humans-only
+            supermajority vote, so it is said here, before signing. */}
+        <p className="mt-1.5 text-xs text-fg-tertiary">
+          {GOVERNANCE_PROFILES[profile].suitedTo} Changing this later takes a governance-rules vote.
+        </p>
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="org-founder">

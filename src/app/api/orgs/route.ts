@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { isSameOrigin } from "@/lib/auth/actor";
-import { GOVERNANCE_PROFILE_IDS } from "@/lib/db/enums";
+import { COLLECTIVE_KIND_IDS, GOVERNANCE_PROFILE_IDS, LEGAL_STATUSES } from "@/lib/db/enums";
 import {
   createOrganization,
   listPublicOrganizations,
@@ -26,6 +26,24 @@ const BodySchema = z.object({
   description: z.string().max(500).nullish(),
   founderName: z.string().min(2).max(80),
   governanceProfile: z.enum(GOVERNANCE_PROFILE_IDS).nullish(),
+  kind: z.enum(COLLECTIVE_KIND_IDS).nullish(),
+  place: z
+    .object({
+      country_code: z.string().max(2).optional(),
+      region: z.string().max(80).optional(),
+      locality: z.string().max(80).optional(),
+    })
+    .nullish(),
+  legal: z
+    .object({
+      status: z.enum(LEGAL_STATUSES),
+      legal_form: z.string().max(120).optional(),
+      jurisdiction: z.string().max(2).optional(),
+      register_id: z.string().max(60).optional(),
+      recognised_on: z.string().max(10).optional(),
+    })
+    .nullish(),
+  orangecatGroup: z.string().max(80).nullish(),
   address: z.string().min(20).max(90).optional(),
   signature: z.string().min(1).max(200).optional(),
   grant: z
@@ -41,9 +59,11 @@ const STATUS: Record<CreateOrganizationRefusal, number> = {
   invalid: 400,
   bad_signature: 401,
   bad_grant: 403,
+  bad_group: 403,
   founding_limit: 403,
   slug_taken: 409,
   project_taken: 409,
+  group_taken: 409,
 };
 
 /**
@@ -95,6 +115,10 @@ export async function POST(req: Request) {
     founderKey: address && signature ? { address, signature } : null,
     grant: parsed.data.grant ?? null,
     governanceProfile: parsed.data.governanceProfile ?? null,
+    kind: parsed.data.kind ?? null,
+    place: parsed.data.place ?? null,
+    legal: parsed.data.legal ?? null,
+    orangecatGroup: parsed.data.orangecatGroup ?? null,
   });
 
   if (!result.created) {

@@ -6,6 +6,7 @@ import {
   Electorate,
   GOVERNANCE_PROFILE_IDS,
   VoteThreshold,
+  type CollectiveKindId,
   type GovernanceProfileId,
 } from "@/lib/db/enums";
 import type { MethodId } from "@/lib/domain/methods/types";
@@ -249,6 +250,31 @@ export const GOVERNANCE_PROFILES: Record<GovernanceProfileId, GovernanceProfile>
 };
 
 export const DEFAULT_PROFILE: GovernanceProfileId = DEFAULT_GOVERNANCE_PROFILE;
+
+/**
+ * The profile a kind of body usually decides by — the founding form's default
+ * once a kind is picked, never a lock. Keyed by the shared kind list, so a kind
+ * added there without a row here fails the build. This is Solon's own table:
+ * the kinds package says what a body IS and deliberately nothing about how it
+ * decides.
+ */
+export const KIND_DEFAULT_PROFILE: Record<CollectiveKindId, GovernanceProfileId> = {
+  circle: "COLLECTIVE",
+  family: "COLLECTIVE",
+  association: "ASSOCIATION",
+  cooperative: "COOPERATIVE",
+  collective: "COLLECTIVE",
+  company: "COMPANY",
+  guild: "ASSOCIATION",
+  dao: "TOWN",
+  town: "TOWN",
+  network_state: "DELEGATED",
+  local_fund: "TOWN",
+};
+
+export function defaultProfileForKind(kind: CollectiveKindId): GovernanceProfileId {
+  return KIND_DEFAULT_PROFILE[kind];
+}
 
 /** The profiles in the order they are declared — the one order every list uses. */
 export const GOVERNANCE_PROFILE_LIST: readonly GovernanceProfile[] = GOVERNANCE_PROFILE_IDS.map(

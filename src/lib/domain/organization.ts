@@ -19,7 +19,10 @@ import {
   type GovernanceProfileId,
 } from "@/lib/config/governance-profiles";
 import { mandateEnd } from "./mandate";
-import { descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
+import { bodyProblem, descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
+import { fetchOrangeCatGroup } from "@/lib/orangecat-group";
+import { normalizePlace, type LegalRecord, type Place } from "@/lib/collective-kinds";
+import { DEFAULT_COLLECTIVE_KIND, type CollectiveKindId, type LegalStatus } from "@/lib/db/enums";
 
 /**
  * Founding an organization.
@@ -80,11 +83,33 @@ export interface CreateOrganizationInput {
    * choice existed got.
    */
   governanceProfile?: GovernanceProfileId | null;
+  /**
+   * What kind of body this is, where it belongs and what it legally is —
+   * validated together by bodyProblem() (organization-rules.ts). Omitted kind
+   * = the default every organization founded before kinds existed got.
+   */
+  kind?: CollectiveKindId | null;
+  place?: Partial<Place> | null;
+  legal?: Partial<LegalRecord> | null;
+  /**
+   * The slug of an OrangeCat organisation to bind this body to. Accepted only
+   * when OrangeCat says the founder's actor owns it (fetchOrangeCatGroup);
+   * the OrangeCat group's own kind and place fill in whatever the founder
+   * left blank, so the two records describe one body.
+   */
+  orangecatGroup?: string | null;
   now?: Date;
 }
 
 export type CreateOrganizationRefusal =
-  "invalid" | "bad_signature" | "bad_grant" | "slug_taken" | "project_taken" | "founding_limit";
+  | "invalid"
+  | "bad_signature"
+  | "bad_grant"
+  | "bad_group"
+  | "slug_taken"
+  | "project_taken"
+  | "group_taken"
+  | "founding_limit";
 
 export interface CreateOrganizationResult {
   created: boolean;
@@ -96,6 +121,8 @@ export interface CreateOrganizationResult {
   memberId?: string;
   claimedProject?: string | null;
   governanceProfile?: GovernanceProfileId;
+  kind?: CollectiveKindId;
+  orangecatGroupId?: string | null;
 }
 
 /** A unique-constraint violation's constraint name, or null. Drizzle wraps pg errors. */
@@ -124,6 +151,36 @@ export async function createOrganization(
       : null);
   if (problem) return { created: false, verified: false, refusal: "invalid", reason: problem };
   const governanceProfile: GovernanceProfileId = input.governanceProfile ?? DEFAULT_PROFILE;
+
+  // Binding to an OrangeCat organisation is checked first, because when it
+  // holds it may SUPPLY the kind and the place the founder left blank — and a
+  // binding that fails refuses the founding outright, for the same reason a
+  // failing grant does: nobody should walk away believing two records are one
+  // body when they are not.
+  let orangecatGroupId: string | null = null;
+  let kind: CollectiveKindId = input.kind ?? DEFAULT_COLLECTIVE_KIND;
+  let place: Partial<Place> | null = input.place ?? null;
+  if (input.orangecatGroup) {
+    const bound = await fetchOrangeCatGroup(input.orangecatGroup);
+    if (!bound.ok) {
+      return { created: false, verified: false, refusal: "bad_group", reason: bound.reason };
+    }
+    if (bound.group.ownerActorId !== input.actorId) {
+      return {
+        created: false,
+        verified: false,
+        refusal: "bad_group",
+        reason: "that OrangeCat organisation is not yours to bind",
+      };
+    }
+    orangecatGroupId = bound.group.id;
+    if (input.kind == null) kind = bound.group.kind;
+    if (!place?.locality && bound.group.place) place = bound.group.place;
+  }
+  const bodyIssue = bodyProblem({ kind, place, legal: input.legal ?? null });
+  if (bodyIssue) return { created: false, verified: false, refusal: "invalid", reason: bodyIssue };
+  const legalStatus: LegalStatus = input.legal?.status ?? "informal";
+  const normalizedPlace = normalizePlace(place);
 
   // Under a structure that gives decisions to mandate holders, the founder
   // holds the first mandate — otherwise "one person decides" would open with
@@ -192,7 +249,23 @@ export async function createOrganization(
 
       const [org] = await tx
         .insert(organizations)
-        .values({ slug, name, description, claimedProject, governanceProfile })
+        .values({
+          slug,
+          name,
+          description,
+          claimedProject,
+          governanceProfile,
+          kind,
+          countryCode: normalizedPlace?.country_code ?? null,
+          region: normalizedPlace?.region ?? null,
+          locality: normalizedPlace?.locality ?? null,
+          legalStatus,
+          legalForm: input.legal?.legal_form?.trim() || null,
+          jurisdiction: input.legal?.jurisdiction?.trim().toUpperCase() || null,
+          registerId: input.legal?.register_id?.trim() || null,
+          recognisedOn: input.legal?.recognised_on || null,
+          orangecatGroupId,
+        })
         .returning();
 
       const [founder] = await tx
@@ -222,6 +295,10 @@ export async function createOrganization(
             name,
             claimedProject,
             governanceProfile,
+            kind,
+            place: normalizedPlace,
+            legalStatus,
+            orangecatGroupId,
             proof: key ? "BIP137" : "ACCOUNT",
             ...(key
               ? { founderAddress: key.address, signedMessage: message, signature: key.signature }
@@ -261,6 +338,8 @@ export async function createOrganization(
       memberId: result.founder.id,
       claimedProject,
       governanceProfile,
+      kind,
+      orangecatGroupId,
     };
   } catch (e) {
     if (e instanceof Error && e.message === "FOUNDING_LIMIT") {
@@ -278,6 +357,14 @@ export async function createOrganization(
         verified: true,
         refusal: "slug_taken",
         reason: `an organization at "${slug}" already exists — choose another address`,
+      };
+    }
+    if (constraint === "organizations_orangecat_group_key") {
+      return {
+        created: false,
+        verified: true,
+        refusal: "group_taken",
+        reason: "that OrangeCat organisation is already bound to an organization here",
       };
     }
     if (constraint === "organizations_claimed_project_key") {

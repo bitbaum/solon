@@ -37,6 +37,20 @@ export type GovernanceProfileId = (typeof GOVERNANCE_PROFILE_IDS)[number];
 /** What an organization decides by when its founder did not say. */
 export const DEFAULT_GOVERNANCE_PROFILE: GovernanceProfileId = "TOWN";
 
+/**
+ * What kind of body an organization is — a town, an association, a company, a
+ * local fund. One list for OrangeCat, Loki and Solon, vendored from
+ * bitbaum/orangecat packages/collective-kinds (src/lib/collective-kinds). The
+ * kind is a different axis from the governance profile: an association may
+ * decide by delegates, a town by one person. The kind says WHAT the body is;
+ * the profile says HOW it decides; KIND_DEFAULT_PROFILE in
+ * config/governance-profiles.ts is the suggested pairing.
+ */
+export { COLLECTIVE_KIND_IDS, LEGAL_STATUSES } from "@/lib/collective-kinds";
+export type { CollectiveKindId, LegalStatus } from "@/lib/collective-kinds";
+/** What an organization founded before kinds existed is: people who trust each other. */
+export const DEFAULT_COLLECTIVE_KIND = "circle" as const;
+
 export const MEMBER_TYPES = ["HUMAN", "AGENT"] as const;
 export const MemberType = enumLike(MEMBER_TYPES);
 export type MemberType = (typeof MEMBER_TYPES)[number];

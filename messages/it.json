@@ -19,6 +19,7 @@
       "more": "Tutto il resto."
     },
     "links": {
+      "whatYouCanDo": "Cosa puoi fare qui",
       "hire": "Incaricare Solon",
       "security": "Sicurezza",
       "features": "Funzionalità",
@@ -52,6 +53,7 @@
       "changelog": "Novità"
     },
     "desc": {
+      "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
       "hire": "Affidare a Solon la governance del vostro gruppo",
       "security": "Ciò che Solon rifiuta di custodire, e ciò che chiunque può verificare",
       "features": "Tutto ciò che Solon fa oggi",

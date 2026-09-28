@@ -26,6 +26,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   foreignKey,
   index,
   integer,
@@ -39,6 +40,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { randomUUID } from "node:crypto";
+import { COLLECTIVE_KINDS } from "@/lib/collective-kinds";
 import {
   AUDIT_EVENT_TYPES,
   DECISION_BODIES,
@@ -57,6 +59,11 @@ import {
   SESSION_STATUSES,
   VOTE_THRESHOLDS,
   VOTING_METHODS,
+  COLLECTIVE_KIND_IDS,
+  DEFAULT_COLLECTIVE_KIND,
+  LEGAL_STATUSES,
+  type CollectiveKindId,
+  type LegalStatus,
 } from "./enums";
 
 export * from "./enums";
@@ -107,11 +114,59 @@ export const organizations = pgTable(
      * At most one organization governs a given project.
      */
     claimedProject: text("claimed_project"),
+    /**
+     * What kind of body this is — one of the collective kinds (enums.ts). A
+     * town or a local fund is bound to a place and cannot exist without one;
+     * the check below is that rule in the database's own words.
+     */
+    kind: text("kind").$type<CollectiveKindId>().notNull().default(DEFAULT_COLLECTIVE_KIND),
+    /** Where it belongs: ISO 3166-1 alpha-2, then region, then locality, as its people write them. */
+    countryCode: varchar("country_code", { length: 2 }),
+    region: varchar("region", { length: 80 }),
+    locality: varchar("locality", { length: 80 }),
+    /**
+     * What it legally is, as a fact with evidence (collective-kinds/legal.ts):
+     * informal, registered (a register entry with a number), or tax_exempt
+     * (registered AND recognised public-benefit). Only the last may ever be
+     * described as receiving deductible gifts; the app enforces the evidence.
+     */
+    legalStatus: text("legal_status").$type<LegalStatus>().notNull().default("informal"),
+    legalForm: varchar("legal_form", { length: 120 }),
+    jurisdiction: varchar("jurisdiction", { length: 2 }),
+    registerId: varchar("register_id", { length: 60 }),
+    recognisedOn: date("recognised_on"),
+    /**
+     * The OrangeCat organisation (groups.id) this body IS, when its founder
+     * bound the two. Set only after OrangeCat confirmed the founder's actor
+     * owns that group (src/lib/orangecat-group.ts) — never from a typed id —
+     * so a Solon organization and an OrangeCat wallet belong to the same body
+     * by proof, not by name. At most one organization per group.
+     */
+    orangecatGroupId: text("orangecat_group_id"),
     createdAt: timestamp("created_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
   (t) => [
     uniqueIndex("organizations_slug_key").on(t.slug),
     uniqueIndex("organizations_claimed_project_key").on(t.claimedProject),
+    uniqueIndex("organizations_orangecat_group_key").on(t.orangecatGroupId),
+    check(
+      "organizations_kind_check",
+      sql`${t.kind} IN (${sql.raw(COLLECTIVE_KIND_IDS.map((id) => `'${id}'`).join(", "))})`,
+    ),
+    // A place-bound kind without a place is a word. The list is derived from
+    // the same table the form reads (needsPlace), so it cannot drift from it.
+    check(
+      "organizations_place_bound_kinds_have_a_place",
+      sql`${t.kind} NOT IN (${sql.raw(
+        COLLECTIVE_KIND_IDS.filter((id) => COLLECTIVE_KINDS[id].needsPlace)
+          .map((id) => `'${id}'`)
+          .join(", "),
+      )}) OR (${t.countryCode} IS NOT NULL AND ${t.region} IS NOT NULL AND ${t.locality} IS NOT NULL)`,
+    ),
+    check(
+      "organizations_legal_status_check",
+      sql`${t.legalStatus} IN (${sql.raw(LEGAL_STATUSES.map((id) => `'${id}'`).join(", "))})`,
+    ),
     // The column is text, not a pg enum, so a profile can be added without an
     // enum migration — but only a profile that exists may be stored. Built from
     // the same tuple the rule registry is keyed by.

@@ -19,6 +19,7 @@
       "more": "Tout le reste."
     },
     "links": {
+      "whatYouCanDo": "Ce que vous pouvez faire ici",
       "hire": "Engager Solon",
       "security": "Sécurité",
       "features": "Fonctionnalités",
@@ -52,6 +53,7 @@
       "changelog": "Changements"
     },
     "desc": {
+      "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
       "hire": "Confier à Solon la gouvernance de votre groupe",
       "security": "Ce que Solon refuse de détenir, et ce que chacun peut vérifier",
       "features": "Tout ce que Solon fait aujourd'hui",

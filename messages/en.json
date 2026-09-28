@@ -19,6 +19,7 @@
       "more": "Everything else."
     },
     "links": {
+      "whatYouCanDo": "What you can do",
       "hire": "Hire Solon",
       "security": "Security",
       "features": "Features",
@@ -52,6 +53,7 @@
       "changelog": "Changelog"
     },
     "desc": {
+      "whatYouCanDo": "Everything here, in plain words, with a start",
       "hire": "Have Solon run your group's governance",
       "security": "What Solon refuses to hold, and what anyone can check",
       "features": "Everything Solon does today",

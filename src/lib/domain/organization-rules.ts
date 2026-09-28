@@ -54,3 +54,63 @@ export function descriptionProblem(description: string | null | undefined): stri
   if (description && description.length > 500) return "keep the description under 500 characters";
   return null;
 }
+
+import {
+  COLLECTIVE_KINDS,
+  isCollectiveKindId,
+  legalProblem,
+  placeProblem,
+  type CollectiveKindId,
+  type LegalRecord,
+  type Place,
+} from "@/lib/collective-kinds";
+
+export interface BodyFacts {
+  kind?: string | null;
+  place?: Partial<Place> | null;
+  legal?: Partial<LegalRecord> | null;
+}
+
+const PLACE_WORDS: Record<string, string> = {
+  country_code: "the country, as a two-letter code (CH)",
+  region: "the region — canton, state or province",
+  locality: "the locality — village, quarter or town",
+};
+
+/**
+ * What is wrong with what the founder said the body IS, or null. One sentence,
+ * about one field, in the order the form shows them — the same reading the API
+ * refuses on, so the form can never accept what the API will not.
+ */
+export function bodyProblem(facts: BodyFacts): string | null {
+  if (facts.kind != null && !isCollectiveKindId(facts.kind))
+    return "choose one of the kinds of body";
+  const kind: CollectiveKindId | undefined = isCollectiveKindId(facts.kind)
+    ? facts.kind
+    : undefined;
+  const anyPlace = Boolean(
+    facts.place?.country_code || facts.place?.region || facts.place?.locality,
+  );
+  if ((kind && COLLECTIVE_KINDS[kind].needsPlace) || anyPlace) {
+    const missing = placeProblem(facts.place);
+    if (missing) {
+      const head =
+        kind && COLLECTIVE_KINDS[kind].needsPlace
+          ? `a ${COLLECTIVE_KINDS[kind].name.toLowerCase()} belongs to a place — `
+          : "";
+      return `${head}give ${PLACE_WORDS[missing]}`;
+    }
+  }
+  const status = facts.legal?.status;
+  if (status && status !== "informal") {
+    const problem = legalProblem(
+      { ...facts.legal, status },
+      kind ? COLLECTIVE_KINDS[kind] : undefined,
+    );
+    if (problem === "kind_cannot_be_tax_exempt") {
+      return `a ${kind ? COLLECTIVE_KINDS[kind].name.toLowerCase() : "body"} of this kind cannot be recognised as tax-exempt`;
+    }
+    if (problem) return `a ${status.replace("_", "-")} body needs its ${problem.replace("_", " ")}`;
+  }
+  return null;
+}
