@@ -24,6 +24,7 @@
  */
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   check,
   foreignKey,
   index,
@@ -40,6 +41,7 @@ import {
 import { randomUUID } from "node:crypto";
 import {
   AUDIT_EVENT_TYPES,
+  DECISION_BODIES,
   DECISION_CATEGORIES,
   DEFAULT_GOVERNANCE_PROFILE,
   GOVERNANCE_PROFILE_IDS,
@@ -66,6 +68,7 @@ export const keyCustodyEnum = pgEnum("KeyCustody", KEY_CUSTODIES);
 export const memberStatusEnum = pgEnum("MemberStatus", MEMBER_STATUSES);
 export const decisionCategoryEnum = pgEnum("DecisionCategory", DECISION_CATEGORIES);
 export const electorateEnum = pgEnum("Electorate", ELECTORATES);
+export const decisionBodyEnum = pgEnum("DecisionBody", DECISION_BODIES);
 export const voteThresholdEnum = pgEnum("VoteThreshold", VOTE_THRESHOLDS);
 export const proposalStatusEnum = pgEnum("ProposalStatus", PROPOSAL_STATUSES);
 export const sessionStatusEnum = pgEnum("SessionStatus", SESSION_STATUSES);
@@ -150,6 +153,19 @@ export const members = pgTable(
     ocActorId: text("oc_actor_id"),
     /** For agents: which system runs them, e.g. "orangecat:cat", "loki:loki". */
     system: text("system"),
+    /**
+     * Whether this seat decides the categories a profile gives to MANDATE —
+     * the founder under "one person decides", the delegates members elected
+     * under "elected delegates decide". Granted at founding or by a MEMBERSHIP
+     * decision, never by an edit. See src/lib/domain/mandate.ts.
+     */
+    holdsMandate: boolean("holds_mandate").notNull().default(false),
+    /**
+     * When the mandate lapses. Null for a mandate without a term. A lapsed
+     * mandate decides nothing; the categories it held go back to the members
+     * until someone is elected again.
+     */
+    mandateUntil: timestamp("mandate_until", { precision: 3, mode: "date" }),
     joinedAt: timestamp("joined_at", { precision: 3, mode: "date" }).notNull().defaultNow(),
   },
   (t) => [
@@ -205,6 +221,14 @@ export const proposals = pgTable(
      * yes/no questions, which carry their answers in the method itself.
      */
     options: jsonb("options"),
+    /**
+     * What the decision DOES besides record itself, applied when it passes:
+     * grant or end a mandate (MEMBERSHIP), or switch the organization's
+     * governance profile (GOVERNANCE_RULES). Shape and pairing are in
+     * src/lib/domain/effects.ts. Hashed into contentHash, so a signed proposal
+     * cannot have its effect swapped after signing.
+     */
+    effect: jsonb("effect"),
     proposerMemberId: text("proposer_member_id").notNull(),
     /** How the proposer proved they filed it. See PROOFS in ./enums. */
     proof: proofEnum("proof").notNull().default("BIP137"),
@@ -243,6 +267,14 @@ export const votingSessions = pgTable(
     // Snapshot at open — a past decision must stay explainable after the
     // governance config changes.
     electorate: electorateEnum("electorate").notNull(),
+    /** Who within the electorate decided — every member, or the mandate holders. */
+    decidedBy: decisionBodyEnum("decided_by").notNull().default("MEMBERS"),
+    /**
+     * For MANDATE sessions: the member ids that held a live mandate at open.
+     * The roll is frozen for the same reason the rules are — a mandate granted
+     * mid-vote must not add a ballot to a count already running.
+     */
+    mandateRoll: jsonb("mandate_roll"),
     method: votingMethodEnum("method").notNull().default("SINGLE_CHOICE"),
     /**
      * The exact options put to the members, frozen at open. Editing the

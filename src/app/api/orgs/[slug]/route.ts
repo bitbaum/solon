@@ -27,6 +27,8 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }
           votingWeight: true,
           status: true,
           system: true,
+          holdsMandate: true,
+          mandateUntil: true,
           joinedAt: true,
         },
         orderBy: asc(members.joinedAt),
@@ -44,6 +46,13 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }
     governanceProfile: org.governanceProfile,
     decidesBy: profileFor(org.governanceProfile).label,
     createdAt: org.createdAt,
+    // Who decides is part of what a prospective member is joining, so it is
+    // published beside the roster rather than left to be inferred from it.
+    governance: {
+      profile: profileFor(org.governanceProfile).id,
+      label: profileFor(org.governanceProfile).label,
+      whoDecides: profileFor(org.governanceProfile).whoDecides,
+    },
     members: org.members.map((m) => ({ ...m, votingWeight: Number(m.votingWeight) })),
   });
 }

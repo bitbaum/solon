@@ -138,9 +138,9 @@ export default function GovernancePage() {
             {
               href: "/governance/profiles",
               kind: "read",
-              title: "Five ways to be an organization",
+              title: "Who decides, and how",
               blurb:
-                "A town, an association, a co-op, a collective and a company board, compared rule by rule.",
+                "One person, everyone, or elected delegates — and the house styles of an association, a co-op, a collective and a company board, compared rule by rule.",
             },
             {
               href: "/governance/voting",

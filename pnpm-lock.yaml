@@ -20,6 +20,9 @@ importers:
       '@scure/base':
         specifier: ^2.4.0
         version: 2.4.0
+      bip-kit:
+        specifier: ^0.3.1
+        version: 0.3.1(react@19.3.0)
       bs58check:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1785,6 +1788,22 @@ packages:
     resolution: {integrity: sha512-JyJ954WzuIR8/FFzX0o5krdSTrBAkcCSRfWSleRsIHSWV+cZe2FI1PKggVkFke1hBldRs+LRxUczzE9iPmgZww==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  bip-kit@0.3.1:
+    resolution: {integrity: sha512-OnkaJiDCRz0UeMifgI8NHnHoaBWyvpYOgdDIfOcxMiIWDWliVyHU+jg5aYX6zccIH15G5uze1vaGJV1XdRDDJg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      katex: '>=0.16'
+      mermaid: '>=10'
+      react: '>=18'
+      shiki: '>=1'
+    peerDependenciesMeta:
+      katex:
+        optional: true
+      mermaid:
+        optional: true
+      shiki:
+        optional: true
 
   brace-expansion@1.1.18:
     resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
@@ -4777,6 +4796,10 @@ snapshots:
   base-x@5.0.1: {}
 
   baseline-browser-mapping@2.11.14: {}
+
+  bip-kit@0.3.1(react@19.3.0):
+    dependencies:
+      react: 19.3.0
 
   brace-expansion@1.1.18:
     dependencies:

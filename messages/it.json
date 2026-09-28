@@ -28,7 +28,7 @@
       "methods": "Metodi di voto",
       "thresholds": "Quorum e maggioranza",
       "whoDecides": "Chi decide cosa",
-      "profiles": "Cinque tipi di organizzazione",
+      "profiles": "Chi decide, e come",
       "voting": "Come si esprime un voto",
       "dashboard": "Panoramica",
       "decisions": "Decisioni",
@@ -47,7 +47,9 @@
       "forTowns": "Villaggi e comuni",
       "forAssociations": "Associazioni e cooperative",
       "forCommunities": "Comunità",
-      "forNetworkStates": "Stati in rete"
+      "forNetworkStates": "Stati in rete",
+      "roadmap": "Roadmap",
+      "changelog": "Novità"
     },
     "desc": {
       "hire": "Affidare a Solon la governance del vostro gruppo",
@@ -59,7 +61,7 @@
       "methods": "Sei modi di contare, e quando usarli",
       "thresholds": "Quanti devono esserci, e quanti devono approvare",
       "whoDecides": "Quali decisioni spettano a chi",
-      "profiles": "Modelli di regole per cinque tipi di gruppo",
+      "profiles": "Una persona, tutti o delegati eletti",
       "voting": "Un clic, o una firma che chiunque può ricontare",
       "dashboard": "Il vostro gruppo in un colpo d'occhio",
       "decisions": "Tutto ciò che è in decisione, e il passo successivo",
@@ -78,7 +80,9 @@
       "forTowns": "Assemblee, bilanci, regole locali",
       "forAssociations": "Assemblee generali fatte bene",
       "forCommunities": "Gruppi online e collettivi",
-      "forNetworkStates": "Dalla società startup al riconoscimento"
+      "forNetworkStates": "Dalla società startup al riconoscimento",
+      "roadmap": "Dove va Solon, in ordine",
+      "changelog": "Cosa è cambiato, dal più recente"
     }
   },
   "Nav": {
@@ -354,6 +358,12 @@
     "kicker": "Crediti fotografici",
     "title": "Le fotografie di questo sito",
     "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere."
+  },
+  "Development": {
+    "roadmapTitle": "Roadmap — Solon",
+    "changelogTitle": "Novità — Solon",
+    "roadmapDescription": "Dove va Solon, nell'ordine in cui ci va — letto dal registro di riferimento della flotta.",
+    "changelogDescription": "Cosa è cambiato in Solon per chi lo usa, dal più recente — letto dal registro di riferimento della flotta."
   },
   "Entry": {
     "kicker": "Il tuo account",

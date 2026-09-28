@@ -10,9 +10,15 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { organizationMessage, verifyMessage } from "@/lib/bitcoin/message";
-import { DEFAULT_PROFILE, isGovernanceProfileId } from "@/lib/config/governance-profiles";
-import type { GovernanceProfileId } from "@/lib/db/enums";
 import { verifyLokiGrant, type LokiGrant } from "@/lib/loki-grant";
+import {
+  DEFAULT_PROFILE,
+  isGovernanceProfileId,
+  profileFor,
+  usesMandates,
+  type GovernanceProfileId,
+} from "@/lib/config/governance-profiles";
+import { mandateEnd } from "./mandate";
 import { descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
 
 /**
@@ -68,9 +74,10 @@ export interface CreateOrganizationInput {
   grant?: LokiGrant | null;
   /**
    * How the organization decides — one of the governance profiles. Chosen at
-   * founding because it is the hardest thing to change afterwards (a
-   * GOVERNANCE_RULES vote, humans-only, supermajority). Omitted = the default,
-   * which is what every organization founded before the choice existed got.
+   * founding because there is nobody else yet to ask; every change after this
+   * is a GOVERNANCE_RULES decision taken under the profile chosen here.
+   * Omitted = the default, which is what every organization founded before the
+   * choice existed got.
    */
   governanceProfile?: GovernanceProfileId | null;
   now?: Date;
@@ -117,6 +124,17 @@ export async function createOrganization(
       : null);
   if (problem) return { created: false, verified: false, refusal: "invalid", reason: problem };
   const governanceProfile: GovernanceProfileId = input.governanceProfile ?? DEFAULT_PROFILE;
+
+  // Under a structure that gives decisions to mandate holders, the founder
+  // holds the first mandate — otherwise "one person decides" would open with
+  // nobody deciding. Under DELEGATED it carries the profile's term, so the
+  // founder's mandate lapses into an election rather than lasting forever.
+  const profile = profileFor(governanceProfile);
+  const founderMandate = usesMandates(profile);
+  const foundedAt = input.now ?? new Date();
+  const founderMandateUntil = founderMandate
+    ? mandateEnd(null, profile.mandateTermDays, foundedAt)
+    : null;
 
   // A grant that is PRESENT but fails refuses the founding outright. Creating the
   // organization anyway, unattributed, would leave someone who came from their
@@ -187,6 +205,8 @@ export async function createOrganization(
           bitcoinAddress: key?.address ?? null,
           ocActorId: input.actorId,
           status: MemberStatus.ACTIVE,
+          holdsMandate: founderMandate,
+          mandateUntil: founderMandateUntil,
         })
         .returning();
 
@@ -201,6 +221,7 @@ export async function createOrganization(
             slug,
             name,
             claimedProject,
+            governanceProfile,
             proof: key ? "BIP137" : "ACCOUNT",
             ...(key
               ? { founderAddress: key.address, signedMessage: message, signature: key.signature }
@@ -219,6 +240,12 @@ export async function createOrganization(
             memberType: MemberType.HUMAN,
             bitcoinAddress: founder.bitcoinAddress,
             genesis: true,
+            ...(founderMandate
+              ? {
+                  holdsMandate: true,
+                  mandateUntil: founderMandateUntil?.toISOString() ?? null,
+                }
+              : {}),
             note: "founding human seat — granted in the same transaction that created the organization, so it can never be claimed by anyone but the founder. Later admissions go through MEMBERSHIP votes.",
           },
         },

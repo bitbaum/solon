@@ -95,6 +95,8 @@ export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
     children: [
       { key: "useCases", href: "/for" },
       { key: "hire", href: "/hire" },
+      { key: "roadmap", href: "/roadmap" },
+      { key: "changelog", href: "/changelog" },
       { key: "credits", href: "/credits" },
     ],
   },

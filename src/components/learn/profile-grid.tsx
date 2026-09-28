@@ -1,13 +1,13 @@
-import { GOVERNANCE_PROFILES, GOVERNANCE_PROFILE_IDS } from "@/lib/config/governance-profiles";
+import { GOVERNANCE_PROFILE_IDS, GOVERNANCE_PROFILES } from "@/lib/config/governance-profiles";
 import { CATEGORY_LABEL } from "@/lib/config/governance";
-import { DECISION_CATEGORIES, VoteThreshold } from "@/lib/db/enums";
+import { DECISION_CATEGORIES, DecisionBody, VoteThreshold } from "@/lib/db/enums";
 import { methodSpec } from "@/lib/domain/methods";
 
 /**
- * The five shipped profiles, side by side, rendered from the profile registry.
+ * Every shipped profile, side by side, rendered from the profile registry.
  *
- * The comparison is the argument: the same seven categories, five different
- * sets of answers, none of them wrong. A reader looking for "which one am I?"
+ * The comparison is the argument: the same categories, answered differently,
+ * none of them wrong. A reader looking for "which one am I?"
  * gets that from `suitedTo`; a reader who wants to know what they are signing
  * up for gets the whole rule set, because a constitution summarised is a
  * constitution misread.
@@ -17,7 +17,7 @@ const ORDER = GOVERNANCE_PROFILE_IDS;
 export function ProfileGrid() {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[50rem] border-collapse text-sm">
+      <table className="w-full min-w-[68rem] border-collapse text-sm">
         <caption className="sr-only">
           How each governance profile decides each category of question
         </caption>
@@ -48,7 +48,15 @@ export function ProfileGrid() {
                 const rule = GOVERNANCE_PROFILES[id].rules[category];
                 return (
                   <td key={id} className="px-3 py-4">
-                    <span className="block text-fg-primary">{methodSpec(rule.method).label}</span>
+                    {/* Who decides comes first in the cell: it is the difference
+                        between the structures, where the method is the
+                        difference between house styles. */}
+                    <span className="block text-xs text-fg-secondary">
+                      {rule.decidedBy === DecisionBody.MANDATE ? "Mandate holders" : "All members"}
+                    </span>
+                    <span className="mt-1 block text-fg-primary">
+                      {methodSpec(rule.method).label}
+                    </span>
                     <span className="mt-1.5 block font-mono text-xs text-fg-secondary">
                       {/* The threshold is what a reader scans this table FOR, so a
                           supermajority is coloured rather than left to a glyph

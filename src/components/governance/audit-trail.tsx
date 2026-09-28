@@ -18,6 +18,8 @@ const EVENT_LABEL: Record<AuditEventType, string> = {
   VOTE_CAST: "Vote cast",
   SESSION_CLOSED: "Voting session closed",
   POLICY_ACTIVATED: "Policy version activated",
+  MANDATE_CHANGED: "Mandate granted or ended",
+  PROFILE_CHANGED: "Governance structure changed",
 };
 
 /** Where a given audit subject can actually be inspected. */

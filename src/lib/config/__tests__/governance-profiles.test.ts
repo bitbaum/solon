@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
+import { DecisionBody, DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "../governance";
 import {
   DEFAULT_PROFILE,
@@ -10,6 +10,7 @@ import {
   isGovernanceProfileId,
   profileFor,
   ruleFor,
+  usesMandates,
 } from "../governance-profiles";
 import { USE_CASES } from "@/lib/content/use-cases";
 import { organizations } from "@/lib/db/schema";
@@ -43,8 +44,14 @@ describe("humans-only red lines", () => {
       for (const category of ALL_CATEGORIES) {
         const rule = profile.rules[category];
         // If a profile ever gains an `electorate` key this fails — which is the
-        // point. Eligibility has exactly one source.
-        expect(Object.keys(rule).sort()).toEqual(["method", "quorumPercent", "threshold"]);
+        // point. Eligibility has exactly one source. `decidedBy` only narrows
+        // inside that electorate (mandate holders are still filtered by it).
+        expect(Object.keys(rule).sort()).toEqual([
+          "decidedBy",
+          "method",
+          "quorumPercent",
+          "threshold",
+        ]);
       }
     }
   });
@@ -122,6 +129,7 @@ describe("the default profile preserves pre-existing behaviour", () => {
       expect(rule.threshold).toBe(CATEGORY_THRESHOLD[category]);
       expect(rule.quorumPercent).toBe(CATEGORY_QUORUM_PERCENT[category]);
       expect(rule.method).toBe("single_choice");
+      expect(rule.decidedBy).toBe(DecisionBody.MEMBERS);
     }
   });
 
@@ -133,6 +141,55 @@ describe("the default profile preserves pre-existing behaviour", () => {
   it("still sources electorate from the one config that owns it", () => {
     for (const category of ALL_CATEGORIES) {
       expect(electorateFor(category)).toBe(CATEGORY_ELECTORATE[category]);
+    }
+  });
+});
+
+describe("who decides", () => {
+  it("lists every profile exactly once, in the order pages render them", () => {
+    expect([...GOVERNANCE_PROFILE_IDS].sort()).toEqual(Object.keys(GOVERNANCE_PROFILES).sort());
+    for (const id of GOVERNANCE_PROFILE_IDS) {
+      expect(GOVERNANCE_PROFILES[id].id).toBe(id);
+      expect(isGovernanceProfileId(id)).toBe(true);
+    }
+    expect(isGovernanceProfileId("MONARCHY")).toBe(false);
+    expect(isGovernanceProfileId(undefined)).toBe(false);
+  });
+
+  it("gives every category to the mandate under one person decides", () => {
+    for (const category of ALL_CATEGORIES) {
+      expect(ruleFor("SOLE", category).decidedBy).toBe(DecisionBody.MANDATE);
+    }
+  });
+
+  it("keeps the roster, safety and the rules with the members under elected delegates", () => {
+    // Those three are how members elect, recall, and change the structure. A
+    // delegate profile that gave them to the delegates would let a delegate
+    // extend their own term.
+    for (const category of [
+      DecisionCategory.MEMBERSHIP,
+      DecisionCategory.SAFETY,
+      DecisionCategory.GOVERNANCE_RULES,
+    ]) {
+      expect(ruleFor("DELEGATED", category).decidedBy).toBe(DecisionBody.MEMBERS);
+    }
+    expect(profileFor("DELEGATED").mandateTermDays).toBeGreaterThan(0);
+  });
+
+  it("gives mandates a term only where members elect them", () => {
+    for (const profile of ALL_PROFILES) {
+      if (!usesMandates(profile)) expect(profile.mandateTermDays).toBeNull();
+    }
+    expect(profileFor("SOLE").mandateTermDays).toBeNull();
+  });
+
+  it("describes who decides for every profile, and names no regime", () => {
+    for (const profile of ALL_PROFILES) {
+      expect(profile.whoDecides.length).toBeGreaterThan(10);
+      const words = `${profile.label} ${profile.suitedTo} ${profile.whoDecides}`.toLowerCase();
+      for (const loaded of ["monarch", "dictator", "autocra", "tyran", "king"]) {
+        expect(words, `${profile.id} uses "${loaded}"`).not.toContain(loaded);
+      }
     }
   });
 });

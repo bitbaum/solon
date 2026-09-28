@@ -11,7 +11,9 @@ import {
 } from "@/lib/config/governance-profiles";
 import type { GovernanceProfileId } from "@/lib/db/enums";
 import type { LokiGrant } from "@/lib/loki-grant";
+import { DEFAULT_PROFILE, type GovernanceProfileId } from "@/lib/config/governance-profiles";
 import ActStep from "./act-step";
+import StructurePicker from "./structure-picker";
 
 interface Verdict {
   created: boolean;
@@ -145,6 +147,10 @@ export default function CreateOrganization({
           className={field}
         />
       </div>
+
+      {/* Chosen before signing: the choice is part of the signed text
+          (`decides:`), so a founder who signs with a key signs the structure too. */}
+      <StructurePicker value={profile} onChange={setProfile} />
 
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="org-profile">

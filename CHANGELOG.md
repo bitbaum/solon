@@ -1,0 +1,206 @@
+# Changelog
+
+What changed for the people who use Solon, newest first. Every entry comes
+from a merged pull request in this repository; the number in brackets is the
+one to read for the detail. Fixes get the same weight as features.
+
+## 2026-09-28
+
+### Added
+
+- **Public roadmap and changelog.** `/roadmap` and `/changelog` render this
+  repository's `ROADMAP.md` and `CHANGELOG.md` through the fleet map, without
+  signing in, and are linked from the footer.
+- **Who decides: one person, everyone, or elected delegates.** Profiles used
+  to vary only how votes were counted; every member always voted. An
+  organization can now be run by its founder alone, by everyone, or by
+  delegates elected for a term (365 days by default). Delegates decide money
+  and operations; members keep membership, safety and the rules, which is how
+  they elect and recall. A category with no live mandate falls back to the
+  members, and the record says so. (#195)
+- **Founding chooses how the organization decides.** Every organization
+  founded so far became a town meeting silently. The founder now picks a
+  governance profile at founding, the choice is bound into the signed text, and
+  the organization page names it ("Association (Verein)", not an id). (#194)
+
+### Fixed
+
+- **Founding no longer says a Bitcoin key is required.** The signed-out
+  founding page still claimed votes verify through a Bitcoin key. A key is
+  optional; the page now says so, and says what a key adds. (#196)
+
+## 2026-09-25
+
+### Added
+
+- **Solon's own sign-up and sign-in.** `/sign-up` and `/sign-in` in Solon's
+  design, in all five languages: email first, then Google, GitHub or an
+  existing OrangeCat account. One account underneath for Solon, OrangeCat and
+  Loki. The header's Sign in remembers the page you were on. (#191)
+- **Use cases, the ideas behind Solon, a new era, and the platform.** `/for`
+  compares companies, villages and towns, associations and co-ops, communities
+  and network states, with one page each. `/governance/ideas` tells the ideas
+  Solon stands on, each with its source; `/governance/new-era` says what
+  changed and what technology still cannot do; `/platform` explains how Solon,
+  OrangeCat and Loki work together. A four-panel menu describes every page in
+  one line. (#190)
+- **Five languages.** English, German (Swiss spelling), French, Italian and
+  Russian, chosen by the URL and a switcher in the header — never guessed from
+  the browser. Pages not yet translated say so in the reader's language. (#189)
+- **A new front door.** Full-screen photographs, one statement and one action
+  per section, a three-link header and copy written for the person who runs a
+  group — no protocol vocabulary on the front pages. New `/hire` (free for
+  pilot groups in beta) and `/credits`. (#188)
+
+### Fixed
+
+- **Every header control is a 44px touch target.** Sixteen controls in the
+  header were smaller; the wordmark, the four section triggers, Sign in and
+  Hire Solon now all meet the floor. (#193)
+- **Phone layouts no longer scroll sideways, and the mobile menu opens.** Both
+  had shipped and were found by looking; the render checks that now run in CI
+  fail if either comes back. (#188)
+
+## 2026-09-24
+
+### Added
+
+- **Govern with one click — Bitcoin is optional.** A seat no longer needs a
+  wallet. A signed-in member claims a seat, founds an organization, files a
+  proposal and votes with one click; each act is recorded as Solon's record.
+  Signing with a Bitcoin key stays available for anyone who wants a vote others
+  can recount, and agents always sign. Changing your vote replaces the earlier
+  ballot until the session closes. (#184)
+
+### Fixed
+
+- **The site no longer claims every vote is Bitcoin-signed.** The home page,
+  `/governance`, `/features`, `/integration` and `/propose` now say what is
+  true: one click by default, a signature when wanted, every record labelled
+  with which. (#187)
+- **Dependency updates that had been dropped are back**, and minor updates
+  arrive grouped so it cannot recur. (#185)
+
+## 2026-09-20
+
+### Added
+
+- **A link that carries context lands on a form that kept it.** OrangeCat's
+  "Govern it with Solon" button now opens `/propose` with the title, the entity
+  and the cheapest category pre-filled — with its consequence stated and one
+  tap to change — and the draft survives sign-in and joining. The form's
+  category hints are read from the rules themselves instead of a hand copy.
+  (#172)
+- **A rules change shows whether it was decided.** Every pull request touching
+  the governance rules is checked for a ratifying decision; when there is none
+  it warns with a pre-filled link to the proposal that would. It records; it
+  never blocks. (#172)
+
+### Changed
+
+- **Loki's plane is Execution, not Engineering.** The footer and the ecosystem
+  page name what Loki is: where the work gets done. (#173)
+
+## 2026-09-17
+
+### Added
+
+- **Anyone may found an organization.** The only way to create one used to be
+  a database migration. Founding is now permissionless; the organization, the
+  founding seat and both audit events land in one transaction. One identity
+  holds one seat per organization, and an organization is attributed to a Loki
+  project only through a grant Loki signed — never because the names match.
+  (#166)
+- **Governance, taught from the product's own code.** Five pages —
+  `/governance`, `/governance/methods`, `/governance/thresholds`,
+  `/governance/who-decides`, `/governance/profiles` — where every tally is
+  computed by the same function that counts a live session. (#168)
+
+### Fixed
+
+- **The approval floor is visible.** On the Approval tab, an option rated
+  below the floor dims, so a reader can watch the tally being assembled. (#169)
+- **A localization that was never wired up is gone.** Four dictionaries shipped
+  where no visitor could reach them; the English copy moved into the components
+  that use it. (#170)
+
+## 2026-09-14
+
+### Added
+
+- **Value routing to originators.** `originator_share` v1: 10% of a product's
+  net revenue, by default, to the originators of the code it is built from —
+  equal per originator, monthly, in Bitcoin, on a public ledger. The split is
+  deterministic and anyone can recount it; every later version needs an
+  approved allocation-policy vote. (#164)
+
+### Changed
+
+- **One signature step** for claiming a seat and filing a proposal. (#165)
+- **FleetCrown is now called Loki** everywhere on the site. (#157)
+
+## 2026-09-07
+
+### Changed
+
+- **Green pull requests merge and deploy themselves** through the fleet's
+  shared sweep instead of a stale local copy, and the sweep no longer stalls on
+  workflow changes. (#154, #155)
+- Node, React, Next, Vitest and other dependencies updated. (#140–#153)
+
+## 2026-09-05
+
+### Changed
+
+- **Design tokens come from the published package** `@bitbaum/design-tokens`
+  instead of a git tag, so Solon, OrangeCat and Loki share one source. (#139)
+
+## 2026-09-02
+
+### Changed
+
+- **Prisma replaced by Drizzle** — the fleet has one ORM. Migration history
+  begins at a baseline proven byte-identical to the tables Prisma created.
+  (#136)
+- **One package manager (pnpm)** across the fleet. (#137)
+- **Moved to the bitbaum organization**, and `verify` made honest again.
+  (#135)
+
+## 2026-08-31
+
+### Fixed
+
+- **The footer promised pages only the navigation could keep.** Footer and
+  navigation now render one list. (#122)
+
+### Changed
+
+- A formatter (Prettier) with `format:check` in `verify`; TypeScript 6; CI and
+  the deploy follow the box to Node 24. (#123, #133, #134)
+
+## 2026-08-25
+
+### Added
+
+- **Feedback from any page.** The Loki feedback widget loads site-wide, so a
+  reader can report what is wrong from where they saw it. (#114)
+
+## 2026-08-15
+
+Earlier history, in one entry. The spine of the product shipped in this week:
+
+- **Six ways to decide, one way to prove it.** Single choice, consent,
+  approval, dots, score and ranked choice, each with its own signed ballot
+  encoding; five governance profiles replace one hardcoded structure; the
+  humans-only categories cannot be reassigned by any profile. (#92)
+- **From reader to member to vote.** `/join` binds a key to an identity,
+  `/propose` files a proposal, `/proposals` lists them with their next step;
+  every page offers at least one action. A second organization's vote no
+  longer appears on the first organization's dashboard. (#90)
+- **Treasury honesty.** The treasury report says whether every source
+  resolved instead of answering yes about nothing; the site stopped claiming
+  transaction records it never stored. Still watch-only. (#88)
+- **The Townsism thesis** Solon is an organ of, published at `/why` and in
+  `docs/TOWNSISM.md`. (#87)
+- **One visual language** across OrangeCat, Loki and Solon, from a shared
+  token package; orange calls to action fixed to meet contrast. (#77–#93)

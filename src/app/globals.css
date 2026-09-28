@@ -29,7 +29,8 @@ body {
    * `.headline-caps` is the short, uppercase statement a full-screen section
    * makes — a few words, never a sentence.
    */
-  .headline {
+  .headline,
+  .bp-development h1 {
     @apply font-sans font-bold tracking-tight text-fg-primary;
     line-height: 1.05;
   }
@@ -39,7 +40,8 @@ body {
     line-height: 1;
   }
   /* The small uppercase label above a headline. */
-  .kicker {
+  .kicker,
+  .bp-development .bp-development-name {
     @apply text-xs font-semibold uppercase tracking-caps text-fg-secondary;
   }
 
@@ -98,6 +100,43 @@ body {
   /* A lighter shade for the top of a section the header floats over. */
   .scrim-top {
     background: linear-gradient(to bottom, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0) 100%);
+  }
+
+  /*
+   * The public roadmap and changelog render through bip-kit (the fleet's
+   * building-in-public renderer), whose stylesheet is neutral and reads every
+   * colour, face and measure from a `--bp-*` variable. Those are pointed at the
+   * shared tokens here, so the records wear Solon's clothes without a second
+   * palette. `html.dark` outranks the package's own dark-mode block, and the
+   * box sits on the page edge like every other inner page.
+   */
+  html.dark .bp-development {
+    --bp-font-sans: var(--font-sans);
+    --bp-font-mono: var(--font-mono);
+    --bp-radius: var(--radius-surface);
+    --bp-radius-sm: var(--radius-control);
+    --bp-development-padding: 0px;
+    --bp-development-title: var(--text-display-2);
+    --bp-bg: transparent;
+    --bp-surface: hsl(var(--surface-raised));
+    --bp-fg: hsl(var(--text-primary));
+    --bp-fg-muted: hsl(var(--text-secondary));
+    --bp-fg-faint: hsl(var(--text-tertiary));
+    --bp-border: hsl(var(--border-subtle));
+    --bp-accent: hsl(var(--text-primary));
+    --bp-accent-contrast: hsl(var(--text-inverted));
+    --bp-note: hsl(var(--text-primary));
+    --bp-note-bg: hsl(var(--surface-raised));
+    --bp-tip: hsl(var(--status-positive));
+    --bp-tip-bg: hsl(var(--surface-raised));
+    --bp-warn: hsl(var(--status-warning));
+    --bp-warn-bg: hsl(var(--surface-raised));
+    --bp-danger: hsl(var(--status-negative));
+    --bp-danger-bg: hsl(var(--surface-raised));
+    margin-inline: 0;
+  }
+  .bp-development-check {
+    color: hsl(var(--status-positive));
   }
 
   /* The header, once the page has scrolled past the first screen. */

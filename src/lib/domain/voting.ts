@@ -2,6 +2,7 @@ import { and, count, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import {
   AuditEventType,
+  DecisionBody,
   Electorate,
   MemberStatus,
   MemberType,
@@ -12,6 +13,7 @@ import {
   VotingMethod,
   auditEvents,
   members,
+  organizations,
   policies,
   proposals,
   votes,
@@ -19,7 +21,9 @@ import {
 } from "@/lib/db/schema";
 import { verifyMessage, voteMessage } from "@/lib/bitcoin/message";
 import { VOTING_WINDOW_DAYS } from "@/lib/config/governance";
-import { electorateFor, ruleFor } from "@/lib/config/governance-profiles";
+import { electorateFor, profileFor, ruleFor } from "@/lib/config/governance-profiles";
+import { isMandateLive, mandateEnd, resolveDecisionBody } from "@/lib/domain/mandate";
+import { parseEffect } from "@/lib/domain/effects";
 import {
   aggregateBallots,
   canonicalBallot,
@@ -88,8 +92,13 @@ export async function openSession(proposalId: string) {
   }
 
   const electorate = electorateFor(proposal.category);
-  const eligible = await db
-    .select({ votingWeight: members.votingWeight })
+  const inElectorate = await db
+    .select({
+      id: members.id,
+      votingWeight: members.votingWeight,
+      holdsMandate: members.holdsMandate,
+      mandateUntil: members.mandateUntil,
+    })
     .from(members)
     .where(
       and(
@@ -100,6 +109,13 @@ export async function openSession(proposalId: string) {
           : []),
       ),
     );
+  // Who within the electorate decides: the profile's rule, unless it names the
+  // mandate holders and none holds a live mandate — then the members decide.
+  const now = new Date();
+  const holders = inElectorate.filter((m) => isMandateLive(m, now));
+  const { decidedBy, fellBack } = resolveDecisionBody(rule.decidedBy, holders.length);
+  const eligible = decidedBy === DecisionBody.MANDATE ? holders : inElectorate;
+  const mandateRoll = decidedBy === DecisionBody.MANDATE ? eligible.map((m) => m.id) : null;
   if (eligible.length === 0) {
     throw new Error(
       "no eligible members — a session with an empty electorate cannot decide anything",
@@ -107,7 +123,7 @@ export async function openSession(proposalId: string) {
   }
   const eligibleWeight = eligible.reduce((s, m) => s + Number(m.votingWeight), 0);
 
-  const closesAt = new Date();
+  const closesAt = new Date(now);
   closesAt.setDate(closesAt.getDate() + VOTING_WINDOW_DAYS);
   const dotBudget = method === VotingMethod.DOT ? DEFAULT_DOT_BUDGET : null;
 
@@ -119,6 +135,8 @@ export async function openSession(proposalId: string) {
         status: SessionStatus.ACTIVE,
         closesAt,
         electorate,
+        decidedBy,
+        mandateRoll,
         method,
         options: spec.needsOptions ? options : null,
         dotBudget,
@@ -144,6 +162,13 @@ export async function openSession(proposalId: string) {
         options: options.map((o) => o.key),
         dotBudget,
         electorate,
+        decidedBy,
+        ...(fellBack
+          ? {
+              mandateFallback:
+                "the profile gives this category to mandate holders and none holds a live mandate, so the members decide",
+            }
+          : {}),
         threshold: rule.threshold,
         quorumPercent: rule.quorumPercent,
         eligibleCount: eligible.length,
@@ -235,6 +260,18 @@ export async function submitVote(
       verified: true,
       reason: "this session's electorate is humans-only; agent members cannot vote here",
     };
+  }
+
+  if (session.decidedBy === DecisionBody.MANDATE) {
+    const roll = Array.isArray(session.mandateRoll) ? (session.mandateRoll as unknown[]) : [];
+    if (!roll.includes(member.id)) {
+      return {
+        stored: false,
+        verified: true,
+        reason:
+          "this decision belongs to the mandate holders, and your seat did not hold a mandate when it opened",
+      };
+    }
   }
 
   const ballotJson = parsed.ballot;
@@ -412,6 +449,88 @@ export async function closeSession(sessionId: string) {
       });
     }
 
+    if (decision.outcome === SessionOutcome.APPROVED) {
+      await applyEffect(tx, session.proposal, sessionId);
+    }
+
     return { session: closed, outcome: decision.outcome, aggregate, tally: tallyOf(aggregate) };
+  });
+}
+
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+/**
+ * Carry out what an approved proposal says it does — inside the closing
+ * transaction, so a decision and its consequence land together or not at all.
+ *
+ * The effect was validated and paired with its category when the proposal was
+ * filed; it is re-parsed here because a stored row is data, not a promise.
+ */
+async function applyEffect(
+  tx: Tx,
+  proposal: { id: string; organizationId: string; effect: unknown },
+  sessionId: string,
+) {
+  const parsed = parseEffect(proposal.effect);
+  if (!parsed.ok || parsed.effect === null) return;
+  const effect = parsed.effect;
+  const organizationId = proposal.organizationId;
+
+  if (effect.kind === "profile") {
+    const org = await tx.query.organizations.findFirst({
+      where: eq(organizations.id, organizationId),
+    });
+    if (!org) return;
+    await tx
+      .update(organizations)
+      .set({ governanceProfile: effect.profile })
+      .where(eq(organizations.id, organizationId));
+    await tx.insert(auditEvents).values({
+      organizationId,
+      eventType: AuditEventType.PROFILE_CHANGED,
+      subjectType: "organization",
+      subjectId: organizationId,
+      payload: {
+        from: org.governanceProfile,
+        to: effect.profile,
+        approvedBySessionId: sessionId,
+        proposalId: proposal.id,
+      },
+    });
+    return;
+  }
+
+  const member = await tx.query.members.findFirst({
+    where: and(eq(members.id, effect.memberId), eq(members.organizationId, organizationId)),
+  });
+  // Filed against a seat that has since gone: nothing to change, and the
+  // closed session already records what was decided.
+  if (!member) return;
+  const org = await tx.query.organizations.findFirst({
+    where: eq(organizations.id, organizationId),
+  });
+  const now = new Date();
+  const until = effect.grant
+    ? mandateEnd(
+        effect.until ? new Date(effect.until) : null,
+        profileFor(org?.governanceProfile).mandateTermDays,
+        now,
+      )
+    : null;
+  await tx
+    .update(members)
+    .set({ holdsMandate: effect.grant, mandateUntil: until })
+    .where(eq(members.id, member.id));
+  await tx.insert(auditEvents).values({
+    organizationId,
+    eventType: AuditEventType.MANDATE_CHANGED,
+    subjectType: "member",
+    subjectId: member.id,
+    payload: {
+      grant: effect.grant,
+      until: until?.toISOString() ?? null,
+      approvedBySessionId: sessionId,
+      proposalId: proposal.id,
+    },
   });
 }

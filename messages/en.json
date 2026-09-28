@@ -28,7 +28,7 @@
       "methods": "Voting methods",
       "thresholds": "Quorum and threshold",
       "whoDecides": "Who decides what",
-      "profiles": "Five kinds of organization",
+      "profiles": "Who decides, and how",
       "voting": "How a vote is cast",
       "dashboard": "Dashboard",
       "decisions": "Decisions",
@@ -47,7 +47,9 @@
       "forTowns": "Villages and towns",
       "forAssociations": "Associations and co-ops",
       "forCommunities": "Communities",
-      "forNetworkStates": "Network states"
+      "forNetworkStates": "Network states",
+      "roadmap": "Roadmap",
+      "changelog": "Changelog"
     },
     "desc": {
       "hire": "Have Solon run your group's governance",
@@ -59,7 +61,7 @@
       "methods": "Six ways to count, and when to use each",
       "thresholds": "How many must turn up, and how many must agree",
       "whoDecides": "Which decisions belong to whom",
-      "profiles": "Rule templates for five kinds of group",
+      "profiles": "One person, everyone, or elected delegates",
       "voting": "One click, or a signature anyone can recount",
       "dashboard": "Your group at a glance",
       "decisions": "Everything up for decision, and its next step",
@@ -78,7 +80,9 @@
       "forTowns": "Assemblies, budgets, local rules",
       "forAssociations": "General meetings, done properly",
       "forCommunities": "Online groups and collectives",
-      "forNetworkStates": "From startup society to recognition"
+      "forNetworkStates": "From startup society to recognition",
+      "roadmap": "Where Solon is going, in order",
+      "changelog": "What changed, newest first"
     }
   },
   "Nav": {
@@ -354,6 +358,12 @@
     "kicker": "Photo credits",
     "title": "The photographs on this site",
     "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one."
+  },
+  "Development": {
+    "roadmapTitle": "Roadmap — Solon",
+    "changelogTitle": "Changelog — Solon",
+    "roadmapDescription": "Where Solon is going, in the order it is going there — read from the fleet's canonical record.",
+    "changelogDescription": "What changed in Solon for the people who use it, newest first — read from the fleet's canonical record."
   },
   "Status": {
     "available": "Available now",

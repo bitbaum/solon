@@ -68,6 +68,40 @@ and no agent key can be counted on them:
 | `SAFETY` | **humans only** |
 | `GOVERNANCE_RULES` | **humans only** |
 
+## Who decides: three structures, stated plainly
+
+An organization picks its structure when it is founded, and can change it later
+by a `GOVERNANCE_RULES` decision taken under the structure it already has.
+`src/lib/config/governance-profiles.ts` is the SSOT; every profile says, for each
+category, **who** decides (every member, or the members holding a mandate) and
+**how** (method, threshold, quorum).
+
+| Structure | Who decides |
+|---|---|
+| **One person decides** (`SOLE`) | The founder holds the only mandate and decides everything, including the rules. Members can propose; they do not vote. |
+| **Everyone decides** (`TOWN`) | Every member votes on every decision. The default. |
+| **Elected delegates decide** (`DELEGATED`) | Members grant mandates for a term (365 days unless the decision names an end). Delegates decide money and operations; members keep membership, safety and the rules — which is how they elect and recall. |
+
+Association, Cooperative, Collective and Company board are house styles of
+"everyone decides" with different methods and bars.
+
+The labels describe what a structure does, not what it resembles: no
+"monarchy", no "republic". Three rules keep every structure honest:
+
+- **It is said out loud.** The organization page and `GET /api/orgs/{slug}`
+  publish the profile's `whoDecides` sentence beside the roster, so nobody joins
+  without knowing.
+- **Nothing stalls.** A category given to mandate holders when no mandate is
+  live — a term lapsed, a delegate resigned — goes to the members, and the
+  session's audit event says so (`src/lib/domain/mandate.ts`).
+- **A mandate narrows, never widens.** Mandate holders are still filtered by the
+  category's electorate, so an agent holding a mandate cannot vote on a
+  humans-only category. Granting or ending a mandate is a `MEMBERSHIP` decision;
+  switching structure is `GOVERNANCE_RULES` (`src/lib/domain/effects.ts`).
+
+And the one that sits outside the code: Solon is open source. Anyone who wants a
+different structure — or a different Solon — can take it and run their own.
+
 ## How a decision happens
 
 ```
@@ -77,12 +111,15 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 ```
 
 1. A proposal is drafted against an organization and a decision category.
-2. Opening it creates a voting session; the category fixes the electorate.
+2. Opening it creates a voting session; the category fixes the electorate, and
+   the profile decides whether every member or only the mandate holders vote
+   (the roll of mandate holders is frozen at open).
 3. Members vote — one click, or a Bitcoin signed message. One ballot per member
    per session, enforced by a unique constraint on `[sessionId, memberId]`;
    voting again before close replaces the earlier ballot.
 4. Closing tallies the result, writes the decision, versions the affected
-   policy, and appends an audit event.
+   policy, carries out the proposal's effect if it has one (a mandate granted
+   or ended, a structure switched), and appends an audit event.
 
 ## Data model
 
@@ -100,7 +137,8 @@ Organization ── has many ──> Member (HUMAN | AGENT; OrangeCat identity a
 ```
 
 Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
-`decision`, `treasury`, `membership`, `organization`, `org`, `canonical`) and
+`decision`, `treasury`, `membership`, `organization`, `org`, `canonical`,
+`mandate`, `effects`) and
 stays free of HTTP and UI concerns.
 Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
@@ -154,7 +192,7 @@ how Solon counts changes the lesson rather than leaving it stale:
 | `/governance/methods` | One room, five ways of counting, two different winners (interactive) |
 | `/governance/thresholds` | Quorum and threshold as two knobs over one vote (interactive) |
 | `/governance/who-decides` | Every category's electorate, threshold and quorum; the humans-only red lines |
-| `/governance/profiles` | The five shipped profiles compared rule by rule |
+| `/governance/profiles` | Who decides, and how: every shipped profile compared rule by rule |
 
 The worked examples live in `src/lib/governance/worked-example.ts` and supply
 *ballots only* — never a result. `src/lib/__tests__/worked-example.test.ts`
