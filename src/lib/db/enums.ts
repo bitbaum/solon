@@ -15,6 +15,24 @@ function enumLike<const T extends readonly [string, ...string[]]>(values: T) {
   return Object.fromEntries(values.map((v) => [v, v])) as { [K in T[number]]: K };
 }
 
+/**
+ * How an organization decides — the ids of the governance profiles in
+ * src/lib/config/governance-profiles.ts. The rules live there; the ids live
+ * here so the schema can CHECK the column and the browser can list the choice
+ * without pulling the rule tables in. Adding a profile = adding an id here and
+ * its rules there; a test fails if either half is missing.
+ */
+export const GOVERNANCE_PROFILE_IDS = [
+  "TOWN",
+  "ASSOCIATION",
+  "COOPERATIVE",
+  "COLLECTIVE",
+  "COMPANY",
+] as const;
+export type GovernanceProfileId = (typeof GOVERNANCE_PROFILE_IDS)[number];
+/** What an organization decides by when its founder did not say. */
+export const DEFAULT_GOVERNANCE_PROFILE: GovernanceProfileId = "TOWN";
+
 export const MEMBER_TYPES = ["HUMAN", "AGENT"] as const;
 export const MemberType = enumLike(MEMBER_TYPES);
 export type MemberType = (typeof MEMBER_TYPES)[number];

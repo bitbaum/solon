@@ -10,6 +10,8 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { organizationMessage, verifyMessage } from "@/lib/bitcoin/message";
+import { DEFAULT_PROFILE, isGovernanceProfileId } from "@/lib/config/governance-profiles";
+import type { GovernanceProfileId } from "@/lib/db/enums";
 import { verifyLokiGrant, type LokiGrant } from "@/lib/loki-grant";
 import { descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
 
@@ -64,6 +66,13 @@ export interface CreateOrganizationInput {
   founderKey?: { address: string; signature: string } | null;
   /** Loki vouching that this actor owns a project, when the organization governs one. */
   grant?: LokiGrant | null;
+  /**
+   * How the organization decides — one of the governance profiles. Chosen at
+   * founding because it is the hardest thing to change afterwards (a
+   * GOVERNANCE_RULES vote, humans-only, supermajority). Omitted = the default,
+   * which is what every organization founded before the choice existed got.
+   */
+  governanceProfile?: GovernanceProfileId | null;
   now?: Date;
 }
 
@@ -79,6 +88,7 @@ export interface CreateOrganizationResult {
   slug?: string;
   memberId?: string;
   claimedProject?: string | null;
+  governanceProfile?: GovernanceProfileId;
 }
 
 /** A unique-constraint violation's constraint name, or null. Drizzle wraps pg errors. */
@@ -101,8 +111,12 @@ export async function createOrganization(
     slugProblem(slug) ??
     nameProblem(input.name) ??
     descriptionProblem(description) ??
-    (input.founderName.trim().length < 2 ? "use a display name of at least 2 characters" : null);
+    (input.founderName.trim().length < 2 ? "use a display name of at least 2 characters" : null) ??
+    (input.governanceProfile != null && !isGovernanceProfileId(input.governanceProfile)
+      ? "choose one of the governance profiles"
+      : null);
   if (problem) return { created: false, verified: false, refusal: "invalid", reason: problem };
+  const governanceProfile: GovernanceProfileId = input.governanceProfile ?? DEFAULT_PROFILE;
 
   // A grant that is PRESENT but fails refuses the founding outright. Creating the
   // organization anyway, unattributed, would leave someone who came from their
@@ -127,6 +141,9 @@ export async function createOrganization(
         actorId: input.actorId,
         founderAddress: key.address,
         project: claimedProject,
+        // Signed only when chosen: a founder who took the default signs the
+        // same text a founder signed before the choice existed.
+        decides: input.governanceProfile ?? null,
       })
     : null;
   if (key && message) {
@@ -157,7 +174,7 @@ export async function createOrganization(
 
       const [org] = await tx
         .insert(organizations)
-        .values({ slug, name, description, claimedProject })
+        .values({ slug, name, description, claimedProject, governanceProfile })
         .returning();
 
       const [founder] = await tx
@@ -216,6 +233,7 @@ export async function createOrganization(
       slug: result.org.slug,
       memberId: result.founder.id,
       claimedProject,
+      governanceProfile,
     };
   } catch (e) {
     if (e instanceof Error && e.message === "FOUNDING_LIMIT") {
@@ -258,6 +276,7 @@ export function listPublicOrganizations() {
       slug: organizations.slug,
       name: organizations.name,
       claimedProject: organizations.claimedProject,
+      governanceProfile: organizations.governanceProfile,
       createdAt: organizations.createdAt,
     })
     .from(organizations)

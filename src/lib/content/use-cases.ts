@@ -1,3 +1,4 @@
+import type { GovernanceProfileId } from "@/lib/db/enums";
 import type { CapabilityKey } from "./capabilities";
 import { PHOTOS, type Photo } from "./photos";
 
@@ -13,7 +14,7 @@ export interface UseCase {
   photo: Photo;
   position: string;
   /** The governance profile that fits best (lib/config/governance-profiles.ts). */
-  profile: "COMPANY" | "TOWN" | "ASSOCIATION" | "COOPERATIVE" | "COLLECTIVE";
+  profile: GovernanceProfileId;
   capabilities: CapabilityKey[];
 }
 

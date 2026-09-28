@@ -6,6 +6,7 @@ import AuditTrail from "@/components/governance/audit-trail";
 import { db } from "@/lib/db/client";
 import { auditEvents, members } from "@/lib/db/schema";
 import { orgBySlug, primaryOrg } from "@/lib/domain/org";
+import { profileFor } from "@/lib/config/governance-profiles";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,7 @@ export default async function OrganizationPage({ params }: { params: Params }) {
     primaryOrg(),
   ]);
   const isPrimary = primary?.id === org.id;
+  const profile = profileFor(org.governanceProfile);
 
   const fact = (label: string, value: React.ReactNode) => (
     <div className="flex justify-between gap-4">
@@ -57,7 +59,12 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         <dl className="mx-auto max-w-2xl space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">
           {fact("Address", <span className="font-mono">/orgs/{org.slug}</span>)}
           {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
-          {fact("Decides by", org.governanceProfile)}
+          {fact(
+            "Decides by",
+            <Link href="/governance/profiles" className="hover:underline" title={profile.suitedTo}>
+              {profile.label}
+            </Link>,
+          )}
           {org.claimedProject &&
             fact("Governs", <span className="font-mono">{org.claimedProject}</span>)}
         </dl>

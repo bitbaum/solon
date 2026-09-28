@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "../governance";
-import { GOVERNANCE_PROFILES, electorateFor, profileFor, ruleFor } from "../governance-profiles";
+import {
+  DEFAULT_PROFILE,
+  GOVERNANCE_PROFILES,
+  GOVERNANCE_PROFILE_IDS,
+  GOVERNANCE_PROFILE_LIST,
+  electorateFor,
+  isGovernanceProfileId,
+  profileFor,
+  ruleFor,
+} from "../governance-profiles";
+import { USE_CASES } from "@/lib/content/use-cases";
+import { organizations } from "@/lib/db/schema";
 import { ALL_METHODS } from "@/lib/domain/methods";
 
 const ALL_PROFILES = Object.values(GOVERNANCE_PROFILES);
@@ -80,6 +91,22 @@ describe("every profile is complete and sane", () => {
         expect(strict, `${profile.id}/${category} decides a red line too cheaply`).toBe(true);
       }
     }
+  });
+});
+
+describe("the profile ids are one list", () => {
+  it("every id in the enum tuple has rules, and every rule set is in the tuple", () => {
+    expect(Object.keys(GOVERNANCE_PROFILES).sort()).toEqual([...GOVERNANCE_PROFILE_IDS].sort());
+    expect(GOVERNANCE_PROFILE_LIST.map((p) => p.id)).toEqual([...GOVERNANCE_PROFILE_IDS]);
+    for (const id of GOVERNANCE_PROFILE_IDS) expect(GOVERNANCE_PROFILES[id].id).toBe(id);
+  });
+
+  it("is what the schema defaults to and what the marketing audiences point at", () => {
+    expect(organizations.governanceProfile.default).toBe(DEFAULT_PROFILE);
+    for (const useCase of USE_CASES) {
+      expect(isGovernanceProfileId(useCase.profile), useCase.key).toBe(true);
+    }
+    expect(isGovernanceProfileId("nonprofit")).toBe(false);
   });
 });
 

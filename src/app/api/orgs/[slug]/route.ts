@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { members, organizations } from "@/lib/db/schema";
+import { profileFor } from "@/lib/config/governance-profiles";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,9 @@ export async function GET(_: Request, ctx: { params: Promise<{ slug: string }> }
     slug: org.slug,
     name: org.name,
     description: org.description,
+    // The id is what the rules are keyed by; the label is what a person reads.
+    governanceProfile: org.governanceProfile,
+    decidesBy: profileFor(org.governanceProfile).label,
     createdAt: org.createdAt,
     members: org.members.map((m) => ({ ...m, votingWeight: Number(m.votingWeight) })),
   });

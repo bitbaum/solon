@@ -41,7 +41,10 @@ import { randomUUID } from "node:crypto";
 import {
   AUDIT_EVENT_TYPES,
   DECISION_CATEGORIES,
+  DEFAULT_GOVERNANCE_PROFILE,
+  GOVERNANCE_PROFILE_IDS,
   ELECTORATES,
+  type GovernanceProfileId,
   KEY_CUSTODIES,
   MEMBER_STATUSES,
   MEMBER_TYPES,
@@ -86,7 +89,10 @@ export const organizations = pgTable(
      * src/lib/config/governance-profiles.ts. Changing it is itself a
      * GOVERNANCE_RULES decision.
      */
-    governanceProfile: text("governance_profile").notNull().default("TOWN"),
+    governanceProfile: text("governance_profile")
+      .$type<GovernanceProfileId>()
+      .notNull()
+      .default(DEFAULT_GOVERNANCE_PROFILE),
     /**
      * The Loki project this organization governs, when Loki vouched for it.
      *
@@ -103,6 +109,17 @@ export const organizations = pgTable(
   (t) => [
     uniqueIndex("organizations_slug_key").on(t.slug),
     uniqueIndex("organizations_claimed_project_key").on(t.claimedProject),
+    // The column is text, not a pg enum, so a profile can be added without an
+    // enum migration — but only a profile that exists may be stored. Built from
+    // the same tuple the rule registry is keyed by.
+    check(
+      "organizations_governance_profile_check",
+      // sql.raw, not parameters: drizzle-kit would otherwise write the list as
+      // $1…$5 into the migration file, which is not DDL Postgres can run.
+      sql`${t.governanceProfile} IN (${sql.raw(
+        GOVERNANCE_PROFILE_IDS.map((id) => `'${id}'`).join(", "),
+      )})`,
+    ),
   ],
 );
 

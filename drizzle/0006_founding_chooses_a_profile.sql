@@ -1,0 +1,1 @@
+ALTER TABLE "organizations" ADD CONSTRAINT "organizations_governance_profile_check" CHECK ("organizations"."governance_profile" IN ('TOWN', 'ASSOCIATION', 'COOPERATIVE', 'COLLECTIVE', 'COMPANY'));
