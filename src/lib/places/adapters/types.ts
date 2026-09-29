@@ -5,7 +5,19 @@ import type { ImportBatch } from "../importer/batch";
 /** One request the framework makes to fetch a source (design §8.3, step 1). */
 export interface RetrievalRequest {
   url: string;
+  /**
+   * Sent as a JSON POST when present. The snapshot then holds the request with
+   * the response (see `importer/envelope.ts`), because such a response alone
+   * does not say what was asked.
+   */
+  body?: unknown;
 }
+
+/**
+ * Asks the source something before planning (which years it has published).
+ * The framework makes the request; the adapter only reads the answer.
+ */
+export type Probe = (request: RetrievalRequest) => Promise<unknown>;
 
 export interface MapContext<Options> {
   source: Source;
@@ -43,12 +55,20 @@ export interface Adapter<Parsed = unknown, Options = unknown> {
    * (ISO date). Absent: the source is handed in as a file. Rerunning it must
    * change nothing when the source has not changed.
    */
-  retrievals?: (options: Options, today: string) => RetrievalRequest[];
+  retrievals?: (
+    options: Options,
+    today: string,
+    probe: Probe,
+  ) => RetrievalRequest[] | Promise<RetrievalRequest[]>;
   /**
    * The history to load once, before the first scheduled run: older states of
    * the source, oldest first. Not refetched by schedule, since importing an
    * older state after a newer one would restate the past as current.
    */
-  backfill?: (options: Options, today: string) => RetrievalRequest[];
+  backfill?: (
+    options: Options,
+    today: string,
+    probe: Probe,
+  ) => RetrievalRequest[] | Promise<RetrievalRequest[]>;
   map: (parsed: Parsed, context: MapContext<Options>) => ImportBatch;
 }

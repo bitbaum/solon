@@ -1,7 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: the canton of Zürich's commune multipliers import
+_Last modified 2026-09-29: tariffs and the canton's multiplier import from the
+Federal Tax Administration and match its calculator (golden fixtures, §6.2,
+§8.2); POST retrievals are stored as envelopes and planning may probe the
+source (§8.3). Earlier the same day: the canton of Zürich's commune multipliers import
 (§8.2), adapters may skip rows with a reason and date yearly figures by the
 pack's fiscal year (§8.3); the Swiss structure is live, loaded as §8.3
 describes. Earlier the same day: P1 begun — the Swiss pack's structure is built:
@@ -462,6 +465,23 @@ are **golden fixtures per pack**: sample incomes, the official calculator's
 output for them, and the source and date the output was captured from. The
 evaluator is correct when it reproduces them within a stated tolerance.
 
+**Built (P1)**: the Swiss golden fixtures are the Federal Tax Administration's
+calculator for 2025 at CHF 100,000 taxable income without church tax: the City
+of Zürich and Küsnacht, single and married, captured 2026-09-29. Imported
+tariffs and multipliers reproduce them through the real chain within the
+calculator's rounding to the franc (`switzerland.integration.test.ts`). What
+schema version 1 cannot express yet, measured:
+
+- Zürich's Personalsteuer (CHF 24 a person): no fixed amounts. Left out of the
+  fixtures, and named in them.
+- The federal tariff's top: above CHF 793,400 the tax is 11.5% of the whole
+  income, which marginal brackets can only approximate; they overstate it by a
+  constant CHF 1.40 there.
+- Tariffs that divide a couple's income (splitting, in other cantons): the
+  importer skips them with that reason instead of importing a wrong tariff.
+- The model's `single` is a single person without children; ZH taxes single
+  parents on the married tariff, which the model does not ask about yet.
+
 ### 6.3 "Takes tax" is derived
 
 An authority takes income tax in a period exactly when a model component
@@ -581,6 +601,13 @@ hardcoded date.
 | `bfs-communes-mutations` | mergers between two dates | same API | opendata.swiss open |
 | `zurich-statistical-quarters` | the City of Zürich's 12 districts and 34 quarters | the city's WFS, GeoJSON | CC0 |
 | `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
+| `estv-income-tax-scales` | the federal tariff and the canton of Zürich's basic tariff, single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
+| `estv-canton-multipliers` | the canton of Zürich's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
+
+The calculator's exports answer for years it has not published with another
+year's figures (asked on 2026-09-29, "2027" gave the canton a 98% multiplier
+and "2030" 95%). Its adapter therefore asks the calculator's published year
+range before planning and never requests a year beyond it.
 
 A Zürich commune whose school communities levy different rates (Uster and
 Turbenthal today; 16 commune-years since 2021) has no single multiplier: which
@@ -590,11 +617,8 @@ addresses apart. The Federal Tax Administration's figures differ from the
 canton's for at least one commune (Aeugst am Albis 2025: 90 against 92); the
 canton publishes its communes' own decisions, so its figures are the ones used.
 
-Found for the next steps: federal and cantonal tariffs and each canton's own
-multiplier (the Federal Tax Administration's tax-calculator exports, official
-figures; POST requests whose body names the year, which the `sources` row
-cannot record yet); the city's address register with postcode, quarter and
-parishes per address (CC0), which gives postcode → quarter with shares.
+Found for the next step: the city's address register with postcode, quarter
+and parishes per address (CC0), which gives postcode → quarter with shares.
 
 ### 8.3 The importer framework
 
@@ -677,6 +701,14 @@ run stops the rest. What the first real adapters settled:
   lists them under `skipped`. Anything else it cannot read fails the run.
 - Figures published per year become facts over the pack's fiscal year
   (`fiscalYear.startMonthDay`), so no adapter assumes years start in January.
+- A request may carry a body; it is sent as a JSON POST, and the snapshot is an
+  envelope holding the request with the response text, as a web archive stores
+  them (`importer/envelope.ts`). The response to such a request often does not
+  say what was asked (a tariff export does not name its year), so the snapshot
+  alone must be enough to import it again. `sources.url` keeps the endpoint.
+- Planning may ask the source first (`probe`: the framework makes the request,
+  the adapter reads the answer), for sources whose published range is not a
+  date rule.
 
 **In production (until the scheduled runner exists)**: the deployed app is a
 standalone bundle without the scripts, so a load runs from a checkout of the
@@ -848,8 +880,8 @@ before the build.
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
   (Built: the no-literals and neutral-copy guards, §12; the tokens, §9.1;
   `charter_city`, §3. The other §12 guards come with the data they check:
-  golden tax fixtures with P1, dispute fixtures with P4, the no-dead-ends
-  checks with the screens.)
+  golden tax fixtures with P1 (built, §6.2), dispute fixtures with P4, the
+  no-dead-ends checks with the screens.)
 - The Register organization, founded by George under `SOLE` (his signature),
   with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
@@ -877,10 +909,10 @@ before the build.
   Zürich's 12 districts and 34 quarters. Witikon resolves up its chain to
   Switzerland and its page says it takes no tax
   (`switzerland.integration.test.ts`, from cuts of the real retrievals). Live
-  since 2026-09-29. The canton's commune multipliers since 2021 import too.
-  Next: tariffs and each canton's multiplier (which need the request a
-  retrieval made recorded, §8.2), the golden fixtures, the postcode resolver,
-  then the screens.
+  since 2026-09-29, with the canton's commune multipliers since 2021. Federal
+  and cantonal tariffs and the canton's multiplier import from the Federal Tax
+  Administration, and the City of Zürich and Küsnacht at CHF 100,000 match its
+  calculator (§6.2). Next: the postcode resolver, then the screens.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

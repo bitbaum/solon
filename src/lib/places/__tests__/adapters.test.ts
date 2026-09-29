@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
-import { ADAPTERS } from "../adapters";
+import { ADAPTERS, type Probe } from "../adapters";
 import { isoFromDottedDate, parseCsv } from "../adapters/csv";
 import { fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
@@ -30,6 +30,9 @@ function mapSource(
     skip: (row, reason) => skipped.push({ row, reason }),
   });
 }
+
+const plannedUrls = async (sourceKey: string, today: string, backfill = false) =>
+  (await plannedRetrievals(placesConfig, sourceKey, today, { backfill })).map((r) => r.url);
 
 const byRef = (batch: ImportBatch, scheme: string, value: string): BatchJurisdiction => {
   const place = batch.jurisdictions.find((j) => j.ref.scheme === scheme && j.ref.value === value);
@@ -73,12 +76,10 @@ describe("the FSO commune register snapshot", () => {
   const y2021 = mapSource("bfs-communes-snapshot", fixture("communes-2021-01-01.csv"));
   const y2026 = mapSource("bfs-communes-snapshot", fixture("communes-2026-09-29.csv"));
 
-  it("fetches today's snapshot on schedule, and one a year since its start to backfill", () => {
+  it("fetches today's snapshot on schedule, and one a year since its start to backfill", async () => {
     const today = "https://www.agvchapp.bfs.admin.ch/api/communes/snapshot?date=29-09-2026";
-    expect(plannedRetrievals(placesConfig, "bfs-communes-snapshot", "2026-09-29")).toEqual([today]);
-    expect(
-      plannedRetrievals(placesConfig, "bfs-communes-snapshot", "2026-09-29", { backfill: true }),
-    ).toEqual([
+    expect(await plannedUrls("bfs-communes-snapshot", "2026-09-29")).toEqual([today]);
+    expect(await plannedUrls("bfs-communes-snapshot", "2026-09-29", true)).toEqual([
       today,
       ...[2021, 2022, 2023, 2024, 2025, 2026].map(
         (year) => `https://www.agvchapp.bfs.admin.ch/api/communes/snapshot?date=01-01-${year}`,
@@ -183,8 +184,8 @@ describe("the FSO commune register mutations", () => {
     );
   });
 
-  it("plans one retrieval from the day after the first snapshot", () => {
-    expect(plannedRetrievals(placesConfig, "bfs-communes-mutations", "2026-09-29")).toEqual([
+  it("plans one retrieval from the day after the first snapshot", async () => {
+    expect(await plannedUrls("bfs-communes-mutations", "2026-09-29")).toEqual([
       "https://www.agvchapp.bfs.admin.ch/api/communes/mutations?includeTerritoryExchange=false&startPeriod=02-01-2021&endPeriod=29-09-2026",
     ]);
   });
@@ -256,6 +257,94 @@ describe("the canton of Zürich's municipal multipliers", () => {
     expect(fiscalYearPeriod(2025, "04-06")).toEqual({
       validFrom: "2025-04-06",
       validTo: "2026-04-05",
+    });
+  });
+});
+
+describe("the Federal Tax Administration's exports", () => {
+  const skipped: { row: string; reason: string }[] = [];
+  const scales = mapSource("estv-income-tax-scales", fixture("estv-scales-2025.json"), skipped);
+  const tariff = (scheme: string, value: string, variant: string) =>
+    scales.facts.find(
+      (f) =>
+        f.jurisdiction.scheme === scheme && f.jurisdiction.value === value && f.variant === variant,
+    );
+
+  it("reads the year from the request, since the response does not name it", () => {
+    expect(
+      scales.facts.every((f) => f.validFrom === "2025-01-01" && f.validTo === "2025-12-31"),
+    ).toBe(true);
+  });
+
+  it("reads a federal table as thresholds, once, however many cantons repeat it", () => {
+    const federal = tariff("iso_3166_1", "CH", "single")!;
+    expect(federal.metricKey).toBe("tax.income.tariff");
+    const brackets = (federal.value as { brackets: { from: number; rate: number }[] }).brackets;
+    expect(brackets.slice(0, 3)).toEqual([
+      { from: 0, rate: 0 },
+      { from: 15200, rate: 0.0077 },
+      { from: 33200, rate: 0.0088 },
+    ]);
+    expect(brackets.at(-1)).toEqual({ from: 793400, rate: 0.115 });
+    expect(scales.facts.filter((f) => f.jurisdiction.value === "CH")).toHaveLength(2);
+  });
+
+  it("reads a cantonal table as bracket widths, for the listed canton only", () => {
+    const basic = tariff("bfs_canton", "1", "single")!;
+    expect(basic.metricKey).toBe("tax.income.tariff.basic");
+    expect((basic.value as { brackets: unknown[] }).brackets.slice(0, 3)).toEqual([
+      { from: 0, rate: 0 },
+      { from: 6900, rate: 0.02 },
+      { from: 11800, rate: 0.03 },
+    ]);
+    expect(tariff("bfs_canton", "1", "married")).toBeDefined();
+    expect(scales.facts).toHaveLength(4);
+  });
+
+  it("reports no row it could not read when another row gives the same tariff", () => {
+    expect(skipped).toEqual([]);
+  });
+
+  it("records the canton's own multiplier", () => {
+    const rates = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
+    expect(rates.facts).toEqual([
+      {
+        jurisdiction: { scheme: "bfs_canton", value: "1" },
+        metricKey: "tax.multiplier",
+        variant: null,
+        validFrom: "2025-01-01",
+        validTo: "2025-12-31",
+        value: 0.98,
+      },
+    ]);
+  });
+
+  describe("planning", () => {
+    const source = placesConfig.sources.find((s) => s.key === "estv-income-tax-scales")!;
+    const adapter = ADAPTERS.get(source.adapter)!;
+    const options = adapter.options!.parse(source.options);
+    const publishedUpTo =
+      (maxYear: number): Probe =>
+      async () => ({ response: { Calculator: 1, MinYear: 2010, MaxYear: maxYear } });
+    const years = (requests: { body?: unknown }[]) =>
+      requests.map((r) => (r.body as { TaxYear: number }).TaxYear);
+
+    it("asks for the latest published year on schedule, and the years before it to backfill", async () => {
+      expect(years(await adapter.retrievals!(options, "2026-09-29", publishedUpTo(2026)))).toEqual([
+        2026,
+      ]);
+      expect(years(await adapter.backfill!(options, "2026-09-29", publishedUpTo(2026)))).toEqual([
+        2021, 2022, 2023, 2024, 2025,
+      ]);
+    });
+
+    it("never asks for a year the publisher has not released", async () => {
+      expect(years(await adapter.retrievals!(options, "2027-01-15", publishedUpTo(2026)))).toEqual([
+        2026,
+      ]);
+      await expect(adapter.retrievals!(options, "2026-09-29", publishedUpTo(0))).rejects.toThrow(
+        /no published year/,
+      );
     });
   });
 });

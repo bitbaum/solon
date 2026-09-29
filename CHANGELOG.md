@@ -19,6 +19,12 @@ one to read for the detail. Fixes get the same weight as features.
   canton's own statistics. A commune whose school communities levy different
   rates (Uster, Turbenthal) shows none rather than a wrong one, until the
   address decides which applies. (#216)
+- **Federal and Zürich income-tax tariffs, and the canton's own multiplier,
+  every year since 2021**, from the Federal Tax Administration. Together with
+  the commune multipliers they give the same income tax as the
+  administration's own calculator for the City of Zürich and Küsnacht (checked
+  at CHF 100,000, single and married; church tax and the CHF 24 personal tax
+  are not counted yet). (#217)
 - **A new kind of body: charter city.** A city with its own charter, founded
   by agreement with the state that hosts it — or proposed, before that
   agreement. Like a town, it cannot be founded without a place; picking it
