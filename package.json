@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "design:check": "node scripts/design-system-check.js",
-    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run test",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run check:places-literals && pnpm run test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:puppeteer": "BASE_URL=${BASE_URL:-http://localhost:3000} node tests/puppeteer/smoke.mjs",
@@ -25,7 +25,8 @@
     "db:push": "drizzle-kit push",
     "check:vendored-drift": "node scripts/check-vendored-drift.mjs",
     "places:sync-config": "tsx scripts/places-sync-config.ts",
-    "places:import": "tsx scripts/places-import.ts"
+    "places:import": "tsx scripts/places-import.ts",
+    "check:places-literals": "tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {
     "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.1.0",
