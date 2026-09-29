@@ -1,6 +1,8 @@
 # Solon: from a vote ledger to a constitution engine
 
 _Design, 2026-09-24. Status: proposal. Nothing here is built unless it says so._
+_Last modified 2026-09-29: dropped the retired manifesto framing; §6 and open
+question 7 now stand on their own._
 _The one-line vision stays in Solon's Loki project profile (the producer); this
 file is the design behind it and does not restate it._
 
@@ -276,7 +278,7 @@ runtime:
 Every one of these today is a constant someone edited. Each becomes a policy
 with a decision behind it.
 
-## 6. Federation and exit (the Townsism part)
+## 6. Federation and exit
 
 - **Orgs as members:** `member_type: ORG`. A federation's vote from a member org
   is itself a decision of that org, verifiable end to end.
@@ -353,5 +355,5 @@ Each step is shippable on its own and leaves the record more honest than before.
    not create one.
 6. **First pilot.** A Swiss Verein, a co-living house, or the fleet itself only
    until Phase 2 lands?
-7. **Name.** Deyville (`~/ideas/deyville-platform.md`) stays parked until a town
-   runs on it. The design above does not depend on the name.
+7. ~~Name~~ — **decided 2026-09-29:** Solon stays Solon. The separate
+   town-OS brand is retired.
