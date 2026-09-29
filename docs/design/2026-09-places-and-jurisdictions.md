@@ -1,7 +1,11 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: the `charter_city` kind built; P0 is built apart
+_Last modified 2026-09-29: P1 begun — the Swiss pack's structure is built:
+the FSO commune register (all cantons, mergers since 2021) and the City of
+Zürich's quarters import through real adapters that `places:fetch` retrieves,
+with adapter options in config and Swiss terms of use on the licence policy
+(§5.2, §8.1–§8.3, §11). Earlier the same day: the `charter_city` kind built; P0 is built apart
 from the Register organization, which needs George's signature (§3, §11).
 Earlier the same day: the no-literals and neutral-copy guards built, map
 tokens added upstream (§9.1, §12); the minimal place page built; the P0 acceptance
@@ -369,6 +373,15 @@ Nothing in that block is read by name anywhere in `src/`. The engine iterates
 `levels`, resolves `parent`, looks up `names` for the reader's locale, and hands
 `taxModel` to the evaluator.
 
+**Built (P1)**: `src/lib/config/places/countries/switzerland.ts`. It differs from
+the sketch in three ways. The levels stop at what P1 imports (nation, canton,
+district, municipality, and the City of Zürich's districts and statistical
+quarters as `partial`); parishes and school communities come with P2. The
+income-tax model has no church component for the same reason. And the
+nation has no identifier source yet, so the commune-register source creates
+the root and states its ISO code, set in that source's options; a later
+world source matches it by that code.
+
 ### 5.3 Config → database projection
 
 Registries that facts FK-reference (`place_country_packs`, `place_levels`,
@@ -522,6 +535,16 @@ the obvious world datasets differ: some are public domain or CC0, some CC BY
 the same terms), some non-commercial (excluded). No share-alike source in
 P1–P4 (decided, §13).
 
+**Built (P1)**: Swiss public bodies publish under terms of use, not licences,
+because raw data is mostly not protected by copyright in Switzerland. The
+policy lists them as `LicenseRef-` entries, each the equivalent of a class the
+decision admits: `LicenseRef-opendata-swiss-open` (opendata.swiss "Open use",
+citing recommended; public-domain-like), `LicenseRef-opendata-swiss-by` ("Open
+use. Must provide the source."; CC BY's obligation), and
+`LicenseRef-ch-official-act` (official acts, decisions and their figures, such
+as tariffs and multipliers, which Art. 5 URG leaves unprotected). The
+Register can narrow this by decision like any editorial policy.
+
 ### 8.2 Sources, by publisher
 
 Each importer's first task is to **confirm access path, format and licence**
@@ -545,6 +568,22 @@ The source registry holds each as an entry (key, publisher, dataset, homepage,
 licence SPDX, attribution key, cadence as a cron expression, adapter module,
 packs served). Cadence is config, so the scheduler reads it and no job has a
 hardcoded date.
+
+**Built (P1)**, each confirmed on 2026-09-29 and recorded in
+`src/lib/config/places/sources.ts`:
+
+| Source key | What | Access | Terms |
+|---|---|---|---|
+| `bfs-communes-snapshot` | every canton, district and commune valid on a date, with validity and parent | FSO register API, CSV, no key | opendata.swiss open |
+| `bfs-communes-mutations` | mergers between two dates | same API | opendata.swiss open |
+| `zurich-statistical-quarters` | the City of Zürich's 12 districts and 34 quarters | the city's WFS, GeoJSON | CC0 |
+
+Found for the next steps: the canton's commune multipliers since 2012
+(Statistical Office of the Canton of Zürich, CSV, "must provide the source");
+federal and cantonal tariffs and the canton's own multiplier (the Federal Tax
+Administration's tax-calculator exports, official figures); the city's address
+register with postcode, quarter and parishes per address (CC0), which gives
+postcode → quarter with shares.
 
 ### 8.3 The importer framework
 
@@ -603,10 +642,29 @@ prints the report and exits 1 on a failed run. What the build settled:
   chain's current facts, and those facts in the evaluator's terms. Whether a
   level takes tax is `taxingLevels` over them, from the model, not a flag.
 
-Not yet: fetching from a URL (P1 hands the file in; the scheduled fetch comes
-with the first real adapter), areas and assertions (P4), and CI dry-runs of
-real adapters (none exist yet; the fixture adapter is exercised by the
-acceptance spec).
+**Built (P1)**: fetching. An adapter may declare `retrievals(options, today)`,
+what a scheduled run fetches, which must change nothing when rerun on an
+unchanged source, and `backfill`, older states loaded once when a source is
+first loaded (never by schedule, since an older state imported after a newer
+one restates the past). `pnpm run places:fetch <source-key> [--backfill]
+[--dry-run] [--plan]` fetches them in order and imports each; the first failed
+run stops the rest. What the first real adapters settled:
+
+- **Adapters parse formats and name no country.** Which levels, schemes and
+  parts of a source its rows become is the source's `options` in config,
+  checked by the adapter's own schema at run time and by a unit test for every
+  registered source. The no-literals guard covers the adapters too.
+- A source may state relations of places it does not list (a register of
+  mergers); those relations are diffed like any other the source states.
+- An ended place is filed under the last parent it had. When an ended place
+  and a current one share a name, the one recorded first keeps the plain path,
+  so a backfill imports today's state first.
+- Measured on the full register: the backfill (today, then one snapshot a year
+  since 2021) takes about 25 seconds on a laptop; a rerun changes nothing.
+
+Not yet: areas and assertions (P4), the scheduled runner on the box, and CI
+dry-runs of real adapters against live sources (CI imports cuts of the real
+retrievals instead).
 
 ### 8.4 Corrections and editorial policy: the Register
 
@@ -787,6 +845,16 @@ before the build.
   takes tax) › Zürich (canton) › Switzerland. City of Zürich vs Küsnacht at CHF
   100,000 shows two estimates matching the golden fixtures, and every number
   links to its snapshot.
+- Built so far: the structure. `src/lib/config/places/countries/switzerland.ts`
+  (levels, schemes, the income-tax model without church tax, which P2's
+  parishes bring); the FSO register for **all** cantons rather than Zürich
+  alone, because its mergers can only be linked when both ends are known
+  places, with snapshots since 2021 and 79 mergers as `succeeds`; the City of
+  Zürich's 12 districts and 34 quarters. Witikon resolves up its chain to
+  Switzerland and its page says it takes no tax
+  (`swiss-structure.integration.test.ts`, from cuts of the real retrievals).
+  Next: tariffs and multipliers with golden fixtures, the postcode resolver,
+  then the screens.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

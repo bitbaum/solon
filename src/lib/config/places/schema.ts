@@ -112,6 +112,13 @@ export const sourceSchema = z.object({
   cadence: z.string().regex(/^(\S+\s+){4}\S+$/, "a five-field cron expression"),
   /** Key of the adapter module in src/lib/places/adapters. */
   adapter: registryKey,
+  /**
+   * What the adapter needs to know about the world to map this source: which
+   * levels and identifier schemes its rows become, which part of the source to
+   * take. Validated by the adapter's own schema, so an adapter parses a format
+   * and names no country.
+   */
+  options: z.record(z.string(), z.unknown()).default({}),
   packs: z.array(registryKey),
 });
 export type Source = z.infer<typeof sourceSchema>;

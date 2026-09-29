@@ -1,0 +1,4 @@
+MutationNumber,MutationDate,InitialHistoricalCode,InitialCode,InitialName,InitialParentHistoricalCode,InitialParentName,InitialStep,TerminalHistoricalCode,TerminalCode,TerminalName,TerminalParentHistoricalCode,TerminalParentName,TerminalStep
+3964,01.01.2023,11735,21,Adlikon,10082,Bezirk Andelfingen,29,16621,291,Andelfingen,10082,Bezirk Andelfingen,26
+3964,01.01.2023,12173,32,Humlikon,10082,Bezirk Andelfingen,29,16621,291,Andelfingen,10082,Bezirk Andelfingen,26
+3964,01.01.2023,13214,30,Andelfingen,10082,Bezirk Andelfingen,26,16621,291,Andelfingen,10082,Bezirk Andelfingen,26

@@ -26,6 +26,7 @@
     "check:vendored-drift": "node scripts/check-vendored-drift.mjs",
     "places:sync-config": "tsx scripts/places-sync-config.ts",
     "places:import": "tsx scripts/places-import.ts",
+    "places:fetch": "tsx scripts/places-fetch.ts",
     "check:places-literals": "tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {

@@ -119,7 +119,7 @@ describe("placesConfigProblems names what is wrong", () => {
   it("a source whose licence is not on the policy", () => {
     expect(
       broken((c) => {
-        c.sources[0]!.licence = "CC-BY-NC-4.0";
+        c.sources.find((s) => s.key === "testland-register")!.licence = "CC-BY-NC-4.0";
       }),
     ).toContain('source "testland-register": licence "CC-BY-NC-4.0" is not on the licence policy');
   });
@@ -166,7 +166,7 @@ describe("placesConfigProblems names what is wrong", () => {
   it("an identifier pattern that does not compile", () => {
     expect(
       broken((c) => {
-        c.identifierSchemes[0]!.pattern = "T[0-9";
+        c.identifierSchemes.find((s) => s.key === "testland_register")!.pattern = "T[0-9";
       }),
     ).toContain('identifier scheme "testland_register": pattern does not compile');
   });

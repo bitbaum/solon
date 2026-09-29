@@ -168,8 +168,25 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
           .map((issue) => `format: ${issue.path.join(".") || "(root)"}: ${issue.message}`),
       );
     }
+    const adapterOptions = adapter.options
+      ? adapter.options.safeParse(source.options)
+      : { success: true as const, data: undefined };
+    if (!adapterOptions.success) {
+      throw new RunFailed(
+        adapterOptions.error.issues.map(
+          (issue) => `source options: ${issue.path.join(".") || "(root)"}: ${issue.message}`,
+        ),
+      );
+    }
     const pack = config.packs.find((p) => p.key === source.packs[0]);
-    const batch = importBatchSchema.parse(adapter.map(parsed.data, { source, pack }));
+    const batch = importBatchSchema.parse(
+      adapter.map(parsed.data, {
+        source,
+        pack,
+        options: adapterOptions.data,
+        retrieval: { url: retrieval.url },
+      }),
+    );
     const check = checkBatch(batch, config, sourceKey);
     report.quarantined = check.quarantined.map(({ fact, reason }) => ({
       fact: `${refKey(fact.jurisdiction)} ${fact.metricKey} ${fact.validFrom}`,
@@ -316,9 +333,11 @@ async function applyBatch(
   };
 
   // --- Places: new ones get a row, a path and their identifier. ---
+  // The current parent, or for a place that has ended, the last one it had.
   const currentParent = new Map(
     batch.relations
-      .filter((r) => r.relation === "part_of" && r.validTo === null)
+      .filter((r) => r.relation === "part_of")
+      .sort((a, b) => (a.validTo ?? "9999").localeCompare(b.validTo ?? "9999"))
       .map((r) => [refKey(r.from), r.to]),
   );
   const byRef = new Map(batch.jurisdictions.map((j) => [refKey(j.ref), j]));
@@ -550,6 +569,13 @@ async function applyBatch(
   }
 
   // --- Relations: end or supersede first, so "one current parent" holds throughout. ---
+  // A source may state relations of places it does not list (a register of mergers).
+  const relationScope = [
+    ...new Set([
+      ...placeIds,
+      ...batch.relations.map((r) => idOf(r.from, `relation ${r.relation}`)),
+    ]),
+  ];
   const currentRelations = await tx
     .select({
       id: jurisdictionRelations.id,
@@ -563,7 +589,7 @@ async function applyBatch(
     .innerJoin(sources, eq(sources.id, jurisdictionRelations.sourceId))
     .where(
       and(
-        inArray(jurisdictionRelations.fromId, placeIds),
+        inArray(jurisdictionRelations.fromId, relationScope),
         eq(sources.sourceKey, source.key),
         isNull(jurisdictionRelations.supersededAt),
       ),
