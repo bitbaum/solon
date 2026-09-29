@@ -146,6 +146,12 @@ jobs:
       - name: Migration replay (baseline + seed on a fresh database)
         run: pnpm exec drizzle-kit migrate
 
+      # The place_* registries are projections of src/lib/config/places. Sync
+      # them, then prove the database agrees with config (design §5.3, §12).
+      # Before the specs: the Places spec adds a made-up country on purpose.
+      - name: Places registries agree with config
+        run: pnpm run places:sync-config && pnpm run places:sync-config --check
+
       # Every *.integration.test.ts, matched by name — not a hand-kept list.
       # This step used to name the vote-spine spec alone, so the membership
       # spec that guards the founding seat existed and was never once run by

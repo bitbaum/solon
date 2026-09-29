@@ -71,6 +71,13 @@
       "when": 1790677356803,
       "tag": "0009_members_carry_their_orangecat_face",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790704291332,
+      "tag": "0010_places_foundations",
+      "breakpoints": true
     }
   ]
 }

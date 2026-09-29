@@ -23,7 +23,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "check:vendored-drift": "node scripts/check-vendored-drift.mjs"
+    "check:vendored-drift": "node scripts/check-vendored-drift.mjs",
+    "places:sync-config": "tsx scripts/places-sync-config.ts"
   },
   "dependencies": {
     "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.1.0",

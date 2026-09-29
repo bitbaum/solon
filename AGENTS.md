@@ -29,8 +29,15 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 
 ## Drizzle / database
 
-- Schema SSOT: `src/lib/db/schema.ts` (9 models). Types flow from it via `$inferSelect`;
-  enum vocabulary lives in `src/lib/db/enums.ts` (dependency-free, safe for client code).
+- Schema SSOT: `src/lib/db/schema.ts` (9 governance models) and
+  `src/lib/db/places-schema.ts` (Places: jurisdictions, names, identifiers, areas,
+  relations, facts, sources, and the `place_*` registries). Types flow from them via
+  `$inferSelect`; enum vocabulary lives in `src/lib/db/enums.ts` and
+  `src/lib/places/vocabulary.ts` (dependency-free, safe for client code).
+- **Places registries are projections of config.** `place_*` tables are written only
+  by `pnpm run places:sync-config` (every import run syncs first, in its own
+  transaction). The config lives in `src/lib/config/places/`. Places rows are never
+  deleted; a trigger refuses it. Design: `docs/design/2026-09-places-and-jurisdictions.md`.
 - **There is no codegen.** Typecheck and build read the schema module directly.
 - Migrations live in `drizzle/` (`pnpm run db:generate` after a schema change;
   `pnpm run db:migrate` applies them). **Running migrations against a real
@@ -48,7 +55,7 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 | Job | What it does |
 |---|---|
 | `verify` | `pnpm install --frozen-lockfile` → `pnpm run verify` → `pnpm run build` |
-| `integration` | `drizzle-kit migrate` on a **fresh** Postgres, then the vote-spine integration spec |
+| `integration` | `drizzle-kit migrate` on a **fresh** Postgres → `places:sync-config` and `--check` → every `*.integration.test.ts` → render checks → production-shaped smoke |
 
 The integration job is why migrations must replay cleanly from the baseline: it
 builds the database from scratch every run.

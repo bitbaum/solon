@@ -12,8 +12,10 @@
  */
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import * as schema from "./schema";
+import * as governanceSchema from "./schema";
+import * as placesSchema from "./places-schema";
 
+const schema = { ...governanceSchema, ...placesSchema };
 type Db = ReturnType<typeof drizzle<typeof schema>>;
 
 const globalForDb = globalThis as unknown as { solonDb: Db | undefined };

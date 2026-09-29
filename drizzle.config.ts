@@ -1,5 +1,6 @@
 /**
- * Drizzle Kit config. Schema lives in src/lib/db/schema.ts; generated SQL in
+ * Drizzle Kit config. Schema lives in src/lib/db/schema.ts (the governance
+ * tables) and src/lib/db/places-schema.ts (Places); generated SQL in
  * ./drizzle (the deploy pipeline's apply-schema.sh probes exactly that path).
  *
  * dbCredentials are only needed by db:migrate / db:push / studio — `db:generate`
@@ -16,7 +17,7 @@ for (const f of [".env.local", ".env"]) {
 }
 
 export default defineConfig({
-  schema: "./src/lib/db/schema.ts",
+  schema: ["./src/lib/db/schema.ts", "./src/lib/db/places-schema.ts"],
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
