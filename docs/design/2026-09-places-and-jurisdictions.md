@@ -1,11 +1,11 @@
 # Places: every jurisdiction on one map, official and founded
 
-_Created 2026-09-29. Status: proposal. Nothing here is built unless it says so._
-_Last modified 2026-09-29: rewritten for world coverage and zero hardcoding —
-first principles stated up front (§1); authorities separated from territory, with
-claims, administration and recognition as sourced relations (§4, §7); every
-country-specific fact moved to country packs and registries (§5); the tax
-formula made declarative (§6)._
+_Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
+_Last modified 2026-09-29: George decided §13. The Register starts under "One
+person decides" with George as its only mandate holder, and everyone else
+advises, including by advisory vote (§8.4); editorial policies are adopted by the
+Register's decisions, not by a member vote (§5.4). Earlier the same day:
+rewritten for world coverage and zero hardcoding (§1, §4–§7)._
 _Companions: `2026-09-solon-plan.md` (the product), `2026-09-solon-constitution-engine.md`
 (the governance engine). What Solon IS stays in its Loki project profile; this
 file is the design behind one function of it and does not restate the vision._
@@ -104,7 +104,7 @@ This table is the "no hardcoding" rule in operational form.
 |---|---|---|---|
 | **Mechanism** | hierarchy walk, tax-model evaluator, importer framework, invariant engine, map renderer | code (`src/lib/places/`, the shared evaluator package) | PR with tests; contains **no** country, level, currency or date literal (guarded, §12) |
 | **Structure config** | country packs (levels, local names, identifier schemes, tax model shape, fiscal year, currency), source registry, metric catalog, instrument kinds, identifier-scheme registry, licence policy | `config/places/**` as typed TS modules validated by Zod | PR reviewed by humans; anyone may contribute a pack |
-| **Editorial policy** | naming policy for disputed places, aggregate threshold, which third-party indices appear, staleness rule | **Solon policies** of the Register organization (`policies` table, versioned, each version approved by a vote) | a vote; this is the engine doc's "rules as data, amended by the rules" |
+| **Editorial policy** | naming policy for disputed places, aggregate threshold, which third-party indices appear, staleness rule | **Solon policies** of the Register organization (`policies` table, versioned, each version adopted by a Register decision) | a Register decision under its governance profile (§8.4); this is the engine doc's "rules as data, amended by the rules" |
 | **Facts** | places, areas, names, identifiers, relations, recognitions, tax rates, instruments, ballots | database, written only by importers and register decisions | import runs; corrections by decision (§8.4) |
 | **Personal data** | residence, civic split, income | OrangeCat (residence, split), the browser (income) | the person |
 | **Copy** | every sentence, level-name translations | `messages/<locale>.json` | PR |
@@ -343,8 +343,8 @@ adding a country needs no migration.
 
 The aggregate threshold, the compare-column limit, the staleness rule, the
 naming policy and the third-party-index list are **Register policies** (§8.4):
-versioned in the `policies` table, each version approved by a vote, read at
-runtime. Their initial values are proposed in §13, not written into code.
+versioned in the `policies` table, each version adopted by a Register decision,
+read at runtime. Their initial values are in §13, not written into code.
 
 ## 6. Tax: a declarative model and a pure evaluator
 
@@ -450,8 +450,8 @@ applicable sanctions law (Swiss SECO first, since the operator is in Switzerland
 Sanctions lists are **data**: imported from the official publishers, sourced and
 dated, like every other fact. OrangeCat's giving flow checks them before money
 moves, and a refusal says why and where the list comes from. Nothing
-about this is hardcoded per country. The legal reading of which lists apply is a
-decision for George with advice (§13).
+about this is hardcoded per country. SECO's lists apply first; UN and EU lists
+follow once legal advice confirms them (decided, §13).
 
 ## 8. Data sources and import
 
@@ -462,8 +462,8 @@ what each obliges (attribution text, share-alike scope). **An importer whose
 source licence is not on the list does not run.** The policy matters because
 the obvious world datasets differ: some are public domain or CC0, some CC BY
 (attribution), some share-alike (ODbL: a derived *database* must be shared under
-the same terms), some non-commercial (excluded). Which share-alike sources to
-accept is a decision (§13).
+the same terms), some non-commercial (excluded). No share-alike source in
+P1–P4 (decided, §13).
 
 ### 8.2 Sources, by publisher
 
@@ -522,6 +522,16 @@ Solon decides corrections (effect `register.correct`, engine doc §2.2: appends 
 policies of §5.4. Anyone may propose, with a source. This dogfoods the engine on
 public, low-stakes, real questions, and makes Solon's own editorial choices
 visible and contestable.
+
+**Who decides (decided 2026-09-29).** The Register is founded under the existing
+"One person decides" profile (`SOLE`), with George as founder and only mandate
+holder. Its organization page says so, as it does for every `SOLE`
+organization. Everyone else proposes and advises, including through **advisory
+votes** (engine doc §2.5): members cast ballots that do not bind, the tally is
+published beside the decision, and the decision records whether it followed the
+tally. Advisory votes are not built yet. Until they are, members advise by
+proposing. Moving the Register to a shared profile later is one `profile`
+decision taken under `SOLE`, which the engine already supports.
 
 ## 9. Product and UX
 
@@ -591,9 +601,8 @@ The screens are those of the first version of this document, now generic:
 
 ### 9.3 Navigation
 
-The header budget is four links. Recommendation: Places replaces Platform in
-the header, and Platform moves to the footer (§13). Labels come from
-`site-config.ts`.
+The header budget is four links. Places replaces Platform in the header, and
+Platform moves to the footer (decided, §13). Labels come from `site-config.ts`.
 
 ### 9.4 States
 
@@ -642,6 +651,8 @@ before the build.
   model.
 - The importer framework with a fixture adapter; the invariant engine.
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
+- The Register organization, founded by George under `SOLE` (his signature),
+  with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
   renders a place page and evaluates a tax model, **with zero changes under
   `src/`**.
@@ -704,24 +715,31 @@ before the build.
 
 ## 13. Decisions that are George's
 
-1. **Header**: Places replaces Platform? (Recommended.)
-2. **Evaluator package**: a small shared package for the in-browser estimate, used by
-   OrangeCat and Solon? (Recommended, for privacy and one implementation.)
-3. **Register organization**: founding seats and profile. (Recommended: the fleet,
-   "everyone decides", corrections as `OPERATIONS`.)
-4. **Initial Register policies**: aggregate threshold 5, compare limit 4,
-   stale after the period ends plus 3 months, naming policy as in §7.2. (Proposed
-   values for the first vote, not constants.)
-5. **Licence policy**: accept CC0, public domain and CC BY; decide on ODbL
-   (share-alike on a derived database) before any OpenStreetMap-derived source.
-   (Recommended: not in P1–P4.)
+All decided 2026-09-29.
+
+1. **Header**: Places replaces Platform, and Platform moves to the footer (§9.3).
+2. **Evaluator package**: one small shared package for the in-browser estimate,
+   used by OrangeCat and Solon. One implementation, and income never leaves the
+   device.
+3. **Register organization**: George holds all control at first. Profile `SOLE`,
+   George the only mandate holder; others advise, including by advisory vote
+   (§8.4). Corrections are `OPERATIONS` decisions.
+4. **Initial Register policies**: George sets them. Starting values: aggregate
+   threshold 5 (no figure shown for fewer than five people), compare limit 4,
+   stale when the period ended more than 3 months ago, naming policy as in
+   §7.2. They are policies George can change by decision, not constants.
+5. **Licence policy**: accept CC0, public domain and CC BY. No ODbL source in
+   P1–P4; decide on ODbL before any OpenStreetMap-derived source.
 6. **Third-party indices** (freedom, democracy, corruption): not before P4, and
-   then only under the publisher's name. (Recommended.)
-7. **Sanctions**: which lists apply to OrangeCat's giving flow, with legal advice.
-8. **Founded places claiming territory**: open to anyone, since the badge tells
-   the truth? (Recommended.)
-9. **Solon's vision line**: if Places becomes a pillar of what Solon is, the Loki
-   project profile is where that sentence changes.
+   then only under the publisher's name.
+7. **Sanctions**: start with the Swiss SECO lists, since the operator is in
+   Switzerland. Extending to UN and EU lists waits for legal advice, before P4
+   puts money near a sanctioned area.
+8. **Founded places claiming territory**: open to anyone. The badge always says
+   founded or proposed, never state.
+9. **Solon's vision line**: unchanged until P1 ships. Then the Loki project
+   profile names Places, because nothing is described as existing before it
+   does.
 
 ## 14. Risks
 

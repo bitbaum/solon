@@ -1,8 +1,10 @@
 # Solon: from a vote ledger to a constitution engine
 
 _Design, 2026-09-24. Status: proposal. Nothing here is built unless it says so._
-_Last modified 2026-09-29: dropped the retired manifesto framing; §6 and open
-question 7 now stand on their own._
+_Last modified 2026-09-29: added advisory votes (§2.5, Phase 3), first needed
+by the Register of `2026-09-places-and-jurisdictions.md` §8.4. Earlier the same
+day: dropped the retired manifesto framing; §6 and open question 7 now stand on
+their own._
 _The one-line vision stays in Solon's Loki project profile (the producer); this
 file is the design behind it and does not restate it._
 
@@ -203,6 +205,17 @@ on **threadkit** (fleet package; OrangeCat already uses it; "permission is
 participation", so members read and outsiders read-only per charter). It also
 gets **amendments**, i.e. forks of a draft that are voted first.
 
+**Advisory votes.** Where a mandate decides a category (every category under
+"One person decides", the mandate categories under "Elected delegates decide"),
+the members who do not hold the mandate can still cast ballots on a proposal.
+The ballots do not bind. The tally is published beside the decision, and the
+decision document records whether the mandate holder followed it. This gives a
+founder who keeps control a measured view of the members, and gives members a
+public record of when they were overruled. Advisory ballots are signed and
+counted like binding ones, so they are just as recountable; they only lack
+the power to decide. First needed by the Register
+(`2026-09-places-and-jurisdictions.md` §8.4, decided 2026-09-29).
+
 AI agents take **offices with published mandates, never sovereignty**:
 
 | Role | Does | Never |
@@ -324,6 +337,7 @@ Each step is shippable on its own and leaves the record more honest than before.
 **Phase 3: Usable membership and deliberation**
 - Admission by vote (`member.admit`), so a signed-in visitor can ask to join
   and the members decide — the next biggest ease win after one-click voting.
+- Advisory votes where a mandate decides (§2.5).
 - Emailed ballot links; passkey and Nostr signers; per-category minimum
   assurance in the charter.
 - Bank-statement import (camt.053) as a treasury ledger.

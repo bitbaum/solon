@@ -6,7 +6,8 @@ product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
 _Last modified 2026-09-29: added Places (every jurisdiction, official and
 founded, on one map) to the information architecture and the build order; its
-design is `2026-09-places-and-jurisdictions.md`._
+design is `2026-09-places-and-jurisdictions.md`, whose decisions George took the
+same day (Places takes Platform's header slot once it ships)._
 
 ## 1. The problem, from first principles
 
@@ -52,6 +53,8 @@ and shown inline with `<Term>`; the glossary page renders the same list.
 
 Header (the budget test allows four links): **Use cases · Governance · Platform ·
 Decisions**, then the language switcher, sign-in (or your menu), and **Hire Solon**.
+When Places ships (phase G), it takes Platform's slot and Platform moves to the
+footer (decided 2026-09-29).
 
 | Section | Pages |
 |---|---|
@@ -59,7 +62,7 @@ Decisions**, then the language switcher, sign-in (or your menu), and **Hire Solo
 | **Governance** `/governance` | the art and science (existing lessons) · **ideas** (Solon of Athens, the Landsgemeinde, Ostrom, exit and voice, Condorcet and Arrow, panarchy, network states) · **a new era** (why self-governance is newly possible) |
 | **Platform** `/platform` | how Solon, OrangeCat and Loki work together · security · `/technical` (reference) |
 | **Decisions** | the public record: organizations, proposals, votes |
-| **Places** `/places` (proposed) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md`; whether it takes Platform's header slot is open there (§13) |
+| **Places** `/places` (designed, not built) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
 | Account | **My Solon** `/me` — my groups, votes waiting for me, my proposals · profile |
 
 Footer and mobile menu render the whole map from `site-config.ts` (existing SSOT,
