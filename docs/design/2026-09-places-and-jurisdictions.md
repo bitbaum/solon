@@ -1,9 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: the no-literals and neutral-copy guards built, map
-tokens proposed upstream (§9.1, §11, §12). Earlier the same day: the minimal
-place page built; the P0 acceptance
+_Last modified 2026-09-29: the `charter_city` kind built; P0 is built apart
+from the Register organization, which needs George's signature (§3, §11).
+Earlier the same day: the no-literals and neutral-copy guards built, map
+tokens added upstream (§9.1, §12); the minimal place page built; the P0 acceptance
 test now covers it (§9.2, §11). Earlier the same day: importer framework,
 invariant engine and chain reader built, with Testland importing and
 evaluating in CI (§8.3, §11). Earlier: P0 foundations built — the tables of §4 (what the
@@ -127,7 +128,9 @@ contributing a country must not mean editing five message files.
 registries. OrangeCat holds the person (residence, civic split) and the money
 (funds of founded places, bound to Solon organizations through the existing
 group binding). The shared vocabulary of collective kinds stays in
-`@bitbaum/collective-kinds` and gains `charter_city`. **Country-specific
+`@bitbaum/collective-kinds` and gains `charter_city` (built: package 0.2.0,
+bitbaum/orangecat#1191, Solon migration `0011_charter_city_kind`; place-bound,
+default profile "Elected delegates decide"). **Country-specific
 structure does not go into that package**: a package holds mechanism and
 cross-product vocabulary, and country packs are data about the world, served by
 Solon's API.
@@ -761,9 +764,10 @@ before the build.
 - The importer framework with a fixture adapter; the invariant engine. (Built:
   §8.3.)
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
-  (Built: the no-literals and neutral-copy guards, §12; the tokens, §9.1. The
-  other §12 guards come with the data they check: golden tax fixtures with P1,
-  dispute fixtures with P4, the no-dead-ends checks with the screens.)
+  (Built: the no-literals and neutral-copy guards, §12; the tokens, §9.1;
+  `charter_city`, §3. The other §12 guards come with the data they check:
+  golden tax fixtures with P1, dispute fixtures with P4, the no-dead-ends
+  checks with the screens.)
 - The Register organization, founded by George under `SOLE` (his signature),
   with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,

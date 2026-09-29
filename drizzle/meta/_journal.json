@@ -78,6 +78,13 @@
       "when": 1790704291332,
       "tag": "0010_places_foundations",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790706246863,
+      "tag": "0011_charter_city_kind",
+      "breakpoints": true
     }
   ]
 }
