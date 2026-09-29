@@ -268,6 +268,7 @@ export const KIND_DEFAULT_PROFILE: Record<CollectiveKindId, GovernanceProfileId>
   guild: "ASSOCIATION",
   dao: "TOWN",
   town: "TOWN",
+  charter_city: "DELEGATED",
   network_state: "DELEGATED",
   local_fund: "TOWN",
 };

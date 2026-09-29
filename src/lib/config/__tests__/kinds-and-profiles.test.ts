@@ -37,6 +37,7 @@ describe("bodyProblem — what the founder says the body is", () => {
 
   it("refuses a town without a place, naming the first missing field", () => {
     expect(bodyProblem({ kind: "town" })).toMatch(/^a town belongs to a place — give the country/);
+    expect(bodyProblem({ kind: "charter_city" })).toMatch(/^a charter city belongs to a place/);
     expect(
       bodyProblem({ kind: "local_fund", place: { country_code: "CH", region: "Zürich" } }),
     ).toMatch(/locality/);

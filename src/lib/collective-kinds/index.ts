@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/collective-kinds@0.1.0 (src/index.ts).
+// VENDORED from bitbaum/orangecat packages/collective-kinds@0.2.0 (src/index.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.

@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/collective-kinds@0.1.0 (src/kinds.ts).
+// VENDORED from bitbaum/orangecat packages/collective-kinds@0.2.0 (src/kinds.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -36,6 +36,7 @@ export const COLLECTIVE_KIND_IDS = [
   'guild',
   'dao',
   'town',
+  'charter_city',
   'network_state',
   'local_fund',
 ] as const;
@@ -140,6 +141,15 @@ export const COLLECTIVE_KINDS: Readonly<Record<CollectiveKindId, CollectiveKind>
     id: 'town',
     name: 'Town',
     description: 'A civic body for a place: small enough to be known, large enough to run itself.',
+    needsPlace: true,
+    canBeTaxExempt: false,
+    usualLegalForms: {},
+  },
+  charter_city: {
+    id: 'charter_city',
+    name: 'Charter city',
+    description:
+      'A city with its own charter, founded by agreement with the state that hosts it — or proposed, before that agreement.',
     needsPlace: true,
     canBeTaxExempt: false,
     usualLegalForms: {},

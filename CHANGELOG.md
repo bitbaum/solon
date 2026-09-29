@@ -4,6 +4,15 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-09-29
+
+### Added
+
+- **A new kind of body: charter city.** A city with its own charter, founded
+  by agreement with the state that hosts it — or proposed, before that
+  agreement. Like a town, it cannot be founded without a place; picking it
+  suggests elected delegates to decide. Same word as on OrangeCat. (#214)
+
 ## 2026-09-28
 
 ### Added
