@@ -217,11 +217,13 @@ describe("the City of Zürich's statistical quarters", () => {
 
 describe("the canton of Zürich's municipal multipliers", () => {
   const skipped: { row: string; reason: string }[] = [];
-  const batch = mapSource("zurich-municipal-multipliers", fixture("multipliers-2020-2026.csv"), skipped);
+  const batch = mapSource(
+    "zurich-municipal-multipliers",
+    fixture("multipliers-2020-2026.csv"),
+    skipped,
+  );
   const multiplier = (commune: string, year: number) =>
-    batch.facts.find(
-      (f) => f.jurisdiction.value === commune && f.validFrom === `${year}-01-01`,
-    );
+    batch.facts.find((f) => f.jurisdiction.value === commune && f.validFrom === `${year}-01-01`);
 
   it("records each commune's multiplier as a ratio for its fiscal year", () => {
     expect(multiplier("261", 2025)).toEqual({

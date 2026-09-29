@@ -66,7 +66,9 @@ export const csvFactsAdapter: Adapter<Rows, CsvFactsOptions> = {
       const year = Number(row[options.yearColumn]);
       const code = row[options.place.column];
       if (!Number.isInteger(year) || !code) {
-        throw new Error(`${where}: no year in ${options.yearColumn} or no code in ${options.place.column}`);
+        throw new Error(
+          `${where}: no year in ${options.yearColumn} or no code in ${options.place.column}`,
+        );
       }
       if (options.fromYear !== undefined && year < options.fromYear) {
         continue;
