@@ -1,10 +1,12 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: paths corrected to Solon's layout (config lives in
-`src/lib/config/places/`); the evaluator is named `@bitbaum/tax-model`, produced
-in OrangeCat and vendored here (§6.2, §11), and its result reports `complete` and
-`missing`. Earlier the same day: George decided §13 (the Register starts under
+_Last modified 2026-09-29: P0 foundations built — the tables of §4 (what the
+build settled is listed there), the config registries and their validation
+(§5.1), and `places:sync-config`, which every import run calls first instead of
+a deploy hook (§5.3). Config labels live with their entries (§3). Earlier the
+same day: paths corrected to Solon's layout; the evaluator named
+`@bitbaum/tax-model`, produced in OrangeCat and vendored here (§6.2, §11). Earlier: George decided §13 (the Register starts under
 "One person decides", everyone else advises, §8.4; editorial policies are
 Register decisions, §5.4), and the doc was rewritten for world coverage and zero
 hardcoding (§1, §4–§7)._
@@ -109,7 +111,12 @@ This table is the "no hardcoding" rule in operational form.
 | **Editorial policy** | naming policy for disputed places, aggregate threshold, which third-party indices appear, staleness rule | **Solon policies** of the Register organization (`policies` table, versioned, each version adopted by a Register decision) | a Register decision under its governance profile (§8.4); this is the engine doc's "rules as data, amended by the rules" |
 | **Facts** | places, areas, names, identifiers, relations, recognitions, tax rates, instruments, ballots | database, written only by importers and register decisions | import runs; corrections by decision (§8.4) |
 | **Personal data** | residence, civic split, income | OrangeCat (residence, split), the browser (income) | the person |
-| **Copy** | every sentence, level-name translations | `messages/<locale>.json` | PR |
+| **Copy** | every sentence of the UI | `messages/<locale>.json` | PR |
+
+Labels of config entries (level names, metric and scheme labels) live **with the
+entry**, keyed by BCP 47 locale, not in `messages/*.json`. A pack names its levels
+in its country's languages, Romansh included, which are not the site's locales, and
+contributing a country must not mean editing five message files.
 
 **Ownership across the three planes.** Solon holds the public facts and the
 registries. OrangeCat holds the person (residence, civic split) and the money
@@ -124,6 +131,27 @@ Solon's API.
 
 Postgres database `solon` on bitbaum, Drizzle, following `schema.ts` conventions:
 app-minted text ids, named constraints, append-only where history matters.
+
+**Built (P0, migration `0010_places_foundations`, `src/lib/db/places-schema.ts`),
+empty.** What the build settled beyond the text below:
+
+- Valid time is `date` (`valid_from` null = start unknown, `valid_to` null =
+  current). Every table that reports the world also carries `superseded_at`, so
+  a correction supersedes a name, identifier, relation or area as it does a fact.
+- Triggers refuse a `DELETE` on every Places table and any change of a
+  jurisdiction's `origin`.
+- `facts_one_current_per_key`: one current row per jurisdiction, metric,
+  variant and `valid_from`, so "the current value" is never a choice.
+- Relations need a source, except `located_in` and `federated_with`, which a
+  founded place states about itself (`jurisdiction_relations_sourced`).
+- A `corrected` fact names its decision (`corrected_by_proposal_id`).
+- Two bookkeeping tables: `place_config_syncs` (§5.3) and `place_import_runs`
+  (each run's counts, quarantined values and errors, §8.3).
+- Levels are keyed per pack (`place_levels (pack_key, key)`), so two packs may
+  both have a `municipality` level.
+- Waiting for the phase that first needs them: `ballots` (P2),
+  `organization_places` with `relation-roles.ts` (P3), and the replacement of
+  `organizations.country_code / region / locality` (§4.8, P1).
 
 ### 4.1 `jurisdictions`: authorities
 
@@ -275,8 +303,10 @@ invalidated by import runs.
 
 ```
 src/lib/config/places/
+  index.ts                  assembles the registries into `placesConfig`, validated at load
   schema.ts                 Zod schemas for everything below — the contract
   countries/
+    index.ts                the list of packs (empty until P1)
     switzerland.ts          one pack per country; file name = pack key
     …
   sources.ts                source registry
@@ -284,12 +314,15 @@ src/lib/config/places/
   instrument-kinds.ts       instrument kinds and their JSON schemas
   identifier-schemes.ts     identifier schemes, with `reserved`
   licences.ts               licence policy: SPDX ids allowed, and what each obliges
-  relation-roles.ts         organization_places roles
+  relation-roles.ts         organization_places roles (P3)
 ```
 
-Every module is `as const satisfies <Schema>`, the pattern of
-`entity-registry.ts` and `governance-profiles.ts`: typed at compile time,
-validated at load, tested in CI.
+Every module `satisfies` its schema's input type: typed at compile time,
+validated at load (`definePlacesConfig` parses with Zod, then
+`placesConfigProblems` checks what refers to what), tested in CI. Engine code
+takes a `PlacesConfig` as a parameter instead of importing `placesConfig`, so a
+test can hand it a made-up country. **Built in P0**, with every registry empty
+except the licence policy of §13 (`CC0-1.0`, `PDDL-1.0`, `CC-BY-4.0`).
 
 ### 5.2 A country pack
 
@@ -299,7 +332,7 @@ Its *facts* come from importers. The Swiss pack, abbreviated:
 ```ts
 export const switzerland = {
   key: "switzerland",
-  identifiers: { wikidata: "…", iso3166_1: "CH" },   // exact values filled from sources at build
+  names: { de: "Schweiz", fr: "Suisse", it: "Svizzera", rm: "Svizra", en: "Switzerland" },
   currency: "CHF",
   fiscalYear: { startMonthDay: "01-01" },
   defaultLocales: ["de", "fr", "it", "rm"],
@@ -316,10 +349,13 @@ export const switzerland = {
   ],
   identifierSchemes: ["bfs_municipality", "bfs_district", "zurich_city_quarter"],
   sources: ["bfs-municipality-register", "swisstopo-localities", "zh-tax-multipliers", "estv-tariffs", …],
-  taxModel: "./switzerland.tax.ts",
-  instruments: ["federal-political-rights", "cantonal-political-rights"],
-} as const satisfies CountryPack;
+  taxModel: switzerlandIncomeTax,                    // §6.1, from ./switzerland.tax.ts
+  instrumentKinds: ["popular_vote", "initiative", "referendum"],
+} satisfies CountryPackInput;
 ```
+
+The country's own identifiers (Wikidata, ISO 3166) are not in the pack: they are
+data on its root jurisdiction, imported with a source like every identifier.
 
 Nothing in that block is read by name anywhere in `src/`. The engine iterates
 `levels`, resolves `parent`, looks up `names` for the reader's locale, and hands
@@ -330,13 +366,19 @@ Nothing in that block is read by name anywhere in `src/`. The engine iterates
 Registries that facts FK-reference (`place_country_packs`, `place_levels`,
 `place_metrics`, `place_identifier_schemes`, `place_instrument_kinds`) are
 **projections** of config, written by an idempotent `pnpm run places:sync-config`
-that deploy runs before the app starts:
+(`src/lib/places/sync-config.ts`, built in P0). **Every import run syncs first,
+inside its own transaction**, so the registries always exist before anything
+references them and deploy needs no extra step (the fleet's deploy applies
+migrations and has no pre-start hook). CI runs it with `--check` on a freshly
+migrated database. The sync:
 
 - inserts new keys and updates labels;
-- **refuses to remove a key still referenced** by any fact, and fails the deploy
-  with the referencing rows. A registry entry is retired by marking it retired,
-  never by vanishing;
-- writes an audit row with the config's git SHA.
+- **refuses to remove a key still referenced** by any data, naming it. A key
+  that vanished from config and that nothing uses is marked retired, never
+  deleted; config can also retire a key explicitly (`retired: true`);
+- refuses changes the data cannot survive: a metric's value type once facts hold
+  it, or making a scheme reserved that a founded place already carries;
+- writes an audit row (`place_config_syncs`) with the config's hash and git SHA.
 
 So the database enforces integrity (FKs), config stays the single producer, and
 adding a country needs no migration.
@@ -653,10 +695,10 @@ before the build.
 
 **P0: foundations, no country yet**
 - `src/lib/config/places/schema.ts` and the empty registries; `places:sync-config`;
-  migrations for §4 with empty tables.
+  migrations for §4 with empty tables. (Built: §4, §5.1, §5.3.)
 - `@bitbaum/tax-model` with the `TaxModel` schema, tested against a synthetic
-  model (written: bitbaum/orangecat#1190), then vendored into Solon with its
-  drift check.
+  model, then vendored into Solon with its drift check. (Built:
+  bitbaum/orangecat#1190, `src/lib/tax-model/`, `check:vendored-drift`.)
 - The importer framework with a fixture adapter; the invariant engine.
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
 - The Register organization, founded by George under `SOLE` (his signature),

@@ -123,8 +123,11 @@ Proposal (DRAFT) ──open──> VotingSession (OPEN) ──signed votes──
 
 ## Data model
 
-`src/lib/db/schema.ts` is the SSOT — **9 models** (Drizzle), with types, validation
-and API contracts derived from it.
+`src/lib/db/schema.ts` is the SSOT for governance — **9 models** (Drizzle), with
+types, validation and API contracts derived from it. Places (every jurisdiction,
+official and founded) has its own module, `src/lib/db/places-schema.ts`; its
+tables exist and are empty until the first country is imported
+(`docs/design/2026-09-places-and-jurisdictions.md`).
 
 ```
 Organization ── has many ──> Member (HUMAN | AGENT; OrangeCat identity and/or own Bitcoin key)
