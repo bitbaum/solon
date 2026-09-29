@@ -388,5 +388,27 @@
     "readFreely": "Per leggere qualsiasi cosa su Solon non serve un account: ogni decisione e il suo registro sono pubblici.",
     "unavailable": "L’accesso non è attivo su questa istanza di Solon. Tutto resta leggibile senza account.",
     "photoLine": "Deciso alla luce del sole."
+  },
+  "Places": {
+    "kicker": "{level} · {pack}",
+    "metaTitle": "{name} · {level}, {pack}",
+    "metaDescription": "{name} ({level}, {pack}): di che cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
+    "official": "Ufficiale",
+    "officialNote": "Registrato come lo pubblicano le sue fonti.",
+    "partOf": "Fa parte di",
+    "alsoServedBy": "Servito anche da",
+    "tax": {
+      "title": "Imposte",
+      "levies": "Riscuote imposte: le aliquote fissate qui entrano nel modello fiscale di {pack}.",
+      "none": "Non riscuote imposte proprie. Qui valgono le imposte dei luoghi di cui fa parte.",
+      "noModel": "Per {pack} non c'è ancora un modello fiscale."
+    },
+    "otherNames": "Altri nomi",
+    "identifiers": "Identificativi",
+    "sources": {
+      "title": "Fonti",
+      "retrieved": "Consultato il {date}",
+      "licence": "Licenza: {licence}"
+    }
   }
 }

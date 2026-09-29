@@ -1,8 +1,9 @@
 /**
  * The P0 acceptance test of the Places design (§11): a made-up country pack
- * imports, validates, and evaluates a tax model, with nothing but its pack and
- * fixtures. Testland's register goes through the real importer into a real
- * database; the tax estimate at the end is computed by hand below.
+ * imports, validates, renders a place page and evaluates a tax model, with
+ * nothing but its pack and fixtures. Testland's register goes through the real
+ * importer into a real database; the tax estimate is computed by hand below;
+ * the page is the real component, rendered from those rows.
  *
  * One story, in order. Safe to rerun on the same database: the first import
  * then finds Testland already there and restores the 2025 register.
@@ -11,7 +12,13 @@
  * skips it.
  */
 import { describe, expect, it } from "vitest";
+import { createElement, type ComponentProps } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { NextIntlClientProvider, createTranslator } from "next-intl";
 import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
+import PlaceProfile from "@/components/places/place-profile";
+import en from "../../../../messages/en.json";
+import de from "../../../../messages/de.json";
 import { placesConfig } from "@/lib/config/places";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import { db } from "@/lib/db/client";
@@ -27,6 +34,7 @@ import { evaluate, taxingLevels } from "@/lib/tax-model";
 import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import type { ImportBatch } from "../importer/batch";
 import { runImport } from "../importer/run";
+import { loadPlacePage } from "../place-page";
 import type { SnapshotStore } from "../importer/snapshots";
 import { TESTLAND_TAX, withTestland } from "./fixtures/testland/config";
 import { OAK_HOLLOW, encode, register, testlandBatch } from "./fixtures/testland/batch";
@@ -34,6 +42,20 @@ import { OAK_HOLLOW, encode, register, testlandBatch } from "./fixtures/testland
 const RUN = process.env.INTEGRATION === "1";
 const testland = withTestland(placesConfig);
 const ON = "2025-06-01";
+
+async function renderPlacePage(slugPath: string, locale: "en" | "de"): Promise<string> {
+  const view = await loadPlacePage(db, testland, slugPath, ON, locale);
+  expect(view, slugPath).not.toBeNull();
+  const messages = locale === "en" ? en : de;
+  const t = createTranslator({ locale, messages, namespace: "Places" });
+  return renderToStaticMarkup(
+    createElement(
+      NextIntlClientProvider,
+      { locale, messages } as ComponentProps<typeof NextIntlClientProvider>,
+      createElement(PlaceProfile, { view: view!, t }),
+    ),
+  );
+}
 
 const snapshots: SnapshotStore & { keys: Set<string> } = {
   keys: new Set(),
@@ -367,6 +389,42 @@ describe.runIf(RUN)("Testland, through the importer", () => {
     expect(await factRows("T112")).toBe(factsBefore);
     expect(await recordedRetrievals(report.contentSha256)).toBe(0);
     expect(await currentMultiplier("T112")).toBe(0.8);
+  });
+
+  it("renders the hamlet's place page from the pack alone", async () => {
+    const html = await renderPlacePage("testland/northshire/millbrook/oak-hollow", "en");
+    expect(html).toContain("<h1");
+    expect(html).toContain("Oak Hollow");
+    expect(html).toContain("Hamlet · Testland");
+    const crumbs = [
+      "/places/testland",
+      "/places/testland/northshire",
+      "/places/testland/northshire/millbrook",
+    ];
+    const positions = crumbs.map((href) => html.indexOf(`href="${href}"`));
+    expect(positions.every((p) => p >= 0)).toBe(true);
+    expect([...positions].sort((a, b) => a - b)).toEqual(positions);
+    expect(html).toContain('href="/places/testland/weavers-guild"');
+    expect(html).toContain(en.Places.tax.none);
+    expect(html).toContain("Hamlet code");
+    expect(html).toContain("Testland Office of Registers: Register of places and rates");
+    expect(html).toContain("Licence: CC0-1.0");
+  });
+
+  it("renders a parish that levies tax, and a shire in German", async () => {
+    const parish = await renderPlacePage("testland/northshire/millbrook", "en");
+    expect(parish).toContain(en.Places.tax.levies.replace("{pack}", "Testland"));
+    expect(parish).toContain('href="https://register.testland.invalid/T111"');
+
+    const shire = await renderPlacePage("testland/northshire", "de");
+    expect(shire).toContain("Nordgrafschaft");
+    expect(shire).toContain("Grafschaft · Testland");
+    expect(shire).toContain(">Northshire <");
+  });
+
+  it("has no page for a path nobody holds, or a pack the config lacks", async () => {
+    expect(await loadPlacePage(db, testland, "testland/nowhere", ON, "en")).toBeNull();
+    expect(await loadPlacePage(db, placesConfig, "testland/northshire", ON, "en")).toBeNull();
   });
 
   it("does not run a source whose licence is not on the policy", async () => {

@@ -27,6 +27,16 @@ test.describe("every page renders", () => {
   }
 });
 
+// A place the running config has no pack for is not found, never an error:
+// production carries no country pack yet, and the CI database holds Testland,
+// which only the tests' config knows.
+test("an unknown place answers 404", async ({ page }) => {
+  for (const href of ["/places/nowhere", "/places/testland/northshire", "/de/places/testland"]) {
+    const res = await page.goto(href, { waitUntil: "domcontentloaded" });
+    expect(res?.status(), href).toBe(404);
+  }
+});
+
 async function background(page: Page, selector: string): Promise<string> {
   return page
     .locator(selector)

@@ -1,9 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: importer framework, invariant engine and chain
-reader built, with Testland importing and evaluating in CI (§8.3, §11).
-Earlier the same day: P0 foundations built — the tables of §4 (what the
+_Last modified 2026-09-29: the minimal place page built; the P0 acceptance
+test now covers it (§9.2, §11). Earlier the same day: importer framework,
+invariant engine and chain reader built, with Testland importing and
+evaluating in CI (§8.3, §11). Earlier: P0 foundations built — the tables of §4 (what the
 build settled is listed there), the config registries and their validation
 (§5.1), and `places:sync-config`, which every import run calls first instead of
 a deploy hook (§5.3). Config labels live with their entries (§3). Earlier the
@@ -668,6 +669,19 @@ The screens are those of the first version of this document, now generic:
   A founded place shows the same skeleton: contributions (voluntary, on top of
   tax), fund and ledger, derived instruments, Join. An ended place keeps its page
   with the successor link.
+
+  **Built (P0, minimal)**: `src/app/[locale]/places/[...slug]/page.tsx` renders
+  1, 2 and a plain 4 (whether the place levies tax, from `taxingLevels`; "no tax
+  model yet" when its pack has none), plus other names, identifiers (linked
+  through the scheme's `urlTemplate`) and the latest retrieval of each source
+  behind the place. What a reader sees is decided by `placeView`
+  (`src/lib/places/place-view.ts`, pure) from what `loadPlacePage`
+  (`place-page.ts`) reads; `PlaceProfile` (`src/components/places/`) takes its
+  translator as a prop, so the acceptance spec renders Testland's pages from
+  the database with the test config. Copy lives in the `Places` namespace of
+  `messages/*.json`, in all five languages. A path nobody holds, or a place
+  whose pack the running config lacks, is a 404 (a render check guards it).
+  The rest of the list comes with the phases that bring its data.
 - **`/compare`**: columns up to the Register's limit, rows grouped as Money, Say,
   Leaving, Status, Size. Every cell sourced, missing shown as missing. **No
   Solon score**; personal weights computed in the browser and labelled as the
@@ -746,10 +760,9 @@ before the build.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
   renders a place page and evaluates a tax model, **with changes only to its
   pack under `src/lib/config/places/` and its fixtures**, none to the engine.
-  (Import, validation and the tax estimate built: Testland, in
-  `src/lib/places/__tests__/fixtures/testland/` and
-  `places-import.integration.test.ts`, runs in CI's integration job. The place
-  page is next.)
+  (Built: Testland, in `src/lib/places/__tests__/fixtures/testland/` and
+  `places-import.integration.test.ts`, imports, validates, renders its place
+  pages and evaluates its tax model in CI's integration job.)
 
 **P1: the Canton of Zürich** (the Swiss pack, partially filled)
 - Levels down to statistical quarters for the City of Zürich. About 160
