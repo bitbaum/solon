@@ -4,8 +4,9 @@
  * 1 January 2021 and on 29 September 2026, its mutations in between, the City
  * of Zürich's statistical quarters, and the canton's municipal multipliers.
  * The P1 acceptance (§11) as far as it is built: Witikon resolves up its chain
- * to Switzerland, a merger is a succession, not an edit, and a commune's
- * multiplier is a dated fact from its source.
+ * to Switzerland, a merger is a succession, not an edit, and the City of Zürich
+ * and Küsnacht at CHF 100,000 match the Federal Tax Administration's
+ * calculator (the golden fixtures).
  *
  * Safe to rerun on the same database: the second pass of every import must
  * change nothing, which is also what the scheduled runs rely on.
@@ -24,7 +25,9 @@ import {
   jurisdictionRelations,
   jurisdictions,
 } from "@/lib/db/places-schema";
-import { loadChain } from "../chain";
+import { switzerlandIncomeTax } from "@/lib/config/places/countries/switzerland";
+import { evaluate } from "@/lib/tax-model";
+import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
@@ -54,7 +57,21 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["bfs-communes-mutations", "mutations-2021-2026.csv"],
   ["zurich-statistical-quarters", "statistical-quarters.json"],
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
+  ["estv-income-tax-scales", "estv-scales-2025.json"],
+  ["estv-canton-multipliers", "estv-rates-2025.json"],
 ];
+
+/**
+ * The Federal Tax Administration's calculator (API_calculateSimpleTaxes), 2025,
+ * taxable income CHF 100,000, no church tax, asked on 2026-09-29. Its CHF 24 per
+ * person Personalsteuer is left out: the model has no fixed amounts yet.
+ */
+const GOLDEN_2025 = [
+  { commune: "261", variant: "single", federal: 2688, canton: 6083, communal: 7386 },
+  { commune: "261", variant: "married", federal: 1816, canton: 4689, communal: 5694 },
+  { commune: "154", variant: "single", federal: 2688, canton: 6083, communal: 4531 },
+  { commune: "154", variant: "married", federal: 1816, canton: 4689, communal: 3493 },
+] as const;
 
 const importFixture = (sourceKey: string, file: string): Promise<ImportReport> =>
   runImport(db, {
@@ -223,4 +240,26 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     expect(zurich.every((f) => Number(f.value) === 1.19)).toBe(true);
     expect(await multipliers("21")).toEqual([]);
   });
+
+  it.each(GOLDEN_2025)(
+    "estimates commune $commune, $variant, at CHF 100,000 as the federal calculator does",
+    async ({ commune, variant, federal, canton, communal }) => {
+      const chain = await loadChain(db, await placeId("bfs_municipality", commune), "2025-06-30");
+      const chainFacts = await loadFacts(
+        db,
+        chain.map((p) => p.id),
+        "2025-06-30",
+      );
+      const estimate = evaluate(switzerlandIncomeTax, evaluatorFacts(chain, chainFacts), {
+        values: { taxable_income: 100_000 },
+        variant,
+      });
+      expect(estimate.complete).toBe(true);
+      expect(estimate.currency).toBe("CHF");
+      const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
+      // The calculator rounds each tax to the franc; canton and commune share one component.
+      expect(Math.abs(amount("federal") - federal)).toBeLessThan(1);
+      expect(Math.abs(amount("cantonal_and_communal") - (canton + communal))).toBeLessThan(2);
+    },
+  );
 });

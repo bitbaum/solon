@@ -6,13 +6,13 @@
  *   pnpm run places:fetch <source-key> [--backfill] [--dry-run] [--plan]
  *
  * --backfill loads the source's history first (once, when a source is first
- * loaded; the schedule never passes it). --plan prints the URLs it would fetch
- * and stops. Exit 1 on a failed run, so a cron runner alerts.
+ * loaded; the schedule never passes it). --plan prints the requests it would
+ * make and stops. Exit 1 on a failed run, so a cron runner alerts.
  */
 import { execFileSync } from "node:child_process";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
-import { fetchAndImport, plannedRetrievals } from "@/lib/places/importer/fetch";
+import { describeRequest, fetchAndImport, plannedRetrievals } from "@/lib/places/importer/fetch";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
 
 const args = process.argv.slice(2);
@@ -35,7 +35,8 @@ function gitSha(): string | null {
 
 async function main(): Promise<number> {
   if (args.includes("--plan")) {
-    console.log(plannedRetrievals(placesConfig, sourceKey!, today, { backfill }).join("\n"));
+    const requests = await plannedRetrievals(placesConfig, sourceKey!, today, { backfill });
+    console.log(requests.map(describeRequest).join("\n"));
     return 0;
   }
   const reports = await fetchAndImport(db, {

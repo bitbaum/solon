@@ -157,4 +157,83 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["switzerland"],
   },
+  {
+    // Confirmed 2026-09-29: the tax calculator's "tax scales" export, one POST
+    // per year for group 88 (every canton's main place, each row also carrying
+    // the federal tariff). Tariffs are enacted law (DBG Art. 36, cantonal tax
+    // acts), unprotected under Art. 5 URG. ESTV answers for unpublished years
+    // with other years' figures, so the adapter asks the year range first.
+    key: "estv-income-tax-scales",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: tax scales",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/#/taxdata/tax-scales",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator: tax scales",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner: Steuertarife",
+    },
+    cadence: "0 5 2 * *",
+    adapter: "estv_tax_scales",
+    options: {
+      url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_exportManyTaxScales",
+      yearRange: {
+        url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_getTaxYearRange",
+        calculator: 1,
+      },
+      taxGroup: 88,
+      fromYear: 2021,
+      taxType: "EINKOMMENSSTEUER",
+      targets: [
+        {
+          target: "BUND",
+          metric: "tax.income.tariff",
+          place: { scheme: "iso_3166_1", value: "CH" },
+        },
+        {
+          target: "KANTON",
+          metric: "tax.income.tariff.basic",
+          cantons: { ZH: { scheme: "bfs_canton", value: "1" } },
+        },
+      ],
+      // Single people with children are taxed on the married tariff; the model's
+      // "single" is a single person without children.
+      variants: [
+        { variant: "single", group: "LEDIG_OHNE_KINDER" },
+        { variant: "married", group: "VERHEIRATET" },
+      ],
+      everyVariantGroup: "ALLE",
+      tableTypes: { BUND: "thresholds", ZUERICH: "widths" },
+    },
+    packs: ["switzerland"],
+  },
+  {
+    // Confirmed 2026-09-29: the tax calculator's "simple rates" export for
+    // group 88; IncomeRateCanton is the canton's own multiplier (Staatssteuerfuss).
+    // Commune multipliers come from the cantons' own publications instead.
+    key: "estv-canton-multipliers",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: multipliers",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/#/taxdata/tax-rates",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator: multipliers",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner: Steuerfüsse",
+    },
+    cadence: "0 5 2 * *",
+    adapter: "estv_simple_rates",
+    options: {
+      url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_exportManySimpleRates",
+      yearRange: {
+        url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_getTaxYearRange",
+        calculator: 1,
+      },
+      taxGroup: 88,
+      fromYear: 2021,
+      field: "IncomeRateCanton",
+      metric: "tax.multiplier",
+      divideBy: 100,
+      cantons: { ZH: { scheme: "bfs_canton", value: "1" } },
+    },
+    packs: ["switzerland"],
+  },
 ];
