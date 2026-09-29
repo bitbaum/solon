@@ -1,0 +1,201 @@
+{
+  "pack": "testland",
+  "jurisdictions": [
+    {
+      "ref": { "scheme": "testland_register", "value": "T100" },
+      "levelKey": "realm",
+      "names": [
+        { "locale": "en", "name": "Testland", "nameType": "self" },
+        { "locale": "de", "name": "Testland", "nameType": "self" }
+      ]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T110" },
+      "levelKey": "shire",
+      "names": [
+        { "locale": "en", "name": "Northshire", "nameType": "self" },
+        { "locale": "de", "name": "Nordgrafschaft", "nameType": "self" }
+      ]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T120" },
+      "levelKey": "shire",
+      "names": [{ "locale": "en", "name": "Southshire", "nameType": "self" }]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T111" },
+      "levelKey": "parish",
+      "names": [{ "locale": "en", "name": "Millbrook", "nameType": "self" }]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T112" },
+      "levelKey": "parish",
+      "names": [{ "locale": "en", "name": "Ashford", "nameType": "self" }]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T121" },
+      "levelKey": "parish",
+      "names": [
+        { "locale": "en", "name": "Fenwick", "nameType": "self" },
+        { "locale": "en", "name": "Fenwic", "nameType": "historical", "validTo": "1901-01-01" }
+      ]
+    },
+    {
+      "ref": { "scheme": "testland_hamlet", "value": "oakhollow" },
+      "levelKey": "hamlet",
+      "names": [{ "locale": "en", "name": "Oak Hollow", "nameType": "self" }]
+    },
+    {
+      "ref": { "scheme": "testland_register", "value": "T190" },
+      "levelKey": "guild",
+      "names": [{ "locale": "en", "name": "Weavers' Guild", "nameType": "self" }]
+    }
+  ],
+  "relations": [
+    {
+      "from": { "scheme": "testland_register", "value": "T110" },
+      "to": { "scheme": "testland_register", "value": "T100" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T120" },
+      "to": { "scheme": "testland_register", "value": "T100" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T111" },
+      "to": { "scheme": "testland_register", "value": "T110" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T112" },
+      "to": { "scheme": "testland_register", "value": "T110" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T121" },
+      "to": { "scheme": "testland_register", "value": "T120" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_hamlet", "value": "oakhollow" },
+      "to": { "scheme": "testland_register", "value": "T111" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T190" },
+      "to": { "scheme": "testland_register", "value": "T111" },
+      "relation": "overlaps"
+    },
+    {
+      "from": { "scheme": "testland_register", "value": "T190" },
+      "to": { "scheme": "testland_register", "value": "T112" },
+      "relation": "overlaps"
+    }
+  ],
+  "facts": [
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T100" },
+      "metricKey": "test.income.tariff",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": {
+        "kind": "progressive",
+        "currency": "XTS",
+        "brackets": [
+          { "from": 0, "rate": 0 },
+          { "from": 20000, "rate": 0.05 },
+          { "from": 60000, "rate": 0.1 }
+        ]
+      }
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T100" },
+      "metricKey": "test.income.tariff",
+      "variant": "together",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": {
+        "kind": "progressive",
+        "currency": "XTS",
+        "brackets": [
+          { "from": 0, "rate": 0 },
+          { "from": 30000, "rate": 0.04 },
+          { "from": 80000, "rate": 0.09 }
+        ]
+      }
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T110" },
+      "metricKey": "test.income.tariff.basic",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": {
+        "kind": "progressive",
+        "currency": "XTS",
+        "brackets": [
+          { "from": 0, "rate": 0 },
+          { "from": 10000, "rate": 0.04 },
+          { "from": 50000, "rate": 0.08 }
+        ]
+      }
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T120" },
+      "metricKey": "test.income.tariff.basic",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": {
+        "kind": "progressive",
+        "currency": "XTS",
+        "brackets": [
+          { "from": 0, "rate": 0 },
+          { "from": 10000, "rate": 0.03 },
+          { "from": 50000, "rate": 0.07 }
+        ]
+      }
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T110" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 1
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T120" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 0.9
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T111" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 1.2
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T112" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 0.8
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T121" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 1.1
+    },
+    {
+      "jurisdiction": { "scheme": "testland_register", "value": "T190" },
+      "metricKey": "test.multiplier",
+      "validFrom": "2025-04-01",
+      "validTo": "2026-04-01",
+      "value": 0.1
+    }
+  ]
+}

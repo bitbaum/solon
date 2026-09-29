@@ -38,6 +38,12 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
   by `pnpm run places:sync-config` (every import run syncs first, in its own
   transaction). The config lives in `src/lib/config/places/`. Places rows are never
   deleted; a trigger refuses it. Design: `docs/design/2026-09-places-and-jurisdictions.md`.
+- **Places data enters only through the importer.** `pnpm run places:import <source-key>
+  <file> [--dry-run]` (`src/lib/places/importer/`) snapshots, parses with the source's
+  adapter (`src/lib/places/adapters/`), checks against config, applies in one
+  transaction and runs the invariant engine; every run lands in `place_import_runs`.
+  No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
+  must keep importing and evaluating with changes only to its pack and fixtures.
 - **There is no codegen.** Typecheck and build read the schema module directly.
 - Migrations live in `drizzle/` (`pnpm run db:generate` after a schema change;
   `pnpm run db:migrate` applies them). **Running migrations against a real
