@@ -388,5 +388,27 @@
     "readFreely": "Zum Lesen brauchen Sie auf Solon nie ein Konto: Jeder Entscheid und sein Protokoll sind öffentlich.",
     "unavailable": "Die Anmeldung ist für diese Solon-Instanz nicht eingeschaltet. Alles hier bleibt ohne Konto lesbar.",
     "photoLine": "Offen entschieden."
+  },
+  "Places": {
+    "kicker": "{level} · {pack}",
+    "metaTitle": "{name} · {level}, {pack}",
+    "metaDescription": "{name} ({level}, {pack}): wozu der Ort gehört, ob er Steuern erhebt, und die Quelle hinter jeder Angabe.",
+    "official": "Amtlich",
+    "officialNote": "So erfasst, wie seine Quellen es veröffentlichen.",
+    "partOf": "Gehört zu",
+    "alsoServedBy": "Ebenfalls zuständig",
+    "tax": {
+      "title": "Steuern",
+      "levies": "Erhebt Steuern: Die hier festgelegten Sätze fliessen ins Steuermodell von {pack} ein.",
+      "none": "Erhebt keine eigenen Steuern. Hier gelten die Steuern der Orte, zu denen er gehört.",
+      "noModel": "Für {pack} gibt es noch kein Steuermodell."
+    },
+    "otherNames": "Weitere Namen",
+    "identifiers": "Kennungen",
+    "sources": {
+      "title": "Quellen",
+      "retrieved": "Abgerufen am {date}",
+      "licence": "Lizenz: {licence}"
+    }
   }
 }

@@ -388,5 +388,27 @@
     "readFreely": "Aucun compte n’est nécessaire pour lire quoi que ce soit sur Solon : chaque décision et son registre sont publics.",
     "unavailable": "La connexion n’est pas activée sur cette instance de Solon. Tout reste lisible sans compte.",
     "photoLine": "Décidé au grand jour."
+  },
+  "Places": {
+    "kicker": "{level} · {pack}",
+    "metaTitle": "{name} · {level}, {pack}",
+    "metaDescription": "{name} ({level}, {pack}) : ce dont ce lieu fait partie, s'il prélève l'impôt, et la source de chaque donnée.",
+    "official": "Officiel",
+    "officialNote": "Enregistré tel que ses sources le publient.",
+    "partOf": "Fait partie de",
+    "alsoServedBy": "Également desservi par",
+    "tax": {
+      "title": "Impôts",
+      "levies": "Prélève l'impôt : les taux fixés ici entrent dans le modèle fiscal de {pack}.",
+      "none": "Ne prélève pas d'impôt propre. Ici s'appliquent les impôts des lieux dont il fait partie.",
+      "noModel": "Pas encore de modèle fiscal pour {pack}."
+    },
+    "otherNames": "Autres noms",
+    "identifiers": "Identifiants",
+    "sources": {
+      "title": "Sources",
+      "retrieved": "Consulté le {date}",
+      "licence": "Licence : {licence}"
+    }
   }
 }
