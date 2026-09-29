@@ -44,6 +44,7 @@ yarn.lock
 # them creates a fight between two writers over generated output.
 drizzle/meta
 
-# Vendored byte for byte from bitbaum/orangecat packages/collective-kinds; CI diffs it against upstream,
+# Vendored byte for byte from bitbaum/orangecat packages/*; CI diffs them against upstream,
 # so OrangeCat's formatting is the formatting.
 src/lib/collective-kinds/
+src/lib/tax-model/
