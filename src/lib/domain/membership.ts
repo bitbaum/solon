@@ -10,6 +10,7 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { registrationMessage, verifyMessage } from "@/lib/bitcoin/message";
+import { founderRule, genesisVerdict, genesisRefusalCopy } from "./founder";
 
 export interface RegisterMemberInput {
   orgSlug: string;
@@ -47,13 +48,17 @@ const activeHumansOf = (organizationId: string) =>
  * only way in was an operator with database access.
  *
  * The founding seat is the one admission that cannot itself be voted on, so it
- * is granted on proof rather than by decision: the first recognized OrangeCat
- * identity to claim it becomes the founding member (with a Bitcoin key if they
- * choose to add one), and that grant is written into the append-only audit trail where
- * anyone can see it happened and when. Every later admission is an ordinary
- * MEMBERSHIP vote by the humans already seated — the genesis branch is closed
- * permanently by its own success, because it only fires while the human roster
- * is empty.
+ * is granted on proof rather than by decision: the identity the deployment
+ * names as founder (src/lib/domain/founder.ts) claims it — with a Bitcoin key
+ * if they choose to add one — and that grant is written into the append-only
+ * audit trail where anyone can see it happened and when. Every later admission
+ * is an ordinary MEMBERSHIP vote by the humans already seated — the genesis
+ * branch is closed permanently by its own success, because it only fires while
+ * the human roster is empty.
+ *
+ * Until 2026-09-29 the seat went to the FIRST signed-in person to claim it.
+ * With sign-up one emailed code away, that was a race anyone could win — and
+ * whoever won it alone decided membership, safety and the rules.
  */
 export async function registerMember(input: RegisterMemberInput): Promise<RegisterMemberResult> {
   const org = await db.query.organizations.findFirst({
@@ -120,6 +125,11 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
     };
   }
 
+  const verdict = genesisVerdict(input.actorId, founderRule());
+  if (!verdict.allowed) {
+    return { registered: false, verified: true, reason: genesisRefusalCopy(verdict) };
+  }
+
   // The count and the insert must be one atomic step: two people submitting at
   // the same instant would otherwise both read zero and both be seated.
   // `bitcoinAddress` and `ocActorId` are each unique per organization, so the
@@ -176,7 +186,11 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   }
 }
 
-/** Is the founding seat still unclaimed? Drives what /join offers. */
+/**
+ * Is the founding seat still unclaimed? Drives what /join and the dashboard
+ * offer. Unclaimed is not the same as claimable — see `genesisVerdict` for
+ * whether a given identity may take it.
+ */
 export async function genesisOpen(orgSlug: string): Promise<boolean> {
   const org = await db.query.organizations.findFirst({
     where: eq(organizations.slug, orgSlug),
