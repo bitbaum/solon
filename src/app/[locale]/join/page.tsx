@@ -3,6 +3,7 @@ import { auth, authEnabled } from "@/lib/auth";
 import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { memberForActor } from "@/lib/auth/recognition";
 import { genesisOpen } from "@/lib/domain/membership";
+import { founderRule, genesisRefusalCopy, genesisVerdict } from "@/lib/domain/founder";
 import { primaryOrg } from "@/lib/domain/org";
 import ClaimSeat from "@/components/governance/claim-seat";
 import { isSafePath, type Query } from "@/lib/domain/proposal-draft";
@@ -125,14 +126,34 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
     );
   }
 
+  // Unclaimed is not claimable: a seeded organization's seat belongs to the
+  // identity the deployment names, and this page never offers a button the
+  // API would refuse.
+  const verdict = genesisVerdict(session.actorId, founderRule());
+  if (!verdict.allowed) {
+    return (
+      <Shell title="The founding seat is reserved">
+        <Card>
+          <p className="text-sm leading-relaxed text-fg-secondary">{genesisRefusalCopy(verdict)}</p>
+          <Actions>
+            <Link href="/governance/audit" className="btn-primary">
+              Read the record
+            </Link>
+            <Secondary href="/orgs/new">Or found your own organization →</Secondary>
+          </Actions>
+        </Card>
+      </Shell>
+    );
+  }
+
   return (
     <Shell title="Claim the founding seat">
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="rounded-surface border border-default bg-surface-raised p-5 text-sm leading-relaxed text-fg-secondary">
           <p>
-            {org.name} has no human members yet. A membership vote cannot open without one, so the
-            founding seat is granted to the first signed-in person who claims it. It is recorded in
-            the audit trail as a founding grant, and every admission after it is an ordinary vote.
+            {org.name} has no human members yet, and you are the identity this deployment names as
+            its founder. Claiming the seat is recorded in the audit trail as a founding grant, and
+            every admission after it is an ordinary membership vote.
           </p>
         </div>
         <ClaimSeat

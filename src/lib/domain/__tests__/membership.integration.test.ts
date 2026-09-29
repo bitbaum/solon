@@ -8,7 +8,7 @@
  * Runs only with INTEGRATION=1 against a migrated database (same harness as
  * the vote spine). Plain `npm test` skips it.
  */
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { MemberStatus, MemberType } from "@/lib/db/enums";
@@ -44,11 +44,44 @@ function claim(slug: string, actorId: string) {
 }
 
 describe.runIf(RUN)("founding seat", () => {
-  it("seats the first human on a valid signature and closes the branch", async () => {
+  // The seat belongs to the identity the deployment names. Each test names its
+  // own claimant so the old "first to press the button" rule cannot pass by
+  // accident.
+  const saved = process.env.SOLON_FOUNDER_ACTOR_ID;
+  const founder = `actor-${randomUUID()}`;
+  beforeEach(() => {
+    process.env.SOLON_FOUNDER_ACTOR_ID = founder;
+  });
+  afterEach(() => {
+    if (saved === undefined) delete process.env.SOLON_FOUNDER_ACTOR_ID;
+    else process.env.SOLON_FOUNDER_ACTOR_ID = saved;
+  });
+
+  it("is closed to everyone while no founder is named", async () => {
+    delete process.env.SOLON_FOUNDER_ACTOR_ID;
+    const slug = await freshOrg();
+    expect(await genesisOpen(slug)).toBe(true);
+    const anyone = claim(slug, `actor-${randomUUID()}`);
+    const refused = await registerMember(anyone.input);
+    expect(refused).toMatchObject({ registered: false, verified: true });
+    expect(refused.reason).toMatch(/no founder has been named/);
+    expect(await genesisOpen(slug)).toBe(true);
+  });
+
+  it("refuses everyone but the named founder", async () => {
+    const slug = await freshOrg();
+    const stranger = claim(slug, `actor-${randomUUID()}`);
+    const refused = await registerMember(stranger.input);
+    expect(refused).toMatchObject({ registered: false, verified: true });
+    expect(refused.reason).toMatch(/reserved for the identity/);
+    expect(await genesisOpen(slug)).toBe(true);
+  });
+
+  it("seats the named founder on a valid signature and closes the branch", async () => {
     const slug = await freshOrg();
     expect(await genesisOpen(slug)).toBe(true);
 
-    const first = claim(slug, `actor-${randomUUID()}`);
+    const first = claim(slug, founder);
     const seated = await registerMember(first.input);
     expect(seated).toMatchObject({ registered: true, verified: true, genesis: true });
 
@@ -65,9 +98,10 @@ describe.runIf(RUN)("founding seat", () => {
     });
     expect((event?.payload as { genesis?: boolean })?.genesis).toBe(true);
 
-    // And the branch is now closed to everyone else.
+    // And the branch is now closed — even to the founder's own second claim.
     expect(await genesisOpen(slug)).toBe(false);
-    const second = claim(slug, `actor-${randomUUID()}`);
+    process.env.SOLON_FOUNDER_ACTOR_ID = `actor-${randomUUID()}`;
+    const second = claim(slug, process.env.SOLON_FOUNDER_ACTOR_ID);
     const refused = await registerMember(second.input);
     expect(refused.registered).toBe(false);
     expect(refused.verified).toBe(true);
@@ -76,7 +110,7 @@ describe.runIf(RUN)("founding seat", () => {
 
   it("refuses a signature that does not match the claimed address", async () => {
     const slug = await freshOrg();
-    const honest = claim(slug, `actor-${randomUUID()}`);
+    const honest = claim(slug, founder);
     const impostor = generateKeyPair();
 
     const result = await registerMember({
@@ -90,7 +124,7 @@ describe.runIf(RUN)("founding seat", () => {
 
   it("will not let a signature be replayed under a different OrangeCat identity", async () => {
     const slug = await freshOrg();
-    const victim = claim(slug, `actor-${randomUUID()}`);
+    const victim = claim(slug, founder);
 
     // Same address, same signature, attacker's actor id: the actor is inside
     // the signed text, so the signature no longer verifies.
@@ -104,8 +138,7 @@ describe.runIf(RUN)("founding seat", () => {
 
   it("does not seat the same actor or address twice", async () => {
     const slug = await freshOrg();
-    const actorId = `actor-${randomUUID()}`;
-    const first = claim(slug, actorId);
+    const first = claim(slug, founder);
     await registerMember(first.input);
 
     const again = await registerMember(first.input);

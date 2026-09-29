@@ -6,6 +6,7 @@ import { memberForActor } from "@/lib/auth/recognition";
 import { db } from "@/lib/db/client";
 import { organizations, proposals, votes, votingSessions } from "@/lib/db/schema";
 import { genesisOpen } from "@/lib/domain/membership";
+import { founderRule, genesisVerdict } from "@/lib/domain/founder";
 import { orgBySlug } from "@/lib/domain/org";
 
 interface NextStep {
@@ -44,9 +45,10 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
 
   if (!member) {
     const open = await genesisOpen(orgSlug);
-    return open
+    const mine = open && genesisVerdict(session.actorId, founderRule()).allowed;
+    return mine
       ? {
-          headline: "The founding seat is unclaimed",
+          headline: "The founding seat is yours to claim",
           detail: "No human is on this roster yet. Claim it with one click and the seat is yours.",
           href: "/join",
           cta: "Claim the seat",

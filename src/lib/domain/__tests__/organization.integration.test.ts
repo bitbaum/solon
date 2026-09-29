@@ -191,9 +191,12 @@ describe.runIf(RUN)("one identity, several rosters", () => {
     const actorId = newActor();
     expect((await createOrganization(founding({ actorId }).input)).created).toBe(true);
 
-    // A second, seeded organization with an empty human roster.
+    // A second, seeded organization with an empty human roster, whose founding
+    // seat the deployment reserves for this same identity.
     const slug = newSlug();
     await db.insert(organizations).values({ slug, name: "Seeded Org" });
+    const saved = process.env.SOLON_FOUNDER_ACTOR_ID;
+    process.env.SOLON_FOUNDER_ACTOR_ID = actorId;
     const pair = generateKeyPair();
     const claimed = await registerMember({
       orgSlug: slug,
@@ -207,6 +210,8 @@ describe.runIf(RUN)("one identity, several rosters", () => {
         ),
       },
     });
+    if (saved === undefined) delete process.env.SOLON_FOUNDER_ACTOR_ID;
+    else process.env.SOLON_FOUNDER_ACTOR_ID = saved;
     expect(claimed).toMatchObject({ registered: true, genesis: true });
   });
 });
