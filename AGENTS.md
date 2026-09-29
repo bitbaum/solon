@@ -46,6 +46,8 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
   what the adapter declares from the source's URL and imports each in turn;
   `--backfill` loads history once, on a source's first load only. Adapters parse a
   format; which levels and schemes rows become is the source's `options` in config.
+  In production the bundle has no scripts: run `places:fetch` from a checkout of the
+  deployed commit on the box (design §8.3, "In production").
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
   must keep importing and evaluating with changes only to its pack and fixtures.
   `pnpm run check:places-literals` (in `verify`) fails on any registry key, ISO

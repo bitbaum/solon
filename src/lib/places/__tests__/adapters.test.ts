@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { ADAPTERS } from "../adapters";
 import { isoFromDottedDate, parseCsv } from "../adapters/csv";
+import { fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
 import type { BatchJurisdiction, ImportBatch } from "../importer/batch";
 
@@ -11,7 +12,11 @@ const FIXTURES = join(__dirname, "fixtures", "switzerland");
 const fixture = (name: string) => new Uint8Array(readFileSync(join(FIXTURES, name)));
 
 /** A retrieval of a registered source, through its adapter as a run would. */
-function mapSource(sourceKey: string, bytes: Uint8Array): ImportBatch {
+function mapSource(
+  sourceKey: string,
+  bytes: Uint8Array,
+  skipped: { row: string; reason: string }[] = [],
+): ImportBatch {
   const source = placesConfig.sources.find((s) => s.key === sourceKey)!;
   const adapter = ADAPTERS.get(source.adapter)!;
   const decoded = adapter.decode
@@ -22,6 +27,7 @@ function mapSource(sourceKey: string, bytes: Uint8Array): ImportBatch {
     pack: placesConfig.packs.find((p) => p.key === source.packs[0]),
     options: adapter.options?.parse(source.options),
     retrieval: { url: null },
+    skip: (row, reason) => skipped.push({ row, reason }),
   });
 }
 
@@ -206,5 +212,48 @@ describe("the City of Zürich's statistical quarters", () => {
     const districts = batch.jurisdictions.filter((j) => j.levelKey === "city_district");
     expect(districts.map((d) => d.ref.value).sort()).toEqual(["1", "7"]);
     expect(batch.jurisdictions).toHaveLength(7);
+  });
+});
+
+describe("the canton of Zürich's municipal multipliers", () => {
+  const skipped: { row: string; reason: string }[] = [];
+  const batch = mapSource("zurich-municipal-multipliers", fixture("multipliers-2020-2026.csv"), skipped);
+  const multiplier = (commune: string, year: number) =>
+    batch.facts.find(
+      (f) => f.jurisdiction.value === commune && f.validFrom === `${year}-01-01`,
+    );
+
+  it("records each commune's multiplier as a ratio for its fiscal year", () => {
+    expect(multiplier("261", 2025)).toEqual({
+      jurisdiction: { scheme: "bfs_municipality", value: "261" },
+      metricKey: "tax.multiplier",
+      variant: null,
+      validFrom: "2025-01-01",
+      validTo: "2025-12-31",
+      value: 1.19,
+    });
+    expect(multiplier("154", 2026)?.value).toBe(0.73);
+    expect(batch.jurisdictions).toEqual([]);
+  });
+
+  it("reads no year before the one the options start at", () => {
+    expect(multiplier("261", 2020)).toBeUndefined();
+    expect(multiplier("261", 2021)).toBeDefined();
+  });
+
+  it("leaves out a commune with more than one rate, and says why", () => {
+    expect(multiplier("198", 2025)).toBeUndefined();
+    expect(multiplier("21", 2022)).toBeUndefined();
+    expect(skipped.map((s) => s.row)).toContain("bfs_municipality:198 2025");
+    expect(skipped.find((s) => s.row === "bfs_municipality:198 2025")?.reason).toMatch(
+      /more than one rate.*STF_O_KIRCHE2 = 110/,
+    );
+  });
+
+  it("dates a fiscal year that does not start in January", () => {
+    expect(fiscalYearPeriod(2025, "04-06")).toEqual({
+      validFrom: "2025-04-06",
+      validTo: "2026-04-05",
+    });
   });
 });

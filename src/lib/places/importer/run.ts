@@ -90,6 +90,8 @@ export interface ImportReport {
   quarantined: { fact: string; reason: string }[];
   /** Places this source stated before that the batch no longer mentions. */
   missingFromSource: string[];
+  /** Rows the adapter left out on purpose, with why. */
+  skipped: { row: string; reason: string }[];
   problems: string[];
 }
 
@@ -135,6 +137,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
     counts: noChanges(),
     quarantined: [],
     missingFromSource: [],
+    skipped: [],
     problems: [],
   };
 
@@ -185,6 +188,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         pack,
         options: adapterOptions.data,
         retrieval: { url: retrieval.url },
+        skip: (row, reason) => report.skipped.push({ row, reason }),
       }),
     );
     const check = checkBatch(batch, config, sourceKey);
@@ -251,6 +255,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         counts: report.counts,
         quarantined: report.quarantined,
         missingFromSource: report.missingFromSource,
+        skipped: report.skipped,
         problems: report.problems,
       },
       finishedAt: new Date(),

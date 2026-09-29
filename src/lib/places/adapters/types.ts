@@ -14,6 +14,8 @@ export interface MapContext<Options> {
   options: Options;
   /** Where these bytes came from, when known. */
   retrieval: { url: string | null };
+  /** Leaves a row out on purpose; the run's report lists it with the reason. */
+  skip: (row: string, reason: string) => void;
 }
 
 /**

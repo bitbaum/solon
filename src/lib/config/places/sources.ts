@@ -122,4 +122,39 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["switzerland"],
   },
+  {
+    // Confirmed 2026-09-29: opendata.swiss dataset
+    // "steuerfusse-der-zurcher-gemeinden-fur-naturliche-und-juristische-personen",
+    // terms_by. One row per commune and year since 2012. STF_O_KIRCHE1 is the
+    // commune's multiplier without church tax; a commune whose school
+    // communities levy different rates carries a second rate in STF_O_KIRCHE2,
+    // and no single multiplier applies to all of it.
+    key: "zurich-municipal-multipliers",
+    publisher: "Canton of Zürich, Office for Statistics and Data",
+    dataset: "Steuerfüsse der Zürcher Gemeinden – Zeitreihe",
+    homepage:
+      "https://opendata.swiss/de/dataset/steuerfusse-der-zurcher-gemeinden-fur-naturliche-und-juristische-personen",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Canton of Zürich, Office for Statistics and Data: municipal tax multipliers",
+      de: "Kanton Zürich, Amt für Statistik und Daten: Gemeindesteuerfüsse",
+    },
+    cadence: "0 5 1 * *",
+    adapter: "csv_facts",
+    options: {
+      url: "https://www.web.statistik.zh.ch/ogd/data/steuerfuesse/kanton_zuerich_stf_timeseries.csv",
+      place: { scheme: "bfs_municipality", column: "BFSNR" },
+      yearColumn: "YEAR",
+      fromYear: 2021,
+      facts: [{ metric: "tax.multiplier", column: "STF_O_KIRCHE1", divideBy: 100 }],
+      skipUnless: [
+        {
+          column: "STF_O_KIRCHE2",
+          equals: "0",
+          reason: "the commune levies more than one rate; which applies depends on the address",
+        },
+      ],
+    },
+    packs: ["switzerland"],
+  },
 ];

@@ -12,12 +12,11 @@
  */
 import { z } from "zod";
 import type { BatchJurisdiction, BatchName, BatchRelation, ExternalRef } from "../importer/batch";
-import { isoFromDottedDate, parseCsv } from "./csv";
+import { decodeCsv, isoFromDottedDate } from "./csv";
 import type { Adapter } from "./types";
 
 const dotted = z.string().regex(/^(\d{2}\.\d{2}\.\d{4})?$/, "a DD.MM.YYYY date or empty");
 const code = z.string().regex(/^\d+$/, "a number");
-const decodeCsv = (bytes: Uint8Array): unknown => parseCsv(new TextDecoder().decode(bytes));
 const refSchema = z.object({ scheme: z.string().min(1), value: z.string().min(1) });
 const isoDate = z.iso.date();
 

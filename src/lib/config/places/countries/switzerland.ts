@@ -107,6 +107,11 @@ export const switzerland: CountryPackInput = {
     "zurich_city_district",
     "zurich_statistical_quarter",
   ],
-  sources: ["bfs-communes-snapshot", "bfs-communes-mutations", "zurich-statistical-quarters"],
+  sources: [
+    "bfs-communes-snapshot",
+    "bfs-communes-mutations",
+    "zurich-statistical-quarters",
+    "zurich-municipal-multipliers",
+  ],
   taxModel: switzerlandIncomeTax,
 };
