@@ -42,7 +42,7 @@ async function aSource() {
   const [row] = await db
     .insert(sources)
     .values({
-      sourceKey: "testland-register",
+      sourceKey: "testland-by-hand",
       retrievedAt: new Date(),
       contentSha256: "0".repeat(64),
       snapshotKey: `test/${tag()}`,
@@ -53,10 +53,21 @@ async function aSource() {
   return row!;
 }
 
+/**
+ * A Testland place that ended long ago: enough for every rule here, and never
+ * part of the live hierarchy the importer spec builds and checks alongside.
+ */
 async function aStatePlace(levelKey: string) {
   const [row] = await db
     .insert(jurisdictions)
-    .values({ origin: "state", countryPack: "testland", levelKey, slugPath: `testland/${tag()}` })
+    .values({
+      origin: "state",
+      countryPack: "testland",
+      levelKey,
+      slugPath: `testland/ended-${tag()}`,
+      validFrom: "1800-01-01",
+      validTo: "1801-01-01",
+    })
     .returning();
   return row!;
 }

@@ -1,7 +1,9 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: P0 foundations built — the tables of §4 (what the
+_Last modified 2026-09-29: importer framework, invariant engine and chain
+reader built, with Testland importing and evaluating in CI (§8.3, §11).
+Earlier the same day: P0 foundations built — the tables of §4 (what the
 build settled is listed there), the config registries and their validation
 (§5.1), and `places:sync-config`, which every import run calls first instead of
 a deploy hook (§5.3). Config labels live with their entries (§3). Earlier the
@@ -563,6 +565,43 @@ adapters must not reimplement:
 
 A failed run alerts through Loki's cron runner. Stale data is shown as stale.
 
+**Built (P0)**: `src/lib/places/importer/` (`run.ts` the steps above,
+`batch.ts` the generic shapes, `validate.ts` the config checks and quarantine,
+`snapshots.ts` the sha256 store), `src/lib/places/invariants.ts`, adapters in
+`src/lib/places/adapters/` (the `fixture` adapter reads the generic shapes
+as-is, so a batch can be written by hand and reviewed), and
+`pnpm run places:import <source-key> <file> [--dry-run] [--url=…]`, which
+prints the report and exits 1 on a failed run. What the build settled:
+
+- Every run is a row in `place_import_runs`, failed ones included, with its
+  counts, quarantined values and problems. A dry run does the whole
+  transaction, invariants included, and rolls it back, so its diff is exact.
+- The run syncs the config registries inside its own transaction (§5.3) and
+  records the retrieval in `sources` only if it applies.
+- A source speaks for itself: names, identifiers and relations it stated
+  before and no longer states are superseded; what other sources said is left
+  alone. Facts are per period: an omitted period stands, a changed value
+  supersedes. Current state places the source knew and no longer mentions are
+  **reported** (`missingFromSource`), never ended: only a source saying so can
+  end a place.
+- A new place's `slug_path` is fixed when it is first recorded (pack key for
+  the root level, then one segment per `part_of` step from its own name;
+  overlapping places sit directly under the pack key), so links hold through
+  renamings. A clash gets the identifier appended.
+- The invariants run over the pack's whole current hierarchy, not just the
+  batch.
+- Snapshots live in `PLACES_SNAPSHOT_DIR` (default `./data/snapshots`, key
+  `ab/<sha256>`).
+- `src/lib/places/chain.ts` reads it back: a place's chain on a date (itself,
+  its `part_of` ancestors, the overlapping places over any of them), the
+  chain's current facts, and those facts in the evaluator's terms. Whether a
+  level takes tax is `taxingLevels` over them, from the model, not a flag.
+
+Not yet: fetching from a URL (P1 hands the file in; the scheduled fetch comes
+with the first real adapter), areas and assertions (P4), and CI dry-runs of
+real adapters (none exist yet; the fixture adapter is exercised by the
+acceptance spec).
+
 ### 8.4 Corrections and editorial policy: the Register
 
 Wrong data is fixed by a decision, not an edit. A **Register** organization on
@@ -699,13 +738,18 @@ before the build.
 - `@bitbaum/tax-model` with the `TaxModel` schema, tested against a synthetic
   model, then vendored into Solon with its drift check. (Built:
   bitbaum/orangecat#1190, `src/lib/tax-model/`, `check:vendored-drift`.)
-- The importer framework with a fixture adapter; the invariant engine.
+- The importer framework with a fixture adapter; the invariant engine. (Built:
+  §8.3.)
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
 - The Register organization, founded by George under `SOLE` (his signature),
   with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
   renders a place page and evaluates a tax model, **with changes only to its
   pack under `src/lib/config/places/` and its fixtures**, none to the engine.
+  (Import, validation and the tax estimate built: Testland, in
+  `src/lib/places/__tests__/fixtures/testland/` and
+  `places-import.integration.test.ts`, runs in CI's integration job. The place
+  page is next.)
 
 **P1: the Canton of Zürich** (the Swiss pack, partially filled)
 - Levels down to statistical quarters for the City of Zürich. About 160
