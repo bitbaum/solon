@@ -1,11 +1,13 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: George decided §13. The Register starts under "One
-person decides" with George as its only mandate holder, and everyone else
-advises, including by advisory vote (§8.4); editorial policies are adopted by the
-Register's decisions, not by a member vote (§5.4). Earlier the same day:
-rewritten for world coverage and zero hardcoding (§1, §4–§7)._
+_Last modified 2026-09-29: paths corrected to Solon's layout (config lives in
+`src/lib/config/places/`); the evaluator is named `@bitbaum/tax-model`, produced
+in OrangeCat and vendored here (§6.2, §11), and its result reports `complete` and
+`missing`. Earlier the same day: George decided §13 (the Register starts under
+"One person decides", everyone else advises, §8.4; editorial policies are
+Register decisions, §5.4), and the doc was rewritten for world coverage and zero
+hardcoding (§1, §4–§7)._
 _Companions: `2026-09-solon-plan.md` (the product), `2026-09-solon-constitution-engine.md`
 (the governance engine). What Solon IS stays in its Loki project profile; this
 file is the design behind one function of it and does not restate the vision._
@@ -102,8 +104,8 @@ This table is the "no hardcoding" rule in operational form.
 
 | Kind | Examples | Lives in | Changed by |
 |---|---|---|---|
-| **Mechanism** | hierarchy walk, tax-model evaluator, importer framework, invariant engine, map renderer | code (`src/lib/places/`, the shared evaluator package) | PR with tests; contains **no** country, level, currency or date literal (guarded, §12) |
-| **Structure config** | country packs (levels, local names, identifier schemes, tax model shape, fiscal year, currency), source registry, metric catalog, instrument kinds, identifier-scheme registry, licence policy | `config/places/**` as typed TS modules validated by Zod | PR reviewed by humans; anyone may contribute a pack |
+| **Mechanism** | hierarchy walk, tax-model evaluator, importer framework, invariant engine, map renderer | code (`src/lib/places/`, the shared `@bitbaum/tax-model` package) | PR with tests; contains **no** country, level, currency or date literal (guarded, §12) |
+| **Structure config** | country packs (levels, local names, identifier schemes, tax model shape, fiscal year, currency), source registry, metric catalog, instrument kinds, identifier-scheme registry, licence policy | `src/lib/config/places/**` as typed TS modules validated by Zod | PR reviewed by humans; anyone may contribute a pack |
 | **Editorial policy** | naming policy for disputed places, aggregate threshold, which third-party indices appear, staleness rule | **Solon policies** of the Register organization (`policies` table, versioned, each version adopted by a Register decision) | a Register decision under its governance profile (§8.4); this is the engine doc's "rules as data, amended by the rules" |
 | **Facts** | places, areas, names, identifiers, relations, recognitions, tax rates, instruments, ballots | database, written only by importers and register decisions | import runs; corrections by decision (§8.4) |
 | **Personal data** | residence, civic split, income | OrangeCat (residence, split), the browser (income) | the person |
@@ -167,7 +169,7 @@ source_id, valid_from, valid_to)`
 `jurisdiction_identifiers (jurisdiction_id, scheme, value, valid_from, valid_to,
 source_id)`, unique on `(scheme, value, valid_from)`.
 
-Schemes come from the **identifier-scheme registry** (`config/places/identifier-schemes.ts`):
+Schemes come from the **identifier-scheme registry** (`src/lib/config/places/identifier-schemes.ts`):
 key, label, validator pattern, URL template, and `reserved: true` for schemes
 only a state authority can carry (ISO 3166, national statistics codes). The
 registry is synced to `place_identifier_schemes` and FK-referenced. A trigger
@@ -221,7 +223,7 @@ invariant engine, not coded.
 - **`facts`** `(id, jurisdiction_id, metric_key → place_metrics, variant,
   valid_from, valid_to, value_numeric, value_json, unit, currency, source_id NOT
   NULL, method, recorded_at, superseded_at)`.
-  - Metrics come from `config/places/metrics.ts` (label key, unit, value type,
+  - Metrics come from `src/lib/config/places/metrics.ts` (label key, unit, value type,
     definition, schema of `value_json`), synced and FK-referenced.
   - `currency` is ISO 4217, per fact. **No currency is assumed anywhere.**
     Cross-currency comparison converts with sourced, dated exchange-rate facts,
@@ -236,7 +238,7 @@ invariant engine, not coded.
 `instruments (id, jurisdiction_id, kind → instrument-kind registry, eligibility
 jsonb, requirements jsonb, how_key, official_url, source_id, valid_from, valid_to)`.
 Kinds, and the JSON schemas of `eligibility` and `requirements`, live in
-`config/places/instrument-kinds.ts`. All thresholds are data: a federal initiative's
+`src/lib/config/places/instrument-kinds.ts`. All thresholds are data: a federal initiative's
 signature count and window are a row, not a constant.
 
 **Founded places store no instruments.** They are derived from the
@@ -272,7 +274,7 @@ invalidated by import runs.
 ### 5.1 Layout
 
 ```
-config/places/
+src/lib/config/places/
   schema.ts                 Zod schemas for everything below — the contract
   countries/
     switzerland.ts          one pack per country; file name = pack key
@@ -354,6 +356,7 @@ A country's tax formula is **data in its pack**. The Swiss income tax, as data:
 
 ```ts
 export const switzerlandIncomeTax = {
+  schemaVersion: 1,
   base: "taxable_income",
   components: [
     { key: "federal", tariff: { level: "nation", metric: "tax.income.tariff" } },
@@ -380,11 +383,15 @@ different structure is a different model, not a code branch.
 
 ### 6.2 The evaluator
 
-A small **pure** function, `evaluate(model, facts, inputs) → { components[],
-total, effectiveRate, currency, assumptions[] }`. It has no I/O, is
+A small **pure** function, `evaluate(model, facts, input) → { components[],
+total, effectiveRate, currency, complete, missing[] }`. It has no I/O, is
 deterministic, and runs in the browser, so the income never leaves the device.
-OrangeCat (finances, civic split) and Solon (map, compare, move planner) both
-need it, which is the fleet's test for a shared package (decision §13). Its tests
+A missing required fact is never guessed: the estimate comes back incomplete
+and names it in `missing`. OrangeCat (finances, civic split) and Solon (map,
+compare, move planner) both need it, which is the fleet's test for a shared
+package (decision §13). It is `@bitbaum/tax-model`: produced in
+`orangecat/packages/tax-model`, with no dependencies, and copied byte for byte
+into Solon under a drift check, the way `@bitbaum/collective-kinds` is shared. Its tests
 are **golden fixtures per pack**: sample incomes, the official calculator's
 output for them, and the source and date the output was captured from. The
 evaluator is correct when it reproduces them within a stated tolerance.
@@ -457,7 +464,7 @@ follow once legal advice confirms them (decided, §13).
 
 ### 8.1 Licence policy first
 
-`config/places/licences.ts` lists the SPDX licences the register accepts and
+`src/lib/config/places/licences.ts` lists the SPDX licences the register accepts and
 what each obliges (attribution text, share-alike scope). **An importer whose
 source licence is not on the list does not run.** The policy matters because
 the obvious world datasets differ: some are public domain or CC0, some CC BY
@@ -645,17 +652,18 @@ Each phase ships on its own, verified live, with its acceptance test written
 before the build.
 
 **P0: foundations, no country yet**
-- `config/places/schema.ts` and the empty registries; `places:sync-config`;
+- `src/lib/config/places/schema.ts` and the empty registries; `places:sync-config`;
   migrations for §4 with empty tables.
-- The evaluator package with the `TaxModel` schema, tested against a synthetic
-  model.
+- `@bitbaum/tax-model` with the `TaxModel` schema, tested against a synthetic
+  model (written: bitbaum/orangecat#1190), then vendored into Solon with its
+  drift check.
 - The importer framework with a fixture adapter; the invariant engine.
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
 - The Register organization, founded by George under `SOLE` (his signature),
   with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
-  renders a place page and evaluates a tax model, **with zero changes under
-  `src/`**.
+  renders a place page and evaluates a tax model, **with changes only to its
+  pack under `src/lib/config/places/` and its fixtures**, none to the engine.
 
 **P1: the Canton of Zürich** (the Swiss pack, partially filled)
 - Levels down to statistical quarters for the City of Zürich. About 160
@@ -703,7 +711,7 @@ before the build.
 
 | Principle | Guard |
 |---|---|
-| No country, level, currency, month-day or ISO literal in the engine | `scripts/check-places-no-literals.ts`: fails on any registry key, ISO code or currency code under `src/lib/places/**` and the evaluator package, except in tests and fixtures. Keys are read from the registries, so the check has no list of its own. |
+| No country, level, currency, month-day or ISO literal in the engine | `scripts/check-places-no-literals.ts`: fails on any registry key, ISO code or currency code under `src/lib/places/**` and the vendored `@bitbaum/tax-model`, except in tests and fixtures. Keys are read from the registries, so the check has no list of its own. |
 | Config is valid | Zod validation of every module in `verify`; each pack's slug rules produce unique paths; each pack's tax model type-checks against its metrics |
 | Config and database agree | `places:sync-config --check` in CI against a migrated test database |
 | Nothing without a source | a DB constraint (`source_id NOT NULL` where required) plus an invariant for founded exceptions |
