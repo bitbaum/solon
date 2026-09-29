@@ -14,6 +14,9 @@ export function parseCsv(text: string): Record<string, string>[] {
     .map((row) => Object.fromEntries(header.map((name, i) => [name, row[i] ?? ""])));
 }
 
+/** An adapter's `decode` for CSV sources, UTF-8. */
+export const decodeCsv = (bytes: Uint8Array): unknown => parseCsv(new TextDecoder().decode(bytes));
+
 function csvRows(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];

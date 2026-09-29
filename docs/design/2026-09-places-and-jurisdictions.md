@@ -1,7 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: P1 begun — the Swiss pack's structure is built:
+_Last modified 2026-09-29: the canton of Zürich's commune multipliers import
+(§8.2), adapters may skip rows with a reason and date yearly figures by the
+pack's fiscal year (§8.3); the Swiss structure is live, loaded as §8.3
+describes. Earlier the same day: P1 begun — the Swiss pack's structure is built:
 the FSO commune register (all cantons, mergers since 2021) and the City of
 Zürich's quarters import through real adapters that `places:fetch` retrieves,
 with adapter options in config and Swiss terms of use on the licence policy
@@ -577,13 +580,21 @@ hardcoded date.
 | `bfs-communes-snapshot` | every canton, district and commune valid on a date, with validity and parent | FSO register API, CSV, no key | opendata.swiss open |
 | `bfs-communes-mutations` | mergers between two dates | same API | opendata.swiss open |
 | `zurich-statistical-quarters` | the City of Zürich's 12 districts and 34 quarters | the city's WFS, GeoJSON | CC0 |
+| `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
 
-Found for the next steps: the canton's commune multipliers since 2012
-(Statistical Office of the Canton of Zürich, CSV, "must provide the source");
-federal and cantonal tariffs and the canton's own multiplier (the Federal Tax
-Administration's tax-calculator exports, official figures); the city's address
-register with postcode, quarter and parishes per address (CC0), which gives
-postcode → quarter with shares.
+A Zürich commune whose school communities levy different rates (Uster and
+Turbenthal today; 16 commune-years since 2021) has no single multiplier: which
+one applies depends on the address. The importer leaves those rows out and
+lists them in the run's report until the postcode resolver can tell the
+addresses apart. The Federal Tax Administration's figures differ from the
+canton's for at least one commune (Aeugst am Albis 2025: 90 against 92); the
+canton publishes its communes' own decisions, so its figures are the ones used.
+
+Found for the next steps: federal and cantonal tariffs and each canton's own
+multiplier (the Federal Tax Administration's tax-calculator exports, official
+figures; POST requests whose body names the year, which the `sources` row
+cannot record yet); the city's address register with postcode, quarter and
+parishes per address (CC0), which gives postcode → quarter with shares.
 
 ### 8.3 The importer framework
 
@@ -661,8 +672,21 @@ run stops the rest. What the first real adapters settled:
   so a backfill imports today's state first.
 - Measured on the full register: the backfill (today, then one snapshot a year
   since 2021) takes about 25 seconds on a laptop; a rerun changes nothing.
+- An adapter may leave a row out on purpose (a figure that does not apply to
+  the whole place); it names the row and the reason, and the run's report
+  lists them under `skipped`. Anything else it cannot read fails the run.
+- Figures published per year become facts over the pack's fiscal year
+  (`fiscalYear.startMonthDay`), so no adapter assumes years start in January.
 
-Not yet: areas and assertions (P4), the scheduled runner on the box, and CI
+**In production (until the scheduled runner exists)**: the deployed app is a
+standalone bundle without the scripts, so a load runs from a checkout of the
+deployed commit on the box, as the app's user, against the box's database,
+with snapshots under `/opt/solon/shared/places-snapshots`, first with
+`--plan` and `--dry-run`. The Swiss structure was loaded this way on
+2026-09-29 at `b7027f1`, and reproduced the local load exactly.
+
+Not yet: areas and assertions (P4), the scheduled runner on the box (a route
+the box's timer calls, which needs a cron secret in the app's environment), and CI
 dry-runs of real adapters against live sources (CI imports cuts of the real
 retrievals instead).
 
@@ -852,8 +876,10 @@ before the build.
   places, with snapshots since 2021 and 79 mergers as `succeeds`; the City of
   Zürich's 12 districts and 34 quarters. Witikon resolves up its chain to
   Switzerland and its page says it takes no tax
-  (`swiss-structure.integration.test.ts`, from cuts of the real retrievals).
-  Next: tariffs and multipliers with golden fixtures, the postcode resolver,
+  (`switzerland.integration.test.ts`, from cuts of the real retrievals). Live
+  since 2026-09-29. The canton's commune multipliers since 2021 import too.
+  Next: tariffs and each canton's multiplier (which need the request a
+  retrieval made recorded, §8.2), the golden fixtures, the postcode resolver,
   then the screens.
 
 **P2: Switzerland in depth**

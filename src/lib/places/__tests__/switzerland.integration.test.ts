@@ -1,10 +1,11 @@
 /**
- * The Swiss structure through the real importer into a real database, from
- * cuts of the actual retrievals (fixtures/switzerland): the FSO commune
- * register on 1 January 2021 and on 29 September 2026, its mutations in
- * between, and the City of Zürich's statistical quarters. The part of the P1
- * acceptance (§11) that needs no tax facts: Witikon resolves up its chain to
- * Switzerland, and a merger is a succession, not an edit.
+ * The Swiss pack through the real importer into a real database, from cuts of
+ * the actual retrievals (fixtures/switzerland): the FSO commune register on
+ * 1 January 2021 and on 29 September 2026, its mutations in between, the City
+ * of Zürich's statistical quarters, and the canton's municipal multipliers.
+ * The P1 acceptance (§11) as far as it is built: Witikon resolves up its chain
+ * to Switzerland, a merger is a succession, not an edit, and a commune's
+ * multiplier is a dated fact from its source.
  *
  * Safe to rerun on the same database: the second pass of every import must
  * change nothing, which is also what the scheduled runs rely on.
@@ -18,6 +19,7 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import {
+  facts,
   jurisdictionIdentifiers,
   jurisdictionRelations,
   jurisdictions,
@@ -51,6 +53,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["bfs-communes-snapshot", "communes-2026-09-29.csv"],
   ["bfs-communes-mutations", "mutations-2021-2026.csv"],
   ["zurich-statistical-quarters", "statistical-quarters.json"],
+  ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
 ];
 
 const importFixture = (sourceKey: string, file: string): Promise<ImportReport> =>
@@ -80,8 +83,8 @@ async function placeId(scheme: string, value: string): Promise<string> {
   return row!.id;
 }
 
-describe.skipIf(!RUN)("the Swiss structure, imported (P1)", () => {
-  it("imports the register's snapshots, its mergers and the city's quarters", async () => {
+describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
+  it("imports the register's snapshots, its mergers, the city's quarters and the multipliers", async () => {
     for (const [sourceKey, file] of RETRIEVALS) {
       const report = await importFixture(sourceKey, file);
       expect(report.problems, file).toEqual([]);
@@ -198,5 +201,26 @@ describe.skipIf(!RUN)("the Swiss structure, imported (P1)", () => {
         ),
       );
     expect(versions.map((v) => v.value)).toEqual(["16656"]);
+  });
+
+  it("records a commune's multiplier for each year, and leaves out a commune with two rates", async () => {
+    const multipliers = async (commune: string) =>
+      db
+        .select({ validFrom: facts.validFrom, value: facts.valueNumeric, unit: facts.unit })
+        .from(facts)
+        .where(
+          and(
+            eq(facts.jurisdictionId, await placeId("bfs_municipality", commune)),
+            eq(facts.metricKey, "tax.multiplier"),
+            isNull(facts.supersededAt),
+          ),
+        )
+        .orderBy(facts.validFrom);
+    const zurich = await multipliers("261");
+    expect(zurich.map((f) => f.validFrom)).toEqual(
+      [2021, 2022, 2023, 2024, 2025, 2026].map((year) => `${year}-01-01`),
+    );
+    expect(zurich.every((f) => Number(f.value) === 1.19)).toBe(true);
+    expect(await multipliers("21")).toEqual([]);
   });
 });

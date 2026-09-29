@@ -15,6 +15,10 @@ one to read for the detail. Fixes get the same weight as features.
   `/places/switzerland/zurich/bezirk-zurich/zurich/kreis-7/witikon`. Everything
   comes from the Federal Statistical Office and the city's open data, with the
   source kept for every row. Taxes, postcodes and the map come next. (#215)
+- **Each Zürich commune's tax multiplier, every year since 2021**, from the
+  canton's own statistics. A commune whose school communities levy different
+  rates (Uster, Turbenthal) shows none rather than a wrong one, until the
+  address decides which applies. (#216)
 - **A new kind of body: charter city.** A city with its own charter, founded
   by agreement with the state that hosts it — or proposed, before that
   agreement. Like a town, it cannot be founded without a place; picking it

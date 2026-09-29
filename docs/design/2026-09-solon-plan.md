@@ -4,7 +4,8 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-09-29: Places P1 begun, the Swiss structure imports (§9, G).
+_Last modified 2026-09-29: the Swiss structure live, Zürich's multipliers import (§9, G).
+Earlier the same day: Places P1 begun, the Swiss structure imports (§9, G).
 Earlier the same day: Places P0 marked built in the build order (§9, G).
 Earlier the same day: added Places (every jurisdiction, official and
 founded, on one map) to the information architecture and the build order; its
@@ -161,8 +162,9 @@ Each phase ships on its own, verified live.
   `charter_city` kind, proven by a made-up country in CI. Still open in P0:
   the Register organization, which George founds and signs. P1, the Canton
   of Zürich, has begun: the structure (every Swiss canton, district and
-  commune with mergers since 2021, the City of Zürich's quarters) imports from
-  the official sources. Next: tariffs, multipliers, postcodes, the screens.
+  commune with mergers since 2021, the City of Zürich's quarters) is live
+  from the official sources, and Zürich's commune multipliers import. Next:
+  tariffs, postcodes, the screens.
 
 ## 10. Open for George
 
