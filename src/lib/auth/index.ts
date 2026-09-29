@@ -61,6 +61,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // id_token.sub is the OrangeCat actor id — the cross-product
         // identity boundary (never email; see loki's provider note).
         token.actorId = profile.sub;
+        // The person's face as OrangeCat shows it: handle and picture. Read
+        // here, written to the roster by the account page (member-identity.ts).
+        token.ocUsername =
+          typeof profile.preferred_username === "string" ? profile.preferred_username : null;
+        token.picture = typeof profile.picture === "string" ? profile.picture : token.picture;
       }
       if (account?.provider === "orangecat") {
         return bindOcTokens(token, account);
@@ -85,6 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (typeof token.actorId === "string") {
         session.actorId = token.actorId;
       }
+      session.ocUsername = typeof token.ocUsername === "string" ? token.ocUsername : null;
       return session;
     },
   },
@@ -94,5 +100,7 @@ declare module "next-auth" {
   interface Session {
     /** OrangeCat actor id (id_token.sub) of the signed-in visitor. */
     actorId?: string;
+    /** OrangeCat handle (id_token.preferred_username); null for an account without one. */
+    ocUsername?: string | null;
   }
 }

@@ -10,6 +10,7 @@ import { profileFor, usesMandates } from "@/lib/config/governance-profiles";
 import { COLLECTIVE_KINDS, LEGAL_STATUS_LABEL, formatPlace } from "@/lib/collective-kinds";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { isMandateLive } from "@/lib/domain/mandate";
+import { MemberFace } from "@/components/ui/member-face";
 
 export const dynamic = "force-dynamic";
 
@@ -134,8 +135,16 @@ export default async function OrganizationPage({ params }: { params: Params }) {
                   key={m.id}
                   className="rounded-control border border-default bg-surface-base p-4 text-sm"
                 >
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="font-semibold text-fg-primary">{m.displayName}</span>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="flex items-center gap-2 font-semibold text-fg-primary">
+                      <MemberFace
+                        name={m.displayName}
+                        username={m.ocUsername ?? null}
+                        avatarUrl={m.avatarUrl ?? null}
+                        size={28}
+                      />
+                      {m.displayName}
+                    </span>
                     <span className="text-xs text-fg-secondary">
                       {m.memberType === "AGENT"
                         ? `Agent · ${m.system ?? "unnamed system"}`

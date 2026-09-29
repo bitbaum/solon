@@ -206,6 +206,15 @@ export const members = pgTable(
     status: memberStatusEnum("status").notNull().default("ACTIVE"),
     /** OrangeCat actor id once the member linked via OIDC login (humans only). */
     ocActorId: text("oc_actor_id"),
+    /**
+     * The member's face and handle as OrangeCat knows them, refreshed from the
+     * id token each time they sign in (src/lib/domain/member-identity.ts).
+     * `displayName` stays the name they chose for THIS roster; these two are
+     * how a reader gets from a seat to the person behind it — the OrangeCat
+     * profile at /profiles/<ocUsername>. Null for members without a link.
+     */
+    ocUsername: text("oc_username"),
+    avatarUrl: text("avatar_url"),
     /** For agents: which system runs them, e.g. "orangecat:cat", "loki:loki". */
     system: text("system"),
     /**

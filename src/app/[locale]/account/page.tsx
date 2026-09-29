@@ -2,6 +2,8 @@ import { getLocale } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { membershipsForActor } from "@/lib/auth/recognition";
+import { MemberFace } from "@/components/ui/member-face";
+import { orangecatProfileUrl, syncMemberFace } from "@/lib/domain/member-identity";
 
 export const metadata = { title: "Account — Solon" };
 export const dynamic = "force-dynamic";
@@ -23,7 +25,13 @@ export default async function AccountPage() {
     });
   }
 
+  // The roster carries the person's OrangeCat face; refresh it from this
+  // session's claims so a new picture or handle on OrangeCat shows up here
+  // without anyone re-typing anything. Names are never rewritten.
+  const face = { username: session.ocUsername ?? null, avatarUrl: session.user?.image ?? null };
+  await syncMemberFace(session.actorId, face);
   const memberships = await membershipsForActor(session.actorId);
+  const profileUrl = orangecatProfileUrl(face.username);
 
   return (
     <main className="max-w-xl mx-auto py-16">
@@ -33,6 +41,24 @@ export default async function AccountPage() {
         <h2 className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-4">
           OrangeCat identity
         </h2>
+        <div className="mb-4 flex items-center gap-3">
+          <MemberFace
+            name={session.user?.name ?? "?"}
+            username={face.username}
+            avatarUrl={face.avatarUrl}
+            size={48}
+          />
+          <div className="min-w-0">
+            <p className="font-medium text-fg-primary">{session.user?.name ?? "—"}</p>
+            {profileUrl ? (
+              <a href={profileUrl} className="text-sm text-fg-secondary underline" rel="noopener">
+                @{face.username} on OrangeCat
+              </a>
+            ) : (
+              <p className="text-sm text-fg-secondary">No public OrangeCat page yet</p>
+            )}
+          </div>
+        </div>
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-fg-secondary">Name</dt>
@@ -47,6 +73,17 @@ export default async function AccountPage() {
             <dd className="text-fg-primary font-mono text-xs break-all">{session.actorId}</dd>
           </div>
         </dl>
+        <p className="mt-4 text-sm text-fg-secondary">
+          Name, picture, email, passkeys and the apps allowed in are all managed in one place:{" "}
+          <a
+            href={`${process.env.ORANGECAT_OAUTH_ISSUER ?? "https://orangecat.ch"}/settings`}
+            className="text-fg-primary underline"
+            rel="noopener"
+          >
+            your OrangeCat settings
+          </a>
+          . Solon reads them; it never keeps a second copy to edit.
+        </p>
       </section>
 
       <section className="bg-surface-base border border-default rounded-surface p-6 mb-8">
