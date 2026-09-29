@@ -4,6 +4,9 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
+_Last modified 2026-09-29: added Places (every jurisdiction, official and
+founded, on one map) to the information architecture and the build order; its
+design is `2026-09-places-and-jurisdictions.md`._
 
 ## 1. The problem, from first principles
 
@@ -56,6 +59,7 @@ Decisions**, then the language switcher, sign-in (or your menu), and **Hire Solo
 | **Governance** `/governance` | the art and science (existing lessons) · **ideas** (Solon of Athens, the Landsgemeinde, Ostrom, exit and voice, Condorcet and Arrow, panarchy, network states) · **a new era** (why self-governance is newly possible) |
 | **Platform** `/platform` | how Solon, OrangeCat and Loki work together · security · `/technical` (reference) |
 | **Decisions** | the public record: organizations, proposals, votes |
+| **Places** `/places` (proposed) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md`; whether it takes Platform's header slot is open there (§13) |
 | Account | **My Solon** `/me` — my groups, votes waiting for me, my proposals · profile |
 
 Footer and mobile menu render the whole map from `site-config.ts` (existing SSOT,
@@ -144,6 +148,9 @@ Each phase ships on its own, verified live.
 - **E. The app** — new header, account menu, `/me`, organization directory and
   hub, member profiles; `primaryOrg()` retired.
 - **F. The engine** — charter, admission by vote, mandates and receipts (engine doc).
+- **G. Places** — the Canton of Zürich first, then Switzerland, then founded
+  places and the world (`2026-09-places-and-jurisdictions.md` §11). Independent
+  of E and F except for the Register organization's `register.correct` effect.
 
 ## 10. Open for George
 
