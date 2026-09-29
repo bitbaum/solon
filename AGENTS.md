@@ -44,6 +44,10 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
   transaction and runs the invariant engine; every run lands in `place_import_runs`.
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
   must keep importing and evaluating with changes only to its pack and fixtures.
+  `pnpm run check:places-literals` (in `verify`) fails on any registry key, ISO
+  region or currency code, or month-day literal in `src/lib/places`, the vendored
+  tax model or the place page. Copy about places takes no side: the neutral-copy
+  test scans `messages/*.json` against `src/lib/config/places/neutral-terms.ts`.
 - **There is no codegen.** Typecheck and build read the schema module directly.
 - Migrations live in `drizzle/` (`pnpm run db:generate` after a schema change;
   `pnpm run db:migrate` applies them). **Running migrations against a real

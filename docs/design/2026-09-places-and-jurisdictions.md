@@ -1,7 +1,9 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: the minimal place page built; the P0 acceptance
+_Last modified 2026-09-29: the no-literals and neutral-copy guards built, map
+tokens proposed upstream (§9.1, §11, §12). Earlier the same day: the minimal
+place page built; the P0 acceptance
 test now covers it (§9.2, §11). Earlier the same day: importer framework,
 invariant engine and chain reader built, with Testland importing and
 evaluating in CI (§8.3, §11). Earlier: P0 foundations built — the tables of §4 (what the
@@ -636,7 +638,11 @@ concatenated sentences, no dead ends.
   keyed by `geometry_ref`, served as versioned static assets. Disputed areas get
   their own features so they can be hatched (§7.2).
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,
-  colour-blind safe. Colour is never the only carrier.
+  colour-blind safe. Colour is never the only carrier. (Built:
+  bitbaum/design-tokens#31 adds `--map-scale-1…7` (viridis, luminance rising at
+  every step, pinned by a test), `--map-no-data`, `--map-boundary` and the
+  hatch geometry. Solon takes them with the package release that carries them,
+  when the map is built in P1.)
 - **World scale needs RTL and many scripts**: layout uses logical CSS properties
   (`margin-inline-start`, not `margin-left`), fonts cover the scripts the names
   table contains, and locale data (plural rules, number and date formats,
@@ -755,6 +761,9 @@ before the build.
 - The importer framework with a fixture adapter; the invariant engine. (Built:
   §8.3.)
 - The CI guards of §12; tokens for the map scale and hatch; `charter_city` kind.
+  (Built: the no-literals and neutral-copy guards, §12; the tokens, §9.1. The
+  other §12 guards come with the data they check: golden tax fixtures with P1,
+  dispute fixtures with P4, the no-dead-ends checks with the screens.)
 - The Register organization, founded by George under `SOLE` (his signature),
   with the initial policies of §13.
 - **Acceptance**: a made-up country pack with fixtures imports, validates,
@@ -810,11 +819,11 @@ before the build.
 
 | Principle | Guard |
 |---|---|
-| No country, level, currency, month-day or ISO literal in the engine | `scripts/check-places-no-literals.ts`: fails on any registry key, ISO code or currency code under `src/lib/places/**` and the vendored `@bitbaum/tax-model`, except in tests and fixtures. Keys are read from the registries, so the check has no list of its own. |
+| No country, level, currency, month-day or ISO literal in the engine | `scripts/check-places-no-literals.ts`: fails on any registry key, ISO code or currency code under `src/lib/places/**` and the vendored `@bitbaum/tax-model`, except in tests and fixtures. Keys are read from the registries, so the check has no list of its own. **Built**: `pnpm run check:places-literals` in `verify` (TypeScript AST, codes recognised by `Intl`; also scans the place page; the engine's own vocabulary is exempt), and a unit test runs it with Testland's keys |
 | Config is valid | Zod validation of every module in `verify`; each pack's slug rules produce unique paths; each pack's tax model type-checks against its metrics |
 | Config and database agree | `places:sync-config --check` in CI against a migrated test database |
 | Nothing without a source | a DB constraint (`source_id NOT NULL` where required) plus an invariant for founded exceptions |
-| Neutral words | copy test over `messages/*.json` with the configurable term list; quotations must carry a source key |
+| Neutral words | copy test over `messages/*.json` with the configurable term list; quotations must carry a source key. **Built**: `src/i18n/__tests__/neutral-copy.test.ts`, terms in `src/lib/config/places/neutral-terms.ts` (phrases where a word has an innocent governance sense); a `quote` with a sibling `source` is exempt |
 | Tax is correct | golden fixtures per pack, captured from official calculators, with source and date |
 | Model generality | the P0 made-up-country test and the P4 dispute fixtures run in CI forever |
 | No dead ends | e2e: an ended place, a place with no data, and an uncovered destination each render a next step |
