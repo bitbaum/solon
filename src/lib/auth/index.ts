@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { applyOcRefresh, bindOcTokens, ocRefreshDue, refreshOcTokens } from "./oc-session";
 import { isRecognizableProfile } from "./recognition";
 
 /**
@@ -20,6 +21,7 @@ import { isRecognizableProfile } from "./recognition";
 
 const clientId = process.env.ORANGECAT_OAUTH_CLIENT_ID;
 const clientSecret = process.env.ORANGECAT_OAUTH_CLIENT_SECRET;
+const issuer = process.env.ORANGECAT_OAUTH_ISSUER ?? "https://orangecat.ch";
 
 /** True when the OrangeCat OAuth pair is configured; the nav hides the
  * sign-in control otherwise instead of mounting a provider that fails
@@ -36,7 +38,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: "orangecat",
           name: "OrangeCat",
           type: "oidc",
-          issuer: process.env.ORANGECAT_OAUTH_ISSUER ?? "https://orangecat.ch",
+          issuer,
           clientId,
           clientSecret,
           client: { token_endpoint_auth_method: "client_secret_post" },
@@ -54,11 +56,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // governance identity — /auth/error explains this to the visitor.
       return isRecognizableProfile(profile);
     },
-    jwt({ token, profile }) {
+    async jwt({ token, profile, account }) {
       if (profile?.sub) {
         // id_token.sub is the OrangeCat actor id — the cross-product
         // identity boundary (never email; see loki's provider note).
         token.actorId = profile.sub;
+      }
+      if (account?.provider === "orangecat") {
+        return bindOcTokens(token, account);
+      }
+      // The session lives only as long as OrangeCat lets it: once the access
+      // token expires, refresh; a refusal (Disconnect on OrangeCat, Sign out
+      // everywhere, account deleted) ends the session. See oc-session.ts.
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      if (clientId && clientSecret && ocRefreshDue(token, nowSeconds)) {
+        const result = await refreshOcTokens(token.ocRefreshToken as string, {
+          issuer,
+          clientId,
+          clientSecret,
+          fetch,
+          nowSeconds,
+        });
+        return applyOcRefresh(token, result, nowSeconds);
       }
       return token;
     },
