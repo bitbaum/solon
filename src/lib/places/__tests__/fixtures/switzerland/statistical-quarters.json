@@ -1,0 +1,60 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "objectid": 23,
+        "knr": 1,
+        "kname": "Kreis 1",
+        "qnr": 11,
+        "qname": "Rathaus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "objectid": 24,
+        "knr": 7,
+        "kname": "Kreis 7",
+        "qnr": 71,
+        "qname": "Fluntern"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "objectid": 10,
+        "knr": 7,
+        "kname": "Kreis 7",
+        "qnr": 72,
+        "qname": "Hottingen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "objectid": 1,
+        "knr": 7,
+        "kname": "Kreis 7",
+        "qnr": 73,
+        "qname": "Hirslanden"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "objectid": 14,
+        "knr": 7,
+        "kname": "Kreis 7",
+        "qnr": 74,
+        "qname": "Witikon"
+      }
+    }
+  ]
+}

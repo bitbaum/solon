@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Switzerland, as the official register has it.** Every canton, district
+  and commune, with the mergers since 2021 (the old communes stay, marked as
+  ended, and point to the one they joined), and the City of Zürich's districts
+  and statistical quarters, each with a page at its place in the chain:
+  `/places/switzerland/zurich/bezirk-zurich/zurich/kreis-7/witikon`. Everything
+  comes from the Federal Statistical Office and the city's open data, with the
+  source kept for every row. Taxes, postcodes and the map come next. (#215)
 - **A new kind of body: charter city.** A city with its own charter, founded
   by agreement with the state that hosts it — or proposed, before that
   agreement. Like a town, it cannot be founded without a place; picking it

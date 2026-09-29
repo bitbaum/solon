@@ -4,7 +4,8 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-09-29: Places P0 marked built in the build order (§9, G).
+_Last modified 2026-09-29: Places P1 begun, the Swiss structure imports (§9, G).
+Earlier the same day: Places P0 marked built in the build order (§9, G).
 Earlier the same day: added Places (every jurisdiction, official and
 founded, on one map) to the information architecture and the build order; its
 design is `2026-09-places-and-jurisdictions.md`, whose decisions George took the
@@ -63,7 +64,7 @@ footer (decided 2026-09-29).
 | **Governance** `/governance` | the art and science (existing lessons) · **ideas** (Solon of Athens, the Landsgemeinde, Ostrom, exit and voice, Condorcet and Arrow, panarchy, network states) · **a new era** (why self-governance is newly possible) |
 | **Platform** `/platform` | how Solon, OrangeCat and Loki work together · security · `/technical` (reference) |
 | **Decisions** | the public record: organizations, proposals, votes |
-| **Places** `/places` (foundations built, no country yet; the map and list come with P1) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
+| **Places** `/places` (foundations built; Switzerland's communes and the City of Zürich's quarters import; the map and list come later in P1) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
 | Account | **My Solon** `/me` — my groups, votes waiting for me, my proposals · profile |
 
 Footer and mobile menu render the whole map from `site-config.ts` (existing SSOT,
@@ -158,8 +159,10 @@ Each phase ships on its own, verified live.
   P0 (foundations, no country yet) is built: tables, config registries, the
   importer, the invariant engine, a minimal place page, the guards and the
   `charter_city` kind, proven by a made-up country in CI. Still open in P0:
-  the Register organization, which George founds and signs. Next: P1, the
-  Canton of Zürich.
+  the Register organization, which George founds and signs. P1, the Canton
+  of Zürich, has begun: the structure (every Swiss canton, district and
+  commune with mergers since 2021, the City of Zürich's quarters) imports from
+  the official sources. Next: tariffs, multipliers, postcodes, the screens.
 
 ## 10. Open for George
 

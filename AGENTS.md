@@ -42,6 +42,10 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
   <file> [--dry-run]` (`src/lib/places/importer/`) snapshots, parses with the source's
   adapter (`src/lib/places/adapters/`), checks against config, applies in one
   transaction and runs the invariant engine; every run lands in `place_import_runs`.
+  `pnpm run places:fetch <source-key> [--backfill] [--dry-run] [--plan]` retrieves
+  what the adapter declares from the source's URL and imports each in turn;
+  `--backfill` loads history once, on a source's first load only. Adapters parse a
+  format; which levels and schemes rows become is the source's `options` in config.
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
   must keep importing and evaluating with changes only to its pack and fixtures.
   `pnpm run check:places-literals` (in `verify`) fails on any registry key, ISO
