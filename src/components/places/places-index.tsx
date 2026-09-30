@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { PackIndex, PlaceHit, PlaceSearch } from "@/lib/places/search";
+import PlacesMap from "./places-map";
 import type { PlacesTranslator } from "./place-profile";
 
 interface PlacesIndexProps {
@@ -11,6 +12,8 @@ interface PlacesIndexProps {
   /** A level being browsed, with its places. */
   browse: { pack: string; level: string; levelName: string; places: PlaceHit[] } | null;
   packs: PackIndex[];
+  /** The pack the map draws; null when none has boundaries. */
+  mapPack: string | null;
   t: PlacesTranslator;
 }
 
@@ -48,9 +51,11 @@ function HitList({ hits, t }: { hits: PlaceHit[]; t: PlacesTranslator }) {
 }
 
 /**
- * Finding a place (design §9.2): search by name or postcode, or browse a
- * pack's levels. A postcode that spans several places lists each with its
- * share of addresses and lets the reader pick; nothing is guessed.
+ * Finding a place (design §9.1, §9.2): the map first, with one box for an
+ * address, a place or a postcode; below it, browsing a pack's levels. Without
+ * JavaScript the plain search form stands in for the map. A postcode that
+ * spans several places lists each with its share of addresses and lets the
+ * reader pick; nothing is guessed.
  */
 export default function PlacesIndex({
   query,
@@ -58,31 +63,39 @@ export default function PlacesIndex({
   search,
   browse,
   packs,
+  mapPack,
   t,
 }: PlacesIndexProps) {
+  const form = (
+    <form action={searchAction} method="get" role="search" className="space-y-2">
+      <label htmlFor="places-q" className="block text-sm font-medium text-fg-primary">
+        {t("index.searchLabel")}
+      </label>
+      <div className="flex gap-3">
+        <input
+          id="places-q"
+          name="q"
+          defaultValue={query}
+          placeholder={t("index.searchPlaceholder")}
+          className="field"
+          autoComplete="off"
+        />
+        <button type="submit" className="btn-primary min-h-11 shrink-0">
+          {t("index.searchButton")}
+        </button>
+      </div>
+    </form>
+  );
   return (
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
+      <p className="mb-10 max-w-3xl text-fg-secondary">{t("index.intro")}</p>
+      {mapPack && (
+        <div className="mb-16">
+          <PlacesMap packKey={mapPack} />
+        </div>
+      )}
       <div className="mx-auto max-w-3xl space-y-10">
-        <p className="text-fg-secondary">{t("index.intro")}</p>
-
-        <form action={searchAction} method="get" role="search" className="space-y-2">
-          <label htmlFor="places-q" className="block text-sm font-medium text-fg-primary">
-            {t("index.searchLabel")}
-          </label>
-          <div className="flex gap-3">
-            <input
-              id="places-q"
-              name="q"
-              defaultValue={query}
-              placeholder={t("index.searchPlaceholder")}
-              className="field"
-              autoComplete="off"
-            />
-            <button type="submit" className="btn-primary min-h-11 shrink-0">
-              {t("index.searchButton")}
-            </button>
-          </div>
-        </form>
+        {mapPack && !search ? <noscript>{form}</noscript> : form}
 
         {search && (
           <section aria-live="polite" className="space-y-3">

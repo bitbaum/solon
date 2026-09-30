@@ -22,6 +22,16 @@ const nextConfig = {
       { protocol: "https", hostname: "orangecat.ch" },
     ],
   },
+  // Libraries copied into public/vendor/<name>/<version>/ never change under
+  // a path (scripts/build/vendor-maplibre.mjs), so browsers may keep them.
+  async headers() {
+    return [
+      {
+        source: "/vendor/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ];
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

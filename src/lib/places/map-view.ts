@@ -12,6 +12,7 @@ import {
   type CompareTaxPack,
   type EstimateInput,
 } from "./compare-view";
+import { foldName } from "./fold";
 import type { PlaceSource } from "./place-view";
 
 export interface MapPlace {
@@ -29,11 +30,15 @@ export interface MapData {
   packKey: string;
   levelKey: string;
   levelName: string;
-  /** The boundary file, as the geography manifest lists it. */
-  resource: { id: string; href: string; sha256: string };
+  /** The boundary file, as the geography manifest at `manifest` lists it. */
+  resource: { id: string; href: string; sha256: string; manifest: string };
+  /** The day the places and their boundaries are current for. */
+  on: string;
   /** The day whose figures are shown: `on`, or up to two years earlier (as /compare). */
   period: string;
   earlierYear: boolean;
+  /** The pack's address search, asked from the browser; null when it has none. */
+  addressSearch: { format: "geoadmin_search"; url: string; provider: string } | null;
   /** Null when the pack has no tax model: the map then draws places without colour. */
   taxPack: CompareTaxPack | null;
   /** The levels a place's chain reaches, so a missing figure can say why it is missing. */
@@ -91,4 +96,73 @@ export function classOf(value: number, breaks: readonly number[]): number {
     k++;
   }
   return k;
+}
+
+/** Which of `colours` (lowest first) draws each of `classes` classes: spread over the whole scale. */
+export function classColour(k: number, classes: number, colours: readonly string[]): string {
+  const last = colours.length - 1;
+  return colours[classes <= 1 ? last : Math.round((k * last) / (classes - 1))]!;
+}
+
+/** Places whose name holds the text, folded as search folds it; names starting with it first. */
+export function findPlaces(places: readonly MapPlace[], text: string, limit: number): MapPlace[] {
+  const query = foldName(text.trim());
+  if (query.length < 2) {
+    return [];
+  }
+  const starts: MapPlace[] = [];
+  const holds: MapPlace[] = [];
+  for (const place of places) {
+    const name = foldName(place.name);
+    if (name.startsWith(query)) {
+      starts.push(place);
+    } else if (name.includes(query)) {
+      holds.push(place);
+    }
+  }
+  return [...starts, ...holds].slice(0, limit);
+}
+
+type Ring = readonly (readonly number[])[];
+
+/** A boundary as GeoJSON draws it, in WGS84. */
+export type AreaGeometry =
+  | { type: "Polygon"; coordinates: readonly Ring[] }
+  | { type: "MultiPolygon"; coordinates: readonly (readonly Ring[])[] };
+
+const polygonsOf = (geometry: AreaGeometry) =>
+  geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+
+function ringHolds(ring: Ring, x: number, y: number): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i]!;
+    const [xj, yj] = ring[j]!;
+    if (yi! > y !== yj! > y && x < ((xj! - xi!) * (y - yi!)) / (yj! - yi!) + xi!) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+/** Whether a position (longitude, latitude) lies in the area: inside an outer ring and no hole. */
+export function areaHolds(geometry: AreaGeometry, [x, y]: readonly [number, number]): boolean {
+  return polygonsOf(geometry).some(
+    ([outer, ...holes]) =>
+      outer !== undefined && ringHolds(outer, x, y) && !holes.some((h) => ringHolds(h, x, y)),
+  );
+}
+
+/** West, south, east, north. */
+export function areaBounds(geometry: AreaGeometry): [number, number, number, number] {
+  let [w, s, e, n] = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const polygon of polygonsOf(geometry)) {
+    for (const [x, y] of polygon[0] ?? []) {
+      w = Math.min(w, x!);
+      e = Math.max(e, x!);
+      s = Math.min(s, y!);
+      n = Math.max(n, y!);
+    }
+  }
+  return [w, s, e, n];
 }

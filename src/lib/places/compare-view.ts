@@ -59,6 +59,8 @@ export interface CompareTaxPack {
   multiplierRows: { key: string; levelKey: string; metric: string; level: string }[];
   levelNames: Record<string, string>;
   excludes: string;
+  /** The base the map shows until the reader enters theirs; null without one. */
+  exampleBase: number | null;
 }
 
 export interface Comparison {
@@ -88,6 +90,21 @@ export type ColumnEstimate =
   | { kind: "not_recorded"; levels: string[] }
   | { kind: "estimate"; estimate: Estimate; currency: string; formatLocale: string }
   | { kind: "error" };
+
+export interface MoneyFormat {
+  currency: string;
+  /** The reader's language in the country's number formats (de-CH). */
+  formatLocale: string;
+}
+
+/** A whole amount of money as the country writes it: CHF 13’050. */
+export function formatMoney(amount: number, { currency, formatLocale }: MoneyFormat): string {
+  return new Intl.NumberFormat(formatLocale, {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
 
 export const multiplierRowKey = (level: string, metric: string) => `${level}/${metric}`;
 

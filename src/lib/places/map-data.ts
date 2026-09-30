@@ -17,7 +17,7 @@ import {
 import { evaluate, type Fact, type TaxModel } from "@/lib/tax-model";
 import { loadFacts, type ChainFact, type ChainName } from "./chain";
 import { taxPackView, yearsBefore } from "./compare";
-import { geographyFileHref, parseGeometryRef } from "./geography";
+import { GEOGRAPHY_FILE_PATH, geographyFileHref, parseGeometryRef } from "./geography";
 import type { MapData, MapPlace } from "./map-view";
 import { loadRetrievals } from "./place-page";
 import { displayName, localized, placeSources } from "./place-view";
@@ -25,6 +25,34 @@ import { displayName, localized, placeSources } from "./place-view";
 /** How many fiscal years back the map looks for figures not yet published for this one (as /compare). */
 const YEARS_BACK = 2;
 const MAX_DEPTH = 32;
+
+/** An area that draws a place on `on`: current, and administered by it then. */
+const drawnOn = (on: string) =>
+  and(
+    eq(areaAssertions.assertion, "administers"),
+    isNull(areas.supersededAt),
+    isNull(areaAssertions.supersededAt),
+    or(isNull(areas.validFrom), lte(areas.validFrom, on)),
+    or(isNull(areas.validTo), gt(areas.validTo, on)),
+    or(isNull(areaAssertions.validFrom), lte(areaAssertions.validFrom, on)),
+    or(isNull(areaAssertions.validTo), gt(areaAssertions.validTo, on)),
+  );
+
+/** The first pack, in the configuration's order, with a place drawn on `on`; null when none has. */
+export async function mapPackKey(
+  db: Database,
+  config: PlacesConfig,
+  on: string,
+): Promise<string | null> {
+  const rows = await db
+    .selectDistinct({ pack: jurisdictions.countryPack })
+    .from(areas)
+    .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
+    .innerJoin(jurisdictions, eq(jurisdictions.id, areaAssertions.jurisdictionId))
+    .where(drawnOn(on));
+  const drawn = new Set(rows.map((row) => row.pack));
+  return config.packs.find((pack) => drawn.has(pack.key))?.key ?? null;
+}
 
 /** Where each drawn place of the pack is, on `on`: its feature in a boundary file. */
 async function drawnPlaces(db: Database, pack: CountryPack, on: string) {
@@ -39,18 +67,7 @@ async function drawnPlaces(db: Database, pack: CountryPack, on: string) {
     .from(areas)
     .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
     .innerJoin(jurisdictions, eq(jurisdictions.id, areaAssertions.jurisdictionId))
-    .where(
-      and(
-        eq(jurisdictions.countryPack, pack.key),
-        eq(areaAssertions.assertion, "administers"),
-        isNull(areas.supersededAt),
-        isNull(areaAssertions.supersededAt),
-        or(isNull(areas.validFrom), lte(areas.validFrom, on)),
-        or(isNull(areas.validTo), gt(areas.validTo, on)),
-        or(isNull(areaAssertions.validFrom), lte(areaAssertions.validFrom, on)),
-        or(isNull(areaAssertions.validTo), gt(areaAssertions.validTo, on)),
-      ),
-    );
+    .where(and(eq(jurisdictions.countryPack, pack.key), drawnOn(on)));
   return rows.flatMap((row) => {
     const ref = parseGeometryRef(row.geometryRef);
     return ref && row.levelKey && row.slugPath
@@ -310,9 +327,12 @@ export async function loadMapData(
       id: `${places[0]!.ref.sourceId}:${places[0]!.ref.datasetVersion}`,
       href: geographyFileHref(sha),
       sha256: sha,
+      manifest: GEOGRAPHY_FILE_PATH,
     },
+    on,
     period,
     earlierYear: period !== on,
+    addressSearch: pack.addressSearch ?? null,
     taxPack: taxPackView(config, pack, period, locale),
     levels: [...new Set(members.flatMap((id) => levelOf.get(id) ?? []))],
     factGroups,

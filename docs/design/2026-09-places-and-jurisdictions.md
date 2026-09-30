@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-10-01: the map's data is served: `GET /api/v1/places/map` gives every drawn commune with the tax figures along its chain, for the browser to estimate as `/compare` does (§9.1). Earlier the same day: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-10-01: the map is built: `/places` opens on every drawn commune coloured by the tax at the reader's income (or the pack's example income until they enter one), with a list that says the same, one search box for an address, a place or a postcode, a card per place and a compare tray (§9.1, §9.2); an address goes from the browser to the pack's geocoder, never to Solon (§10). Earlier the same day: the map's data is served: `GET /api/v1/places/map` gives every drawn commune with the tax figures along its chain, for the browser to estimate as `/compare` does (§9.1). Earlier the same day: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -856,14 +856,39 @@ concatenated sentences, no dead ends.
   browser estimates with the same `estimateColumn` as `/compare`
   (`map-view.ts`), so the two cannot disagree, and the reader's income never
   leaves their device. The period is the latest of the last three years whose
-  figures are published for the most places, one period for all. Not yet: the
-  map itself, lakes and canton outlines, earlier editions.
+  figures are published for the most places, one period for all.
+
+  **Built (P1, the map)**: `src/components/places/places-map.tsx` on
+  `/places`. The browser loads the map data, then the boundary file through
+  geo-kit (manifest revalidated on every load, file checked against its
+  sha256), and draws it with MapLibre GL on an empty style: no base map, the
+  data is the picture. Each commune is coloured by its class among seven
+  quantile classes of the estimates on the map (`quantileBreaks`, lowest
+  first, spread over the scale); a commune without a figure is `--map-no-data`.
+  Until the reader enters an income the map shows the pack's `exampleBase`
+  (CHF 100'000 for Switzerland), and the legend says it is an example. One
+  search box finds a place by name on the device, a postcode through
+  `/api/v1/places`, and an address through the pack's `addressSearch`
+  (swisstopo's geo.admin.ch SearchServer), asked from the browser without
+  cookies or referrer; the note under the box names the provider. The
+  address's commune is found on the device (`areaHolds`). A card gives the
+  place's tax, rate and rank, a link to its page and "add to compare"; the
+  tray links to `/compare` (up to the Register's `compareLimit`). The list
+  (`map-list.tsx`) is the same rows, sortable; on phones it opens first.
+  MapLibre is ESM whose worker URL bundlers cannot follow, so
+  `scripts/build/vendor-maplibre.mjs` copies its files to
+  `public/vendor/maplibre-gl/<version>/` before `dev` and `build` (served
+  immutable), and the canvas imports them at run time. Without JavaScript the
+  plain search form stands in. Not yet: lakes and canton outlines, earlier
+  editions, a base map.
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,
   colour-blind safe. Colour is never the only carrier. (Built:
   bitbaum/design-tokens#31 adds `--map-scale-1…7` (viridis, luminance rising at
   every step, pinned by a test), `--map-no-data`, `--map-boundary` and the
-  hatch geometry. Solon takes them with the package release that carries them,
-  when the map is built in P1.)
+  hatch geometry. Solon reads them from the page through `map-colours.ts`, so
+  both themes follow. Until design-tokens publishes a release with them to npm,
+  Solon pins that commit from GitHub in `package.json`; it goes back to a
+  version once the release is out.)
 - **World scale needs RTL and many scripts**: layout uses logical CSS properties
   (`margin-inline-start`, not `margin-left`), fonts cover the scripts the names
   table contains, and locale data (plural rules, number and date formats,
@@ -880,7 +905,8 @@ The screens are those of the first version of this document, now generic:
   metric is computed in the browser. Search by name, postcode or identifier; a
   postcode spanning several places asks. Founded places toggle on.
 
-  **Built (P1, list only)**: `src/app/[locale]/places/page.tsx` searches by
+  **Built (P1, map, list and search)**: the map of §9.1 opens the page, above
+  the browse links; `src/app/[locale]/places/page.tsx` also searches by
   postcode (any pack's `postcodePattern`) or name, and browses each pack's
   levels with their counts; `src/lib/places/search.ts` reads names, levels and
   parents for all hits at once. A postcode spanning several places lists each
@@ -888,7 +914,7 @@ The screens are those of the first version of this document, now generic:
   accents, and an umlaut spelled out matches it ("zurich" and "Zuerich" find
   "Zürich"): `src/lib/places/fold.ts` folds the query in code and the names in
   SQL from one character table, so no extension or index is needed. The
-  communes' boundaries are published (§9.1); the map is the next step. The same search is `GET /api/v1/places?q=`, and a place page is
+  plain form is shown without JavaScript, and when a search was submitted. The same search is `GET /api/v1/places?q=`, and a place page is
   `GET /api/v1/places/{path}`, both listed on `/integration`.
 - **Place page** (`/places/{slug_path}`), top to bottom:
   1. name (per the naming policy), level (from the pack, in the reader's

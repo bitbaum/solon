@@ -158,6 +158,20 @@ body {
   padding-inline: 0;
 }
 
+/* The map's hover label, in the page's colours. Unlayered to outrank MapLibre's stylesheet. */
+.places-map-tip .maplibregl-popup-content {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid hsl(var(--border-default));
+  border-radius: var(--radius-control);
+  background-color: hsl(var(--surface-overlay));
+  color: hsl(var(--text-primary));
+  font-size: 0.875rem;
+  box-shadow: none;
+}
+.places-map-tip .maplibregl-popup-tip {
+  display: none;
+}
+
 /* Sections rise into place as they arrive — unless the reader asked for less motion. */
 @media (prefers-reduced-motion: no-preference) {
   .rise {

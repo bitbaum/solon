@@ -7,8 +7,8 @@
   },
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/build/vendor-maplibre.mjs && next dev",
+    "build": "node scripts/build/vendor-maplibre.mjs && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@bitbaum/geo-kit": "github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa",
-    "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.1.0",
+    "@fleet/design-tokens": "github:bitbaum/design-tokens#c93f7b2662b25284c6a45729c1b71047e21c81fe",
     "@noble/hashes": "2.4.0",
     "@noble/secp256k1": "3.2.0",
     "@scure/base": "^2.4.0",
@@ -41,6 +41,7 @@
     "drizzle-orm": "^0.45.3",
     "fflate": "^0.8.3",
     "lucide-react": "1.48.0",
+    "maplibre-gl": "6.11.2",
     "next": "16.3.6",
     "next-auth": "^5.0.0-beta.32",
     "next-intl": "^4.14.7",

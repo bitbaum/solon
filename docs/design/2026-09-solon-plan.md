@@ -4,7 +4,7 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-10-01: Swiss commune boundaries import and are published for the coming map; Solon gets a light theme beside the dark one (§9, G). Earlier, 2026-09-30: `/compare` covers seven cantons: Zürich, Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden and Jura (§9, G). Earlier the same day: `/compare` sets up to four places side by side, the tax estimate computed in the browser (§9, G).
+_Last modified 2026-10-01: the map on `/places` is built: every commune coloured by the tax at the reader's income, one search box for an address, a place or a postcode, and a list beside it (§9, G). Earlier the same day: Swiss commune boundaries import and are published for the coming map; Solon gets a light theme beside the dark one (§9, G). Earlier, 2026-09-30: `/compare` covers seven cantons: Zürich, Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden and Jura (§9, G). Earlier the same day: `/compare` sets up to four places side by side, the tax estimate computed in the browser (§9, G).
 Earlier the same day: Places took Platform's header slot, with `/places` (search by name or postcode, browse by level) and its API (§3, §9, G).
 Earlier the same day: the deep side gained `/faq`, `/whitepaper` and `/blog` (§7), read from `content/` through bip-kit 0.5; everyday pages speak plain words with Technical details one click away (`docs/development/ui-guidelines.md`, "Two depths").
 Earlier the same day: `/places/coverage`, the first Places screen, counts coverage from the data (§9, G).
@@ -70,7 +70,7 @@ Places took Platform's slot on 2026-09-30, and Platform moved to the footer
 | **Governance** `/governance` | the art and science (existing lessons) · **ideas** (Solon of Athens, the Landsgemeinde, Ostrom, exit and voice, Condorcet and Arrow, panarchy, network states) · **a new era** (why self-governance is newly possible) |
 | **Platform** `/platform` | how Solon, OrangeCat and Loki work together · security · `/technical` (reference) |
 | **Decisions** | the public record: organizations, proposals, votes |
-| **Places** `/places` (in the header since 2026-09-30: search by name or postcode, browse by level, place pages, `/places/coverage`, `/compare` and the API are live; commune boundaries are published, the map is next) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
+| **Places** `/places` (in the header since 2026-09-30: search by name or postcode, browse by level, place pages, `/places/coverage`, `/compare` and the API are live; the map opens `/places`, coloured by the tax at the reader's income) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
 | Account | **My Solon** `/me` — my groups, votes waiting for me, my proposals · profile |
 
 Footer and mobile menu render the whole map from `site-config.ts` (existing SSOT,
@@ -174,9 +174,10 @@ Each phase ships on its own, verified live.
   from the official sources; Zürich's tariffs and multipliers import and
   reproduce the federal calculator. `/places/coverage` counts it all from
   the data. Postcodes, the `/places` list, `/compare` and the API are live,
-  and every commune's boundary is imported and published for the map.
-  Next: the map on `/places` (dark and light), and the Register, which
-  George founds.
+  and so is the map on `/places`: every commune's boundary, coloured by
+  the tax at the reader's income, with a list and an address search.
+  Next: the Register, which George founds; lakes and canton outlines on
+  the map; the light theme.
 
 ## 10. Open for George
 

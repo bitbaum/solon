@@ -3,14 +3,32 @@
  * browsing a pack's levels. The config is a parameter, so a test can hand in a
  * made-up country. Names, levels and parents are read for all hits at once.
  */
-import { and, count, eq, gt, inArray, isNull, like, lte, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  gt,
+  inArray,
+  isNull,
+  like,
+  lte,
+  or,
+  sql,
+  type AnyColumn,
+  type SQL,
+} from "drizzle-orm";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictionNames, jurisdictionRelations, jurisdictions } from "@/lib/db/places-schema";
 import type { ChainName } from "./chain";
-import { foldName, foldedColumn } from "./fold";
+import { FOLD_FROM, FOLD_TO, foldName } from "./fold";
 import { displayName, localized } from "./place-view";
 import { resolvePostcode, type PostcodeLocality } from "./postcodes";
+
+/** `column`, folded in SQL exactly as `foldName` folds text. */
+function foldedColumn(column: AnyColumn): SQL<string> {
+  return sql<string>`replace(replace(replace(lower(translate(${column}, ${FOLD_FROM}, ${FOLD_TO})), 'ae', 'a'), 'oe', 'o'), 'ue', 'u')`;
+}
 
 export interface PlaceHit {
   slugPath: string;

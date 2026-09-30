@@ -76,6 +76,8 @@ const switzerlandTaxLabels: TaxLabels = {
       it: "Imposte cantonale e comunale",
     },
   },
+  // The income the golden fixtures check against the federal calculator.
+  exampleBase: 100_000,
   excludes: {
     en: "Not included: church tax, wealth tax and fixed per-head taxes, such as CHF 24 a person in Zürich or CHF 50 in Lucerne.",
     de: "Nicht enthalten: Kirchensteuer, Vermögenssteuer und feste Kopfsteuern, etwa CHF 24 pro Person in Zürich oder CHF 50 in Luzern.",
@@ -166,6 +168,13 @@ export const switzerland: CountryPackInput = {
     "zurich_statistical_quarter",
   ],
   postcodePattern: "[1-9][0-9]{3}",
+  // Confirmed 2026-09-30: the federal geoportal's search, open to any origin
+  // (CORS *), no key; results carry WGS84 coordinates.
+  addressSearch: {
+    format: "geoadmin_search",
+    url: "https://api3.geo.admin.ch/rest/services/api/SearchServer",
+    provider: "swisstopo (geo.admin.ch)",
+  },
   sources: [
     "bfs-communes-snapshot",
     "bfs-communes-mutations",
