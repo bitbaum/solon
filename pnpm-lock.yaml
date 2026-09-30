@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@bitbaum/geo-kit':
-        specifier: github:bitbaum/geo-kit#599e5685da512f16b361e6b124129961c6f56d4e
-        version: https://codeload.github.com/bitbaum/geo-kit/tar.gz/599e5685da512f16b361e6b124129961c6f56d4e
+        specifier: github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa
+        version: https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa
       '@fleet/design-tokens':
         specifier: npm:@bitbaum/design-tokens@^1.1.0
         version: '@bitbaum/design-tokens@1.1.0'
@@ -206,9 +206,9 @@ packages:
     resolution: {integrity: sha512-sDVplKP4jKe0WHCOnW7xk75RC46JsAYqUngcVlctyAs9f1TQqZqbYTfbmyYipYCOaCIHMflnzAneQTbqrQbtBw==}
     engines: {node: '>=20'}
 
-  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/599e5685da512f16b361e6b124129961c6f56d4e':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bitbaum/geo-kit/tar.gz/599e5685da512f16b361e6b124129961c6f56d4e}
-    version: 0.1.0
+  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa':
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa}
+    version: 0.1.1
     engines: {node: '>=20'}
 
   '@cacheable/memory@2.2.0':
@@ -3672,7 +3672,7 @@ snapshots:
 
   '@bitbaum/design-tokens@1.1.0': {}
 
-  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/599e5685da512f16b361e6b124129961c6f56d4e': {}
+  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa': {}
 
   '@cacheable/memory@2.2.0':
     dependencies:
