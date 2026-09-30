@@ -36,6 +36,8 @@ export const METRICS: readonly MetricInput[] = [
     },
     valueType: "number",
     unit: "ratio",
-    plausible: { min: 0, max: 3 },
+    // Swiss multipliers reach 5.25 (Lungern, on a small basic tariff); a percent
+    // read as a fraction (119 for 1.19) still falls far outside.
+    plausible: { min: 0, max: 6 },
   },
 ];
