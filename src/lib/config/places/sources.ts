@@ -1,6 +1,20 @@
 import type { SourceInput } from "./schema";
 
 /**
+ * Cantons whose income tax the Swiss model expresses (one basic tariff times the
+ * canton's and the commune's multipliers, no splitting), by the tax calculator's
+ * canton code, with their FSO number. Each reproduces the calculator to the franc
+ * at CHF 60,000, 100,000 and 250,000, single and married, for 2025 and 2026
+ * (checked 2026-09-30). Ticino does not: its basic tax differs by CHF 25–50.
+ */
+const MODELLED_CANTONS = { ZH: "1", BE: "2", LU: "3", ZG: "9", BS: "12", AR: "15", JU: "26" };
+const modelledCantons = Object.fromEntries(
+  Object.entries(MODELLED_CANTONS).map(([code, value]) => [code, { scheme: "bfs_canton", value }]),
+);
+/** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
+const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
+
+/**
  * The source registry: one entry per dataset — publisher, licence, cadence and
  * the adapter that reads it (§8.2). Each importer's first task is to confirm
  * the access path, format and licence, then record them here.
@@ -192,7 +206,7 @@ export const SOURCES: readonly SourceInput[] = [
         {
           target: "KANTON",
           metric: "tax.income.tariff.basic",
-          cantons: { ZH: { scheme: "bfs_canton", value: "1" } },
+          cantons: modelledCantons,
         },
       ],
       // Single people with children are taxed on the married tariff; the model's
@@ -232,7 +246,41 @@ export const SOURCES: readonly SourceInput[] = [
       field: "IncomeRateCanton",
       metric: "tax.multiplier",
       divideBy: 100,
-      cantons: { ZH: { scheme: "bfs_canton", value: "1" } },
+      cantons: modelledCantons,
+    },
+    packs: ["switzerland"],
+  },
+  {
+    // Confirmed 2026-09-30: the same "simple rates" export for group 30, every
+    // commune in Switzerland (2,121 in 2025) with its FSO number;
+    // IncomeRateCity is the commune's multiplier. Against Zürich's own
+    // publication it agrees for 157 of 160 communes: two levy two rates and the
+    // export shows one without saying so, and Aeugst differs (90 against 92).
+    // So it is read only for cantons whose communes levy one rate, and Zürich
+    // keeps its own source.
+    key: "estv-commune-multipliers",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: multipliers of every commune",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/#/taxdata/tax-rates",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator: multipliers",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner: Steuerfüsse",
+    },
+    cadence: "15 5 2 * *",
+    adapter: "estv_simple_rates",
+    options: {
+      url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_exportManySimpleRates",
+      yearRange: {
+        url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_getTaxYearRange",
+        calculator: 1,
+      },
+      taxGroup: 30,
+      fromYear: 2021,
+      field: "IncomeRateCity",
+      metric: "tax.multiplier",
+      divideBy: 100,
+      communes: { scheme: "bfs_municipality", cantons: ESTV_COMMUNE_CANTONS },
     },
     packs: ["switzerland"],
   },

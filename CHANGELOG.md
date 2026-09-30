@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Compare places in six more cantons.** `/compare` now estimates income
+  tax in every commune of Bern, Lucerne, Zug, Basel-Stadt, Appenzell
+  Ausserrhoden and Jura, not only Zürich. Each canton was checked against the
+  Federal Tax Administration's own calculator and matches it to the franc.
+  Ticino and the cantons that tax couples by splitting their income follow.
+  (#236)
+
 - **Compare places: what tax would cost you in each.** `/compare` puts up to
   four places side by side. Enter your taxable income and household, and it
   shows the yearly tax in each, the difference to the cheapest, and the tax

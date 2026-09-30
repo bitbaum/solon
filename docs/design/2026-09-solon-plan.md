@@ -4,7 +4,7 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-09-30: `/compare` sets up to four places side by side, the tax estimate computed in the browser (§9, G).
+_Last modified 2026-09-30: `/compare` covers seven cantons: Zürich, Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden and Jura (§9, G). Earlier the same day: `/compare` sets up to four places side by side, the tax estimate computed in the browser (§9, G).
 Earlier the same day: Places took Platform's header slot, with `/places` (search by name or postcode, browse by level) and its API (§3, §9, G).
 Earlier the same day: the deep side gained `/faq`, `/whitepaper` and `/blog` (§7), read from `content/` through bip-kit 0.5; everyday pages speak plain words with Technical details one click away (`docs/development/ui-guidelines.md`, "Two depths").
 Earlier the same day: `/places/coverage`, the first Places screen, counts coverage from the data (§9, G).

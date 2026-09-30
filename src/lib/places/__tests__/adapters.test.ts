@@ -397,7 +397,7 @@ describe("the Federal Tax Administration's exports", () => {
     expect(scales.facts.filter((f) => f.jurisdiction.value === "CH")).toHaveLength(2);
   });
 
-  it("reads a cantonal table as bracket widths, for the listed canton only", () => {
+  it("reads a cantonal table as bracket widths, for the listed cantons only", () => {
     const basic = tariff("bfs_canton", "1", "single")!;
     expect(basic.metricKey).toBe("tax.income.tariff.basic");
     expect((basic.value as { brackets: unknown[] }).brackets.slice(0, 3)).toEqual([
@@ -406,25 +406,49 @@ describe("the Federal Tax Administration's exports", () => {
       { from: 11800, rate: 0.03 },
     ]);
     expect(tariff("bfs_canton", "1", "married")).toBeDefined();
-    expect(scales.facts).toHaveLength(4);
+    expect(tariff("bfs_canton", "2", "single")).toBeDefined();
+    // Aargau divides a couple's income, and is not listed.
+    expect(scales.facts.some((f) => f.jurisdiction.value === "19")).toBe(false);
+    expect(scales.facts).toHaveLength(6);
   });
 
   it("reports no row it could not read when another row gives the same tariff", () => {
     expect(skipped).toEqual([]);
   });
 
+  const multiplier = (scheme: string, value: string, multiplier: number) => ({
+    jurisdiction: { scheme, value },
+    metricKey: "tax.multiplier",
+    variant: null,
+    validFrom: "2025-01-01",
+    validTo: "2026-01-01",
+    value: multiplier,
+  });
+
   it("records the canton's own multiplier", () => {
     const rates = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
     expect(rates.facts).toEqual([
-      {
-        jurisdiction: { scheme: "bfs_canton", value: "1" },
-        metricKey: "tax.multiplier",
-        variant: null,
-        validFrom: "2025-01-01",
-        validTo: "2026-01-01",
-        value: 0.98,
-      },
+      multiplier("bfs_canton", "1", 0.98),
+      multiplier("bfs_canton", "2", 2.975),
     ]);
+  });
+
+  it("records each commune's multiplier by its FSO number, for the listed cantons only", () => {
+    // Zürich's communes have their own source, and Uri is not modelled.
+    const rates = mapSource("estv-commune-multipliers", fixture("estv-commune-rates-2025.json"));
+    expect(rates.facts).toEqual([multiplier("bfs_municipality", "371", 1.63)]);
+  });
+
+  it("refuses rates that name both a place per canton and each row's own", () => {
+    const adapter = ADAPTERS.get("estv_simple_rates")!;
+    const source = placesConfig.sources.find((s) => s.key === "estv-canton-multipliers")!;
+    const options = source.options as Record<string, unknown>;
+    expect(
+      adapter.options!.safeParse({
+        ...options,
+        communes: { scheme: "bfs_municipality", cantons: ["BE"] },
+      }).success,
+    ).toBe(false);
   });
 
   describe("planning", () => {

@@ -206,19 +206,43 @@ const rateRow = z.object({ Location: location }).catchall(z.unknown());
 const rates = enveloped(rateRow);
 type Rates = z.infer<typeof rates>;
 
-const ratesOptions = exportOptions.extend({
-  /** The row field holding the multiplier, and the metric it is. */
-  field: z.string().min(1),
-  metric: z.string().min(1),
-  /** A field in percent has 100 here. */
-  divideBy: z.number().positive().default(1),
-  cantons: z.record(z.string(), ref),
-});
+const ratesOptions = exportOptions
+  .extend({
+    /** The row field holding the multiplier, and the metric it is. */
+    field: z.string().min(1),
+    metric: z.string().min(1),
+    /** A field in percent has 100 here. */
+    divideBy: z.number().positive().default(1),
+    /** A place per canton, by the export's canton code: the canton's own multiplier. */
+    cantons: z.record(z.string(), ref).optional(),
+    /**
+     * Or each row's own place, its BfsID under `scheme`, for the listed canton
+     * codes only. The export gives one rate per commune; where a commune levies
+     * several, it shows one of them without saying so, so list only cantons whose
+     * communes levy one.
+     */
+    communes: z
+      .object({ scheme: z.string().min(1), cantons: z.array(z.string().min(1)).min(1) })
+      .optional(),
+  })
+  .refine(
+    (o) => (o.cantons === undefined) !== (o.communes === undefined),
+    "give either cantons or communes",
+  );
 type RatesOptions = z.infer<typeof ratesOptions>;
+
+function placeOfRate(options: RatesOptions, at: z.infer<typeof location>): ExternalRef | undefined {
+  if (options.cantons) {
+    return options.cantons[at.Canton];
+  }
+  return options.communes!.cantons.includes(at.Canton)
+    ? { scheme: options.communes!.scheme, value: String(at.BfsID) }
+    : undefined;
+}
 
 export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
   key: "estv_simple_rates",
-  version: "2",
+  version: "3",
   decode: decodeJsonEnvelope,
   schema: rates,
   options: ratesOptions,
@@ -230,13 +254,13 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
     const year = exported.request.body.TaxYear;
     const facts = new Map<string, BatchFact>();
     for (const row of exported.response.response) {
-      const place = options.cantons[row.Location.Canton];
+      const place = placeOfRate(options, row.Location);
       if (!place) {
         continue;
       }
       const value = row[options.field];
       if (typeof value !== "number") {
-        throw new Error(`${row.Location.Canton} ${year}: ${options.field} is not a number`);
+        throw new Error(`${place.scheme}:${place.value} ${year}: ${options.field} is not a number`);
       }
       const key = `${place.scheme}:${place.value}`;
       const fact: BatchFact = {
