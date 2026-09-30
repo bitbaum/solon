@@ -58,6 +58,18 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/v1/places?q=",
+    description: "places by postcode or name; a postcode spanning several places returns each",
+    sample: () => "/api/v1/places?q=8053",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/places/[...path]",
+    description: "one official place: what it is part of, whether it levies tax, and its sources",
+    sample: () => "/api/v1/places/switzerland/zurich/bezirk-zurich/zurich",
+  },
+  {
+    method: "GET",
     path: "/api/health",
     description: "service health",
     sample: () => "/api/health",

@@ -9,14 +9,16 @@
       "governance": "Governance",
       "platform": "Plattform",
       "decisions": "Entscheide",
-      "more": "Mehr"
+      "more": "Mehr",
+      "places": "Orte"
     },
     "sectionDesc": {
       "useCases": "Jede Art von Gruppe entscheidet. Finden Sie Ihre.",
       "governance": "Kunst und Wissenschaft des gemeinsamen Entscheidens.",
       "platform": "Solon entscheidet, OrangeCat zahlt, Loki erledigt die Arbeit.",
       "decisions": "Das öffentliche Protokoll — und Ihr Teil darin.",
-      "more": "Alles Weitere."
+      "more": "Alles Weitere.",
+      "places": "Jede Gebietskörperschaft, mit der Quelle hinter jeder Angabe."
     },
     "links": {
       "whatYouCanDo": "Was Sie hier tun können",
@@ -53,7 +55,9 @@
       "changelog": "Änderungen",
       "whitepaper": "Whitepaper",
       "faq": "Fragen und Antworten",
-      "blog": "Blog"
+      "blog": "Blog",
+      "places": "Orte",
+      "placesCoverage": "Abdeckung"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -90,7 +94,9 @@
       "changelog": "Was sich geändert hat, Neuestes zuerst",
       "whitepaper": "Wie Solon funktioniert, mit allen technischen Einzelheiten",
       "faq": "Kurze Antworten, vom Einstieg bis zur Prüfung der Stimmen",
-      "blog": "Was wir bauen und warum, während wir es bauen"
+      "blog": "Was wir bauen und warum, während wir es bauen",
+      "places": "Einen Ort nach Name oder Postleitzahl finden",
+      "placesCoverage": "Was Orte abdeckt, aus den Daten gezählt"
     }
   },
   "Nav": {
@@ -417,6 +423,25 @@
         "failed": "Letzter Import am {date} fehlgeschlagen",
         "running": "Import läuft seit {date}"
       }
+    },
+    "index": {
+      "title": "Orte",
+      "kicker": "Jede Gebietskörperschaft, amtlich und gegründet",
+      "metaTitle": "Orte · einen Ort finden",
+      "metaDescription": "Einen Ort nach Name oder Postleitzahl finden: wozu er gehört, ob er Steuern erhebt und die Quelle hinter jeder Angabe.",
+      "intro": "Jeder Ort, den Solon führt, so wie ihn seine amtlichen Quellen veröffentlichen. Suchen Sie nach Name oder Postleitzahl, oder gehen Sie die Ebenen eines Landes durch.",
+      "searchLabel": "Name oder Postleitzahl",
+      "searchPlaceholder": "Ein Name oder eine Postleitzahl",
+      "searchButton": "Suchen",
+      "noHits": "Nichts gefunden für «{query}».",
+      "postcodeOne": "Die Postleitzahl {postcode} liegt in diesem Ort:",
+      "postcodeMany": "Die Postleitzahl {postcode} umfasst {count} Orte. Wählen Sie Ihren:",
+      "nameHits": "{count, plural, one {# Ort} other {# Orte}} gefunden",
+      "hitIn": "{level} in {parent}",
+      "localityShare": "{locality}: {share, number, ::percent .##} der Adressen",
+      "levelTitle": "{level}: {count, plural, one {# Ort} other {# Orte}}",
+      "levelLink": "{level} ({count})",
+      "coverageLink": "Was Orte abdeckt und wie aktuell jede Quelle ist →"
     }
   },
   "AuthError": {

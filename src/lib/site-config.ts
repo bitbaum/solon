@@ -57,18 +57,12 @@ export const MENU: MenuSection[] = [
     feature: { link: "ideas", href: "/governance/ideas", photo: "landsgemeindePainting" },
   },
   {
-    key: "platform",
-    href: "/platform",
+    key: "places",
+    href: "/places",
     children: [
-      { key: "platform", href: "/platform" },
-      { key: "security", href: "/security" },
-      { key: "features", href: "/features" },
-      { key: "api", href: "/integration" },
-      { key: "whitepaper", href: "/whitepaper" },
-      { key: "faq", href: "/faq" },
-      { key: "about", href: "/about" },
+      { key: "places", href: "/places" },
+      { key: "placesCoverage", href: "/places/coverage" },
     ],
-    feature: { link: "newEra", href: "/governance/new-era", photo: "starlinkTownHall" },
   },
   {
     key: "decisions",
@@ -92,6 +86,20 @@ export const MENU: MenuSection[] = [
  */
 export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
   ...MENU.map(({ key, children }) => ({ key, children })),
+  // Places took Platform's header slot (design 2026-09-places §9.3); Platform
+  // lives on in the footer and the mobile menu.
+  {
+    key: "platform",
+    children: [
+      { key: "platform", href: "/platform" },
+      { key: "security", href: "/security" },
+      { key: "features", href: "/features" },
+      { key: "api", href: "/integration" },
+      { key: "whitepaper", href: "/whitepaper" },
+      { key: "faq", href: "/faq" },
+      { key: "about", href: "/about" },
+    ],
+  },
   {
     key: "more",
     children: [

@@ -9,14 +9,16 @@
       "governance": "Governance",
       "platform": "Piattaforma",
       "decisions": "Decisioni",
-      "more": "Altro"
+      "more": "Altro",
+      "places": "Luoghi"
     },
     "sectionDesc": {
       "useCases": "Ogni gruppo decide. Trovate il vostro.",
       "governance": "L'arte e la scienza di decidere insieme.",
       "platform": "Solon decide, OrangeCat paga, Loki svolge il lavoro.",
       "decisions": "Il registro pubblico — e la vostra parte.",
-      "more": "Tutto il resto."
+      "more": "Tutto il resto.",
+      "places": "Ogni ente territoriale, con la fonte di ogni dato."
     },
     "links": {
       "whatYouCanDo": "Cosa puoi fare qui",
@@ -53,7 +55,9 @@
       "changelog": "Novità",
       "whitepaper": "Whitepaper",
       "faq": "Domande e risposte",
-      "blog": "Blog"
+      "blog": "Blog",
+      "places": "Luoghi",
+      "placesCoverage": "Copertura"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -90,7 +94,9 @@
       "changelog": "Cosa è cambiato, dal più recente",
       "whitepaper": "Come funziona Solon, in ogni dettaglio tecnico",
       "faq": "Risposte brevi, dai primi passi alla verifica dei voti",
-      "blog": "Cosa costruiamo e perché, mentre lo costruiamo"
+      "blog": "Cosa costruiamo e perché, mentre lo costruiamo",
+      "places": "Trovare un luogo per nome o numero postale",
+      "placesCoverage": "Cosa coprono i luoghi, contato dai dati"
     }
   },
   "Nav": {
@@ -417,6 +423,25 @@
         "failed": "Ultima importazione fallita il {date}",
         "running": "Importazione in corso dal {date}"
       }
+    },
+    "index": {
+      "title": "Luoghi",
+      "kicker": "Ogni ente territoriale, ufficiale o fondato",
+      "metaTitle": "Luoghi · trovare un luogo",
+      "metaDescription": "Trovare un luogo per nome o numero postale: di cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
+      "intro": "Ogni luogo che Solon registra, così come lo pubblicano le sue fonti ufficiali. Cerca per nome o numero postale, oppure sfoglia i livelli di un paese.",
+      "searchLabel": "Nome o numero postale",
+      "searchPlaceholder": "Un nome o un numero postale",
+      "searchButton": "Cerca",
+      "noHits": "Nessun risultato per «{query}».",
+      "postcodeOne": "Il numero postale {postcode} si trova in questo luogo:",
+      "postcodeMany": "Il numero postale {postcode} comprende {count} luoghi. Scegli il tuo:",
+      "nameHits": "{count, plural, one {# luogo trovato} other {# luoghi trovati}}",
+      "hitIn": "{level} in {parent}",
+      "localityShare": "{locality}: {share, number, ::percent .##} dei suoi indirizzi",
+      "levelTitle": "{level}: {count, plural, one {# luogo} other {# luoghi}}",
+      "levelLink": "{level} ({count})",
+      "coverageLink": "Cosa coprono i luoghi e quanto è aggiornata ogni fonte →"
     }
   },
   "AuthError": {
