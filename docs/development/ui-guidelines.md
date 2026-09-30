@@ -124,6 +124,7 @@ text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
 | Auth control | `src/components/ui/auth-control.tsx` |
 | Page shell (every inner page: kicker, title, one-line description) | `src/components/ui/page-layout.tsx` |
 | The way down to the exact record (IDs, addresses, raw payloads, API links) | `src/components/ui/technical-details.tsx` |
+| Long-form pages (whitepaper, questions, blog) | markdown in `content/`, read by `src/lib/content/reading.ts` through bip-kit (`bip-kit/node`, `parseFaq`), rendered inside `PageLayout` in a `.bp-theme` wrapper; routes are `force-static` |
 | Text box, select, text area | the `.field` class in `src/app/globals.css` (add `py-3` on a text area) |
 | Full-screen section | `src/components/site/full-bleed.tsx` |
 
@@ -157,8 +158,8 @@ Solon has two depths, and both matter.
   Bitcoin addresses, raw payloads, API paths) sits under **Technical details**
   (`TechnicalDetails`), closed by default, on the same page.
 - **The deep side** (the governance explainers under `/governance/*`,
-  `/security`, `/api`, `/ecosystem`, `/treasury/bitcoin`, and later the
-  whitepaper, Q&A, blog, changelog and roadmap) is for the reader who wants to
+  `/security`, `/api`, `/ecosystem`, `/treasury/bitcoin`, `/whitepaper`,
+  `/faq`, `/blog`, `/changelog` and `/roadmap`) is for the reader who wants to
   know exactly how it works. It may be as technical as it needs to be:
   precise terms (quorum, electorate, BIP-137) are the point there. Everyday
   pages link down to it ("How this works →"); it never has to link up.

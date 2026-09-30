@@ -37,6 +37,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The deep side: a whitepaper, questions and answers, and a blog.**
+  `/whitepaper` explains how Solon works in full technical detail and says
+  plainly what is built and what is only designed. `/faq` answers the first
+  questions people ask, plain ones first and technical ones last. `/blog`
+  follows the work as it happens. All three are markdown files in the
+  repository, rendered with bip-kit, the kit our products share. (#227)
+
 - **What Places covers, counted from the data**, at `/places/coverage`: for
   each country, how many places each level holds, how many of them have each
   figure the tax estimate needs, and when each source was last fetched. A

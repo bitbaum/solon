@@ -103,14 +103,16 @@ body {
   }
 
   /*
-   * The public roadmap and changelog render through bip-kit (the fleet's
-   * building-in-public renderer), whose stylesheet is neutral and reads every
-   * colour, face and measure from a `--bp-*` variable. Those are pointed at the
-   * shared tokens here, so the records wear Solon's clothes without a second
-   * palette. `html.dark` outranks the package's own dark-mode block, and the
-   * box sits on the page edge like every other inner page.
+   * The roadmap, changelog, whitepaper, questions and blog render through
+   * bip-kit (the fleet's building-in-public renderer), whose stylesheet is
+   * neutral and reads every colour, face and measure from a `--bp-*` variable.
+   * Those are pointed at the shared tokens here, so the pages wear Solon's
+   * clothes without a second palette. `html.dark` outranks the package's own
+   * dark-mode block, and the box sits on the page edge like every other inner
+   * page. `.bp-theme` wraps the pages that render bip-kit inside `PageLayout`.
    */
-  html.dark .bp-development {
+  html.dark .bp-development,
+  html.dark .bp-theme {
     --bp-font-sans: var(--font-sans);
     --bp-font-mono: var(--font-mono);
     --bp-radius: var(--radius-surface);
@@ -144,6 +146,16 @@ body {
     background-color: hsl(var(--surface-page) / 0.92);
     backdrop-filter: blur(12px);
   }
+}
+
+/*
+ * Inside PageLayout a bip-kit article starts on the page edge, under the
+ * title. Unlayered, because bip-kit's stylesheet is unlayered and would
+ * outrank anything in `@layer components`.
+ */
+.bp-theme .bp-article {
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 /* Sections rise into place as they arrive — unless the reader asked for less motion. */
