@@ -17,7 +17,7 @@ one to read for the detail. Fixes get the same weight as features.
   married, at three incomes, for 2025 and 2026. Glarus, Nidwalden,
   Schaffhausen, Geneva, Thurgau, St. Gallen and Appenzell Innerrhoden also
   split, but do not match the calculator yet, so they stay grey rather
-  than show a wrong figure. (#PR)
+  than show a wrong figure. (#241)
 
 - **A map of what tax would cost you, commune by commune.** `/places` now
   opens on a map of every Swiss commune, coloured from the lowest tax to the
