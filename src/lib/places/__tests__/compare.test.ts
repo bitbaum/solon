@@ -86,6 +86,7 @@ describe("comparisonView", () => {
   it("labels the model from the pack and counts the pack's own fiscal year", () => {
     expect(pack).toMatchObject({
       currency: "XTS",
+      formatLocale: "en",
       taxYear: "2026/27",
       base: { key: "taxable_income", label: "Income", hint: null },
       conditions: [{ key: "guild_member", label: "Guild member" }],
@@ -147,6 +148,7 @@ describe("lowestTotals", () => {
   const at = (total: number, currency: string): ColumnEstimate => ({
     kind: "estimate",
     currency,
+    formatLocale: "en",
     estimate: {
       components: [],
       total,

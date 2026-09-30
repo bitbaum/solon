@@ -198,6 +198,7 @@ export function comparisonView(input: {
         key: pack.key,
         name: localized(pack.names, locale),
         currency: pack.currency,
+        formatLocale: pack.region ? `${locale}-${pack.region}` : locale,
         taxYear: taxYear(pack.fiscalYear.startMonthDay, on),
         model,
         base: inputOf(model.base),

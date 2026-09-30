@@ -73,6 +73,14 @@ export const countryPackSchema = z.object({
   names: localizedTextSchema,
   /** ISO 4217. Checked against the runtime's CLDR data. */
   currency: z.string().regex(/^[A-Z]{3}$/),
+  /**
+   * ISO 3166-1 alpha-2, for the country's number formats: its amounts read as
+   * its people write them (de-CH: CHF 13’050). Absent: the reader's locale alone.
+   */
+  region: z
+    .string()
+    .regex(/^[A-Z]{2}$/)
+    .optional(),
   fiscalYear: z.object({
     startMonthDay: z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, "MM-DD"),
   }),
@@ -279,6 +287,7 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
 
   // CLDR's full ISO 4217 list, test codes included; supportedValuesOf omits those.
   const currencyNames = new Intl.DisplayNames(["en"], { type: "currency", fallback: "none" });
+  const regionNames = new Intl.DisplayNames(["en"], { type: "region", fallback: "none" });
   const packs = new Set(config.packs.map((p) => p.key));
   const sources = new Set(config.sources.map((s) => s.key));
   const schemes = new Set(config.identifierSchemes.map((s) => s.key));
@@ -289,6 +298,9 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
   for (const pack of config.packs) {
     if (currencyNames.of(pack.currency) === undefined) {
       problems.push(`pack "${pack.key}": "${pack.currency}" is not an ISO 4217 currency`);
+    }
+    if (pack.region !== undefined && regionNames.of(pack.region) === undefined) {
+      problems.push(`pack "${pack.key}": "${pack.region}" is not an ISO 3166-1 region`);
     }
     problems.push(...levelProblems(pack));
     for (const key of pack.identifierSchemes.filter((k) => !schemes.has(k))) {
