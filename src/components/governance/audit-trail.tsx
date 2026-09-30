@@ -1,5 +1,7 @@
 import { Link } from "@/i18n/navigation";
-import type { AuditEvent, AuditEventType } from "@/lib/db/schema";
+import type { AuditEvent } from "@/lib/db/schema";
+import TechnicalDetails from "@/components/ui/technical-details";
+import { EVENT_LABEL, eventGloss } from "@/lib/domain/event-gloss";
 
 /**
  * An organization's audit trail, rendered from its rows.
@@ -8,19 +10,6 @@ import type { AuditEvent, AuditEventType } from "@/lib/db/schema";
  * list, and a second copy of the labels and the gloss is how two pages come to
  * describe one event two ways.
  */
-
-const EVENT_LABEL: Record<AuditEventType, string> = {
-  ORG_CREATED: "Organization created",
-  MEMBER_ADDED: "New member",
-  MEMBER_STATUS_CHANGED: "Membership changed",
-  PROPOSAL_CREATED: "Suggestion saved",
-  SESSION_OPENED: "Vote started",
-  VOTE_CAST: "Someone voted",
-  SESSION_CLOSED: "Vote ended",
-  POLICY_ACTIVATED: "New rules took effect",
-  MANDATE_CHANGED: "Someone was given or lost a role",
-  PROFILE_CHANGED: "How decisions are made changed",
-};
 
 /** Where a given audit subject can actually be inspected. */
 const SUBJECT_ACTION: Record<string, string> = {
@@ -36,35 +25,12 @@ function subjectHref(subjectType: string, subjectId: string): string | null {
   return null;
 }
 
-/**
- * Keys that belong in the raw event and never in a one-line gloss: a note is
- * prose, and a signature or the multi-line text it signs is bytes to verify,
- * not something to read at a glance.
- */
-const NOT_GLOSSED = new Set(["note", "signature", "signedMessage"]);
-
-/**
- * A one-line gloss of the payload so the trail is readable at a glance. The
- * exact bytes stay one click away in "Raw event" — the summary is a
- * convenience, never a replacement for the record.
- */
-function summarize(payload: unknown): string | null {
-  if (!payload || typeof payload !== "object") return null;
-  const entries = Object.entries(payload as Record<string, unknown>)
-    .filter(([k, v]) => !NOT_GLOSSED.has(k) && v !== null && typeof v !== "object")
-    .slice(0, 4);
-  if (entries.length === 0) return null;
-  return entries
-    .map(([k, v]) => `${k.replace(/([A-Z])/g, " $1").toLowerCase()}: ${String(v)}`)
-    .join(" · ");
-}
-
 export default function AuditTrail({ events }: { events: AuditEvent[] }) {
   return (
     <ol className="space-y-3">
       {events.map((e) => {
         const href = subjectHref(e.subjectType, e.subjectId);
-        const summary = summarize(e.payload);
+        const summary = eventGloss(e.eventType, e.payload);
         return (
           <li key={e.id} className="rounded-control border border-default bg-surface-base p-4">
             <div className="flex items-baseline justify-between gap-4">
@@ -85,14 +51,13 @@ export default function AuditTrail({ events }: { events: AuditEvent[] }) {
                   {SUBJECT_ACTION[e.subjectType] ?? "Open"} →
                 </Link>
               )}
-              <details className="text-xs">
-                <summary className="cursor-pointer text-fg-tertiary">Raw event</summary>
-                <pre className="mt-2 whitespace-pre-wrap break-all rounded-control border border-default bg-surface-raised p-2 font-mono text-fg-primary">
-                  {e.subjectType}:{e.subjectId}
+              <TechnicalDetails>
+                <pre className="whitespace-pre-wrap break-all rounded-control border border-default bg-surface-raised p-2 font-mono text-fg-primary">
+                  {e.eventType} {e.subjectType}:{e.subjectId}
                   {"\n"}
                   {JSON.stringify(e.payload, null, 2)}
                 </pre>
-              </details>
+              </TechnicalDetails>
             </div>
           </li>
         );

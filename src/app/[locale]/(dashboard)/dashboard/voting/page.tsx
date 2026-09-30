@@ -38,23 +38,17 @@ export default async function VotingPage() {
 
   if (dbError) {
     return (
-      <main className="space-y-6">
-        <h1 className="headline text-display-3">Voting</h1>
-        <p className="text-fg-secondary">
-          The voting register is currently unreachable. No session data can be shown.
-        </p>
-      </main>
+      <p className="text-fg-secondary">
+        This cannot be loaded right now. Please try again in a minute.
+      </p>
     );
   }
 
   if (!session) {
     return (
-      <main className="space-y-6">
-        <h1 className="headline text-display-3">Voting</h1>
-        <p className="text-fg-secondary">
-          No voting session has been opened yet. When one opens, members vote here with one click.
-        </p>
-      </main>
+      <p className="text-fg-secondary">
+        Nothing has been voted on yet. When a vote starts, members vote here with one click.
+      </p>
     );
   }
 
@@ -62,10 +56,8 @@ export default async function VotingPage() {
   const viewer = await viewerFor((await auth())?.actorId, session.proposal.organizationId);
 
   return (
-    <main className="space-y-6">
-      <h1 className="headline text-display-3">
-        {session.status === "ACTIVE" ? "Voting now" : "The latest vote"}
-      </h1>
+    <div className="space-y-6">
+      <p className="kicker">{session.status === "ACTIVE" ? "Voting now" : "The latest vote"}</p>
       <VotingInterface
         session={{
           id: session.id,
@@ -80,6 +72,6 @@ export default async function VotingPage() {
         viewer={viewer}
         here="/dashboard/voting"
       />
-    </main>
+    </div>
   );
 }

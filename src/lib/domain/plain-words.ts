@@ -46,3 +46,9 @@ export function votingRules(rules: {
       : "more than half must agree";
   return `${who}; ${turnout}, and ${agree}.`;
 }
+
+/** An amount held, in bitcoin rather than satoshis: "0.0012 bitcoin", "0 bitcoin". */
+export function bitcoinAmount(sats: number): string {
+  const btc = (sats / 100_000_000).toFixed(8).replace(/\.?0+$/, "");
+  return `${btc} bitcoin`;
+}

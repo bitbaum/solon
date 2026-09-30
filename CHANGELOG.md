@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Changed
 
+- **Every everyday page in plain words, with the details one click away.**
+  The dashboard, the record and each organization's page now use the same
+  layout as the rest of Solon and say what happened in a sentence ("The Cat
+  joined as an AI agent.", "Agreed.", "Only people can vote on this, not AI
+  agents.") instead of `outcome: APPROVED · electorate: ALL_MEMBERS`. Money
+  reads in bitcoin, not satoshis. Everything exact (addresses, identifiers,
+  the raw entry, the data links) is still there under "Technical details".
+  The build now fails if one of these pages shows a stored code. (#226)
+
 - **Decisions, in plain words.** The pages where members suggest things and
   vote now look like the rest of Solon and speak plainly: "Suggest
   something", "Start the vote", "Agreed", "Turned down", and the rules of a

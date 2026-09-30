@@ -1,8 +1,11 @@
 # UI guidelines
 
-_Created 2026-01-08. Last modified 2026-09-30: every inner page uses `PageLayout`,
-every text box uses `.field`, and stored values (statuses, categories, voting
-rules) are shown through `src/lib/domain/plain-words.ts`, never as stored._
+_Created 2026-01-08. Last modified 2026-09-30: two depths, everyday pages
+(`EVERYDAY_ROUTES`) plain with "Technical details" one click away, the deep
+side as technical as it needs to be; the render check that holds everyday
+pages to it. Earlier the same day: every inner page uses `PageLayout`, every
+text box uses `.field`, and stored values are shown through
+`src/lib/domain/plain-words.ts`, never as stored._
 
 ## Where the design system actually lives
 
@@ -120,6 +123,7 @@ text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
 | Logo | `src/components/ui/logo.tsx` |
 | Auth control | `src/components/ui/auth-control.tsx` |
 | Page shell (every inner page: kicker, title, one-line description) | `src/components/ui/page-layout.tsx` |
+| The way down to the exact record (IDs, addresses, raw payloads, API links) | `src/components/ui/technical-details.tsx` |
 | Text box, select, text area | the `.field` class in `src/app/globals.css` (add `py-3` on a text area) |
 | Full-screen section | `src/components/site/full-bleed.tsx` |
 
@@ -142,11 +146,36 @@ group, not for engineers: no crypto or protocol vocabulary on the front pages
 (the details live on `/security` and `/governance/voting`). Never assemble a
 sentence by concatenation; see `AGENTS.md`, "Language".
 
+### Two depths
+
+Solon has two depths, and both matter.
+
+- **Everyday pages** (`EVERYDAY_ROUTES` in `src/lib/site-config.ts`: the
+  dashboard, decisions, suggesting, joining, founding, the record, and each
+  organization's page) are for someone who has never read about governance.
+  They say what happened in plain words. The exact record (identifiers,
+  Bitcoin addresses, raw payloads, API paths) sits under **Technical details**
+  (`TechnicalDetails`), closed by default, on the same page.
+- **The deep side** (the governance explainers under `/governance/*`,
+  `/security`, `/api`, `/ecosystem`, `/treasury/bitcoin`, and later the
+  whitepaper, Q&A, blog, changelog and roadmap) is for the reader who wants to
+  know exactly how it works. It may be as technical as it needs to be:
+  precise terms (quorum, electorate, BIP-137) are the point there. Everyday
+  pages link down to it ("How this works →"); it never has to link up.
+
+`tests/e2e/render.spec.ts` ("the everyday pages show no stored codes") fails
+the build if an everyday page shows a stored value outside Technical details.
+
+### Plain words on everyday pages
+
 Assume the reader is not technical. A value the database stores (`OPEN`,
 `SIMPLE_MAJORITY`, `HUMANS_ONLY`, `TREASURY_SPEND`) never reaches the page as
 stored: statuses go through `proposalStanding()`, the rules of a vote through
 `votingRules()` (both in `src/lib/domain/plain-words.ts`), and category names
-come from `CATEGORY_LABEL` in `src/lib/config/governance.ts`. The words people
+come from `CATEGORY_LABEL` in `src/lib/config/governance.ts`, and entries on
+the record read through `EVENT_LABEL` and `eventGloss()` in
+`src/lib/domain/event-gloss.ts`. Amounts read in bitcoin (`bitcoinAmount()`),
+not satoshis. The words people
 see are "suggest", "start the vote", "agreed" and "turned down", not "file",
 "open a session", "quorum" or "electorate". Error messages say what happened
 and what to do ("The connection dropped, so nothing was saved. Please try

@@ -9,8 +9,9 @@ import { sessionAggregate } from "@/lib/domain/voting";
 import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import { treasuryReport } from "@/lib/domain/treasury";
 import { rawQueryString, type Query } from "@/lib/domain/proposal-draft";
-import { proposalStanding } from "@/lib/domain/plain-words";
-import type { SessionOutcome, SessionStatus } from "@/lib/db/enums";
+import { bitcoinAmount, proposalStanding } from "@/lib/domain/plain-words";
+import { EVENT_LABEL } from "@/lib/domain/event-gloss";
+import type { AuditEventType, SessionOutcome, SessionStatus } from "@/lib/db/enums";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +44,8 @@ export default async function DashboardOverview({
     outcome: SessionOutcome | null;
   } | null = null;
   let tallyLine: string | null = null;
-  let treasuryLine = "No treasury source registered yet.";
-  let events: { id: string; eventType: string; createdAt: Date }[] = [];
+  let treasuryLine = "No money is being tracked yet.";
+  let events: { id: string; eventType: AuditEventType; createdAt: Date }[] = [];
   let dbError = false;
 
   try {
@@ -79,8 +80,8 @@ export default async function DashboardOverview({
       if (report.sources.length > 0) {
         treasuryLine =
           report.totalSats !== null
-            ? `${report.sources.length} source(s), ${report.totalSats.toString()} sats on-chain`
-            : `${report.sources.length} source(s) registered; balance currently unresolved`;
+            ? `${bitcoinAmount(report.totalSats)} in ${report.sources.length === 1 ? "one wallet" : `${report.sources.length} wallets`}`
+            : "The balance cannot be read right now.";
       }
       events = await db.query.auditEvents.findMany({
         where: eq(auditEvents.organizationId, org.id),
@@ -95,24 +96,18 @@ export default async function DashboardOverview({
 
   if (dbError) {
     return (
-      <main className="space-y-6">
-        <h1 className="headline text-display-3 text-fg-primary">Overview</h1>
-        <p className="text-fg-secondary">
-          The governance register is currently unreachable. No live data can be shown.
-        </p>
-      </main>
+      <p className="text-fg-secondary">
+        This cannot be loaded right now. Please try again in a minute.
+      </p>
     );
   }
 
   return (
-    <main className="space-y-6">
-      <h1 className="headline text-display-3 text-fg-primary">
-        {org ? `${org.name} — Overview` : "Overview"}
-      </h1>
+    <div className="space-y-6">
       {!org && (
         <p className="text-fg-secondary">
-          No organization is registered yet. Once one exists, its votes, treasury, and audit trail
-          appear here.
+          There is no organization here yet. Once there is, its votes, money and history appear
+          here.
         </p>
       )}
       {org && <NextAction orgSlug={org.slug} />}
@@ -122,9 +117,7 @@ export default async function DashboardOverview({
             href="/dashboard/voting"
             className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
-            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
-              Latest vote
-            </div>
+            <div className="kicker mb-3">Latest vote</div>
             {session ? (
               <>
                 <div className="font-semibold text-fg-primary">{session.proposalTitle}</div>
@@ -134,7 +127,7 @@ export default async function DashboardOverview({
                 </div>
               </>
             ) : (
-              <div className="text-sm text-fg-secondary">No voting session opened yet.</div>
+              <div className="text-sm text-fg-secondary">Nothing has been voted on yet.</div>
             )}
           </Link>
 
@@ -142,9 +135,7 @@ export default async function DashboardOverview({
             href="/dashboard/treasury"
             className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
-            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
-              Treasury
-            </div>
+            <div className="kicker mb-3">Money</div>
             <div className="text-sm text-fg-secondary">{treasuryLine}</div>
           </Link>
 
@@ -152,17 +143,14 @@ export default async function DashboardOverview({
             href="/governance/audit"
             className="block rounded-surface border border-default p-5 hover:border-default transition-colors"
           >
-            <div className="text-sm font-semibold text-fg-secondary uppercase tracking-wide mb-2">
-              Recent activity
-            </div>
+            <div className="kicker mb-3">Lately</div>
             {events.length === 0 ? (
-              <div className="text-sm text-fg-secondary">No audit events yet.</div>
+              <div className="text-sm text-fg-secondary">Nothing has happened yet.</div>
             ) : (
               <ul className="space-y-1 text-sm text-fg-secondary">
                 {events.map((e) => (
                   <li key={e.id} className="truncate">
-                    {e.eventType.toLowerCase().replace(/_/g, " ")} ·{" "}
-                    {e.createdAt.toISOString().slice(0, 10)}
+                    {EVENT_LABEL[e.eventType]} · {e.createdAt.toISOString().slice(0, 10)}
                   </li>
                 ))}
               </ul>
@@ -170,6 +158,6 @@ export default async function DashboardOverview({
           </Link>
         </div>
       )}
-    </main>
+    </div>
   );
 }

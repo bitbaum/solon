@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
-import { PRIMARY_NAV, SITE_LINKS } from "../../src/lib/site-config";
+import { EVERYDAY_ROUTES, PRIMARY_NAV, SITE_LINKS } from "../../src/lib/site-config";
+import * as enums from "../../src/lib/db/enums";
 import en from "../../messages/en.json";
 
 /**
@@ -34,6 +35,39 @@ test("an unknown place answers 404", async ({ page }) => {
   for (const href of ["/places/nowhere", "/places/testland/northshire", "/de/places/testland"]) {
     const res = await page.goto(href, { waitUntil: "domcontentloaded" });
     expect(res?.status(), href).toBe(404);
+  }
+});
+
+// Every value the database stores as a code: OPEN, SIMPLE_MAJORITY, HUMANS_ONLY.
+const STORED_CODES = new Set<string>(
+  (Object.values(enums) as unknown[])
+    .filter((v): v is unknown[] => Array.isArray(v))
+    .flat()
+    .filter((v): v is string => typeof v === "string" && /^[A-Z][A-Z_]+$/.test(v)),
+);
+
+// Text a reader actually sees, as written (not as CSS capitalises it), leaving
+// out what sits under "Technical details" and code blocks, where codes belong.
+async function plainText(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const walker = document.createTreeWalker(document.querySelector("main") ?? document.body, 4);
+    const out: string[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!node.parentElement?.closest("details, pre, code, script, style"))
+        out.push(node.nodeValue ?? "");
+    }
+    return out.join(" ");
+  });
+}
+
+test("the everyday pages show no stored codes", async ({ page }) => {
+  for (const href of [...EVERYDAY_ROUTES, "/orgs/orangecat"]) {
+    await page.goto(href, { waitUntil: "domcontentloaded" });
+    const words = (await plainText(page)).match(/\b[A-Z][A-Z_]{2,}\b/g) ?? [];
+    expect(
+      words.filter((w) => STORED_CODES.has(w)),
+      href,
+    ).toEqual([]);
   }
 });
 
