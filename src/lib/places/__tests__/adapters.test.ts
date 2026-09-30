@@ -344,6 +344,24 @@ describe("swisstopo's postcode directory", () => {
     expect(batch.postcodes[0]?.share).toBeCloseTo(0.00412, 10);
   });
 
+  it("leaves out Liechtenstein's communes and the commune-free areas, and reports them", () => {
+    const text = [
+      "PLZ4;Ortschaftsname;BFS-Nr;Kantonskürzel;Adressenanteil;Validity",
+      "1793;Jeuss;2233;FR;96.875 %;2008-07-01",
+      "1793;Jeuss;2391;FR;3.125 %;2008-07-01",
+      "9487;Gamprin-Bendern;7009;;99.507 %;2008-07-01",
+      "",
+    ].join("\r\n");
+    const skipped: { row: string; reason: string }[] = [];
+    const batch = mapSource(SOURCE, new TextEncoder().encode(text), skipped);
+    expect(batch.postcodes.map((p) => p.place.value)).toEqual(["2233"]);
+    expect(skipped.map((s) => s.row)).toEqual([
+      "1793 Jeuss (bfs_municipality:2391)",
+      "9487 Gamprin-Bendern (bfs_municipality:7009)",
+    ]);
+    expect(skipped[1]?.reason).toMatch(/Liechtenstein/);
+  });
+
   it("refuses an archive that does not hold exactly one CSV", () => {
     expect(() => decodeCsvAnyForm(zipSync({ "a.csv": csv, "b.csv": csv }))).toThrow(
       /holds 2 CSV files/,
