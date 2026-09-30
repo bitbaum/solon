@@ -1000,5 +1000,17 @@
         "running": "Import running since {date}"
       }
     }
+  },
+  "AuthError": {
+    "metaTitle": "Sign-in didn’t finish",
+    "kicker": "Your account",
+    "deniedTitle": "Your OrangeCat account needs an email",
+    "deniedLede": "Solon shows who decided what, so every account here needs an email. Add one to your OrangeCat account, then come back and continue. Everything you already did there stays.",
+    "addEmail": "Add an email on OrangeCat",
+    "failedTitle": "Sign-in didn’t finish",
+    "failedLede": "Something went wrong between Solon and OrangeCat. It is usually gone on the second try.",
+    "tryAgain": "Try again",
+    "back": "Back to Solon",
+    "readFreely": "You never need an account to read anything on Solon."
   }
 }

@@ -16,6 +16,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Signing in when your OrangeCat account got its email later.** Solon said
+  "Add an email to continue" to accounts that had one, and "Sign in again"
+  led straight back to the same page. OrangeCat now tells Solon the email
+  your account has. If sign-in ever does stop, the page is in your language,
+  says what to do, and every button on it works. (#221)
 - **Tax estimates on 31 December.** A year's tariffs and multipliers ended a
   day early, so an estimate on the last day of the year came out incomplete,
   and a commune that merged away looked gone the day before it did. Every

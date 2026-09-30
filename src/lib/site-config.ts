@@ -125,6 +125,7 @@ export const TRANSLATED_ROUTES = new Set<string>([
   "/credits",
   "/sign-in",
   "/sign-up",
+  "/auth/error",
 ]);
 
 /** Sections translated as a whole: every page under the prefix. */

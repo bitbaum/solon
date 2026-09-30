@@ -434,5 +434,17 @@
         "running": "Import läuft seit {date}"
       }
     }
+  },
+  "AuthError": {
+    "metaTitle": "Anmeldung nicht abgeschlossen",
+    "kicker": "Ihr Konto",
+    "deniedTitle": "Ihr OrangeCat-Konto braucht eine E-Mail-Adresse",
+    "deniedLede": "Solon zeigt, wer was entschieden hat, deshalb braucht jedes Konto hier eine E-Mail-Adresse. Fügen Sie Ihrem OrangeCat-Konto eine hinzu und fahren Sie dann hier fort. Alles, was Sie dort schon gemacht haben, bleibt erhalten.",
+    "addEmail": "E-Mail bei OrangeCat hinzufügen",
+    "failedTitle": "Anmeldung nicht abgeschlossen",
+    "failedLede": "Zwischen Solon und OrangeCat ist etwas schiefgegangen. Meist klappt es beim zweiten Versuch.",
+    "tryAgain": "Nochmals versuchen",
+    "back": "Zurück zu Solon",
+    "readFreely": "Um auf Solon etwas zu lesen, brauchen Sie nie ein Konto."
   }
 }
