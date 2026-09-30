@@ -367,28 +367,6 @@
     "roadmapDescription": "Où va Solon, dans l'ordre où il y va — lu depuis le registre de référence de la flotte.",
     "changelogDescription": "Ce qui a changé dans Solon pour celles et ceux qui l'utilisent, du plus récent au plus ancien — lu depuis le registre de référence de la flotte."
   },
-  "Entry": {
-    "kicker": "Votre compte",
-    "signInTitle": "Se connecter à Solon",
-    "signUpTitle": "Créer votre compte Solon",
-    "lede": "Un seul compte pour Solon, OrangeCat et Loki. Gratuit, sans portefeuille.",
-    "emailLabel": "E-mail",
-    "emailPlaceholder": "vous@exemple.ch",
-    "continue": "Continuer",
-    "or": "ou",
-    "with": {
-      "google": "Continuer avec Google",
-      "github": "Continuer avec GitHub",
-      "orangecat": "J’ai déjà un compte OrangeCat"
-    },
-    "toSignUp": "Nouveau ici ? Créer un compte",
-    "toSignIn": "Déjà un compte ? Se connecter",
-    "howTitle": "Et ensuite",
-    "how": "Vous terminez sur la page de connexion d’OrangeCat, qui gère le compte unique pour Solon, OrangeCat et Loki, puis vous revenez directement ici. Solon ne voit jamais votre mot de passe.",
-    "readFreely": "Aucun compte n’est nécessaire pour lire quoi que ce soit sur Solon : chaque décision et son registre sont publics.",
-    "unavailable": "La connexion n’est pas activée sur cette instance de Solon. Tout reste lisible sans compte.",
-    "photoLine": "Décidé au grand jour."
-  },
   "Places": {
     "kicker": "{level} · {pack}",
     "metaTitle": "{name} · {level}, {pack}",

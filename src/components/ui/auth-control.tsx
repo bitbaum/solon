@@ -1,12 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useSession } from "next-auth/react";
+import { entryHref } from "@/lib/auth/entry-href";
 
 /**
- * The header's session corner. Signed out: "Sign in", which opens Solon's own
- * sign-in page and remembers this page so the reader comes back to it. Signed
+ * The header's session corner. Signed out: "Sign in", which opens OrangeCat's
+ * sign-in screen (titled for Solon) and remembers this page so the reader
+ * comes back to it. Signed
  * in: your name, linking to /account. Session state is fetched client-side so
  * the marketing pages stay static; until it arrives the signed-out label
  * shows, because most visitors are signed out.
@@ -17,6 +19,7 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
   const { data: session } = useSession();
   const pathname = usePathname();
   const t = useTranslations("Nav");
+  const locale = useLocale();
 
   const className = compact
     ? "btn-frame w-full"
@@ -30,13 +33,9 @@ export default function AuthControl({ compact = false }: { compact?: boolean }) 
     );
   }
 
-  const onEntryPage = pathname === "/sign-in" || pathname === "/sign-up";
   return (
-    <Link
-      href={onEntryPage ? "/sign-in" : { pathname: "/sign-in", query: { from: pathname } }}
-      className={className}
-    >
+    <a href={entryHref("sign-in", locale, pathname)} className={className}>
       {t("signIn")}
-    </Link>
+    </a>
   );
 }

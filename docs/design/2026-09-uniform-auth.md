@@ -4,7 +4,10 @@ _Decided 2026-09-25: option A. George: "go with option A for auth, build it.
 It should be easy for people to create accounts in any way they prefer … I
 would really prefer not to pay for things and … to use open source." Status
 at the end._
-_Last modified 2026-09-30: an account that added its email after sign-up was
+_Last modified 2026-09-30: George decided that every product's "Sign in"
+opens OrangeCat's screen directly (titled for the product), with no sign-in
+screen of the product's own in front of it; Solon's is gone (see "Decided
+2026-09-30" under Status). Earlier the same day: an account that added its email after sign-up was
 turned away by Solon (OrangeCat sent the stale profile copy); fixed on both
 sides, see "Fixed 2026-09-30" under Status._
 
@@ -90,6 +93,20 @@ OIDC provider on the box, no paid identity service.
   page you were on; `/account` signed out goes to `/sign-in`.
 - Already true before this work: email + password sign-up with no
   confirmation step (auto-confirm on), Google, GitHub and X enabled on GoTrue.
+
+**Decided 2026-09-30: one sign-in screen, OrangeCat's**
+
+George: "why no normal log in with login and password". Solon's own
+email-first page only forwarded to OrangeCat, so the person typed their email
+twice and met the password field on the second screen. Now `/sign-in` and
+`/sign-up` in Solon are routes, not pages: they start the OIDC flow at once
+(`prompt=create` for sign-up), and OrangeCat's screen, titled "Sign in to
+continue to Solon", offers email and password, an emailed code, Google, GitHub
+and "Create an account". Links to them are plain `<a>` (a prefetching link
+would start a sign-in in the background). OrangeCat's left column speaks for
+the app that sent the person and leads back to it (bitbaum/orangecat#1195).
+Loki and every other product follow the same rule: a "Sign in" button, the
+shared error page's behaviour, nothing more.
 
 **Fixed 2026-09-30**
 
