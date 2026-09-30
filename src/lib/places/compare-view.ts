@@ -101,7 +101,7 @@ export function compareHref(slugPaths: readonly string[]): string {
 }
 
 export function estimateColumn(
-  column: CompareColumn,
+  column: Pick<CompareColumn, "facts" | "levels">,
   pack: CompareTaxPack | undefined,
   input: EstimateInput,
 ): ColumnEstimate {

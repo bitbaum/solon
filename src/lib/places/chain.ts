@@ -120,13 +120,14 @@ export async function loadChain(
     .sort((a, b) => (a.depth ?? MAX_DEPTH + 1) - (b.depth ?? MAX_DEPTH + 1));
 }
 
-/** The current facts of these places for the period containing `on`. */
+/** The current facts of these places for the period containing `on`; only these metrics, when given. */
 export async function loadFacts(
   db: Executor,
   jurisdictionIds: string[],
   on: string,
+  metricKeys?: readonly string[],
 ): Promise<ChainFact[]> {
-  if (jurisdictionIds.length === 0) {
+  if (jurisdictionIds.length === 0 || metricKeys?.length === 0) {
     return [];
   }
   const rows = await db
@@ -135,6 +136,7 @@ export async function loadFacts(
     .where(
       and(
         inArray(facts.jurisdictionId, jurisdictionIds),
+        metricKeys ? inArray(facts.metricKey, [...metricKeys]) : undefined,
         isNull(facts.supersededAt),
         lte(facts.validFrom, on),
         or(isNull(facts.validTo), gt(facts.validTo, on)),

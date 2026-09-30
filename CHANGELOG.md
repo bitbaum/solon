@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Tax figures for every commune at once, for the map.** A new public
+  endpoint, `/api/v1/places/map`, gives every commune on the map with the
+  tax figures that apply to it, so the map can colour each one by what you
+  would pay at your income. The estimate runs in your browser, exactly as on
+  `/compare`: your income is never sent. (#239)
+
 - **Commune boundaries, for the coming map.** Solon now imports the outline
   of every Swiss commune from swisstopo's official boundaries and publishes
   them as one small file (about 220 KB) that a map can check before drawing.

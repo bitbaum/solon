@@ -49,6 +49,8 @@ import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
 import { loadCoverage } from "../coverage";
 import { geographyFileHref, geographyManifest, parseGeometryRef } from "../geography";
+import { loadMapData } from "../map-data";
+import { estimatePlace } from "../map-view";
 import { resolvePostcode } from "../postcodes";
 import { loadPackIndex, placesAtLevel, searchPlaces } from "../search";
 import { withTestland } from "./fixtures/testland/config";
@@ -231,6 +233,38 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     expect(next.counts).toMatchObject({ areasSuperseded: 3, areasInserted: 3 });
     const back = await edition("swissboundaries3d_2026-01_cut.shp.zip");
     expect(back.counts).toMatchObject({ areasSuperseded: 3, areasInserted: 3 });
+  });
+
+  it("maps every drawn commune with the figures /compare uses, estimated alike", async () => {
+    const map = await loadMapData(db, config, "switzerland", "2026-09-30", "de");
+    expect(map).not.toBeNull();
+    expect(map!.levelKey).toBe("municipality");
+    expect(map!.levelName).toBe("Gemeinde");
+    expect(map!.resource.id).toBe("swisstopo-commune-boundaries:2026-01");
+    // The cut's tariffs end with 2025, so a day in 2026 maps 2025, and says so.
+    expect(map!.earlierYear).toBe(true);
+    expect(map!.taxPack?.taxYear).toBe("2025");
+    expect(map!.places.map((p) => [p.feature, p.name])).toEqual([
+      ["371", "Biel/Bienne"],
+      ["154", "Küsnacht (ZH)"],
+      ["261", "Zürich"],
+    ]);
+    // The nation's and a canton's facts are sent once, however many communes share them.
+    const groupsUsed = map!.places.flatMap((p) => p.groups);
+    expect(new Set(groupsUsed).size).toBe(map!.factGroups.length);
+    expect(groupsUsed.length).toBeGreaterThan(map!.factGroups.length);
+    for (const g of GOLDEN_2025) {
+      const place = map!.places.find((p) => p.feature === g.commune)!;
+      const e = estimatePlace(map!, place, { base: 100_000, variant: g.variant, conditions: {} });
+      expect(e.kind, `${g.commune} ${g.variant}`).toBe("estimate");
+      if (e.kind === "estimate") {
+        expect(Math.abs(e.estimate.total - (g.federal + g.canton + g.communal))).toBeLessThan(3);
+      }
+    }
+    expect(map!.sources.map((s) => s.dataset)).toEqual(
+      expect.arrayContaining(["swissBOUNDARIES3D"]),
+    );
+    expect(await loadMapData(db, config, "nowhere", "2026-09-30", "de")).toBeNull();
   });
 
   it("resolves a postcode to the commune it lies in", async () => {

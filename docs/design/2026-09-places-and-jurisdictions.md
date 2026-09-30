@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-10-01: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-10-01: the map's data is served: `GET /api/v1/places/map` gives every drawn commune with the tax figures along its chain, for the browser to estimate as `/compare` does (§9.1). Earlier the same day: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -844,8 +844,20 @@ concatenated sentences, no dead ends.
   into: its source, level, edition, validity, size, bounds and sha256, which
   the map checks before drawing. `GET /api/v1/places/geography/{sha256}.topojson`
   serves the file itself as immutable (cached a year; the name is the
-  content). The Swiss communes are one file of about 220 KB gzipped. Not yet:
-  the map itself, lakes and canton outlines, earlier editions.
+  content). The Swiss communes are one file of about 220 KB gzipped.
+
+  **Built (P1, the map's data)**: `GET /api/v1/places/map?pack=` gives every
+  place a current area draws at one level of the pack (the level most areas
+  draw, or `?level=`), with its feature in the boundary file, its name and
+  parent, and the facts its tax model reads along its chain. Those facts go
+  out once per place that holds them (the nation's and a canton's are shared
+  by all their communes), and each commune lists which it reads.
+  `src/lib/places/map-data.ts` loads every chain in one recursive query; the
+  browser estimates with the same `estimateColumn` as `/compare`
+  (`map-view.ts`), so the two cannot disagree, and the reader's income never
+  leaves their device. The period is the latest of the last three years whose
+  figures are published for the most places, one period for all. Not yet: the
+  map itself, lakes and canton outlines, earlier editions.
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,
   colour-blind safe. Colour is never the only carrier. (Built:
   bitbaum/design-tokens#31 adds `--map-scale-1…7` (viridis, luminance rising at

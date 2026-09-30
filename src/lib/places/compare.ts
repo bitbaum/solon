@@ -5,7 +5,7 @@
  * in the browser (`compare-view.ts`).
  */
 import { and, eq, inArray } from "drizzle-orm";
-import type { PlacesConfig } from "@/lib/config/places/schema";
+import type { CountryPack, PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictions } from "@/lib/db/places-schema";
 import { evaluate, taxingLevels, type TaxModel } from "@/lib/tax-model";
@@ -176,46 +176,11 @@ export function comparisonView(input: {
     const taxing = model ? taxingLevels(model, facts) : [];
 
     let taxPack = taxPacks.get(pack.key);
-    if (!taxPack && model && pack.taxLabels) {
-      const labels = pack.taxLabels;
-      const inputOf = (key: string) => ({
-        key,
-        label: localized(labels.inputs[key]!.label, locale),
-        hint: labels.inputs[key]!.hint ? localized(labels.inputs[key]!.hint!, locale) : null,
-      });
-      const rows = new Map<string, CompareTaxPack["multiplierRows"][number]>();
-      for (const ref of model.components.flatMap((c) => c.multipliers ?? [])) {
-        const key = multiplierRowKey(ref.level, ref.metric);
-        const metric = config.metrics.find((m) => m.key === ref.metric);
-        rows.set(key, {
-          key,
-          levelKey: ref.level,
-          metric: metric ? localized(metric.label, locale) : ref.metric,
-          level: levelName(ref.level),
-        });
+    if (!taxPack) {
+      taxPack = taxPackView(config, pack, on, locale) ?? undefined;
+      if (taxPack) {
+        taxPacks.set(pack.key, taxPack);
       }
-      taxPack = {
-        key: pack.key,
-        name: localized(pack.names, locale),
-        currency: pack.currency,
-        formatLocale: pack.region ? `${locale}-${pack.region}` : locale,
-        taxYear: taxYear(pack.fiscalYear.startMonthDay, on),
-        model,
-        base: inputOf(model.base),
-        conditions: model.inputs.filter((key) => key !== model.base).map(inputOf),
-        variants: model.variants.map((key) => ({
-          key,
-          label: localized(labels.variants[key]!, locale),
-        })),
-        components: model.components.map((c) => ({
-          key: c.key,
-          label: localized(labels.components[c.key]!, locale),
-        })),
-        multiplierRows: [...rows.values()],
-        levelNames: Object.fromEntries(pack.levels.map((l) => [l.key, levelName(l.key)])),
-        excludes: localized(labels.excludes, locale),
-      };
-      taxPacks.set(pack.key, taxPack);
     }
 
     const parent = chain.find((p) => p.depth === 1);
@@ -245,4 +210,59 @@ export function comparisonView(input: {
     });
   }
   return { columns, taxPacks: [...taxPacks.values()], notFound };
+}
+
+/** A pack's tax model in the reader's words, for the fiscal year containing `on`; null without one. */
+export function taxPackView(
+  config: PlacesConfig,
+  pack: CountryPack,
+  on: string,
+  locale: string,
+): CompareTaxPack | null {
+  const model = pack.taxModel;
+  const labels = pack.taxLabels;
+  if (!model || !labels) {
+    return null;
+  }
+  const levelName = (key: string | null) => {
+    const level = pack.levels.find((l) => l.key === key);
+    return level ? localized(level.names, locale) : (key ?? "");
+  };
+  const inputOf = (key: string) => ({
+    key,
+    label: localized(labels.inputs[key]!.label, locale),
+    hint: labels.inputs[key]!.hint ? localized(labels.inputs[key]!.hint!, locale) : null,
+  });
+  const rows = new Map<string, CompareTaxPack["multiplierRows"][number]>();
+  for (const ref of model.components.flatMap((c) => c.multipliers ?? [])) {
+    const key = multiplierRowKey(ref.level, ref.metric);
+    const metric = config.metrics.find((m) => m.key === ref.metric);
+    rows.set(key, {
+      key,
+      levelKey: ref.level,
+      metric: metric ? localized(metric.label, locale) : ref.metric,
+      level: levelName(ref.level),
+    });
+  }
+  return {
+    key: pack.key,
+    name: localized(pack.names, locale),
+    currency: pack.currency,
+    formatLocale: pack.region ? `${locale}-${pack.region}` : locale,
+    taxYear: taxYear(pack.fiscalYear.startMonthDay, on),
+    model,
+    base: inputOf(model.base),
+    conditions: model.inputs.filter((key) => key !== model.base).map(inputOf),
+    variants: model.variants.map((key) => ({
+      key,
+      label: localized(labels.variants[key]!, locale),
+    })),
+    components: model.components.map((c) => ({
+      key: c.key,
+      label: localized(labels.components[c.key]!, locale),
+    })),
+    multiplierRows: [...rows.values()],
+    levelNames: Object.fromEntries(pack.levels.map((l) => [l.key, levelName(l.key)])),
+    excludes: localized(labels.excludes, locale),
+  };
 }
