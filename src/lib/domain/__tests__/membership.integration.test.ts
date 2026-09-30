@@ -15,7 +15,7 @@ import { MemberStatus, MemberType } from "@/lib/db/enums";
 import { db } from "@/lib/db/client";
 import { auditEvents, members, organizations } from "@/lib/db/schema";
 import { generateKeyPair, registrationMessage, signMessage } from "@/lib/bitcoin/message";
-import { genesisOpen, registerMember } from "@/lib/domain/membership";
+import { genesisOpen, registerMember, unfoundedOrganizations } from "@/lib/domain/membership";
 
 const RUN = process.env.INTEGRATION === "1";
 
@@ -64,7 +64,7 @@ describe.runIf(RUN)("founding seat", () => {
     const anyone = claim(slug, `actor-${randomUUID()}`);
     const refused = await registerMember(anyone.input);
     expect(refused).toMatchObject({ registered: false, verified: true });
-    expect(refused.reason).toMatch(/no founder has been named/);
+    expect(refused.reason).toMatch(/doesn't have its first member yet/);
     expect(await genesisOpen(slug)).toBe(true);
   });
 
@@ -73,7 +73,7 @@ describe.runIf(RUN)("founding seat", () => {
     const stranger = claim(slug, `actor-${randomUUID()}`);
     const refused = await registerMember(stranger.input);
     expect(refused).toMatchObject({ registered: false, verified: true });
-    expect(refused.reason).toMatch(/reserved for the identity/);
+    expect(refused.reason).toMatch(/waiting for its founder/);
     expect(await genesisOpen(slug)).toBe(true);
   });
 
@@ -105,7 +105,14 @@ describe.runIf(RUN)("founding seat", () => {
     const refused = await registerMember(second.input);
     expect(refused.registered).toBe(false);
     expect(refused.verified).toBe(true);
-    expect(refused.reason).toMatch(/founding seat is taken|MEMBERSHIP vote/);
+    expect(refused.reason).toMatch(/already has members/);
+  });
+
+  it("lists an organization as unfounded until its first member joins", async () => {
+    const slug = await freshOrg();
+    expect((await unfoundedOrganizations()).map((o) => o.slug)).toContain(slug);
+    await registerMember(claim(slug, founder).input);
+    expect((await unfoundedOrganizations()).map((o) => o.slug)).not.toContain(slug);
   });
 
   it("refuses a signature that does not match the claimed address", async () => {
@@ -144,7 +151,7 @@ describe.runIf(RUN)("founding seat", () => {
     const again = await registerMember(first.input);
     expect(again.registered).toBe(false);
     // Seats are per organization now, so the refusal names this organization's roster.
-    expect(again.reason).toMatch(/already holds a seat|already registered|founding seat is taken/);
+    expect(again.reason).toMatch(/already holds a seat|already registered|already has members/);
 
     const count = await db.$count(members, eq(members.bitcoinAddress, first.pair.address));
     expect(count).toBe(1);

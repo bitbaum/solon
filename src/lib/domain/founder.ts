@@ -40,9 +40,38 @@ export function genesisVerdict(actorId: string, rule: FounderRule): GenesisVerdi
   return { allowed: true };
 }
 
-/** The sentence /join shows for a refused verdict — the way forward, never a wall. */
-export function genesisRefusalCopy(verdict: Exclude<GenesisVerdict, { allowed: true }>): string {
+/**
+ * What /join tells a visitor who may not take the seat: in plain words, with
+ * the way forward. Never the name of a setting — the visitor cannot change it,
+ * and the operator is told through /api/health (see `foundingGaps`).
+ */
+export function genesisRefusalCopy(
+  verdict: Exclude<GenesisVerdict, { allowed: true }>,
+  orgName: string,
+): string {
   return verdict.reason === "unnamed"
-    ? "This organization was set up before founding had a form, and no founder has been named for it yet. Until the deployment names one (SOLON_FOUNDER_ACTOR_ID), nobody can take the seat. Everything on the record is open to you meanwhile."
-    : "This organization was set up before founding had a form, and its founding seat is reserved for the identity the deployment named as its founder. Once that person is seated, admission is by a membership vote. Everything on the record is open to you meanwhile.";
+    ? `${orgName} doesn't have its first member yet, so nobody can join it for now. Once its founder has joined, you can ask to become a member and the members decide. You can already read everything ${orgName} has decided.`
+    : `${orgName} is waiting for its founder to join first. After that, you can ask to become a member and the members decide. You can already read everything ${orgName} has decided.`;
+}
+
+/** An organization nobody can join: no member yet, and no founder named to be the first. */
+export interface FoundingGap {
+  slug: string;
+  problem: string;
+}
+
+/**
+ * The operator's side of the same rule. A seeded organization with no member
+ * and no named founder is a dead end for every visitor, so it is reported
+ * instead of waiting for someone to hit it.
+ */
+export function foundingGaps(
+  unfounded: readonly { slug: string }[],
+  rule: FounderRule,
+): FoundingGap[] {
+  if (rule.founderActorId) return [];
+  return unfounded.map(({ slug }) => ({
+    slug,
+    problem: `"${slug}" has no member and no founder is named (SOLON_FOUNDER_ACTOR_ID), so nobody can join it.`,
+  }));
 }

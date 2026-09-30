@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import PageLayout from "@/components/ui/page-layout";
 import { auth, authEnabled } from "@/lib/auth";
 import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { memberForActor } from "@/lib/auth/recognition";
@@ -15,8 +16,9 @@ const one = (v: string | string[] | undefined): string => (Array.isArray(v) ? v[
 
 /**
  * Every branch of this page ends in something the visitor can do right now:
- * sign in, claim the seat, cast a vote, or read the roster. "Nothing to do
- * here" is not one of the states.
+ * sign in, join, vote, or read what was decided. "Nothing to do here" is not
+ * one of the states, and no branch names a setting or a technical term — the
+ * reader is anyone who wants to take part.
  *
  * `?next=` is where the visitor was going when membership got in the way — a
  * pre-filled proposal, usually. It rides through sign-in and the seat claim
@@ -30,99 +32,91 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
   const org = await primaryOrg();
   if (!org) {
     return (
-      <Shell title="Join">
-        <Card>
-          <p className="text-sm text-fg-secondary">
-            No organization is seeded in this environment yet.
-          </p>
-          <Actions>
-            <Secondary href="/governance/audit">Browse the audit trail</Secondary>
-          </Actions>
-        </Card>
-      </Shell>
+      <Page title="Nothing to join yet">
+        <p>There is no organization here yet. You can start one.</p>
+        <Actions>
+          <Link href="/orgs/new" className="btn-primary">
+            Start an organization
+          </Link>
+        </Actions>
+      </Page>
     );
   }
 
   const session = await auth();
+  const record = (
+    <Secondary href="/governance/audit">See everything {org.name} has decided</Secondary>
+  );
 
   if (!session?.actorId) {
     return (
-      <Shell title="Become a member">
-        <Card>
-          <p className="text-sm leading-relaxed text-fg-secondary">
-            Sign in so the roster says who you are. That is all membership needs &mdash; you vote
-            with one click. {ENTRY_COST}
-          </p>
-          <Actions>
-            {authEnabled ? (
-              <EntryLinks from={here} />
-            ) : (
-              <p className="text-sm text-fg-secondary">
-                Sign-in is not configured in this environment.
-              </p>
-            )}
-            <Secondary href="/governance/audit">Or just read the record →</Secondary>
-          </Actions>
-        </Card>
-      </Shell>
+      <Page title={`Join ${org.name}`}>
+        <p>Sign in so the other members know it is you. Voting is then one click. {ENTRY_COST}</p>
+        <Actions>
+          {authEnabled ? (
+            <EntryLinks from={here} />
+          ) : (
+            <p>Signing in is not switched on here yet.</p>
+          )}
+          {record}
+        </Actions>
+      </Page>
     );
   }
 
   const member = await memberForActor(session.actorId, org.id);
   if (member) {
     return (
-      <Shell title="You are a member">
-        <Card>
-          <dl className="space-y-2 text-sm">
-            <Row label="Roster name" value={member.displayName} />
-            <Row label="Organization" value={member.organization.name} />
-            <Row label="Voting weight" value={member.votingWeight.toString()} />
-            <Row
-              label="How you vote"
-              value={member.bitcoinAddress ?? "one click, with this account"}
-              mono={Boolean(member.bitcoinAddress)}
-            />
-          </dl>
-          <Actions>
-            {next ? (
-              <>
-                <Link href={next} className="btn-primary">
-                  Continue where you left off
-                </Link>
-                <Secondary href="/dashboard/voting">Or go to the current vote →</Secondary>
-              </>
-            ) : (
-              <>
-                <Link href="/dashboard/voting" className="btn-primary">
-                  Go to the current vote
-                </Link>
-                <Secondary href="/propose">File a proposal →</Secondary>
-              </>
-            )}
-          </Actions>
-        </Card>
-      </Shell>
+      <Page title={`You're a member of ${org.name}`}>
+        <dl className="space-y-3">
+          <Row label="Your name, as members see it" value={member.displayName} />
+          <Row label="Votes you carry" value={member.votingWeight.toString()} />
+          <Row
+            label="How you vote"
+            value={
+              member.bitcoinAddress
+                ? "One click, or signed with your Bitcoin key"
+                : "One click, while signed in"
+            }
+          />
+        </dl>
+        <Actions>
+          {next ? (
+            <>
+              <Link href={next} className="btn-primary">
+                Continue where you left off
+              </Link>
+              <Secondary href="/dashboard/voting">See what is being decided</Secondary>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard/voting" className="btn-primary">
+                See what is being decided
+              </Link>
+              <Secondary href="/propose">Suggest something</Secondary>
+            </>
+          )}
+        </Actions>
+      </Page>
     );
   }
 
   const open = await genesisOpen(org.slug);
   if (!open) {
     return (
-      <Shell title="Admission is by vote">
-        <Card>
-          <p className="text-sm leading-relaxed text-fg-secondary">
-            {org.name} has seated members, so new admissions are decided by a MEMBERSHIP vote rather
-            than claimed. You are signed in and can read everything: the roster, every proposal,
-            every signature, and the treasury.
-          </p>
-          <Actions>
-            <Link href="/governance/audit" className="btn-primary">
-              Read the record
-            </Link>
-            <Secondary href="/dashboard/voting">See the current vote →</Secondary>
-          </Actions>
-        </Card>
-      </Shell>
+      <Page title={`Join ${org.name}`}>
+        <p>
+          New members join {org.name} when a member suggests it and the members vote yes. Ask
+          someone in {org.name} to suggest you. Meanwhile you can read everything: who the members
+          are, every decision, and where the money goes.
+        </p>
+        <Actions>
+          <Link href="/governance/audit" className="btn-primary">
+            See everything {org.name} has decided
+          </Link>
+          <Secondary href="/orgs/new">Or start your own organization</Secondary>
+        </Actions>
+      </Page>
     );
   }
 
@@ -132,76 +126,63 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
   const verdict = genesisVerdict(session.actorId, founderRule());
   if (!verdict.allowed) {
     return (
-      <Shell title="The founding seat is reserved">
-        <Card>
-          <p className="text-sm leading-relaxed text-fg-secondary">{genesisRefusalCopy(verdict)}</p>
-          <Actions>
-            <Link href="/governance/audit" className="btn-primary">
-              Read the record
-            </Link>
-            <Secondary href="/orgs/new">Or found your own organization →</Secondary>
-          </Actions>
-        </Card>
-      </Shell>
+      <Page title={`${org.name} isn't open to join yet`}>
+        <p>{genesisRefusalCopy(verdict, org.name)}</p>
+        <Actions>
+          <Link href="/orgs/new" className="btn-primary">
+            Start your own organization
+          </Link>
+          {record}
+        </Actions>
+      </Page>
     );
   }
 
   return (
-    <Shell title="Claim the founding seat">
-      <div className="mx-auto max-w-2xl space-y-6">
-        <div className="rounded-surface border border-default bg-surface-raised p-5 text-sm leading-relaxed text-fg-secondary">
-          <p>
-            {org.name} has no human members yet, and you are the identity this deployment names as
-            its founder. Claiming the seat is recorded in the audit trail as a founding grant, and
-            every admission after it is an ordinary membership vote.
-          </p>
-        </div>
-        <ClaimSeat
-          orgSlug={org.slug}
-          actorId={session.actorId}
-          defaultName={session.user?.name ?? "Member"}
-        />
+    <Page title={`Become ${org.name}'s first member`}>
+      <p className="mb-6">
+        You are {org.name}&apos;s founder. Joining is written into its public record, and from then
+        on new members join by a vote of the members.
+      </p>
+      <ClaimSeat
+        orgSlug={org.slug}
+        actorId={session.actorId}
+        defaultName={session.user?.name ?? ""}
+      />
+    </Page>
+  );
+}
+
+function Page({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <PageLayout title={title} kicker="Membership">
+      <div className="max-w-2xl rounded-surface border border-default bg-surface-base p-6 text-base leading-relaxed text-fg-secondary">
+        {children}
       </div>
-    </Shell>
-  );
-}
-
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <main className="section-shell py-section-tight">
-      <h1 className="text-center headline text-display-2 text-fg-primary">{title}</h1>
-      <div className="mt-12">{children}</div>
-    </main>
-  );
-}
-
-function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mx-auto max-w-2xl rounded-surface border border-default bg-surface-base p-6">
-      {children}
-    </div>
+    </PageLayout>
   );
 }
 
 function Actions({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6 flex flex-wrap items-center gap-4">{children}</div>;
+  return <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">{children}</div>;
 }
 
 function Secondary({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="text-sm text-fg-secondary transition-colors hover:text-fg-primary">
+    <Link
+      href={href}
+      className="text-sm font-semibold text-fg-secondary underline-offset-4 transition-colors hover:text-fg-primary hover:underline"
+    >
       {children}
     </Link>
   );
 }
 
-function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between gap-4">
-      <dt className="text-fg-secondary">{label}</dt>
-      <dd className={`text-fg-primary ${mono ? "break-all font-mono text-xs" : "font-medium"}`}>
-        {value}
-      </dd>
+    <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
+      <dt>{label}</dt>
+      <dd className="font-medium text-fg-primary sm:text-right">{value}</dd>
     </div>
   );
 }
