@@ -262,6 +262,18 @@ export const SOURCES: readonly SourceInput[] = [
       place: { scheme: "bfs_municipality", column: "BFS-Nr" },
       share: { column: "Adressenanteil", divideBy: 100 },
       validFrom: "Validity",
+      skipWhen: [
+        {
+          column: "Kantonskürzel",
+          values: [""],
+          reason: "a Liechtenstein commune; the directory covers both countries",
+        },
+        {
+          column: "BFS-Nr",
+          values: ["2391", "5391"],
+          reason: "a commune-free area (Staatswald Galm, Comunanza Cadenazzo/Monteceneri)",
+        },
+      ],
     },
     packs: ["switzerland"],
   },

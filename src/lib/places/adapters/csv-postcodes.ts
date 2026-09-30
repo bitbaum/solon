@@ -23,21 +23,30 @@ const csvPostcodesOptions = z.object({
   share: z.object({ column, divideBy: z.number().positive().default(1) }).optional(),
   /** An ISO date the row is valid from. */
   validFrom: column.optional(),
+  /**
+   * Rows whose `column` holds one of `values` are left out, and reported with
+   * `reason`: places the directory lists that are not the pack's. Any other
+   * unknown code still fails the run.
+   */
+  skipWhen: z
+    .array(z.object({ column, values: z.array(z.string()).min(1), reason: z.string().min(1) }))
+    .default([]),
 });
 type CsvPostcodesOptions = z.infer<typeof csvPostcodesOptions>;
 
 export const csvPostcodesAdapter: Adapter<Rows, CsvPostcodesOptions> = {
   key: "csv_postcodes",
-  version: "1",
+  version: "2",
   decode: decodeCsvAnyForm,
   schema: rows,
   options: csvPostcodesOptions,
   retrievals: (options) => (options.url ? [{ url: options.url }] : []),
-  map: (table, { pack, options }) => {
+  map: (table, { pack, options, skip }) => {
     if (!pack) {
       throw new Error("postcodes belong to a pack's places; the source names none");
     }
-    const postcodes: BatchPostcode[] = table.map((row, i) => {
+    const postcodes: BatchPostcode[] = [];
+    for (const [i, row] of table.entries()) {
       const where = `row ${i + 2}`;
       const postcode = row[options.postcode]?.trim();
       const locality = row[options.locality]?.trim();
@@ -46,6 +55,17 @@ export const csvPostcodesAdapter: Adapter<Rows, CsvPostcodesOptions> = {
         throw new Error(
           `${where}: no postcode, locality or code in ${options.postcode}, ${options.locality}, ${options.place.column}`,
         );
+      }
+      const rule = options.skipWhen.find((r) => {
+        const value = row[r.column];
+        return value !== undefined && r.values.includes(value.trim());
+      });
+      if (rule) {
+        skip(
+          `${postcode} ${locality} (${options.place.scheme}:${code})`,
+          `${rule.reason} (${rule.column} = ${row[rule.column] ?? ""})`,
+        );
+        continue;
       }
       let share: number | null = null;
       if (options.share) {
@@ -56,15 +76,15 @@ export const csvPostcodesAdapter: Adapter<Rows, CsvPostcodesOptions> = {
         }
         share = value / options.share.divideBy;
       }
-      return {
+      postcodes.push({
         postcode,
         locality,
         place: { scheme: options.place.scheme, value: code },
         share,
         validFrom: options.validFrom ? row[options.validFrom]?.trim() || null : null,
         validTo: null,
-      };
-    });
+      });
+    }
     return { pack: pack.key, jurisdictions: [], relations: [], facts: [], postcodes };
   },
 };

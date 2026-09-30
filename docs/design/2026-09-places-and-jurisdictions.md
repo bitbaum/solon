@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-09-30: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -623,7 +623,7 @@ hardcoded date.
 | `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
 | `estv-income-tax-scales` | the federal tariff and the canton of Zürich's basic tariff, single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
 | `estv-canton-multipliers` | the canton of Zürich's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
-| `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30 | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
+| `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 The calculator's exports answer for years it has not published with another
 year's figures (asked on 2026-09-29, "2027" gave the canton a 98% multiplier

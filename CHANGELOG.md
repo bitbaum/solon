@@ -19,8 +19,9 @@ one to read for the detail. Fixes get the same weight as features.
 - **Places know their postcodes.** Solon now reads swisstopo's official
   directory of localities, so a Swiss postcode leads to the commune it lies
   in. When a postcode spans several communes (1,223 of 3,190 do), Solon lists
-  each with its share of the addresses instead of guessing. The Places search
-  builds on this next.
+  each with its share of the addresses instead of guessing. Liechtenstein's
+  communes and two commune-free areas in the same directory are left out on
+  purpose; the import lists them.
 
 ### Changed
 
