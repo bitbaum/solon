@@ -18,9 +18,9 @@ export default function OpenSessionButton({ proposalId }: { proposalId: string }
       const res = await fetch(`/api/proposals/${proposalId}/open`, { method: "POST" });
       const body = await res.json();
       if (body.opened) window.location.reload();
-      else setError(body.error ?? "could not open the session");
+      else setError(body.error ?? "The vote could not be started.");
     } catch {
-      setError("network error — the session was not opened");
+      setError("The connection dropped, so the vote did not start. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -34,11 +34,10 @@ export default function OpenSessionButton({ proposalId }: { proposalId: string }
         disabled={submitting}
         className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {submitting ? "Opening…" : "Open for voting"}
+        {submitting ? "Starting…" : "Start the vote"}
       </button>
       <p className="mt-2 text-xs text-fg-tertiary">
-        Starts the voting window and freezes the electorate, threshold and quorum. This happens once
-        and cannot be undone.
+        Members can vote from then on, and the rules for this vote are fixed. You cannot undo this.
       </p>
       {error && (
         <p className="mt-3 rounded-control border border-status-negative/40 bg-surface-raised p-3 text-sm text-fg-primary">

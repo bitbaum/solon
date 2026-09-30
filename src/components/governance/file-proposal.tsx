@@ -114,7 +114,7 @@ export default function FileProposal({
       setVerdict({
         created: false,
         verified: false,
-        reason: "network error — nothing was filed",
+        reason: "The connection dropped, so nothing was saved. Please try again.",
       });
     } finally {
       setSubmitting(false);
@@ -126,20 +126,19 @@ export default function FileProposal({
   if (verdict?.created) {
     return (
       <div className="rounded-surface border border-default bg-surface-base p-6">
-        <h2 className="headline text-display-3 text-fg-primary">Proposal filed</h2>
+        <h2 className="headline text-display-3 text-fg-primary">Saved as a draft</h2>
         <p className="mt-3 text-sm text-fg-secondary">
-          The proposal is on the record as a draft. Opening it starts the voting window and freezes
-          the rules.
+          Everyone can read it now. Members can vote once someone starts the vote.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <Link href={`/proposals/${verdict.proposalId}`} className="btn-primary">
-            Open it for voting
+            Start the vote
           </Link>
           <Link
             href="/proposals"
             className="self-center text-sm text-fg-secondary transition-colors hover:text-fg-primary"
           >
-            All proposals →
+            See all decisions →
           </Link>
         </div>
       </div>
@@ -159,18 +158,18 @@ export default function FileProposal({
           >
             your {initial.origin.entityType} on OrangeCat
           </a>
-          . Change anything before you file it.
+          . Change anything you like before you save it.
         </p>
       )}
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="p-category">
-          Category
+          What is it about?
         </label>
         <select
           id="p-category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+          className="field mt-2"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -186,7 +185,7 @@ export default function FileProposal({
         {needsOptions && (
           <div className="mt-4">
             <label className="block text-sm font-medium text-fg-primary" htmlFor="p-options">
-              The options — one per line
+              The choices, one per line
             </label>
             <textarea
               id="p-options"
@@ -194,15 +193,15 @@ export default function FileProposal({
               value={optionText}
               onChange={(e) => setOptionText(e.target.value)}
               placeholder={"Solar roof\nHeat pump\nInsulation"}
-              className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+              className="field mt-2 py-3"
             />
             {options ? (
               <p className="mt-1.5 text-xs text-fg-tertiary">
-                Members will vote between: {options.map((o) => o.key).join(", ")}
+                Members will choose between: {options.map((o) => o.label).join(", ")}
               </p>
             ) : (
               <p className="mt-1.5 text-xs text-fg-tertiary">
-                At least two options, each on its own line.
+                At least two choices, each on its own line.
               </p>
             )}
           </div>
@@ -211,43 +210,45 @@ export default function FileProposal({
 
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="p-title">
-          Title
+          Your suggestion in a sentence
         </label>
         <input
           id="p-title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="What is being decided"
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+          placeholder="For example: Buy a second cargo bike for deliveries"
+          className="field mt-2"
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="p-body">
-          Rationale
+          Why?
         </label>
         <textarea
           id="p-body"
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={6}
-          placeholder="Why this, and what changes if it passes."
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+          placeholder="Why this, and what changes if members agree."
+          className="field mt-2 py-3"
         />
         {memberAddress && (
           <p className="mt-1.5 text-xs text-fg-tertiary">
-            If you sign, the title and category are bound into your signature; the rationale is not,
-            so it stays editable context rather than a signed claim.
+            If you sign with your Bitcoin key, the sentence and topic are sealed by your signature;
+            the explanation is not, so you can still add to it.
           </p>
         )}
       </div>
 
       <ActStep
-        label="File proposal"
+        label="Save as draft"
         onAct={() => submit(false)}
         disabled={!ready}
         submitting={submitting}
-        rejection={verdict && !verdict.created ? (verdict.reason ?? "Proposal rejected.") : null}
+        rejection={
+          verdict && !verdict.created ? (verdict.reason ?? "This could not be saved.") : null
+        }
         signing={
           memberAddress
             ? {

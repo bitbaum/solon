@@ -11,21 +11,21 @@ import type { AuditEvent, AuditEventType } from "@/lib/db/schema";
 
 const EVENT_LABEL: Record<AuditEventType, string> = {
   ORG_CREATED: "Organization created",
-  MEMBER_ADDED: "Member added",
-  MEMBER_STATUS_CHANGED: "Member status changed",
-  PROPOSAL_CREATED: "Proposal filed",
-  SESSION_OPENED: "Voting session opened",
-  VOTE_CAST: "Vote cast",
-  SESSION_CLOSED: "Voting session closed",
-  POLICY_ACTIVATED: "Policy version activated",
-  MANDATE_CHANGED: "Mandate granted or ended",
-  PROFILE_CHANGED: "Governance structure changed",
+  MEMBER_ADDED: "New member",
+  MEMBER_STATUS_CHANGED: "Membership changed",
+  PROPOSAL_CREATED: "Suggestion saved",
+  SESSION_OPENED: "Vote started",
+  VOTE_CAST: "Someone voted",
+  SESSION_CLOSED: "Vote ended",
+  POLICY_ACTIVATED: "New rules took effect",
+  MANDATE_CHANGED: "Someone was given or lost a role",
+  PROFILE_CHANGED: "How decisions are made changed",
 };
 
 /** Where a given audit subject can actually be inspected. */
 const SUBJECT_ACTION: Record<string, string> = {
-  proposal: "Open the proposal",
-  voting_session: "Verify the decision document",
+  proposal: "See the suggestion",
+  voting_session: "See the full record",
 };
 
 function subjectHref(subjectType: string, subjectId: string): string | null {

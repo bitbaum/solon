@@ -9,6 +9,8 @@ import { sessionAggregate } from "@/lib/domain/voting";
 import { summarizeAggregate } from "@/lib/domain/methods/summary";
 import { treasuryReport } from "@/lib/domain/treasury";
 import { rawQueryString, type Query } from "@/lib/domain/proposal-draft";
+import { proposalStanding } from "@/lib/domain/plain-words";
+import type { SessionOutcome, SessionStatus } from "@/lib/db/enums";
 
 export const dynamic = "force-dynamic";
 
@@ -36,9 +38,9 @@ export default async function DashboardOverview({
   let org = null;
   let session: {
     id: string;
-    status: string;
+    status: SessionStatus;
     proposalTitle: string;
-    outcome: string | null;
+    outcome: SessionOutcome | null;
   } | null = null;
   let tallyLine: string | null = null;
   let treasuryLine = "No treasury source registered yet.";
@@ -127,7 +129,7 @@ export default async function DashboardOverview({
               <>
                 <div className="font-semibold text-fg-primary">{session.proposalTitle}</div>
                 <div className="mt-1 text-sm text-fg-secondary">
-                  {session.outcome ?? session.status}
+                  {proposalStanding(session.status, session.outcome)}
                   {tallyLine ? ` · ${tallyLine}` : ""}
                 </div>
               </>

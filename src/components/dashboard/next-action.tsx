@@ -84,10 +84,10 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     });
     if (!alreadyVoted) {
       return {
-        headline: "A vote is open and you have not cast one",
+        headline: "There is a vote you have not taken part in",
         detail: `${active.proposal.title} — closes ${active.closesAt.toISOString().slice(0, 10)}.`,
         href: `/proposals/${active.proposalId}`,
-        cta: "Cast your vote",
+        cta: "Vote",
       };
     }
   }
@@ -107,18 +107,18 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
   });
   if (draft) {
     return {
-      headline: "A proposal is waiting to be opened",
-      detail: `${draft.title} — nobody can vote until its session starts.`,
+      headline: "A suggestion is waiting for its vote to start",
+      detail: `${draft.title}. Nobody can vote on it until someone starts the vote.`,
       href: `/proposals/${draft.id}`,
-      cta: "Open it for voting",
+      cta: "Start the vote",
     };
   }
 
   return {
     headline: "Nothing is waiting on you",
-    detail: "No open vote, no proposal pending. Put something on the record.",
+    detail: "There is no vote going on and no suggestion waiting. Want to suggest something?",
     href: "/propose",
-    cta: "File a proposal",
+    cta: "Suggest something",
   };
 }
 

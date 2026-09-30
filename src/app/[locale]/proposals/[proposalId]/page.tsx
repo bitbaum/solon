@@ -10,6 +10,9 @@ import VotingInterface from "@/components/dashboard/voting-interface";
 import OpenSessionButton from "@/components/governance/open-session-button";
 import { auth } from "@/lib/auth";
 import { viewerFor } from "@/lib/auth/recognition";
+import PageLayout from "@/components/ui/page-layout";
+import { CATEGORY_LABEL } from "@/lib/config/governance";
+import { votingRules } from "@/lib/domain/plain-words";
 
 export const dynamic = "force-dynamic";
 
@@ -34,35 +37,14 @@ export default async function ProposalPage({
   const viewer = await viewerFor((await auth())?.actorId, proposal.organizationId);
 
   return (
-    <main className="section-shell py-section-tight">
-      <Link
-        href="/proposals"
-        className="text-sm text-fg-secondary transition-colors hover:text-fg-primary"
-      >
-        ← All proposals
-      </Link>
-
-      <div className="mx-auto mt-6 max-w-3xl space-y-8">
-        <header>
-          <span className="text-xs uppercase tracking-caps text-fg-tertiary">
-            {proposal.category.replace(/_/g, " ").toLowerCase()}
-          </span>
-          <h1 className="mt-2 headline text-display-2 text-fg-primary">{proposal.title}</h1>
-          <p className="mt-3 text-sm text-fg-secondary">
-            Filed by {proposal.proposer.displayName}
-            {proposal.proposer.bitcoinAddress && (
-              <>
-                {" · "}
-                <span className="font-mono text-xs">{proposal.proposer.bitcoinAddress}</span>
-              </>
-            )}
-          </p>
-        </header>
-
+    <PageLayout
+      kicker={CATEGORY_LABEL[proposal.category]}
+      title={proposal.title}
+      description={`Suggested by ${proposal.proposer.displayName}`}
+    >
+      <div className="max-w-3xl space-y-8">
         <section className="rounded-surface border border-default bg-surface-base p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-caps text-fg-tertiary">
-            Rationale
-          </h2>
+          <h2 className="headline text-display-3 text-fg-primary">Why</h2>
           <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-fg-primary">
             {proposal.body}
           </p>
@@ -70,9 +52,9 @@ export default async function ProposalPage({
 
         {proposal.status === "DRAFT" && (
           <section className="rounded-surface border border-default bg-surface-base p-6">
-            <h2 className="headline text-display-3 text-fg-primary">Not yet open</h2>
+            <h2 className="headline text-display-3 text-fg-primary">Nobody can vote yet</h2>
             <p className="mt-3 text-sm text-fg-secondary">
-              This proposal is on the record but no votes can be cast until a session opens.
+              Anyone can read this suggestion. Voting starts when a member opens it.
             </p>
             <div className="mt-6">
               <OpenSessionButton proposalId={proposal.id} />
@@ -85,7 +67,7 @@ export default async function ProposalPage({
             session={{
               id: proposal.session.id,
               title: proposal.title,
-              rules: `${proposal.session.threshold} · quorum ${proposal.session.quorumPercent}% · electorate ${proposal.session.electorate}`,
+              rules: votingRules(proposal.session),
               status: proposal.session.status,
               method: methodId(proposal.session.method),
               options: readOptions(proposal.session.options),
@@ -96,7 +78,14 @@ export default async function ProposalPage({
             here={`/proposals/${proposal.id}`}
           />
         )}
+
+        <Link
+          href="/proposals"
+          className="inline-block text-sm text-fg-secondary transition-colors hover:text-fg-primary"
+        >
+          ← All decisions
+        </Link>
       </div>
-    </main>
+    </PageLayout>
   );
 }

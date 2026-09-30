@@ -5,6 +5,7 @@ import { DEFAULT_DOT_BUDGET } from "@/lib/domain/methods";
 import { primaryOrg } from "@/lib/domain/org";
 import { auth } from "@/lib/auth";
 import { viewerFor } from "@/lib/auth/recognition";
+import { votingRules } from "@/lib/domain/plain-words";
 import { desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { proposals, votingSessions } from "@/lib/db/schema";
@@ -63,13 +64,13 @@ export default async function VotingPage() {
   return (
     <main className="space-y-6">
       <h1 className="headline text-display-3">
-        {session.status === "ACTIVE" ? "Open Vote" : "Latest Vote"}
+        {session.status === "ACTIVE" ? "Voting now" : "The latest vote"}
       </h1>
       <VotingInterface
         session={{
           id: session.id,
           title: session.proposal.title,
-          rules: `${session.threshold} · quorum ${session.quorumPercent}% · electorate ${session.electorate}`,
+          rules: votingRules(session),
           status: session.status,
           method: methodId(session.method),
           options: readOptions(session.options),

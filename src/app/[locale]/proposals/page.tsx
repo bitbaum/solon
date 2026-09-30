@@ -3,13 +3,16 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { proposals as proposalsTable } from "@/lib/db/schema";
 import { primaryOrg } from "@/lib/domain/org";
+import PageLayout from "@/components/ui/page-layout";
+import { CATEGORY_LABEL } from "@/lib/config/governance";
+import { proposalStanding } from "@/lib/domain/plain-words";
 
-export const metadata = { title: "Proposals — Solon" };
+export const metadata = { title: "Decisions — Solon" };
 export const dynamic = "force-dynamic";
 
 const STATUS_ACTION: Record<string, string> = {
-  DRAFT: "Open it for voting →",
-  OPEN: "Cast your vote →",
+  DRAFT: "Start the vote →",
+  OPEN: "Vote →",
   CLOSED: "See the result →",
 };
 
@@ -23,28 +26,27 @@ export default async function ProposalsPage() {
       })
     : [];
 
+  const orgName = org?.name ?? "this organization";
   return (
-    <main className="section-shell py-section-tight">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="headline text-display-2 text-fg-primary">Proposals</h1>
-          <p className="mt-3 text-fg-secondary">
-            Everything {org?.name ?? "this organization"} has been asked to decide.
-          </p>
-        </div>
-        <Link href="/propose" className="btn-primary">
-          File a proposal
+    <PageLayout
+      kicker="Decisions"
+      title={`What ${orgName} is deciding`}
+      description="Everything members have suggested, and how each vote went. Anyone can read it."
+    >
+      {proposals.length > 0 && (
+        <Link href="/propose" className="btn-primary mb-10 inline-flex">
+          Suggest something
         </Link>
-      </div>
+      )}
 
-      <div className="mt-12 space-y-3">
+      <div className="space-y-3">
         {proposals.length === 0 && (
           <div className="rounded-surface border border-default bg-surface-base p-8 text-center">
             <p className="text-fg-secondary">
-              Nothing has been proposed yet. The first one sets the precedent.
+              Nobody has suggested anything yet. Yours could be the first.
             </p>
             <Link href="/propose" className="btn-primary mt-6 inline-flex">
-              File the first proposal
+              Suggest something
             </Link>
           </div>
         )}
@@ -59,12 +61,11 @@ export default async function ProposalsPage() {
               <div className="min-w-0">
                 <h2 className="headline text-display-3 text-fg-primary">{p.title}</h2>
                 <p className="mt-1 text-sm text-fg-secondary">
-                  {p.category.replace(/_/g, " ").toLowerCase()} · filed by {p.proposer.displayName}
-                  {p.session?.outcome ? ` · ${p.session.outcome.toLowerCase()}` : ""}
+                  {CATEGORY_LABEL[p.category]} · suggested by {p.proposer.displayName}
                 </p>
               </div>
-              <span className="shrink-0 rounded-pill border border-default px-3 py-1 text-xs uppercase tracking-caps text-fg-secondary">
-                {p.status}
+              <span className="shrink-0 rounded-pill border border-default px-3 py-1 text-xs text-fg-secondary">
+                {proposalStanding(p.status, p.session?.outcome)}
               </span>
             </div>
             <span className="mt-3 inline-block text-sm text-accent">
@@ -73,6 +74,6 @@ export default async function ProposalsPage() {
           </Link>
         ))}
       </div>
-    </main>
+    </PageLayout>
   );
 }

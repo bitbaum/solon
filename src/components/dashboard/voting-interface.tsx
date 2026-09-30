@@ -8,13 +8,15 @@ import type { Aggregate, BallotOption, MethodId } from "@/lib/domain/methods/typ
 import BallotEditor from "./ballot-editor";
 import ActStep from "@/components/governance/act-step";
 import type { Viewer } from "@/lib/auth/recognition";
+import type { SessionStatus } from "@/lib/db/enums";
+import { proposalStanding } from "@/lib/domain/plain-words";
 
 export interface VotingInterfaceProps {
   session: {
     id: string;
     title: string;
     rules: string;
-    status: string;
+    status: SessionStatus;
     method: MethodId;
     options: BallotOption[];
     dotBudget: number;
@@ -107,7 +109,11 @@ export default function VotingInterface({
       });
       setVerdict(await res.json());
     } catch {
-      setVerdict({ stored: false, verified: false, reason: "network error — vote not submitted" });
+      setVerdict({
+        stored: false,
+        verified: false,
+        reason: "the connection dropped. Please try again.",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -121,7 +127,7 @@ export default function VotingInterface({
           <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-fg-secondary shrink-0">
-          Session: {session.status}
+          {proposalStanding(session.status)}
         </div>
       </header>
 
@@ -132,15 +138,14 @@ export default function VotingInterface({
 
       {!isOpen && (
         <div className="rounded-surface border border-default p-4 bg-surface-raised text-sm text-fg-primary">
-          This session is closed — votes are no longer accepted. The final result is below, and the
-          full signed record is published as a{" "}
+          Voting has ended. The result is below. Anyone can also download the{" "}
           <a
             href={`/api/v1/decisions/${session.id}`}
             className="font-semibold text-accent hover:text-accent-dark"
           >
-            self-verifying decision document
+            full record of this vote
           </a>
-          .
+          , which can be checked without trusting us.
         </div>
       )}
 
@@ -149,7 +154,7 @@ export default function VotingInterface({
           {!viewer.seat && (
             <p className="text-sm text-fg-secondary">
               {viewer.signedIn ? (
-                "You do not hold a seat in this organization, so you can follow this vote but not cast it."
+                "You are not a member of this organization, so you can follow this vote but not take part."
               ) : (
                 <>
                   Members vote here with one click.{" "}
@@ -181,7 +186,7 @@ export default function VotingInterface({
             submitting={submitting}
             rejection={
               verdict && !verdict.stored
-                ? `Vote not recorded: ${verdict.reason ?? "unknown reason"}`
+                ? `Your vote was not counted: ${verdict.reason ?? "something went wrong. Please try again."}`
                 : null
             }
             signing={
