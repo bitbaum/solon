@@ -64,6 +64,8 @@ export const taxLabelsSchema = z.object({
   components: z.record(z.string(), localizedTextSchema),
   /** Said once beside every estimate. */
   excludes: localizedTextSchema,
+  /** The base the map shows until the reader enters theirs: an example, and labelled as one. */
+  exampleBase: z.number().positive().optional(),
 });
 export type TaxLabels = z.infer<typeof taxLabelsSchema>;
 
@@ -94,6 +96,19 @@ export const countryPackSchema = z.object({
   identifierSchemes: z.array(registryKey),
   /** The country's postcode format, a regular expression; absent when it has no postcodes. */
   postcodePattern: z.string().min(1).optional(),
+  /**
+   * A public address search the map's search box asks straight from the
+   * reader's browser, so Solon never sees the address. `format` is the
+   * service's API, which the browser code knows; `provider` is named beside
+   * the search box.
+   */
+  addressSearch: z
+    .object({
+      format: z.enum(["geoadmin_search"]),
+      url: z.url(),
+      provider: z.string().min(1),
+    })
+    .optional(),
   sources: z.array(sourceKey),
   instrumentKinds: z.array(registryKey).default([]),
   /** The country's income tax as data; validated against its levels and the metric catalog. */

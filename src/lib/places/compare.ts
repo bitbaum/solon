@@ -264,5 +264,6 @@ export function taxPackView(
     multiplierRows: [...rows.values()],
     levelNames: Object.fromEntries(pack.levels.map((l) => [l.key, levelName(l.key)])),
     excludes: localized(labels.excludes, locale),
+    exampleBase: labels.exampleBase ?? null,
   };
 }

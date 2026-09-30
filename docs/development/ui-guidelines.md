@@ -1,8 +1,10 @@
 # UI guidelines
 
-_Created 2026-01-08. Last modified 2026-10-01: Solon gets a light theme
-beside the dark one (decided 2026-09-30, not built yet), both from the
-package's tokens. Earlier, 2026-09-30: two depths, everyday pages
+_Created 2026-01-08. Last modified 2026-10-01: the Places map is built and
+draws only with tokens, read from the page (`map-colours.ts`), so it follows
+whichever theme is on. Earlier the same day: Solon gets a light theme beside
+the dark one (decided 2026-09-30, not built yet), both from the package's
+tokens. Earlier, 2026-09-30: two depths, everyday pages
 (`EVERYDAY_ROUTES`) plain with "Technical details" one click away, the deep
 side as technical as it needs to be; the render check that holds everyday
 pages to it. Earlier the same day: every inner page uses `PageLayout`, every
@@ -37,9 +39,14 @@ To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in th
 `tokens.css`, tag a release, and bump the dependency in the three apps.
 
 Solon is **dark today and gets a light theme** (decided 2026-09-30, with the
-Places map, not built yet). Both come from the package's tokens, including the
-map's colour scale, so a colour is never written for one theme only; until the
-light theme ships, marketing and dashboard share the near-black canvas.
+Places map; the theme itself is not built yet). Both come from the package's
+tokens, including the map's colour scale, so a colour is never written for one
+theme only; until the light theme ships, marketing and dashboard share the
+near-black canvas. The map already follows: `src/components/places/map-colours.ts`
+reads `--map-scale-1…7`, `--map-no-data`, `--map-boundary` and
+`--accent-primary` from the page and reads them again when the `<html>` class
+changes. MapLibre's own stylesheet is unlayered, so the few overrides of it in
+`globals.css` (the hover label) are unlayered too, in tokens.
 
 ## Headlines are the sans
 

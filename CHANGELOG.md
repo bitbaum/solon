@@ -8,6 +8,18 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **A map of what tax would cost you, commune by commune.** `/places` now
+  opens on a map of every Swiss commune, coloured from the lowest tax to the
+  highest for your income and household. Until you enter yours, it shows an
+  example income of CHF 100'000 and says so. Type an address, a place or a
+  postcode into one box to jump there; tap a commune for its tax, how it ranks
+  and a link to its page, and add up to four to a comparison. The same
+  communes are a sortable list beside the map, and on phones the list comes
+  first. Your income stays in your browser. An address you type goes from
+  your browser straight to swisstopo's geo.admin.ch to be found, and Solon
+  never sees it; the note under the box says so. Communes whose figures are
+  not recorded yet are grey. (#240)
+
 - **Tax figures for every commune at once, for the map.** A new public
   endpoint, `/api/v1/places/map`, gives every commune on the map with the
   tax figures that apply to it, so the map can colour each one by what you

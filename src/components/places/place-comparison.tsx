@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { useDeviceInputs } from "./device-inputs";
+import TaxSituation from "./tax-situation";
 import {
   compareHref,
   estimateColumn,
+  formatMoney,
   lowestTotals,
   parseAmount,
   type ColumnEstimate,
@@ -13,98 +16,6 @@ import {
   type CompareTaxPack,
   type Comparison,
 } from "@/lib/places/compare-view";
-
-interface MoneyFormat {
-  currency: string;
-  formatLocale: string;
-}
-
-interface PackInput {
-  amount: string;
-  variant: string;
-  conditions: Record<string, boolean>;
-}
-
-/**
- * Kept for the tab only, so adding a place keeps what the reader typed. It is
- * never sent anywhere: not in the link, not in a form, not to the server.
- */
-const STORAGE_KEY = "solon.compare.inputs";
-
-/**
- * The tab's inputs as a store: held in memory, mirrored to sessionStorage when
- * the browser allows it (private mode may not), and empty on the server.
- */
-const listeners = new Set<() => void>();
-let held: string | null | undefined;
-
-function snapshot(): string {
-  if (held === undefined) {
-    try {
-      held = sessionStorage.getItem(STORAGE_KEY);
-    } catch {
-      held = null;
-    }
-  }
-  return held ?? "{}";
-}
-
-function save(value: string) {
-  held = value;
-  try {
-    sessionStorage.setItem(STORAGE_KEY, value);
-  } catch {
-    // Kept in memory for this page instead.
-  }
-  listeners.forEach((listener) => listener());
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
-
-function parseSaved(json: string): Record<string, Partial<PackInput>> {
-  try {
-    const saved: unknown = JSON.parse(json);
-    return typeof saved === "object" && saved !== null
-      ? (saved as Record<string, Partial<PackInput>>)
-      : {};
-  } catch {
-    return {};
-  }
-}
-
-/** A pack's saved input, where it still fits the pack; the pack's defaults otherwise. */
-function inputFor(pack: CompareTaxPack, saved: Partial<PackInput> | undefined): PackInput {
-  return {
-    amount: typeof saved?.amount === "string" ? saved.amount : "",
-    variant:
-      typeof saved?.variant === "string" && pack.variants.some((v) => v.key === saved.variant)
-        ? saved.variant
-        : (pack.variants[0]?.key ?? ""),
-    conditions:
-      typeof saved?.conditions === "object" && saved.conditions !== null ? saved.conditions : {},
-  };
-}
-
-function useDeviceInputs(packs: readonly CompareTaxPack[]) {
-  const json = useSyncExternalStore(subscribe, snapshot, () => "{}");
-  const inputs = useMemo(() => {
-    const saved = parseSaved(json);
-    return Object.fromEntries(packs.map((pack) => [pack.key, inputFor(pack, saved[pack.key])]));
-  }, [json, packs]);
-  const update = (packKey: string, patch: Partial<PackInput>) =>
-    save(
-      JSON.stringify({
-        ...parseSaved(snapshot()),
-        [packKey]: { ...inputs[packKey]!, ...patch },
-      }),
-    );
-  return [inputs, update] as const;
-}
 
 /**
  * Places side by side (design §9.2): what tax costs there for the reader's
@@ -132,12 +43,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     [columns, taxPacks, inputs],
   );
   const lowest = lowestTotals(estimates);
-  const money = (amount: number, { currency, formatLocale }: MoneyFormat) =>
-    new Intl.NumberFormat(formatLocale, {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 0,
-    }).format(amount);
+  const money = formatMoney;
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 1 });
   const levelList = (pack: CompareTaxPack | undefined, levels: string[]) =>
@@ -210,93 +116,18 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
 
   return (
     <div className="space-y-8">
-      {taxPacks.map((pack) => {
-        const input = inputs[pack.key]!;
-        const set = (patch: Partial<PackInput>) => updateInput(pack.key, patch);
-        const amountId = `compare-amount-${pack.key}`;
-        return (
-          <section
-            key={pack.key}
-            aria-labelledby={`${amountId}-title`}
-            className="space-y-5 rounded-surface border border-default bg-surface-base p-5 sm:p-6"
-          >
-            <h2 id={`${amountId}-title`} className="font-semibold text-fg-primary">
-              {taxPacks.length > 1 ? t("yourSituationIn", { pack: pack.name }) : t("yourSituation")}
-            </h2>
-            <div className="grid gap-5 md:grid-cols-2">
-              <div>
-                <label htmlFor={amountId} className="block text-sm font-medium text-fg-primary">
-                  {pack.base.label}
-                </label>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-sm text-fg-secondary" aria-hidden>
-                    {pack.currency}
-                  </span>
-                  <input
-                    id={amountId}
-                    inputMode="numeric"
-                    autoComplete="off"
-                    value={input.amount}
-                    onChange={(e) => set({ amount: e.target.value })}
-                    placeholder={t("amountPlaceholder")}
-                    aria-describedby={`${amountId}-hint`}
-                    className="field"
-                  />
-                </div>
-                <p id={`${amountId}-hint`} className="mt-2 text-xs text-fg-tertiary">
-                  {pack.base.hint && `${pack.base.hint} `}
-                  {t("privacy")}
-                </p>
-              </div>
-              {pack.variants.length > 1 && (
-                <fieldset>
-                  <legend className="block text-sm font-medium text-fg-primary">
-                    {t("household")}
-                  </legend>
-                  <div className="mt-2 space-y-2">
-                    {pack.variants.map((variant) => (
-                      <label
-                        key={variant.key}
-                        className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-control border px-3 text-sm ${
-                          input.variant === variant.key
-                            ? "border-accent bg-surface-raised text-fg-primary"
-                            : "border-default text-fg-secondary"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name={`compare-variant-${pack.key}`}
-                          value={variant.key}
-                          checked={input.variant === variant.key}
-                          onChange={() => set({ variant: variant.key })}
-                        />
-                        {variant.label}
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              )}
-              {pack.conditions.map((condition) => (
-                <label
-                  key={condition.key}
-                  className="flex min-h-11 items-center gap-3 text-sm text-fg-primary"
-                >
-                  <input
-                    type="checkbox"
-                    checked={input.conditions[condition.key] === true}
-                    onChange={(e) =>
-                      set({
-                        conditions: { ...input.conditions, [condition.key]: e.target.checked },
-                      })
-                    }
-                  />
-                  {condition.label}
-                </label>
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      {taxPacks.map((pack) => (
+        <TaxSituation
+          key={pack.key}
+          pack={pack}
+          input={inputs[pack.key]!}
+          onChange={(patch) => updateInput(pack.key, patch)}
+          title={
+            taxPacks.length > 1 ? t("yourSituationIn", { pack: pack.name }) : t("yourSituation")
+          }
+          idPrefix="compare"
+        />
+      ))}
 
       <p aria-live="polite" className="text-fg-primary">
         {cheapest &&
