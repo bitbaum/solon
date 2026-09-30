@@ -1,7 +1,9 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-29: tariffs and the canton's multiplier import from the
+_Last modified 2026-09-30: valid time is half-open, and the adapters now
+store it so (§4); a year's figures still hold on 31 December.
+Earlier, 2026-09-29: tariffs and the canton's multiplier import from the
 Federal Tax Administration and match its calculator (golden fixtures, §6.2,
 §8.2); POST retrievals are stored as envelopes and planning may probe the
 source (§8.3). Earlier the same day: the canton of Zürich's commune multipliers import
@@ -153,8 +155,10 @@ app-minted text ids, named constraints, append-only where history matters.
 **Built (P0, migration `0010_places_foundations`, `src/lib/db/places-schema.ts`),
 empty.** What the build settled beyond the text below:
 
-- Valid time is `date` (`valid_from` null = start unknown, `valid_to` null =
-  current). Every table that reports the world also carries `superseded_at`, so
+- Valid time is `date` and half-open: `valid_from` is the first day a row
+  holds, `valid_to` the first day it no longer does (null = start unknown,
+  null = current). A row for the year 2025 runs `2025-01-01` to `2026-01-01`;
+  an adapter whose source gives a last day stores the day after it. Every table that reports the world also carries `superseded_at`, so
   a correction supersedes a name, identifier, relation or area as it does a fact.
 - Triggers refuse a `DELETE` on every Places table and any change of a
   jurisdiction's `origin`.

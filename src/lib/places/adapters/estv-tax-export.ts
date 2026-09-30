@@ -138,7 +138,7 @@ function brackets(row: ScaleRow, reading: "thresholds" | "widths") {
 
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "1",
+  version: "2",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -218,7 +218,7 @@ type RatesOptions = z.infer<typeof ratesOptions>;
 
 export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
   key: "estv_simple_rates",
-  version: "1",
+  version: "2",
   decode: decodeJsonEnvelope,
   schema: rates,
   options: ratesOptions,

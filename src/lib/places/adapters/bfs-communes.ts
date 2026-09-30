@@ -78,7 +78,7 @@ type SnapshotOptions = z.infer<typeof snapshotOptions>;
 
 export const bfsCommunesSnapshotAdapter: Adapter<SnapshotRow[], SnapshotOptions> = {
   key: "bfs_communes_snapshot",
-  version: "1",
+  version: "2",
   decode: decodeCsv,
   schema: z.array(snapshotRow).min(1),
   options: snapshotOptions,
@@ -136,7 +136,10 @@ export const bfsCommunesSnapshotAdapter: Adapter<SnapshotRow[], SnapshotOptions>
         continue;
       }
       const isTop = Number(row.Level) === top;
-      const validTo = isoFromDottedDate(row.ValidTo);
+      // The register gives a row's last valid day; valid time here is
+      // half-open, so the row ends on the day after.
+      const lastDay = isoFromDottedDate(row.ValidTo);
+      const validTo = lastDay && dayAfter(lastDay);
       const parts = row.Name.split(" / ");
       const names: BatchName[] =
         isTop && parts.length === locales.length

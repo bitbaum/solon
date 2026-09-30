@@ -4,6 +4,16 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-09-30
+
+### Fixed
+
+- **Tax estimates on 31 December.** A year's tariffs and multipliers ended a
+  day early, so an estimate on the last day of the year came out incomplete,
+  and a commune that merged away looked gone the day before it did. Every
+  period now ends on the day after its last day, as the rest of Solon counts
+  time. (#219)
+
 ## 2026-09-29
 
 ### Added
