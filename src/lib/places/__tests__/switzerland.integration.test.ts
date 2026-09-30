@@ -73,12 +73,14 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
   ["estv-income-tax-scales", "estv-scales-2025.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
+  ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
 ];
 
 /**
  * The Federal Tax Administration's calculator (API_calculateSimpleTaxes), 2025,
- * taxable income CHF 100,000, no church tax, asked on 2026-09-29. Its CHF 24 per
+ * taxable income CHF 100,000, no church tax, asked on 2026-09-29 (Zürich and
+ * Küsnacht) and 2026-09-30 (Biel/Bienne, Canton of Bern). Zürich's CHF 24 per
  * person Personalsteuer is left out: the model has no fixed amounts yet.
  */
 const GOLDEN_2025 = [
@@ -86,6 +88,8 @@ const GOLDEN_2025 = [
   { commune: "261", variant: "married", federal: 1816, canton: 4689, communal: 5694 },
   { commune: "154", variant: "single", federal: 2688, canton: 6083, communal: 4531 },
   { commune: "154", variant: "married", federal: 1816, canton: 4689, communal: 3493 },
+  { commune: "371", variant: "single", federal: 2688, canton: 13373, communal: 7327 },
+  { commune: "371", variant: "married", federal: 1816, canton: 11365, communal: 6227 },
 ] as const;
 
 const importFixture = (sourceKey: string, file: string): Promise<ImportReport> =>
@@ -370,8 +374,9 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       }
       return e.estimate.total;
     };
-    for (const g of GOLDEN_2025) {
-      const i = g.commune === "261" ? 0 : 1;
+    const columnOf: Record<string, number> = { "261": 0, "154": 1 };
+    for (const g of GOLDEN_2025.filter((g) => g.commune in columnOf)) {
+      const i = columnOf[g.commune]!;
       expect(Math.abs(total(i, g.variant) - (g.federal + g.canton + g.communal))).toBeLessThan(3);
     }
     // Witikon levies nothing itself: its tax is the City of Zürich's.

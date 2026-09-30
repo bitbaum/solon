@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -502,6 +502,24 @@ schema version 1 cannot express yet, measured:
 - The model's `single` is a single person without children; ZH taxes single
   parents on the married tariff, which the model does not ask about yet.
 
+**Built (P2, first cantons)**: a canton joins when the model reproduces the
+calculator for it, measured 2026-09-30 at CHF 60,000, 100,000 and 250,000,
+single and married, for two communes each (one for Basel-Stadt's city plus
+Riehen), for 2025 and 2026: Bern, Lucerne, Zug, Basel-Stadt, Appenzell
+Ausserrhoden and Jura match to the franc (108 cases), and Biel/Bienne is a
+golden fixture through the real chain. Basel-Stadt's city has no commune tax
+of its own; the calculator splits the canton's 100% into 50% canton and 50%
+commune, and Solon records it as published. Lucerne's CHF 50 per-head tax is
+left out like Zürich's. Not yet:
+
+- Ticino: same shape, but its basic tax differs from the calculator's by
+  CHF 25–50, so it waits until the difference is understood.
+- Aargau, St. Gallen, Solothurn, Thurgau, Graubünden, Glarus, Schaffhausen,
+  Nidwalden, Appenzell Innerrhoden, Geneva, Neuchâtel, Fribourg (married),
+  Vaud and Schwyz: splitting or a family quotient, a later schema version.
+- Basel-Landschaft (a formula), Uri and Obwalden (flat tax), Valais and Schwyz
+  (separate commune tariffs): table types not read yet.
+
 ### 6.3 "Takes tax" is derived
 
 An authority takes income tax in a period exactly when a model component
@@ -621,8 +639,9 @@ hardcoded date.
 | `bfs-communes-mutations` | mergers between two dates | same API | opendata.swiss open |
 | `zurich-statistical-quarters` | the City of Zürich's 12 districts and 34 quarters | the city's WFS, GeoJSON | CC0 |
 | `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
-| `estv-income-tax-scales` | the federal tariff and the canton of Zürich's basic tariff, single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
-| `estv-canton-multipliers` | the canton of Zürich's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
+| `estv-income-tax-scales` | the federal tariff and the basic tariff of each modelled canton (Zürich, Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
+| `estv-canton-multipliers` | each modelled canton's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
+| `estv-commune-multipliers` | each commune's multiplier per year since 2021, for the modelled cantons except Zürich; confirmed 2026-09-30 | the same export for group 30, every Swiss commune by its FSO number | official act (Art. 5 URG) |
 | `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 The calculator's exports answer for years it has not published with another
@@ -637,6 +656,10 @@ lists them in the run's report until the postcode resolver can tell the
 addresses apart. The Federal Tax Administration's figures differ from the
 canton's for at least one commune (Aeugst am Albis 2025: 90 against 92); the
 canton publishes its communes' own decisions, so its figures are the ones used.
+The calculator's export for every commune shows one rate for Uster and
+Turbenthal without saying there are two, so it is read only for cantons whose
+communes levy one rate; the modelled cantons are listed once
+(`MODELLED_CANTONS` in `sources.ts`) and shared by the three ESTV sources.
 
 Found for the next step: the city's address register with postcode, quarter
 and parishes per address (CC0), which gives postcode → quarter with shares.
@@ -999,6 +1022,7 @@ before the build.
   `/places` searches and lists them, and the API serves both (§9.2);
   `/compare` sets them side by side with the estimate in the browser (§9.2).
   Next: the Register (George) and the city's address register.
+  P2 has begun: six more cantons' tariffs and multipliers (§6.2).
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

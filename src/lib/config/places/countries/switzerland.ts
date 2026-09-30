@@ -7,7 +7,7 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * (Steuerfüsse). Church tax is not modelled yet: the register publishes its
  * multipliers per denomination, and which parish levies it is not imported,
  * so a church component waits for the parishes (§6.1). Nor are fixed per-head
- * taxes (Zürich's CHF 24 Personalsteuer): schema version 1 has no fixed amount.
+ * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
  */
 export const switzerlandIncomeTax = {
   schemaVersion: 1,
@@ -77,10 +77,10 @@ const switzerlandTaxLabels: TaxLabels = {
     },
   },
   excludes: {
-    en: "Not included: church tax, wealth tax and fixed per-head taxes such as Zürich's CHF 24 personal tax.",
-    de: "Nicht enthalten: Kirchensteuer, Vermögenssteuer und feste Kopfsteuern wie Zürichs Personalsteuer von CHF 24.",
-    fr: "Non compris : impôt ecclésiastique, impôt sur la fortune et impôts par tête comme l'impôt personnel zurichois de CHF 24.",
-    it: "Non incluse: imposta di culto, imposta sulla sostanza e imposte pro capite come l'imposta personale zurighese di CHF 24.",
+    en: "Not included: church tax, wealth tax and fixed per-head taxes, such as CHF 24 a person in Zürich or CHF 50 in Lucerne.",
+    de: "Nicht enthalten: Kirchensteuer, Vermögenssteuer und feste Kopfsteuern, etwa CHF 24 pro Person in Zürich oder CHF 50 in Luzern.",
+    fr: "Non compris : impôt ecclésiastique, impôt sur la fortune et impôts par tête, comme CHF 24 par personne à Zurich ou CHF 50 à Lucerne.",
+    it: "Non incluse: imposta di culto, imposta sulla sostanza e imposte pro capite, come CHF 24 a persona a Zurigo o CHF 50 a Lucerna.",
   },
 };
 
@@ -173,6 +173,7 @@ export const switzerland: CountryPackInput = {
     "zurich-municipal-multipliers",
     "estv-income-tax-scales",
     "estv-canton-multipliers",
+    "estv-commune-multipliers",
     "swisstopo-postcode-localities",
   ],
   taxModel: switzerlandIncomeTax,

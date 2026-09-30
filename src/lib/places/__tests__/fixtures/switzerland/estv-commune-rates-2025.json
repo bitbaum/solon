@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_exportManySimpleRates",
+    "body": {
+      "SimKey": null,
+      "TaxYear": 2025,
+      "TaxGroupID": 30
+    }
+  },
+  "response": "{\"response\": [{\"Location\": {\"TaxLocationID\": 800000000, \"CantonID\": 26, \"BfsID\": 261, \"BfsName\": \"Zürich\", \"ZipCode\": \"\", \"City\": \"Zürich\", \"Canton\": \"ZH\"}, \"IncomeRateCanton\": 98, \"IncomeRateCity\": 119, \"IncomeRateProtestant\": 10, \"IncomeRateRoman\": 10, \"IncomeRateChrist\": 14, \"FortuneRateCanton\": 98, \"FortuneRateCity\": 119, \"FortuneRateProtestant\": 10, \"FortuneRateRoman\": 10, \"FortuneRateChrist\": 14, \"ProfitTaxRateCanton\": 98, \"ProfitTaxRateCity\": 129.03, \"ProfitTaxRateChurch\": 0, \"CapitalTaxRateCanton\": 98, \"CapitalTaxRateCity\": 129.03, \"CapitalTaxRateChurch\": 0}, {\"Location\": {\"TaxLocationID\": 250000000, \"CantonID\": 4, \"BfsID\": 371, \"BfsName\": \"Biel/Bienne\", \"ZipCode\": \"\", \"City\": \"Biel/Bienne\", \"Canton\": \"BE\"}, \"IncomeRateCanton\": 297.5, \"IncomeRateCity\": 163, \"IncomeRateProtestant\": 23, \"IncomeRateRoman\": 23, \"IncomeRateChrist\": 28, \"FortuneRateCanton\": 297.5, \"FortuneRateCity\": 163, \"FortuneRateProtestant\": 23, \"FortuneRateRoman\": 23, \"FortuneRateChrist\": 28, \"ProfitTaxRateCanton\": 262, \"ProfitTaxRateCity\": 163, \"ProfitTaxRateChurch\": 23.06, \"CapitalTaxRateCanton\": 262, \"CapitalTaxRateCity\": 163, \"CapitalTaxRateChurch\": 23.06}, {\"Location\": {\"TaxLocationID\": 647200000, \"CantonID\": 22, \"BfsID\": 1206, \"BfsName\": \"Erstfeld\", \"ZipCode\": \"\", \"City\": \"Erstfeld\", \"Canton\": \"UR\"}, \"IncomeRateCanton\": 100, \"IncomeRateCity\": 103, \"IncomeRateProtestant\": 115, \"IncomeRateRoman\": 130, \"IncomeRateChrist\": 0, \"FortuneRateCanton\": 100, \"FortuneRateCity\": 103, \"FortuneRateProtestant\": 115, \"FortuneRateRoman\": 130, \"FortuneRateChrist\": 0, \"ProfitTaxRateCanton\": 100, \"ProfitTaxRateCity\": 103, \"ProfitTaxRateChurch\": 128.965, \"CapitalTaxRateCanton\": 100, \"CapitalTaxRateCity\": 103, \"CapitalTaxRateChurch\": 0}]}"
+}
