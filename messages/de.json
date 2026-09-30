@@ -50,7 +50,10 @@
       "forCommunities": "Gemeinschaften",
       "forNetworkStates": "Netzwerkstaaten",
       "roadmap": "Roadmap",
-      "changelog": "Änderungen"
+      "changelog": "Änderungen",
+      "whitepaper": "Whitepaper",
+      "faq": "Fragen und Antworten",
+      "blog": "Blog"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -84,7 +87,10 @@
       "forCommunities": "Gruppen im Netz und Kollektive",
       "forNetworkStates": "Von der Startup-Gesellschaft zur Anerkennung",
       "roadmap": "Wohin Solon geht, in dieser Reihenfolge",
-      "changelog": "Was sich geändert hat, Neuestes zuerst"
+      "changelog": "Was sich geändert hat, Neuestes zuerst",
+      "whitepaper": "Wie Solon funktioniert, mit allen technischen Einzelheiten",
+      "faq": "Kurze Antworten, vom Einstieg bis zur Prüfung der Stimmen",
+      "blog": "Was wir bauen und warum, während wir es bauen"
     }
   },
   "Nav": {

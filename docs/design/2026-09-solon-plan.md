@@ -4,7 +4,8 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-09-30: `/places/coverage`, the first Places screen, counts coverage from the data (§9, G).
+_Last modified 2026-09-30: the deep side gained `/faq`, `/whitepaper` and `/blog` (§7), read from `content/` through bip-kit 0.5; everyday pages speak plain words with Technical details one click away (`docs/development/ui-guidelines.md`, "Two depths").
+Earlier the same day: `/places/coverage`, the first Places screen, counts coverage from the data (§9, G).
 Earlier, 2026-09-29: Zürich's tariffs and multipliers import and match the federal calculator (§9, G).
 Earlier the same day: the Swiss structure live, Zürich's multipliers import (§9, G).
 Earlier the same day: Places P1 begun, the Swiss structure imports (§9, G).
@@ -129,6 +130,9 @@ the webhook contract, re-verification by each executor.
 | `/governance/ideas` | the curious citizen | the ideas Solon stands on, told as stories, each with its source |
 | `/governance/new-era` | the curious citizen | why governing yourselves is newly possible — and what it still cannot do |
 | `/platform` | someone deciding to adopt | the three products as one system, in plain words |
+| `/faq` | anyone with a question | short answers, plain ones first and technical ones last (`content/faq.md`) |
+| `/whitepaper` | the verifier, the adopter | how Solon works in full technical detail, with what is built and what is designed (`content/whitepaper.md`) |
+| `/blog` | the follower | what changed and why, as it is built (`content/blog/*.md`) |
 | `/technical/*` | the verifier | specifications, exact and sourced |
 
 ## 8. Engineering rules for all of this

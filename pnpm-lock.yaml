@@ -24,8 +24,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       bip-kit:
-        specifier: ^0.4.0
-        version: 0.4.0(react@19.3.0)
+        specifier: ^0.5.0
+        version: 0.5.0(react@19.3.0)
       bs58check:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1797,8 +1797,8 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  bip-kit@0.4.0:
-    resolution: {integrity: sha512-RkdrHVKvwWhRck/eQ4Bay1ElzB6OdGYd1QEB5k/Vx/J86Rslm8eyKL4AclPc+KW7bi419f8l8eEJkIDXJSyedg==}
+  bip-kit@0.5.0:
+    resolution: {integrity: sha512-I1kPxU1SLhr74Ll9/4pfThZ93PpCS17U0lHb4u6I3hiZWwj2Te4i0rRzH2tRnZMDmSSbR4PTyAEIXv2FXKnrSw==}
     engines: {node: '>=20'}
     peerDependencies:
       katex: '>=0.16'
@@ -4812,7 +4812,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.14: {}
 
-  bip-kit@0.4.0(react@19.3.0):
+  bip-kit@0.5.0(react@19.3.0):
     dependencies:
       react: 19.3.0
 
