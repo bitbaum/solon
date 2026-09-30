@@ -7,8 +7,10 @@
  * fires when a route actually touches the database (and the server components
  * that do already catch it and render their fallback).
  *
- * Hot-reload-safe: in development the pool is stashed on globalThis so Next's
- * module reloads do not leak connections.
+ * One pool per process, stashed on globalThis: in development so Next's module
+ * reloads do not leak connections, and in production because the proxy below
+ * calls getDb() on every access, so an uncached pool meant a new pool per
+ * query and a burst of queries could exhaust the box's shared Postgres.
  */
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
@@ -25,7 +27,7 @@ function getDb(): Db {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set — required for database operations");
   const db = drizzle(new Pool({ connectionString: url }), { schema });
-  if (process.env.NODE_ENV !== "production") globalForDb.solonDb = db;
+  globalForDb.solonDb = db;
   return db;
 }
 

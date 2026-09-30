@@ -69,6 +69,10 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Solon no longer opens a database connection per query.** In production
+  every query started its own connection pool, so a busy page could use up
+  the connections the server's apps share. There is now one pool, as intended.
+
 - **Joining, in plain words.** The join page now looks like the rest of Solon
   and says what is going on without technical terms: who can join, how new
   members get in (a member suggests you, the members vote), and what you can
