@@ -18,7 +18,7 @@ one to read for the detail. Fixes get the same weight as features.
   first. Your income stays in your browser. An address you type goes from
   your browser straight to swisstopo's geo.admin.ch to be found, and Solon
   never sees it; the note under the box says so. Communes whose figures are
-  not recorded yet are grey. (#PR)
+  not recorded yet are grey. (#240)
 
 - **Tax figures for every commune at once, for the map.** A new public
   endpoint, `/api/v1/places/map`, gives every commune on the map with the
