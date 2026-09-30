@@ -57,6 +57,7 @@
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "26.6.2",
     "@types/pg": "^8.23.1",
     "@types/proj4": "^2.19.0",
