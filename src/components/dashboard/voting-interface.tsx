@@ -14,7 +14,8 @@ import { proposalStanding } from "@/lib/domain/plain-words";
 export interface VotingInterfaceProps {
   session: {
     id: string;
-    title: string;
+    /** Left out where the page's own heading already names the proposal. */
+    title?: string;
     rules: string;
     status: SessionStatus;
     method: MethodId;
@@ -123,7 +124,7 @@ export default function VotingInterface({
     <section className="space-y-6">
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="headline text-display-3 text-fg-primary">{session.title}</h2>
+          <h2 className="headline text-display-3 text-fg-primary">{session.title ?? "The vote"}</h2>
           <p className="text-sm text-fg-secondary">{session.rules}</p>
         </div>
         <div className="text-right text-sm text-fg-secondary shrink-0">
@@ -222,21 +223,21 @@ export default function VotingInterface({
 
           {verdict?.stored && (
             <p className="rounded-control border border-status-positive/40 bg-surface-base p-3 text-sm text-fg-primary">
-              Your vote is recorded. You can change it until the session closes.
+              Your vote is counted. You can change it until voting ends.
             </p>
           )}
         </div>
       )}
 
-      <Result aggregate={liveAggregate} />
+      <Result aggregate={liveAggregate} final={!isOpen} />
     </section>
   );
 }
 
-function Result({ aggregate }: { aggregate: Aggregate | null }) {
+function Result({ aggregate, final }: { aggregate: Aggregate | null; final: boolean }) {
   return (
     <div className="rounded-surface border border-default p-4 bg-surface-raised">
-      <h3 className="font-semibold text-fg-primary">Result so far (weighted)</h3>
+      <h3 className="font-semibold text-fg-primary">{final ? "Result" : "Result so far"}</h3>
       <p className="mt-1 text-sm text-fg-secondary">{summarizeAggregate(aggregate)}</p>
 
       {aggregate?.ranked && aggregate.ranked.length > 0 && (

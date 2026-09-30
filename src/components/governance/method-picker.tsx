@@ -33,7 +33,7 @@ export default function MethodPicker({
         id="p-method"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+        className="field mt-2"
       >
         <option value="">However this organization usually decides this</option>
         {methods.map((m) => (
@@ -45,7 +45,7 @@ export default function MethodPicker({
       <p className="mt-1.5 text-xs text-fg-tertiary">
         {active
           ? active.summary
-          : "Your organization's governance profile picks the method, the threshold and the quorum for this category."}
+          : "Your organization's rules already say how this kind of decision is voted on, how many must take part and how many must agree."}
       </p>
     </div>
   );

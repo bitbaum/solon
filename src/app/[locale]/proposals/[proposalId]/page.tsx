@@ -16,6 +16,15 @@ import { votingRules } from "@/lib/domain/plain-words";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ proposalId: string }> }) {
+  const { proposalId } = await params;
+  const proposal = await db.query.proposals.findFirst({
+    where: eq(proposals.id, proposalId),
+    columns: { title: true },
+  });
+  return proposal ? { title: `${proposal.title} — Solon` } : {};
+}
+
 /**
  * One proposal, and whatever the next step on it happens to be: open it, vote
  * on it, or read the decision it produced. The page never renders a dead end —
@@ -66,7 +75,6 @@ export default async function ProposalPage({
           <VotingInterface
             session={{
               id: proposal.session.id,
-              title: proposal.title,
               rules: votingRules(proposal.session),
               status: proposal.session.status,
               method: methodId(proposal.session.method),
