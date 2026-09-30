@@ -260,6 +260,7 @@ function taxModelProblems(pack: CountryPack, metrics: ReadonlyMap<string, Metric
   for (const component of model.components) {
     const refs = [
       { ref: component.tariff, valueType: "tariff" as const },
+      ...(component.divisor ? [{ ref: component.divisor, valueType: "number" as const }] : []),
       ...(component.multipliers ?? []).map((ref) => ({ ref, valueType: "number" as const })),
     ];
     for (const { ref, valueType } of refs) {

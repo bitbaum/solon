@@ -8,6 +8,7 @@ import { and, count, countDistinct, desc, eq, gt, isNull, lte, max, ne, or } fro
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { facts, jurisdictions, placeImportRuns, sources } from "@/lib/db/places-schema";
+import { componentRefs } from "@/lib/tax-model";
 import type { ImportRunStatus } from "./vocabulary";
 import { localized } from "./place-view";
 
@@ -89,10 +90,7 @@ export function coverageView(input: CoverageInput): PackCoverage[] {
       return level ? localized(level.names, locale) : key;
     };
 
-    const modelRefs = (pack.taxModel?.components ?? []).flatMap((c) => [
-      c.tariff,
-      ...(c.multipliers ?? []),
-    ]);
+    const modelRefs = (pack.taxModel?.components ?? []).flatMap(componentRefs);
     const pairs = [
       ...modelRefs.map((r) => ({ levelKey: r.level, metricKey: r.metric })),
       ...input.factCounts.filter((c) => c.countryPack === pack.key),

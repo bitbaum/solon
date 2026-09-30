@@ -8,7 +8,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import type { CountryPack, PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictions } from "@/lib/db/places-schema";
-import { evaluate, taxingLevels, type TaxModel } from "@/lib/tax-model";
+import { componentRefs, evaluate, taxingLevels, type TaxModel } from "@/lib/tax-model";
 import { fiscalYearPeriod } from "./adapters/csv-facts";
 import { evaluatorFacts, loadChain, loadFacts, type ChainFact, type ChainPlace } from "./chain";
 import {
@@ -132,7 +132,7 @@ export function figuresPublished(config: PlacesConfig, place: ComparedPlace): bo
 }
 
 function modelRefs(model: TaxModel) {
-  return model.components.flatMap((c) => [c.tariff, ...(c.multipliers ?? [])]);
+  return model.components.flatMap(componentRefs);
 }
 
 /** The fiscal year containing `on`: "2026", or "2026/27" when it spans two calendar years. */

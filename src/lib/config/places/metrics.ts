@@ -27,6 +27,20 @@ export const METRICS: readonly MetricInput[] = [
     unit: "currency",
   },
   {
+    // Applied to a basic tariff: the tariff reads the income divided by it, and
+    // its amount is multiplied back. 2 is full splitting of a couple's income.
+    key: "tax.income.divisor",
+    label: {
+      en: "Income divisor (splitting)",
+      de: "Divisor des Einkommens (Splitting)",
+      fr: "diviseur du revenu (splitting)",
+      it: "divisore del reddito (splitting)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 1, max: 3 },
+  },
+  {
     key: "tax.multiplier",
     label: {
       en: "Tax multiplier",
