@@ -30,6 +30,7 @@
     "check:places-literals": "tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {
+    "@bitbaum/geo-kit": "github:bitbaum/geo-kit#599e5685da512f16b361e6b124129961c6f56d4e",
     "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.1.0",
     "@noble/hashes": "2.4.0",
     "@noble/secp256k1": "3.2.0",
