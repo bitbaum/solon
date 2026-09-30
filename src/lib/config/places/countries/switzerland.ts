@@ -107,6 +107,7 @@ export const switzerland: CountryPackInput = {
     "zurich_city_district",
     "zurich_statistical_quarter",
   ],
+  postcodePattern: "[1-9][0-9]{3}",
   sources: [
     "bfs-communes-snapshot",
     "bfs-communes-mutations",
@@ -114,6 +115,7 @@ export const switzerland: CountryPackInput = {
     "zurich-municipal-multipliers",
     "estv-income-tax-scales",
     "estv-canton-multipliers",
+    "swisstopo-postcode-localities",
   ],
   taxModel: switzerlandIncomeTax,
 };

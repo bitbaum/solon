@@ -78,6 +78,28 @@ export function checkBatch(
     }
   }
 
+  const postcodePattern = pack.postcodePattern ? new RegExp(`^(?:${pack.postcodePattern})$`) : null;
+  const postcodeKeys = new Set<string>();
+  for (const row of batch.postcodes) {
+    const key = `${row.postcode} ${row.locality} ${refKey(row.place)} ${row.validFrom ?? "-"}`;
+    const where = `postcode ${key}`;
+    if (postcodeKeys.has(key)) {
+      problems.push(`${where} appears twice`);
+    }
+    postcodeKeys.add(key);
+    if (!postcodePattern) {
+      problems.push(`${where}: pack "${pack.key}" has no postcode format`);
+    } else if (!postcodePattern.test(row.postcode)) {
+      problems.push(
+        `${where}: "${row.postcode}" does not match pack "${pack.key}"'s postcode format`,
+      );
+    }
+    const problem = identifierProblem(row.place, where);
+    if (problem) {
+      problems.push(problem);
+    }
+  }
+
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
   const factKeys = new Set<string>();
   const accepted: BatchFact[] = [];

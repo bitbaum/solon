@@ -3,10 +3,11 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { ADAPTERS, type Probe } from "../adapters";
-import { isoFromDottedDate, parseCsv } from "../adapters/csv";
+import { zipSync } from "fflate";
+import { decodeCsvAnyForm, isoFromDottedDate, parseCsv } from "../adapters/csv";
 import { fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
-import type { BatchJurisdiction, ImportBatch } from "../importer/batch";
+import { importBatchSchema, type BatchJurisdiction, type ImportBatch } from "../importer/batch";
 
 const FIXTURES = join(__dirname, "fixtures", "switzerland");
 const fixture = (name: string) => new Uint8Array(readFileSync(join(FIXTURES, name)));
@@ -22,13 +23,15 @@ function mapSource(
   const decoded = adapter.decode
     ? adapter.decode(bytes)
     : (JSON.parse(new TextDecoder().decode(bytes)) as unknown);
-  return adapter.map(adapter.schema.parse(decoded), {
-    source,
-    pack: placesConfig.packs.find((p) => p.key === source.packs[0]),
-    options: adapter.options?.parse(source.options),
-    retrieval: { url: null },
-    skip: (row, reason) => skipped.push({ row, reason }),
-  });
+  return importBatchSchema.parse(
+    adapter.map(adapter.schema.parse(decoded), {
+      source,
+      pack: placesConfig.packs.find((p) => p.key === source.packs[0]),
+      options: adapter.options?.parse(source.options),
+      retrieval: { url: null },
+      skip: (row, reason) => skipped.push({ row, reason }),
+    }),
+  );
 }
 
 const plannedUrls = async (sourceKey: string, today: string, backfill = false) =>
@@ -313,6 +316,38 @@ describe("the canton of Zürich's municipal multipliers", () => {
       validFrom: "2025-04-06",
       validTo: "2026-04-06",
     });
+  });
+});
+
+describe("swisstopo's postcode directory", () => {
+  const SOURCE = "swisstopo-postcode-localities";
+  const csv = fixture("postcode-localities-2026-09-30.csv");
+
+  it("reads the zipped, semicolon-separated directory as published, and the plain CSV alike", () => {
+    const batch = mapSource(SOURCE, zipSync({ "AMTOVZ_CSV_LV95/AMTOVZ_CSV_LV95.csv": csv }));
+    expect(batch.postcodes).toHaveLength(29);
+    expect(batch.postcodes.find((p) => p.postcode === "8053")).toEqual({
+      postcode: "8053",
+      locality: "Zürich",
+      place: { scheme: "bfs_municipality", value: "261" },
+      share: 1,
+      validFrom: "2008-07-01",
+      validTo: null,
+    });
+    expect(mapSource(SOURCE, csv)).toEqual(batch);
+  });
+
+  it("reads a locality's share of addresses in percent", () => {
+    const text =
+      "PLZ4;Ortschaftsname;BFS-Nr;Adressenanteil;Validity\r\n8051;Zürich;191;0.412 %;2008-07-01\r\n";
+    const batch = mapSource(SOURCE, new TextEncoder().encode(text));
+    expect(batch.postcodes[0]?.share).toBeCloseTo(0.00412, 10);
+  });
+
+  it("refuses an archive that does not hold exactly one CSV", () => {
+    expect(() => decodeCsvAnyForm(zipSync({ "a.csv": csv, "b.csv": csv }))).toThrow(
+      /holds 2 CSV files/,
+    );
   });
 });
 

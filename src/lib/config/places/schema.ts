@@ -67,6 +67,8 @@ export const countryPackSchema = z.object({
   }),
   levels: z.array(levelSchema).min(1),
   identifierSchemes: z.array(registryKey),
+  /** The country's postcode format, a regular expression; absent when it has no postcodes. */
+  postcodePattern: z.string().min(1).optional(),
   sources: z.array(sourceKey),
   instrumentKinds: z.array(registryKey).default([]),
   /** The country's income tax as data; validated against its levels and the metric catalog. */

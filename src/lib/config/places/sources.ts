@@ -236,4 +236,33 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["switzerland"],
   },
+  {
+    // Confirmed 2026-09-30: a zipped, semicolon-separated CSV from the federal
+    // geodata STAC catalogue, no key; its licence link is swisstopo's OGD
+    // conditions (free use, the source must be named). Every postcode locality
+    // with the commune it lies in and its share of the locality's addresses;
+    // 1,223 of 3,190 postcodes span more than one commune.
+    key: "swisstopo-postcode-localities",
+    publisher: "Federal Office of Topography (swisstopo)",
+    dataset: "Official directory of localities with postcodes",
+    homepage:
+      "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities-with-postcode-and-perimeter",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Federal Office of Topography swisstopo, official directory of localities",
+      de: "Bundesamt für Landestopografie swisstopo, amtliches Ortschaftenverzeichnis",
+      fr: "Office fédéral de topographie swisstopo, répertoire officiel des localités",
+    },
+    cadence: "0 4 3 * *",
+    adapter: "csv_postcodes",
+    options: {
+      url: "https://data.geo.admin.ch/ch.swisstopo-vd.ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz_2056.csv.zip",
+      postcode: "PLZ4",
+      locality: "Ortschaftsname",
+      place: { scheme: "bfs_municipality", column: "BFS-Nr" },
+      share: { column: "Adressenanteil", divideBy: 100 },
+      validFrom: "Validity",
+    },
+    packs: ["switzerland"],
+  },
 ];

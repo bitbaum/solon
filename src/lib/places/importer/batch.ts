@@ -77,18 +77,32 @@ export const batchFactSchema = z.object({
   value: z.union([z.number(), tariffSchema]),
 });
 
+/** A postcode locality and a place it lies in; one postcode may span several places. */
+export const batchPostcodeSchema = z.object({
+  postcode: z.string().min(1),
+  locality: z.string().min(1),
+  place: externalRefSchema,
+  /** The part of the locality's addresses inside the place, when the source states it. */
+  share: z.number().gt(0).lte(1).nullable().default(null),
+  ...period,
+});
+
 export const importBatchSchema = z.object({
   /** The pack every place in the batch belongs to. */
   pack: z.string().min(1),
   jurisdictions: z.array(batchJurisdictionSchema),
   relations: z.array(batchRelationSchema).default([]),
   facts: z.array(batchFactSchema).default([]),
+  postcodes: z.array(batchPostcodeSchema).default([]),
 });
 
 export type ImportBatch = z.infer<typeof importBatchSchema>;
+/** What an adapter hands in; the importer parses it, so defaulted lists may be left out. */
+export type ImportBatchInput = z.input<typeof importBatchSchema>;
 export type BatchJurisdiction = z.infer<typeof batchJurisdictionSchema>;
 export type BatchName = z.infer<typeof batchNameSchema>;
 export type BatchRelation = z.infer<typeof batchRelationSchema>;
 export type BatchFact = z.infer<typeof batchFactSchema>;
+export type BatchPostcode = z.infer<typeof batchPostcodeSchema>;
 
 export const refKey = (ref: ExternalRef): string => `${ref.scheme}:${ref.value}`;

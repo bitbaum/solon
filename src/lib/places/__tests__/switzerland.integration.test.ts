@@ -2,7 +2,8 @@
  * The Swiss pack through the real importer into a real database, from cuts of
  * the actual retrievals (fixtures/switzerland): the FSO commune register on
  * 1 January 2021 and on 29 September 2026, its mutations in between, the City
- * of Zürich's statistical quarters, and the canton's municipal multipliers.
+ * of Zürich's statistical quarters, the canton's municipal multipliers, and
+ * swisstopo's postcode directory for the communes in the cut.
  * The P1 acceptance (§11) as far as it is built: Witikon resolves up its chain
  * to Switzerland, a merger is a succession, not an edit, and the City of Zürich
  * and Küsnacht at CHF 100,000 match the Federal Tax Administration's
@@ -37,6 +38,7 @@ import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
 import { loadCoverage } from "../coverage";
+import { resolvePostcode } from "../postcodes";
 import { withTestland } from "./fixtures/testland/config";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -65,6 +67,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
   ["estv-income-tax-scales", "estv-scales-2025.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
+  ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
 ];
 
 /**
@@ -144,6 +147,22 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       ["canton", "Zürich"],
       ["nation", "Schweiz"],
     ]);
+  });
+
+  it("resolves a postcode to the commune it lies in", async () => {
+    // Witikon's own postcode reaches the City of Zürich; the quarter needs the
+    // city's address register, which is not imported yet.
+    expect(await resolvePostcode(db, "switzerland", "8053", ON)).toEqual([
+      {
+        jurisdictionId: await placeId("bfs_municipality", "261"),
+        localities: [{ name: "Zürich", share: 1 }],
+      },
+    ]);
+    const kuesnacht = await resolvePostcode(db, "switzerland", "8700", ON);
+    expect(kuesnacht.map((m) => m.jurisdictionId)).toEqual([
+      await placeId("bfs_municipality", "154"),
+    ]);
+    expect(await resolvePostcode(db, "switzerland", "9999", ON)).toEqual([]);
   });
 
   it("gives Witikon a page at its path, taking no tax", async () => {

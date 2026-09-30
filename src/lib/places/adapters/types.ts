@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import type { CountryPack, Source } from "@/lib/config/places/schema";
-import type { ImportBatch } from "../importer/batch";
+import type { ImportBatchInput } from "../importer/batch";
 
 /** One request the framework makes to fetch a source (design §8.3, step 1). */
 export interface RetrievalRequest {
@@ -70,5 +70,5 @@ export interface Adapter<Parsed = unknown, Options = unknown> {
     today: string,
     probe: Probe,
   ) => RetrievalRequest[] | Promise<RetrievalRequest[]>;
-  map: (parsed: Parsed, context: MapContext<Options>) => ImportBatch;
+  map: (parsed: Parsed, context: MapContext<Options>) => ImportBatchInput;
 }
