@@ -67,37 +67,32 @@ export async function loadPlacePage(
         isNull(jurisdictionRelations.supersededAt),
       ),
     );
-  const sourceIds = [
-    ...new Set(
-      [
-        ...identifiers.map((r) => r.sourceId),
-        ...names.map((r) => r.sourceId),
-        ...relations.map((r) => r.sourceId),
-        ...facts.filter((f) => f.jurisdictionId === place.id).map((f) => f.sourceId),
-      ].filter((id): id is string => id !== null),
-    ),
-  ];
-  const retrievals =
-    sourceIds.length === 0
-      ? []
-      : await db
-          .select({
-            sourceKey: sources.sourceKey,
-            retrievedAt: sql<Date>`max(${sources.retrievedAt})`,
-          })
-          .from(sources)
-          .where(inArray(sources.id, sourceIds))
-          .groupBy(sources.sourceKey);
+  const retrievals = await loadRetrievals(db, [
+    ...identifiers.map((r) => r.sourceId),
+    ...names.map((r) => r.sourceId),
+    ...relations.map((r) => r.sourceId),
+    ...facts.filter((f) => f.jurisdictionId === place.id).map((f) => f.sourceId),
+  ]);
 
-  return placeView({
-    config,
-    chain,
-    facts,
-    identifiers,
-    sources: retrievals.map((r) => ({
-      sourceKey: r.sourceKey,
-      retrievedAt: new Date(r.retrievedAt),
-    })),
-    locale,
-  });
+  return placeView({ config, chain, facts, identifiers, sources: retrievals, locale });
+}
+
+/** The latest retrieval of each source among these `sources` rows. */
+export async function loadRetrievals(
+  db: Database,
+  sourceIds: readonly (string | null)[],
+): Promise<{ sourceKey: string; retrievedAt: Date }[]> {
+  const ids = [...new Set(sourceIds.filter((id): id is string => id !== null))];
+  if (ids.length === 0) {
+    return [];
+  }
+  const rows = await db
+    .select({
+      sourceKey: sources.sourceKey,
+      retrievedAt: sql<Date>`max(${sources.retrievedAt})`,
+    })
+    .from(sources)
+    .where(inArray(sources.id, ids))
+    .groupBy(sources.sourceKey);
+  return rows.map((r) => ({ sourceKey: r.sourceKey, retrievedAt: new Date(r.retrievedAt) }));
 }

@@ -163,6 +163,24 @@ describe("placesConfigProblems names what is wrong", () => {
     ).toContain('pack "testland" tax model: base "taxable_income" is not listed in inputs');
   });
 
+  it("a tax model a reader could not read: no labels, or a variant without one", () => {
+    expect(
+      broken((c) => {
+        pack(c).taxLabels = undefined;
+      }),
+    ).toContain('pack "testland" tax model: no taxLabels');
+    expect(
+      broken((c) => {
+        delete pack(c).taxLabels!.variants.together;
+      }),
+    ).toContain('pack "testland" tax model: variant "together" has no label');
+    expect(
+      broken((c) => {
+        pack(c).taxModel = undefined;
+      }),
+    ).toContain('pack "testland": tax labels without a tax model');
+  });
+
   it("an identifier pattern that does not compile", () => {
     expect(
       broken((c) => {
