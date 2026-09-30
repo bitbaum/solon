@@ -1,7 +1,9 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: `/places/coverage` is built, counted from the
+_Last modified 2026-09-30: postcodes resolve to the places they lie in, from
+swisstopo's directory (`place_postcodes`, §4.6, §8.2), which the `/places`
+search will use. Earlier the same day: `/places/coverage` is built, counted from the
 data (§9.2), and places pages count as translated; production holds every P1
 source so far, reloaded after the fix below (§8.3). Earlier the same day: valid
 time is half-open, and the adapters now store it so (§4); a year's figures
@@ -285,6 +287,16 @@ invariant engine, not coded.
     `superseded_at` is null. A correction supersedes and never overwrites.
   - `method`: `imported`, `derived` (names its inputs), `corrected` (names the
     decision).
+- **`place_postcodes`** `(id, pack_key → place_country_packs, postcode,
+  locality, jurisdiction_id, share, source_id NOT NULL, valid_from, valid_to,
+  recorded_at, superseded_at)`. **Built** (migration `0012_place_postcodes`).
+  One row per postcode locality and place it lies in, so one postcode can
+  return several places; `share` is the part of the locality's addresses in
+  the place, as the source states it. A pack's `postcodePattern` says what a
+  postcode looks like there; a pack without one takes no postcodes. Written by
+  importers per source, like relations: what a source no longer states is
+  superseded. `resolvePostcode` (`src/lib/places/postcodes.ts`) answers
+  "which places, on this day", the largest share first.
 
 ### 4.7 `instruments` and `ballots`
 
@@ -610,6 +622,7 @@ hardcoded date.
 | `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
 | `estv-income-tax-scales` | the federal tariff and the canton of Zürich's basic tariff, single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
 | `estv-canton-multipliers` | the canton of Zürich's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
+| `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30 | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 The calculator's exports answer for years it has not published with another
 year's figures (asked on 2026-09-29, "2027" gave the canton a 98% multiplier
@@ -935,7 +948,10 @@ before the build.
   and cantonal tariffs and the canton's multiplier import from the Federal Tax
   Administration, and the City of Zürich and Küsnacht at CHF 100,000 match its
   calculator (§6.2). `/places/coverage` counts all of it from the data.
-  Next: the postcode resolver, the `/places` list, `/compare` and the API.
+  Postcodes resolve to communes from swisstopo's directory (§4.6, §8.2); a
+  postcode reaches its quarter once the city's address register is imported,
+  so 8053 reaches the City of Zürich today, not Witikon.
+  Next: the `/places` list, `/compare` and the API.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

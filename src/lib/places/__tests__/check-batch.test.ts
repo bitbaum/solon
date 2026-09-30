@@ -59,6 +59,32 @@ describe("checkBatch", () => {
     ]);
   });
 
+  it("refuses postcodes a pack has no format for, that do not match it, or that repeat", () => {
+    const row = {
+      postcode: "8053",
+      locality: "Zürich",
+      place: { scheme: "bfs_municipality", value: "261" },
+      share: 1,
+      validFrom: null,
+      validTo: null,
+    };
+    const swiss = {
+      pack: "switzerland",
+      jurisdictions: [],
+      relations: [],
+      facts: [],
+      postcodes: [row, { ...row, postcode: "80530" }, row],
+    };
+    expect(checkBatch(swiss, config, "swisstopo-postcode-localities").problems).toEqual([
+      `postcode 80530 Zürich bfs_municipality:261 -: "80530" does not match pack "switzerland"'s postcode format`,
+      "postcode 8053 Zürich bfs_municipality:261 - appears twice",
+    ]);
+    const testland = { ...testlandBatch(), postcodes: [{ ...row, place: register("T110") }] };
+    expect(checkBatch(testland, config, SOURCE).problems).toEqual([
+      'postcode 8053 Zürich testland_register:T110 -: pack "testland" has no postcode format',
+    ]);
+  });
+
   it("quarantines a value outside the metric's plausible band and publishes the rest", () => {
     const batch = testlandBatch();
     const fenwick = batch.facts.find((f) => f.jurisdiction.value === "T121")!;

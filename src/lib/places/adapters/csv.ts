@@ -1,10 +1,12 @@
+import { unzipSync } from "fflate";
+
 /**
  * RFC 4180 CSV to records keyed by the header row: quoted fields, doubled
- * quotes, commas and line breaks inside quotes, CRLF or LF, a leading BOM.
+ * quotes, delimiters and line breaks inside quotes, CRLF or LF, a leading BOM.
  * Official registers publish CSV; nothing here knows which.
  */
-export function parseCsv(text: string): Record<string, string>[] {
-  const rows = csvRows(text.replace(/^\uFEFF/, ""));
+export function parseCsv(text: string, delimiter = ","): Record<string, string>[] {
+  const rows = csvRows(text.replace(/^\uFEFF/, ""), delimiter);
   const header = rows.shift();
   if (!header) {
     return [];
@@ -17,7 +19,32 @@ export function parseCsv(text: string): Record<string, string>[] {
 /** An adapter's `decode` for CSV sources, UTF-8. */
 export const decodeCsv = (bytes: Uint8Array): unknown => parseCsv(new TextDecoder().decode(bytes));
 
-function csvRows(text: string): string[][] {
+const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04];
+
+/**
+ * An adapter's `decode` for CSV that may come zipped (the archive must hold
+ * exactly one `.csv`) and separated by semicolons, as European registers often
+ * publish it: the header row decides the delimiter.
+ */
+export function decodeCsvAnyForm(bytes: Uint8Array): unknown {
+  let csv = bytes;
+  if (ZIP_MAGIC.every((byte, i) => bytes[i] === byte)) {
+    const entries = Object.entries(unzipSync(bytes)).filter(([name]) =>
+      name.toLowerCase().endsWith(".csv"),
+    );
+    if (entries.length !== 1) {
+      throw new Error(`the archive holds ${entries.length} CSV files, not one`);
+    }
+    csv = entries[0]![1];
+  }
+  const text = new TextDecoder().decode(csv);
+  const end = text.search(/\r?\n/);
+  const header = end === -1 ? text : text.slice(0, end);
+  const delimiter = header.split(";").length > header.split(",").length ? ";" : ",";
+  return parseCsv(text, delimiter);
+}
+
+function csvRows(text: string, delimiter: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
   let field = "";
@@ -35,7 +62,7 @@ function csvRows(text: string): string[][] {
       }
     } else if (char === '"') {
       quoted = true;
-    } else if (char === ",") {
+    } else if (char === delimiter) {
       row.push(field);
       field = "";
     } else if (char === "\n" || char === "\r") {

@@ -558,6 +558,69 @@ export const facts = pgTable(
   ],
 );
 
+/**
+ * A postcode locality and a place it lies in (§8.2). One postcode may span
+ * several places, so a lookup can return several rows; `share` is the part of
+ * the locality's addresses inside this place, as the source states it (null
+ * when it states none). Written only by importers, per source, like relations.
+ */
+export const placePostcodes = pgTable(
+  "place_postcodes",
+  {
+    id: text("id").primaryKey().$defaultFn(uuid),
+    packKey: text("pack_key").notNull(),
+    postcode: text("postcode").notNull(),
+    /** The locality's name as the postcode directory writes it. */
+    locality: text("locality").notNull(),
+    jurisdictionId: text("jurisdiction_id").notNull(),
+    share: numeric("share"),
+    sourceId: text("source_id").notNull(),
+    validFrom: validFrom(),
+    validTo: validTo(),
+    recordedAt: recordedAt(),
+    supersededAt: supersededAt(),
+  },
+  (t) => [
+    uniqueIndex("place_postcodes_one_current_per_key")
+      .on(
+        t.packKey,
+        t.postcode,
+        t.locality,
+        t.jurisdictionId,
+        sql`coalesce(${t.validFrom}, '-infinity'::date)`,
+      )
+      .where(sql`${t.supersededAt} IS NULL`),
+    index("place_postcodes_pack_key_postcode_idx").on(t.packKey, t.postcode),
+    index("place_postcodes_jurisdiction_id_idx").on(t.jurisdictionId),
+    check(
+      "place_postcodes_share_range",
+      sql`${t.share} IS NULL OR (${t.share} > 0 AND ${t.share} <= 1)`,
+    ),
+    validPeriod("place_postcodes_valid_period", t.validFrom, t.validTo),
+    foreignKey({
+      columns: [t.packKey],
+      foreignColumns: [placeCountryPacks.key],
+      name: "place_postcodes_pack_key_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+    foreignKey({
+      columns: [t.jurisdictionId],
+      foreignColumns: [jurisdictions.id],
+      name: "place_postcodes_jurisdiction_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+    foreignKey({
+      columns: [t.sourceId],
+      foreignColumns: [sources.id],
+      name: "place_postcodes_source_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+  ],
+);
+
 /** A way to take part in a state place; founded places derive theirs from their charter (§4.7). */
 export const instruments = pgTable(
   "instruments",

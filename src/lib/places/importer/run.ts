@@ -17,7 +17,8 @@
  *
  * What a batch says replaces what the same source said before about the same
  * places: names, identifiers and relations of this source that the batch no
- * longer states are superseded. Facts are per period, so a batch that omits
+ * longer states are superseded, and so are its postcodes (a postcode source
+ * states its whole directory). Facts are per period, so a batch that omits
  * an old period leaves it standing; a changed value supersedes the old one.
  * Places this source knew and the batch omits are reported, not ended: only a
  * source can say when a place ended.
@@ -32,6 +33,7 @@ import {
   jurisdictionRelations,
   jurisdictions,
   placeImportRuns,
+  placePostcodes,
   sources,
 } from "@/lib/db/places-schema";
 import { ADAPTERS, type Adapter } from "../adapters";
@@ -76,6 +78,8 @@ export const CHANGE_KINDS = [
   "relationsSuperseded",
   "factsInserted",
   "factsSuperseded",
+  "postcodesInserted",
+  "postcodesSuperseded",
 ] as const;
 export type ChangeKind = (typeof CHANGE_KINDS)[number];
 export type ChangeCounts = Record<ChangeKind, number>;
@@ -327,6 +331,7 @@ async function applyBatch(
     ...batch.jurisdictions.flatMap((j) => [j.ref, ...j.identifiers]),
     ...batch.relations.flatMap((r) => [r.from, r.to]),
     ...batch.facts.map((f) => f.jurisdiction),
+    ...batch.postcodes.map((p) => p.place),
     ...batch.jurisdictions.flatMap((j) => j.names.flatMap((n) => (n.usedBy ? [n.usedBy] : []))),
   ]);
   const idOf = (ref: ExternalRef, where: string): string => {
@@ -690,6 +695,65 @@ async function applyBatch(
     }
     await tx.insert(facts).values({ ...row, sourceId, method: "imported" });
     counts.factsInserted += 1;
+  }
+
+  // --- Postcodes: the source's whole directory; what it no longer states is superseded. ---
+  const currentPostcodes = await tx
+    .select({
+      id: placePostcodes.id,
+      postcode: placePostcodes.postcode,
+      locality: placePostcodes.locality,
+      jurisdictionId: placePostcodes.jurisdictionId,
+      share: placePostcodes.share,
+      validFrom: placePostcodes.validFrom,
+      validTo: placePostcodes.validTo,
+    })
+    .from(placePostcodes)
+    .innerJoin(sources, eq(sources.id, placePostcodes.sourceId))
+    .where(and(eq(sources.sourceKey, source.key), isNull(placePostcodes.supersededAt)));
+  const postcodeKey = (r: {
+    postcode: string;
+    locality: string;
+    jurisdictionId: string;
+    validFrom: string | null;
+  }) => canonical([r.postcode, r.locality, r.jurisdictionId, r.validFrom]);
+  const wantedPostcodes = new Map(
+    batch.postcodes.map((p) => {
+      const row = {
+        packKey: pack.key,
+        postcode: p.postcode,
+        locality: p.locality,
+        jurisdictionId: idOf(p.place, `postcode ${p.postcode}`),
+        share: p.share === null ? null : String(p.share),
+        validFrom: p.validFrom,
+        validTo: p.validTo,
+      };
+      return [postcodeKey(row), row] as const;
+    }),
+  );
+  for (const have of currentPostcodes) {
+    const want = wantedPostcodes.get(postcodeKey(have));
+    const same =
+      want !== undefined &&
+      want.validTo === have.validTo &&
+      (want.share === null ? have.share === null : Number(have.share) === Number(want.share));
+    if (same) {
+      wantedPostcodes.delete(postcodeKey(have));
+      continue;
+    }
+    await tx
+      .update(placePostcodes)
+      .set({ supersededAt: now })
+      .where(eq(placePostcodes.id, have.id));
+    counts.postcodesSuperseded += 1;
+  }
+  if (wantedPostcodes.size > 0) {
+    const rows = [...wantedPostcodes.values()].map((r) => ({ ...r, sourceId }));
+    // A national directory is thousands of rows; batched under the parameter limit.
+    for (let i = 0; i < rows.length; i += 1000) {
+      await tx.insert(placePostcodes).values(rows.slice(i, i + 1000));
+    }
+    counts.postcodesInserted += rows.length;
   }
 
   // --- Current places this source knew and no longer mentions: reported, never ended here. ---
