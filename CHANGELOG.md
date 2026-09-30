@@ -15,7 +15,10 @@ one to read for the detail. Fixes get the same weight as features.
   and more than half must agree.") instead of codes like
   `SIMPLE_MAJORITY · quorum 50% · electorate ALL_MEMBERS`. Topics read "How
   money is shared" or "Spending money" instead of "Allocation policy" or
-  "Treasury spend". Error messages say what happened and what to do.
+  "Treasury spend". Error messages say what happened and what to do The
+  menu says "Suggest something" in every language, a finished vote says
+  "Result" instead of "Result so far (weighted)", and each decision's page has
+  its own title in the browser tab. (#224, #225)
 
 - **Sign in the usual way: email and password.** "Sign in" and "Create an
   account" now open the sign-in screen straight away, with email and
