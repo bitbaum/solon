@@ -95,7 +95,7 @@ one to read for the detail. Fixes get the same weight as features.
   implausible.** Its canton and commune multipliers (330%–420%) were above
   the import's sanity limit of 300%, so they would have shown as "not
   recorded". The limit is now 600%, above every multiplier Switzerland
-  publishes (the highest is Lungern's 525%).
+  publishes (the highest is Lungern's 525%). (#237)
 
 - **Solon no longer opens a database connection per query.** In production
   every query started its own connection pool, so a busy page could use up
