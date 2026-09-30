@@ -6,6 +6,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ## 2026-09-30
 
+### Changed
+
+- **Sign in the usual way: email and password.** "Sign in" and "Create an
+  account" now open the sign-in screen straight away, with email and
+  password, an emailed code, Google or GitHub. No more typing your email on
+  one page to find the password on the next. You come back to the page you
+  were on. (#223)
+
 ### Added
 
 - **What Places covers, counted from the data**, at `/places/coverage`: for

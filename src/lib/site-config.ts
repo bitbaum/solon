@@ -123,8 +123,6 @@ export const TRANSLATED_ROUTES = new Set<string>([
   "/hire",
   "/security",
   "/credits",
-  "/sign-in",
-  "/sign-up",
   "/auth/error",
 ]);
 
