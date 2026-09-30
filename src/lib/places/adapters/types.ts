@@ -11,6 +11,8 @@ export interface RetrievalRequest {
    * does not say what was asked.
    */
   body?: unknown;
+  /** The ISO date the fetched state begins, when the source's listing says. */
+  validFrom?: string;
 }
 
 /**
@@ -25,7 +27,7 @@ export interface MapContext<Options> {
   /** `source.options`, parsed with the adapter's `options` schema. */
   options: Options;
   /** Where these bytes came from, when known. */
-  retrieval: { url: string | null };
+  retrieval: { url: string | null; validFrom: string | null };
   /** Leaves a row out on purpose; the run's report lists it with the reason. */
   skip: (row: string, reason: string) => void;
 }

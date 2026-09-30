@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-10-01: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -247,6 +247,15 @@ every state authority worldwide**, because it covers places ISO does not.
 
   `asserted_by_id` records **whose view** the row reports when a source reports a
   position (e.g. a state's legal designation of an area).
+
+**Built (P1, communes)**: an import that draws areas writes each as an
+`areas` row with one `administers` assertion by its place, and publishes the
+file the rows point into (below, §9.1). `geometry_ref` is geo-kit's
+`geo:v1:<source>:<edition>:<file sha256>:<feature>`, so a new edition, or a
+change to how the file is simplified, supersedes the old rows and their
+assertions together; a rerun of the same edition changes nothing. The source
+states only who administers an area; `claims` wait for sources that report
+them (P4).
 
 For a Swiss municipality this is one area, one `claims`, one `administers`, same
 authority. For a disputed territory it is one area with several `claims` and
@@ -642,6 +651,7 @@ hardcoded date.
 | `estv-income-tax-scales` | the federal tariff and the basic tariff of each modelled canton (Zürich, Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), single and married, per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
 | `estv-canton-multipliers` | each modelled canton's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
 | `estv-commune-multipliers` | each commune's multiplier per year since 2021, for the modelled cantons except Zürich; confirmed 2026-09-30 | the same export for group 30, every Swiss commune by its FSO number | official act (Art. 5 URG) |
+| `swisstopo-commune-boundaries` | every commune's territory, from the latest swissBOUNDARIES3D edition begun (yearly on 1 January, plus mid-year editions for mergers such as 2025-04-06); confirmed 2026-09-30. The layer also holds cantons' lake areas, Liechtenstein and the foreign enclaves, which the source's `where` leaves out; 2,110 communes in 2026-01 | the federal geodata STAC catalogue, zipped Shapefile in LV95 (`shapefile_areas`: snapped to 25 m as read, reprojected to WGS84, one topology keeping 5 % of the points, about 220 KB gzipped) | swisstopo OGD: free use, name the source |
 | `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 The calculator's exports answer for years it has not published with another
@@ -772,16 +782,26 @@ registry order, with snapshots under `PLACES_SNAPSHOT_DIR`. A failed run answers
 500, which fires the timer's failure alert. `?source=<key>` runs one source now.
 It calls no model. Backfills stay manual, from a checkout.
 
-Not yet: areas and assertions (P4), and CI dry-runs of real adapters against
-live sources (CI imports cuts of the real retrievals instead).
+**Areas and their file** (built 2026-10-01): a batch may carry `areas` and one
+`geometry` (level, edition, TopoJSON text). The check refuses areas without a
+file, a file without a collection named after the level, and areas naming a
+feature the file lacks or naming one twice. The run stores the file under its
+sha256 in `PLACES_SNAPSHOT_DIR/geometry/` before the transaction (written
+aside and renamed, so a reader never sees half a file), then diffs the areas
+as above (§4.4). A retrieval may say when its state begins (`validFrom`,
+read from the catalogue's edition date); areas take it as their valid-from.
+
+Not yet: disputed areas and several viewpoints (P4), and CI dry-runs of real
+adapters against live sources (CI imports cuts of the real retrievals
+instead).
 
 The cross-application geometry contract and pure validators live in the public
 `@bitbaum/geo-kit` package, pinned by immutable commit in Solon, Substrata and
 OrangeCat. Solon's `geojson_tiers` adapter now validates present GeoJSON
 structure and WGS84 coordinates before mapping the jurisdiction hierarchy;
-sources with no geometry remain supported. This is an input guard only: Solon
-still does not persist polygon assets or publish map resources, so P4 remains
-unbuilt. Private residence coordinates stay in OrangeCat and are never sent to
+sources with no geometry remain supported. The commune boundaries above are
+persisted and published (§9.1); the world backbone and disputed areas remain
+P4. Private residence coordinates stay in OrangeCat and are never sent to
 Solon.
 
 ### 8.4 Corrections and editorial policy: the Register
@@ -805,7 +825,9 @@ decision taken under `SOLE`, which the engine already supports.
 
 ## 9. Product and UX
 
-The plan of record's rules hold: dark-only, shared tokens, sans headlines, three
+The plan of record's rules hold, with one change: Solon gets a light theme
+beside the dark one (decided 2026-09-30, with the map; both from the shared
+tokens). Shared tokens, sans headlines, three
 depths, every sentence in `messages/*.json`, Swiss German spelling, no
 concatenated sentences, no dead ends.
 
@@ -816,6 +838,14 @@ concatenated sentences, no dead ends.
 - Geometry is built into simplified TopoJSON per level and dataset version,
   keyed by `geometry_ref`, served as versioned static assets. Disputed areas get
   their own features so they can be hatched (§7.2).
+
+  **Built (P1, communes)**: `GET /api/v1/places/geography` is a
+  `@bitbaum/geo-kit` manifest (schema 1) of every file a current area points
+  into: its source, level, edition, validity, size, bounds and sha256, which
+  the map checks before drawing. `GET /api/v1/places/geography/{sha256}.topojson`
+  serves the file itself as immutable (cached a year; the name is the
+  content). The Swiss communes are one file of about 220 KB gzipped. Not yet:
+  the map itself, lakes and canton outlines, earlier editions.
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,
   colour-blind safe. Colour is never the only carrier. (Built:
   bitbaum/design-tokens#31 adds `--map-scale-1…7` (viridis, luminance rising at
@@ -845,8 +875,8 @@ The screens are those of the first version of this document, now generic:
   with its localities' share of addresses. Names match without case or
   accents, and an umlaut spelled out matches it ("zurich" and "Zuerich" find
   "Zürich"): `src/lib/places/fold.ts` folds the query in code and the names in
-  SQL from one character table, so no extension or index is needed. The map waits for P4's
-  geometry. The same search is `GET /api/v1/places?q=`, and a place page is
+  SQL from one character table, so no extension or index is needed. The
+  communes' boundaries are published (§9.1); the map is the next step. The same search is `GET /api/v1/places?q=`, and a place page is
   `GET /api/v1/places/{path}`, both listed on `/integration`.
 - **Place page** (`/places/{slug_path}`), top to bottom:
   1. name (per the naming policy), level (from the pack, in the reader's

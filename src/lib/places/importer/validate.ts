@@ -100,6 +100,8 @@ export function checkBatch(
     }
   }
 
+  problems.push(...areaProblems(batch, levels, identifierProblem));
+
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
   const factKeys = new Set<string>();
   const accepted: BatchFact[] = [];
@@ -153,4 +155,60 @@ export function checkBatch(
     accepted.push(fact);
   }
   return { problems, quarantined, batch: { ...batch, facts: accepted } };
+}
+
+/** A geometry file and the areas drawn in it agree: one level, every feature there once. */
+function areaProblems(
+  batch: ImportBatch,
+  levels: Set<string>,
+  identifierProblem: (ref: ExternalRef, where: string) => string | null,
+): string[] {
+  const { areas, geometry } = batch;
+  if (!geometry) {
+    return areas.length > 0 ? ["the batch states areas without the geometry file they are in"] : [];
+  }
+  const problems: string[] = [];
+  if (!levels.has(geometry.levelKey)) {
+    problems.push(`geometry: level "${geometry.levelKey}" is not a level of pack "${batch.pack}"`);
+  }
+  const features = topologyFeatureIds(geometry.topology, geometry.levelKey);
+  if (typeof features === "string") {
+    return [...problems, `geometry: ${features}`];
+  }
+  const stated = new Set<string>();
+  for (const area of areas) {
+    const where = `area ${refKey(area.place)} (feature ${area.feature})`;
+    if (stated.has(area.feature)) {
+      problems.push(`${where}: the feature is stated twice`);
+    }
+    stated.add(area.feature);
+    if (!features.has(area.feature)) {
+      problems.push(`${where}: the geometry file has no such feature`);
+    }
+    const problem = identifierProblem(area.place, where);
+    if (problem) {
+      problems.push(problem);
+    }
+  }
+  return problems;
+}
+
+/** The ids of the features in a TopoJSON file's object for `levelKey`, or why there are none. */
+function topologyFeatureIds(text: string, levelKey: string): Set<string> | string {
+  let topology: unknown;
+  try {
+    topology = JSON.parse(text);
+  } catch {
+    return "the file is not JSON";
+  }
+  const object = (topology as { type?: unknown; objects?: Record<string, unknown> })?.objects?.[
+    levelKey
+  ] as { type?: unknown; geometries?: { id?: unknown }[] } | undefined;
+  if ((topology as { type?: unknown }).type !== "Topology" || !object) {
+    return `the file is not a TopoJSON topology with an object named "${levelKey}"`;
+  }
+  if (object.type !== "GeometryCollection" || !Array.isArray(object.geometries)) {
+    return `object "${levelKey}" is not a collection of features`;
+  }
+  return new Set(object.geometries.map((g) => String(g.id)));
 }

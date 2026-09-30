@@ -74,6 +74,8 @@ describe("checkBatch", () => {
       relations: [],
       facts: [],
       postcodes: [row, { ...row, postcode: "80530" }, row],
+      areas: [],
+      geometry: null,
     };
     expect(checkBatch(swiss, config, "swisstopo-postcode-localities").problems).toEqual([
       `postcode 80530 Zürich bfs_municipality:261 -: "80530" does not match pack "switzerland"'s postcode format`,
@@ -83,6 +85,66 @@ describe("checkBatch", () => {
     expect(checkBatch(testland, config, SOURCE).problems).toEqual([
       'postcode 8053 Zürich testland_register:T110 -: pack "testland" has no postcode format',
     ]);
+  });
+
+  it("refuses areas without their file, of an unknown level, or naming features it lacks", () => {
+    const parishes = (ids: string[]) =>
+      JSON.stringify({
+        type: "Topology",
+        arcs: [],
+        objects: {
+          parish: { type: "GeometryCollection", geometries: ids.map((id) => ({ type: null, id })) },
+        },
+      });
+    const area = (value: string, feature: string) => ({
+      place: register(value),
+      feature,
+      validFrom: null,
+      validTo: null,
+    });
+    const batch = {
+      ...testlandBatch(),
+      areas: [area("T110", "a"), area("T111", "b")],
+      geometry: { levelKey: "parish", datasetVersion: "1", topology: parishes(["a", "b"]) },
+    };
+    expect(checkBatch(batch, config, SOURCE).problems).toEqual([]);
+
+    expect(checkBatch({ ...batch, geometry: null }, config, SOURCE).problems).toEqual([
+      "the batch states areas without the geometry file they are in",
+    ]);
+    expect(
+      checkBatch(
+        {
+          ...batch,
+          areas: [area("T110", "a"), area("T111", "a"), area("X1", "c")],
+          geometry: { ...batch.geometry, levelKey: "county", topology: parishes(["a"]) },
+        },
+        config,
+        SOURCE,
+      ).problems,
+    ).toEqual([
+      'geometry: level "county" is not a level of pack "testland"',
+      'geometry: the file is not a TopoJSON topology with an object named "county"',
+    ]);
+    expect(
+      checkBatch(
+        {
+          ...batch,
+          areas: [area("T110", "a"), area("T111", "a"), area("X1", "c")],
+          geometry: { ...batch.geometry, topology: parishes(["a"]) },
+        },
+        config,
+        SOURCE,
+      ).problems,
+    ).toEqual([
+      "area testland_register:T111 (feature a): the feature is stated twice",
+      "area testland_register:X1 (feature c): the geometry file has no such feature",
+      'area testland_register:X1 (feature c): "X1" does not match scheme "testland_register"',
+    ]);
+    expect(
+      checkBatch({ ...batch, geometry: { ...batch.geometry, topology: "{" } }, config, SOURCE)
+        .problems,
+    ).toEqual(["geometry: the file is not JSON"]);
   });
 
   it("quarantines a value outside the metric's plausible band and publishes the rest", () => {
