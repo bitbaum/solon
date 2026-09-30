@@ -1,9 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: postcodes resolve to the places they lie in, from
-swisstopo's directory (`place_postcodes`, §4.6, §8.2), which the `/places`
-search will use. Earlier the same day: `/places/coverage` is built, counted from the
+_Last modified 2026-09-30: the scheduled runner is built, a daily box timer
+calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
+the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
+§8.2), which the `/places` search will use. Earlier the same day: `/places/coverage` is built, counted from the
 data (§9.2), and places pages count as translated; production holds every P1
 source so far, reloaded after the fix below (§8.3). Earlier the same day: valid
 time is half-open, and the adapters now store it so (§4); a year's figures
@@ -730,7 +731,7 @@ run stops the rest. What the first real adapters settled:
   the adapter reads the answer), for sources whose published range is not a
   date rule.
 
-**In production (until the scheduled runner exists)**: the deployed app is a
+**In production, a first load or a backfill**: the deployed app is a
 standalone bundle without the scripts, so a load runs from a checkout of the
 deployed commit on the box, as the app's user, against the box's database,
 with snapshots under `/opt/solon/shared/places-snapshots`, first with
@@ -739,10 +740,17 @@ with snapshots under `/opt/solon/shared/places-snapshots`, first with
 sources were reloaded on 2026-09-30 at `5877485`, which superseded the
 inclusive end dates (978 facts, 125 place updates) without deleting a row.
 
-Not yet: areas and assertions (P4), the scheduled runner on the box (a route
-the box's timer calls, which needs a cron secret in the app's environment), and CI
-dry-runs of real adapters against live sources (CI imports cuts of the real
-retrievals instead).
+**The scheduled runner** (built 2026-09-30): the box's appcron timer
+(`appcron-solon-places`, registered in Loki's `install-app-crons.sh`) calls
+`POST /api/cron/places` once a day with the app's `CRON_SECRET`. The route
+fetches and imports every source whose cadence names that day
+(`src/lib/places/schedule.ts` reads the day fields; the timer owns the hour), in
+registry order, with snapshots under `PLACES_SNAPSHOT_DIR`. A failed run answers
+500, which fires the timer's failure alert. `?source=<key>` runs one source now.
+It calls no model. Backfills stay manual, from a checkout.
+
+Not yet: areas and assertions (P4), and CI dry-runs of real adapters against
+live sources (CI imports cuts of the real retrievals instead).
 
 The cross-application geometry contract and pure validators live in the public
 `@bitbaum/geo-kit` package, pinned by immutable commit in Solon, Substrata and
