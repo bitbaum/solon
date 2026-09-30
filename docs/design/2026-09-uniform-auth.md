@@ -4,6 +4,9 @@ _Decided 2026-09-25: option A. George: "go with option A for auth, build it.
 It should be easy for people to create accounts in any way they prefer … I
 would really prefer not to pay for things and … to use open source." Status
 at the end._
+_Last modified 2026-09-30: an account that added its email after sign-up was
+turned away by Solon (OrangeCat sent the stale profile copy); fixed on both
+sides, see "Fixed 2026-09-30" under Status._
 
 ## What exists (surveyed 2026-09-25)
 
@@ -87,6 +90,19 @@ OIDC provider on the box, no paid identity service.
   page you were on; `/account` signed out goes to `/sign-in`.
 - Already true before this work: email + password sign-up with no
   confirmation step (auto-confirm on), Google, GitHub and X enabled on GoTrue.
+
+**Fixed 2026-09-30**
+
+- George could not sign in to Solon: "Add an email to continue", and "Sign in
+  again" looped straight back. His account has a confirmed email, but
+  OrangeCat's `email` claim read `profiles.email`, a copy taken at sign-up
+  that never follows a later add or change, so it was empty. The same gap hit
+  every anonymous account that added its email inline. OrangeCat now sends the
+  account's own email, with `email_verified` (bitbaum/orangecat#1193).
+- Solon's `/auth/error` is rewritten in its sign-in design and five languages:
+  for a real email-less account the first button adds the email on
+  OrangeCat's settings, "Try again" starts the sign-in directly, and the
+  audit-trail link is gone.
 
 **Not done, on purpose**
 

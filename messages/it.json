@@ -434,5 +434,17 @@
         "running": "Importazione in corso dal {date}"
       }
     }
+  },
+  "AuthError": {
+    "metaTitle": "Accesso non completato",
+    "kicker": "Il tuo account",
+    "deniedTitle": "Il tuo account OrangeCat ha bisogno di un’e-mail",
+    "deniedLede": "Solon mostra chi ha deciso cosa, quindi ogni account qui ha bisogno di un’e-mail. Aggiungine una al tuo account OrangeCat, poi torna qui e continua. Tutto ciò che hai già fatto lì resta.",
+    "addEmail": "Aggiungi un’e-mail su OrangeCat",
+    "failedTitle": "Accesso non completato",
+    "failedLede": "Qualcosa è andato storto tra Solon e OrangeCat. Di solito al secondo tentativo funziona.",
+    "tryAgain": "Riprova",
+    "back": "Torna a Solon",
+    "readFreely": "Non serve mai un account per leggere qualcosa su Solon."
   }
 }

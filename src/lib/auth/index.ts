@@ -23,6 +23,9 @@ const clientId = process.env.ORANGECAT_OAUTH_CLIENT_ID;
 const clientSecret = process.env.ORANGECAT_OAUTH_CLIENT_SECRET;
 const issuer = process.env.ORANGECAT_OAUTH_ISSUER ?? "https://orangecat.ch";
 
+/** Where a person manages their one account, email included. */
+export const orangecatSettingsUrl = new URL("/settings", issuer).toString();
+
 /** True when the OrangeCat OAuth pair is configured; the nav hides the
  * sign-in control otherwise instead of mounting a provider that fails
  * opaquely at the code exchange. */

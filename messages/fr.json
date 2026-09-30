@@ -434,5 +434,17 @@
         "running": "Import en cours depuis le {date}"
       }
     }
+  },
+  "AuthError": {
+    "metaTitle": "La connexion n’a pas abouti",
+    "kicker": "Votre compte",
+    "deniedTitle": "Votre compte OrangeCat a besoin d’une adresse e-mail",
+    "deniedLede": "Solon montre qui a décidé quoi, donc chaque compte ici a besoin d’une adresse e-mail. Ajoutez-en une à votre compte OrangeCat, puis revenez continuer. Tout ce que vous y avez déjà fait est conservé.",
+    "addEmail": "Ajouter un e-mail sur OrangeCat",
+    "failedTitle": "La connexion n’a pas abouti",
+    "failedLede": "Quelque chose s’est mal passé entre Solon et OrangeCat. En général, cela passe au deuxième essai.",
+    "tryAgain": "Réessayer",
+    "back": "Retour à Solon",
+    "readFreely": "Vous n’avez jamais besoin d’un compte pour lire quoi que ce soit sur Solon."
   }
 }
