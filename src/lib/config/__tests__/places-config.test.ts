@@ -30,6 +30,14 @@ describe("Solon's Places config", () => {
       }),
     ).toThrow();
   });
+
+  it("admits every published multiplier, and not a percent read as a fraction", () => {
+    const band = placesConfig.metrics.find((m) => m.key === "tax.multiplier")!.plausible!;
+    // Lungern's 525% and Appenzell Ausserrhoden's 330% are real.
+    expect(5.25).toBeLessThanOrEqual(band.max);
+    expect(3.3).toBeLessThanOrEqual(band.max);
+    expect(119).toBeGreaterThan(band.max);
+  });
 });
 
 describe("a contributed pack (Testland)", () => {
