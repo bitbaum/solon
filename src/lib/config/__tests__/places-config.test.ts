@@ -101,6 +101,14 @@ describe("placesConfigProblems names what is wrong", () => {
     ).toContain('pack "testland": "QQQ" is not an ISO 4217 currency');
   });
 
+  it("a region that is not ISO 3166-1", () => {
+    expect(
+      broken((c) => {
+        pack(c).region = "QQ";
+      }),
+    ).toContain('pack "testland": "QQ" is not an ISO 3166-1 region');
+  });
+
   it("a scheme, source or instrument kind nobody declared", () => {
     const problems = broken((c) => {
       pack(c).identifierSchemes.push("nowhere_code");

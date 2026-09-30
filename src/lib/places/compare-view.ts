@@ -45,6 +45,8 @@ export interface CompareTaxPack {
   key: string;
   name: string;
   currency: string;
+  /** The reader's language in the country's number formats (de-CH), for its amounts. */
+  formatLocale: string;
   /** The fiscal year the figures are for, as the pack counts it (2026, or 2026/27). */
   taxYear: string;
   model: TaxModel;
@@ -84,7 +86,7 @@ export type ColumnEstimate =
   | { kind: "needs_lower_place"; levels: string[] }
   /** The chain reaches the level, but its figure is not recorded. */
   | { kind: "not_recorded"; levels: string[] }
-  | { kind: "estimate"; estimate: Estimate; currency: string }
+  | { kind: "estimate"; estimate: Estimate; currency: string; formatLocale: string }
   | { kind: "error" };
 
 export const multiplierRowKey = (level: string, metric: string) => `${level}/${metric}`;
@@ -128,7 +130,12 @@ export function estimateColumn(
       ? { kind: "needs_lower_place", levels: below }
       : { kind: "not_recorded", levels };
   }
-  return { kind: "estimate", estimate, currency: estimate.currency ?? pack.currency };
+  return {
+    kind: "estimate",
+    estimate,
+    currency: estimate.currency ?? pack.currency,
+    formatLocale: pack.formatLocale,
+  };
 }
 
 /**

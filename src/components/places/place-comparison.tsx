@@ -14,6 +14,11 @@ import {
   type Comparison,
 } from "@/lib/places/compare-view";
 
+interface MoneyFormat {
+  currency: string;
+  formatLocale: string;
+}
+
 interface PackInput {
   amount: string;
   variant: string;
@@ -127,8 +132,12 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     [columns, taxPacks, inputs],
   );
   const lowest = lowestTotals(estimates);
-  const money = (amount: number, currency: string) =>
-    format.number(amount, { style: "currency", currency, maximumFractionDigits: 0 });
+  const money = (amount: number, { currency, formatLocale }: MoneyFormat) =>
+    new Intl.NumberFormat(formatLocale, {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 1 });
   const levelList = (pack: CompareTaxPack | undefined, levels: string[]) =>
@@ -156,7 +165,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
         return (
           <>
             <span className="block text-lg font-semibold text-fg-primary">
-              {money(e.estimate.total, e.currency)}
+              {money(e.estimate.total, e)}
             </span>
             <span className="block text-xs text-fg-secondary">
               {t("rate", { rate: e.estimate.effectiveRate })}
@@ -168,7 +177,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                     {t("lowest")}
                   </span>
                 ) : (
-                  t("more", { amount: money(more, e.currency) })
+                  t("more", { amount: money(more, e) })
                 )}
               </span>
             )}
@@ -293,7 +302,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
         {cheapest &&
           t("cheapest", {
             place: cheapest.column.name,
-            amount: money(cheapest.e.estimate.total, cheapest.e.currency),
+            amount: money(cheapest.e.estimate.total, cheapest.e),
           })}
       </p>
 
@@ -376,7 +385,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                           {e.kind !== "estimate" || !result || result.amount === null ? (
                             <span className="text-fg-tertiary">–</span>
                           ) : result.applies ? (
-                            money(result.amount, e.currency)
+                            money(result.amount, e)
                           ) : (
                             <span className="text-fg-tertiary">{t("doesNotApply")}</span>
                           )}

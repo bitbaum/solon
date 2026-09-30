@@ -35,6 +35,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Changed
 
+- **Place search without accents, amounts in Swiss formats.** "zurich",
+  "Zuerich" and "Zürich" now all find Zürich, and "neuchatel" finds
+  Neuchâtel. Compared amounts read the Swiss way in every language
+  ("CHF 13’050", or "13 050 CHF" in French) instead of the German "13.050 CHF". (#235)
+
 - **Every everyday page in plain words, with the details one click away.**
   The dashboard, the record and each organization's page now use the same
   layout as the rest of Solon and say what happened in a sentence ("The Cat

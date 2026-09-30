@@ -3,11 +3,12 @@
  * browsing a pack's levels. The config is a parameter, so a test can hand in a
  * made-up country. Names, levels and parents are read for all hits at once.
  */
-import { and, count, eq, gt, ilike, inArray, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gt, inArray, isNull, like, lte, or } from "drizzle-orm";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictionNames, jurisdictionRelations, jurisdictions } from "@/lib/db/places-schema";
 import type { ChainName } from "./chain";
+import { foldName, foldedColumn } from "./fold";
 import { displayName, localized } from "./place-view";
 import { resolvePostcode, type PostcodeLocality } from "./postcodes";
 
@@ -156,14 +157,15 @@ export async function searchPlaces(
   if (q.length < 2) {
     return { kind: "name", hits: [] };
   }
-  const pattern = `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+  const folded = foldName(q);
+  const pattern = `%${folded.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
   const rows = await db
     .selectDistinct({ id: jurisdictionNames.jurisdictionId, name: jurisdictionNames.name })
     .from(jurisdictionNames)
     .innerJoin(jurisdictions, eq(jurisdictions.id, jurisdictionNames.jurisdictionId))
     .where(
       and(
-        ilike(jurisdictionNames.name, pattern),
+        like(foldedColumn(jurisdictionNames.name), pattern),
         isNull(jurisdictionNames.supersededAt),
         eq(jurisdictions.origin, "state"),
         inArray(
@@ -176,10 +178,9 @@ export async function searchPlaces(
     .limit(NAME_SEARCH_LIMIT * 4);
   // Ranked by the name the reader sees, not the one that matched (a district's
   // short name may be its town's): exact first, then prefix, then the rest.
-  const lower = q.toLocaleLowerCase(locale);
   const rank = (name: string) => {
-    const n = name.toLocaleLowerCase(locale);
-    return n === lower ? 0 : n.startsWith(lower) ? 1 : n.includes(lower) ? 2 : 3;
+    const n = foldName(name);
+    return n === folded ? 0 : n.startsWith(folded) ? 1 : n.includes(folded) ? 2 : 3;
   };
   const hits = await placeHits(db, config, [...new Set(rows.map((r) => r.id))], on, locale);
   return {

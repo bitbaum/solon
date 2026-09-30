@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-09-30: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -819,8 +819,10 @@ The screens are those of the first version of this document, now generic:
   postcode (any pack's `postcodePattern`) or name, and browses each pack's
   levels with their counts; `src/lib/places/search.ts` reads names, levels and
   parents for all hits at once. A postcode spanning several places lists each
-  with its localities' share of addresses. Names match as written (no accent
-  folding yet: "Zurich" does not find "Zürich"). The map waits for P4's
+  with its localities' share of addresses. Names match without case or
+  accents, and an umlaut spelled out matches it ("zurich" and "Zuerich" find
+  "Zürich"): `src/lib/places/fold.ts` folds the query in code and the names in
+  SQL from one character table, so no extension or index is needed. The map waits for P4's
   geometry. The same search is `GET /api/v1/places?q=`, and a place page is
   `GET /api/v1/places/{path}`, both listed on `/integration`.
 - **Place page** (`/places/{slug_path}`), top to bottom:
@@ -875,7 +877,9 @@ The screens are those of the first version of this document, now generic:
   column has no commune's multiplier) or not recorded yet. The pack names its
   model's inputs, variants and components and what the estimate leaves out
   (`taxLabels`, required beside a `taxModel` and checked by the config
-  guard). Say, Leaving, Status and Size are one row, "not compared yet", with
+  guard). Amounts use the pack's `region` number formats in the reader's
+  language (`de-CH` reads "CHF 13’050", `fr-CH` "13 050 CHF"); a pack without
+  a region uses the language's own. Say, Leaving, Status and Size are one row, "not compared yet", with
   the coverage link, until their data exists; personal weights come with
   them. The golden values of §6.2 are reproduced through `/compare` in the
   Swiss integration test.

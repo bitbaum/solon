@@ -94,6 +94,7 @@ export const switzerland: CountryPackInput = {
     en: "Switzerland",
   },
   currency: "CHF",
+  region: "CH",
   fiscalYear: { startMonthDay: "01-01" },
   defaultLocales: ["de", "fr", "it", "rm"],
   slug: { strategy: "official-name", transliterate: true },

@@ -185,6 +185,13 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     const byName = await searchPlaces(db, config, "witik", ON, "de");
     expect(byName.hits.map((h) => [h.name, h.parentName])).toEqual([["Witikon", "Kreis 7"]]);
     expect((await searchPlaces(db, config, "zürich", ON, "de")).hits[0]?.name).toBe("Zürich");
+    // Typed without the umlaut, or with it spelled out, a name is still found.
+    for (const typed of ["zurich", "Zuerich", "ZÜRICH"]) {
+      expect((await searchPlaces(db, config, typed, ON, "de")).hits[0]?.name, typed).toBe("Zürich");
+    }
+    expect((await searchPlaces(db, config, "kusnacht", ON, "de")).hits.map((h) => h.name)).toEqual([
+      "Küsnacht (ZH)",
+    ]);
     expect((await searchPlaces(db, config, "z", ON, "de")).hits).toEqual([]);
   });
 
@@ -352,6 +359,8 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     expect(later.taxPacks[0]!.taxYear).toBe("2025");
     const pack = comparison.taxPacks.find((p) => p.key === "switzerland")!;
     expect(pack.taxYear).toBe("2025");
+    // Amounts in Swiss number formats, in the reader's language: CHF 13’050.
+    expect(pack.formatLocale).toBe("de-CH");
     const run = (i: number, variant: string): ColumnEstimate =>
       estimateColumn(comparison.columns[i]!, pack, { base: 100_000, variant, conditions: {} });
     const total = (i: number, variant: string) => {
