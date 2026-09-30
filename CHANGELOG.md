@@ -13,6 +13,7 @@ one to read for the detail. Fixes get the same weight as features.
   Ausserrhoden and Jura, not only Zürich. Each canton was checked against the
   Federal Tax Administration's own calculator and matches it to the franc.
   Ticino and the cantons that tax couples by splitting their income follow.
+  (#236)
 
 - **Compare places: what tax would cost you in each.** `/compare` puts up to
   four places side by side. Enter your taxable income and household, and it
