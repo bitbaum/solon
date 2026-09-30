@@ -1,5 +1,5 @@
 import type { TaxModel } from "@/lib/tax-model";
-import type { CountryPackInput } from "../schema";
+import type { CountryPackInput, TaxLabels } from "../schema";
 
 /**
  * Swiss income tax on taxable income: the federal tariff, plus the canton's
@@ -26,6 +26,63 @@ export const switzerlandIncomeTax = {
     },
   ],
 } as const satisfies TaxModel;
+
+/**
+ * The married tariff also applies to a single parent living with their
+ * children, federally (DBG Art. 36) and in the cantons imported so far.
+ */
+const switzerlandTaxLabels: TaxLabels = {
+  inputs: {
+    taxable_income: {
+      label: {
+        en: "Taxable income",
+        de: "Steuerbares Einkommen",
+        fr: "Revenu imposable",
+        it: "Reddito imponibile",
+      },
+      hint: {
+        en: "After deductions, as on your tax return; not your gross salary.",
+        de: "Nach den Abzügen, wie in der Steuererklärung; nicht der Bruttolohn.",
+        fr: "Après les déductions, comme dans la déclaration d'impôt ; pas le salaire brut.",
+        it: "Dopo le deduzioni, come nella dichiarazione d'imposta; non il salario lordo.",
+      },
+    },
+  },
+  variants: {
+    single: {
+      en: "Single, no children at home",
+      de: "Alleinstehend, ohne Kinder im Haushalt",
+      fr: "Seul·e, sans enfants dans le ménage",
+      it: "Solo, senza figli nell'economia domestica",
+    },
+    married: {
+      en: "Married, or with children at home",
+      de: "Verheiratet oder mit Kindern im Haushalt",
+      fr: "Marié·e, ou avec enfants dans le ménage",
+      it: "Coniugati, o con figli nell'economia domestica",
+    },
+  },
+  components: {
+    federal: {
+      en: "Federal income tax",
+      de: "Direkte Bundessteuer",
+      fr: "Impôt fédéral direct",
+      it: "Imposta federale diretta",
+    },
+    cantonal_and_communal: {
+      en: "Cantonal and communal tax",
+      de: "Staats- und Gemeindesteuer",
+      fr: "Impôts cantonal et communal",
+      it: "Imposte cantonale e comunale",
+    },
+  },
+  excludes: {
+    en: "Not included: church tax, wealth tax and fixed per-head taxes such as Zürich's CHF 24 personal tax.",
+    de: "Nicht enthalten: Kirchensteuer, Vermögenssteuer und feste Kopfsteuern wie Zürichs Personalsteuer von CHF 24.",
+    fr: "Non compris : impôt ecclésiastique, impôt sur la fortune et impôts par tête comme l'impôt personnel zurichois de CHF 24.",
+    it: "Non incluse: imposta di culto, imposta sulla sostanza e imposte pro capite come l'imposta personale zurighese di CHF 24.",
+  },
+};
 
 export const switzerland: CountryPackInput = {
   key: "switzerland",
@@ -118,4 +175,5 @@ export const switzerland: CountryPackInput = {
     "swisstopo-postcode-localities",
   ],
   taxModel: switzerlandIncomeTax,
+  taxLabels: switzerlandTaxLabels,
 };

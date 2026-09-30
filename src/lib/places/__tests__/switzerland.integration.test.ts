@@ -20,8 +20,11 @@ import { and, eq, isNull } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { createTranslator } from "next-intl";
+import type { ComponentProps } from "react";
+import { NextIntlClientProvider, createTranslator } from "next-intl";
+import CompareIndex from "@/components/places/compare-index";
 import CoverageReport from "@/components/places/coverage-report";
+import de from "../../../../messages/de.json";
 import en from "../../../../messages/en.json";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
@@ -34,6 +37,8 @@ import {
 import { switzerlandIncomeTax } from "@/lib/config/places/countries/switzerland";
 import { evaluate } from "@/lib/tax-model";
 import { evaluatorFacts, loadChain, loadFacts } from "../chain";
+import { loadComparison } from "../compare";
+import { estimateColumn, type ColumnEstimate } from "../compare-view";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
@@ -316,6 +321,84 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       expect(Math.abs(amount("cantonal_and_communal") - (canton + communal))).toBeLessThan(2);
     },
   );
+
+  it("compares places as the federal calculator does, and says why a figure is missing", async () => {
+    const pathOf = async (id: string) =>
+      (
+        await db
+          .select({ path: jurisdictions.slugPath })
+          .from(jurisdictions)
+          .where(eq(jurisdictions.id, id))
+      )[0]!.path!;
+    const zurich = await pathOf(await placeId("bfs_municipality", "261"));
+    const kusnacht = await pathOf(await placeId("bfs_municipality", "154"));
+    const witikon = (await searchPlaces(db, config, "witik", ON, "de")).hits[0]!.slugPath;
+    const [canton] = await db
+      .select({ path: jurisdictions.slugPath })
+      .from(jurisdictions)
+      .where(and(eq(jurisdictions.levelKey, "canton"), isNull(jurisdictions.validTo)));
+    const comparison = await loadComparison(
+      db,
+      config,
+      [zurich, kusnacht, witikon, canton!.path!, "switzerland/nowhere"],
+      "2025-06-30",
+      "de",
+    );
+    expect(comparison.notFound).toEqual(["switzerland/nowhere"]);
+    expect(comparison.earlierYear).toBe(false);
+    // The cut's tariffs end with 2025, so a day in 2026 compares 2025, and says so.
+    const later = await loadComparison(db, config, [zurich, kusnacht], "2026-09-30", "de");
+    expect(later.earlierYear).toBe(true);
+    expect(later.taxPacks[0]!.taxYear).toBe("2025");
+    const pack = comparison.taxPacks.find((p) => p.key === "switzerland")!;
+    expect(pack.taxYear).toBe("2025");
+    const run = (i: number, variant: string): ColumnEstimate =>
+      estimateColumn(comparison.columns[i]!, pack, { base: 100_000, variant, conditions: {} });
+    const total = (i: number, variant: string) => {
+      const e = run(i, variant);
+      if (e.kind !== "estimate") {
+        throw new Error(`column ${i}: ${e.kind}`);
+      }
+      return e.estimate.total;
+    };
+    for (const g of GOLDEN_2025) {
+      const i = g.commune === "261" ? 0 : 1;
+      expect(Math.abs(total(i, g.variant) - (g.federal + g.canton + g.communal))).toBeLessThan(3);
+    }
+    // Witikon levies nothing itself: its tax is the City of Zürich's.
+    expect(total(2, "single")).toBe(total(0, "single"));
+    expect(comparison.columns[2]!.taxedBy.at(-1)).toEqual({
+      name: "Zürich",
+      levelName: "Gemeinde",
+    });
+    expect(run(3, "single")).toEqual({ kind: "needs_lower_place", levels: ["municipality"] });
+    expect(comparison.columns[0]!.multipliers["municipality/tax.multiplier"]).toBe(1.19);
+    expect(comparison.sources.map((s) => s.publisher)).toEqual(
+      expect.arrayContaining([expect.stringContaining("Tax Administration")]),
+    );
+
+    const t = createTranslator({ locale: "de", messages: de, namespace: "Places" });
+    const html = renderToStaticMarkup(
+      createElement(
+        NextIntlClientProvider,
+        { locale: "de", messages: de } as ComponentProps<typeof NextIntlClientProvider>,
+        createElement(CompareIndex, {
+          slugPaths: comparison.columns.map((c) => c.slugPath),
+          comparison,
+          limit: 4,
+          query: "",
+          searchAction: "/de/compare",
+          search: null,
+          t,
+        }),
+      ),
+    );
+    expect(html).toContain("Steuerfuss (Gemeinde)");
+    expect(html).toContain("Direkte Bundessteuer");
+    expect(html).toContain("höchstens 4 Orte");
+    // Rendered on the server, before the reader has typed anything.
+    expect(html).toContain("Geben Sie oben Ihr Einkommen ein");
+  });
 
   it("still finds a year's tariffs and multipliers on its last day", async () => {
     const chain = await loadChain(db, await placeId("bfs_municipality", "261"), "2025-12-31");

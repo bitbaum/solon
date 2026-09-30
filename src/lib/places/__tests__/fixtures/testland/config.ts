@@ -58,6 +58,15 @@ export const TESTLAND_PACK = {
   identifierSchemes: ["testland_register", "testland_hamlet"],
   sources: ["testland-register"],
   taxModel: TESTLAND_TAX,
+  taxLabels: {
+    inputs: {
+      taxable_income: { label: { en: "Income", de: "Einkommen" } },
+      guild_member: { label: { en: "Guild member" } },
+    },
+    variants: { alone: { en: "Alone" }, together: { en: "Together" } },
+    components: { crown: { en: "Crown tax" }, shire_and_parish: { en: "Shire and parish tax" } },
+    excludes: { en: "Not included: the tithe." },
+  },
 } satisfies CountryPackInput;
 
 export const TESTLAND_SCHEMES = [

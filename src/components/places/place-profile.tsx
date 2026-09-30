@@ -1,7 +1,9 @@
 import type { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
+import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
+import SourceList from "./source-list";
 
 export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
 
@@ -86,6 +88,12 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
                 ? t("tax.levies", { pack: view.packName })
                 : t("tax.none")}
           </p>
+          <Link
+            href={compareHref([view.slugPath])}
+            className="mt-3 inline-block text-sm text-fg-primary hover:underline"
+          >
+            {t("compareLink")}
+          </Link>
         </section>
 
         {(view.otherNames.length > 0 || view.identifiers.length > 0) && (
@@ -115,29 +123,7 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
           </dl>
         )}
 
-        {view.sources.length > 0 && (
-          <section>
-            <h2 className="mb-3 font-semibold text-fg-primary">{t("sources.title")}</h2>
-            <ul className="space-y-3 text-sm">
-              {view.sources.map((source) => (
-                <li key={`${source.publisher}-${source.dataset}`} className="text-fg-secondary">
-                  <a
-                    href={source.homepage}
-                    className="text-fg-primary hover:underline"
-                    rel="noopener noreferrer"
-                  >
-                    {source.publisher}: {source.dataset}
-                  </a>
-                  <span className="block text-xs">
-                    {t("sources.retrieved", { date: source.retrievedAt })} ·{" "}
-                    {t("sources.licence", { licence: source.licence })}
-                    {source.attribution && ` · ${source.attribution}`}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <SourceList sources={view.sources} t={t} />
       </div>
     </PageLayout>
   );

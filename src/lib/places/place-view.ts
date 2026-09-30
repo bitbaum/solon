@@ -109,22 +109,6 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     };
   });
 
-  const sources = input.sources.flatMap(({ sourceKey, retrievedAt }) => {
-    const source = config.sources.find((s) => s.key === sourceKey);
-    return source
-      ? [
-          {
-            publisher: source.publisher,
-            dataset: source.dataset,
-            homepage: source.homepage,
-            licence: source.licence,
-            attribution: source.attribution ? localized(source.attribution, locale) : null,
-            retrievedAt: retrievedAt.toISOString().slice(0, 10),
-          },
-        ]
-      : [];
-  });
-
   return {
     id: place.id,
     slugPath: place.slugPath,
@@ -147,6 +131,29 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
       pack.taxModel && place.levelKey
         ? taxingLevels(pack.taxModel, evaluatorFacts(chain, input.facts)).includes(place.levelKey)
         : null,
-    sources,
+    sources: placeSources(config, input.sources, locale),
   };
+}
+
+/** The registered sources behind these retrievals, in the reader's language. */
+export function placeSources(
+  config: PlacesConfig,
+  retrievals: readonly { sourceKey: string; retrievedAt: Date }[],
+  locale: string,
+): PlaceSource[] {
+  return retrievals.flatMap(({ sourceKey, retrievedAt }) => {
+    const source = config.sources.find((s) => s.key === sourceKey);
+    return source
+      ? [
+          {
+            publisher: source.publisher,
+            dataset: source.dataset,
+            homepage: source.homepage,
+            licence: source.licence,
+            attribution: source.attribution ? localized(source.attribution, locale) : null,
+            retrievedAt: retrievedAt.toISOString().slice(0, 10),
+          },
+        ]
+      : [];
+  });
 }

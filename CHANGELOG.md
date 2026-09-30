@@ -8,6 +8,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Compare places: what tax would cost you in each.** `/compare` puts up to
+  four places side by side. Enter your taxable income and household, and it
+  shows the yearly tax in each, the difference to the cheapest, and the tax
+  rates behind it (federal, cantonal and communal), each with its source. Your
+  income never leaves your browser: it is not in the link and Solon never
+  receives it. When this year's figures are not all published yet, the
+  comparison uses the latest complete year and says so. Every place page
+  links to it, and it sits in the Places menu. For now it covers the Canton of
+  Zürich's communes; elsewhere it says which figure is missing.
+
 - **Places in the header: find a place by name or postcode.** `/places` finds
   any recorded place by its name or postcode and lists every level of a
   country (cantons, communes, city districts…) with how many places each has.

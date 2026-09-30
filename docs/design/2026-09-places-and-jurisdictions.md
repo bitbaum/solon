@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-09-30: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -857,6 +857,28 @@ The screens are those of the first version of this document, now generic:
   Leaving, Status, Size. Every cell sourced, missing shown as missing. **No
   Solon score**; personal weights computed in the browser and labelled as the
   reader's.
+
+  **Built (P1, Money only)**: `src/app/[locale]/compare/page.tsx` compares the
+  places in the link (`?p={path}&p=…`, so a comparison can be shared) up to
+  the Register's limit (`REGISTER_POLICY_DEFAULTS.compareLimit`, 4, until the
+  Register adopts its policies), with a search to add another.
+  `src/lib/places/compare.ts` loads each chain and the facts the pack's tax
+  model reads, all for one period: the latest fiscal year whose figures are
+  all published at the places' own levels (up to two years back), said in the
+  heading when it is not the current one. The estimate runs in the browser
+  (`compare-view.ts`, no database import; `place-comparison.tsx`): the reader
+  types their taxable income and household, which stay in the tab
+  (sessionStorage) and never enter a link, a form or a request. Rows: tax per
+  year with the effective rate and the difference to the lowest (only within
+  one currency), each component, each multiplier the model reads, and who
+  levies it. A missing figure says why: set by a lower level (a canton's
+  column has no commune's multiplier) or not recorded yet. The pack names its
+  model's inputs, variants and components and what the estimate leaves out
+  (`taxLabels`, required beside a `taxModel` and checked by the config
+  guard). Say, Leaving, Status and Size are one row, "not compared yet", with
+  the coverage link, until their data exists; personal weights come with
+  them. The golden values of §6.2 are reproduced through `/compare` in the
+  Swiss integration test.
 - **`/move?from&to`**: estimate difference (browser), dates and deadlines (each a
   sourced fact of the places involved), the fiscal-year rule stated from the
   pack's tax model, outbound steps, change in instruments and ballots. A
@@ -970,8 +992,9 @@ before the build.
   Postcodes resolve to communes from swisstopo's directory (§4.6, §8.2); a
   postcode reaches its quarter once the city's address register is imported,
   so 8053 reaches the City of Zürich today, not Witikon.
-  `/places` searches and lists them, and the API serves both (§9.2).
-  Next: `/compare`.
+  `/places` searches and lists them, and the API serves both (§9.2);
+  `/compare` sets them side by side with the estimate in the browser (§9.2).
+  Next: the Register (George) and the city's address register.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

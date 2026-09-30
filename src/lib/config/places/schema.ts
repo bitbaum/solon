@@ -50,6 +50,23 @@ export const levelSchema = z
   });
 export type Level = z.infer<typeof levelSchema>;
 
+/**
+ * What a reader sees of a tax model: its inputs, variants and components in
+ * the country's words, and what the estimate leaves out. Required beside a
+ * `taxModel`; every key the model names must be labelled.
+ */
+export const taxLabelsSchema = z.object({
+  inputs: z.record(
+    z.string(),
+    z.object({ label: localizedTextSchema, hint: localizedTextSchema.optional() }),
+  ),
+  variants: z.record(z.string(), localizedTextSchema),
+  components: z.record(z.string(), localizedTextSchema),
+  /** Said once beside every estimate. */
+  excludes: localizedTextSchema,
+});
+export type TaxLabels = z.infer<typeof taxLabelsSchema>;
+
 export const countryPackSchema = z.object({
   /** Also the file name under countries/. */
   key: registryKey,
@@ -75,6 +92,7 @@ export const countryPackSchema = z.object({
   taxModel: z
     .custom<TaxModel>((value) => typeof value === "object" && value !== null, "a TaxModel")
     .optional(),
+  taxLabels: taxLabelsSchema.optional(),
 });
 export type CountryPack = z.infer<typeof countryPackSchema>;
 
@@ -198,10 +216,23 @@ function levelProblems(pack: CountryPack): string[] {
 function taxModelProblems(pack: CountryPack, metrics: ReadonlyMap<string, Metric>): string[] {
   const model = pack.taxModel;
   if (!model) {
-    return [];
+    return pack.taxLabels ? [`pack "${pack.key}": tax labels without a tax model`] : [];
   }
   const prefix = `pack "${pack.key}" tax model`;
   const problems = modelProblems(model).map((problem) => `${prefix}: ${problem}`);
+  const labels = pack.taxLabels;
+  if (!labels) {
+    problems.push(`${prefix}: no taxLabels`);
+  } else {
+    const unlabelled = [
+      ...model.inputs.filter((key) => !labels.inputs[key]).map((key) => `input "${key}"`),
+      ...model.variants.filter((key) => !labels.variants[key]).map((key) => `variant "${key}"`),
+      ...model.components
+        .filter((c) => !labels.components[c.key])
+        .map((c) => `component "${c.key}"`),
+    ];
+    problems.push(...unlabelled.map((what) => `${prefix}: ${what} has no label`));
+  }
   const levels = new Set(pack.levels.map((level) => level.key));
   for (const component of model.components) {
     const refs = [
