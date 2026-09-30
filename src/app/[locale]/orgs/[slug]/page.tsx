@@ -11,6 +11,7 @@ import { COLLECTIVE_KINDS, LEGAL_STATUS_LABEL, formatPlace } from "@/lib/collect
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { isMandateLive } from "@/lib/domain/mandate";
 import { MemberFace } from "@/components/ui/member-face";
+import TechnicalDetails from "@/components/ui/technical-details";
 
 export const dynamic = "force-dynamic";
 
@@ -59,75 +60,95 @@ export default async function OrganizationPage({ params }: { params: Params }) {
   );
 
   return (
-    <PageLayout title={org.name} description={org.description ?? undefined}>
-      <div className="mx-auto max-w-4xl space-y-10">
-        <dl className="mx-auto max-w-2xl space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">
-          {fact("Address", <span className="font-mono">/orgs/{org.slug}</span>)}
-          {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
-          {fact("Kind of body", COLLECTIVE_KINDS[org.kind].name)}
-          {org.countryCode &&
-            org.region &&
-            org.locality &&
-            fact(
-              "Place",
-              formatPlace({
-                country_code: org.countryCode,
-                region: org.region,
-                locality: org.locality,
-              }),
-            )}
-          {org.legalStatus !== "informal" &&
-            fact(
-              "Legal status",
-              `${LEGAL_STATUS_LABEL[org.legalStatus]}${org.legalForm ? ` · ${org.legalForm}` : ""}`,
-            )}
-          {org.orangecatGroupId &&
-            fact(
-              "Wallet",
-              <a
-                href={`${ECOSYSTEM_PILLARS.find((p) => p.key === "orangecat")!.url}/groups/${org.slug}`}
+    <PageLayout kicker="Organization" title={org.name} description={org.description ?? undefined}>
+      <div className="max-w-3xl space-y-10">
+        <div className="rounded-surface border border-default bg-surface-base p-6">
+          <dl className="space-y-2 text-sm">
+            {fact("Founded", org.createdAt.toISOString().slice(0, 10))}
+            {fact("Kind of group", COLLECTIVE_KINDS[org.kind].name)}
+            {org.countryCode &&
+              org.region &&
+              org.locality &&
+              fact(
+                "Place",
+                formatPlace({
+                  country_code: org.countryCode,
+                  region: org.region,
+                  locality: org.locality,
+                }),
+              )}
+            {org.legalStatus !== "informal" &&
+              fact(
+                "Legal status",
+                `${LEGAL_STATUS_LABEL[org.legalStatus]}${org.legalForm ? ` · ${org.legalForm}` : ""}`,
+              )}
+            {org.orangecatGroupId &&
+              fact(
+                "Wallet",
+                <a
+                  href={`${ECOSYSTEM_PILLARS.find((p) => p.key === "orangecat")!.url}/groups/${org.slug}`}
+                  className="hover:underline"
+                >
+                  on OrangeCat
+                </a>,
+              )}
+            {fact(
+              "Who decides",
+              <Link
+                href="/governance/profiles"
                 className="hover:underline"
+                title={profile.suitedTo}
               >
-                on OrangeCat
-              </a>,
+                {profile.label}
+              </Link>,
             )}
-          {fact(
-            "Who decides",
-            <Link href="/governance/profiles" className="hover:underline" title={profile.suitedTo}>
-              {profile.label}
-            </Link>,
-          )}
-          {org.claimedProject &&
-            fact("Governs", <span className="font-mono">{org.claimedProject}</span>)}
-        </dl>
+            {org.claimedProject && fact("Runs", org.claimedProject)}
+          </dl>
+          <TechnicalDetails className="mt-5">
+            <p>
+              Address: <span className="font-mono text-fg-primary">/orgs/{org.slug}</span>
+            </p>
+            <p>
+              The same facts as data:{" "}
+              <Link
+                href={`/api/orgs/${org.slug}`}
+                className="font-mono text-accent hover:underline"
+              >
+                /api/orgs/{org.slug}
+              </Link>{" "}
+              and the full history at{" "}
+              <Link
+                href={`/api/orgs/${org.slug}/audit`}
+                className="font-mono text-accent hover:underline"
+              >
+                /api/orgs/{org.slug}/audit
+              </Link>
+              .
+            </p>
+          </TechnicalDetails>
+        </div>
 
-        {/* Said before the roster, in the profile's own words, because it is
+        {/* Said before the members, in the profile's own words, because it is
             what someone deciding whether to join most needs to know — and the
             one thing an organization should never leave to be inferred. */}
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-fg-secondary">
-          {profile.whoDecides}
-        </p>
+        <p className="text-sm leading-relaxed text-fg-secondary">{profile.whoDecides}</p>
 
         {/* Written only for an organization that is not #1, because only there is
             it true: the proposal and voting screens on this site are built for
-            the primary organization today. The record below is complete either way. */}
+            the primary organization today. The history below is complete either way. */}
         {!isPrimary && primary && (
-          <p className="mx-auto max-w-2xl rounded-surface border border-default bg-surface-raised p-4 text-sm leading-relaxed text-fg-secondary">
-            The proposal and voting screens on this site run for {primary.name} today. {org.name}
-            &apos;s roster and record are public here and at{" "}
-            <Link href={`/api/orgs/${org.slug}`} className="font-mono text-accent hover:underline">
-              /api/orgs/{org.slug}
-            </Link>
-            ; screens for its own votes are not built yet.
+          <p className="rounded-surface border border-default bg-surface-raised p-4 text-sm leading-relaxed text-fg-secondary">
+            Suggesting and voting on this site work for {primary.name} for now, not yet for{" "}
+            {org.name}. Its members and its history are public below.
           </p>
         )}
 
         <section>
-          <h2 className="mb-4 font-semibold text-fg-primary">
-            Roster <span className="text-fg-tertiary">({roster.length})</span>
+          <h2 className="mb-4 headline text-display-3 text-fg-primary">
+            Members <span className="text-fg-tertiary">({roster.length})</span>
           </h2>
           {roster.length === 0 ? (
-            <p className="text-sm text-fg-secondary">Nobody holds a seat yet.</p>
+            <p className="text-sm text-fg-secondary">Nobody has joined yet.</p>
           ) : (
             <ul className="space-y-3">
               {roster.map((m) => (
@@ -146,23 +167,34 @@ export default async function OrganizationPage({ params }: { params: Params }) {
                       {m.displayName}
                     </span>
                     <span className="text-xs text-fg-secondary">
-                      {m.memberType === "AGENT"
-                        ? `Agent · ${m.system ?? "unnamed system"}`
-                        : "Human"}
-                      {" · "}weight {Number(m.votingWeight)}
+                      {m.memberType === "AGENT" ? "AI agent" : "Person"}
+                      {Number(m.votingWeight) !== 1 &&
+                        ` · their vote counts ${Number(m.votingWeight)} times`}
                       {m.status !== "ACTIVE" && ` · ${m.status.toLowerCase()}`}
                       {usesMandates(profile) &&
                         isMandateLive(m, now) &&
-                        ` · holds a mandate${
+                        ` · decides on the group's behalf${
                           m.mandateUntil
                             ? ` until ${m.mandateUntil.toISOString().slice(0, 10)}`
                             : ""
                         }`}
                     </span>
                   </div>
-                  <p className="mt-1.5 break-all font-mono text-xs text-fg-secondary">
-                    {m.bitcoinAddress ?? "votes with an OrangeCat account"}
-                  </p>
+                  {(m.bitcoinAddress || m.system) && (
+                    <TechnicalDetails className="mt-3">
+                      {m.system && (
+                        <p>
+                          System: <span className="font-mono text-fg-primary">{m.system}</span>
+                        </p>
+                      )}
+                      {m.bitcoinAddress && (
+                        <p className="break-all">
+                          Signs votes with the Bitcoin key{" "}
+                          <span className="font-mono text-fg-primary">{m.bitcoinAddress}</span>
+                        </p>
+                      )}
+                    </TechnicalDetails>
+                  )}
                 </li>
               ))}
             </ul>
@@ -170,17 +202,9 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         </section>
 
         <section>
-          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="font-semibold text-fg-primary">Record</h2>
-            <Link
-              href={`/api/orgs/${org.slug}/audit`}
-              className="text-sm text-fg-secondary transition-colors hover:text-fg-primary"
-            >
-              Raw JSON →
-            </Link>
-          </div>
+          <h2 className="mb-4 headline text-display-3 text-fg-primary">What has happened</h2>
           {events.length === 0 ? (
-            <p className="text-sm text-fg-secondary">Nothing is on the record yet.</p>
+            <p className="text-sm text-fg-secondary">Nothing has happened yet.</p>
           ) : (
             <AuditTrail events={events} />
           )}

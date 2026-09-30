@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import AuditTrail from "@/components/governance/audit-trail";
+import TechnicalDetails from "@/components/ui/technical-details";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { auditEvents } from "@/lib/db/schema";
@@ -33,39 +34,45 @@ export default async function AuditPage() {
 
   return (
     <PageLayout
-      title="Audit Trail"
-      description="Every governance event, append-only — the record itself, not a summary of it"
+      kicker="Decisions"
+      title="The record"
+      description="Everything that has happened, in order: who joined, what was suggested, how each vote went. Nothing on it is ever changed or deleted."
     >
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-3xl space-y-6">
         {dbError && (
-          <p className="text-center text-fg-secondary">
-            The audit register is currently unreachable. No events can be shown.
+          <p className="text-fg-secondary">
+            This cannot be loaded right now. Please try again in a minute.
           </p>
         )}
         {!dbError && !org && (
-          <p className="text-center text-fg-secondary">
-            No organization is registered yet, so there is no audit trail to show.
+          <p className="text-fg-secondary">
+            There is no organization here yet, so nothing to show.
           </p>
         )}
         {org && (
           <>
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-surface border border-default bg-surface-raised p-4">
-              <p className="text-sm text-fg-secondary">
-                {events.length} most recent events for{" "}
-                <span className="font-semibold text-fg-primary">{org.name}</span>. Append-only: no
-                code path updates or deletes them.
-              </p>
-              <div className="flex shrink-0 items-center gap-4">
-                <Link
-                  href={`/api/orgs/${org.slug}/audit`}
-                  className="text-sm text-fg-secondary transition-colors hover:text-fg-primary"
-                >
-                  Raw JSON →
-                </Link>
-                <Link href="/proposals" className="btn-primary">
-                  Add to the record
+            <div className="rounded-surface border border-default bg-surface-raised p-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-sm text-fg-secondary">
+                  The latest {events.length} entries for{" "}
+                  <span className="font-semibold text-fg-primary">{org.name}</span>.
+                </p>
+                <Link href="/propose" className="btn-primary shrink-0">
+                  Suggest something
                 </Link>
               </div>
+              <TechnicalDetails className="mt-3">
+                <p>
+                  Append-only: no code path updates or deletes an entry. The same record as data:{" "}
+                  <Link
+                    href={`/api/orgs/${org.slug}/audit`}
+                    className="font-mono text-accent hover:underline"
+                  >
+                    /api/orgs/{org.slug}/audit
+                  </Link>
+                  .
+                </p>
+              </TechnicalDetails>
             </div>
             <AuditTrail events={events} />
           </>

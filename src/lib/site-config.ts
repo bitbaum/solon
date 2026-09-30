@@ -134,6 +134,24 @@ export const isTranslatedRoute = (pathname: string): boolean =>
   TRANSLATED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
 /**
+ * The everyday pages: where members join, suggest, vote and read the history.
+ * They speak plain words; stored values (OPEN, SIMPLE_MAJORITY, HUMANS_ONLY)
+ * only appear under "Technical details". The explainers, /security, /api,
+ * /ecosystem and /treasury/bitcoin are the deep side and may be as technical
+ * as they need to be. tests/e2e/render.spec.ts holds these pages to it.
+ */
+export const EVERYDAY_ROUTES = [
+  "/dashboard",
+  "/dashboard/treasury",
+  "/dashboard/voting",
+  "/proposals",
+  "/propose",
+  "/join",
+  "/orgs/new",
+  "/governance/audit",
+] as const;
+
+/**
  * Where a message to the people behind Solon arrives. An @orangecat.ch apex
  * address — the only domain on the box that receives mail.
  */

@@ -30,8 +30,7 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
   if (!session?.actorId) {
     return {
       headline: "Sign in to take part",
-      detail:
-        "Reading needs no account. Voting needs an OrangeCat identity with a seat on the roster.",
+      detail: "Anyone can read along without an account. To vote, sign in and become a member.",
       href: "/join",
       cta: "Get started",
     };
@@ -49,16 +48,16 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     return mine
       ? {
           headline: "The founding seat is yours to claim",
-          detail: "No human is on this roster yet. Claim it with one click and the seat is yours.",
+          detail: "Nobody has joined yet. Take the first seat with one click.",
           href: "/join",
-          cta: "Claim the seat",
+          cta: "Take the seat",
         }
       : {
-          headline: "You are signed in as an observer",
+          headline: "You can read along",
           detail:
-            "Admission is decided by a membership vote. Everything on the record is already open to you.",
+            "You are not a member yet. Members vote on who joins; meanwhile you can see everything that is decided.",
           href: "/proposals",
-          cta: "Read the proposals",
+          cta: "See what is being decided",
         };
   }
 
@@ -85,7 +84,7 @@ async function nextStep(orgSlug: string): Promise<NextStep> {
     if (!alreadyVoted) {
       return {
         headline: "There is a vote you have not taken part in",
-        detail: `${active.proposal.title} — closes ${active.closesAt.toISOString().slice(0, 10)}.`,
+        detail: `${active.proposal.title}. Voting ends on ${active.closesAt.toISOString().slice(0, 10)}.`,
         href: `/proposals/${active.proposalId}`,
         cta: "Vote",
       };

@@ -1,46 +1,28 @@
-"use client";
-
-import { Link } from "@/i18n/navigation";
-import { usePathname } from "@/i18n/navigation";
-
-const TABS = [
-  { title: "Overview", href: "/dashboard" },
-  { title: "Treasury", href: "/dashboard/treasury" },
-  { title: "Voting", href: "/dashboard/voting" },
-];
+import PageLayout from "@/components/ui/page-layout";
+import DashboardTabs from "@/components/dashboard/dashboard-tabs";
+import { primaryOrg } from "@/lib/domain/org";
 
 /**
- * The working screens. Same page edge as every other page (section-shell), a
- * plain underlined tab row, and no frame around the content: the content's own
- * sections carry their borders, so wrapping them in another box only nests
- * cards inside cards.
+ * The working screens: the same page header as every other page, then a plain
+ * underlined tab row. No frame around the content — the content's own sections
+ * carry their borders, so wrapping them in another box only nests cards inside
+ * cards.
  */
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const org = await primaryOrg().catch(() => null);
 
   return (
-    <div className="section-shell py-section-tight">
-      <div className="kicker">Dashboard</div>
-      <nav className="mt-5 flex gap-8 border-b border-subtle" aria-label="Dashboard sections">
-        {TABS.map((tab) => {
-          const active = pathname === tab.href;
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              aria-current={active ? "page" : undefined}
-              className={`-mb-px border-b-2 pb-3 text-sm font-semibold transition-colors ${
-                active
-                  ? "border-accent text-fg-primary"
-                  : "border-transparent text-fg-secondary hover:text-fg-primary"
-              }`}
-            >
-              {tab.title}
-            </Link>
-          );
-        })}
-      </nav>
+    <PageLayout
+      kicker="Dashboard"
+      title={org?.name ?? "Dashboard"}
+      description={
+        org
+          ? `What is going on at ${org.name}: the latest vote, the money and what happened lately.`
+          : undefined
+      }
+    >
+      <DashboardTabs />
       <div className="pt-10">{children}</div>
-    </div>
+    </PageLayout>
   );
 }

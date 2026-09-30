@@ -15,21 +15,14 @@ export default async function TreasuryPage() {
 
   if (dbError || !org) {
     return (
-      <main className="space-y-6">
-        <h1 className="headline text-display-3">Treasury</h1>
-        <p className="text-fg-secondary">
-          {dbError
-            ? "The treasury register is currently unreachable. No balance can be shown."
-            : "No organization is registered yet, so there is no treasury to show."}
-        </p>
-      </main>
+      <p className="text-fg-secondary">
+        {dbError
+          ? "This cannot be loaded right now. Please try again in a minute."
+          : "There is no organization here yet, so there is no money to show."}
+      </p>
     );
   }
 
   const report = await treasuryReport(org.id);
-  return (
-    <main className="space-y-6">
-      <BitcoinTreasury orgName={org.name} report={report} />
-    </main>
-  );
+  return <BitcoinTreasury report={report} />;
 }
