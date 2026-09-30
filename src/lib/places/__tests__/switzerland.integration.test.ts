@@ -17,6 +17,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { and, eq, isNull } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createTranslator } from "next-intl";
+import CoverageReport from "@/components/places/coverage-report";
+import en from "../../../../messages/en.json";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import {
@@ -31,6 +36,7 @@ import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
+import { loadCoverage } from "../coverage";
 import { withTestland } from "./fixtures/testland/config";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -275,5 +281,23 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       variant: "single",
     });
     expect(estimate.missing).toEqual([]);
+  });
+
+  it("counts its coverage from the data and renders it", async () => {
+    const packs = await loadCoverage(db, config, "2025-06-01", "en");
+    const swiss = packs.find((p) => p.key === "switzerland")!;
+    const metric = (level: string) => swiss.metrics.find((m) => m.levelName === level)!;
+    expect(metric("Confederation")).toMatchObject({ places: 1, of: 1, inTaxModel: true });
+    const communal = swiss.metrics.find((m) => m.levelName === "Municipality" && m.inTaxModel)!;
+    expect(communal.places).toBeGreaterThanOrEqual(2);
+    expect(communal.places).toBeLessThan(communal.of);
+    expect(swiss.sources.every((s) => s.retrievedOn !== null)).toBe(true);
+
+    const t = createTranslator({ locale: "en", messages: en, namespace: "Places" });
+    const html = renderToStaticMarkup(
+      createElement(CoverageReport, { packs, on: "2025-06-01", t }),
+    );
+    expect(html).toContain("Switzerland");
+    expect(html).toContain(`${communal.places} of ${communal.of}`);
   });
 });

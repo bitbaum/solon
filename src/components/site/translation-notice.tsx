@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { TRANSLATED_ROUTES } from "@/lib/site-config";
+import { isTranslatedRoute } from "@/lib/site-config";
 
 /**
  * A page not yet translated says so, in the reader's own language, instead of
@@ -14,7 +14,7 @@ export default function TranslationNotice() {
   const pathname = usePathname();
   const t = useTranslations("Notice");
 
-  if (locale === routing.defaultLocale || TRANSLATED_ROUTES.has(pathname)) return null;
+  if (locale === routing.defaultLocale || isTranslatedRoute(pathname)) return null;
 
   return (
     <div className="border-b border-subtle bg-surface-raised">

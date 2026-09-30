@@ -975,6 +975,30 @@
       "title": "Sources",
       "retrieved": "Retrieved {date}",
       "licence": "Licence: {licence}"
+    },
+    "coverage": {
+      "metaTitle": "Coverage · Places",
+      "metaDescription": "Which countries, levels, facts and sources Solon's places cover, and how fresh each source is, counted from the data.",
+      "kicker": "Places",
+      "title": "Coverage",
+      "intro": "Counted from the data on {date}, not written by hand. Where a level has few places or a fact is missing, this page says so.",
+      "empty": "No country is covered yet.",
+      "levels": "Levels",
+      "places": "{count, plural, one {# place} other {# places}}",
+      "partial": "only some places are divided into it",
+      "overlapping": "beside the hierarchy",
+      "facts": "Facts",
+      "factsNote": "How many places at each level hold each fact today.",
+      "factsOf": "{places} of {of}",
+      "inTaxModel": "tax model",
+      "noTaxModel": "No tax model yet.",
+      "sources": "Sources",
+      "neverRetrieved": "Not retrieved yet",
+      "lastRun": {
+        "applied": "Last import applied on {date}",
+        "failed": "Last import failed on {date}",
+        "running": "Import running since {date}"
+      }
     }
   }
 }

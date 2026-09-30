@@ -409,6 +409,30 @@
       "title": "Sources",
       "retrieved": "Consulté le {date}",
       "licence": "Licence : {licence}"
+    },
+    "coverage": {
+      "metaTitle": "Couverture · Lieux",
+      "metaDescription": "Les pays, niveaux, données et sources que couvrent les lieux de Solon, et la fraîcheur de chaque source, comptés à partir des données.",
+      "kicker": "Lieux",
+      "title": "Couverture",
+      "intro": "Compté à partir des données le {date}, pas écrit à la main. Quand un niveau compte peu de lieux ou qu'une donnée manque, cette page le dit.",
+      "empty": "Aucun pays n'est encore couvert.",
+      "levels": "Niveaux",
+      "places": "{count, plural, one {# lieu} other {# lieux}}",
+      "partial": "seuls certains lieux y sont divisés",
+      "overlapping": "à côté de la hiérarchie",
+      "facts": "Données",
+      "factsNote": "Combien de lieux de chaque niveau ont chaque donnée aujourd'hui.",
+      "factsOf": "{places} sur {of}",
+      "inTaxModel": "modèle fiscal",
+      "noTaxModel": "Pas encore de modèle fiscal.",
+      "sources": "Sources",
+      "neverRetrieved": "Pas encore récupérée",
+      "lastRun": {
+        "applied": "Dernier import appliqué le {date}",
+        "failed": "Dernier import échoué le {date}",
+        "running": "Import en cours depuis le {date}"
+      }
     }
   }
 }
