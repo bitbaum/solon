@@ -147,22 +147,22 @@ describe("the FSO commune register snapshot", () => {
     ]);
   });
 
-  it("ends a commune the register ended, and dates its territorial version", () => {
+  it("ends a commune on the day after the last day the register gives", () => {
     expect(byRef(y2021, "bfs_municipality", "21")).toMatchObject({
-      validTo: "2022-12-31",
+      validTo: "2023-01-01",
       identifiers: [
         {
           scheme: "bfs_municipality_version",
           value: "11735",
           validFrom: "1872-01-01",
-          validTo: "2022-12-31",
+          validTo: "2023-01-01",
         },
       ],
     });
   });
 
   it("keeps a commune's number through a territory exchange", () => {
-    expect(byRef(y2021, "bfs_municipality", "62")).toMatchObject({ validTo: "2023-12-31" });
+    expect(byRef(y2021, "bfs_municipality", "62")).toMatchObject({ validTo: "2024-01-01" });
     expect(byRef(y2026, "bfs_municipality", "62")).toMatchObject({
       validTo: null,
       identifiers: [expect.objectContaining({ value: "16656", validFrom: "2024-01-01" })],
@@ -287,7 +287,7 @@ describe("the canton of Zürich's municipal multipliers", () => {
       metricKey: "tax.multiplier",
       variant: null,
       validFrom: "2025-01-01",
-      validTo: "2025-12-31",
+      validTo: "2026-01-01",
       value: 1.19,
     });
     expect(multiplier("154", 2026)?.value).toBe(0.73);
@@ -308,10 +308,10 @@ describe("the canton of Zürich's municipal multipliers", () => {
     );
   });
 
-  it("dates a fiscal year that does not start in January", () => {
+  it("dates a fiscal year half-open, also when it does not start in January", () => {
     expect(fiscalYearPeriod(2025, "04-06")).toEqual({
       validFrom: "2025-04-06",
-      validTo: "2026-04-05",
+      validTo: "2026-04-06",
     });
   });
 });
@@ -327,7 +327,7 @@ describe("the Federal Tax Administration's exports", () => {
 
   it("reads the year from the request, since the response does not name it", () => {
     expect(
-      scales.facts.every((f) => f.validFrom === "2025-01-01" && f.validTo === "2025-12-31"),
+      scales.facts.every((f) => f.validFrom === "2025-01-01" && f.validTo === "2026-01-01"),
     ).toBe(true);
   });
 
@@ -368,7 +368,7 @@ describe("the Federal Tax Administration's exports", () => {
         metricKey: "tax.multiplier",
         variant: null,
         validFrom: "2025-01-01",
-        validTo: "2025-12-31",
+        validTo: "2026-01-01",
         value: 0.98,
       },
     ]);

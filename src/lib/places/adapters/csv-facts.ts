@@ -40,18 +40,15 @@ const csvFactsOptions = z.object({
 });
 type CsvFactsOptions = z.infer<typeof csvFactsOptions>;
 
-/** The first and last day of the fiscal year starting in `year` on `startMonthDay`. */
-export function fiscalYearPeriod(year: number, startMonthDay: string) {
-  const next = Date.parse(`${year + 1}-${startMonthDay}T00:00:00Z`);
-  return {
-    validFrom: `${year}-${startMonthDay}`,
-    validTo: new Date(next - 86_400_000).toISOString().slice(0, 10),
-  };
-}
+/** The fiscal year starting in `year` on `startMonthDay`, half-open: it ends where the next begins. */
+export const fiscalYearPeriod = (year: number, startMonthDay: string) => ({
+  validFrom: `${year}-${startMonthDay}`,
+  validTo: `${year + 1}-${startMonthDay}`,
+});
 
 export const csvFactsAdapter: Adapter<Rows, CsvFactsOptions> = {
   key: "csv_facts",
-  version: "1",
+  version: "2",
   decode: decodeCsv,
   schema: rows,
   options: csvFactsOptions,

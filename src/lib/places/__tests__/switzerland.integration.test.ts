@@ -184,7 +184,7 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       .select({ validTo: jurisdictions.validTo })
       .from(jurisdictions)
       .where(eq(jurisdictions.id, predecessors[0]!));
-    expect(ended[0]!.validTo).toBe("2022-12-31");
+    expect(ended[0]!.validTo).toBe("2023-01-01");
   });
 
   it("keeps the plain path for the commune that exists now", async () => {
@@ -262,4 +262,18 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       expect(Math.abs(amount("cantonal_and_communal") - (canton + communal))).toBeLessThan(2);
     },
   );
+
+  it("still finds a year's tariffs and multipliers on its last day", async () => {
+    const chain = await loadChain(db, await placeId("bfs_municipality", "261"), "2025-12-31");
+    const chainFacts = await loadFacts(
+      db,
+      chain.map((p) => p.id),
+      "2025-12-31",
+    );
+    const estimate = evaluate(switzerlandIncomeTax, evaluatorFacts(chain, chainFacts), {
+      values: { taxable_income: 100_000 },
+      variant: "single",
+    });
+    expect(estimate.missing).toEqual([]);
+  });
 });
