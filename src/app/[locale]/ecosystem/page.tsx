@@ -7,9 +7,16 @@ import {
   proposals as proposalsTable,
 } from "@/lib/db/schema";
 import { primaryOrg } from "@/lib/domain/org";
+import { proposalStanding } from "@/lib/domain/plain-words";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { CATEGORY_ELECTORATE, CATEGORY_LABEL } from "@/lib/config/governance";
-import { Electorate, type DecisionCategory } from "@/lib/db/enums";
+import {
+  Electorate,
+  type DecisionCategory,
+  type ProposalStatus,
+  type SessionOutcome,
+  type SessionStatus,
+} from "@/lib/db/enums";
 
 export const dynamic = "force-dynamic";
 
@@ -34,8 +41,8 @@ export default async function EcosystemPage() {
     id: string;
     title: string;
     category: DecisionCategory;
-    status: string;
-    session: { id: string; status: string; outcome: string | null } | null;
+    status: ProposalStatus;
+    session: { id: string; status: SessionStatus; outcome: SessionOutcome | null } | null;
   }[] = [];
   let dbError = false;
 
@@ -273,15 +280,15 @@ export default async function EcosystemPage() {
                           <span className="font-semibold text-fg-primary">{p.title}</span>
                           <span className="text-xs text-fg-secondary whitespace-nowrap">
                             {CATEGORY_LABEL[p.category]} ·{" "}
-                            {p.session?.outcome ?? p.session?.status ?? p.status}
+                            {proposalStanding(p.session?.status ?? p.status, p.session?.outcome)}
                           </span>
                         </div>
                         {p.session?.outcome && (
                           <a
                             href={`/api/v1/decisions/${p.session.id}`}
-                            className="mt-1 inline-block text-xs font-mono text-accent hover:text-accent-dark"
+                            className="mt-1 inline-block text-xs text-accent hover:text-accent-dark"
                           >
-                            self-verifying decision document →
+                            Full record of this vote →
                           </a>
                         )}
                       </li>

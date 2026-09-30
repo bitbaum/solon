@@ -104,7 +104,7 @@ twice and met the password field on the second screen. Now `/sign-in` and
 continue to Solon", offers email and password, an emailed code, Google, GitHub
 and "Create an account". Links to them are plain `<a>` (a prefetching link
 would start a sign-in in the background). OrangeCat's left column speaks for
-the app that sent the person and leads back to it (bitbaum/orangecat#1195).
+the app that sent the person and leads back to it (bitbaum/orangecat#1197).
 Loki and every other product follow the same rule: a "Sign in" button, the
 shared error page's behaviour, nothing more.
 

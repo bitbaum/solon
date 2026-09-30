@@ -4,9 +4,10 @@ import EntryLinks, { ENTRY_COST } from "@/components/auth/entry-links";
 import { memberForActor } from "@/lib/auth/recognition";
 import { primaryOrg } from "@/lib/domain/org";
 import FileProposal from "@/components/governance/file-proposal";
+import PageLayout from "@/components/ui/page-layout";
 import { draftFromQuery, rawQueryString, type Query } from "@/lib/domain/proposal-draft";
 
-export const metadata = { title: "File a proposal — Solon" };
+export const metadata = { title: "Suggest something — Solon" };
 export const dynamic = "force-dynamic";
 
 /**
@@ -27,9 +28,9 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
 
   if (!org) {
     return (
-      <Shell title="File a proposal">
+      <Shell>
         <p className="text-sm text-fg-secondary">
-          No organization is seeded in this environment yet.
+          There is no organization here yet, so there is nothing to suggest changes to.
         </p>
       </Shell>
     );
@@ -37,10 +38,10 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
 
   if (!member) {
     return (
-      <Shell title="File a proposal">
+      <Shell>
         <p className="text-sm leading-relaxed text-fg-secondary">
-          Proposals are filed by a member, so the record always says who asked for the change. You
-          are not on the roster yet.
+          Only members can make a suggestion, so everyone can see who asked for what. You are not a
+          member of {org.name} yet.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {session?.actorId || !authEnabled ? (
@@ -54,7 +55,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
             href="/proposals"
             className="text-sm text-fg-secondary transition-colors hover:text-fg-primary"
           >
-            Read the open proposals →
+            See what is being decided →
           </Link>
         </div>
       </Shell>
@@ -62,25 +63,20 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
   }
 
   return (
-    <main className="section-shell py-section-tight">
-      <h1 className="text-center headline text-display-2 text-fg-primary">File a proposal</h1>
-      <p className="mx-auto mt-5 max-w-lede text-center text-fg-secondary">
-        Filing puts it on the record as a draft. Opening it starts the clock and freezes the rules.
-      </p>
-      <div className="mx-auto mt-12 max-w-2xl">
-        <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} initial={draft} />
-      </div>
-    </main>
+    <Shell>
+      <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} initial={draft} />
+    </Shell>
   );
 }
 
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
+function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="section-shell py-section-tight">
-      <h1 className="text-center headline text-display-2 text-fg-primary">{title}</h1>
-      <div className="mx-auto mt-12 max-w-2xl rounded-surface border border-default bg-surface-base p-6">
-        {children}
-      </div>
-    </main>
+    <PageLayout
+      kicker="Decisions"
+      title="Suggest something"
+      description="Write down what you would like to change and why. It is saved as a draft; members vote once someone starts the vote."
+    >
+      <div className="max-w-2xl">{children}</div>
+    </PageLayout>
   );
 }

@@ -57,13 +57,13 @@ export const SUPERMAJORITY_FRACTION = 2 / 3;
  * a private copy inside the ecosystem page until /governance needed it too.
  */
 export const CATEGORY_LABEL: Record<DecisionCategory, string> = {
-  ALLOCATION_POLICY: "Allocation policy",
-  TREASURY_SPEND: "Treasury spend",
-  OPERATIONS: "Operations",
-  AID_DISBURSEMENT: "Aid disbursement",
-  MEMBERSHIP: "Membership",
+  ALLOCATION_POLICY: "How money is shared",
+  TREASURY_SPEND: "Spending money",
+  OPERATIONS: "Day-to-day running",
+  AID_DISBURSEMENT: "Help for a person",
+  MEMBERSHIP: "Who is a member",
   SAFETY: "Safety",
-  GOVERNANCE_RULES: "Governance rules",
+  GOVERNANCE_RULES: "The rules",
 };
 
 export const CATEGORY_MEANING: Record<DecisionCategory, string> = {

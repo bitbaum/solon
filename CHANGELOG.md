@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Changed
 
+- **Decisions, in plain words.** The pages where members suggest things and
+  vote now look like the rest of Solon and speak plainly: "Suggest
+  something", "Start the vote", "Agreed", "Turned down", and the rules of a
+  vote as a sentence ("All members vote; at least 50% of them must take part,
+  and more than half must agree.") instead of codes like
+  `SIMPLE_MAJORITY · quorum 50% · electorate ALL_MEMBERS`. Topics read "How
+  money is shared" or "Spending money" instead of "Allocation policy" or
+  "Treasury spend". Error messages say what happened and what to do.
+
 - **Sign in the usual way: email and password.** "Sign in" and "Create an
   account" now open the sign-in screen straight away, with email and
   password, an emailed code, Google or GitHub. No more typing your email on

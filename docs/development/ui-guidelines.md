@@ -1,5 +1,9 @@
 # UI guidelines
 
+_Created 2026-01-08. Last modified 2026-09-30: every inner page uses `PageLayout`,
+every text box uses `.field`, and stored values (statuses, categories, voting
+rules) are shown through `src/lib/domain/plain-words.ts`, never as stored._
+
 ## Where the design system actually lives
 
 Two files, and this document is neither of them:
@@ -115,7 +119,8 @@ text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
 | Footer | `src/components/ui/footer.tsx` |
 | Logo | `src/components/ui/logo.tsx` |
 | Auth control | `src/components/ui/auth-control.tsx` |
-| Page shell | `src/components/ui/page-layout.tsx` |
+| Page shell (every inner page: kicker, title, one-line description) | `src/components/ui/page-layout.tsx` |
+| Text box, select, text area | the `.field` class in `src/app/globals.css` (add `py-3` on a text area) |
 | Full-screen section | `src/components/site/full-bleed.tsx` |
 
 Links come from `src/lib/site-config.ts`: `SITE_SECTIONS` (footer, mobile menu) and `PRIMARY_NAV` (the header's three links, tested to be a subset). Keep components small, prefer
@@ -136,3 +141,13 @@ Every sentence on a translated page lives in `messages/<locale>.json` (five lang
 group, not for engineers: no crypto or protocol vocabulary on the front pages
 (the details live on `/security` and `/governance/voting`). Never assemble a
 sentence by concatenation; see `AGENTS.md`, "Language".
+
+Assume the reader is not technical. A value the database stores (`OPEN`,
+`SIMPLE_MAJORITY`, `HUMANS_ONLY`, `TREASURY_SPEND`) never reaches the page as
+stored: statuses go through `proposalStanding()`, the rules of a vote through
+`votingRules()` (both in `src/lib/domain/plain-words.ts`), and category names
+come from `CATEGORY_LABEL` in `src/lib/config/governance.ts`. The words people
+see are "suggest", "start the vote", "agreed" and "turned down", not "file",
+"open a session", "quorum" or "electorate". Error messages say what happened
+and what to do ("The connection dropped, so nothing was saved. Please try
+again."), not "network error".

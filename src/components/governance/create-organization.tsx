@@ -125,7 +125,7 @@ export default function CreateOrganization({
       setVerdict({
         created: false,
         verified: false,
-        reason: "network error — nothing was submitted",
+        reason: "The connection dropped, so nothing was saved. Please try again.",
       });
     } finally {
       setSubmitting(false);
