@@ -9,14 +9,16 @@
       "governance": "Governance",
       "platform": "Platform",
       "decisions": "Decisions",
-      "more": "More"
+      "more": "More",
+      "places": "Places"
     },
     "sectionDesc": {
       "useCases": "Every kind of group decides. Find yours.",
       "governance": "The art and science of deciding together.",
       "platform": "Solon decides, OrangeCat pays, Loki does the work.",
       "decisions": "The public record — and your part in it.",
-      "more": "Everything else."
+      "more": "Everything else.",
+      "places": "Every jurisdiction, with the source behind every fact."
     },
     "links": {
       "whatYouCanDo": "What you can do",
@@ -53,7 +55,9 @@
       "changelog": "Changelog",
       "whitepaper": "Whitepaper",
       "faq": "Questions and answers",
-      "blog": "Blog"
+      "blog": "Blog",
+      "places": "Places",
+      "placesCoverage": "Coverage"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -90,7 +94,9 @@
       "changelog": "What changed, newest first",
       "whitepaper": "How Solon works, in full technical detail",
       "faq": "Short answers, from getting started to how votes are checked",
-      "blog": "What we build, and why, as we build it"
+      "blog": "What we build, and why, as we build it",
+      "places": "Find a place by name or postcode",
+      "placesCoverage": "What Places covers, counted from the data"
     }
   },
   "Nav": {
@@ -983,6 +989,25 @@
         "failed": "Last import failed on {date}",
         "running": "Import running since {date}"
       }
+    },
+    "index": {
+      "title": "Places",
+      "kicker": "Every jurisdiction, official and founded",
+      "metaTitle": "Places · find a place",
+      "metaDescription": "Find a place by name or postcode: what it is part of, whether it levies tax, and the source behind every fact.",
+      "intro": "Every place Solon records, as its official sources publish it. Search by name or postcode, or browse a country's levels.",
+      "searchLabel": "Name or postcode",
+      "searchPlaceholder": "A name or a postcode",
+      "searchButton": "Search",
+      "noHits": "Nothing found for “{query}”.",
+      "postcodeOne": "Postcode {postcode} lies in this place:",
+      "postcodeMany": "Postcode {postcode} spans {count} places. Pick yours:",
+      "nameHits": "{count, plural, one {# place} other {# places}} found",
+      "hitIn": "{level} in {parent}",
+      "localityShare": "{locality}: {share, number, ::percent .##} of its addresses",
+      "levelTitle": "{level}: {count, plural, one {# place} other {# places}}",
+      "levelLink": "{level} ({count})",
+      "coverageLink": "What Places covers, and how fresh each source is →"
     }
   },
   "AuthError": {

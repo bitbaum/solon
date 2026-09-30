@@ -9,14 +9,16 @@
       "governance": "Gouvernance",
       "platform": "Plateforme",
       "decisions": "Décisions",
-      "more": "Plus"
+      "more": "Plus",
+      "places": "Lieux"
     },
     "sectionDesc": {
       "useCases": "Tout groupe décide. Trouvez le vôtre.",
       "governance": "L'art et la science de décider ensemble.",
       "platform": "Solon décide, OrangeCat paie, Loki fait le travail.",
       "decisions": "Le registre public — et votre rôle.",
-      "more": "Tout le reste."
+      "more": "Tout le reste.",
+      "places": "Chaque collectivité, avec la source de chaque donnée."
     },
     "links": {
       "whatYouCanDo": "Ce que vous pouvez faire ici",
@@ -53,7 +55,9 @@
       "changelog": "Changements",
       "whitepaper": "Livre blanc",
       "faq": "Questions et réponses",
-      "blog": "Blog"
+      "blog": "Blog",
+      "places": "Lieux",
+      "placesCoverage": "Couverture"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -90,7 +94,9 @@
       "changelog": "Ce qui a changé, du plus récent au plus ancien",
       "whitepaper": "Le fonctionnement de Solon, dans tous ses détails techniques",
       "faq": "Des réponses courtes, des premiers pas à la vérification des votes",
-      "blog": "Ce que nous construisons, et pourquoi, au fil de l'eau"
+      "blog": "Ce que nous construisons, et pourquoi, au fil de l'eau",
+      "places": "Trouver un lieu par nom ou code postal",
+      "placesCoverage": "Ce que couvrent les lieux, compté à partir des données"
     }
   },
   "Nav": {
@@ -417,6 +423,25 @@
         "failed": "Dernier import échoué le {date}",
         "running": "Import en cours depuis le {date}"
       }
+    },
+    "index": {
+      "title": "Lieux",
+      "kicker": "Chaque collectivité, officielle ou fondée",
+      "metaTitle": "Lieux · trouver un lieu",
+      "metaDescription": "Trouver un lieu par son nom ou son code postal : de quoi il fait partie, s’il prélève l’impôt, et la source de chaque donnée.",
+      "intro": "Chaque lieu que Solon recense, tel que ses sources officielles le publient. Cherchez par nom ou par code postal, ou parcourez les niveaux d’un pays.",
+      "searchLabel": "Nom ou code postal",
+      "searchPlaceholder": "Un nom ou un code postal",
+      "searchButton": "Chercher",
+      "noHits": "Rien trouvé pour « {query} ».",
+      "postcodeOne": "Le code postal {postcode} se trouve dans ce lieu :",
+      "postcodeMany": "Le code postal {postcode} couvre {count} lieux. Choisissez le vôtre :",
+      "nameHits": "{count, plural, one {# lieu trouvé} other {# lieux trouvés}}",
+      "hitIn": "{level} dans {parent}",
+      "localityShare": "{locality} : {share, number, ::percent .##} de ses adresses",
+      "levelTitle": "{level} : {count, plural, one {# lieu} other {# lieux}}",
+      "levelLink": "{level} ({count})",
+      "coverageLink": "Ce que couvrent les lieux, et la fraîcheur de chaque source →"
     }
   },
   "AuthError": {

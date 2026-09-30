@@ -1,10 +1,10 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: the scheduled runner is built, a daily box timer
+_Last modified 2026-09-30: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
-§8.2), which the `/places` search will use. Earlier the same day: `/places/coverage` is built, counted from the
+§8.2). Earlier the same day: `/places/coverage` is built, counted from the
 data (§9.2), and places pages count as translated; production holds every P1
 source so far, reloaded after the fix below (§8.3). Earlier the same day: valid
 time is half-open, and the adapters now store it so (§4); a year's figures
@@ -814,6 +814,15 @@ The screens are those of the first version of this document, now generic:
   definition, period and source in the legend. The "tax for an income of __"
   metric is computed in the browser. Search by name, postcode or identifier; a
   postcode spanning several places asks. Founded places toggle on.
+
+  **Built (P1, list only)**: `src/app/[locale]/places/page.tsx` searches by
+  postcode (any pack's `postcodePattern`) or name, and browses each pack's
+  levels with their counts; `src/lib/places/search.ts` reads names, levels and
+  parents for all hits at once. A postcode spanning several places lists each
+  with its localities' share of addresses. Names match as written (no accent
+  folding yet: "Zurich" does not find "Zürich"). The map waits for P4's
+  geometry. The same search is `GET /api/v1/places?q=`, and a place page is
+  `GET /api/v1/places/{path}`, both listed on `/integration`.
 - **Place page** (`/places/{slug_path}`), top to bottom:
   1. name (per the naming policy), level (from the pack, in the reader's
      language), origin badge;
@@ -871,6 +880,8 @@ The screens are those of the first version of this document, now generic:
 
 The header budget is four links. Places replaces Platform in the header, and
 Platform moves to the footer (decided, §13). Labels come from `site-config.ts`.
+**Built** 2026-09-30: the Places panel holds `/places` and `/places/coverage`;
+Platform is its own footer group.
 
 ### 9.4 States
 
@@ -959,7 +970,8 @@ before the build.
   Postcodes resolve to communes from swisstopo's directory (§4.6, §8.2); a
   postcode reaches its quarter once the city's address register is imported,
   so 8053 reaches the City of Zürich today, not Witikon.
-  Next: the `/places` list, `/compare` and the API.
+  `/places` searches and lists them, and the API serves both (§9.2).
+  Next: `/compare`.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

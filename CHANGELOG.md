@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Places in the header: find a place by name or postcode.** `/places` finds
+  any recorded place by its name or postcode and lists every level of a
+  country (cantons, communes, city districts…) with how many places each has.
+  A postcode that spans several communes shows each one with its share of the
+  addresses, and you pick yours. The same search is open to other apps at
+  `/api/v1/places`. Places took Platform's spot in the header; Platform's
+  pages are in the footer.
+
 - **Places know their postcodes.** Solon now reads swisstopo's official
   directory of localities, so a Swiss postcode leads to the commune it lies
   in. When a postcode spans several communes (1,223 of 3,190 do), Solon lists

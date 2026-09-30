@@ -39,6 +39,7 @@ import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
 import { loadCoverage } from "../coverage";
 import { resolvePostcode } from "../postcodes";
+import { loadPackIndex, placesAtLevel, searchPlaces } from "../search";
 import { withTestland } from "./fixtures/testland/config";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -163,6 +164,34 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       await placeId("bfs_municipality", "154"),
     ]);
     expect(await resolvePostcode(db, "switzerland", "9999", ON)).toEqual([]);
+  });
+
+  it("finds a place by postcode or by name, with its level and parent", async () => {
+    const byPostcode = await searchPlaces(db, config, "8053", ON, "de");
+    expect(byPostcode.kind).toBe("postcode");
+    expect(byPostcode.hits).toEqual([
+      expect.objectContaining({
+        name: "Zürich",
+        levelName: "Gemeinde",
+        parentName: "Bezirk Zürich",
+        localities: [{ name: "Zürich", share: 1 }],
+      }),
+    ]);
+    const byName = await searchPlaces(db, config, "witik", ON, "de");
+    expect(byName.hits.map((h) => [h.name, h.parentName])).toEqual([["Witikon", "Kreis 7"]]);
+    expect((await searchPlaces(db, config, "zürich", ON, "de")).hits[0]?.name).toBe("Zürich");
+    expect((await searchPlaces(db, config, "z", ON, "de")).hits).toEqual([]);
+  });
+
+  it("lists a level's places by name and counts every level", async () => {
+    // The cut holds two of the city's districts and eight current communes.
+    const districts = await placesAtLevel(db, config, "switzerland", "city_district", ON, "de");
+    expect(districts.map((d) => [d.name, d.parentName])).toEqual([
+      ["Kreis 1", "Zürich"],
+      ["Kreis 7", "Zürich"],
+    ]);
+    const swiss = (await loadPackIndex(db, config, ON, "de")).find((p) => p.key === "switzerland");
+    expect(swiss?.levels.find((l) => l.key === "municipality")?.count).toBe(8);
   });
 
   it("gives Witikon a page at its path, taking no tax", async () => {
