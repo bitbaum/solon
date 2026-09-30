@@ -33,9 +33,11 @@ export class FileSnapshotStore implements SnapshotStore {
   }
 }
 
-/** The store the app uses: PLACES_SNAPSHOT_DIR, or ./data/snapshots in development. */
+/** PLACES_SNAPSHOT_DIR, or ./data/snapshots in development. */
+export const snapshotDir = (): string =>
+  process.env.PLACES_SNAPSHOT_DIR || join(process.cwd(), "data", "snapshots");
+
+/** The store the app uses. */
 export function defaultSnapshotStore(): SnapshotStore {
-  return new FileSnapshotStore(
-    process.env.PLACES_SNAPSHOT_DIR || join(process.cwd(), "data", "snapshots"),
-  );
+  return new FileSnapshotStore(snapshotDir());
 }

@@ -3,8 +3,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { ADAPTERS, type Probe } from "../adapters";
-import { zipSync } from "fflate";
+import { unzipSync, zipSync } from "fflate";
 import { decodeCsvAnyForm, isoFromDottedDate, parseCsv } from "../adapters/csv";
+import { readShapefile } from "../adapters/shapefile";
 import { fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
 import { importBatchSchema, type BatchJurisdiction, type ImportBatch } from "../importer/batch";
@@ -17,6 +18,7 @@ function mapSource(
   sourceKey: string,
   bytes: Uint8Array,
   skipped: { row: string; reason: string }[] = [],
+  retrieval: { url: string | null; validFrom: string | null } = { url: null, validFrom: null },
 ): ImportBatch {
   const source = placesConfig.sources.find((s) => s.key === sourceKey)!;
   const adapter = ADAPTERS.get(source.adapter)!;
@@ -28,7 +30,7 @@ function mapSource(
       source,
       pack: placesConfig.packs.find((p) => p.key === source.packs[0]),
       options: adapter.options?.parse(source.options),
-      retrieval: { url: null },
+      retrieval,
       skip: (row, reason) => skipped.push({ row, reason }),
     }),
   );
@@ -252,7 +254,8 @@ describe("the City of Zürich's statistical quarters", () => {
       scheme: "zurich_city_district",
       value: "1",
     });
-    expect(withGeometry).not.toHaveProperty("areas");
+    expect(withGeometry.areas).toEqual([]);
+    expect(withGeometry.geometry).toBeNull();
   });
 
   it("rejects malformed or out-of-WGS84 source polygons before mapping", () => {
@@ -476,6 +479,122 @@ describe("the Federal Tax Administration's exports", () => {
       ]);
       await expect(adapter.retrievals!(options, "2026-09-29", publishedUpTo(0))).rejects.toThrow(
         /no published year/,
+      );
+    });
+  });
+});
+
+describe("swisstopo's commune boundaries", () => {
+  const SOURCE = "swisstopo-commune-boundaries";
+  // A cut of swissBOUNDARIES3D 2026-01: Küsnacht, Zürich and Biel/Bienne, the
+  // canton's share of Lake Zürich and Vaduz (LI), snapped to 25 m.
+  const zip = fixture("swissboundaries3d_2026-01_cut.shp.zip");
+  const retrieval = {
+    url: "https://data.geo.admin.ch/ch.swisstopo.swissboundaries3d/swissboundaries3d_2026-01/swissboundaries3d_2026-01_2056_5728.shp.zip",
+    validFrom: "2026-01-01",
+  };
+  const map = () => mapSource(SOURCE, zip, [], retrieval);
+
+  it("reads polygon records with their Z values skipped, and their attributes", () => {
+    const files = unzipSync(zip);
+    const layer = "swissBOUNDARIES3D_1_5_TLM_HOHEITSGEBIET";
+    const records = readShapefile(files[`${layer}.shp`]!, files[`${layer}.dbf`]!, "UTF-8");
+    expect(records.map((r) => r.attributes.NAME)).toEqual([
+      "Zürichsee (ZH)",
+      "Küsnacht (ZH)",
+      "Vaduz",
+      "Zürich",
+      "Biel/Bienne",
+    ]);
+    const [x, y] = records[3]!.polygons[0]![0]![0]!;
+    expect(x).toBeGreaterThan(2_670_000);
+    expect(y).toBeGreaterThan(1_240_000);
+  });
+
+  it("draws each commune the filter keeps, administered by its place, from the edition's start", () => {
+    const batch = map();
+    expect(batch.areas).toEqual(
+      ["154", "261", "371"].map((code) => ({
+        place: { scheme: "bfs_municipality", value: code },
+        feature: code,
+        validFrom: "2026-01-01",
+        validTo: null,
+      })),
+    );
+    expect(batch.geometry?.levelKey).toBe("municipality");
+    expect(batch.geometry?.datasetVersion).toBe("2026-01");
+  });
+
+  it("publishes one quantised WGS84 topology whose features are the communes' codes", () => {
+    const topology = JSON.parse(map().geometry!.topology) as {
+      type: string;
+      transform: unknown;
+      bbox: number[];
+      objects: { municipality: { geometries: { id: string; type: string }[] } };
+    };
+    expect(topology.type).toBe("Topology");
+    expect(topology.transform).toBeDefined();
+    expect(topology.objects.municipality.geometries.map((g) => [g.id, g.type])).toEqual([
+      ["154", "MultiPolygon"],
+      ["261", "MultiPolygon"],
+      ["371", "MultiPolygon"],
+    ]);
+    const [west, south, east, north] = topology.bbox;
+    expect(west).toBeGreaterThan(7.1);
+    expect(east).toBeLessThan(8.7);
+    expect(south).toBeGreaterThan(47);
+    expect(north).toBeLessThan(47.5);
+  });
+
+  it("writes the same file for the same edition, so a rerun changes nothing", () => {
+    expect(map().geometry!.topology).toBe(map().geometry!.topology);
+  });
+
+  it("refuses a retrieval whose URL names no edition", () => {
+    expect(() =>
+      mapSource(SOURCE, zip, [], { url: "fixture:boundaries.zip", validFrom: null }),
+    ).toThrow(/no edition/);
+  });
+
+  describe("planning", () => {
+    const source = placesConfig.sources.find((s) => s.key === SOURCE)!;
+    const adapter = ADAPTERS.get(source.adapter)!;
+    const options = adapter.options!.parse(source.options);
+    const edition = (id: string, datetime: string) => ({
+      id: `swissboundaries3d_${id}`,
+      properties: { datetime },
+      assets: {
+        [`swissboundaries3d_${id}_2056_5728.gdb.zip`]: {
+          href: `https://example.test/swissboundaries3d_${id}_2056_5728.gdb.zip`,
+        },
+        [`swissboundaries3d_${id}_2056_5728.shp.zip`]: {
+          href: `https://example.test/swissboundaries3d_${id}_2056_5728.shp.zip`,
+        },
+      },
+    });
+    const catalogue: Probe = async () => ({
+      features: [
+        edition("2025-01", "2025-01-01T00:00:00Z"),
+        edition("2025-04", "2025-04-06T00:00:00Z"),
+        edition("2026-01", "2026-01-01T00:00:00Z"),
+      ],
+    });
+
+    it("fetches the latest edition begun by today, with the date it begins", async () => {
+      expect(await adapter.retrievals!(options, "2025-12-31", catalogue)).toEqual([
+        {
+          url: "https://example.test/swissboundaries3d_2025-04_2056_5728.shp.zip",
+          validFrom: "2025-04-06",
+        },
+      ]);
+      expect((await adapter.retrievals!(options, "2026-09-30", catalogue))[0]?.validFrom).toBe(
+        "2026-01-01",
+      );
+    });
+
+    it("fails when no edition has begun", async () => {
+      await expect(adapter.retrievals!(options, "2024-12-31", catalogue)).rejects.toThrow(
+        /no "_2056_5728.shp.zip" edition begun by 2024-12-31/,
       );
     });
   });

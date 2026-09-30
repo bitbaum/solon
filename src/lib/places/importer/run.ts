@@ -18,15 +18,20 @@
  * What a batch says replaces what the same source said before about the same
  * places: names, identifiers and relations of this source that the batch no
  * longer states are superseded, and so are its postcodes (a postcode source
- * states its whole directory). Facts are per period, so a batch that omits
+ * states its whole directory) and its areas (a geometry source states every
+ * area it draws, with the file they are drawn in). Facts are per period, so a batch that omits
  * an old period leaves it standing; a changed value supersedes the old one.
  * Places this source knew and the batch omits are reported, not ended: only a
  * source can say when a place ended.
  */
+import { randomUUID } from "node:crypto";
 import { and, eq, inArray, isNull } from "drizzle-orm";
+import { makeGeometryRef } from "@bitbaum/geo-kit";
 import type { CountryPack, PlacesConfig, Source } from "@/lib/config/places/schema";
 import type { Database, Tx } from "@/lib/db/client";
 import {
+  areaAssertions,
+  areas,
   facts,
   jurisdictionIdentifiers,
   jurisdictionNames,
@@ -47,6 +52,7 @@ import {
   type ExternalRef,
   type ImportBatch,
 } from "./batch";
+import { defaultGeometryStore, type GeometryStore } from "./geometry-store";
 import { sha256Hex, type SnapshotStore } from "./snapshots";
 import { checkBatch } from "./validate";
 
@@ -54,6 +60,8 @@ export interface Retrieval {
   bytes: Uint8Array;
   url: string | null;
   retrievedAt: Date;
+  /** The ISO date the fetched state begins, when the source's listing says. */
+  validFrom?: string | null;
 }
 
 export interface ImportOptions {
@@ -61,6 +69,8 @@ export interface ImportOptions {
   sourceKey: string;
   retrieval: Retrieval;
   snapshots: SnapshotStore;
+  /** Where a batch's geometry file is published; beside the snapshots by default. */
+  geometry?: GeometryStore;
   dryRun?: boolean;
   gitSha?: string | null;
   adapters?: ReadonlyMap<string, Adapter>;
@@ -80,6 +90,8 @@ export const CHANGE_KINDS = [
   "factsSuperseded",
   "postcodesInserted",
   "postcodesSuperseded",
+  "areasInserted",
+  "areasSuperseded",
 ] as const;
 export type ChangeKind = (typeof CHANGE_KINDS)[number];
 export type ChangeCounts = Record<ChangeKind, number>;
@@ -191,7 +203,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         source,
         pack,
         options: adapterOptions.data,
-        retrieval: { url: retrieval.url },
+        retrieval: { url: retrieval.url, validFrom: retrieval.validFrom ?? null },
         skip: (row, reason) => report.skipped.push({ row, reason }),
       }),
     );
@@ -204,6 +216,16 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
       throw new RunFailed(check.problems);
     }
     const batchPack = config.packs.find((p) => p.key === check.batch.pack)!;
+    // Published before the rows that point into it, so no reference ever dangles.
+    const geometrySha = check.batch.geometry
+      ? sha256Hex(new TextEncoder().encode(check.batch.geometry.topology))
+      : null;
+    if (check.batch.geometry && geometrySha && !dryRun) {
+      await (options.geometry ?? defaultGeometryStore()).put(
+        geometrySha,
+        check.batch.geometry.topology,
+      );
+    }
 
     const outcome = await db
       .transaction(async (tx) => {
@@ -220,7 +242,15 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
             licenceSpdx: source.licence,
           })
           .returning();
-        const applied = await applyBatch(tx, config, batchPack, source, check.batch, sourceRow!.id);
+        const applied = await applyBatch(
+          tx,
+          config,
+          batchPack,
+          source,
+          check.batch,
+          sourceRow!.id,
+          geometrySha,
+        );
         const problems = await packInvariants(tx, batchPack);
         if (problems.length > 0) {
           throw new RunFailed(problems);
@@ -324,6 +354,7 @@ async function applyBatch(
   source: Source,
   batch: ImportBatch,
   sourceId: string,
+  geometrySha: string | null,
 ): Promise<ApplyOutcome> {
   const counts = noChanges();
   const now = new Date();
@@ -332,6 +363,7 @@ async function applyBatch(
     ...batch.relations.flatMap((r) => [r.from, r.to]),
     ...batch.facts.map((f) => f.jurisdiction),
     ...batch.postcodes.map((p) => p.place),
+    ...batch.areas.map((a) => a.place),
     ...batch.jurisdictions.flatMap((j) => j.names.flatMap((n) => (n.usedBy ? [n.usedBy] : []))),
   ]);
   const idOf = (ref: ExternalRef, where: string): string => {
@@ -756,6 +788,8 @@ async function applyBatch(
     counts.postcodesInserted += rows.length;
   }
 
+  await applyAreas(tx, source, batch, sourceId, geometrySha, idOf, counts, now);
+
   // --- Current places this source knew and no longer mentions: reported, never ended here. ---
   const known = await tx
     .selectDistinct({
@@ -811,4 +845,112 @@ async function packInvariants(tx: Tx, pack: CountryPack): Promise<string[]> {
     places.map((p) => ({ id: p.id, levelKey: p.levelKey, label: p.slugPath ?? p.id })),
     edges,
   );
+}
+
+/**
+ * Areas: every area the source draws, each administered by its place. What
+ * the source no longer states (a merged commune, a new edition of the file)
+ * is superseded, the area and its assertion together.
+ */
+async function applyAreas(
+  tx: Tx,
+  source: Source,
+  batch: ImportBatch,
+  sourceId: string,
+  geometrySha: string | null,
+  idOf: (ref: ExternalRef, where: string) => string,
+  counts: ChangeCounts,
+  now: Date,
+): Promise<void> {
+  const current = await tx
+    .select({
+      areaId: areas.id,
+      assertionId: areaAssertions.id,
+      geometryRef: areas.geometryRef,
+      jurisdictionId: areaAssertions.jurisdictionId,
+      validFrom: areas.validFrom,
+      validTo: areas.validTo,
+    })
+    .from(areas)
+    .innerJoin(sources, eq(sources.id, areas.sourceId))
+    .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
+    .where(
+      and(
+        eq(sources.sourceKey, source.key),
+        isNull(areas.supersededAt),
+        isNull(areaAssertions.supersededAt),
+      ),
+    );
+  const areaKey = (r: {
+    geometryRef: string;
+    jurisdictionId: string;
+    validFrom: string | null;
+    validTo: string | null;
+  }) => canonical([r.geometryRef, r.jurisdictionId, r.validFrom, r.validTo]);
+  const geometry = batch.geometry;
+  const wanted = new Map(
+    geometry && geometrySha
+      ? batch.areas.map((a) => {
+          const row = {
+            geometryRef: makeGeometryRef({
+              sourceId: source.key,
+              datasetVersion: geometry.datasetVersion,
+              resourceId: geometrySha,
+              featureId: a.feature,
+            }),
+            jurisdictionId: idOf(a.place, `area ${a.feature}`),
+            validFrom: a.validFrom,
+            validTo: a.validTo,
+          };
+          return [areaKey(row), row] as const;
+        })
+      : [],
+  );
+  const gone = current.filter((have) => !wanted.delete(areaKey(have)));
+  for (let i = 0; i < gone.length; i += 1000) {
+    const chunk = gone.slice(i, i + 1000);
+    await tx
+      .update(areas)
+      .set({ supersededAt: now })
+      .where(
+        inArray(
+          areas.id,
+          chunk.map((r) => r.areaId),
+        ),
+      );
+    await tx
+      .update(areaAssertions)
+      .set({ supersededAt: now })
+      .where(
+        inArray(
+          areaAssertions.id,
+          chunk.map((r) => r.assertionId),
+        ),
+      );
+  }
+  counts.areasSuperseded += gone.length;
+  const rows = [...wanted.values()];
+  for (let i = 0; i < rows.length; i += 1000) {
+    const chunk = rows.slice(i, i + 1000).map((r) => ({ ...r, areaId: randomUUID() }));
+    await tx.insert(areas).values(
+      chunk.map((r) => ({
+        id: r.areaId,
+        geometryRef: r.geometryRef,
+        sourceId,
+        validFrom: r.validFrom,
+        validTo: r.validTo,
+      })),
+    );
+    await tx.insert(areaAssertions).values(
+      chunk.map((r) => ({
+        jurisdictionId: r.jurisdictionId,
+        areaId: r.areaId,
+        assertion: "administers" as const,
+        sourceId,
+        validFrom: r.validFrom,
+        validTo: r.validTo,
+      })),
+    );
+  }
+  counts.areasInserted += rows.length;
 }

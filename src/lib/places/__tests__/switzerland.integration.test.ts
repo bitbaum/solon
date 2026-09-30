@@ -2,8 +2,9 @@
  * The Swiss pack through the real importer into a real database, from cuts of
  * the actual retrievals (fixtures/switzerland): the FSO commune register on
  * 1 January 2021 and on 29 September 2026, its mutations in between, the City
- * of Zürich's statistical quarters, the canton's municipal multipliers, and
- * swisstopo's postcode directory for the communes in the cut.
+ * of Zürich's statistical quarters, the canton's municipal multipliers,
+ * swisstopo's postcode directory for the communes in the cut, and three of
+ * their boundaries.
  * The P1 acceptance (§11) as far as it is built: Witikon resolves up its chain
  * to Switzerland, a merger is a succession, not an edit, and the City of Zürich
  * and Küsnacht at CHF 100,000 match the Federal Tax Administration's
@@ -16,6 +17,7 @@
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { validateGeographyManifest } from "@bitbaum/geo-kit";
 import { and, eq, isNull } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
@@ -29,6 +31,8 @@ import en from "../../../../messages/en.json";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import {
+  areaAssertions,
+  areas,
   facts,
   jurisdictionIdentifiers,
   jurisdictionRelations,
@@ -40,9 +44,11 @@ import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import { loadComparison } from "../compare";
 import { estimateColumn, type ColumnEstimate } from "../compare-view";
 import { runImport, type ImportReport } from "../importer/run";
+import type { GeometryStore } from "../importer/geometry-store";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadPlacePage } from "../place-page";
 import { loadCoverage } from "../coverage";
+import { geographyFileHref, geographyManifest, parseGeometryRef } from "../geography";
 import { resolvePostcode } from "../postcodes";
 import { loadPackIndex, placesAtLevel, searchPlaces } from "../search";
 import { withTestland } from "./fixtures/testland/config";
@@ -75,6 +81,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["estv-canton-multipliers", "estv-rates-2025.json"],
   ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
+  ["swisstopo-commune-boundaries", "swissboundaries3d_2026-01_cut.shp.zip"],
 ];
 
 /**
@@ -92,6 +99,16 @@ const GOLDEN_2025 = [
   { commune: "371", variant: "married", federal: 1816, canton: 11365, communal: 6227 },
 ] as const;
 
+const geometryFiles = new Map<string, Uint8Array>();
+const geometry: GeometryStore = {
+  async put(sha, text) {
+    geometryFiles.set(sha, new TextEncoder().encode(text));
+  },
+  async get(sha) {
+    return geometryFiles.get(sha) ?? null;
+  },
+};
+
 const importFixture = (sourceKey: string, file: string): Promise<ImportReport> =>
   runImport(db, {
     config,
@@ -102,6 +119,7 @@ const importFixture = (sourceKey: string, file: string): Promise<ImportReport> =
       retrievedAt: new Date(),
     },
     snapshots,
+    geometry,
   });
 
 async function placeId(scheme: string, value: string): Promise<string> {
@@ -157,6 +175,62 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       ["canton", "Zürich"],
       ["nation", "Schweiz"],
     ]);
+  });
+
+  it("draws communes from the boundary file, each administered by its place", async () => {
+    const drawn = await db
+      .select({ ref: areas.geometryRef, place: areaAssertions.jurisdictionId })
+      .from(areas)
+      .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
+      .where(and(isNull(areas.supersededAt), isNull(areaAssertions.supersededAt)));
+    const byFeature = new Map(drawn.map((d) => [parseGeometryRef(d.ref)?.featureId, d]));
+    for (const code of ["154", "261", "371"]) {
+      expect(byFeature.get(code)?.place, code).toBe(await placeId("bfs_municipality", code));
+      expect(parseGeometryRef(byFeature.get(code)!.ref)).toMatchObject({
+        sourceId: "swisstopo-commune-boundaries",
+        datasetVersion: "2026-01",
+      });
+    }
+  });
+
+  it("publishes the boundary file in a manifest a map can check", async () => {
+    const manifest = await geographyManifest(db, config, geometry, new Date());
+    const licensePolicy = config.licences.map((l) => ({
+      spdx: l.spdx,
+      requiresAttribution: l.requiresAttribution,
+    }));
+    expect(validateGeographyManifest(manifest, { licensePolicy })).toEqual([]);
+    const communes = manifest.resources.find(
+      (r) => r.id === "swisstopo-commune-boundaries:2026-01",
+    );
+    expect(communes).toMatchObject({
+      geographyId: "switzerland",
+      levelKey: "municipality",
+      format: "topojson",
+      featureCount: 3,
+      viewpointKey: null,
+    });
+    expect(communes?.href).toBe(geographyFileHref(communes!.sha256));
+    expect(geometryFiles.get(communes!.sha256)?.byteLength).toBe(communes?.byteSize);
+    expect(manifest.sources.map((s) => s.id)).toContain("swisstopo-commune-boundaries");
+  });
+
+  it("replaces a commune's area when a new edition of the boundaries arrives", async () => {
+    const zip = new Uint8Array(
+      readFileSync(join(FIXTURES, "swissboundaries3d_2026-01_cut.shp.zip")),
+    );
+    const edition = (name: string) =>
+      runImport(db, {
+        config,
+        sourceKey: "swisstopo-commune-boundaries",
+        retrieval: { bytes: zip, url: `fixture:${name}`, retrievedAt: new Date() },
+        snapshots,
+        geometry,
+      });
+    const next = await edition("swissboundaries3d_2027-01_cut.shp.zip");
+    expect(next.counts).toMatchObject({ areasSuperseded: 3, areasInserted: 3 });
+    const back = await edition("swissboundaries3d_2026-01_cut.shp.zip");
+    expect(back.counts).toMatchObject({ areasSuperseded: 3, areasInserted: 3 });
   });
 
   it("resolves a postcode to the commune it lies in", async () => {

@@ -10,6 +10,7 @@ import type { Database } from "@/lib/db/client";
 import { ADAPTERS, type Adapter, type Probe, type RetrievalRequest } from "../adapters";
 import { envelopeBytes } from "./envelope";
 import { runImport, type ImportReport } from "./run";
+import type { GeometryStore } from "./geometry-store";
 import type { SnapshotStore } from "./snapshots";
 
 export interface FetchOptions {
@@ -18,6 +19,7 @@ export interface FetchOptions {
   /** ISO date the retrievals are planned for. */
   today: string;
   snapshots: SnapshotStore;
+  geometry?: GeometryStore;
   dryRun?: boolean;
   gitSha?: string | null;
   /** Load the source's history first (adapter `backfill`), then today's state. */
@@ -97,8 +99,14 @@ export async function fetchAndImport(db: Database, options: FetchOptions): Promi
     const report = await runImport(db, {
       config: options.config,
       sourceKey: options.sourceKey,
-      retrieval: { bytes, url: request.url, retrievedAt: new Date() },
+      retrieval: {
+        bytes,
+        url: request.url,
+        retrievedAt: new Date(),
+        validFrom: request.validFrom ?? null,
+      },
       snapshots: options.snapshots,
+      geometry: options.geometry,
       dryRun: options.dryRun,
       gitSha: options.gitSha,
       adapters,

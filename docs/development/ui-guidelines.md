@@ -1,6 +1,8 @@
 # UI guidelines
 
-_Created 2026-01-08. Last modified 2026-09-30: two depths, everyday pages
+_Created 2026-01-08. Last modified 2026-10-01: Solon gets a light theme
+beside the dark one (decided 2026-09-30, not built yet), both from the
+package's tokens. Earlier, 2026-09-30: two depths, everyday pages
 (`EVERYDAY_ROUTES`) plain with "Technical details" one click away, the deep
 side as technical as it needs to be; the render check that holds everyday
 pages to it. Earlier the same day: every inner page uses `PageLayout`, every
@@ -34,8 +36,10 @@ shared neither. Copies drift; imports cannot.
 To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in the package's
 `tokens.css`, tag a release, and bump the dependency in the three apps.
 
-Solon is **dark-only**. It is a public ledger; marketing and dashboard share the
-same near-black canvas. There is no light theme to keep in sync.
+Solon is **dark today and gets a light theme** (decided 2026-09-30, with the
+Places map, not built yet). Both come from the package's tokens, including the
+map's colour scale, so a colour is never written for one theme only; until the
+light theme ships, marketing and dashboard share the near-black canvas.
 
 ## Headlines are the sans
 

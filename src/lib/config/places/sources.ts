@@ -325,4 +325,43 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["switzerland"],
   },
+  {
+    // Confirmed 2026-09-30: the federal geodata STAC catalogue lists one zipped
+    // Shapefile per edition (2016-01 … 2026-01, plus 2025-04 for mid-year
+    // mergers), in LV95, no key; swisstopo's OGD conditions (free use, the
+    // source must be named). Each commune's territory, exclaves as parts of one
+    // record; the layer also holds cantons' lake areas, Liechtenstein and the
+    // foreign enclaves, which `where` leaves out. A 25 m grid and 5 % of the
+    // points give about 220 KB gzipped for all 2,110 communes (2026-01).
+    key: "swisstopo-commune-boundaries",
+    publisher: "Federal Office of Topography (swisstopo)",
+    dataset: "swissBOUNDARIES3D",
+    homepage: "https://www.swisstopo.admin.ch/en/landscape-model-swissboundaries3d",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Federal Office of Topography swisstopo, swissBOUNDARIES3D",
+      de: "Bundesamt für Landestopografie swisstopo, swissBOUNDARIES3D",
+      fr: "Office fédéral de topographie swisstopo, swissBOUNDARIES3D",
+    },
+    cadence: "30 4 3 * *",
+    adapter: "shapefile_areas",
+    options: {
+      catalogue: {
+        url: "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissboundaries3d/items?limit=100",
+        asset: "_2056_5728.shp.zip",
+      },
+      edition: "swissboundaries3d_(\\d{4}-\\d{2})_",
+      member: "swissBOUNDARIES3D_1_5_TLM_HOHEITSGEBIET",
+      where: [
+        { column: "ICC", values: ["CH"] },
+        { column: "OBJEKTART", values: ["Gemeindegebiet"] },
+      ],
+      place: { scheme: "bfs_municipality", column: "BFS_NUMMER" },
+      level: "municipality",
+      grid: 25,
+      keep: 0.05,
+      quantization: 30000,
+    },
+    packs: ["switzerland"],
+  },
 ];

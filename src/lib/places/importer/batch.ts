@@ -87,6 +87,28 @@ export const batchPostcodeSchema = z.object({
   ...period,
 });
 
+/** A place's land, as one feature of the batch's geometry file draws it. */
+export const batchAreaSchema = z.object({
+  place: externalRefSchema,
+  /** The feature's id in `geometry.topology`. */
+  feature: z.string().min(1),
+  ...period,
+});
+
+/**
+ * The file the batch's areas are features of (§4.4): the database keeps a
+ * reference to each feature, never the geometry, and the file is published
+ * under its sha256 (`importer/geometry-store.ts`).
+ */
+export const batchGeometrySchema = z.object({
+  /** The level every feature is a place of; the file's one object is named after it. */
+  levelKey: z.string().min(1),
+  /** The source's own edition, part of every reference into the file ("2026-01"). */
+  datasetVersion: z.string().min(1),
+  /** TopoJSON, WGS84. */
+  topology: z.string().min(1),
+});
+
 export const importBatchSchema = z.object({
   /** The pack every place in the batch belongs to. */
   pack: z.string().min(1),
@@ -94,6 +116,9 @@ export const importBatchSchema = z.object({
   relations: z.array(batchRelationSchema).default([]),
   facts: z.array(batchFactSchema).default([]),
   postcodes: z.array(batchPostcodeSchema).default([]),
+  /** A geometry source states all its areas at once, with the file they are drawn in. */
+  areas: z.array(batchAreaSchema).default([]),
+  geometry: batchGeometrySchema.nullable().default(null),
 });
 
 export type ImportBatch = z.infer<typeof importBatchSchema>;
@@ -104,5 +129,7 @@ export type BatchName = z.infer<typeof batchNameSchema>;
 export type BatchRelation = z.infer<typeof batchRelationSchema>;
 export type BatchFact = z.infer<typeof batchFactSchema>;
 export type BatchPostcode = z.infer<typeof batchPostcodeSchema>;
+export type BatchArea = z.infer<typeof batchAreaSchema>;
+export type BatchGeometry = z.infer<typeof batchGeometrySchema>;
 
 export const refKey = (ref: ExternalRef): string => `${ref.scheme}:${ref.value}`;
