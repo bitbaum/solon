@@ -55,7 +55,7 @@ export default function ClaimSeat({
       setVerdict({
         registered: false,
         verified: false,
-        reason: "network error — nothing was submitted",
+        reason: "We couldn't reach Solon. Nothing was saved; please try again.",
       });
     } finally {
       setSubmitting(false);
@@ -63,26 +63,28 @@ export default function ClaimSeat({
   }
 
   return (
-    <div className="space-y-5 rounded-surface border border-default bg-surface-base p-6">
+    <div className="space-y-5">
       <div>
         <label className="block text-sm font-medium text-fg-primary" htmlFor="join-name">
-          Display name on the roster
+          Your name, as other members will see it
         </label>
         <input
           id="join-name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="mt-1 w-full rounded-control border border-default bg-surface-raised px-3 py-2 text-sm text-fg-primary"
+          className="field mt-2"
         />
       </div>
 
       <ActStep
-        label="Claim the founding seat"
+        label="Join as the first member"
         onAct={() => submit(false)}
         disabled={displayName.trim().length < 2}
         submitting={submitting}
         rejection={
-          verdict && !verdict.registered ? (verdict.reason ?? "Registration failed.") : null
+          verdict && !verdict.registered
+            ? (verdict.reason ?? "That didn't work. Please try again.")
+            : null
         }
         signing={{
           fields: (

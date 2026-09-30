@@ -16,6 +16,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Joining, in plain words.** The join page now looks like the rest of Solon
+  and says what is going on without technical terms: who can join, how new
+  members get in (a member suggests you, the members vote), and what you can
+  do meanwhile. It no longer shows the name of a server setting to visitors;
+  an organization nobody can join is now reported to whoever runs Solon
+  instead. OrangeCat's founder can now take its first seat. (#222)
 - **Signing in when your OrangeCat account got its email later.** Solon said
   "Add an email to continue" to accounts that had one, and "Sign in again"
   led straight back to the same page. OrangeCat now tells Solon the email

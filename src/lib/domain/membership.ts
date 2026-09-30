@@ -1,4 +1,4 @@
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, exists, not } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import {
   AuditEventType,
@@ -33,7 +33,7 @@ export interface RegisterMemberResult {
   memberId?: string;
 }
 
-const activeHumansOf = (organizationId: string) =>
+const activeHumansOf = (organizationId: string | typeof organizations.id) =>
   and(
     eq(members.organizationId, organizationId),
     eq(members.memberType, MemberType.HUMAN),
@@ -120,14 +120,13 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
     return {
       registered: false,
       verified: true,
-      reason:
-        "the founding seat is taken — further admissions are decided by a MEMBERSHIP vote of the seated members",
+      reason: `${org.name} already has members, so new members join by a vote of the members.`,
     };
   }
 
   const verdict = genesisVerdict(input.actorId, founderRule());
   if (!verdict.allowed) {
-    return { registered: false, verified: true, reason: genesisRefusalCopy(verdict) };
+    return { registered: false, verified: true, reason: genesisRefusalCopy(verdict, org.name) };
   }
 
   // The count and the insert must be one atomic step: two people submitting at
@@ -201,4 +200,16 @@ export async function genesisOpen(orgSlug: string): Promise<boolean> {
     .from(members)
     .where(activeHumansOf(org.id));
   return humanCount === 0;
+}
+
+/** Organizations with no active human member — each one needs a founder to be joinable at all. */
+export async function unfoundedOrganizations(): Promise<{ slug: string }[]> {
+  return db
+    .select({ slug: organizations.slug })
+    .from(organizations)
+    .where(
+      not(
+        exists(db.select({ id: members.id }).from(members).where(activeHumansOf(organizations.id))),
+      ),
+    );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { founderRule, genesisRefusalCopy, genesisVerdict } from "../founder";
+import { founderRule, foundingGaps, genesisRefusalCopy, genesisVerdict } from "../founder";
 
 const GEORGE = "c9e52937-6020-4cc0-9bf5-5b41538248e5";
 
@@ -33,13 +33,24 @@ describe("genesisVerdict", () => {
     });
   });
 
-  it("explains each refusal with the way forward, never a bare no", () => {
+  it("explains each refusal in plain words with the way forward, never a setting's name", () => {
     for (const reason of ["unnamed", "not_founder"] as const) {
-      const copy = genesisRefusalCopy({ allowed: false, reason });
-      expect(copy).toMatch(/record is open to you/);
+      const copy = genesisRefusalCopy({ allowed: false, reason }, "OrangeCat");
+      expect(copy).toContain("OrangeCat");
+      expect(copy).toMatch(/ask to become a member/);
+      expect(copy).not.toMatch(/SOLON_|deployment|actor/i);
     }
-    expect(genesisRefusalCopy({ allowed: false, reason: "unnamed" })).toContain(
-      "SOLON_FOUNDER_ACTOR_ID",
-    );
+  });
+});
+
+describe("foundingGaps", () => {
+  it("reports every organization without a member while no founder is named", () => {
+    const gaps = foundingGaps([{ slug: "orangecat" }], { founderActorId: null });
+    expect(gaps).toHaveLength(1);
+    expect(gaps[0]!.problem).toContain("SOLON_FOUNDER_ACTOR_ID");
+  });
+
+  it("reports nothing once a founder is named", () => {
+    expect(foundingGaps([{ slug: "orangecat" }], { founderActorId: GEORGE })).toEqual([]);
   });
 });
