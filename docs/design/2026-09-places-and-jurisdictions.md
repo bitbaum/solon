@@ -722,6 +722,15 @@ the box's timer calls, which needs a cron secret in the app's environment), and 
 dry-runs of real adapters against live sources (CI imports cuts of the real
 retrievals instead).
 
+The cross-application geometry contract and pure validators live in the public
+`@bitbaum/geo-kit` package, pinned by immutable commit in Solon, Substrata and
+OrangeCat. Solon's `geojson_tiers` adapter now validates present GeoJSON
+structure and WGS84 coordinates before mapping the jurisdiction hierarchy;
+sources with no geometry remain supported. This is an input guard only: Solon
+still does not persist polygon assets or publish map resources, so P4 remains
+unbuilt. Private residence coordinates stay in OrangeCat and are never sent to
+Solon.
+
 ### 8.4 Corrections and editorial policy: the Register
 
 Wrong data is fixed by a decision, not an edit. A **Register** organization on

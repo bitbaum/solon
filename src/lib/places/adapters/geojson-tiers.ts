@@ -3,9 +3,12 @@
  * each carrying the codes and names of every tier above it (a city's quarters
  * with their district on each quarter). Format only: which properties hold
  * which tier, and the place the top tier belongs to, are the source's
- * `options`. Geometry is not read yet; areas come with the map.
+ * `options`. Present geometries are checked for valid structure and WGS84
+ * coordinates; this adapter still maps hierarchy only, leaving geometry
+ * persistence to the area layer.
  */
 import { z } from "zod";
+import { validateGeometry } from "@bitbaum/geo-kit";
 import type { BatchJurisdiction, BatchRelation, ExternalRef } from "../importer/batch";
 import type { Adapter } from "./types";
 
@@ -13,7 +16,13 @@ const property = z.union([z.string(), z.number()]).nullable();
 const featureCollection = z.object({
   type: z.literal("FeatureCollection"),
   features: z
-    .array(z.object({ type: z.literal("Feature"), properties: z.record(z.string(), property) }))
+    .array(
+      z.object({
+        type: z.literal("Feature"),
+        geometry: z.unknown().nullable().optional(),
+        properties: z.record(z.string(), property),
+      }),
+    )
     .min(1),
 });
 type FeatureCollection = z.infer<typeof featureCollection>;
@@ -52,6 +61,14 @@ export const geojsonTiersAdapter: Adapter<FeatureCollection, TiersOptions> = {
     const places = new Map<string, BatchJurisdiction>();
     const relations = new Map<string, BatchRelation>();
     for (const [i, feature] of collection.features.entries()) {
+      if (feature.geometry !== null && feature.geometry !== undefined) {
+        const geometryProblems = validateGeometry(feature.geometry);
+        if (geometryProblems.length > 0) {
+          throw new Error(
+            `feature ${i}: invalid geometry: ${geometryProblems.slice(0, 4).join("; ")}`,
+          );
+        }
+      }
       let above: ExternalRef = options.parent;
       for (const tier of options.tiers) {
         const code = feature.properties[tier.code];

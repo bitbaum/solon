@@ -194,6 +194,21 @@ describe("the FSO commune register mutations", () => {
 describe("the City of Zürich's statistical quarters", () => {
   const batch = mapSource("zurich-statistical-quarters", fixture("statistical-quarters.json"));
 
+  const fixtureWithGeometry = (geometry: unknown) => {
+    const collection = JSON.parse(
+      new TextDecoder().decode(fixture("statistical-quarters.json")),
+    ) as {
+      type: "FeatureCollection";
+      features: {
+        type: "Feature";
+        geometry: unknown | null;
+        properties: Record<string, unknown>;
+      }[];
+    };
+    collection.features = [{ ...collection.features[0]!, geometry }];
+    return new TextEncoder().encode(JSON.stringify(collection));
+  };
+
   it("maps each tier of a feature to a place part of the tier above", () => {
     expect(byRef(batch, "zurich_statistical_quarter", "74")).toMatchObject({
       levelKey: "statistical_quarter",
@@ -213,6 +228,46 @@ describe("the City of Zürich's statistical quarters", () => {
     const districts = batch.jurisdictions.filter((j) => j.levelKey === "city_district");
     expect(districts.map((d) => d.ref.value).sort()).toEqual(["1", "7"]);
     expect(batch.jurisdictions).toHaveLength(7);
+  });
+
+  it("accepts checked polygon geometry while keeping area persistence separate", () => {
+    const geometry = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [8.5, 47.3],
+          [8.6, 47.3],
+          [8.6, 47.4],
+          [8.5, 47.4],
+          [8.5, 47.3],
+        ],
+      ],
+    };
+    const withGeometry = mapSource("zurich-statistical-quarters", fixtureWithGeometry(geometry));
+    expect(withGeometry.jurisdictions).toHaveLength(2);
+    expect(parentOf(withGeometry, "zurich_statistical_quarter", "11")).toEqual({
+      scheme: "zurich_city_district",
+      value: "1",
+    });
+    expect(withGeometry).not.toHaveProperty("areas");
+  });
+
+  it("rejects malformed or out-of-WGS84 source polygons before mapping", () => {
+    const geometry = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [181, 47.3],
+          [181, 47.4],
+          [182, 47.4],
+          [182, 47.3],
+          [181, 47.3],
+        ],
+      ],
+    };
+    expect(() => mapSource("zurich-statistical-quarters", fixtureWithGeometry(geometry))).toThrow(
+      "feature 0: invalid geometry",
+    );
   });
 });
 
