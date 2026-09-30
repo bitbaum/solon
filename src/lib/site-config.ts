@@ -127,6 +127,13 @@ export const TRANSLATED_ROUTES = new Set<string>([
   "/sign-up",
 ]);
 
+/** Sections translated as a whole: every page under the prefix. */
+const TRANSLATED_PREFIXES = ["/places"];
+
+export const isTranslatedRoute = (pathname: string): boolean =>
+  TRANSLATED_ROUTES.has(pathname) ||
+  TRANSLATED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
 /**
  * Where a message to the people behind Solon arrives. An @orangecat.ch apex
  * address — the only domain on the box that receives mail.

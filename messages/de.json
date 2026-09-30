@@ -409,6 +409,30 @@
       "title": "Quellen",
       "retrieved": "Abgerufen am {date}",
       "licence": "Lizenz: {licence}"
+    },
+    "coverage": {
+      "metaTitle": "Abdeckung · Orte",
+      "metaDescription": "Welche Länder, Ebenen, Angaben und Quellen Solons Orte abdecken und wie aktuell jede Quelle ist, aus den Daten gezählt.",
+      "kicker": "Orte",
+      "title": "Abdeckung",
+      "intro": "Aus den Daten gezählt am {date}, nicht von Hand geschrieben. Wo eine Ebene wenige Orte hat oder eine Angabe fehlt, steht es hier.",
+      "empty": "Noch ist kein Land abgedeckt.",
+      "levels": "Ebenen",
+      "places": "{count, plural, one {# Ort} other {# Orte}}",
+      "partial": "nur manche Orte sind darin unterteilt",
+      "overlapping": "neben der Hierarchie",
+      "facts": "Angaben",
+      "factsNote": "Wie viele Orte jeder Ebene heute jede Angabe haben.",
+      "factsOf": "{places} von {of}",
+      "inTaxModel": "Steuermodell",
+      "noTaxModel": "Noch kein Steuermodell.",
+      "sources": "Quellen",
+      "neverRetrieved": "Noch nicht abgerufen",
+      "lastRun": {
+        "applied": "Letzter Import am {date} übernommen",
+        "failed": "Letzter Import am {date} fehlgeschlagen",
+        "running": "Import läuft seit {date}"
+      }
     }
   }
 }

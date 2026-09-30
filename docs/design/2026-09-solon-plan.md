@@ -4,7 +4,8 @@ _Written 2026-09-25 from George's brief. Companion to
 `2026-09-solon-constitution-engine.md` (the governance engine). This file is the
 product: who it is for, what they read, how they move through it, in which
 language, and the order it gets built in._
-_Last modified 2026-09-29: Zürich's tariffs and multipliers import and match the federal calculator (§9, G).
+_Last modified 2026-09-30: `/places/coverage`, the first Places screen, counts coverage from the data (§9, G).
+Earlier, 2026-09-29: Zürich's tariffs and multipliers import and match the federal calculator (§9, G).
 Earlier the same day: the Swiss structure live, Zürich's multipliers import (§9, G).
 Earlier the same day: Places P1 begun, the Swiss structure imports (§9, G).
 Earlier the same day: Places P0 marked built in the build order (§9, G).
@@ -66,7 +67,7 @@ footer (decided 2026-09-29).
 | **Governance** `/governance` | the art and science (existing lessons) · **ideas** (Solon of Athens, the Landsgemeinde, Ostrom, exit and voice, Condorcet and Arrow, panarchy, network states) · **a new era** (why self-governance is newly possible) |
 | **Platform** `/platform` | how Solon, OrangeCat and Loki work together · security · `/technical` (reference) |
 | **Decisions** | the public record: organizations, proposals, votes |
-| **Places** `/places` (foundations built; Switzerland's communes and the City of Zürich's quarters import; the map and list come later in P1) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
+| **Places** `/places` (foundations built; Switzerland's communes and the City of Zürich's quarters import; `/places/coverage` is live; the map and list come later in P1) | every jurisdiction, official and founded, on one map: compare, take part, move · design in `2026-09-places-and-jurisdictions.md` |
 | Account | **My Solon** `/me` — my groups, votes waiting for me, my proposals · profile |
 
 Footer and mobile menu render the whole map from `site-config.ts` (existing SSOT,
@@ -165,7 +166,8 @@ Each phase ships on its own, verified live.
   of Zürich, has begun: the structure (every Swiss canton, district and
   commune with mergers since 2021, the City of Zürich's quarters) is live
   from the official sources; Zürich's tariffs and multipliers import and
-  reproduce the federal calculator. Next: postcodes, the screens.
+  reproduce the federal calculator. `/places/coverage` counts it all from
+  the data. Next: postcodes, the `/places` list, `/compare` and the API.
 
 ## 10. Open for George
 

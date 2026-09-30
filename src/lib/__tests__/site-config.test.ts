@@ -8,7 +8,14 @@
 import { describe, it, expect } from "vitest";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { HIRE_HREF, MENU, PRIMARY_NAV, SITE_LINKS, SITE_SECTIONS } from "@/lib/site-config";
+import {
+  HIRE_HREF,
+  MENU,
+  PRIMARY_NAV,
+  SITE_LINKS,
+  SITE_SECTIONS,
+  isTranslatedRoute,
+} from "@/lib/site-config";
 import en from "../../../messages/en.json";
 import { findUseCase } from "@/lib/content/use-cases";
 
@@ -81,5 +88,15 @@ describe("PRIMARY_NAV", () => {
     // Six mega-menus wrapped the header onto two lines at 1440px. Three links
     // plus sign-in plus one call to action is the budget.
     expect(PRIMARY_NAV.length).toBeLessThanOrEqual(4);
+  });
+});
+
+describe("isTranslatedRoute", () => {
+  it("takes whole sections by prefix and single pages by path", () => {
+    expect(isTranslatedRoute("/places")).toBe(true);
+    expect(isTranslatedRoute("/places/switzerland/zurich")).toBe(true);
+    expect(isTranslatedRoute("/placesque")).toBe(false);
+    expect(isTranslatedRoute("/hire")).toBe(true);
+    expect(isTranslatedRoute("/hire/more")).toBe(false);
   });
 });

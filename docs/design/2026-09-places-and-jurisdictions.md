@@ -1,8 +1,11 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-09-30: valid time is half-open, and the adapters now
-store it so (§4); a year's figures still hold on 31 December.
+_Last modified 2026-09-30: `/places/coverage` is built, counted from the
+data (§9.2), and places pages count as translated; production holds every P1
+source so far, reloaded after the fix below (§8.3). Earlier the same day: valid
+time is half-open, and the adapters now store it so (§4); a year's figures
+still hold on 31 December.
 Earlier, 2026-09-29: tariffs and the canton's multiplier import from the
 Federal Tax Administration and match its calculator (golden fixtures, §6.2,
 §8.2); POST retrievals are stored as envelopes and planning may probe the
@@ -719,7 +722,9 @@ standalone bundle without the scripts, so a load runs from a checkout of the
 deployed commit on the box, as the app's user, against the box's database,
 with snapshots under `/opt/solon/shared/places-snapshots`, first with
 `--plan` and `--dry-run`. The Swiss structure was loaded this way on
-2026-09-29 at `b7027f1`, and reproduced the local load exactly.
+2026-09-29 at `b7027f1`, and reproduced the local load exactly. All six Swiss
+sources were reloaded on 2026-09-30 at `5877485`, which superseded the
+inclusive end dates (978 facts, 125 place updates) without deleting a row.
 
 Not yet: areas and assertions (P4), the scheduled runner on the box (a route
 the box's timer calls, which needs a cron secret in the app's environment), and CI
@@ -835,7 +840,11 @@ The screens are those of the first version of this document, now generic:
 - **`/places/coverage`**: per country, which levels, metrics, instruments and
   sources are covered and how fresh they are, **computed from the data**. World
   coverage is honest from day one: a country in the backbone but without a pack
-  says exactly that.
+  says exactly that. **Built** (`src/lib/places/coverage.ts`): per pack, the
+  current places at each level, how many at each level hold each fact the tax
+  model reads (and any other fact they hold), and each source's latest
+  retrieval and latest real import run. Instruments join with P2, and
+  countries without a pack with the backbone (P4).
 
 ### 9.3 Navigation
 
@@ -925,7 +934,8 @@ before the build.
   since 2026-09-29, with the canton's commune multipliers since 2021. Federal
   and cantonal tariffs and the canton's multiplier import from the Federal Tax
   Administration, and the City of Zürich and Küsnacht at CHF 100,000 match its
-  calculator (§6.2). Next: the postcode resolver, then the screens.
+  calculator (§6.2). `/places/coverage` counts all of it from the data.
+  Next: the postcode resolver, the `/places` list, `/compare` and the API.
 
 **P2: Switzerland in depth**
 - All municipalities, all cantonal models and multipliers, church and school

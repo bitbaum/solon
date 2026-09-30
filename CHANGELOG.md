@@ -6,6 +6,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ## 2026-09-30
 
+### Added
+
+- **What Places covers, counted from the data**, at `/places/coverage`: for
+  each country, how many places each level holds, how many of them have each
+  figure the tax estimate needs, and when each source was last fetched. A
+  missing figure shows as a low count, not as silence. Place pages no longer
+  claim to be untranslated in German, French, Italian and Russian. (#220)
+
 ### Fixed
 
 - **Tax estimates on 31 December.** A year's tariffs and multipliers ended a
