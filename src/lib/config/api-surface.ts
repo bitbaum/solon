@@ -70,6 +70,13 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/v1/places/map?pack=",
+    description:
+      "every place a boundary file draws, with the tax figures along its chain, for maps that estimate in the browser",
+    sample: () => "/api/v1/places/map?pack=switzerland",
+  },
+  {
+    method: "GET",
     path: "/api/v1/places/geography",
     description: "boundary files for maps, as a @bitbaum/geo-kit manifest with each file's sha256",
     sample: () => "/api/v1/places/geography",
