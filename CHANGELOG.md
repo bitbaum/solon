@@ -12,7 +12,7 @@ one to read for the detail. Fixes get the same weight as features.
   of every Swiss commune from swisstopo's official boundaries and publishes
   them as one small file (about 220 KB) that a map can check before drawing.
   A new edition each year replaces the old one on its own. The map on
-  `/places` that uses them comes next, in dark and light. (#PR)
+  `/places` that uses them comes next, in dark and light. (#238)
 
 ## 2026-09-30
 
