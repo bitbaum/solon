@@ -8,6 +8,17 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Four more cantons on the map and in `/compare`: Aargau, Solothurn,
+  Graubünden and Neuchâtel.** These cantons tax a married couple as if each
+  earned half their joint income (splitting), which Solon could not express
+  before, so their communes were grey. Their figures now come from the
+  Federal Tax Administration like the others, and each was checked against
+  its tax calculator to the franc: two communes per canton, single and
+  married, at three incomes, for 2025 and 2026. Glarus, Nidwalden,
+  Schaffhausen, Geneva, Thurgau, St. Gallen and Appenzell Innerrhoden also
+  split, but do not match the calculator yet, so they stay grey rather
+  than show a wrong figure. (#241)
+
 - **A map of what tax would cost you, commune by commune.** `/places` now
   opens on a map of every Swiss commune, coloured from the lowest tax to the
   highest for your income and household. Until you enter yours, it shows an

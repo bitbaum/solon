@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
+import { switzerlandIncomeTax } from "@/lib/config/places/countries/switzerland";
+import { evaluate } from "@/lib/tax-model";
 import { ADAPTERS, type Probe } from "../adapters";
 import { unzipSync, zipSync } from "fflate";
 import { decodeCsvAnyForm, isoFromDottedDate, parseCsv } from "../adapters/csv";
@@ -410,9 +412,97 @@ describe("the Federal Tax Administration's exports", () => {
     ]);
     expect(tariff("bfs_canton", "1", "married")).toBeDefined();
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
-    // Aargau divides a couple's income, and is not listed.
-    expect(scales.facts.some((f) => f.jurisdiction.value === "19")).toBe(false);
-    expect(scales.facts).toHaveLength(6);
+    // Two federal tariffs, and a tariff and a divisor per variant for Aargau,
+    // Zürich and Bern.
+    expect(scales.facts).toHaveLength(14);
+  });
+
+  it("records the divisor of a canton that splits a couple's income, and 1 elsewhere", () => {
+    const divisor = (value: string, variant: string) =>
+      scales.facts.find(
+        (f) =>
+          f.metricKey === "tax.income.divisor" &&
+          f.jurisdiction.value === value &&
+          f.variant === variant,
+      )?.value;
+    // Aargau's one table serves both variants; only a couple's income is divided.
+    expect(divisor("19", "married")).toBe(2);
+    expect(divisor("19", "single")).toBe(1);
+    expect(divisor("1", "married")).toBe(1);
+    expect(tariff("bfs_canton", "19", "single")!.value).toEqual(
+      tariff("bfs_canton", "19", "married")!.value,
+    );
+  });
+
+  it.each([
+    // The calculator (API_calculateSimpleTaxes), Aarau, 2025, taxable income
+    // CHF 100,000, no church tax, asked on 2026-10-01.
+    { variant: "single", federal: 2688, cantonal: 7701 + 6660 },
+    { variant: "married", federal: 1816, cantonal: 5292 + 4577 },
+  ])(
+    "lets the model split a couple's income as Aargau does ($variant)",
+    ({ variant, federal, cantonal }) => {
+      const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
+      const facts = [...scales.facts, ...canton.facts].flatMap((f) => {
+        const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
+        return (level === "nation" && f.jurisdiction.value === "CH") ||
+          (level === "canton" && f.jurisdiction.value === "19")
+          ? [
+              {
+                level,
+                metric: f.metricKey,
+                ...(f.variant ? { variant: f.variant } : {}),
+                value: f.value,
+              },
+            ]
+          : [];
+      });
+      // Aarau's own multiplier, 96 %, as the same export reads it.
+      facts.push({ level: "municipality", metric: "tax.multiplier", value: 0.96 });
+      const estimate = evaluate(switzerlandIncomeTax, facts, {
+        values: { taxable_income: 100_000 },
+        variant,
+      });
+      const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
+      expect(estimate.complete).toBe(true);
+      expect(Math.abs(amount("federal") - federal)).toBeLessThan(1);
+      expect(Math.abs(amount("cantonal_and_communal") - cantonal)).toBeLessThan(2);
+    },
+  );
+
+  it("refuses a divided tariff where the calculator divides nothing, or no divisor is recorded", () => {
+    const envelope = JSON.parse(new TextDecoder().decode(fixture("estv-scales-2025.json"))) as {
+      request: unknown;
+      response: string;
+    };
+    const exported = JSON.parse(envelope.response) as { response: Record<string, unknown>[] };
+    const canton = (row: Record<string, unknown>) => (row.Location as { Canton: string }).Canton;
+    // Schaffhausen's federal rows read splitting 1.9; without the other
+    // cantons' federal rows, nothing gives their tariff instead.
+    exported.response = exported.response.filter(
+      (row) => row.Target !== "BUND" || canton(row) === "SH",
+    );
+    for (const row of exported.response) {
+      if (canton(row) === "ZH" && row.Target === "KANTON") row.Splitting = 2;
+    }
+    envelope.response = JSON.stringify(exported);
+    const refused: { row: string; reason: string }[] = [];
+    const batch = mapSource(
+      "estv-income-tax-scales",
+      new TextEncoder().encode(JSON.stringify(envelope)),
+      refused,
+    );
+    const zurich = batch.facts.filter((f) => f.jurisdiction.value === "1");
+    expect(zurich.map((f) => `${f.metricKey} ${f.variant} ${String(f.value)}`)).toContain(
+      "tax.income.divisor married 2",
+    );
+    expect(zurich.some((f) => f.variant === "single")).toBe(false);
+    expect(refused.map((r) => r.reason)).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/variant the calculator does not divide \(splitting 2\)/),
+        expect.stringMatching(/does not record a divisor/),
+      ]),
+    );
   });
 
   it("reports no row it could not read when another row gives the same tariff", () => {
@@ -431,6 +521,7 @@ describe("the Federal Tax Administration's exports", () => {
   it("records the canton's own multiplier", () => {
     const rates = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
     expect(rates.facts).toEqual([
+      multiplier("bfs_canton", "19", 1.11),
       multiplier("bfs_canton", "1", 0.98),
       multiplier("bfs_canton", "2", 2.975),
     ]);

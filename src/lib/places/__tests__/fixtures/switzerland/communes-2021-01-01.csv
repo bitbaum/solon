@@ -1,6 +1,7 @@
 HistoricalCode,BfsCode,ValidFrom,ValidTo,Level,Parent,Name,ShortName,Inscription,Radiation,Rec_Type_fr,Rec_Type_de
 1,1,12.09.1848,,1,,Zürich,ZH,,,,
 2,2,12.09.1848,,1,,Bern / Berne,BE,,,,
+19,19,12.09.1848,,1,,Aargau,AG,,,,
 4,4,12.09.1848,,1,,Uri,UR,,,,
 23,23,12.09.1848,,1,,Valais / Wallis,VS,,,,
 10082,102,12.09.1848,,2,1,Bezirk Andelfingen,Andelfingen,100,,,

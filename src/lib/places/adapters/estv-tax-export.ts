@@ -108,12 +108,34 @@ const scalesOptions = exportOptions.extend({
   targets: z
     .array(
       z
-        .object({ target: z.string().min(1), metric: z.string().min(1), ...placeChoice })
+        .object({
+          target: z.string().min(1),
+          metric: z.string().min(1),
+          ...placeChoice,
+          /**
+           * Where this target's rows say how far a couple's income is divided
+           * before the tariff applies (their `Splitting`), the metric that
+           * records it per variant: the divisor, 1 where nothing is divided.
+           * Without it, a row that divides is not read.
+           */
+          divisor: z.object({ metric: z.string().min(1) }).optional(),
+        })
         .refine(oneWayToPlace, "give either place or cantons"),
     )
     .min(1),
-  /** The group token that marks a row as this variant's; a row may carry several. */
-  variants: z.array(z.object({ variant: z.string().min(1), group: z.string().min(1) })).min(1),
+  /**
+   * The group token that marks a row as this variant's; a row may carry several.
+   * `divided`: the calculator divides this variant's income by a row's `Splitting`.
+   */
+  variants: z
+    .array(
+      z.object({
+        variant: z.string().min(1),
+        group: z.string().min(1),
+        divided: z.boolean().default(false),
+      }),
+    )
+    .min(1),
   /** The group that applies to every variant. */
   everyVariantGroup: z.string().min(1),
   /** How each table type reads: `thresholds` (Amount is where a rate starts) or `widths`. */
@@ -136,9 +158,33 @@ function brackets(row: ScaleRow, reading: "thresholds" | "widths") {
   });
 }
 
+/**
+ * Why a row cannot be read for a variant, or null. A row that divides a
+ * couple's income is read only where its target records the divisor, and
+ * only for variants the calculator divides, or from a table for every variant
+ * (which then divides only the variants that are divided).
+ */
+function unreadable(
+  row: ScaleRow,
+  recordsDivisor: boolean,
+  divided: boolean,
+  options: ScalesOptions,
+): string | null {
+  if (row.Splitting === 0) {
+    return null;
+  }
+  if (!recordsDivisor) {
+    return `the tariff divides a couple's income (splitting ${row.Splitting}), and this target does not record a divisor`;
+  }
+  if (!divided && row.Group !== options.everyVariantGroup) {
+    return `the tariff divides the income of a variant the calculator does not divide (splitting ${row.Splitting})`;
+  }
+  return null;
+}
+
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "2",
+  version: "3",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -163,32 +209,50 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
       const variants = options.variants.filter(
         (v) => groups.includes(v.group) || row.Group === options.everyVariantGroup,
       );
-      for (const { variant } of variants) {
+      for (const { variant, divided } of variants) {
         const key = `${place.scheme}:${place.value} ${target.metric} ${variant}`;
         const label = `${key} ${year}`;
+        const reason = unreadable(row, target.divisor !== undefined, divided, options);
         const reading = options.tableTypes[row.TableType];
-        if (row.Splitting !== 0 || !reading) {
+        if (reason || !reading) {
           unread.set(key, {
             label,
-            reason:
-              row.Splitting !== 0
-                ? `the tariff divides a couple's income (splitting ${row.Splitting}), which the tax model does not express yet`
-                : `table type "${row.TableType}" is not read yet`,
+            reason: reason ?? `table type "${row.TableType}" is not read yet`,
           });
           continue;
         }
-        const fact: BatchFact = {
-          jurisdiction: place,
-          metricKey: target.metric,
-          variant,
-          ...period,
-          value: { kind: "progressive", currency: pack.currency, brackets: brackets(row, reading) },
-        };
-        const earlier = facts.get(key);
-        if (earlier && JSON.stringify(earlier.value) !== JSON.stringify(fact.value)) {
-          throw new Error(`${label}: the export gives two different tariffs`);
+        const read: BatchFact[] = [
+          {
+            jurisdiction: place,
+            metricKey: target.metric,
+            variant,
+            ...period,
+            value: {
+              kind: "progressive",
+              currency: pack.currency,
+              brackets: brackets(row, reading),
+            },
+          },
+        ];
+        if (target.divisor) {
+          read.push({
+            jurisdiction: place,
+            metricKey: target.divisor.metric,
+            variant,
+            ...period,
+            value: divided && row.Splitting !== 0 ? row.Splitting : 1,
+          });
         }
-        facts.set(key, fact);
+        for (const fact of read) {
+          const factKey = `${place.scheme}:${place.value} ${fact.metricKey} ${variant}`;
+          const earlier = facts.get(factKey);
+          if (earlier && JSON.stringify(earlier.value) !== JSON.stringify(fact.value)) {
+            throw new Error(
+              `${label}: the export gives two different values for ${fact.metricKey}`,
+            );
+          }
+          facts.set(factKey, fact);
+        }
       }
     }
     for (const [key, { label, reason }] of unread) {

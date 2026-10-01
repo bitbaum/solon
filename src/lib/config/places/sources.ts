@@ -1,13 +1,31 @@
 import type { SourceInput } from "./schema";
 
 /**
- * Cantons whose income tax the Swiss model expresses (one basic tariff times the
- * canton's and the commune's multipliers, no splitting), by the tax calculator's
- * canton code, with their FSO number. Each reproduces the calculator to the franc
- * at CHF 60,000, 100,000 and 250,000, single and married, for 2025 and 2026
- * (checked 2026-09-30). Ticino does not: its basic tax differs by CHF 25–50.
+ * Cantons whose income tax the Swiss model expresses (one basic tariff, a
+ * couple's income divided by the canton's divisor where it splits, times the
+ * canton's and the commune's multipliers), by the tax calculator's canton code,
+ * with their FSO number. Each reproduces the calculator to the franc at CHF
+ * 60,000, 100,000 and 250,000, single and married, for 2025 and 2026, in two
+ * communes (checked 2026-09-30; Aargau, Solothurn, Graubünden and Neuchâtel,
+ * which split, 2026-10-01). Not yet: Ticino, whose basic tax differs by
+ * CHF 25–60; Glarus, Nidwalden and Schaffhausen, which round the divided
+ * income in a way the model does not express (a couple's tax is off by up to
+ * CHF 9); Thurgau, St. Gallen and Appenzell Innerrhoden, whose school communes
+ * (and districts) levy their own multipliers, which the export reduces to one.
  */
-const MODELLED_CANTONS = { ZH: "1", BE: "2", LU: "3", ZG: "9", BS: "12", AR: "15", JU: "26" };
+const MODELLED_CANTONS = {
+  ZH: "1",
+  BE: "2",
+  LU: "3",
+  ZG: "9",
+  SO: "11",
+  BS: "12",
+  AR: "15",
+  GR: "18",
+  AG: "19",
+  NE: "24",
+  JU: "26",
+};
 const modelledCantons = Object.fromEntries(
   Object.entries(MODELLED_CANTONS).map(([code, value]) => [code, { scheme: "bfs_canton", value }]),
 );
@@ -207,13 +225,15 @@ export const SOURCES: readonly SourceInput[] = [
           target: "KANTON",
           metric: "tax.income.tariff.basic",
           cantons: modelledCantons,
+          divisor: { metric: "tax.income.divisor" },
         },
       ],
       // Single people with children are taxed on the married tariff; the model's
-      // "single" is a single person without children.
+      // "single" is a single person without children. A couple's income is the
+      // one the calculator divides.
       variants: [
         { variant: "single", group: "LEDIG_OHNE_KINDER" },
-        { variant: "married", group: "VERHEIRATET" },
+        { variant: "married", group: "VERHEIRATET", divided: true },
       ],
       everyVariantGroup: "ALLE",
       tableTypes: { BUND: "thresholds", ZUERICH: "widths" },
