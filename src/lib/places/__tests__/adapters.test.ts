@@ -435,8 +435,28 @@ describe("the Federal Tax Administration's exports", () => {
     expect(tariff("bfs_canton", "1", "married")).toBeDefined();
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
     // Two federal tariffs, and a tariff and a divisor per variant for Aargau,
-    // Zürich, Bern, Fribourg and Ticino.
-    expect(scales.facts).toHaveLength(22);
+    // Zürich, Bern, Fribourg, Ticino, Nidwalden, Glarus, Schaffhausen and Vaud.
+    expect(scales.facts).toHaveLength(38);
+  });
+
+  it("attaches how the calculator rounds the income, per canton", () => {
+    const rounding = (scheme: string, value: string) =>
+      (tariff(scheme, value, "married")!.value as { rounding?: unknown }).rounding;
+    expect(rounding("iso_3166_1", "CH")).toEqual({ base: 100 });
+    expect(rounding("bfs_canton", "1")).toEqual({ base: 100 });
+    expect(rounding("bfs_canton", "22")).toEqual({ base: 100, divided: 100 });
+  });
+
+  it("reads Vaud's single tariff from its cohabiting table, which divides nothing", () => {
+    const divisor = (variant: string) =>
+      scales.facts.find(
+        (f) =>
+          f.metricKey === "tax.income.divisor" &&
+          f.jurisdiction.value === "22" &&
+          f.variant === variant,
+      )?.value;
+    expect(divisor("single")).toBe(1);
+    expect(divisor("married")).toBe(1.8);
   });
 
   it("records the divisor of a canton that splits a couple's income, and 1 elsewhere", () => {
@@ -456,64 +476,124 @@ describe("the Federal Tax Administration's exports", () => {
     );
   });
 
+  const vaudReduction = mapSource(
+    "vd-income-tax-reduction",
+    new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-reduction.csv")),
+  ).facts.filter((f) => f.validFrom === "2025-01-01");
+
   it.each([
     // The calculator (API_calculateSimpleTaxes), 2025, taxable income CHF
-    // 100,000, no church tax, asked on 2026-10-01; the commune's own multiplier
-    // as the same export reads it. Aargau splits a couple's income, Fribourg
-    // gives average rates, and Ticino states the tax at each step.
-    {
-      commune: "Aarau",
-      canton: "19",
-      own: 0.96,
-      variant: "single",
-      federal: 2688,
-      cantonal: 7701 + 6660,
-    },
-    {
-      commune: "Aarau",
-      canton: "19",
-      own: 0.96,
-      variant: "married",
-      federal: 1816,
-      cantonal: 5292 + 4577,
-    },
-    {
-      commune: "Fribourg",
-      canton: "10",
-      own: 0.8,
-      variant: "single",
-      federal: 2688,
-      cantonal: 10359 + 8633,
-    },
-    {
-      commune: "Fribourg",
-      canton: "10",
-      own: 0.8,
-      variant: "married",
-      federal: 1816,
-      cantonal: 7826 + 6522,
-    },
-    {
-      commune: "Bellinzona",
-      canton: "21",
-      own: 0.93,
-      variant: "single",
-      federal: 2688,
-      cantonal: 8791 + 8176,
-    },
-    {
-      commune: "Bellinzona",
-      canton: "21",
-      own: 0.93,
-      variant: "married",
-      federal: 1816,
-      cantonal: 6521 + 6065,
-    },
+    // 100,000 unless stated, no church tax, asked on 2026-10-01; the commune's
+    // own multiplier as the same export reads it. Aargau splits a couple's
+    // income, Fribourg gives average rates, and Ticino states the tax at each
+    // step. At CHF 87,654 the income is rounded down to 100, and in Vaud,
+    // Schaffhausen, Nidwalden and Glarus a couple's divided income too; Vaud's
+    // cantonal tax is cut by 4 %.
+    ...[
+      {
+        commune: "Lausanne",
+        canton: "22",
+        own: 0.785,
+        variant: "single",
+        federal: 1870,
+        cantonal: 10752 + 5672,
+      },
+      {
+        commune: "Lausanne",
+        canton: "22",
+        own: 0.785,
+        variant: "married",
+        federal: 1269,
+        cantonal: 8795 + 4640,
+      },
+      {
+        commune: "Schaffhausen",
+        canton: "14",
+        own: 0.86,
+        variant: "married",
+        federal: 1269,
+        cantonal: 3615 + 3935,
+      },
+      {
+        commune: "Stans",
+        canton: "7",
+        own: 2.35,
+        variant: "married",
+        federal: 1269,
+        cantonal: 4311 + 3808,
+      },
+      {
+        commune: "Glarus",
+        canton: "8",
+        own: 0.56,
+        variant: "married",
+        federal: 1269,
+        cantonal: 4707 + 4415,
+      },
+      {
+        commune: "Aarau",
+        canton: "19",
+        own: 0.96,
+        variant: "married",
+        federal: 1269,
+        cantonal: 4191 + 3625,
+      },
+    ].map((c) => ({ ...c, income: 87_654 })),
+    ...[
+      {
+        commune: "Aarau",
+        canton: "19",
+        own: 0.96,
+        variant: "single",
+        federal: 2688,
+        cantonal: 7701 + 6660,
+      },
+      {
+        commune: "Aarau",
+        canton: "19",
+        own: 0.96,
+        variant: "married",
+        federal: 1816,
+        cantonal: 5292 + 4577,
+      },
+      {
+        commune: "Fribourg",
+        canton: "10",
+        own: 0.8,
+        variant: "single",
+        federal: 2688,
+        cantonal: 10359 + 8633,
+      },
+      {
+        commune: "Fribourg",
+        canton: "10",
+        own: 0.8,
+        variant: "married",
+        federal: 1816,
+        cantonal: 7826 + 6522,
+      },
+      {
+        commune: "Bellinzona",
+        canton: "21",
+        own: 0.93,
+        variant: "single",
+        federal: 2688,
+        cantonal: 8791 + 8176,
+      },
+      {
+        commune: "Bellinzona",
+        canton: "21",
+        own: 0.93,
+        variant: "married",
+        federal: 1816,
+        cantonal: 6521 + 6065,
+      },
+    ].map((c) => ({ ...c, income: 100_000 })),
   ])(
-    "estimates $commune, $variant, as the calculator does",
-    ({ canton: cantonCode, own, variant, federal, cantonal }) => {
+    "estimates $commune, $variant, at CHF $income, as the calculator does",
+    ({ canton: cantonCode, own, variant, federal, cantonal, income }) => {
       const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-      const facts = [...scales.facts, ...canton.facts].flatMap((f) => {
+      const facts = [...scales.facts, ...canton.facts, ...vaudReduction].flatMap((f) => {
         const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
         return (level === "nation" && f.jurisdiction.value === "CH") ||
           (level === "canton" && f.jurisdiction.value === cantonCode)
@@ -529,7 +609,7 @@ describe("the Federal Tax Administration's exports", () => {
       });
       facts.push({ level: "municipality", metric: "tax.multiplier", value: own });
       const estimate = evaluate(switzerlandIncomeTax, facts, {
-        values: { taxable_income: 100_000 },
+        values: { taxable_income: income },
         variant,
       });
       const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
@@ -595,6 +675,10 @@ describe("the Federal Tax Administration's exports", () => {
       multiplier("bfs_canton", "2", 2.975),
       multiplier("bfs_canton", "10", 0.96),
       multiplier("bfs_canton", "21", 1),
+      multiplier("bfs_canton", "8", 0.597),
+      multiplier("bfs_canton", "7", 2.66),
+      multiplier("bfs_canton", "14", 0.79),
+      multiplier("bfs_canton", "22", 1.55),
     ]);
   });
 

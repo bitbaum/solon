@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Vaud, Schaffhausen, Nidwalden and Glarus on the map and in `/compare`.**
+  These cantons round a couple's divided income to the hundred francs
+  before the tariff applies, and Vaud cuts its cantonal tax by a share its
+  tax law sets each year (5 % from 2026), which the Federal Tax
+  Administration's tables do not carry; Solon keeps that share by hand,
+  citing the law. All four match the Federal Tax Administration's calculator
+  to the franc, Vaud in all its communes. (#243)
+
 - **Ticino and Fribourg on the map and in `/compare`.** Ticino's tariff
   states the tax at each step, and in a few places that differs from what
   its rates alone would give; Fribourg's tariff gives average rates rather
@@ -52,6 +60,13 @@ one to read for the detail. Fixes get the same weight as features.
   `/places` that uses them comes next, in dark and light. (#238)
 
 ### Fixed
+
+- **Tax figures at incomes that are not round.** The calculator rounds
+  taxable income down to the hundred francs before applying a tariff (in
+  every canton but Solothurn and Graubünden, and federally), and Solon did
+  not, so an income such as CHF 87,654 came out a few francs off. Solon now
+  rounds as the calculator does, and the checks include such incomes.
+  (#243)
 
 - **Federal tax at very high incomes.** Above CHF 793,400 the federal tax is
   11.5% of the whole income. Solon approximated this and showed CHF 1.40
