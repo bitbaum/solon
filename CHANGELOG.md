@@ -14,7 +14,7 @@ one to read for the detail. Fixes get the same weight as features.
   tax law sets each year (5 % from 2026), which the Federal Tax
   Administration's tables do not carry; Solon keeps that share by hand,
   citing the law. All four match the Federal Tax Administration's calculator
-  to the franc, Vaud in all its communes. (#PR)
+  to the franc, Vaud in all its communes. (#243)
 
 - **Ticino and Fribourg on the map and in `/compare`.** Ticino's tariff
   states the tax at each step, and in a few places that differs from what
@@ -66,7 +66,7 @@ one to read for the detail. Fixes get the same weight as features.
   every canton but Solothurn and Graubünden, and federally), and Solon did
   not, so an income such as CHF 87,654 came out a few francs off. Solon now
   rounds as the calculator does, and the checks include such incomes.
-  (#PR)
+  (#243)
 
 - **Federal tax at very high incomes.** Above CHF 793,400 the federal tax is
   11.5% of the whole income. Solon approximated this and showed CHF 1.40
