@@ -22,6 +22,7 @@ const tariffBase = {
   rounding: z
     .object({ base: z.number().positive(), divided: z.number().positive().optional() })
     .optional(),
+  minimum: z.number().min(0).optional(),
 };
 /** The vendored evaluator's `Tariff`, as data a source can carry. */
 export const tariffSchema = z.discriminatedUnion("kind", [
@@ -33,6 +34,20 @@ export const tariffSchema = z.discriminatedUnion("kind", [
     steps: z.array(rateRow.extend({ base: z.number().min(0) })).min(1),
   }),
   z.object({ kind: z.literal("average"), ...tariffBase, points: z.array(rateRow).min(1) }),
+  z.object({
+    kind: z.literal("logarithmic"),
+    ...tariffBase,
+    pieces: z
+      .array(
+        z.object({
+          from: z.number().min(0),
+          constant: z.number(),
+          linear: z.number(),
+          xLnX: z.number(),
+        }),
+      )
+      .min(1),
+  }),
 ]);
 
 const period = {

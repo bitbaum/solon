@@ -19,20 +19,29 @@ const HUNDRED_DIVIDED = { base: 100, divided: 100 };
  * the tax at each step, 2026-10-01, also at CHF 30,000; Glarus, Nidwalden,
  * Schaffhausen and Vaud, which round the divided income, 2026-10-01, also at
  * uneven incomes, Vaud with its cantonal reduction from
- * vd-income-tax-reduction). Not yet: Thurgau, St. Gallen and Appenzell
- * Innerrhoden, whose school communes (and districts) levy their own
- * multipliers, which the export reduces to one.
+ * vd-income-tax-reduction; Uri and Obwalden, whose tariff is a flat rate,
+ * Basel-Landschaft, whose tariff is a formula, and Schwyz, whose communes
+ * have a tariff of their own, 2026-10-01, at CHF 23,456 to 777,777). Not
+ * yet: Thurgau, St. Gallen and Appenzell Innerrhoden, whose school communes
+ * (and districts) levy their own multipliers, which the export reduces to
+ * one; Valais, whose exported tables do not give the calculator's figures
+ * (it indexes them, and a couple's rebate has floors and caps per commune);
+ * Geneva, whose further reduction the export does not carry.
  */
 const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   ZH: { fso: "1", rounding: HUNDRED },
   BE: { fso: "2", rounding: HUNDRED },
   LU: { fso: "3", rounding: HUNDRED },
+  UR: { fso: "4" },
+  SZ: { fso: "5", rounding: HUNDRED_DIVIDED },
+  OW: { fso: "6", rounding: HUNDRED },
   NW: { fso: "7", rounding: HUNDRED_DIVIDED },
   GL: { fso: "8", rounding: HUNDRED_DIVIDED },
   ZG: { fso: "9", rounding: HUNDRED },
   FR: { fso: "10", rounding: HUNDRED },
   SO: { fso: "11" },
   BS: { fso: "12", rounding: HUNDRED },
+  BL: { fso: "13" },
   SH: { fso: "14", rounding: HUNDRED_DIVIDED },
   AR: { fso: "15", rounding: HUNDRED },
   GR: { fso: "18" },
@@ -245,10 +254,21 @@ export const SOURCES: readonly SourceInput[] = [
           metric: "tax.income.tariff",
           place: { scheme: "iso_3166_1", value: "CH" },
           rounding: HUNDRED,
+          // DBG Art. 36 para. 3: amounts below CHF 25 are not levied.
+          minimum: 25,
         },
         {
           target: "KANTON",
           metric: "tax.income.tariff.basic",
+          cantons: modelledCantons,
+          divisor: { metric: "tax.income.divisor" },
+          cantonRounding,
+          alsoAs: { metric: "tax.income.tariff.communal", unless: "GEMEINDE" },
+        },
+        {
+          // Schwyz's communes (and Valais's, not modelled yet) have their own tariff.
+          target: "GEMEINDE",
+          metric: "tax.income.tariff.communal",
           cantons: modelledCantons,
           divisor: { metric: "tax.income.divisor" },
           cantonRounding,
@@ -267,7 +287,15 @@ export const SOURCES: readonly SourceInput[] = [
       // at each step, and the calculator keeps it where the rates below would
       // give another amount (Ticino; the federal tariff's top). Fribourg's
       // tables give average rates, and a couple's table of its own.
-      tableTypes: { BUND: "stepped", ZUERICH: "widths", FREIBURG: "average" },
+      // Uri's and Obwalden's tables are one flat rate, Basel-Landschaft's a
+      // formula per piece of income.
+      tableTypes: {
+        BUND: "stepped",
+        ZUERICH: "widths",
+        FREIBURG: "average",
+        FLATTAX: "flat",
+        FORMEL: "formula",
+      },
       splittingBuiltIn: ["FREIBURG"],
     },
     packs: ["switzerland"],

@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Basel-Landschaft, Schwyz, Uri and Obwalden on the map and in
+  `/compare`.** Uri and Obwalden tax income at one flat rate;
+  Basel-Landschaft's tariff is a formula, which Solon now reads as the law
+  writes it; Schwyz's communes have a tariff of their own. All four match the
+  Federal Tax Administration's calculator to the franc. An estimate now
+  shows the cantonal and the communal tax as two lines instead of one.
+  (#244)
+
 - **Vaud, Schaffhausen, Nidwalden and Glarus on the map and in `/compare`.**
   These cantons round a couple's divided income to the hundred francs
   before the tariff applies, and Vaud cuts its cantonal tax by a share its
@@ -60,6 +68,11 @@ one to read for the detail. Fixes get the same weight as features.
   `/places` that uses them comes next, in dark and light. (#238)
 
 ### Fixed
+
+- **No federal tax below CHF 25.** The federal tax is not levied when it
+  would be less than CHF 25; Solon showed the small amount anyway (CHF 3
+  for a couple at CHF 30,000). It now shows nothing, as the calculator does.
+  (#244)
 
 - **Tax figures at incomes that are not round.** The calculator rounds
   taxable income down to the hundred francs before applying a tariff (in

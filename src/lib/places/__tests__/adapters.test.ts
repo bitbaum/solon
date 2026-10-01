@@ -434,9 +434,49 @@ describe("the Federal Tax Administration's exports", () => {
     ]);
     expect(tariff("bfs_canton", "1", "married")).toBeDefined();
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
-    // Two federal tariffs, and a tariff and a divisor per variant for Aargau,
-    // Zürich, Bern, Fribourg, Ticino, Nidwalden, Glarus, Schaffhausen and Vaud.
-    expect(scales.facts).toHaveLength(38);
+    // Two federal tariffs, and per variant a basic tariff, a communal tariff
+    // and a divisor for Aargau, Zürich, Bern, Fribourg, Ticino, Nidwalden,
+    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz.
+    // Valais's rows are not read: it is not modelled.
+    expect(scales.facts).toHaveLength(80);
+    expect(scales.facts.some((f) => f.jurisdiction.value === "23")).toBe(false);
+  });
+
+  it("gives the communes the canton's basic tariff, unless the canton gives them their own", () => {
+    const of = (value: string, metric: string) =>
+      scales.facts.find(
+        (f) => f.jurisdiction.value === value && f.metricKey === metric && f.variant === "married",
+      )!.value;
+    expect(of("1", "tax.income.tariff.communal")).toEqual(of("1", "tax.income.tariff.basic"));
+    // Schwyz: the communes' top rate is 3.65 % where the canton's is 5 %.
+    const communal = of("5", "tax.income.tariff.communal") as { brackets: { rate: number }[] };
+    const basic = of("5", "tax.income.tariff.basic") as { brackets: { rate: number }[] };
+    expect(communal.brackets.at(-1)!.rate).toBe(0.0365);
+    expect(basic.brackets.at(-1)!.rate).toBe(0.05);
+  });
+
+  it("reads a flat table as one rate, and a formula table as logarithmic pieces", () => {
+    expect(tariff("bfs_canton", "4", "single")!.value).toEqual({
+      kind: "flat",
+      currency: "CHF",
+      rate: 0.071,
+    });
+    const bl = tariff("bfs_canton", "13", "single")!.value as {
+      kind: string;
+      pieces: { from: number; constant: number; linear: number; xLnX: number }[];
+    };
+    expect(bl.kind).toBe("logarithmic");
+    expect(bl.pieces[0]).toEqual({ from: 0, constant: 0, linear: 0, xLnX: 0 });
+    expect(bl.pieces[1]).toEqual({
+      from: 16716,
+      constant: 829.41877,
+      linear: expect.closeTo(-0.827429 - 0.089718, 9),
+      xLnX: 0.089718,
+    });
+  });
+
+  it("does not levy a federal tax below CHF 25", () => {
+    expect((tariff("iso_3166_1", "CH", "married")!.value as { minimum?: number }).minimum).toBe(25);
   });
 
   it("attaches how the calculator rounds the income, per canton", () => {
@@ -496,7 +536,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.785,
         variant: "single",
         federal: 1870,
-        cantonal: 10752 + 5672,
+        cantonal: 10752,
+        communal: 5672,
       },
       {
         commune: "Lausanne",
@@ -504,7 +545,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.785,
         variant: "married",
         federal: 1269,
-        cantonal: 8795 + 4640,
+        cantonal: 8795,
+        communal: 4640,
       },
       {
         commune: "Schaffhausen",
@@ -512,7 +554,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.86,
         variant: "married",
         federal: 1269,
-        cantonal: 3615 + 3935,
+        cantonal: 3615,
+        communal: 3935,
       },
       {
         commune: "Stans",
@@ -520,7 +563,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 2.35,
         variant: "married",
         federal: 1269,
-        cantonal: 4311 + 3808,
+        cantonal: 4311,
+        communal: 3808,
       },
       {
         commune: "Glarus",
@@ -528,7 +572,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.56,
         variant: "married",
         federal: 1269,
-        cantonal: 4707 + 4415,
+        cantonal: 4707,
+        communal: 4415,
       },
       {
         commune: "Aarau",
@@ -536,9 +581,77 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.96,
         variant: "married",
         federal: 1269,
-        cantonal: 4191 + 3625,
+        cantonal: 4191,
+        communal: 3625,
+      },
+      {
+        commune: "Liestal",
+        canton: "13",
+        own: 0.65,
+        variant: "single",
+        federal: 1870,
+        cantonal: 9186,
+        communal: 5971,
+      },
+      {
+        commune: "Liestal",
+        canton: "13",
+        own: 0.65,
+        variant: "married",
+        federal: 1269,
+        cantonal: 5319,
+        communal: 3457,
+      },
+      {
+        commune: "Schwyz",
+        canton: "5",
+        own: 1.75,
+        variant: "single",
+        federal: 1870,
+        cantonal: 3266,
+        communal: 4971,
+      },
+      {
+        commune: "Altdorf",
+        canton: "4",
+        own: 0.95,
+        variant: "single",
+        federal: 1870,
+        cantonal: 6223,
+        communal: 5912,
+      },
+      {
+        commune: "Sarnen",
+        canton: "6",
+        own: 3.86,
+        variant: "married",
+        federal: 1269,
+        cantonal: 5125,
+        communal: 6086,
       },
     ].map((c) => ({ ...c, income: 87_654 })),
+    // The communes' own tariff in Schwyz, above where it parts from the canton's.
+    {
+      commune: "Schwyz",
+      canton: "5",
+      own: 1.75,
+      variant: "married",
+      federal: 86988,
+      cantonal: 44717,
+      communal: 49675,
+      income: 777_777,
+    },
+    // The federal tariff gives CHF 3, which is not levied.
+    {
+      commune: "Aarau",
+      canton: "19",
+      own: 0.96,
+      variant: "married",
+      federal: 0,
+      cantonal: 457,
+      communal: 396,
+      income: 30_000,
+    },
     ...[
       {
         commune: "Aarau",
@@ -546,7 +659,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.96,
         variant: "single",
         federal: 2688,
-        cantonal: 7701 + 6660,
+        cantonal: 7701,
+        communal: 6660,
       },
       {
         commune: "Aarau",
@@ -554,7 +668,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.96,
         variant: "married",
         federal: 1816,
-        cantonal: 5292 + 4577,
+        cantonal: 5292,
+        communal: 4577,
       },
       {
         commune: "Fribourg",
@@ -562,7 +677,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.8,
         variant: "single",
         federal: 2688,
-        cantonal: 10359 + 8633,
+        cantonal: 10359,
+        communal: 8633,
       },
       {
         commune: "Fribourg",
@@ -570,7 +686,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.8,
         variant: "married",
         federal: 1816,
-        cantonal: 7826 + 6522,
+        cantonal: 7826,
+        communal: 6522,
       },
       {
         commune: "Bellinzona",
@@ -578,7 +695,8 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.93,
         variant: "single",
         federal: 2688,
-        cantonal: 8791 + 8176,
+        cantonal: 8791,
+        communal: 8176,
       },
       {
         commune: "Bellinzona",
@@ -586,12 +704,13 @@ describe("the Federal Tax Administration's exports", () => {
         own: 0.93,
         variant: "married",
         federal: 1816,
-        cantonal: 6521 + 6065,
+        cantonal: 6521,
+        communal: 6065,
       },
     ].map((c) => ({ ...c, income: 100_000 })),
   ])(
     "estimates $commune, $variant, at CHF $income, as the calculator does",
-    ({ canton: cantonCode, own, variant, federal, cantonal, income }) => {
+    ({ canton: cantonCode, own, variant, federal, cantonal, communal, income }) => {
       const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
       const facts = [...scales.facts, ...canton.facts, ...vaudReduction].flatMap((f) => {
         const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
@@ -615,7 +734,8 @@ describe("the Federal Tax Administration's exports", () => {
       const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
       expect(estimate.complete).toBe(true);
       expect(Math.abs(amount("federal") - federal)).toBeLessThan(1);
-      expect(Math.abs(amount("cantonal_and_communal") - cantonal)).toBeLessThan(2);
+      expect(Math.abs(amount("cantonal") - cantonal)).toBeLessThan(1);
+      expect(Math.abs(amount("communal") - communal)).toBeLessThan(1);
     },
   );
 
@@ -679,13 +799,20 @@ describe("the Federal Tax Administration's exports", () => {
       multiplier("bfs_canton", "7", 2.66),
       multiplier("bfs_canton", "14", 0.79),
       multiplier("bfs_canton", "22", 1.55),
+      multiplier("bfs_canton", "13", 1),
+      multiplier("bfs_canton", "6", 3.25),
+      multiplier("bfs_canton", "5", 1.15),
+      multiplier("bfs_canton", "4", 1),
     ]);
   });
 
   it("records each commune's multiplier by its FSO number, for the listed cantons only", () => {
-    // Zürich's communes have their own source, and Uri is not modelled.
+    // Zürich's communes have their own source.
     const rates = mapSource("estv-commune-multipliers", fixture("estv-commune-rates-2025.json"));
-    expect(rates.facts).toEqual([multiplier("bfs_municipality", "371", 1.63)]);
+    expect(rates.facts).toEqual([
+      multiplier("bfs_municipality", "371", 1.63),
+      multiplier("bfs_municipality", "1206", 1.03),
+    ]);
   });
 
   it("refuses rates that name both a place per canton and each row's own", () => {
