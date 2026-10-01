@@ -73,7 +73,7 @@ one to read for the detail. Fixes get the same weight as features.
   income tax together to 30 % of taxable income. Solon did not, so a single
   person in Lausanne earning CHF 777,777 was shown about CHF 15,800 too
   much. Solon now applies the limit as the canton's law and the Federal Tax
-  Administration's calculator do. (#PR)
+  Administration's calculator do. (#245)
 
 - **No federal tax below CHF 25.** The federal tax is not levied when it
   would be less than CHF 25; Solon showed the small amount anyway (CHF 3
