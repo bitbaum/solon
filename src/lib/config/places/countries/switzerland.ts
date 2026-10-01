@@ -14,14 +14,16 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * the divided income too in some), and Vaud's cantonal multiplier is cut by
  * the share its tax law sets each year (absent elsewhere, so nothing is cut).
  * Schema version 5: Basel-Landschaft's tariff is a formula (logarithmic
- * pieces), and the federal tax is not levied below CHF 25. Church
+ * pieces), and the federal tax is not levied below CHF 25. Schema version 6:
+ * Vaud's cantonal and communal tax together take at most 30 % of the income,
+ * reduced in proportion above it (absent elsewhere, so nothing is limited). Church
  * tax is not modelled yet: the register publishes its multipliers per
  * denomination, and which parish levies it is not imported,
  * so a church component waits for the parishes (§6.1). Nor are fixed per-head
  * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
  */
 export const switzerlandIncomeTax = {
-  schemaVersion: 5,
+  schemaVersion: 6,
   base: "taxable_income",
   inputs: ["taxable_income"],
   variants: ["single", "married"],
@@ -44,6 +46,12 @@ export const switzerlandIncomeTax = {
       tariff: { level: "canton", metric: "tax.income.tariff.communal" },
       divisor: { level: "canton", metric: "tax.income.divisor" },
       multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
+    },
+  ],
+  limits: [
+    {
+      components: ["cantonal", "communal"],
+      share: { level: "canton", metric: "tax.income.limit", optional: true },
     },
   ],
 } as const satisfies TaxModel;

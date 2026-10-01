@@ -327,6 +327,31 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["switzerland"],
   },
   {
+    // Kept by hand: in Vaud, cantonal and communal income tax together may not
+    // exceed 30 % of taxable income (LICom, RSV 175.21, art. 8 para. 1), which
+    // the calculator applies (measured 2021–2026) and its exports do not carry.
+    key: "vd-income-tax-limit",
+    publisher: "Canton of Vaud",
+    dataset: "Loi sur les impôts communaux (LICom), art. 8",
+    homepage:
+      "https://www.vd.ch/etat-droit-finances/impots/impots-pour-les-individus/les-impots-les-differents-types-dimpots/impot-sur-le-revenu",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Canton of Vaud, LICom art. 8",
+      fr: "Canton de Vaud, LICom art. 8",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 2 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "bfs_canton", column: "canton" },
+      yearColumn: "year",
+      fromYear: 2021,
+      facts: [{ metric: "tax.income.limit", column: "limit" }],
+    },
+    packs: ["switzerland"],
+  },
+  {
     // Confirmed 2026-09-29: the tax calculator's "simple rates" export for
     // group 88; IncomeRateCanton is the canton's own multiplier (Staatssteuerfuss).
     // Commune multipliers come from the cantons' own publications instead.

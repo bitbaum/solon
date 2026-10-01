@@ -55,3 +55,6 @@ next-env.d.ts
 
 # Places importer snapshots (PLACES_SNAPSHOT_DIR default)
 /data/snapshots/
+
+# Scratch files
+/tmp/

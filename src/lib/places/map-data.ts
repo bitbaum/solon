@@ -14,7 +14,7 @@ import {
   jurisdictionRelations,
   jurisdictions,
 } from "@/lib/db/places-schema";
-import { componentRefs, evaluate, type Fact, type TaxModel } from "@/lib/tax-model";
+import { evaluate, modelRefs, type Fact, type TaxModel } from "@/lib/tax-model";
 import { loadFacts, type ChainFact, type ChainName } from "./chain";
 import { taxPackView, yearsBefore } from "./compare";
 import { GEOGRAPHY_FILE_PATH, geographyFileHref, parseGeometryRef } from "./geography";
@@ -250,9 +250,7 @@ export async function loadMapData(
   // The latest period whose figures are published for the most places: every
   // place is estimated for the same one, never a mix of years.
   const model = pack.taxModel;
-  const metrics = model
-    ? [...new Set(model.components.flatMap(componentRefs).map((r) => r.metric))]
-    : [];
+  const metrics = model ? [...new Set(modelRefs(model).map((r) => r.metric))] : [];
   let period = on;
   let byPlace = new Map<string, Fact[]>();
   let best = -1;
