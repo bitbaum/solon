@@ -14,7 +14,7 @@ one to read for the detail. Fixes get the same weight as features.
   than marginal ones. Solon now reads both as the cantons publish them, and
   both match the Federal Tax Administration's calculator to the franc: two
   communes each, single and married, at four incomes, for 2025 and 2026.
-  (#PR)
+  (#242)
 
 - **Four more cantons on the map and in `/compare`: Aargau, Solothurn,
   Graubünden and Neuchâtel.** These cantons tax a married couple as if each
@@ -56,7 +56,7 @@ one to read for the detail. Fixes get the same weight as features.
 - **Federal tax at very high incomes.** Above CHF 793,400 the federal tax is
   11.5% of the whole income. Solon approximated this and showed CHF 1.40
   too much; it now reads the tariff as published and matches exactly. The
-  same correction applies to Graubünden's top rate (CHF 2.20). (#PR)
+  same correction applies to Graubünden's top rate (CHF 2.20). (#242)
 
 ## 2026-09-30
 
