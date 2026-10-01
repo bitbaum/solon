@@ -13,7 +13,7 @@
  * country must not mean editing five message files.
  */
 import { z } from "zod";
-import { componentRefs, modelProblems, type TaxModel } from "@/lib/tax-model";
+import { componentRefs, modelProblems, type FactRef, type TaxModel } from "@/lib/tax-model";
 import { LEVEL_COVERAGES, METRIC_UNITS, METRIC_VALUE_TYPES } from "@/lib/places/vocabulary";
 
 /** A registry key: lower snake case. */
@@ -257,23 +257,31 @@ function taxModelProblems(pack: CountryPack, metrics: ReadonlyMap<string, Metric
     problems.push(...unlabelled.map((what) => `${prefix}: ${what} has no label`));
   }
   const levels = new Set(pack.levels.map((level) => level.key));
-  for (const component of model.components) {
-    const refs = componentRefs(component).map((ref) => ({
-      ref,
-      valueType: ref === component.tariff ? ("tariff" as const) : ("number" as const),
-    }));
-    for (const { ref, valueType } of refs) {
-      if (!levels.has(ref.level)) {
-        problems.push(`${prefix}: "${component.key}" reads unknown level "${ref.level}"`);
-      }
-      const metric = metrics.get(ref.metric);
-      if (!metric) {
-        problems.push(`${prefix}: "${component.key}" reads unknown metric "${ref.metric}"`);
-      } else if (metric.valueType !== valueType) {
-        problems.push(
-          `${prefix}: "${component.key}" reads "${ref.metric}" as a ${valueType}, but it holds a ${metric.valueType}`,
-        );
-      }
+  const refs: { reader: string; ref: FactRef; valueType: "tariff" | "number" }[] = [
+    ...model.components.flatMap((component) =>
+      componentRefs(component).map((ref) => ({
+        reader: `"${component.key}"`,
+        ref,
+        valueType: ref === component.tariff ? ("tariff" as const) : ("number" as const),
+      })),
+    ),
+    ...(model.limits ?? []).map((limit) => ({
+      reader: "a limit",
+      ref: limit.share,
+      valueType: "number" as const,
+    })),
+  ];
+  for (const { reader, ref, valueType } of refs) {
+    if (!levels.has(ref.level)) {
+      problems.push(`${prefix}: ${reader} reads unknown level "${ref.level}"`);
+    }
+    const metric = metrics.get(ref.metric);
+    if (!metric) {
+      problems.push(`${prefix}: ${reader} reads unknown metric "${ref.metric}"`);
+    } else if (metric.valueType !== valueType) {
+      problems.push(
+        `${prefix}: ${reader} reads "${ref.metric}" as a ${valueType}, but it holds a ${metric.valueType}`,
+      );
     }
   }
   return problems;

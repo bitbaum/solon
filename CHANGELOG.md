@@ -69,6 +69,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Very high incomes in Vaud.** Vaud limits its cantonal and communal
+  income tax together to 30 % of taxable income. Solon did not, so a single
+  person in Lausanne earning CHF 777,777 was shown about CHF 15,800 too
+  much. Solon now applies the limit as the canton's law and the Federal Tax
+  Administration's calculator do. (#PR)
+
 - **No federal tax below CHF 25.** The federal tax is not levied when it
   would be less than CHF 25; Solon showed the small amount anyway (CHF 3
   for a couple at CHF 30,000). It now shows nothing, as the calculator does.

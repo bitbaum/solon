@@ -54,6 +54,20 @@ export const METRICS: readonly MetricInput[] = [
     plausible: { min: 1, max: 3 },
   },
   {
+    // Vaud's cantonal and communal income tax together may not exceed this
+    // share of taxable income (LICom art. 8).
+    key: "tax.income.limit",
+    label: {
+      en: "Maximum share of income taken by cantonal and communal tax",
+      de: "Höchstanteil des Einkommens für Staats- und Gemeindesteuer",
+      fr: "part maximale du revenu pour les impôts cantonal et communal",
+      it: "quota massima del reddito per le imposte cantonale e comunale",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0.05, max: 1 },
+  },
+  {
     // Vaud cuts its cantonal tax by a share the tax law sets each year (LRIPP
     // art. 4); the communes' tax is not cut.
     key: "tax.income.basic.reduction",

@@ -520,6 +520,10 @@ describe("the Federal Tax Administration's exports", () => {
     "vd-income-tax-reduction",
     new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-reduction.csv")),
   ).facts.filter((f) => f.validFrom === "2025-01-01");
+  const vaudLimit = mapSource(
+    "vd-income-tax-limit",
+    new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-limit.csv")),
+  ).facts.filter((f) => f.validFrom === "2025-01-01");
 
   it.each([
     // The calculator (API_calculateSimpleTaxes), 2025, taxable income CHF
@@ -641,6 +645,17 @@ describe("the Federal Tax Administration's exports", () => {
       communal: 49675,
       income: 777_777,
     },
+    // Vaud's cantonal and communal tax together are limited to 30 % of the income.
+    {
+      commune: "Lausanne",
+      canton: "22",
+      own: 0.785,
+      variant: "single",
+      federal: 89170,
+      cantonal: 152749,
+      communal: 80584,
+      income: 777_777,
+    },
     // The federal tariff gives CHF 3, which is not levied.
     {
       commune: "Aarau",
@@ -712,20 +727,22 @@ describe("the Federal Tax Administration's exports", () => {
     "estimates $commune, $variant, at CHF $income, as the calculator does",
     ({ canton: cantonCode, own, variant, federal, cantonal, communal, income }) => {
       const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-      const facts = [...scales.facts, ...canton.facts, ...vaudReduction].flatMap((f) => {
-        const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
-        return (level === "nation" && f.jurisdiction.value === "CH") ||
-          (level === "canton" && f.jurisdiction.value === cantonCode)
-          ? [
-              {
-                level,
-                metric: f.metricKey,
-                ...(f.variant ? { variant: f.variant } : {}),
-                value: f.value,
-              },
-            ]
-          : [];
-      });
+      const facts = [...scales.facts, ...canton.facts, ...vaudReduction, ...vaudLimit].flatMap(
+        (f) => {
+          const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
+          return (level === "nation" && f.jurisdiction.value === "CH") ||
+            (level === "canton" && f.jurisdiction.value === cantonCode)
+            ? [
+                {
+                  level,
+                  metric: f.metricKey,
+                  ...(f.variant ? { variant: f.variant } : {}),
+                  value: f.value,
+                },
+              ]
+            : [];
+        },
+      );
       facts.push({ level: "municipality", metric: "tax.multiplier", value: own });
       const estimate = evaluate(switzerlandIncomeTax, facts, {
         values: { taxable_income: income },

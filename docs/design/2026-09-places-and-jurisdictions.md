@@ -1,7 +1,7 @@
 # Places: every jurisdiction on one map, official and founded
 
 _Created 2026-09-29. Status: accepted design; nothing here is built unless it says so._
-_Last modified 2026-10-01: Basel-Landschaft, Schwyz, Uri and Obwalden join the map and `/compare`: the model's cantonal and communal taxes become two components, each with its own tariff (Schwyz gives its communes one of their own); a tariff may be logarithmic (Basel-Landschaft's formulas) and carry a minimum (the federal tax is not levied below CHF 25); schema version 5 (§6.1, §6.2, §8.2). Earlier the same day: Vaud, Schaffhausen, Nidwalden and Glarus join the map and `/compare`: a tariff carries how the calculator rounds the income (to CHF 100, and in some cantons a couple's divided income too), which every canton needs at incomes that are not round, and a canton multiplier may be cut by a share kept by hand (Vaud's LRIPP art. 4); schema version 4 (§6.1, §6.2, §8.2). Earlier the same day: Ticino and Fribourg join the map and `/compare`: tariffs may state the tax at each step or give average rates (schema version 3), and every federal and `BUND` table is read as stated, which also corrects the federal tariff's top (§6.1, §6.2, §8.2). Earlier the same day: four cantons that split a couple's income join the map and `/compare` (Aargau, Solothurn, Graubünden, Neuchâtel): the tax model gains a divisor per component (schema version 2), each matched to the federal calculator (§6.1, §6.2, §8.2). Earlier the same day: the map is built: `/places` opens on every drawn commune coloured by the tax at the reader's income (or the pack's example income until they enter one), with a list that says the same, one search box for an address, a place or a postcode, a card per place and a compare tray (§9.1, §9.2); an address goes from the browser to the pack's geocoder, never to Solon (§10). Earlier the same day: the map's data is served: `GET /api/v1/places/map` gives every drawn commune with the tax figures along its chain, for the browser to estimate as `/compare` does (§9.1). Earlier the same day: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
+_Last modified 2026-10-01: Vaud's cantonal and communal income tax is limited to 30 % of taxable income (LICom art. 8), which the model now expresses as a limit on a share of the base (schema version 6, §6.1, §6.2, §8.2). Earlier the same day: Basel-Landschaft, Schwyz, Uri and Obwalden join the map and `/compare`: the model's cantonal and communal taxes become two components, each with its own tariff (Schwyz gives its communes one of their own); a tariff may be logarithmic (Basel-Landschaft's formulas) and carry a minimum (the federal tax is not levied below CHF 25); schema version 5 (§6.1, §6.2, §8.2). Earlier the same day: Vaud, Schaffhausen, Nidwalden and Glarus join the map and `/compare`: a tariff carries how the calculator rounds the income (to CHF 100, and in some cantons a couple's divided income too), which every canton needs at incomes that are not round, and a canton multiplier may be cut by a share kept by hand (Vaud's LRIPP art. 4); schema version 4 (§6.1, §6.2, §8.2). Earlier the same day: Ticino and Fribourg join the map and `/compare`: tariffs may state the tax at each step or give average rates (schema version 3), and every federal and `BUND` table is read as stated, which also corrects the federal tariff's top (§6.1, §6.2, §8.2). Earlier the same day: four cantons that split a couple's income join the map and `/compare` (Aargau, Solothurn, Graubünden, Neuchâtel): the tax model gains a divisor per component (schema version 2), each matched to the federal calculator (§6.1, §6.2, §8.2). Earlier the same day: the map is built: `/places` opens on every drawn commune coloured by the tax at the reader's income (or the pack's example income until they enter one), with a list that says the same, one search box for an address, a place or a postcode, a card per place and a compare tray (§9.1, §9.2); an address goes from the browser to the pack's geocoder, never to Solon (§10). Earlier the same day: the map's data is served: `GET /api/v1/places/map` gives every drawn commune with the tax figures along its chain, for the browser to estimate as `/compare` does (§9.1). Earlier the same day: commune boundaries are imported: swisstopo's yearly swissBOUNDARIES3D edition becomes `areas` and `administers` assertions plus one content-addressed TopoJSON file, published through a geo-kit manifest (§4.4, §8.2, §8.3, §9.1); Solon gets a light theme beside the dark one (§9). Earlier, 2026-09-30: `/compare` covers six more cantons (Bern, Lucerne, Zug, Basel-Stadt, Appenzell Ausserrhoden, Jura), each matched to the federal calculator; every commune's multiplier from the calculator's export (§6.2, §8.2). Earlier the same day: place search ignores accents and spelled-out umlauts, and `/compare` shows amounts in the country's number formats (pack `region`, §9.2). Earlier the same day: `/compare` is built: up to four places side by side, the tax estimate computed in the browser from the facts each chain holds, the latest year whose figures are all published, and the pack's own words for the model (`taxLabels`, §5, §9.2). Earlier the same day: the postcode import leaves out the directory's Liechtenstein communes and two commune-free areas, and reports them (§8.2); any other unknown commune still fails the run. Earlier the same day: `/places` is built (search by name or postcode, browse by level) with its API, and Places took Platform's header slot (§9.2, §9.3). Earlier the same day: the scheduled runner is built, a daily box timer
 calling `/api/cron/places` (§8.3). Earlier the same day: postcodes resolve to
 the places they lie in, from swisstopo's directory (`place_postcodes`, §4.6,
 §8.2). Earlier the same day: `/places/coverage` is built, counted from the
@@ -454,7 +454,7 @@ A country's tax formula is **data in its pack**. The Swiss income tax, as data:
 
 ```ts
 export const switzerlandIncomeTax = {
-  schemaVersion: 5,
+  schemaVersion: 6,
   base: "taxable_income",
   components: [
     { key: "federal", tariff: { level: "nation", metric: "tax.income.tariff" } },
@@ -478,6 +478,10 @@ export const switzerlandIncomeTax = {
       ],
     },
     // Later: church tax, a component of its own read when "church_member".
+  ],
+  limits: [   // Vaud: cantonal and communal together at most 30 % of the income
+    { components: ["cantonal", "communal"],
+      share: { level: "canton", metric: "tax.income.limit", optional: true } },
   ],
   variants: ["single", "married"],   // which tariff variant applies
   inputs: ["taxable_income", "church_member"],
@@ -503,7 +507,9 @@ canton levies its multiplier less a yearly share, its communes do not.
 Since version 5 a tariff may be **logarithmic** (pieces of constant +
 linear·x + xLnX·x·ln x, as Basel-Landschaft's law writes its tariff) and carry
 a **minimum** (an amount below it is not levied, after any divisor is
-multiplied back). Deductions and social contributions
+multiplied back). Since version 6 a model may have **limits**: components
+that together may not exceed a share of the base (a fact), each reduced in
+proportion to its amount above it. Deductions and social contributions
 are later schema versions (`TaxModel` carries a `schemaVersion`). A country with a
 different structure is a different model, not a code branch.
 
@@ -649,6 +655,21 @@ levied. Not yet:
   a couple's tax is cut by 35 % with floors and caps that differ between canton
   and communes. To be read from the canton's own publication.
 
+**Built (P2, Vaud's limit)**: the live check after the four cantons above
+found Vaud's single people at CHF 777,777 about CHF 15,800 too high. Vaud's
+cantonal and communal income tax together may not exceed 30 % of taxable
+income (LICom, RSV 175.21, art. 8 para. 1); the calculator applies it to the
+exact income, not the rounded one, and cuts canton and commune in proportion,
+in every year since 2021 (measured 2026-10-01 in Lausanne, Montreux,
+Yverdon-les-Bains and Nyon, single and married, up to CHF 3 million). It
+binds from roughly CHF 465,000 for a single person in Lausanne. Kept by hand
+like the reduction (`data/places/switzerland/vd-income-tax-limit.csv`, source
+`vd-income-tax-limit`), read by the model's limit. Of the caps ESTV lists for
+other cantons, only Vaud's is on income alone; Basel-Stadt's, Aargau's,
+Valais's, Ticino's and Geneva's cover income and wealth together or wealth
+alone and do not bind on income alone. Lausanne at CHF 777,777 is a golden
+case in the adapter's tests.
+
 ### 6.3 "Takes tax" is derived
 
 An authority takes income tax in a period exactly when a model component
@@ -770,6 +791,7 @@ hardcoded date.
 | `zurich-municipal-multipliers` | each Zürich commune's multiplier per year, without church tax, read from 2021 | Office for Statistics and Data, CSV | opendata.swiss "by" |
 | `estv-income-tax-scales` | the federal tariff (with its CHF 25 minimum) and the basic and communal tariffs of each modelled canton (Zürich, Bern, Lucerne, Uri, Schwyz, Obwalden, Nidwalden, Glarus, Zug, Fribourg, Solothurn, Basel-Stadt, Basel-Landschaft, Schaffhausen, Appenzell Ausserrhoden, Graubünden, Aargau, Ticino, Vaud, Neuchâtel, Jura), single and married, as stated steps, bracket widths, average rates, a flat rate or logarithmic pieces, with the canton's divisor for each and how the calculator rounds the income (§6.2), per year since 2021 | the Federal Tax Administration's tax-calculator export, POST | official act (Art. 5 URG) |
 | `estv-canton-multipliers` | each modelled canton's own multiplier per year since 2021 | the same calculator's multiplier export, POST | official act (Art. 5 URG) |
+| `vd-income-tax-limit` | Vaud's limit on cantonal and communal income tax together, 30 % of taxable income, per year since 2021 (§6.2); kept by hand | `data/places/switzerland/vd-income-tax-limit.csv`, handed to `places:import` (`csv_facts`), each row citing LICom art. 8 | official act (Art. 5 URG) |
 | `vd-income-tax-reduction` | the share by which Vaud cuts its cantonal income tax, per year since 2021 (§6.2); kept by hand, a row added each year | `data/places/switzerland/vd-income-tax-reduction.csv`, handed to `places:import` (`csv_facts`), each row citing LRIPP art. 4 | official act (Art. 5 URG) |
 | `estv-commune-multipliers` | each commune's multiplier per year since 2021, for the modelled cantons except Zürich; confirmed 2026-09-30 | the same export for group 30, every Swiss commune by its FSO number | official act (Art. 5 URG) |
 | `swisstopo-commune-boundaries` | every commune's territory, from the latest swissBOUNDARIES3D edition begun (yearly on 1 January, plus mid-year editions for mergers such as 2025-04-06); confirmed 2026-09-30. The layer also holds cantons' lake areas, Liechtenstein and the foreign enclaves, which the source's `where` leaves out; 2,110 communes in 2026-01 | the federal geodata STAC catalogue, zipped Shapefile in LV95 (`shapefile_areas`: snapped to 25 m as read, reprojected to WGS84, one topology keeping 5 % of the points, about 220 KB gzipped) | swisstopo OGD: free use, name the source |

@@ -8,7 +8,7 @@ import { and, count, countDistinct, desc, eq, gt, isNull, lte, max, ne, or } fro
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { facts, jurisdictions, placeImportRuns, sources } from "@/lib/db/places-schema";
-import { componentRefs } from "@/lib/tax-model";
+import { modelRefs } from "@/lib/tax-model";
 import type { ImportRunStatus } from "./vocabulary";
 import { localized } from "./place-view";
 
@@ -90,9 +90,9 @@ export function coverageView(input: CoverageInput): PackCoverage[] {
       return level ? localized(level.names, locale) : key;
     };
 
-    const modelRefs = (pack.taxModel?.components ?? []).flatMap(componentRefs);
+    const readRefs = pack.taxModel ? modelRefs(pack.taxModel) : [];
     const pairs = [
-      ...modelRefs.map((r) => ({ levelKey: r.level, metricKey: r.metric })),
+      ...readRefs.map((r) => ({ levelKey: r.level, metricKey: r.metric })),
       ...input.factCounts.filter((c) => c.countryPack === pack.key),
     ].filter(
       (p, i, all) =>
@@ -118,7 +118,7 @@ export function coverageView(input: CoverageInput): PackCoverage[] {
               c.countryPack === pack.key && c.levelKey === levelKey && c.metricKey === metricKey,
           )?.places ?? 0,
         of: placesAt(levelKey),
-        inTaxModel: modelRefs.some((r) => r.level === levelKey && r.metric === metricKey),
+        inTaxModel: readRefs.some((r) => r.level === levelKey && r.metric === metricKey),
       })),
       hasTaxModel: pack.taxModel !== undefined,
       sources: pack.sources.flatMap((key) => {
