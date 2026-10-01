@@ -14,7 +14,7 @@ one to read for the detail. Fixes get the same weight as features.
   writes it; Schwyz's communes have a tariff of their own. All four match the
   Federal Tax Administration's calculator to the franc. An estimate now
   shows the cantonal and the communal tax as two lines instead of one.
-  (#PR)
+  (#244)
 
 - **Vaud, Schaffhausen, Nidwalden and Glarus on the map and in `/compare`.**
   These cantons round a couple's divided income to the hundred francs
@@ -72,7 +72,7 @@ one to read for the detail. Fixes get the same weight as features.
 - **No federal tax below CHF 25.** The federal tax is not levied when it
   would be less than CHF 25; Solon showed the small amount anyway (CHF 3
   for a couple at CHF 30,000). It now shows nothing, as the calculator does.
-  (#PR)
+  (#244)
 
 - **Tax figures at incomes that are not round.** The calculator rounds
   taxable income down to the hundred francs before applying a tariff (in
