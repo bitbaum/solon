@@ -15,21 +15,21 @@ const isoDate = z.iso.date();
 export const externalRefSchema = z.object({ scheme: z.string().min(1), value: z.string().min(1) });
 export type ExternalRef = z.infer<typeof externalRefSchema>;
 
-const bracketSchema = z.object({ from: z.number().min(0), rate: z.number() });
+const rateRow = z.object({ from: z.number().min(0), rate: z.number() });
+const tariffBase = {
+  currency: z.string().regex(/^[A-Z]{3}$/),
+  cap: z.number().min(0).optional(),
+};
 /** The vendored evaluator's `Tariff`, as data a source can carry. */
 export const tariffSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("progressive"), ...tariffBase, brackets: z.array(rateRow).min(1) }),
+  z.object({ kind: z.literal("flat"), ...tariffBase, rate: z.number() }),
   z.object({
-    kind: z.literal("progressive"),
-    currency: z.string().regex(/^[A-Z]{3}$/),
-    cap: z.number().min(0).optional(),
-    brackets: z.array(bracketSchema).min(1),
+    kind: z.literal("stepped"),
+    ...tariffBase,
+    steps: z.array(rateRow.extend({ base: z.number().min(0) })).min(1),
   }),
-  z.object({
-    kind: z.literal("flat"),
-    currency: z.string().regex(/^[A-Z]{3}$/),
-    cap: z.number().min(0).optional(),
-    rate: z.number(),
-  }),
+  z.object({ kind: z.literal("average"), ...tariffBase, points: z.array(rateRow).min(1) }),
 ]);
 
 const period = {

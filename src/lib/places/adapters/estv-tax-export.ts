@@ -13,7 +13,7 @@
  * the source's `options`.
  */
 import { z } from "zod";
-import type { BatchFact, ExternalRef } from "../importer/batch";
+import type { BatchFact, ExternalRef, tariffSchema } from "../importer/batch";
 import { decodeJsonEnvelope } from "../importer/envelope";
 import { fiscalYearPeriod } from "./csv-facts";
 import type { Adapter, Probe, RetrievalRequest } from "./types";
@@ -97,7 +97,7 @@ const scaleRow = z.object({
   TableType: z.string(),
   Splitting: z.number(),
   Group: z.string(),
-  Table: z.array(z.object({ Amount: z.number(), Percent: z.number() })).min(1),
+  Table: z.array(z.object({ Amount: z.number(), Percent: z.number(), Taxes: z.number() })).min(1),
 });
 const scales = enveloped(scaleRow);
 type Scales = z.infer<typeof scales>;
@@ -138,25 +138,57 @@ const scalesOptions = exportOptions.extend({
     .min(1),
   /** The group that applies to every variant. */
   everyVariantGroup: z.string().min(1),
-  /** How each table type reads: `thresholds` (Amount is where a rate starts) or `widths`. */
-  tableTypes: z.record(z.string(), z.enum(["thresholds", "widths"])),
+  /**
+   * How each table type reads: `stepped` (Amount is where a step starts, Taxes
+   * the tax there, Percent the rate on the excess), `widths` (Amount is how far
+   * a marginal rate reaches) or `average` (Percent is the average rate at Amount).
+   */
+  tableTypes: z.record(z.string(), z.enum(["stepped", "widths", "average"])),
+  /**
+   * Table types whose couples get a table of their own: the export's
+   * `Splitting` on them says how that table was derived, so it is not
+   * applied again, and every variant's divisor is 1.
+   */
+  splittingBuiltIn: z.array(z.string().min(1)).default([]),
 });
 type ScalesOptions = z.infer<typeof scalesOptions>;
 
 /** Percent to a rate, without binary noise (2.9699999999999998 → 0.0297). */
 const rateOf = (percent: number): number => Math.round(percent * 1e6) / 1e8;
 
-function brackets(row: ScaleRow, reading: "thresholds" | "widths") {
-  let from = 0;
-  return row.Table.map((step) => {
-    const bracket = {
-      from: reading === "thresholds" ? step.Amount : from,
-      rate: rateOf(step.Percent),
-    };
-    from += step.Amount;
-    return bracket;
-  });
+function tariffOf(
+  row: ScaleRow,
+  reading: ScalesOptions["tableTypes"][string],
+  currency: string,
+): z.infer<typeof tariffSchema> {
+  switch (reading) {
+    case "stepped":
+      return {
+        kind: "stepped",
+        currency,
+        steps: row.Table.map((s) => ({ from: s.Amount, base: s.Taxes, rate: rateOf(s.Percent) })),
+      };
+    case "average":
+      return {
+        kind: "average",
+        currency,
+        points: row.Table.map((s) => ({ from: s.Amount, rate: rateOf(s.Percent) })),
+      };
+    case "widths": {
+      let from = 0;
+      const brackets = row.Table.map((s) => {
+        const bracket = { from, rate: rateOf(s.Percent) };
+        from += s.Amount;
+        return bracket;
+      });
+      return { kind: "progressive", currency, brackets };
+    }
+  }
 }
+
+/** The divisor a row applies to the variants the calculator divides; 0 for none. */
+const splitting = (row: ScaleRow, options: ScalesOptions): number =>
+  options.splittingBuiltIn.includes(row.TableType) ? 0 : row.Splitting;
 
 /**
  * Why a row cannot be read for a variant, or null. A row that divides a
@@ -170,7 +202,7 @@ function unreadable(
   divided: boolean,
   options: ScalesOptions,
 ): string | null {
-  if (row.Splitting === 0) {
+  if (splitting(row, options) === 0) {
     return null;
   }
   if (!recordsDivisor) {
@@ -184,7 +216,7 @@ function unreadable(
 
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "3",
+  version: "4",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -227,11 +259,7 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
             metricKey: target.metric,
             variant,
             ...period,
-            value: {
-              kind: "progressive",
-              currency: pack.currency,
-              brackets: brackets(row, reading),
-            },
+            value: tariffOf(row, reading, pack.currency),
           },
         ];
         if (target.divisor) {
@@ -240,7 +268,7 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
             metricKey: target.divisor.metric,
             variant,
             ...period,
-            value: divided && row.Splitting !== 0 ? row.Splitting : 1,
+            value: divided && splitting(row, options) !== 0 ? splitting(row, options) : 1,
           });
         }
         for (const fact of read) {

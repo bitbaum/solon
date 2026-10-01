@@ -6,13 +6,16 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * basic tariff times the sum of the canton's and the commune's multipliers
  * (Steuerfüsse). Where a canton splits a couple's income, its basic tariff
  * reads the income divided by the canton's divisor for the variant (1 where
- * nothing is divided, 2 for full splitting), and the amount is multiplied back. Church tax is not modelled yet: the register publishes its
- * multipliers per denomination, and which parish levies it is not imported,
+ * nothing is divided, 2 for full splitting), and the amount is multiplied
+ * back. A tariff may state the tax at each step (Ticino, the federal tariff's
+ * top) or give average rates (Fribourg), which needs schema version 3. Church
+ * tax is not modelled yet: the register publishes its multipliers per
+ * denomination, and which parish levies it is not imported,
  * so a church component waits for the parishes (§6.1). Nor are fixed per-head
  * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
  */
 export const switzerlandIncomeTax = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   base: "taxable_income",
   inputs: ["taxable_income"],
   variants: ["single", "married"],
