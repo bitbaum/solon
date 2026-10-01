@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/tax-model@0.3.0 (src/index.ts).
+// VENDORED from bitbaum/orangecat packages/tax-model@0.4.0 (src/index.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -12,11 +12,14 @@ export {
   componentRefs,
   modelProblems,
   tariffProblem,
+  tariffSchemaVersion,
   type Bracket,
   type DivisorRef,
   type Fact,
   type FactRef,
   type MultiplierRef,
+  type RatePoint,
+  type Step,
   type Tariff,
   type TaxComponent,
   type TaxModel,

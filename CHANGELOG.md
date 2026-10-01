@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Ticino and Fribourg on the map and in `/compare`.** Ticino's tariff
+  states the tax at each step, and in a few places that differs from what
+  its rates alone would give; Fribourg's tariff gives average rates rather
+  than marginal ones. Solon now reads both as the cantons publish them, and
+  both match the Federal Tax Administration's calculator to the franc: two
+  communes each, single and married, at four incomes, for 2025 and 2026.
+  (#242)
+
 - **Four more cantons on the map and in `/compare`: Aargau, Solothurn,
   Graubünden and Neuchâtel.** These cantons tax a married couple as if each
   earned half their joint income (splitting), which Solon could not express
@@ -42,6 +50,13 @@ one to read for the detail. Fixes get the same weight as features.
   them as one small file (about 220 KB) that a map can check before drawing.
   A new edition each year replaces the old one on its own. The map on
   `/places` that uses them comes next, in dark and light. (#238)
+
+### Fixed
+
+- **Federal tax at very high incomes.** Above CHF 793,400 the federal tax is
+  11.5% of the whole income. Solon approximated this and showed CHF 1.40
+  too much; it now reads the tariff as published and matches exactly. The
+  same correction applies to Graubünden's top rate (CHF 2.20). (#242)
 
 ## 2026-09-30
 

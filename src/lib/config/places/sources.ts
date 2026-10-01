@@ -7,22 +7,27 @@ import type { SourceInput } from "./schema";
  * with their FSO number. Each reproduces the calculator to the franc at CHF
  * 60,000, 100,000 and 250,000, single and married, for 2025 and 2026, in two
  * communes (checked 2026-09-30; Aargau, Solothurn, Graubünden and Neuchâtel,
- * which split, 2026-10-01). Not yet: Ticino, whose basic tax differs by
- * CHF 25–60; Glarus, Nidwalden and Schaffhausen, which round the divided
- * income in a way the model does not express (a couple's tax is off by up to
- * CHF 9); Thurgau, St. Gallen and Appenzell Innerrhoden, whose school communes
- * (and districts) levy their own multipliers, which the export reduces to one.
+ * which split, 2026-10-01; Fribourg, whose tariff gives average rates, and
+ * Ticino, whose tariff states the tax at each step, 2026-10-01, also at
+ * CHF 30,000). Not yet: Glarus, Nidwalden, Schaffhausen and Vaud, which round
+ * the divided income in a way the model does not express (a couple's tax is
+ * off by up to CHF 9), and Vaud's cantonal tax is reduced by a share the
+ * export does not carry; Thurgau, St. Gallen and Appenzell Innerrhoden, whose
+ * school communes (and districts) levy their own multipliers, which the
+ * export reduces to one.
  */
 const MODELLED_CANTONS = {
   ZH: "1",
   BE: "2",
   LU: "3",
   ZG: "9",
+  FR: "10",
   SO: "11",
   BS: "12",
   AR: "15",
   GR: "18",
   AG: "19",
+  TI: "21",
   NE: "24",
   JU: "26",
 };
@@ -236,7 +241,12 @@ export const SOURCES: readonly SourceInput[] = [
         { variant: "married", group: "VERHEIRATET", divided: true },
       ],
       everyVariantGroup: "ALLE",
-      tableTypes: { BUND: "thresholds", ZUERICH: "widths" },
+      // Confirmed 2026-10-01: a BUND table's Taxes is the tax the tariff states
+      // at each step, and the calculator keeps it where the rates below would
+      // give another amount (Ticino; the federal tariff's top). Fribourg's
+      // tables give average rates, and a couple's table of its own.
+      tableTypes: { BUND: "stepped", ZUERICH: "widths", FREIBURG: "average" },
+      splittingBuiltIn: ["FREIBURG"],
     },
     packs: ["switzerland"],
   },
