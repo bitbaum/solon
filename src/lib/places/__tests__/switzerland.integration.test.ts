@@ -435,9 +435,10 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       expect(estimate.complete).toBe(true);
       expect(estimate.currency).toBe("CHF");
       const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
-      // The calculator rounds each tax to the franc; canton and commune share one component.
+      // The calculator rounds each tax to the franc.
       expect(Math.abs(amount("federal") - federal)).toBeLessThan(1);
-      expect(Math.abs(amount("cantonal_and_communal") - (canton + communal))).toBeLessThan(2);
+      expect(Math.abs(amount("cantonal") - canton)).toBeLessThan(1);
+      expect(Math.abs(amount("communal") - communal)).toBeLessThan(1);
     },
   );
 

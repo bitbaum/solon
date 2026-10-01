@@ -27,6 +27,19 @@ export const METRICS: readonly MetricInput[] = [
     unit: "currency",
   },
   {
+    // The tariff a canton's communes apply their multipliers to: the basic
+    // tariff in most cantons, one of their own in Schwyz.
+    key: "tax.income.tariff.communal",
+    label: {
+      en: "Communal income tax tariff",
+      de: "Tarif der Gemeindesteuer auf dem Einkommen",
+      fr: "barème de l'impôt communal sur le revenu",
+      it: "tariffa dell'imposta comunale sul reddito",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
     // Applied to a basic tariff: the tariff reads the income divided by it, and
     // its amount is multiplied back. 2 is full splitting of a couple's income.
     key: "tax.income.divisor",

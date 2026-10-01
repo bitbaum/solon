@@ -3,29 +3,32 @@ import type { CountryPackInput, TaxLabels } from "../schema";
 
 /**
  * Swiss income tax on taxable income: the federal tariff, plus the canton's
- * basic tariff times the sum of the canton's and the commune's multipliers
- * (Steuerfüsse). Where a canton splits a couple's income, its basic tariff
- * reads the income divided by the canton's divisor for the variant (1 where
- * nothing is divided, 2 for full splitting), and the amount is multiplied
- * back. A tariff may state the tax at each step (Ticino, the federal tariff's
+ * basic tariff times the canton's multiplier, plus the communes' tariff times
+ * the commune's multiplier (Steuerfüsse). In most cantons both tariffs are the
+ * same basic tariff; Schwyz gives its communes one of their own. Where a
+ * canton splits a couple's income, its tariffs read the income divided by the
+ * canton's divisor for the variant (1 where nothing is divided, 2 for full
+ * splitting), and the amount is multiplied back. A tariff may state the tax at each step (Ticino, the federal tariff's
  * top) or give average rates (Fribourg), which needs schema version 3. Schema
  * version 4: a tariff rounds the income down (to CHF 100 in most cantons, and
  * the divided income too in some), and Vaud's cantonal multiplier is cut by
- * the share its tax law sets each year (absent elsewhere, so nothing is cut). Church
+ * the share its tax law sets each year (absent elsewhere, so nothing is cut).
+ * Schema version 5: Basel-Landschaft's tariff is a formula (logarithmic
+ * pieces), and the federal tax is not levied below CHF 25. Church
  * tax is not modelled yet: the register publishes its multipliers per
  * denomination, and which parish levies it is not imported,
  * so a church component waits for the parishes (§6.1). Nor are fixed per-head
  * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
  */
 export const switzerlandIncomeTax = {
-  schemaVersion: 4,
+  schemaVersion: 5,
   base: "taxable_income",
   inputs: ["taxable_income"],
   variants: ["single", "married"],
   components: [
     { key: "federal", tariff: { level: "nation", metric: "tax.income.tariff" } },
     {
-      key: "cantonal_and_communal",
+      key: "cantonal",
       tariff: { level: "canton", metric: "tax.income.tariff.basic" },
       divisor: { level: "canton", metric: "tax.income.divisor" },
       multipliers: [
@@ -34,8 +37,13 @@ export const switzerlandIncomeTax = {
           metric: "tax.multiplier",
           reducedBy: { level: "canton", metric: "tax.income.basic.reduction", optional: true },
         },
-        { level: "municipality", metric: "tax.multiplier" },
       ],
+    },
+    {
+      key: "communal",
+      tariff: { level: "canton", metric: "tax.income.tariff.communal" },
+      divisor: { level: "canton", metric: "tax.income.divisor" },
+      multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
     },
   ],
 } as const satisfies TaxModel;
@@ -82,11 +90,17 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt fédéral direct",
       it: "Imposta federale diretta",
     },
-    cantonal_and_communal: {
-      en: "Cantonal and communal tax",
-      de: "Staats- und Gemeindesteuer",
-      fr: "Impôts cantonal et communal",
-      it: "Imposte cantonale e comunale",
+    cantonal: {
+      en: "Cantonal tax",
+      de: "Staatssteuer",
+      fr: "Impôt cantonal",
+      it: "Imposta cantonale",
+    },
+    communal: {
+      en: "Communal tax",
+      de: "Gemeindesteuer",
+      fr: "Impôt communal",
+      it: "Imposta comunale",
     },
   },
   // The income the golden fixtures check against the federal calculator.

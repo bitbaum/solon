@@ -13,9 +13,11 @@
  * the source's `options`.
  */
 import { z } from "zod";
+import { tariffProblem, type Tariff } from "@/lib/tax-model";
 import type { BatchFact, ExternalRef, tariffSchema } from "../importer/batch";
 import { decodeJsonEnvelope } from "../importer/envelope";
 import { fiscalYearPeriod } from "./csv-facts";
+import { parseFormula } from "./formula";
 import type { Adapter, Probe, RetrievalRequest } from "./types";
 
 const ref = z.object({ scheme: z.string().min(1), value: z.string().min(1) });
@@ -97,7 +99,16 @@ const scaleRow = z.object({
   TableType: z.string(),
   Splitting: z.number(),
   Group: z.string(),
-  Table: z.array(z.object({ Amount: z.number(), Percent: z.number(), Taxes: z.number() })).min(1),
+  Table: z
+    .array(
+      z.object({
+        Amount: z.number(),
+        Percent: z.number(),
+        Taxes: z.number(),
+        Formula: z.string().default(""),
+      }),
+    )
+    .min(1),
 });
 const scales = enveloped(scaleRow);
 type Scales = z.infer<typeof scales>;
@@ -132,6 +143,14 @@ const scalesOptions = exportOptions.extend({
            */
           rounding: rounding.optional(),
           cantonRounding: z.record(z.string(), rounding).default({}),
+          /** A tariff amount below this is not levied (the federal tax's CHF 25). */
+          minimum: z.number().min(0).optional(),
+          /**
+           * This target's tariff is also `metric`'s for a place with no row of
+           * target `unless` (a canton's basic tariff is its communes' tariff,
+           * unless the canton gives them one of their own).
+           */
+          alsoAs: z.object({ metric: z.string().min(1), unless: z.string().min(1) }).optional(),
         })
         .refine(oneWayToPlace, "give either place or cantons"),
     )
@@ -157,9 +176,11 @@ const scalesOptions = exportOptions.extend({
   /**
    * How each table type reads: `stepped` (Amount is where a step starts, Taxes
    * the tax there, Percent the rate on the excess), `widths` (Amount is how far
-   * a marginal rate reaches) or `average` (Percent is the average rate at Amount).
+   * a marginal rate reaches), `average` (Percent is the average rate at
+   * Amount), `flat` (one Percent on the whole amount) or `formula` (from
+   * Amount on, the row's Formula of the amount).
    */
-  tableTypes: z.record(z.string(), z.enum(["stepped", "widths", "average"])),
+  tableTypes: z.record(z.string(), z.enum(["stepped", "widths", "average", "flat", "formula"])),
   /**
    * Table types whose couples get a table of their own: the export's
    * `Splitting` on them says how that table was derived, so it is not
@@ -199,6 +220,24 @@ function tariffOf(
       });
       return { kind: "progressive", currency, brackets };
     }
+    case "flat": {
+      const rates = new Set(row.Table.map((s) => s.Percent));
+      if (rates.size !== 1) {
+        throw new Error(`a flat table with ${rates.size} rates`);
+      }
+      return { kind: "flat", currency, rate: rateOf(row.Table[0]!.Percent) };
+    }
+    case "formula":
+      return {
+        kind: "logarithmic",
+        currency,
+        pieces: row.Table.map((s) => ({
+          from: s.Amount,
+          ...(s.Formula.trim() === ""
+            ? { constant: 0, linear: 0, xLnX: 0 }
+            : parseFormula(s.Formula)),
+        })),
+      };
   }
 }
 
@@ -247,7 +286,7 @@ function unreadable(
 
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "5",
+  version: "6",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -275,6 +314,12 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
       }
       const groups = placeGroups.get(`${row.Target} ${row.Location.Canton}`)!;
       const roundedBy = target.cantonRounding[row.Location.Canton] ?? target.rounding;
+      const tariffMetrics = [
+        target.metric,
+        ...(target.alsoAs && !placeGroups.has(`${target.alsoAs.unless} ${row.Location.Canton}`)
+          ? [target.alsoAs.metric]
+          : []),
+      ];
       for (const { variant, divided } of variantsOf(row, groups, options)) {
         const key = `${place.scheme}:${place.value} ${target.metric} ${variant}`;
         const label = `${key} ${year}`;
@@ -287,18 +332,22 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
           });
           continue;
         }
-        const read: BatchFact[] = [
-          {
-            jurisdiction: place,
-            metricKey: target.metric,
-            variant,
-            ...period,
-            value: {
-              ...tariffOf(row, reading, pack.currency),
-              ...(roundedBy && { rounding: roundedBy }),
-            },
-          },
-        ];
+        const tariff = {
+          ...tariffOf(row, reading, pack.currency),
+          ...(roundedBy && { rounding: roundedBy }),
+          ...(target.minimum !== undefined && { minimum: target.minimum }),
+        };
+        const problem = tariffProblem(tariff as Tariff);
+        if (problem) {
+          throw new Error(`${label}: ${problem}`);
+        }
+        const read: BatchFact[] = tariffMetrics.map((metricKey) => ({
+          jurisdiction: place,
+          metricKey,
+          variant,
+          ...period,
+          value: tariff,
+        }));
         if (target.divisor) {
           read.push({
             jurisdiction: place,
