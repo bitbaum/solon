@@ -8,14 +8,17 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * reads the income divided by the canton's divisor for the variant (1 where
  * nothing is divided, 2 for full splitting), and the amount is multiplied
  * back. A tariff may state the tax at each step (Ticino, the federal tariff's
- * top) or give average rates (Fribourg), which needs schema version 3. Church
+ * top) or give average rates (Fribourg), which needs schema version 3. Schema
+ * version 4: a tariff rounds the income down (to CHF 100 in most cantons, and
+ * the divided income too in some), and Vaud's cantonal multiplier is cut by
+ * the share its tax law sets each year (absent elsewhere, so nothing is cut). Church
  * tax is not modelled yet: the register publishes its multipliers per
  * denomination, and which parish levies it is not imported,
  * so a church component waits for the parishes (§6.1). Nor are fixed per-head
  * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
  */
 export const switzerlandIncomeTax = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   base: "taxable_income",
   inputs: ["taxable_income"],
   variants: ["single", "married"],
@@ -26,7 +29,11 @@ export const switzerlandIncomeTax = {
       tariff: { level: "canton", metric: "tax.income.tariff.basic" },
       divisor: { level: "canton", metric: "tax.income.divisor" },
       multipliers: [
-        { level: "canton", metric: "tax.multiplier" },
+        {
+          level: "canton",
+          metric: "tax.multiplier",
+          reducedBy: { level: "canton", metric: "tax.income.basic.reduction", optional: true },
+        },
         { level: "municipality", metric: "tax.multiplier" },
       ],
     },

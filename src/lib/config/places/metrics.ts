@@ -41,6 +41,20 @@ export const METRICS: readonly MetricInput[] = [
     plausible: { min: 1, max: 3 },
   },
   {
+    // Vaud cuts its cantonal tax by a share the tax law sets each year (LRIPP
+    // art. 4); the communes' tax is not cut.
+    key: "tax.income.basic.reduction",
+    label: {
+      en: "Reduction of the cantonal income tax",
+      de: "Reduktion der Staatssteuer auf dem Einkommen",
+      fr: "réduction de l'impôt cantonal sur le revenu",
+      it: "riduzione dell'imposta cantonale sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 0.5 },
+  },
+  {
     key: "tax.multiplier",
     label: {
       en: "Tax multiplier",

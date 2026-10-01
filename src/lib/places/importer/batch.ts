@@ -19,6 +19,9 @@ const rateRow = z.object({ from: z.number().min(0), rate: z.number() });
 const tariffBase = {
   currency: z.string().regex(/^[A-Z]{3}$/),
   cap: z.number().min(0).optional(),
+  rounding: z
+    .object({ base: z.number().positive(), divided: z.number().positive().optional() })
+    .optional(),
 };
 /** The vendored evaluator's `Tariff`, as data a source can carry. */
 export const tariffSchema = z.discriminatedUnion("kind", [

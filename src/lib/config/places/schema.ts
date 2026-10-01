@@ -13,7 +13,7 @@
  * country must not mean editing five message files.
  */
 import { z } from "zod";
-import { modelProblems, type TaxModel } from "@/lib/tax-model";
+import { componentRefs, modelProblems, type TaxModel } from "@/lib/tax-model";
 import { LEVEL_COVERAGES, METRIC_UNITS, METRIC_VALUE_TYPES } from "@/lib/places/vocabulary";
 
 /** A registry key: lower snake case. */
@@ -258,11 +258,10 @@ function taxModelProblems(pack: CountryPack, metrics: ReadonlyMap<string, Metric
   }
   const levels = new Set(pack.levels.map((level) => level.key));
   for (const component of model.components) {
-    const refs = [
-      { ref: component.tariff, valueType: "tariff" as const },
-      ...(component.divisor ? [{ ref: component.divisor, valueType: "number" as const }] : []),
-      ...(component.multipliers ?? []).map((ref) => ({ ref, valueType: "number" as const })),
-    ];
+    const refs = componentRefs(component).map((ref) => ({
+      ref,
+      valueType: ref === component.tariff ? ("tariff" as const) : ("number" as const),
+    }));
     for (const { ref, valueType } of refs) {
       if (!levels.has(ref.level)) {
         problems.push(`${prefix}: "${component.key}" reads unknown level "${ref.level}"`);

@@ -103,6 +103,12 @@ const scales = enveloped(scaleRow);
 type Scales = z.infer<typeof scales>;
 type ScaleRow = z.infer<typeof scaleRow>;
 
+/** How the calculator rounds the income before a tariff applies: see the tax model's `Rounding`. */
+const rounding = z.object({
+  base: z.number().positive(),
+  divided: z.number().positive().optional(),
+});
+
 const scalesOptions = exportOptions.extend({
   taxType: z.string().min(1),
   targets: z
@@ -119,6 +125,13 @@ const scalesOptions = exportOptions.extend({
            * Without it, a row that divides is not read.
            */
           divisor: z.object({ metric: z.string().min(1) }).optional(),
+          /**
+           * How the calculator rounds the income for this target's tariffs
+           * (measured: the export does not say), and per canton code where
+           * cantons differ; neither means no rounding.
+           */
+          rounding: rounding.optional(),
+          cantonRounding: z.record(z.string(), rounding).default({}),
         })
         .refine(oneWayToPlace, "give either place or cantons"),
     )
@@ -126,6 +139,8 @@ const scalesOptions = exportOptions.extend({
   /**
    * The group token that marks a row as this variant's; a row may carry several.
    * `divided`: the calculator divides this variant's income by a row's `Splitting`.
+   * `fallbackGroup`: read where a place has no row for `group` (nor one for
+   * every variant) for a target.
    */
   variants: z
     .array(
@@ -133,6 +148,7 @@ const scalesOptions = exportOptions.extend({
         variant: z.string().min(1),
         group: z.string().min(1),
         divided: z.boolean().default(false),
+        fallbackGroup: z.string().min(1).optional(),
       }),
     )
     .min(1),
@@ -188,7 +204,22 @@ function tariffOf(
 
 /** The divisor a row applies to the variants the calculator divides; 0 for none. */
 const splitting = (row: ScaleRow, options: ScalesOptions): number =>
-  options.splittingBuiltIn.includes(row.TableType) ? 0 : row.Splitting;
+  options.splittingBuiltIn.includes(row.TableType) || row.Splitting === 1 ? 0 : row.Splitting;
+
+const groupsOf = (row: ScaleRow) => row.Group.split(",");
+
+/** The variants a row is read for, given every group a place's rows carry for its target. */
+function variantsOf(row: ScaleRow, placeGroups: ReadonlySet<string>, options: ScalesOptions) {
+  const groups = groupsOf(row);
+  const covered = (group: string) =>
+    placeGroups.has(group) || placeGroups.has(options.everyVariantGroup);
+  return options.variants.filter(
+    (v) =>
+      row.Group === options.everyVariantGroup ||
+      groups.includes(v.group) ||
+      (v.fallbackGroup !== undefined && !covered(v.group) && groups.includes(v.fallbackGroup)),
+  );
+}
 
 /**
  * Why a row cannot be read for a variant, or null. A row that divides a
@@ -216,7 +247,7 @@ function unreadable(
 
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "4",
+  version: "5",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -230,18 +261,21 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
     const facts = new Map<string, BatchFact>();
     /** Rows not read, by fact; reported only when no other row gives that fact. */
     const unread = new Map<string, { label: string; reason: string }>();
-    for (const row of exported.response.response) {
+    const rows = exported.response.response.filter((row) => row.TaxType === options.taxType);
+    const placeGroups = new Map<string, Set<string>>();
+    for (const row of rows) {
+      const key = `${row.Target} ${row.Location.Canton}`;
+      placeGroups.set(key, new Set([...(placeGroups.get(key) ?? []), ...groupsOf(row)]));
+    }
+    for (const row of rows) {
       const target = options.targets.find((t) => t.target === row.Target);
-      const place =
-        target && row.TaxType === options.taxType && placeOf(target, row.Location.Canton);
+      const place = target && placeOf(target, row.Location.Canton);
       if (!target || !place) {
         continue;
       }
-      const groups = row.Group.split(",");
-      const variants = options.variants.filter(
-        (v) => groups.includes(v.group) || row.Group === options.everyVariantGroup,
-      );
-      for (const { variant, divided } of variants) {
+      const groups = placeGroups.get(`${row.Target} ${row.Location.Canton}`)!;
+      const roundedBy = target.cantonRounding[row.Location.Canton] ?? target.rounding;
+      for (const { variant, divided } of variantsOf(row, groups, options)) {
         const key = `${place.scheme}:${place.value} ${target.metric} ${variant}`;
         const label = `${key} ${year}`;
         const reason = unreadable(row, target.divisor !== undefined, divided, options);
@@ -259,7 +293,10 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
             metricKey: target.metric,
             variant,
             ...period,
-            value: tariffOf(row, reading, pack.currency),
+            value: {
+              ...tariffOf(row, reading, pack.currency),
+              ...(roundedBy && { rounding: roundedBy }),
+            },
           },
         ];
         if (target.divisor) {

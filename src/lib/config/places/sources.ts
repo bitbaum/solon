@@ -1,38 +1,57 @@
+import type { Rounding } from "@/lib/tax-model";
 import type { SourceInput } from "./schema";
+
+/** The calculator rounds taxable income down to CHF 100 before a tariff applies… */
+const HUNDRED = { base: 100 };
+/** …and in some cantons a couple's divided income too, applying its rate to the whole. */
+const HUNDRED_DIVIDED = { base: 100, divided: 100 };
 
 /**
  * Cantons whose income tax the Swiss model expresses (one basic tariff, a
  * couple's income divided by the canton's divisor where it splits, times the
  * canton's and the commune's multipliers), by the tax calculator's canton code,
- * with their FSO number. Each reproduces the calculator to the franc at CHF
- * 60,000, 100,000 and 250,000, single and married, for 2025 and 2026, in two
- * communes (checked 2026-09-30; Aargau, Solothurn, Graubünden and Neuchâtel,
- * which split, 2026-10-01; Fribourg, whose tariff gives average rates, and
- * Ticino, whose tariff states the tax at each step, 2026-10-01, also at
- * CHF 30,000). Not yet: Glarus, Nidwalden, Schaffhausen and Vaud, which round
- * the divided income in a way the model does not express (a couple's tax is
- * off by up to CHF 9), and Vaud's cantonal tax is reduced by a share the
- * export does not carry; Thurgau, St. Gallen and Appenzell Innerrhoden, whose
- * school communes (and districts) levy their own multipliers, which the
- * export reduces to one.
+ * with their FSO number and how the calculator rounds the income (measured
+ * 2026-10-01 at uneven incomes; Solothurn and Graubünden do not round). Each
+ * reproduces the calculator to the franc at CHF 60,000, 100,000 and 250,000,
+ * single and married, for 2025 and 2026, in two communes (checked 2026-09-30;
+ * Aargau, Solothurn, Graubünden and Neuchâtel, which split, 2026-10-01;
+ * Fribourg, whose tariff gives average rates, and Ticino, whose tariff states
+ * the tax at each step, 2026-10-01, also at CHF 30,000; Glarus, Nidwalden,
+ * Schaffhausen and Vaud, which round the divided income, 2026-10-01, also at
+ * uneven incomes, Vaud with its cantonal reduction from
+ * vd-income-tax-reduction). Not yet: Thurgau, St. Gallen and Appenzell
+ * Innerrhoden, whose school communes (and districts) levy their own
+ * multipliers, which the export reduces to one.
  */
-const MODELLED_CANTONS = {
-  ZH: "1",
-  BE: "2",
-  LU: "3",
-  ZG: "9",
-  FR: "10",
-  SO: "11",
-  BS: "12",
-  AR: "15",
-  GR: "18",
-  AG: "19",
-  TI: "21",
-  NE: "24",
-  JU: "26",
+const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
+  ZH: { fso: "1", rounding: HUNDRED },
+  BE: { fso: "2", rounding: HUNDRED },
+  LU: { fso: "3", rounding: HUNDRED },
+  NW: { fso: "7", rounding: HUNDRED_DIVIDED },
+  GL: { fso: "8", rounding: HUNDRED_DIVIDED },
+  ZG: { fso: "9", rounding: HUNDRED },
+  FR: { fso: "10", rounding: HUNDRED },
+  SO: { fso: "11" },
+  BS: { fso: "12", rounding: HUNDRED },
+  SH: { fso: "14", rounding: HUNDRED_DIVIDED },
+  AR: { fso: "15", rounding: HUNDRED },
+  GR: { fso: "18" },
+  AG: { fso: "19", rounding: HUNDRED },
+  TI: { fso: "21", rounding: HUNDRED },
+  VD: { fso: "22", rounding: HUNDRED_DIVIDED },
+  NE: { fso: "24", rounding: HUNDRED_DIVIDED },
+  JU: { fso: "26", rounding: HUNDRED },
 };
 const modelledCantons = Object.fromEntries(
-  Object.entries(MODELLED_CANTONS).map(([code, value]) => [code, { scheme: "bfs_canton", value }]),
+  Object.entries(MODELLED_CANTONS).map(([code, { fso }]) => [
+    code,
+    { scheme: "bfs_canton", value: fso },
+  ]),
+);
+const cantonRounding = Object.fromEntries(
+  Object.entries(MODELLED_CANTONS).flatMap(([code, { rounding }]) =>
+    rounding ? [[code, rounding]] : [],
+  ),
 );
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
@@ -225,19 +244,22 @@ export const SOURCES: readonly SourceInput[] = [
           target: "BUND",
           metric: "tax.income.tariff",
           place: { scheme: "iso_3166_1", value: "CH" },
+          rounding: HUNDRED,
         },
         {
           target: "KANTON",
           metric: "tax.income.tariff.basic",
           cantons: modelledCantons,
           divisor: { metric: "tax.income.divisor" },
+          cantonRounding,
         },
       ],
       // Single people with children are taxed on the married tariff; the model's
       // "single" is a single person without children. A couple's income is the
-      // one the calculator divides.
+      // one the calculator divides. Vaud has no table for single people without
+      // children; the calculator taxes them on its cohabiting table (divisor 1).
       variants: [
-        { variant: "single", group: "LEDIG_OHNE_KINDER" },
+        { variant: "single", group: "LEDIG_OHNE_KINDER", fallbackGroup: "LEDIG_KONKUBINAT" },
         { variant: "married", group: "VERHEIRATET", divided: true },
       ],
       everyVariantGroup: "ALLE",
@@ -247,6 +269,32 @@ export const SOURCES: readonly SourceInput[] = [
       // tables give average rates, and a couple's table of its own.
       tableTypes: { BUND: "stepped", ZUERICH: "widths", FREIBURG: "average" },
       splittingBuiltIn: ["FREIBURG"],
+    },
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand: Vaud's tax law cuts the cantonal income tax by a share set
+    // each year (LRIPP, RSV 642.12, art. 4: 3.5 % for 2024, 4 % for 2025, 5 %
+    // from 2026), which the calculator applies and its exports do not carry.
+    // Add each new year's row when the law changes, before importing that
+    // year's tariffs; a year without a row is not cut.
+    key: "vd-income-tax-reduction",
+    publisher: "Canton of Vaud",
+    dataset: "Loi sur le revenu des personnes physiques (LRIPP), art. 4",
+    homepage: "https://www.lexfind.ch/tolv/258025/fr",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Canton of Vaud, LRIPP art. 4",
+      fr: "Canton de Vaud, LRIPP art. 4",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 2 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "bfs_canton", column: "canton" },
+      yearColumn: "year",
+      fromYear: 2021,
+      facts: [{ metric: "tax.income.basic.reduction", column: "reduction" }],
     },
     packs: ["switzerland"],
   },
