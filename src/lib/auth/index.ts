@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { applyOcRefresh, bindOcTokens, ocRefreshDue, refreshOcTokens } from "./oc-session";
+import { orangecatClient, orangecatProvider, syncOcSession } from "@bitbaum/accountkit/orangecat";
 import { isRecognizableProfile } from "./recognition";
 
 /**
@@ -14,14 +14,15 @@ import { isRecognizableProfile } from "./recognition";
  * and profile claims, and membership is looked up fresh from the members
  * table wherever it matters.
  *
- * The provider mirrors Loki's proven config (loki src/auth.ts):
- * OC's token endpoint accepts only client_secret_post, and requires PKCE
- * even for confidential clients.
+ * The provider and the session refresh live once, in
+ * @bitbaum/accountkit/orangecat, with their contract tests: client_secret_post,
+ * PKCE, identity scopes only (Solon never asks for OC capability scopes —
+ * governance authority flows the other way, via Bitcoin-signed votes), and a
+ * session that ends when OrangeCat revokes the grant.
  */
 
-const clientId = process.env.ORANGECAT_OAUTH_CLIENT_ID;
-const clientSecret = process.env.ORANGECAT_OAUTH_CLIENT_SECRET;
-const issuer = process.env.ORANGECAT_OAUTH_ISSUER ?? "https://orangecat.ch";
+const orangecat = orangecatClient();
+const issuer = orangecat?.issuer ?? "https://orangecat.ch";
 
 /** Where a person manages their one account, email included. */
 export const orangecatSettingsUrl = new URL("/settings", issuer).toString();
@@ -29,30 +30,13 @@ export const orangecatSettingsUrl = new URL("/settings", issuer).toString();
 /** True when the OrangeCat OAuth pair is configured; the nav hides the
  * sign-in control otherwise instead of mounting a provider that fails
  * opaquely at the code exchange. */
-export const authEnabled = Boolean(clientId && clientSecret);
+export const authEnabled = orangecat !== null;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   session: { strategy: "jwt" },
   pages: { error: "/auth/error" },
-  providers: authEnabled
-    ? [
-        {
-          id: "orangecat",
-          name: "OrangeCat",
-          type: "oidc",
-          issuer,
-          clientId,
-          clientSecret,
-          client: { token_endpoint_auth_method: "client_secret_post" },
-          checks: ["pkce", "state"],
-          // Identity only — Solon never asks for OC capability scopes.
-          // Governance authority flows the other way, via Bitcoin-signed
-          // votes that OC re-verifies against pinned keys.
-          authorization: { params: { scope: "openid profile email" } },
-        },
-      ]
-    : [],
+  providers: orangecat ? [orangecatProvider(orangecat)] : [],
   callbacks: {
     signIn({ profile }) {
       // Anonymous OrangeCat accounts (no email) cannot be recognized as a
@@ -70,24 +54,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           typeof profile.preferred_username === "string" ? profile.preferred_username : null;
         token.picture = typeof profile.picture === "string" ? profile.picture : token.picture;
       }
-      if (account?.provider === "orangecat") {
-        return bindOcTokens(token, account);
-      }
-      // The session lives only as long as OrangeCat lets it: once the access
-      // token expires, refresh; a refusal (Disconnect on OrangeCat, Sign out
-      // everywhere, account deleted) ends the session. See oc-session.ts.
-      const nowSeconds = Math.floor(Date.now() / 1000);
-      if (clientId && clientSecret && ocRefreshDue(token, nowSeconds)) {
-        const result = await refreshOcTokens(token.ocRefreshToken as string, {
-          issuer,
-          clientId,
-          clientSecret,
-          fetch,
-          nowSeconds,
-        });
-        return applyOcRefresh(token, result, nowSeconds);
-      }
-      return token;
+      // Records the actor id and tokens on sign-in; afterwards refreshes, and
+      // a refusal (Disconnect on OrangeCat, Sign out everywhere, account
+      // deleted) ends the session.
+      return syncOcSession({ token, profile, account }, orangecat);
     },
     session({ session, token }) {
       if (typeof token.actorId === "string") {
