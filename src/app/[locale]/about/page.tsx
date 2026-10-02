@@ -34,10 +34,10 @@ export default function AboutPage() {
           <div className="prose prose-lg text-fg-primary">
             <p className="mb-4">
               Most governance runs on trust: trust the treasurer, trust the minutes, trust that the
-              vote was counted. Solon replaces that trust with verification. Votes are Bitcoin
-              signed messages anyone can re-check. Decisions are published as self-verifying
-              documents. The audit trail is append-only. The treasury is watch-only — Solon never
-              holds keys or funds.
+              vote was counted. Solon replaces that trust with verification. Every vote is on the
+              record, and a vote a member signs with their own Bitcoin key can be re-checked by
+              anyone. Decisions are published as self-verifying documents. The audit trail is
+              append-only. The treasury is watch-only — Solon never holds keys or funds.
             </p>
             <p className="mb-4">
               Solon is the governance pillar of a three-product stack, and it practices what it

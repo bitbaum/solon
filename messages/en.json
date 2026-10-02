@@ -171,8 +171,8 @@
     "agent": {
       "kicker": "The governance agent",
       "title": "Works for all of you. Never for one of you.",
-      "body": "Every group has more to keep track of than anyone has time for. Solon's governance agent does the clerk's work — in the open, under the same rules as everyone else.",
-      "note": "It proposes and reminds; people decide. Some decisions — who may join, and the rules themselves — only people can vote on. Being built with our first pilot groups.",
+      "body": "Every group has more to keep track of than anyone has time for. Solon's governance agent will do the clerk's work — in the open, under the same rules as everyone else.",
+      "note": "It proposes and reminds; people decide. Some decisions — who may join, and the rules themselves — only people can vote on. Not built yet.",
       "writes": {
         "title": "Writes it up",
         "body": "Turns a request in plain words into a clear proposal that says exactly what would change."
@@ -261,11 +261,11 @@
       },
       "decisions": {
         "title": "Decisions, run end to end",
-        "body": "Proposals, votes, reminders and minutes, for meetings in a room, online, or both. Members vote with one click from wherever they are."
+        "body": "Proposals, votes and a public record, for meetings in a room, online, or both. Members vote with one click from wherever they are."
       },
       "agent": {
         "title": "The governance agent",
-        "body": "Drafts proposals from plain requests, keeps members informed, and checks what was spent against what was decided. It never takes a side, and never decides."
+        "body": "Drafts proposals from plain requests, keeps members informed, and checks what was spent against what was decided. It never takes a side, and never decides. Not built yet."
       },
       "person": {
         "title": "A person when it matters",
@@ -285,7 +285,7 @@
       },
       "associations": {
         "title": "Associations and co-ops",
-        "body": "General meetings, elections and member votes, with the minutes written as it happens."
+        "body": "General meetings, elections and member votes, with every result on the record the moment it is decided."
       },
       "communities": {
         "title": "Communities and new towns",
@@ -574,7 +574,7 @@
       "metaTitle": "Solon for associations and co-ops",
       "kicker": "For associations and co-ops",
       "title": "The general meeting, done properly — with half the work.",
-      "lede": "Clubs, associations and cooperatives run on volunteers. Solon does the paperwork: the notice, the vote, the count and the minutes.",
+      "lede": "Clubs, associations and cooperatives run on volunteers. Solon does the paperwork: the vote, the count and the record.",
       "problems": {
         "p1": {
           "title": "The meeting nobody attends",
@@ -599,7 +599,7 @@
           "body": "The meeting happens in the room and online at the same time; every vote is counted."
         },
         "h3": {
-          "title": "Minutes written as it happens",
+          "title": "On the record as it happens",
           "body": "Every proposal and result is on the record the moment it is decided."
         },
         "h4": {

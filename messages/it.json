@@ -171,8 +171,8 @@
     "agent": {
       "kicker": "L'agente di governance",
       "title": "Lavora per tutti voi. Mai per uno solo.",
-      "body": "Ogni gruppo ha più cose da seguire di quanto chiunque abbia tempo. L'agente di governance di Solon svolge il lavoro di segreteria — alla luce del sole, con le stesse regole di tutti.",
-      "note": "Propone e ricorda; a decidere sono le persone. Alcune decisioni — chi può aderire e le regole stesse — possono essere votate solo da persone. In sviluppo con i nostri primi gruppi pilota.",
+      "body": "Ogni gruppo ha più cose da seguire di quanto chiunque abbia tempo. L'agente di governance di Solon svolgerà il lavoro di segreteria — alla luce del sole, con le stesse regole di tutti.",
+      "note": "Propone e ricorda; a decidere sono le persone. Alcune decisioni — chi può aderire e le regole stesse — possono essere votate solo da persone. Non ancora realizzato.",
       "writes": {
         "title": "Mette per iscritto",
         "body": "Trasforma una richiesta in parole semplici in una proposta chiara che dice esattamente cosa cambierebbe."
@@ -261,11 +261,11 @@
       },
       "decisions": {
         "title": "Decisioni gestite dall'inizio alla fine",
-        "body": "Proposte, votazioni, promemoria e verbali, per riunioni in sala, online o entrambe. I membri votano con un clic, ovunque si trovino."
+        "body": "Proposte, votazioni e un registro pubblico, per riunioni in sala, online o entrambe. I membri votano con un clic, ovunque si trovino."
       },
       "agent": {
         "title": "L'agente di governance",
-        "body": "Redige proposte a partire da richieste semplici, tiene informati i membri e confronta le spese con le decisioni. Non prende mai parte e non decide mai."
+        "body": "Redige proposte a partire da richieste semplici, tiene informati i membri e confronta le spese con le decisioni. Non prende mai parte e non decide mai. Non ancora realizzato."
       },
       "person": {
         "title": "Una persona quando conta",
@@ -285,7 +285,7 @@
       },
       "associations": {
         "title": "Associazioni e cooperative",
-        "body": "Assemblee generali, elezioni e votazioni dei membri, con il verbale scritto mentre si svolgono."
+        "body": "Assemblee generali, elezioni e votazioni dei membri, con ogni risultato a registro nel momento in cui è deciso."
       },
       "communities": {
         "title": "Comunità e nuove città",

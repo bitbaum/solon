@@ -48,7 +48,11 @@ export const SOLON_CAPABILITIES: readonly SolonCapability[] = [
     verb: "Take a seat",
     what: "Become a member of an organization: one account, your own key if you want one.",
     example: "Your neighbourhood association, your co-op, your company's board.",
-    steps: ["Open the organization", "Ask for a seat", "The members admit you — humans only"],
+    steps: [
+      "Open the organization",
+      "Ask a member to suggest you",
+      "The members vote you in — humans only",
+    ],
     startHref: "/join",
   },
   {
@@ -76,7 +80,11 @@ export const SOLON_CAPABILITIES: readonly SolonCapability[] = [
     verb: "See the money",
     what: "The organization's Bitcoin, read from the chain. Solon can look; it can never spend.",
     example: "How much is in the fund right now, to the satoshi.",
-    steps: ["Open the treasury", "See the balance and every movement", "Nothing here can move it"],
+    steps: [
+      "Open the treasury",
+      "See the balance, read from the chain",
+      "Nothing here can move it",
+    ],
     startHref: "/treasury/bitcoin",
   },
   {

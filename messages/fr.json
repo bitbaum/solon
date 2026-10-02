@@ -171,8 +171,8 @@
     "agent": {
       "kicker": "L'agent de gouvernance",
       "title": "Travaille pour vous tous. Jamais pour un seul.",
-      "body": "Chaque groupe a plus à suivre que quiconque n'a de temps. L'agent de gouvernance de Solon fait le travail du secrétariat — au grand jour, selon les mêmes règles que tout le monde.",
-      "note": "Il propose et rappelle ; ce sont des personnes qui décident. Certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes. Développé avec nos premiers groupes pilotes.",
+      "body": "Chaque groupe a plus à suivre que quiconque n'a de temps. L'agent de gouvernance de Solon fera le travail du secrétariat — au grand jour, selon les mêmes règles que tout le monde.",
+      "note": "Il propose et rappelle ; ce sont des personnes qui décident. Certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes. Pas encore construit.",
       "writes": {
         "title": "Il rédige",
         "body": "Transforme une demande en mots simples en une proposition claire qui dit exactement ce qui changerait."
@@ -261,11 +261,11 @@
       },
       "decisions": {
         "title": "Des décisions menées de bout en bout",
-        "body": "Propositions, votes, rappels et procès-verbaux, pour des réunions en salle, en ligne ou les deux. Les membres votent en un clic, où qu'ils soient."
+        "body": "Propositions, votes et un registre public, pour des réunions en salle, en ligne ou les deux. Les membres votent en un clic, où qu'ils soient."
       },
       "agent": {
         "title": "L'agent de gouvernance",
-        "body": "Rédige des propositions à partir de demandes simples, tient les membres informés et compare les dépenses aux décisions. Il ne prend jamais parti et ne décide jamais."
+        "body": "Rédige des propositions à partir de demandes simples, tient les membres informés et compare les dépenses aux décisions. Il ne prend jamais parti et ne décide jamais. Pas encore construit."
       },
       "person": {
         "title": "Une personne quand ça compte",
@@ -285,7 +285,7 @@
       },
       "associations": {
         "title": "Associations et coopératives",
-        "body": "Assemblées générales, élections et votes des membres, avec un procès-verbal rédigé en direct."
+        "body": "Assemblées générales, élections et votes des membres, avec chaque résultat inscrit au registre dès qu'il est décidé."
       },
       "communities": {
         "title": "Communautés et nouvelles villes",
