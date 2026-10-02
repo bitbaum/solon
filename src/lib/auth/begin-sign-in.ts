@@ -3,7 +3,14 @@ import type { NextRequest } from "next/server";
 import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
 import { auth, authEnabled, signIn } from "@/lib/auth";
-import { authorizationParams, returnPath, type EntryMode } from "@/lib/auth/sign-in-request";
+import {
+  authorizationParams,
+  returnPath as safePath,
+  type EntryMode,
+} from "@bitbaum/accountkit/orangecat";
+
+/** Where to land after signing in: `from` if it is ours, else the account page. */
+const returnPath = (from: unknown) => safePath(from, "/account");
 
 export interface SignInStart {
   mode: EntryMode;

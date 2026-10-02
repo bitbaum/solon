@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@bitbaum/accountkit':
+        specifier: github:bitbaum/accountkit#v0.2.0
+        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/b6af2684d50ea53b7134c8138b48d39eddc0610b(react@19.3.0)
       '@bitbaum/geo-kit':
         specifier: github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa
         version: https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa
@@ -237,6 +240,13 @@ packages:
   '@babel/types@7.29.8':
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
+
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/b6af2684d50ea53b7134c8138b48d39eddc0610b':
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/b6af2684d50ea53b7134c8138b48d39eddc0610b}
+    version: 0.2.0
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: '>=18'
 
   '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/c93f7b2662b25284c6a45729c1b71047e21c81fe':
     resolution: {gitHosted: true, integrity: sha512-qkOt5iB+zMAUZvkcXSwHvGgkHET9gvqg6Kuk2NzJzSvPQshuA8YTaxXjSDhI2u9EJFoviZFeKQioYinfvNdMTw==, tarball: https://codeload.github.com/bitbaum/design-tokens/tar.gz/c93f7b2662b25284c6a45729c1b71047e21c81fe}
@@ -3831,6 +3841,10 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
+
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/b6af2684d50ea53b7134c8138b48d39eddc0610b(react@19.3.0)':
+    dependencies:
+      react: 19.3.0
 
   '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/c93f7b2662b25284c6a45729c1b71047e21c81fe': {}
 

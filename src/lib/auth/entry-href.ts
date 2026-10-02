@@ -1,6 +1,6 @@
 import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
-import type { EntryMode } from "@/lib/auth/sign-in-request";
+import type { EntryMode } from "@bitbaum/accountkit/orangecat";
 
 /**
  * The link that starts signing in or creating an account. /sign-in and
