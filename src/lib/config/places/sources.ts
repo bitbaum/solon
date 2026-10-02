@@ -424,8 +424,7 @@ export const SOURCES: readonly SourceInput[] = [
     key: "swisstopo-postcode-localities",
     publisher: "Federal Office of Topography (swisstopo)",
     dataset: "Official directory of localities with postcodes",
-    homepage:
-      "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities-with-postcode-and-perimeter",
+    homepage: "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities",
     licence: "LicenseRef-opendata-swiss-by",
     attribution: {
       en: "Federal Office of Topography swisstopo, official directory of localities",

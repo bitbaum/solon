@@ -265,7 +265,7 @@
       },
       "agent": {
         "title": "The governance agent",
-        "body": "Drafts proposals from plain requests, keeps members informed, and checks what was spent against what was decided. It never takes a side, and never decides."
+        "body": "Drafts proposals from plain requests, keeps members informed, and checks what was spent against what was decided. It never takes a side, and never decides. Being built with our first pilot groups."
       },
       "person": {
         "title": "A person when it matters",
