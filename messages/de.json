@@ -171,8 +171,8 @@
     "agent": {
       "kicker": "Der Governance-Agent",
       "title": "Arbeitet für alle. Nie für einen allein.",
-      "body": "Jede Gruppe hat mehr im Blick zu behalten, als jemand Zeit dafür hat. Der Governance-Agent von Solon übernimmt die Arbeit des Sekretariats — offen und nach denselben Regeln wie alle anderen.",
-      "note": "Er schlägt vor und erinnert; entscheiden tun Menschen. Manche Entscheide — wer beitreten darf und die Regeln selbst — können nur Menschen fällen. Wird mit unseren ersten Pilotgruppen entwickelt.",
+      "body": "Jede Gruppe hat mehr im Blick zu behalten, als jemand Zeit dafür hat. Der Governance-Agent von Solon wird die Arbeit des Sekretariats übernehmen — offen und nach denselben Regeln wie alle anderen.",
+      "note": "Er schlägt vor und erinnert; entscheiden tun Menschen. Manche Entscheide — wer beitreten darf und die Regeln selbst — können nur Menschen fällen. Noch nicht gebaut.",
       "writes": {
         "title": "Schreibt es auf",
         "body": "Macht aus einem Anliegen in einfachen Worten einen klaren Antrag, der genau sagt, was sich ändern würde."
@@ -261,11 +261,11 @@
       },
       "decisions": {
         "title": "Entscheide von Anfang bis Ende",
-        "body": "Anträge, Abstimmungen, Erinnerungen und Protokolle — für Sitzungen im Saal, online oder beides. Mitglieder stimmen mit einem Klick ab, wo immer sie sind."
+        "body": "Anträge, Abstimmungen und ein öffentliches Protokoll — für Sitzungen im Saal, online oder beides. Mitglieder stimmen mit einem Klick ab, wo immer sie sind."
       },
       "agent": {
         "title": "Der Governance-Agent",
-        "body": "Entwirft Anträge aus einfachen Anliegen, hält die Mitglieder informiert und prüft Ausgaben gegen Beschlüsse. Er ergreift nie Partei und entscheidet nie. Wird mit unseren ersten Pilotgruppen entwickelt."
+        "body": "Entwirft Anträge aus einfachen Anliegen, hält die Mitglieder informiert und prüft Ausgaben gegen Beschlüsse. Er ergreift nie Partei und entscheidet nie. Noch nicht gebaut."
       },
       "person": {
         "title": "Ein Mensch, wenn es darauf ankommt",
@@ -285,7 +285,7 @@
       },
       "associations": {
         "title": "Vereine und Genossenschaften",
-        "body": "Generalversammlungen, Wahlen und Abstimmungen der Mitglieder, mit dem Protokoll, das während der Sitzung entsteht."
+        "body": "Generalversammlungen, Wahlen und Abstimmungen der Mitglieder, und jedes Ergebnis steht im Protokoll, sobald es feststeht."
       },
       "communities": {
         "title": "Gemeinschaften und neue Orte",
