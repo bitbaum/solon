@@ -1,6 +1,8 @@
 // The design SSOT for OrangeCat, Loki and Solon: tokens AND the self-hosted
 // faces they name. It must load before globals.css so app rules can override it.
 import "@fleet/design-tokens/tokens.css";
+// The sign-in error screen (SignInError) is drawn by this sheet.
+import "@bitbaum/accountkit/styles.css";
 import "../globals.css";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
