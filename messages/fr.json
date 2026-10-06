@@ -172,14 +172,14 @@
       "kicker": "L'agent de gouvernance",
       "title": "Travaille pour vous tous. Jamais pour un seul.",
       "body": "Chaque groupe a plus à suivre que quiconque n'a de temps. L'agent de gouvernance de Solon fera le travail du secrétariat — au grand jour, selon les mêmes règles que tout le monde.",
-      "note": "Il propose et rappelle ; ce sont des personnes qui décident. Certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes. Pas encore construit.",
+      "note": "Pas encore construit. Ce sont des personnes qui décident : certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes.",
       "writes": {
         "title": "Il rédige",
         "body": "Transforme une demande en mots simples en une proposition claire qui dit exactement ce qui changerait."
       },
       "informs": {
         "title": "Il tient chacun informé",
-        "body": "Dit aux membres ce qui est soumis à décision, les prévient avant la clôture d'un vote et tient le procès-verbal."
+        "body": "Dit aux membres ce qui est soumis à décision."
       },
       "money": {
         "title": "Il suit l'argent",
@@ -203,7 +203,7 @@
       },
       "associations": {
         "title": "Associations et coopératives",
-        "body": "Assemblées générales, élections et votes des membres, consignés au fil de la séance."
+        "body": "Assemblées générales, élections et votes des membres, dans un registre public."
       },
       "communities": {
         "title": "Communautés et nouvelles villes",

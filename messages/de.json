@@ -172,14 +172,14 @@
       "kicker": "Der Governance-Agent",
       "title": "Arbeitet für alle. Nie für einen allein.",
       "body": "Jede Gruppe hat mehr im Blick zu behalten, als jemand Zeit dafür hat. Der Governance-Agent von Solon wird die Arbeit des Sekretariats übernehmen — offen und nach denselben Regeln wie alle anderen.",
-      "note": "Er schlägt vor und erinnert; entscheiden tun Menschen. Manche Entscheide — wer beitreten darf und die Regeln selbst — können nur Menschen fällen. Noch nicht gebaut.",
+      "note": "Noch nicht gebaut. Entscheiden tun Menschen: Manche Entscheide — wer beitreten darf und die Regeln selbst — können nur Menschen fällen.",
       "writes": {
         "title": "Schreibt es auf",
         "body": "Macht aus einem Anliegen in einfachen Worten einen klaren Antrag, der genau sagt, was sich ändern würde."
       },
       "informs": {
         "title": "Hält alle auf dem Laufenden",
-        "body": "Sagt den Mitgliedern, worüber entschieden wird, erinnert sie vor Abstimmungsschluss und führt das Protokoll."
+        "body": "Sagt den Mitgliedern, worüber entschieden wird."
       },
       "money": {
         "title": "Verfolgt das Geld",
@@ -203,7 +203,7 @@
       },
       "associations": {
         "title": "Vereine und Genossenschaften",
-        "body": "Generalversammlungen, Wahlen und Abstimmungen der Mitglieder, protokolliert, während sie stattfinden."
+        "body": "Generalversammlungen, Wahlen und Abstimmungen der Mitglieder, in einem öffentlichen Protokoll."
       },
       "communities": {
         "title": "Gemeinschaften und neue Orte",

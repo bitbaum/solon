@@ -142,12 +142,13 @@ publication over Nostr so the record outlives any one server.
 
 ## Shipped
 
-### Places: every Swiss commune, and what tax would cost you there
+### Places: every Swiss commune, and its income tax at your income
 
-`/places` maps every Swiss commune, coloured by the tax at your income;
+`/places` maps every Swiss commune, coloured by the income tax at your income;
 `/compare` puts places side by side; `/api/v1/places` serves the same data.
-A canton whose figures do not yet match the Federal Tax Administration's
-calculator stays grey rather than show a wrong figure.
+Church tax, wealth tax and fixed per-head taxes are not included. A commune
+whose canton tariff or local multiplier is not modelled yet is drawn as having
+no data; `/places/coverage` shows how much is covered.
 
 ### One-click governance, Bitcoin optional
 

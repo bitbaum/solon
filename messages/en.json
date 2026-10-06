@@ -172,14 +172,14 @@
       "kicker": "The governance agent",
       "title": "Works for all of you. Never for one of you.",
       "body": "Every group has more to keep track of than anyone has time for. Solon's governance agent will do the clerk's work — in the open, under the same rules as everyone else.",
-      "note": "It proposes and reminds; people decide. Some decisions — who may join, and the rules themselves — only people can vote on. Not built yet.",
+      "note": "Not built yet. People decide: some decisions — who may join, and the rules themselves — only people can vote on.",
       "writes": {
         "title": "Writes it up",
         "body": "Turns a request in plain words into a clear proposal that says exactly what would change."
       },
       "informs": {
         "title": "Keeps everyone in the loop",
-        "body": "Tells members what is up for decision, reminds them before a vote closes, and keeps the minutes."
+        "body": "Tells members what is up for decision."
       },
       "money": {
         "title": "Follows the money",
@@ -203,7 +203,7 @@
       },
       "associations": {
         "title": "Associations and co-ops",
-        "body": "General meetings, elections and member votes, minuted as they happen."
+        "body": "General meetings, elections and member votes, on a public record."
       },
       "communities": {
         "title": "Communities and new towns",
@@ -421,7 +421,7 @@
     },
     "governanceAgent": {
       "name": "The governance agent",
-      "body": "Drafts proposals, keeps members informed, writes the minutes and checks spending against decisions."
+      "body": "Not built yet. It will draft proposals, keep members informed and check spending against decisions."
     },
     "admissionByVote": {
       "name": "Admission by vote",
