@@ -6,6 +6,7 @@
     "node": ">=20"
   },
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "node scripts/build/vendor-maplibre.mjs && next dev",
     "build": "node scripts/build/vendor-maplibre.mjs && next build",
@@ -30,6 +31,7 @@
     "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {
+    "@bitbaum/accountkit": "github:bitbaum/accountkit#v0.2.0",
     "@bitbaum/geo-kit": "github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa",
     "@fleet/design-tokens": "github:bitbaum/design-tokens#c93f7b2662b25284c6a45729c1b71047e21c81fe",
     "@noble/hashes": "2.4.0",
@@ -42,7 +44,7 @@
     "fflate": "^0.8.3",
     "lucide-react": "1.48.0",
     "maplibre-gl": "6.11.2",
-    "next": "16.3.6",
+    "next": "16.3.8",
     "next-auth": "^5.0.0-beta.32",
     "next-intl": "^4.14.7",
     "pg": "^8.23.0",
@@ -70,7 +72,7 @@
     "@types/topojson-specification": "^1.0.5",
     "drizzle-kit": "^0.31.11",
     "eslint": "10.11.0",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "espree": "^11.2.0",
     "postcss": "8.5.28",
     "prettier": "3.9.9",
