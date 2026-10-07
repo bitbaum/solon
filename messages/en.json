@@ -162,6 +162,76 @@
         "body": "The result is published with every vote behind it — so everyone knows what was decided, and can hold the people carrying it out to it."
       }
     },
+    "problems": {
+      "kicker": "What it solves",
+      "title": "Real problems. What Solon does about them.",
+      "lede": "Some are one person's problem this week. Some belong to a whole town. Each card says what happens on Solon, and links to the page where it happens.",
+      "note": "Today, suggesting and voting on this site run for OrangeCat, Solon's first organization. A group you start here gets its founding seat and its public record at once; its own votes are not open yet.",
+      "answer": "On Solon",
+      "you": {
+        "title": "For you",
+        "lede": "Situations one person, or one small group, runs into."
+      },
+      "everyone": {
+        "title": "For everyone",
+        "lede": "Problems a town, an association or a whole society has, and nobody owns."
+      },
+      "items": {
+        "groupChat": {
+          "problem": "“We agreed on it in the group chat. Two weeks later, nobody agrees on what we agreed.”",
+          "solution": "Put the question to the group as a suggestion, in plain words, with exactly what would change. Members vote with one click, and the result stays on the record with every vote behind it."
+        },
+        "nightShift": {
+          "problem": "“The vote is on Tuesday at seven, and I work nights.”",
+          "solution": "A vote runs for up to a week, not one evening. Vote from your phone when you have a minute, and change your vote until it closes."
+        },
+        "loudestWins": {
+          "problem": "“Five ideas for one budget. A yes-or-no vote splits the room, and the loudest idea wins.”",
+          "solution": "Choose how the votes are counted for that decision: by ranking, approval, scores or dots, not only yes or no."
+        },
+        "noWallet": {
+          "problem": "“Every voting tool I try wants me to install an app or set up a wallet first.”",
+          "solution": "Sign in with your OrangeCat account and vote with one click. No wallet, no key. If you want proof that anyone can check, sign your vote with your own key instead."
+        },
+        "startGroup": {
+          "problem": "“We're starting a club, and nobody knows how we should decide things.”",
+          "solution": "Start an organization in a minute and take the first seat. Choose who decides: you alone, every member, or elected delegates. Or start from ready-made rules for an association, a co-op or a company board."
+        },
+        "moving": {
+          "problem": "“We might move, and we want to know what tax we would pay in each town.”",
+          "solution": "Put up to four Swiss places side by side and enter your taxable income. You get an estimate of the income tax in each, with the official source behind every figure. What you type stays in your browser."
+        },
+        "closedDoors": {
+          "problem": "Decisions taken behind closed doors, and minutes nobody can check.",
+          "solution": "Every suggestion, every vote cast and every result is on a public record anyone can read. It only grows: nothing on it can be edited or deleted, not even by us."
+        },
+        "trustTheCount": {
+          "problem": "People stop accepting results they cannot check for themselves.",
+          "solution": "Each decision is published with what it takes to recount it. A vote a member signed with their own key can be checked by anyone, without trusting Solon."
+        },
+        "algorithmDecides": {
+          "problem": "Software is starting to decide who gets help, and who gets in.",
+          "solution": "Some questions only people may vote on: help for a person, who may join, safety, and the rules themselves. AI agents can be members and make suggestions, but on those questions their votes are refused."
+        },
+        "hiddenRules": {
+          "problem": "People join groups without knowing who really decides.",
+          "solution": "Every organization on Solon states who decides in one plain sentence on its public page, next to its members: one person, every member, or elected delegates."
+        },
+        "platformRules": {
+          "problem": "Platforms change the rules on their users overnight.",
+          "solution": "OrangeCat keeps two of its own rules on Solon: how much its AI agent may spend, and how revenue is shared with the people whose code it is built on. Every version is public, and a new one is recorded only after a vote has passed."
+        },
+        "whereYouLive": {
+          "problem": "Few people can say which authority is responsible for what, where they live.",
+          "solution": "Type a Swiss postcode or a place name. Solon shows the municipality and every level above it, which of them levy tax, and the official source behind each fact."
+        }
+      },
+      "closing": {
+        "text": "Your problem is not on the list? Tell us about your group. We work out the rules with you, and you decide under them.",
+        "talk": "Talk to us",
+        "all": "Everything you can do here"
+      }
+    },
     "rules": {
       "kicker": "The rules matter",
       "title": "Same people. Different rules. Different winner.",
