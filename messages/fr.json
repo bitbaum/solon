@@ -162,6 +162,76 @@
         "body": "Le résultat est publié avec chaque vote qui le fonde — chacun sait ce qui a été décidé et peut en tenir responsables ceux qui l'appliquent."
       }
     },
+    "problems": {
+      "kicker": "Ce que ça résout",
+      "title": "De vrais problèmes. Ce que Solon y fait.",
+      "lede": "Certains sont le problème d'une seule personne cette semaine. D'autres appartiennent à toute une commune. Chaque carte dit ce qui se passe sur Solon et mène à la page où cela se passe.",
+      "note": "Aujourd'hui, proposer et voter sur ce site fonctionnent pour OrangeCat, la première organisation de Solon. Un groupe que vous créez ici reçoit tout de suite son siège fondateur et son registre public ; ses propres votes ne sont pas encore ouverts.",
+      "answer": "Sur Solon",
+      "you": {
+        "title": "Pour vous",
+        "lede": "Des situations que vit une personne seule, ou un petit groupe."
+      },
+      "everyone": {
+        "title": "Pour tous",
+        "lede": "Des problèmes qu'ont une commune, une association ou toute une société, et qui n'appartiennent à personne."
+      },
+      "items": {
+        "groupChat": {
+          "problem": "« On l'a décidé dans la discussion de groupe. Deux semaines plus tard, personne n'est d'accord sur ce qu'on a décidé. »",
+          "solution": "Soumettez la question au groupe sous forme de proposition, en mots simples, avec exactement ce qui changerait. Les membres votent en un clic, et le résultat reste au registre avec chaque vote qui le fonde."
+        },
+        "nightShift": {
+          "problem": "« Le vote a lieu mardi à sept heures, et je travaille de nuit. »",
+          "solution": "Un vote dure jusqu'à une semaine, pas une seule soirée. Votez depuis votre téléphone quand vous avez une minute, et changez votre vote jusqu'à sa clôture."
+        },
+        "loudestWins": {
+          "problem": "« Cinq idées pour un seul budget. Un vote par oui ou non divise la salle, et l'idée la plus bruyante l'emporte. »",
+          "solution": "Choisissez comment les voix sont comptées pour cette décision : par classement, par approbation, par notes ou par points, pas seulement par oui ou non."
+        },
+        "noWallet": {
+          "problem": "« Chaque outil de vote que j'essaie veut d'abord que j'installe une application ou que je crée un portefeuille. »",
+          "solution": "Connectez-vous avec votre compte OrangeCat et votez en un clic. Pas de portefeuille, pas de clé. Si vous voulez une preuve que chacun peut vérifier, signez plutôt votre vote avec votre propre clé."
+        },
+        "startGroup": {
+          "problem": "« Nous fondons une association, et personne ne sait comment nous devrions décider. »",
+          "solution": "Créez une organisation en une minute et prenez le premier siège. Choisissez qui décide : vous seul, tous les membres ou des délégués élus. Ou partez de règles toutes prêtes pour une association, une coopérative ou un conseil d'administration."
+        },
+        "moving": {
+          "problem": "« Nous allons peut-être déménager, et nous voulons savoir combien d'impôts nous paierions dans chaque commune. »",
+          "solution": "Placez jusqu'à quatre lieux suisses côte à côte et saisissez votre revenu imposable. Vous obtenez une estimation de l'impôt sur le revenu dans chacun, avec la source officielle derrière chaque chiffre. Ce que vous saisissez reste dans votre navigateur."
+        },
+        "closedDoors": {
+          "problem": "Des décisions prises à huis clos, et des procès-verbaux que personne ne peut vérifier.",
+          "solution": "Chaque proposition, chaque vote exprimé et chaque résultat figure dans un registre public que chacun peut lire. Il ne fait que grandir : rien ne peut y être modifié ni supprimé, pas même par nous."
+        },
+        "trustTheCount": {
+          "problem": "Les gens cessent d'accepter des résultats qu'ils ne peuvent pas vérifier eux-mêmes.",
+          "solution": "Chaque décision est publiée avec tout ce qu'il faut pour la recompter. Un vote qu'un membre a signé avec sa propre clé peut être vérifié par n'importe qui, sans faire confiance à Solon."
+        },
+        "algorithmDecides": {
+          "problem": "Des logiciels commencent à décider qui reçoit de l'aide, et qui peut entrer.",
+          "solution": "Certaines questions ne peuvent être votées que par des personnes : l'aide à une personne, qui peut adhérer, la sécurité et les règles elles-mêmes. Des agents d'IA peuvent être membres et faire des propositions, mais sur ces questions leurs votes sont refusés."
+        },
+        "hiddenRules": {
+          "problem": "On rejoint des groupes sans savoir qui décide vraiment.",
+          "solution": "Chaque organisation sur Solon dit qui décide en une phrase claire sur sa page publique, à côté de ses membres : une personne, tous les membres ou des délégués élus."
+        },
+        "platformRules": {
+          "problem": "Les plateformes changent les règles de leurs utilisateurs du jour au lendemain.",
+          "solution": "OrangeCat tient deux de ses propres règles sur Solon : combien son agent d'IA peut dépenser, et comment les revenus sont partagés avec les personnes dont le code le fait tourner. Chaque version est publique, et une nouvelle n'est enregistrée qu'après un vote adopté."
+        },
+        "whereYouLive": {
+          "problem": "Peu de gens savent dire quelle autorité est responsable de quoi, là où ils vivent.",
+          "solution": "Tapez un code postal suisse ou un nom de lieu. Solon montre la commune et chaque niveau au-dessus, lesquels prélèvent des impôts, et la source officielle derrière chaque fait."
+        }
+      },
+      "closing": {
+        "text": "Votre problème n'est pas dans la liste ? Parlez-nous de votre groupe. Nous établissons les règles avec vous, et vous décidez selon elles.",
+        "talk": "Nous écrire",
+        "all": "Tout ce que vous pouvez faire ici"
+      }
+    },
     "rules": {
       "kicker": "Les règles comptent",
       "title": "Mêmes personnes. Autres règles. Autre gagnant.",

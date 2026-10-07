@@ -162,6 +162,76 @@
         "body": "Das Ergebnis wird mit jeder einzelnen Stimme veröffentlicht — so wissen alle, was entschieden wurde, und können die Umsetzenden daran messen."
       }
     },
+    "problems": {
+      "kicker": "Was es löst",
+      "title": "Echte Probleme. Was Solon dagegen tut.",
+      "lede": "Manche hat eine einzelne Person diese Woche. Manche gehören einer ganzen Gemeinde. Jede Karte sagt, was auf Solon geschieht, und führt zur Seite, auf der es geschieht.",
+      "note": "Anträge und Abstimmungen laufen auf dieser Website heute für OrangeCat, die erste Organisation auf Solon. Eine Gruppe, die Sie hier gründen, erhält sofort ihren Gründungssitz und ihr öffentliches Protokoll; eigene Abstimmungen sind für sie noch nicht offen.",
+      "answer": "Auf Solon",
+      "you": {
+        "title": "Für Sie",
+        "lede": "Situationen, in die eine einzelne Person oder eine kleine Gruppe gerät."
+      },
+      "everyone": {
+        "title": "Für alle",
+        "lede": "Probleme, die eine Gemeinde, ein Verein oder eine ganze Gesellschaft hat und die niemandem gehören."
+      },
+      "items": {
+        "groupChat": {
+          "problem": "«Wir haben es im Gruppenchat beschlossen. Zwei Wochen später ist sich niemand mehr einig, was.»",
+          "solution": "Legen Sie die Frage der Gruppe als Antrag vor, in einfachen Worten und mit genau dem, was sich ändern würde. Die Mitglieder stimmen mit einem Klick ab, und das Ergebnis bleibt mit jeder Stimme im Protokoll."
+        },
+        "nightShift": {
+          "problem": "«Die Abstimmung ist am Dienstag um sieben, und ich arbeite nachts.»",
+          "solution": "Eine Abstimmung läuft bis zu einer Woche, nicht nur einen Abend. Stimmen Sie vom Handy ab, wenn Sie eine Minute haben, und ändern Sie Ihre Stimme, bis die Abstimmung schliesst."
+        },
+        "loudestWins": {
+          "problem": "«Fünf Ideen für ein Budget. Ein Ja oder Nein spaltet den Raum, und die lauteste Idee gewinnt.»",
+          "solution": "Wählen Sie für diesen Entscheid, wie gezählt wird: nach Rangfolge, Zustimmung, Bewertung oder verteilten Punkten, nicht nur mit Ja oder Nein."
+        },
+        "noWallet": {
+          "problem": "«Jedes Abstimmungstool will, dass ich zuerst eine App installiere oder ein Wallet einrichte.»",
+          "solution": "Melden Sie sich mit Ihrem OrangeCat-Konto an und stimmen Sie mit einem Klick ab. Kein Wallet, kein Schlüssel. Wenn Sie einen Beweis wollen, den jeder prüfen kann, signieren Sie Ihre Stimme stattdessen mit dem eigenen Schlüssel."
+        },
+        "startGroup": {
+          "problem": "«Wir gründen einen Verein, und niemand weiss, wie wir entscheiden sollen.»",
+          "solution": "Gründen Sie in einer Minute eine Organisation und nehmen Sie den ersten Sitz. Wählen Sie, wer entscheidet: Sie allein, alle Mitglieder oder gewählte Delegierte. Oder beginnen Sie mit fertigen Regeln für einen Verein, eine Genossenschaft oder einen Verwaltungsrat."
+        },
+        "moving": {
+          "problem": "«Wir ziehen vielleicht um und wollen wissen, wie viel Steuern wir in jeder Gemeinde zahlen würden.»",
+          "solution": "Stellen Sie bis zu vier Schweizer Orte nebeneinander und geben Sie Ihr steuerbares Einkommen ein. Sie erhalten für jeden eine Schätzung der Einkommenssteuer, mit der amtlichen Quelle hinter jeder Zahl. Was Sie eingeben, bleibt in Ihrem Browser."
+        },
+        "closedDoors": {
+          "problem": "Entscheide hinter verschlossenen Türen und Protokolle, die niemand prüfen kann.",
+          "solution": "Jeder Antrag, jede abgegebene Stimme und jedes Ergebnis steht in einem öffentlichen Protokoll, das alle lesen können. Es wächst nur: Nichts darin lässt sich ändern oder löschen, auch nicht von uns."
+        },
+        "trustTheCount": {
+          "problem": "Menschen akzeptieren Ergebnisse nicht mehr, die sie nicht selbst prüfen können.",
+          "solution": "Jeder Entscheid wird mit allem veröffentlicht, was es zum Nachzählen braucht. Eine Stimme, die ein Mitglied mit dem eigenen Schlüssel signiert hat, kann jeder prüfen, ohne Solon zu vertrauen."
+        },
+        "algorithmDecides": {
+          "problem": "Software beginnt zu entscheiden, wer Hilfe bekommt und wer dazugehört.",
+          "solution": "Über manche Fragen dürfen nur Menschen abstimmen: Hilfe für eine Person, wer beitreten darf, Sicherheit und die Regeln selbst. KI-Agenten können Mitglied sein und Anträge stellen, aber bei diesen Fragen werden ihre Stimmen abgewiesen."
+        },
+        "hiddenRules": {
+          "problem": "Menschen treten Gruppen bei, ohne zu wissen, wer wirklich entscheidet.",
+          "solution": "Jede Organisation auf Solon sagt in einem klaren Satz auf ihrer öffentlichen Seite, neben ihren Mitgliedern, wer entscheidet: eine Person, alle Mitglieder oder gewählte Delegierte."
+        },
+        "platformRules": {
+          "problem": "Plattformen ändern die Regeln für ihre Nutzer über Nacht.",
+          "solution": "OrangeCat führt zwei seiner eigenen Regeln auf Solon: wie viel sein KI-Agent ausgeben darf und wie Einnahmen mit den Menschen geteilt werden, auf deren Code es aufbaut. Jede Fassung ist öffentlich, und eine neue wird erst nach einer angenommenen Abstimmung erfasst."
+        },
+        "whereYouLive": {
+          "problem": "Kaum jemand kann sagen, welche Behörde am eigenen Wohnort wofür zuständig ist.",
+          "solution": "Geben Sie eine Schweizer Postleitzahl oder einen Ortsnamen ein. Solon zeigt die Gemeinde und jede Ebene darüber, welche davon Steuern erheben, und die amtliche Quelle hinter jeder Angabe."
+        }
+      },
+      "closing": {
+        "text": "Ihr Problem ist nicht dabei? Erzählen Sie uns von Ihrer Gruppe. Wir erarbeiten die Regeln mit Ihnen, und Sie entscheiden danach.",
+        "talk": "Mit uns sprechen",
+        "all": "Alles, was Sie hier tun können"
+      }
+    },
     "rules": {
       "kicker": "Die Regeln zählen",
       "title": "Dieselben Menschen. Andere Regeln. Ein anderer Gewinner.",

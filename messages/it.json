@@ -162,6 +162,76 @@
         "body": "Il risultato viene pubblicato con ogni voto che lo sostiene — così tutti sanno cosa è stato deciso e possono chiederne conto a chi lo attua."
       }
     },
+    "problems": {
+      "kicker": "Cosa risolve",
+      "title": "Problemi reali. Cosa fa Solon.",
+      "lede": "Alcuni sono il problema di una sola persona questa settimana. Altri appartengono a un intero comune. Ogni scheda dice cosa succede su Solon e porta alla pagina dove succede.",
+      "note": "Oggi proporre e votare su questo sito funzionano per OrangeCat, la prima organizzazione di Solon. Un gruppo che fondate qui riceve subito il suo seggio fondatore e il suo registro pubblico; le sue votazioni non sono ancora aperte.",
+      "answer": "Su Solon",
+      "you": {
+        "title": "Per voi",
+        "lede": "Situazioni in cui si trova una persona sola, o un piccolo gruppo."
+      },
+      "everyone": {
+        "title": "Per tutti",
+        "lede": "Problemi che hanno un comune, un'associazione o un'intera società, e che non sono di nessuno."
+      },
+      "items": {
+        "groupChat": {
+          "problem": "«L'abbiamo deciso nella chat di gruppo. Due settimane dopo nessuno è d'accordo su cosa abbiamo deciso.»",
+          "solution": "Sottoponete la questione al gruppo come proposta, in parole semplici, con esattamente ciò che cambierebbe. I membri votano con un clic, e il risultato resta a registro con ogni voto che lo sostiene."
+        },
+        "nightShift": {
+          "problem": "«La votazione è martedì alle sette, e io lavoro di notte.»",
+          "solution": "Una votazione dura fino a una settimana, non una sola sera. Votate dal telefono quando avete un minuto, e cambiate il vostro voto fino alla chiusura."
+        },
+        "loudestWins": {
+          "problem": "«Cinque idee per un solo budget. Un voto sì o no divide la sala, e vince l'idea più rumorosa.»",
+          "solution": "Scegliete come si contano i voti per quella decisione: per classifica, per approvazione, con punteggi o con punti, non solo con sì o no."
+        },
+        "noWallet": {
+          "problem": "«Ogni strumento di voto che provo vuole che prima installi un'app o crei un portafoglio.»",
+          "solution": "Accedete con il vostro account OrangeCat e votate con un clic. Nessun portafoglio, nessuna chiave. Se volete una prova che chiunque può verificare, firmate invece il voto con la vostra chiave."
+        },
+        "startGroup": {
+          "problem": "«Stiamo fondando un'associazione, e nessuno sa come dovremmo decidere.»",
+          "solution": "Fondate un'organizzazione in un minuto e prendete il primo seggio. Scegliete chi decide: voi soli, tutti i membri o delegati eletti. Oppure partite da regole già pronte per un'associazione, una cooperativa o un consiglio d'amministrazione."
+        },
+        "moving": {
+          "problem": "«Forse traslochiamo, e vogliamo sapere quante imposte pagheremmo in ogni comune.»",
+          "solution": "Mettete fino a quattro località svizzere una accanto all'altra e inserite il vostro reddito imponibile. Ottenete una stima dell'imposta sul reddito in ciascuna, con la fonte ufficiale dietro ogni cifra. Ciò che inserite resta nel vostro browser."
+        },
+        "closedDoors": {
+          "problem": "Decisioni prese a porte chiuse, e verbali che nessuno può verificare.",
+          "solution": "Ogni proposta, ogni voto espresso e ogni risultato sta in un registro pubblico che chiunque può leggere. Cresce soltanto: nulla può esservi modificato o cancellato, nemmeno da noi."
+        },
+        "trustTheCount": {
+          "problem": "Le persone smettono di accettare risultati che non possono verificare da sé.",
+          "solution": "Ogni decisione viene pubblicata con tutto ciò che serve per ricontarla. Un voto che un membro ha firmato con la propria chiave può essere verificato da chiunque, senza fidarsi di Solon."
+        },
+        "algorithmDecides": {
+          "problem": "I software iniziano a decidere chi riceve aiuto, e chi può entrare.",
+          "solution": "Su alcune questioni possono votare solo le persone: l'aiuto a una persona, chi può aderire, la sicurezza e le regole stesse. Gli agenti di IA possono essere membri e fare proposte, ma su queste questioni i loro voti vengono respinti."
+        },
+        "hiddenRules": {
+          "problem": "Si entra in un gruppo senza sapere chi decide davvero.",
+          "solution": "Ogni organizzazione su Solon dice chi decide in una frase chiara sulla sua pagina pubblica, accanto ai suoi membri: una persona, tutti i membri o delegati eletti."
+        },
+        "platformRules": {
+          "problem": "Le piattaforme cambiano le regole ai propri utenti da un giorno all'altro.",
+          "solution": "OrangeCat tiene due delle sue regole su Solon: quanto può spendere il suo agente di IA, e come i ricavi vengono condivisi con le persone sul cui codice è costruito. Ogni versione è pubblica, e una nuova viene registrata solo dopo una votazione approvata."
+        },
+        "whereYouLive": {
+          "problem": "Poche persone sanno dire quale autorità è responsabile di cosa, là dove vivono.",
+          "solution": "Digitate un numero postale svizzero o il nome di una località. Solon mostra il comune e ogni livello sopra di esso, quali di essi riscuotono imposte, e la fonte ufficiale dietro ogni dato."
+        }
+      },
+      "closing": {
+        "text": "Il vostro problema non è nell'elenco? Raccontateci del vostro gruppo. Definiamo le regole con voi, e voi decidete secondo quelle.",
+        "talk": "Scriveteci",
+        "all": "Tutto ciò che potete fare qui"
+      }
+    },
     "rules": {
       "kicker": "Le regole contano",
       "title": "Stesse persone. Regole diverse. Vincitore diverso.",

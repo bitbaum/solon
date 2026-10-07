@@ -7,12 +7,14 @@ import FullBleed from "@/components/site/full-bleed";
 import { MethodLab } from "@/components/learn/method-lab";
 import { PHOTOS } from "@/lib/content/photos";
 import AudienceTile from "@/components/site/audience-tile";
+import Problems from "@/components/site/problems";
 import { USE_CASES, type UseCase } from "@/lib/content/use-cases";
 import { HIRE_HREF } from "@/lib/site-config";
 
 /**
  * The front door. A visitor should leave knowing three things: Solon runs how a
  * group decides, it keeps that in the open, and they can have it run for them.
+ * Right after "how it works" comes what it solves, in concrete cases.
  * Each section makes one of those points and offers one way forward. Every
  * sentence lives in messages/<locale>.json under `Home`.
  */
@@ -72,6 +74,8 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
           ))}
         </ol>
       </section>
+
+      <Problems />
 
       <section className="border-t border-subtle bg-surface-public py-section">
         <div className="section-shell">
