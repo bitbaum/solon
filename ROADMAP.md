@@ -15,8 +15,8 @@ Most app pages still read the oldest organization. Solon governs many, so every
 page must be about one of them, and a member must see every group they belong
 to in one place.
 
-- [x] Anyone with an OrangeCat account may found an organization; founding
-      chooses its governance profile
+- [x] Anyone with an OrangeCat account may found an organization {#founding}
+      — founding chooses its governance profile
 - [x] `/orgs/{slug}` shows an organization's roster, record and who decides
 - [ ] `/orgs` — a public directory of every organization
 - [ ] My Solon (`/me`) — my groups, the votes waiting for me, my proposals
@@ -40,9 +40,9 @@ humans-only rules apply, and its office is defined by the group's own rules.
 The roadmap and changelog you are reading are the canonical record, kept in the
 repository and served through the fleet map.
 
-- [x] `ROADMAP.md` and `CHANGELOG.md` in the repository, in the fleet's contract
-- [x] `/roadmap` and `/changelog` rendered from the fleet map without
-      authentication
+- [x] `ROADMAP.md` and `CHANGELOG.md` in the repository, in the fleet's contract {#records-in-repo}
+- [x] `/roadmap` and `/changelog` rendered from the fleet map {#records-public}
+      without authentication
 - [ ] Link signed-decision and source-code evidence from the development profile
 
 ## Next
@@ -86,7 +86,7 @@ policy; the partner revenue share follows the same shape — a deterministic spl
 anyone can recount, changed only by an `ALLOCATION_POLICY` vote, with payouts
 flowing through OrangeCat.
 
-- [x] `originator_share` v1: a deterministic split, pinned by content hash
+- [x] `originator_share` v1: a deterministic split, pinned by content hash {#originator-share}
 - [ ] A revenue-share policy for partners, versioned like every other policy
 - [ ] OrangeCat reads the current version before a payout, never a copy
 
