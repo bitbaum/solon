@@ -31,7 +31,9 @@ export default function Footer() {
           {SITE_SECTIONS.map((section) => (
             <div key={section.key}>
               <div className="kicker">{site(`sections.${section.key}`)}</div>
-              <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary">
+              {/* Two columns on a phone are ~136px; «Abstimmungsverfahren» is
+                  wider, and one word has no break point of its own. */}
+              <ul className="mt-4 space-y-2.5 text-sm text-fg-secondary hyphens-auto wrap-break-word">
                 {section.children.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="transition-colors hover:text-fg-primary">

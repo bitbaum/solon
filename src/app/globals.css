@@ -28,16 +28,26 @@ body {
    * `.headline` is sentence case, for app screens and long titles.
    * `.headline-caps` is the short, uppercase statement a full-screen section
    * makes — a few words, never a sentence.
+   *
+   * Both may break inside a word. At display sizes one long word is wider
+   * than a 320px phone — «UMGESCHRIEBEN.», «ПЕРЕПИСАННОГО.» — and with no
+   * break point the page scrolled sideways in German and Russian while English
+   * looked fine. `hyphens` uses the page's `lang`; `overflow-wrap` is the
+   * fallback where the browser has no dictionary for it.
    */
   .headline,
   .bp-development h1 {
     @apply font-sans font-bold tracking-tight text-fg-primary;
     line-height: 1.05;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
   .headline-caps {
     @apply font-sans font-bold uppercase text-fg-primary;
     letter-spacing: 0.01em;
     line-height: 1;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
   /* The small uppercase label above a headline. */
   .kicker,
