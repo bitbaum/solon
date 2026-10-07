@@ -42,12 +42,12 @@
     "clsx": "2.1.1",
     "drizzle-orm": "^0.45.3",
     "fflate": "^0.8.3",
-    "lucide-react": "1.48.0",
-    "maplibre-gl": "6.11.2",
+    "lucide-react": "1.52.0",
+    "maplibre-gl": "6.12.0",
     "next": "16.3.8",
     "next-auth": "^5.0.0-beta.32",
-    "next-intl": "^4.14.7",
-    "pg": "^8.23.0",
+    "next-intl": "^4.14.9",
+    "pg": "^8.23.1",
     "proj4": "2.22.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -61,7 +61,7 @@
     "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/geojson": "^7946.0.16",
-    "@types/node": "26.6.2",
+    "@types/node": "26.6.4",
     "@types/pg": "^8.23.1",
     "@types/proj4": "^2.19.0",
     "@types/react": "19.3.0",
@@ -71,7 +71,7 @@
     "@types/topojson-simplify": "^3.0.3",
     "@types/topojson-specification": "^1.0.5",
     "drizzle-kit": "^0.31.11",
-    "eslint": "10.11.0",
+    "eslint": "10.12.0",
     "eslint-config-next": "16.3.8",
     "espree": "^11.2.0",
     "postcss": "8.5.28",
@@ -80,6 +80,6 @@
     "ts-node": "10.9.2",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.3"
   }
 }
