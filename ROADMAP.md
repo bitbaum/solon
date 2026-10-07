@@ -142,6 +142,14 @@ publication over Nostr so the record outlives any one server.
 
 ## Shipped
 
+### Places: every Swiss commune, and its income tax at your income
+
+`/places` maps every Swiss commune, coloured by the income tax at your income;
+`/compare` puts places side by side; `/api/v1/places` serves the same data.
+Church tax, wealth tax and fixed per-head taxes are not included. A commune
+whose canton tariff or local multiplier is not modelled yet is drawn as having
+no data; `/places/coverage` shows how much is covered.
+
 ### One-click governance, Bitcoin optional
 
 A seat no longer needs a wallet. A signed-in member claims a seat, founds an
@@ -203,5 +211,5 @@ page not yet translated says so in the reader's language.
 
 ### One account across the stack
 
-Solon's own sign-up and sign-in pages, backed by one OrangeCat account shared
-by Solon, OrangeCat and Loki.
+Sign in once with an OrangeCat account — email and password, an emailed code,
+Google or GitHub — and the same account works for Solon, OrangeCat and Loki.

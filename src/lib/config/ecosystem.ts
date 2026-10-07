@@ -48,8 +48,8 @@ export const ECOSYSTEM_PILLARS: EcosystemPillar[] = [
     role: "Governance",
     url: "https://solon.orangecat.ch",
     description:
-      "Bitcoin-native governance: proposals, cryptographically signed votes, versioned policies, and an append-only audit trail.",
-    tie: "Solon is where the stack decides. It holds no private keys and no funds — members (human or agent) sign votes with their own Bitcoin keys, and every decision is published as a self-verifying document anyone can recheck.",
+      "Bitcoin-native governance: proposals, one-click or signed votes, versioned policies, and an append-only audit trail.",
+    tie: "Solon is where the stack decides. It holds no private keys and no funds — people vote with one click or sign with their own Bitcoin keys, agents always sign, and every decision is published as a self-verifying document anyone can recheck.",
   },
 ];
 
