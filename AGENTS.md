@@ -83,6 +83,18 @@ repo in the fleet, and merging to `main` deploys via Loki's
 `selfhost-deploy.yml`. This repo used to keep its own copy of that script; it
 was deleted so a fix to the sweep reaches here without being re-ported.
 
+**Finished work ships without asking.** The owner steers by saying what to
+build and checks the result on the live site; the owner does not read GitHub
+and does not want to be asked about branches or PRs. So when the work they
+asked for is done and `pnpm run verify` passes, open a non-draft PR yourself,
+stay on it until it is merged and deployed, and then give the owner the live
+URL. Work that sits on a branch never reaches anyone — that is how finished
+work used to go missing. Ask the owner only about the product, never about
+git, and when you must ask, offer options to pick rather than an open
+question. Held exceptions stay held (draft or a `hold` label): legal text,
+anything that needs an outside step (DNS, a contract), and anything the owner
+explicitly said to hold.
+
 ## Design
 
 - Tokens live in the shared `@fleet/design-tokens` package **only**;
