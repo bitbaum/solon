@@ -4,6 +4,17 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-07
+
+### Added
+
+- **The roadmap and the changelog point at each other.** Each roadmap step
+  that shipped now links to the days in `/changelog` that delivered it, and
+  each changelog entry that delivered a step names it, linked back to
+  `/roadmap`. A goal's steps are drawn as a trail, filled where done. The
+  links come from the fleet's shared building-in-public kit (bip-kit 0.6.0),
+  so OrangeCat's pages carry the same ones. {#records-public}
+
 ## 2026-10-01
 
 ### Added
@@ -256,7 +267,7 @@ one to read for the detail. Fixes get the same weight as features.
   from it. Linked from the footer.
 - **Public roadmap and changelog.** `/roadmap` and `/changelog` render this
   repository's `ROADMAP.md` and `CHANGELOG.md` through the fleet map, without
-  signing in, and are linked from the footer.
+  signing in, and are linked from the footer. {#records-in-repo} {#records-public}
 - **Who decides: one person, everyone, or elected delegates.** Profiles used
   to vary only how votes were counted; every member always voted. An
   organization can now be run by its founder alone, by everyone, or by
@@ -268,6 +279,7 @@ one to read for the detail. Fixes get the same weight as features.
   founded so far became a town meeting silently. The founder now picks a
   governance profile at founding, the choice is bound into the signed text, and
   the organization page names it ("Association (Verein)", not an id). (#194)
+  {#founding}
 
 ### Fixed
 
@@ -356,7 +368,7 @@ one to read for the detail. Fixes get the same weight as features.
   founding seat and both audit events land in one transaction. One identity
   holds one seat per organization, and an organization is attributed to a Loki
   project only through a grant Loki signed — never because the names match.
-  (#166)
+  (#166) {#founding}
 - **Governance, taught from the product's own code.** Five pages —
   `/governance`, `/governance/methods`, `/governance/thresholds`,
   `/governance/who-decides`, `/governance/profiles` — where every tally is
@@ -378,7 +390,7 @@ one to read for the detail. Fixes get the same weight as features.
   net revenue, by default, to the originators of the code it is built from —
   equal per originator, monthly, in Bitcoin, on a public ledger. The split is
   deterministic and anyone can recount it; every later version needs an
-  approved allocation-policy vote. (#164)
+  approved allocation-policy vote. (#164) {#originator-share}
 
 ### Changed
 

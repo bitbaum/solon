@@ -16,4 +16,4 @@ allowBuilds:
 # supply-chain window. Redundant once the release ages past the window.
 minimumReleaseAgeExclude:
   - "@bitbaum/design-tokens"
-  - bip-kit@0.5.0
+  - bip-kit@0.6.0
