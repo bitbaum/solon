@@ -77,6 +77,13 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/v1/places/compare?p=",
+    description:
+      "what /compare shows, as data: each place's chain, the facts its tax model reads and the model — estimate wherever the income is; no income is sent here",
+    sample: () => "/api/v1/places/compare?p=switzerland/zurich/bezirk-zurich/zurich",
+  },
+  {
+    method: "GET",
     path: "/api/v1/places/geography",
     description: "boundary files for maps, as a @bitbaum/geo-kit manifest with each file's sha256",
     sample: () => "/api/v1/places/geography",
