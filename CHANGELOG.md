@@ -4,6 +4,17 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-08
+
+### Added
+
+- **What /compare shows, as data.** `/api/v1/places/compare?p=` returns, for
+  any place, the facts its tax model reads and the model itself — everything
+  needed to estimate the tax there. It takes no income and computes nothing:
+  the estimate runs wherever the income is, so Solon still never learns what
+  anyone earns. OrangeCat uses it to suggest the tax share in a person's money
+  rule. Listed on the integration page. [#261]
+
 ## 2026-10-07
 
 ### Added

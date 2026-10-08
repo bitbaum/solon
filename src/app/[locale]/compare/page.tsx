@@ -6,6 +6,7 @@ import { placesConfig } from "@/lib/config/places";
 import { REGISTER_POLICY_DEFAULTS } from "@/lib/config/places/policies";
 import { db } from "@/lib/db/client";
 import { loadComparison } from "@/lib/places/compare";
+import { comparedPaths } from "@/lib/places/compare-request";
 import { searchPlaces } from "@/lib/places/search";
 
 export const dynamic = "force-dynamic";
@@ -33,9 +34,7 @@ export default async function ComparePage({
   setRequestLocale(locale);
   const { p, q = "" } = await searchParams;
   const limit = REGISTER_POLICY_DEFAULTS.compareLimit;
-  const slugPaths = [
-    ...new Set((Array.isArray(p) ? p : p ? [p] : []).map((path) => path.trim()).filter(Boolean)),
-  ].slice(0, limit);
+  const slugPaths = comparedPaths(p, limit);
   const query = q.trim().slice(0, 100);
   const on = today();
 
