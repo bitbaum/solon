@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
+import type { Range } from "@bitbaum/searchkit";
+import { Highlight } from "@bitbaum/searchkit/react";
 import { useLocale, useTranslations } from "next-intl";
 import { searchAddresses, type AddressHit } from "@/lib/places/address-search";
-import { findPlaces, type MapData, type MapPlace } from "@/lib/places/map-view";
+import { placeFinder, type MapData, type MapPlace } from "@/lib/places/map-view";
 
 type Option =
-  { kind: "place"; place: MapPlace; detail: string | null } | { kind: "address"; hit: AddressHit };
+  | { kind: "place"; place: MapPlace; detail: string | null; ranges: Range[] }
+  | { kind: "address"; hit: AddressHit };
 
 interface MapSearchProps {
   data: MapData;
@@ -36,15 +39,17 @@ export default function MapSearch({ data, onPlace, onAddress }: MapSearchProps) 
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(false);
+  const findPlaces = useMemo(() => placeFinder(data.places), [data.places]);
 
   useEffect(() => {
     const query = text.trim();
     const controller = new AbortController();
     const timer = setTimeout(async () => {
-      const local: Option[] = findPlaces(data.places, query, PLACES_SHOWN).map((place) => ({
+      const local: Option[] = findPlaces(query, PLACES_SHOWN).map(({ place, ranges }) => ({
         kind: "place",
         place,
         detail: null,
+        ranges,
       }));
       const byPostcode = /\d/.test(query) && query.length >= 4 ? postcodePlaces(query) : [];
       const addresses =
@@ -91,6 +96,7 @@ export default function MapSearch({ data, onPlace, onAddress }: MapSearchProps) 
                     postcode: q,
                     localities: (hit.localities ?? []).map((l) => l.name).join(", "),
                   }),
+                  ranges: [],
                 },
               ]
             : [];
@@ -104,7 +110,7 @@ export default function MapSearch({ data, onPlace, onAddress }: MapSearchProps) 
       clearTimeout(timer);
       controller.abort();
     };
-  }, [text, data, locale, t]);
+  }, [text, data, findPlaces, locale, t]);
 
   const choose = (option: Option | undefined) => {
     if (!option) {
@@ -142,7 +148,13 @@ export default function MapSearch({ data, onPlace, onAddress }: MapSearchProps) 
       >
         {o.kind === "place" ? (
           <>
-            <span className="font-medium text-fg-primary">{o.place.name}</span>
+            <span className="font-medium text-fg-primary">
+              <Highlight
+                text={o.place.name}
+                ranges={o.ranges}
+                markClassName="bg-transparent font-semibold text-fg-primary underline decoration-accent/60 decoration-2 underline-offset-2"
+              />
+            </span>
             {(o.detail ?? o.place.parentName) && (
               <span className="block text-xs text-fg-tertiary">
                 {o.detail ?? o.place.parentName}

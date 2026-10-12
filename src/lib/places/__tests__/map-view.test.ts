@@ -1,10 +1,13 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { evaluate, typoCases, words } from "@bitbaum/searchkit";
 import { describe, expect, it } from "vitest";
 import {
   areaBounds,
   areaHolds,
   classColour,
   classOf,
-  findPlaces,
+  placeFinder,
   quantileBreaks,
   type AreaGeometry,
   type MapPlace,
@@ -49,7 +52,7 @@ describe("classColour", () => {
   });
 });
 
-describe("findPlaces", () => {
+describe("placeFinder", () => {
   const place = (name: string): MapPlace => ({
     feature: name,
     slugPath: name.toLowerCase(),
@@ -57,19 +60,72 @@ describe("findPlaces", () => {
     parentName: null,
     groups: [],
   });
-  const places = ["Zürich", "Winterthur", "Oberrieden", "Rüschlikon", "Zug"].map(place);
+  const names = (found: { place: MapPlace }[]) => found.map((f) => f.place.name);
+  const find = placeFinder(
+    ["Zürich", "Winterthur", "Oberrieden", "Rüschlikon", "Zug", "St. Gallen", "Genève"].map(place),
+  );
 
-  it("folds accents and case, and puts names that start with the text first", () => {
-    expect(findPlaces(places, "zu", 5).map((p) => p.name)).toEqual(["Zürich", "Zug"]);
-    expect(findPlaces(places, "RIED", 5).map((p) => p.name)).toEqual(["Oberrieden"]);
-    expect(findPlaces(places, "ru", 5).map((p) => p.name)).toEqual(["Rüschlikon"]);
+  it("folds accents and case, and finds a name from its first letters", () => {
+    expect(names(find("zu", 5)).sort()).toEqual(["Zug", "Zürich"]);
+    expect(names(find("RUSCH", 5))).toEqual(["Rüschlikon"]);
+    expect(names(find("geneve", 5))).toEqual(["Genève"]);
+  });
+
+  it("reads an umlaut spelled out as the umlaut", () => {
+    expect(names(find("Zuerich", 5))).toEqual(["Zürich"]);
+    expect(names(find("rueschlikon", 5))).toEqual(["Rüschlikon"]);
+  });
+
+  it("still finds a name with one slip in it", () => {
+    expect(names(find("zurihc", 5))[0]).toBe("Zürich");
+    expect(names(find("winterhur", 5))[0]).toBe("Winterthur");
+    expect(names(find("oberiedn", 5))[0]).toBe("Oberrieden");
+    expect(names(find("geneev", 5))[0]).toBe("Genève");
+  });
+
+  it("finds St. Gallen however the saint is written", () => {
+    for (const typed of ["st gallen", "St. Gallen", "sankt gallen", "gallen"]) {
+      expect(names(find(typed, 5))[0], typed).toBe("St. Gallen");
+    }
+  });
+
+  it("marks where the typed words landed, for the list to show", () => {
+    expect(find("zur", 5)[0]?.ranges).toEqual([{ start: 0, end: 3 }]);
   });
 
   it("waits for two letters and keeps to the limit", () => {
-    expect(findPlaces(places, "z", 5)).toEqual([]);
-    expect(findPlaces(places, "  ", 5)).toEqual([]);
-    expect(findPlaces(places, "r", 5)).toEqual([]);
-    expect(findPlaces(places, "er", 1)).toHaveLength(1);
+    expect(find("z", 5)).toEqual([]);
+    expect(find("  ", 5)).toEqual([]);
+    expect(find("r", 5)).toEqual([]);
+    expect(find("zu", 1)).toHaveLength(1);
+  });
+
+  it("finds every real place name in the fixtures after any one slip", async () => {
+    // The communes, districts and cantons of the Swiss fixtures, and the city
+    // quarters: the names a reader of the map actually types.
+    const fixtures = join(__dirname, "fixtures", "switzerland");
+    const csvNames = ["communes-2021-01-01.csv", "communes-2026-09-29.csv"].flatMap((file) =>
+      readFileSync(join(fixtures, file), "utf8")
+        .trim()
+        .split("\n")
+        .slice(1)
+        .map((line) => line.split(",")[6]!),
+    );
+    const quarters = (
+      JSON.parse(readFileSync(join(fixtures, "statistical-quarters.json"), "utf8")) as {
+        features: { properties: { qname: string } }[];
+      }
+    ).features.map((f) => f.properties.qname);
+    const all = [...new Set([...csvNames, ...quarters, "St. Gallen", "Genève", "Neuchâtel"])];
+    const finder = placeFinder(all.map(place));
+    const cases = typoCases(
+      all.map((name) => ({ id: name, name })),
+      { fold: words },
+    );
+    const report = await evaluate(cases, (q) => names(finder(q, 6)));
+    expect(cases.length).toBeGreaterThan(1000);
+    expect(report.misses).toEqual([]);
+    expect(report.successAt1).toBe(1);
   });
 });
 

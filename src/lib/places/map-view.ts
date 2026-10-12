@@ -5,6 +5,7 @@
  * reader's device, as on /compare, so their income never reaches Solon (§10).
  * Nothing in this file reads the database: the map component imports it.
  */
+import { createSearch, type Range } from "@bitbaum/searchkit";
 import type { Fact } from "@/lib/tax-model";
 import {
   estimateColumn,
@@ -12,7 +13,6 @@ import {
   type CompareTaxPack,
   type EstimateInput,
 } from "./compare-view";
-import { foldName } from "./fold";
 import type { PlaceSource } from "./place-view";
 
 export interface MapPlace {
@@ -104,23 +104,29 @@ export function classColour(k: number, classes: number, colours: readonly string
   return colours[classes <= 1 ? last : Math.round((k * last) / (classes - 1))]!;
 }
 
-/** Places whose name holds the text, folded as search folds it; names starting with it first. */
-export function findPlaces(places: readonly MapPlace[], text: string, limit: number): MapPlace[] {
-  const query = foldName(text.trim());
-  if (query.length < 2) {
-    return [];
-  }
-  const starts: MapPlace[] = [];
-  const holds: MapPlace[] = [];
-  for (const place of places) {
-    const name = foldName(place.name);
-    if (name.startsWith(query)) {
-      starts.push(place);
-    } else if (name.includes(query)) {
-      holds.push(place);
-    }
-  }
-  return [...starts, ...holds].slice(0, limit);
+export interface FoundPlace {
+  place: MapPlace;
+  /** Where the typed words landed in `place.name`, for marking them. */
+  ranges: Range[];
+}
+
+/**
+ * Index the map's places once; find them by name as the reader types — a
+ * slipped letter, a missing umlaut or a name begun but not finished still
+ * finds the place (searchkit), best match first. Nothing below two letters.
+ */
+export function placeFinder(
+  places: readonly MapPlace[],
+): (text: string, limit: number) => FoundPlace[] {
+  const index = createSearch(places, {
+    fields: [{ name: "name", get: (p) => p.name }],
+  });
+  return (text, limit) =>
+    text.trim().length < 2
+      ? []
+      : index
+          .search(text, { limit })
+          .map((hit) => ({ place: hit.item, ranges: hit.matches.name ?? [] }));
 }
 
 type Ring = readonly (readonly number[])[];
