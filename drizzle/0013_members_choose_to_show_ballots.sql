@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "show_ballots" boolean DEFAULT false NOT NULL;

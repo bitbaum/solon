@@ -215,6 +215,15 @@ export const members = pgTable(
      */
     ocUsername: text("oc_username"),
     avatarUrl: text("avatar_url"),
+    /**
+     * Whether the member's own page lists each ballot they cast. Off by
+     * default: a closed session publishes its ballots anyway, but gathering one
+     * person's every vote under their name is a profile they should choose to
+     * make. The page always shows the seat, the mandate, the proposals they
+     * filed and HOW MANY votes they cast; only the individual ballots wait on
+     * this. Set by the member alone, on their account page.
+     */
+    showBallots: boolean("show_ballots").notNull().default(false),
     /** For agents: which system runs them, e.g. "orangecat:cat", "loki:loki". */
     system: text("system"),
     /**

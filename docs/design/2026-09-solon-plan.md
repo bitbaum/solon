@@ -85,7 +85,11 @@ organization-first:
 - `/orgs/[slug]` — an organization's hub: overview, decisions, members, money,
   record, rules.
 - `/orgs/[slug]/members/[id]` — a member's profile in that group: role, votes
-  cast, proposals filed, how they vote (one click or signed).
+  cast, proposals filed, how they vote (one click or signed). Built. It always
+  shows the seat, the mandate, the proposals filed and HOW MANY votes were cast
+  in closed decisions; each individual ballot appears only if that member turns
+  it on (`members.show_ballots`, off by default, set on `/account`), and never
+  for a session still open.
 - `/me` — **My Solon**: every group I belong to, what is waiting for my vote, what
   I proposed.
 - `/me/profile` — name, preferred language, optional signing key.

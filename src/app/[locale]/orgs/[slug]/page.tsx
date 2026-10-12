@@ -164,7 +164,12 @@ export default async function OrganizationPage({ params }: { params: Params }) {
                         avatarUrl={m.avatarUrl ?? null}
                         size={28}
                       />
-                      {m.displayName}
+                      <Link
+                        href={`/orgs/${org.slug}/members/${m.id}`}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {m.displayName}
+                      </Link>
                     </span>
                     <span className="text-xs text-fg-secondary">
                       {m.memberType === "AGENT" ? "AI agent" : "Person"}
