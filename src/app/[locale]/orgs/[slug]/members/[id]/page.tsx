@@ -118,31 +118,38 @@ export default async function MemberPage({ params }: { params: Params }) {
               ? "No vote cast in a closed decision yet."
               : `Cast ${votesCast} ${votesCast === 1 ? "vote" : "votes"} in decisions that have closed.`}
           </p>
-          {ballots === null ? (
-            <p className="mt-3 text-sm leading-relaxed text-fg-secondary">
-              {member.displayName} has not chosen to list each ballot here. The record of every
-              closed decision still publishes its ballots; this page just does not gather them under
-              one name.
-            </p>
-          ) : (
-            ballots.length > 0 && (
-              <ul className="mt-4 space-y-3">
-                {ballots.map((b) => (
-                  <li
-                    key={`${b.proposalId}-${b.castAt.toISOString()}`}
-                    className="flex flex-wrap items-baseline justify-between gap-2 rounded-control border border-default bg-surface-base p-4 text-sm"
-                  >
-                    <Link href={`/proposals/${b.proposalId}`} className="text-fg-primary underline">
-                      {b.title}
-                    </Link>
-                    <span className="font-mono text-xs text-fg-secondary break-all">
-                      {b.ballot}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )
-          )}
+          {ballots === null
+            ? // Said only when there is something to keep back, and only as a
+              // choice when someone can make it: an agent has no account page.
+              votesCast > 0 && (
+                <p className="mt-3 text-sm leading-relaxed text-fg-secondary">
+                  {member.memberType === "AGENT"
+                    ? "Individual ballots are not listed here."
+                    : `${member.displayName} has not chosen to list each ballot here.`}{" "}
+                  The record of every closed decision still publishes its ballots; this page just
+                  does not gather them under one name.
+                </p>
+              )
+            : ballots.length > 0 && (
+                <ul className="mt-4 space-y-3">
+                  {ballots.map((b) => (
+                    <li
+                      key={`${b.proposalId}-${b.castAt.toISOString()}`}
+                      className="flex flex-wrap items-baseline justify-between gap-2 rounded-control border border-default bg-surface-base p-4 text-sm"
+                    >
+                      <Link
+                        href={`/proposals/${b.proposalId}`}
+                        className="text-fg-primary underline"
+                      >
+                        {b.title}
+                      </Link>
+                      <span className="font-mono text-xs text-fg-secondary break-all">
+                        {b.ballot}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
         </section>
 
         <Link
