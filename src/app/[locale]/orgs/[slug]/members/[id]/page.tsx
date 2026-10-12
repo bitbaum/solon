@@ -118,10 +118,10 @@ export default async function MemberPage({ params }: { params: Params }) {
               ? "No vote cast in a closed decision yet."
               : `Cast ${votesCast} ${votesCast === 1 ? "vote" : "votes"} in decisions that have closed.`}
           </p>
+          {/* Said only when there is something to keep back, and only as a choice
+              someone can make: an agent has no account page to make it on. */}
           {ballots === null
-            ? // Said only when there is something to keep back, and only as a
-              // choice when someone can make it: an agent has no account page.
-              votesCast > 0 && (
+            ? votesCast > 0 && (
                 <p className="mt-3 text-sm leading-relaxed text-fg-secondary">
                   {member.memberType === "AGENT"
                     ? "Individual ballots are not listed here."
