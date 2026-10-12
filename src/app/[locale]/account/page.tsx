@@ -3,6 +3,7 @@ import { Link, redirect } from "@/i18n/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { membershipsForActor } from "@/lib/auth/recognition";
 import { MemberFace } from "@/components/ui/member-face";
+import { setShowBallots } from "./actions";
 import { orangecatProfileUrl, syncMemberFace } from "@/lib/domain/member-identity";
 
 export const metadata = { title: "Account — Solon" };
@@ -121,6 +122,26 @@ export default async function AccountPage() {
                     </dd>
                   </div>
                 </dl>
+                <form action={setShowBallots} className="mt-4 border-t border-default pt-4">
+                  <input type="hidden" name="memberId" value={member.id} />
+                  <input type="hidden" name="show" value={member.showBallots ? "0" : "1"} />
+                  <p className="text-sm leading-relaxed text-fg-secondary">
+                    {member.showBallots
+                      ? "Your member page lists how you voted in closed decisions."
+                      : "Your member page shows how many votes you cast, not how you voted."}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-4">
+                    <button type="submit" className="btn-secondary">
+                      {member.showBallots ? "Stop listing my ballots" : "List how I voted"}
+                    </button>
+                    <Link
+                      href={`/orgs/${member.organization.slug}/members/${member.id}`}
+                      className="text-sm text-fg-secondary underline"
+                    >
+                      View your member page
+                    </Link>
+                  </div>
+                </form>
               </li>
             ))}
           </ul>
