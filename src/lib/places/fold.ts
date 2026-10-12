@@ -2,8 +2,9 @@
  * How a typed name meets a recorded one: without case or accents, and with the
  * umlaut spelled out as people type it without one, so "zurich" and "Zuerich"
  * both find Zürich. The query is folded here and names in SQL (`search.ts`),
- * from this one table, so both sides always fold alike. No imports: the map's
- * search box folds in the browser too.
+ * from this one table, so both sides always fold alike. This is only the
+ * database's half: typos and ranking, and the map's box in the browser, are
+ * searchkit's (`@bitbaum/searchkit`), which folds the same way on its own.
  */
 
 const DECOMPOSING = "àáâãäåāăąçćčďèéêëēėęěìíîïīįñńňòóôõöōőŕřśšşťùúûüūůűýÿźżž";

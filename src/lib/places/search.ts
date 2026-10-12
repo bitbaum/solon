@@ -2,7 +2,20 @@
  * Finding a place (design §9.2, `/places`): by postcode, by name, or by
  * browsing a pack's levels. The config is a parameter, so a test can hand in a
  * made-up country. Names, levels and parents are read for all hits at once.
+ *
+ * A name is found the way the map's box finds one: one slipped letter still
+ * finds it. The database matches folded text; searchkit decides which names a
+ * mistyped word could mean (from the names' own words) and ranks what came back.
  */
+import {
+  candidates,
+  createVocabulary,
+  rerank,
+  tokenize,
+  umlautSpelling,
+  words,
+  type Vocabulary,
+} from "@bitbaum/searchkit";
 import {
   and,
   count,
@@ -61,11 +74,75 @@ export interface PackIndex {
 /** Name matches are capped: a search is for finding one place, not listing a country. */
 export const NAME_SEARCH_LIMIT = 25;
 
+/** Spellings tried per typed word besides the word itself. */
+const CORRECTIONS_PER_WORD = 5;
+/** How long the names' words are reused before they are read again; imports land at most daily. */
+const VOCABULARY_TTL_MS = 10 * 60 * 1000;
+const vocabularies = new WeakMap<Database, { key: string; at: number; vocab: Vocabulary }>();
+
 const current = (on: string) =>
   and(
     or(isNull(jurisdictions.validFrom), lte(jurisdictions.validFrom, on)),
     or(isNull(jurisdictions.validTo), gt(jurisdictions.validTo, on)),
   );
+
+/** `text` anywhere in a name, both folded alike; `%` and `_` typed are matched literally. */
+const nameHolds = (text: string) =>
+  like(
+    foldedColumn(jurisdictionNames.name),
+    `%${foldName(text).replace(/[\\%_]/g, (c) => `\\${c}`)}%`,
+  );
+
+/** The words of every current name of the configured packs, as searchkit compares them. */
+async function nameVocabulary(db: Database, config: PlacesConfig, on: string): Promise<Vocabulary> {
+  const packs = config.packs.map((p) => p.key);
+  const key = `${on}|${packs.join(",")}`;
+  const cached = vocabularies.get(db);
+  if (cached && cached.key === key && Date.now() - cached.at < VOCABULARY_TTL_MS) {
+    return cached.vocab;
+  }
+  const rows = await db
+    .selectDistinct({ name: jurisdictionNames.name })
+    .from(jurisdictionNames)
+    .innerJoin(jurisdictions, eq(jurisdictions.id, jurisdictionNames.jurisdictionId))
+    .where(
+      and(
+        isNull(jurisdictionNames.supersededAt),
+        eq(jurisdictions.origin, "state"),
+        inArray(jurisdictions.countryPack, packs),
+        current(on),
+      ),
+    );
+  // Each word also as typed without its umlaut ("zuerich"), as searchkit indexes it.
+  const vocab = createVocabulary(
+    rows.flatMap((r) =>
+      tokenize(r.name).flatMap((t) => {
+        const spelt = umlautSpelling(r.name.slice(t.start, t.end));
+        return spelt ? [t.term, spelt] : [t.term];
+      }),
+    ),
+  );
+  vocabularies.set(db, { key, at: Date.now(), vocab });
+  return vocab;
+}
+
+/**
+ * Which names a query reaches: the text as typed anywhere in a name, or every
+ * typed word the names know — as typed, or as a word of theirs it is one slip
+ * from. A word no name comes near is set aside rather than failing the search.
+ */
+function nameMatches(query: string, vocab: Vocabulary): SQL | undefined {
+  const perWord = [...new Set(words(query))].flatMap((typed) => {
+    const found = candidates(vocab, typed, { limit: 100 });
+    if (found.length === 0) {
+      return [];
+    }
+    const typos = found.filter((c) => c.typos > 0).slice(0, CORRECTIONS_PER_WORD);
+    return [or(nameHolds(typed), ...typos.map((c) => nameHolds(c.term)))!];
+  });
+  const whole = nameHolds(query);
+  return perWord.length > 0 ? or(whole, and(...perWord)) : whole;
+}
 
 /** Hits for these places, in the order given; places of packs the config lacks are left out. */
 async function placeHits(
@@ -175,15 +252,13 @@ export async function searchPlaces(
   if (q.length < 2) {
     return { kind: "name", hits: [] };
   }
-  const folded = foldName(q);
-  const pattern = `%${folded.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
   const rows = await db
     .selectDistinct({ id: jurisdictionNames.jurisdictionId, name: jurisdictionNames.name })
     .from(jurisdictionNames)
     .innerJoin(jurisdictions, eq(jurisdictions.id, jurisdictionNames.jurisdictionId))
     .where(
       and(
-        like(foldedColumn(jurisdictionNames.name), pattern),
+        nameMatches(q, await nameVocabulary(db, config, on)),
         isNull(jurisdictionNames.supersededAt),
         eq(jurisdictions.origin, "state"),
         inArray(
@@ -194,21 +269,29 @@ export async function searchPlaces(
       ),
     )
     .limit(NAME_SEARCH_LIMIT * 4);
-  // Ranked by the name the reader sees, not the one that matched (a district's
-  // short name may be its town's): exact first, then prefix, then the rest.
-  const rank = (name: string) => {
-    const n = foldName(name);
-    return n === folded ? 0 : n.startsWith(folded) ? 1 : n.includes(folded) ? 2 : 3;
-  };
-  const hits = await placeHits(db, config, [...new Set(rows.map((r) => r.id))], on, locale);
+  const matched = new Map<string, string[]>();
+  for (const row of rows) {
+    matched.set(row.id, [...(matched.get(row.id) ?? []), row.name]);
+  }
+  const hits = await placeHits(db, config, [...matched.keys()], on, locale);
+  // Ranked by the name the reader sees before the one that matched (a
+  // district's short name may be its town's); equals stay alphabetical.
+  const found = [...hits]
+    .map(([id, hit]) => ({ hit, names: matched.get(id) ?? [] }))
+    .sort((a, b) => a.hit.name.localeCompare(b.hit.name, locale, { numeric: true }));
+  const ranked = rerank(
+    found,
+    {
+      fields: [
+        { name: "name", get: (f) => f.hit.name },
+        { name: "matched", get: (f) => f.names },
+      ],
+    },
+    q,
+  );
   return {
     kind: "name",
-    hits: [...hits.values()]
-      .sort(
-        (a, b) =>
-          rank(a.name) - rank(b.name) || a.name.localeCompare(b.name, locale, { numeric: true }),
-      )
-      .slice(0, NAME_SEARCH_LIMIT),
+    hits: ranked.slice(0, NAME_SEARCH_LIMIT).map(({ item }) => item.hit),
   };
 }
 

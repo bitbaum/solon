@@ -4,6 +4,18 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-12
+
+### Changed
+
+- **A place is found with a letter wrong.** The search box on the map, and
+  the name search on `/places` and `/compare`, now find a place when one
+  letter of its name slipped — `Zurihc`, `Winterhur`, `Kusnaht` — and when
+  its words are split differently (`st gallen` for St. Gallen). The closest
+  name comes first, and the map's list marks the part of each name that
+  matched. On the map, a name is now found from the start of any of its
+  words rather than from any letters inside it.
+
 ## 2026-10-08
 
 ### Added

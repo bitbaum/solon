@@ -18,6 +18,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { validateGeographyManifest } from "@bitbaum/geo-kit";
+import { evaluate as evaluateSearch, typoCases, words } from "@bitbaum/searchkit";
 import { and, eq, isNull } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
@@ -305,6 +306,48 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       "Küsnacht (ZH)",
     ]);
     expect((await searchPlaces(db, config, "z", ON, "de")).hits).toEqual([]);
+  });
+
+  it("finds a place by name with one slip in it", async () => {
+    const top = async (typed: string) =>
+      (await searchPlaces(db, config, typed, ON, "de")).hits.map((h) => h.name);
+    expect((await top("zurihc"))[0]).toBe("Zürich");
+    expect((await top("Zuerihc"))[0]).toBe("Zürich");
+    expect(await top("kusnaht")).toEqual(["Küsnacht (ZH)"]);
+    expect((await top("witikno"))[0]).toBe("Witikon");
+    expect((await top("bezirk meilne"))[0]).toBe("Bezirk Meilen");
+    // A word no name holds is set aside, not fatal.
+    expect((await top("gemeinde thalwil"))[0]).toBe("Thalwil");
+
+    // Every place in the database, each of its words misspelled once.
+    const index = await loadPackIndex(db, config, ON, "de");
+    const places = (
+      await Promise.all(
+        index.flatMap((pack) =>
+          pack.levels
+            .filter((level) => level.count > 0)
+            .map((level) => placesAtLevel(db, config, pack.key, level.key, ON, "de")),
+        ),
+      )
+    ).flat();
+    const names = [...new Set(places.map((p) => p.name))];
+    const cases = typoCases(
+      names.map((name) => ({ id: name, name })),
+      { fold: words, perWord: 6 },
+    );
+    const notFirst: string[] = [];
+    const report = await evaluateSearch(cases, async (typed) => {
+      const found = await top(typed);
+      if (!cases.find((c) => c.query === typed)!.expect.includes(found[0]!)) {
+        notFirst.push(typed);
+      }
+      return found;
+    });
+    expect(cases.length).toBeGreaterThan(250);
+    expect(report.misses).toEqual([]);
+    // One answer is second, honestly: "vern" is the start of "Verwaltungskreis"
+    // before it is Bern with its first letter slipped.
+    expect(notFirst).toEqual(["vern"]);
   });
 
   it("lists a level's places by name and counts every level", async () => {
