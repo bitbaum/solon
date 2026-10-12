@@ -14,6 +14,9 @@ importers:
       '@bitbaum/geo-kit':
         specifier: github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa
         version: https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa
+      '@bitbaum/searchkit':
+        specifier: github:bitbaum/orangecat#a868c0a98e91df1075404d0c5f27a7846eb08d97&path:packages/searchkit
+        version: https://codeload.github.com/bitbaum/orangecat/tar.gz/a868c0a98e91df1075404d0c5f27a7846eb08d97#path:packages/searchkit(react@19.3.0)
       '@fleet/design-tokens':
         specifier: github:bitbaum/design-tokens#c93f7b2662b25284c6a45729c1b71047e21c81fe
         version: '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/c93f7b2662b25284c6a45729c1b71047e21c81fe'
@@ -257,6 +260,15 @@ packages:
     resolution: {gitHosted: true, tarball: https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa}
     version: 0.1.1
     engines: {node: '>=20'}
+
+  '@bitbaum/searchkit@https://codeload.github.com/bitbaum/orangecat/tar.gz/a868c0a98e91df1075404d0c5f27a7846eb08d97#path:packages/searchkit':
+    resolution: {gitHosted: true, integrity: sha512-1JO7yBdII7Lo4/8kvcfCfr954HEVYCtuBvV3YxjMJMiBxfmtDn98X1K4Yp0p95zyTSFBgMqJRf6Nyuw71ptHcQ==, path: packages/searchkit, tarball: https://codeload.github.com/bitbaum/orangecat/tar.gz/a868c0a98e91df1075404d0c5f27a7846eb08d97}
+    version: 0.2.0
+    peerDependencies:
+      react: '>=18'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@cacheable/memory@2.2.0':
     resolution: {integrity: sha512-CTLKqLItRCEixEAewD3/j9DB3/o96gpTPD4eJ1v+DGOlxZRZncRQkGYqqnAGCscYd6RNeXfGeiuCphsPtqyIfQ==}
@@ -3849,6 +3861,10 @@ snapshots:
   '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/c93f7b2662b25284c6a45729c1b71047e21c81fe': {}
 
   '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/a337aec928cf7804fecf459c308d366b90f4b2fa': {}
+
+  '@bitbaum/searchkit@https://codeload.github.com/bitbaum/orangecat/tar.gz/a868c0a98e91df1075404d0c5f27a7846eb08d97#path:packages/searchkit(react@19.3.0)':
+    optionalDependencies:
+      react: 19.3.0
 
   '@cacheable/memory@2.2.0':
     dependencies:
