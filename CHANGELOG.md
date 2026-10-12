@@ -14,7 +14,7 @@ one to read for the detail. Fixes get the same weight as features.
   its words are split differently (`st gallen` for St. Gallen). The closest
   name comes first, and the map's list marks the part of each name that
   matched. On the map, a name is now found from the start of any of its
-  words rather than from any letters inside it.
+  words rather than from any letters inside it. (#264)
 
 ## 2026-10-08
 
