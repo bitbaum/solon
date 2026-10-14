@@ -33,7 +33,7 @@
   "dependencies": {
     "@bitbaum/accountkit": "github:bitbaum/accountkit#v0.2.0",
     "@bitbaum/geo-kit": "github:bitbaum/geo-kit#a337aec928cf7804fecf459c308d366b90f4b2fa",
-    "@bitbaum/searchkit": "github:bitbaum/orangecat#e6cda794af7eb8da0e88602bdce2c26283616498&path:packages/searchkit",
+    "@bitbaum/searchkit": "github:bitbaum/searchkit#v0.2.2",
     "@fleet/design-tokens": "github:bitbaum/design-tokens#c93f7b2662b25284c6a45729c1b71047e21c81fe",
     "@noble/hashes": "2.4.0",
     "@noble/secp256k1": "3.2.0",
