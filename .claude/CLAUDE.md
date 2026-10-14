@@ -2,6 +2,9 @@
 
 @~/.claude/CLAUDE.md
 
+Org rules are [bitbaum/fleet AGENTS.md](https://github.com/bitbaum/fleet/blob/main/AGENTS.md): packages by default (say why if you skip one), search through `@bitbaum/searchkit`, chat through `@bitbaum/chatkit`, shared names and the identity contract. Read that file. Do not restate it here.
+
+
 ---
 
 ## Read these, not a copy of them
@@ -57,8 +60,8 @@ arrives with context (`?from=orangecat…`, `?title=…`) keeps that context
 through sign-in and `/join` (`lib/domain/proposal-draft.ts`). CI that finds a
 rules change with no decision behind it warns and links the ratification
 proposal (`scripts/check-governance-ratified.ts`); it does not fail the job.
-This is fleet-wide, not Solon's alone; its permanent home is bitbaum/fleet
-`AGENTS.md`, and this paragraph points there once it is written.
+This is fleet-wide, not Solon's alone; its permanent home is
+[bitbaum/fleet AGENTS.md](https://github.com/bitbaum/fleet/blob/main/AGENTS.md).
 
 ## Don't
 
