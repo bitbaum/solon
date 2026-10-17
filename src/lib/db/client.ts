@@ -22,13 +22,18 @@ type Db = ReturnType<typeof drizzle<typeof schema>>;
 
 const globalForDb = globalThis as unknown as { solonDb: Db | undefined };
 
-function getDb(): Db {
+export function getDb(): Db {
   if (globalForDb.solonDb) return globalForDb.solonDb;
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set — required for database operations");
   const db = drizzle(new Pool({ connectionString: url }), { schema });
   globalForDb.solonDb = db;
   return db;
+}
+
+/** True when this process can reach a database at all. */
+export function dbConfigured(): boolean {
+  return Boolean(process.env.DATABASE_URL);
 }
 
 /** Proxy that initializes the real client on first property access. */

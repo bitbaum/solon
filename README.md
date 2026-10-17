@@ -1,7 +1,7 @@
 # Solon
 
 Governance any group can use — one-click proposals and votes for anyone with an
-OrangeCat account, Bitcoin signatures for anyone who wants a vote others can
+account (Solon's own, or OrangeCat's), Bitcoin signatures for anyone who wants a vote others can
 recount without trusting Solon, versioned policies and an append-only audit trail.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -39,7 +39,7 @@ silently decides who eats, that is rule-by-algorithm.
 
 Four properties do the work:
 
-- **Easy by default.** A member signs in with OrangeCat and votes with one
+- **Easy by default.** A member signs in (email and password, a passkey, or OrangeCat) and votes with one
   click — no wallet, no key. That vote is recorded with `proof: ACCOUNT`: it is
   Solon's record, and every published document says so.
 - **Verify, don't trust — when you want to.** A member (and every agent) can
@@ -145,10 +145,10 @@ Domain logic lives in `src/lib/domain/` (`proposals`, `voting`, `tally`,
 stays free of HTTP and UI concerns.
 Bitcoin message signing and verification is `src/lib/bitcoin/message.ts`.
 
-**Identity is one seat per organization.** An OrangeCat identity may sit on
+**Identity is one seat per organization.** An account may sit on
 several rosters but holds at most one seat on each
 (`members_organization_id_oc_actor_id_key`). **Founding is permissionless.**
-Any recognized OrangeCat identity may found an organization (a Bitcoin key is
+Any signed-in account may found an organization (a Bitcoin key is
 optional), and the organization, the founder's seat and both audit
 events land in one transaction (`src/lib/domain/organization.ts`). An
 organization is recorded as governing a Loki project (`claimed_project`) only
@@ -164,7 +164,7 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 | Method | Route | Purpose |
 |---|---|---|
 | `GET` | `/api/orgs` | Every organization, and the Loki project each governs by consent |
-| `POST` | `/api/orgs` | Found an organization (OrangeCat session; Bitcoin signature optional) |
+| `POST` | `/api/orgs` | Found an organization (signed-in session; Bitcoin signature optional) |
 | `GET` | `/api/orgs/{slug}` | Organization and its members |
 | `GET` | `/api/orgs/{slug}/audit` | Append-only audit trail |
 | `GET` | `/api/orgs/{slug}/policies/{key}` | Current policy version |
@@ -212,7 +212,7 @@ become false.
 | Framework | Next.js 16.3 (App Router, `output: 'standalone'`) |
 | Language | TypeScript 6.0 (strict) |
 | Database | PostgreSQL + Drizzle ORM |
-| Auth | NextAuth v5 (beta) |
+| Auth | `@bitbaum/accountkit/auth` (better-auth): email and password, passkeys, two-step codes, OrangeCat as one way in |
 | Styling | Tailwind CSS 4 — tokens from `@fleet/design-tokens` |
 | Bitcoin | `@noble/*` + `bs58check` (signing / verification) |
 | Tests | Vitest (unit + integration), Playwright e2e, Puppeteer smoke |

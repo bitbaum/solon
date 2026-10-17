@@ -9,7 +9,6 @@ import { notFound } from "next/navigation";
 import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { SessionProvider } from "next-auth/react";
 import Navigation from "@/components/ui/navigation";
 import Footer from "@/components/ui/footer";
 import TranslationNotice from "@/components/site/translation-notice";
@@ -64,15 +63,12 @@ export default async function LocaleLayout({
     <html lang={locale} className="dark">
       <body className="flex min-h-screen flex-col antialiased font-sans">
         <NextIntlClientProvider>
-          {/* Session state is fetched client-side so pages stay static. */}
-          <SessionProvider>
-            <Navigation authEnabled={authEnabled} />
-            <TranslationNotice />
-            {/* No container: sections own their width so a photograph can
-                reach the edges of the screen. */}
-            <div className="flex-1">{children}</div>
-            <Footer />
-          </SessionProvider>
+          <Navigation authEnabled={authEnabled} />
+          <TranslationNotice />
+          {/* No container: sections own their width so a photograph can
+              reach the edges of the screen. */}
+          <div className="flex-1">{children}</div>
+          <Footer />
         </NextIntlClientProvider>
         {/* Loki feedback widget. The project token is a literal on purpose:
             read from process.env it would be tree-shaken to an empty string at

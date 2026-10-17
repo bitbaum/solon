@@ -641,3 +641,8 @@ export type Policy = typeof policies.$inferSelect;
 export type TreasurySource = typeof treasurySources.$inferSelect;
 export type AuditEvent = typeof auditEvents.$inferSelect;
 export type AgentApiKey = typeof agentApiKeys.$inferSelect;
+
+// Accounts: the fleet's one account system (@bitbaum/accountkit/auth). Its
+// tables are re-exported, not copied, so drizzle-kit writes the same
+// migration here as in every other product.
+export * from "@bitbaum/accountkit/auth/schema";

@@ -2,7 +2,7 @@ import { SignInError } from "@bitbaum/accountkit";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
-import { authEnabled, orangecatSettingsUrl } from "@/lib/auth";
+import { authEnabled } from "@/lib/auth";
 import { startSignIn } from "@/lib/auth/start-sign-in";
 
 type Props = {
@@ -19,13 +19,9 @@ export async function generateMetadata({ params }: Props) {
 }
 
 /**
- * Auth.js sends a sign-in that did not finish here, with ?error=<code>.
- * AccessDenied is our signIn callback turning away an OrangeCat account with
- * no email, because a governance identity must be attributable; the way on is
- * to add one on OrangeCat, so that is the first button. Anything else gets a
- * retry that starts the sign-in again directly, without another screen.
- *
- * The screen is @bitbaum/accountkit's SignInError — this page was its model.
+ * A sign-in that did not finish, for links that still arrive with
+ * ?error=<code>. The retry goes back to Solon's sign-in screen, which offers
+ * every way in. The screen is @bitbaum/accountkit's SignInError.
  */
 export default async function AuthErrorPage({ params, searchParams }: Props) {
   const locale = toLocale((await params).locale);
@@ -39,7 +35,7 @@ export default async function AuthErrorPage({ params, searchParams }: Props) {
         <SignInError
           error={error}
           retry={authEnabled ? startSignIn : getPathname({ href: "/", locale })}
-          retryFields={{ mode: "sign-in", locale, provider: "" }}
+          retryFields={{ mode: "sign-in", locale }}
           home={getPathname({ href: "/", locale })}
           labels={{
             kicker: t("kicker"),
@@ -52,13 +48,7 @@ export default async function AuthErrorPage({ params, searchParams }: Props) {
             tryAgain: t("tryAgain"),
             home: t("back"),
           }}
-        >
-          {error === "AccessDenied" && (
-            <a href={orangecatSettingsUrl} className="acct-signin-button" rel="noopener noreferrer">
-              {t("addEmail")}
-            </a>
-          )}
-        </SignInError>
+        />
 
         <p className="mt-10 border-t border-default pt-6 text-sm text-fg-secondary">
           {t("readFreely")}
