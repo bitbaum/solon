@@ -11,7 +11,7 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 - **Framework**: Next.js 16.3 (App Router, `output: 'standalone'` for the Hetzner deploy)
 - **Language**: TypeScript 6.0 (strict)
 - **Database**: PostgreSQL via Drizzle ORM (`drizzle-orm/node-postgres` + `pg` Pool)
-- **Auth**: NextAuth v5 (beta) — sign in with OrangeCat (OAuth)
+- **Auth**: `@bitbaum/accountkit/auth` — Solon's own accounts (email and password, passkey, two-step codes); OrangeCat is one way in. Seats of people whose first way in was OrangeCat stay keyed on their OrangeCat actor id (`legacyIdentityProvider`)
 - **Styling**: Tailwind CSS 4, tokens from `@fleet/design-tokens`
 - **Bitcoin**: `@noble/*`, `bs58check` (message signing / signature verification)
 - **Tests**: Vitest (unit + integration), Playwright e2e, Puppeteer smoke (`tests/`)
