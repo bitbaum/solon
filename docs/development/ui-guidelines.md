@@ -13,13 +13,11 @@ text box uses `.field`, and stored values are shown through
 
 ## Where the design system actually lives
 
-Two files, and this document is neither of them:
-
-Not in this repo, and not in this document:
+Not in this document:
 
 | Where | Role |
 |---|---|
-| **`@fleet/design-tokens`** ([repo](https://github.com/bitbaum/design-tokens)) | **Token SSOT** for all three products — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
+| **`@bitbaum/design-tokens`**, installed here as `@fleet/design-tokens` ([repo](https://github.com/bitbaum/design-tokens)) | **Token SSOT** for Solon and Loki — every colour, face, radius, rhythm and measure, plus the self-hosted font files and the Tailwind preset. |
 | `src/app/globals.css` | Solon-specific rules only. Defining a token here **fails the build**. |
 | `tailwind.config.js` | Consumes the shared preset. Defines no colours, fonts or geometry. |
 | `scripts/design-system-check.js` | **Enforcement.** Run by `pnpm run design:check`, which `pnpm run verify` runs. |
@@ -30,13 +28,15 @@ with itself. If you want to know what `--surface-raised` is, read the package.
 
 ## One family, three products
 
-The tokens are no longer *copied* between the three repos — they are **imported
-from one package**. They used to be copied, and they drifted: this file once
+Solon and Loki no longer *copy* tokens — they **import them from one package**
+(Solon under the alias `@fleet/design-tokens`, Loki as `@bitbaum/design-tokens`).
+OrangeCat does not depend on the package; its `globals.css` mirrors some of the
+values, so a change in the package does not reach OrangeCat by itself. They used to be copied, and they drifted: this file once
 claimed Solon's tokens matched OrangeCat's "by name and by value" while the two
 shared neither. Copies drift; imports cannot.
 
 To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in the package's
-`tokens.css`, tag a release, and bump the dependency in the three apps.
+`tokens.css`, tag a release, and bump the dependency in Solon and Loki.
 
 Solon is **dark today and gets a light theme** (decided 2026-09-30, with the
 Places map; the theme itself is not built yet). Both come from the package's
@@ -139,7 +139,7 @@ text uses `max-w-lede` (short intros) or `max-w-copy` (paragraphs).
 | Text box, select, text area | the `.field` class in `src/app/globals.css` (add `py-3` on a text area) |
 | Full-screen section | `src/components/site/full-bleed.tsx` |
 
-Links come from `src/lib/site-config.ts`: `SITE_SECTIONS` (footer, mobile menu) and `PRIMARY_NAV` (the header's three links, tested to be a subset). Keep components small, prefer
+Links come from `src/lib/site-config.ts`: `MENU` (the header's mega menu), `SITE_SECTIONS` (footer, mobile menu) and `PRIMARY_NAV` (each `MENU` section's own link, tested to point at known pages). Keep components small, prefer
 semantic HTML, and keep ARIA roles on the menu primitives.
 
 ## What the checker cannot see

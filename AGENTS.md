@@ -8,11 +8,11 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 
 ## Stack
 
-- **Framework**: Next.js 16.3 (App Router, `output: 'standalone'` for the Hetzner deploy)
+- **Framework**: Next.js 16.4 (App Router, `output: 'standalone'` for the Hetzner deploy)
 - **Language**: TypeScript 6.0 (strict)
 - **Database**: PostgreSQL via Drizzle ORM (`drizzle-orm/node-postgres` + `pg` Pool)
 - **Auth**: `@bitbaum/accountkit/auth` — Solon's own accounts (email and password, passkey, two-step codes); OrangeCat is one way in. Seats of people whose first way in was OrangeCat stay keyed on their OrangeCat actor id (`legacyIdentityProvider`)
-- **Styling**: Tailwind CSS 4, tokens from `@fleet/design-tokens`
+- **Styling**: Tailwind CSS 4, tokens from `@bitbaum/design-tokens` (installed under the alias `@fleet/design-tokens`)
 - **Bitcoin**: `@noble/*`, `bs58check` (message signing / signature verification)
 - **Tests**: Vitest (unit + integration), Playwright e2e, Puppeteer smoke (`tests/`)
 
@@ -21,11 +21,12 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ```bash
 pnpm run dev          # next dev (localhost:3000)
 pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-pnpm run verify       # format:check + lint + typecheck + design:check + test — run before every commit
+pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + test — run before every commit
 ```
 
-`pnpm run verify` is the single source of truth for "is this change clean?" CI
-calls it verbatim. Green `verify` locally ⇒ green CI.
+`pnpm run verify` is the single source of truth for "is this change clean?" CI's
+`verify` job calls it verbatim, then adds the vendored-drift check and the build
+(see CI below), so green `verify` locally is necessary but not the whole of CI.
 
 ## Drizzle / database
 
@@ -72,7 +73,7 @@ calls it verbatim. Green `verify` locally ⇒ green CI.
 
 | Job | What it does |
 |---|---|
-| `verify` | `pnpm install --frozen-lockfile` → `pnpm run verify` → `pnpm run build` |
+| `verify` | `pnpm install --frozen-lockfile` → `pnpm run verify` → `check:vendored-drift` → governance-ratification check (PRs only; warns, never fails) → `pnpm run build` |
 | `integration` | `drizzle-kit migrate` on a **fresh** Postgres → `places:sync-config` and `--check` → every `*.integration.test.ts` → render checks → production-shaped smoke |
 
 The integration job is why migrations must replay cleanly from the baseline: it
@@ -85,10 +86,12 @@ was deleted so a fix to the sweep reaches here without being re-ported.
 
 ## Design
 
-- Tokens live in the shared `@fleet/design-tokens` package **only**;
+- Tokens live in the shared `@bitbaum/design-tokens` package **only** (repo
+  `bitbaum/design-tokens`, installed here under the alias `@fleet/design-tokens`);
   `tailwind.config.js` consumes its Tailwind preset and never holds a literal
   value, and `src/app/globals.css` carries Solon-specific rules, no tokens.
-- Solon shares OrangeCat's token names and values, and is **dark-only**.
+- Loki depends on the same package; OrangeCat does not (its `globals.css`
+  mirrors some of the values). Solon is **dark-only** today.
   The legacy `navy` / `solon-*` palette is deleted — using it fails the build.
 - `pnpm run design:check` (part of `verify`) enforces this. See
   `docs/development/ui-guidelines.md`.
@@ -120,7 +123,7 @@ that can hold value is the thing a vote is about.
 
 ## Notes for agents
 
-- **Never commit secrets.** `.env.example` lists every variable the app reads;
+- **Never commit secrets.** `.env.example` lists the variables the app reads;
   copy it to `.env` and fill it in.
 - User-facing copy on translated pages lives in `messages/<locale>.json`
   (see "Language" below) — never hard-code a sentence on a page that is in

@@ -94,8 +94,9 @@ organization-first:
   I proposed.
 - `/me/profile` — name, preferred language, optional signing key.
 
-Sign-in stays OrangeCat-only — one account across the stack, no second password
-(standing rule: no auth friction). Old routes redirect into the first organization
+Sign-in was OrangeCat-only when this was written. Since 2026-10-17 (#269) Solon
+has its own accounts (`@bitbaum/accountkit/auth`: email and password, passkey,
+two-step codes) and OrangeCat is one way in among them. Old routes redirect into the first organization
 so no link breaks.
 
 ## 5. Languages

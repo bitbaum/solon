@@ -1,5 +1,9 @@
 # One account across OrangeCat, Loki and Solon
 
+_Superseded for Solon on 2026-10-17 (#269): Solon now has its own accounts
+through `@bitbaum/accountkit/auth` (email and password, passkey, two-step
+codes), and OrangeCat is one way in among them. The record below is kept as
+written._
 _Decided 2026-09-25: option A. George: "go with option A for auth, build it.
 It should be easy for people to create accounts in any way they prefer … I
 would really prefer not to pay for things and … to use open source." Status
