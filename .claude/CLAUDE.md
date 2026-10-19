@@ -19,19 +19,22 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 | What is Solon, what are the models and routes? | `README.md` |
 | How do I work in the repo — commands, CI, Drizzle, gotchas? | `AGENTS.md` |
 | What are the design rules? | `docs/development/ui-guidelines.md` |
-| What are the tokens? | `@fleet/design-tokens` — one package, shared by all three products |
+| What are the tokens? | `@bitbaum/design-tokens` (repo `bitbaum/design-tokens`), installed here under the alias `@fleet/design-tokens` |
 | What is the schema? | `src/lib/db/schema.ts` (9 governance models) and `src/lib/db/places-schema.ts` (Places) |
 | Which env vars exist? | `.env.example` |
 
 ## The three that matter most
 
-**`pnpm run verify` is the gate.** format:check + lint + typecheck + design:check + test. CI runs
-exactly it. Run it before every commit.
+**`pnpm run verify` is the gate.** format:check + lint + typecheck + design:check +
+check:places-literals + test. CI's `verify` job runs it. Run it before every commit.
 
-**Design tokens live in `@fleet/design-tokens`, not in this repo.** One package
-is the SSOT for OrangeCat, Loki and Solon — it owns the tokens *and* the
-self-hosted faces, so changing the display typeface for the whole stack is one
-line in one file. `globals.css` holds no tokens and `tailwind.config.js` defines
+**Design tokens live in the shared package, not in this repo.** It is
+`bitbaum/design-tokens`, published as `@bitbaum/design-tokens`; Solon installs it
+under the alias `@fleet/design-tokens`, and Loki depends on it as
+`@bitbaum/design-tokens`. OrangeCat does not depend on it — its `globals.css`
+mirrors some of the values. The package owns the tokens *and* the self-hosted
+faces, so changing the display typeface for Solon and Loki is one line in one
+file. `globals.css` holds no tokens and `tailwind.config.js` defines
 no colours; both would fail `design:check` if they did. Solon is dark-only. The
 `navy` / `solon-*` palette is deleted, not aliased. Never write a hex in a
 component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
@@ -57,7 +60,7 @@ them the way forward, on the same screen — a default with its consequence
 stated and one tap to change it, a "skip" that lands exactly where the old
 path landed, a pre-filled proposal to change the rule itself. A link that
 arrives with context (`?from=orangecat…`, `?title=…`) keeps that context
-through sign-in and `/join` (`lib/domain/proposal-draft.ts`). CI that finds a
+through sign-in and `/join` (`src/lib/domain/proposal-draft.ts`). CI that finds a
 rules change with no decision behind it warns and links the ratification
 proposal (`scripts/check-governance-ratified.ts`); it does not fail the job.
 This is fleet-wide, not Solon's alone; its permanent home is

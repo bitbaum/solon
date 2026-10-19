@@ -10,7 +10,7 @@ No. Everything a group decides is public: the suggestions, the votes, the result
 
 ## How do I sign in?
 
-With an OrangeCat account: email and password, an emailed code, Google or GitHub, whichever you like. One account works for Solon, OrangeCat and the other apps built with it. You do not need a wallet or anything to install.
+With a Solon account (an email and a password, or a passkey) or with your OrangeCat account, whichever you like. You do not need a wallet or anything to install.
 
 ## How do I become a member?
 

@@ -15,12 +15,12 @@ Most app pages still read the oldest organization. Solon governs many, so every
 page must be about one of them, and a member must see every group they belong
 to in one place.
 
-- [x] Anyone with an OrangeCat account may found an organization {#founding}
+- [x] Anyone with an account may found an organization {#founding}
       — founding chooses its governance profile
 - [x] `/orgs/{slug}` shows an organization's roster, record and who decides
 - [ ] `/orgs` — a public directory of every organization
 - [ ] My Solon (`/me`) — my groups, the votes waiting for me, my proposals
-- [ ] Member pages within an organization: role, votes cast, proposals filed
+- [x] Member pages within an organization: role, votes cast, proposals filed
 - [ ] Retire `primaryOrg()` from every page; old links redirect into the
       first organization
 
@@ -178,7 +178,7 @@ on `/governance/profiles`.
 
 ### Founding is permissionless
 
-Any recognized OrangeCat identity may found an organization; the organization,
+Any signed-in account may found an organization; the organization,
 the founding seat and both audit events land in one transaction. An
 organization is attributed to a Loki project only through a grant Loki signed.
 
@@ -209,7 +209,8 @@ function that counts a live session.
 English, German, French, Italian and Russian, with English as the source; a
 page not yet translated says so in the reader's language.
 
-### One account across the stack
+### Accounts: Solon's own, or OrangeCat's
 
-Sign in once with an OrangeCat account — email and password, an emailed code,
-Google or GitHub — and the same account works for Solon, OrangeCat and Loki.
+Create a Solon account with an email and a password or a passkey, with
+two-step codes, or continue with an OrangeCat account. A session grants no
+seat: a seat comes from founding or from a vote of the members.

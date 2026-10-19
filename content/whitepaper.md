@@ -23,9 +23,9 @@ AI agents make this sharper. Once agents spend money and take actions for a grou
 
 ## The model
 
-**Organization.** A group with a roster, a governance profile and a record. Anyone with an OrangeCat account can found one; the founder takes the first seat in the same transaction, so the seat can never be claimed by anyone else. Everything after founding goes through votes.
+**Organization.** A group with a roster, a governance profile and a record. Anyone with an account can found one; the founder takes the first seat in the same transaction, so the seat can never be claimed by anyone else. Everything after founding goes through votes.
 
-**Member.** A seat on the roster, held by a person or by an AI agent, with a voting weight (1 by default). A person signs in with OrangeCat (OpenID Connect; the stable subject is the OrangeCat actor id, never an email). A member may also register a Bitcoin address to sign with.
+**Member.** A seat on the roster, held by a person or by an AI agent, with a voting weight (1 by default). A person signs in with a Solon account (email and password, or a passkey) or with OrangeCat (OpenID Connect); a seat first claimed through OrangeCat stays keyed on the OrangeCat actor id, never an email. A member may also register a Bitcoin address to sign with.
 
 **Category.** Every proposal has one of seven categories. The category fixes who may vote and the bar a vote must clear:
 

@@ -8,7 +8,7 @@ recount without trusting Solon, versioned policies and an append-only audit trai
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000.svg)](https://nextjs.org/)
 
-Live at **[solon.orangecat.ch](https://solon.orangecat.ch)**.
+Running (beta) at **[solon.orangecat.ch](https://solon.orangecat.ch)**.
 
 ---
 
@@ -37,7 +37,7 @@ A legislature for an economy that AI agents help run. It exists because
 is abused" are legitimacy questions, not engineering ones — and if an agent
 silently decides who eats, that is rule-by-algorithm.
 
-Four properties do the work:
+Five properties do the work:
 
 - **Easy by default.** A member signs in (email and password, a passkey, or OrangeCat) and votes with one
   click — no wallet, no key. That vote is recorded with `proof: ACCOUNT`: it is
@@ -176,14 +176,26 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 | `POST` | `/api/sessions/{id}/votes` | Cast or change a vote (signed-in member, or Bitcoin signature) |
 | `POST` | `/api/sessions/{id}/close` | Close and record the decision |
 | `GET` | `/api/v1/decisions/{sessionId}` | **Self-verifying** signed record |
+| `POST` | `/api/members/register` | Claim a member seat (signed-in session; Bitcoin key optional) |
+| `GET` | `/api/v1/places` | Places by postcode or name |
+| `GET` | `/api/v1/places/{...path}` | One official place, as its page shows it |
+| `GET` | `/api/v1/places/compare` | The facts and tax model `/compare` reads, for any place |
+| `GET` | `/api/v1/places/map` | What the `/places` map draws |
+| `GET` | `/api/v1/places/geography` | Geography manifest (`/geography/{file}` serves each boundary file) |
+| `POST` | `/api/cron/places` | Daily Places import (`CRON_SECRET`) |
 | `GET` | `/api/health` | Liveness |
 
 ## Pages
 
 **Public:** `/`, `/features`, `/security`, `/integration`, `/about`,
+`/platform`, `/what-you-can-do`, `/for` and `/for/{slug}` (use cases), `/hire`,
 `/ecosystem` (the live governed state), `/join`, `/propose`, `/proposals`,
-`/governance/voting`, `/governance/audit`, `/treasury/bitcoin`,
-`/orgs/{slug}` (an organization's roster and record), `/orgs/new` (found one)
+`/proposals/{id}`, `/governance/voting`, `/governance/audit`,
+`/treasury/bitcoin`, `/orgs/{slug}` (an organization's roster and record),
+`/orgs/{slug}/members/{id}` (a member's page), `/orgs/new` (found one),
+`/places`, `/places/{...path}`, `/places/coverage`, `/compare`, `/faq`,
+`/whitepaper`, `/blog`, `/roadmap`, `/changelog`, `/credits`, `/sign-in`,
+`/sign-up`
 
 **Governance, explained** — the teaching section. Every tally on these pages is
 produced by the same `aggregate()` that counts a real session, so a change to
@@ -196,6 +208,8 @@ how Solon counts changes the lesson rather than leaving it stale:
 | `/governance/thresholds` | Quorum and threshold as two knobs over one vote (interactive) |
 | `/governance/who-decides` | Every category's electorate, threshold and quorum; the humans-only red lines |
 | `/governance/profiles` | Who decides, and how: every shipped profile compared rule by rule |
+| `/governance/ideas` | The ideas behind Solon |
+| `/governance/new-era` | Why self-governance is newly possible |
 
 The worked examples live in `src/lib/governance/worked-example.ts` and supply
 *ballots only* — never a result. `src/lib/__tests__/worked-example.test.ts`
@@ -209,18 +223,20 @@ become false.
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16.3 (App Router, `output: 'standalone'`) |
+| Framework | Next.js 16.4 (App Router, `output: 'standalone'`) |
 | Language | TypeScript 6.0 (strict) |
 | Database | PostgreSQL + Drizzle ORM |
 | Auth | `@bitbaum/accountkit/auth` (better-auth): email and password, passkeys, two-step codes, OrangeCat as one way in |
-| Styling | Tailwind CSS 4 — tokens from `@fleet/design-tokens` |
+| Styling | Tailwind CSS 4 — tokens from `@bitbaum/design-tokens` (installed as `@fleet/design-tokens`) |
 | Bitcoin | `@noble/*` + `bs58check` (signing / verification) |
 | Tests | Vitest (unit + integration), Playwright e2e, Puppeteer smoke |
-| i18n | English, German, French, Italian |
+| i18n | English, German, French, Italian, Russian (`next-intl`) |
 
 Design system: see [`docs/development/ui-guidelines.md`](docs/development/ui-guidelines.md).
-Tokens are imported from the shared `@fleet/design-tokens` package (one SSOT
-for OrangeCat, Loki and Solon), and Solon is dark-only.
+Tokens are imported from the shared `@bitbaum/design-tokens` package
+(repo `bitbaum/design-tokens`), which Solon installs under the alias
+`@fleet/design-tokens`; Loki uses the same package. OrangeCat does not depend
+on it. Solon is dark-only today.
 
 ## Quick start
 
@@ -244,10 +260,11 @@ pnpm exec tsx scripts/agent-vote.ts
 
 ## Verifying a change
 
-`pnpm run verify` is the single gate, and CI runs exactly it:
+`pnpm run verify` is the single gate, and CI's `verify` job runs it (then the
+vendored-drift check, the governance-ratification warning on PRs, and the build):
 
 ```bash
-pnpm run verify   # format:check && lint && typecheck && design:check && test
+pnpm run verify   # format:check && lint && typecheck && design:check && check:places-literals && test
 ```
 
 ```bash
