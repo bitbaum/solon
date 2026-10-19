@@ -124,8 +124,7 @@ that can hold value is the thing a vote is about.
 ## Notes for agents
 
 - **Never commit secrets.** `.env.example` lists the variables the app reads;
-  copy it to `.env` and fill it in. Not yet in it: `CRON_SECRET` (guards
-  `POST /api/cron/places`) and the optional override `ORANGECAT_URL`.
+  copy it to `.env` and fill it in.
 - User-facing copy on translated pages lives in `messages/<locale>.json`
   (see "Language" below) — never hard-code a sentence on a page that is in
   `TRANSLATED_ROUTES`.
