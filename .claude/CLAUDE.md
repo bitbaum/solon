@@ -66,6 +66,17 @@ proposal (`scripts/check-governance-ratified.ts`); it does not fail the job.
 This is fleet-wide, not Solon's alone; its permanent home is
 [bitbaum/fleet AGENTS.md](https://github.com/bitbaum/fleet/blob/main/AGENTS.md).
 
+## One shape per kind
+
+The fleet-wide design rule is stated once, in
+[bitbaum/fleet AGENTS.md → "One shape per kind"](https://github.com/bitbaum/fleet/blob/main/AGENTS.md):
+things of the same kind look the same, sit in the same place and are the same
+size; siblings share one frame; rows of one list have one anatomy; a row of
+choices is one row (never wrapping pills); one primary action per screen;
+every label says what happens; an icon promises its screen. Read it before
+building a screen and run its pre-PR checklist. Solon's own gates are
+`design:check` and `tests/e2e/render.spec.ts`.
+
 ## Don't
 
 - Skip signature verification on a vote.
