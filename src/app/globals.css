@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@bitbaum/chatkit/styles.css";
 @config "../../tailwind.config.js";
 
 /**
@@ -197,4 +198,13 @@ body {
       transform: none;
     }
   }
+}
+
+/* Shared chat behavior; Solon keeps the fleet's dark governance palette. */
+.solon-chat {
+  min-width: 0;
+}
+.solon-chat .ck-screen {
+  height: min(75dvh, 56rem);
+  min-height: 26rem;
 }

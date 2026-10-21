@@ -58,7 +58,8 @@
       "blog": "Blog",
       "places": "Orte",
       "placesCompare": "Vergleichen",
-      "placesCoverage": "Abdeckung"
+      "placesCoverage": "Abdeckung",
+      "askSolon": "Solon fragen"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -98,7 +99,8 @@
       "blog": "Was wir bauen und warum, während wir es bauen",
       "places": "Einen Ort nach Name oder Postleitzahl finden",
       "placesCompare": "Orte nebeneinander: was Sie die Steuern an jedem kosten",
-      "placesCoverage": "Was Orte abdeckt, aus den Daten gezählt"
+      "placesCoverage": "Was Orte abdeckt, aus den Daten gezählt",
+      "askSolon": "Die Regeln verstehen und einen Vorschlag entwerfen."
     }
   },
   "Nav": {
@@ -284,7 +286,7 @@
     },
     "trust": {
       "kicker": "Warum vertrauen",
-      "title": "Nichts verborgen. Nichts umge\u00ADschrieben.",
+      "title": "Nichts verborgen. Nichts umge­schrieben.",
       "record": {
         "title": "Jede Stimme im Protokoll",
         "body": "Die Mitglieder sehen jeden Antrag, jede Stimme und wie gezählt wurde."

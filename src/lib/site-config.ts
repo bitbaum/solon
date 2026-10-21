@@ -71,6 +71,7 @@ export const MENU: MenuSection[] = [
     children: [
       { key: "decisions", href: "/proposals" },
       { key: "dashboard", href: "/dashboard" },
+      { key: "askSolon", href: "/ask" },
       { key: "propose", href: "/propose" },
       { key: "join", href: "/join" },
       { key: "newOrg", href: "/orgs/new" },

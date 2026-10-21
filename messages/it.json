@@ -58,7 +58,8 @@
       "blog": "Blog",
       "places": "Luoghi",
       "placesCompare": "Confronta",
-      "placesCoverage": "Copertura"
+      "placesCoverage": "Copertura",
+      "askSolon": "Chiedi a Solon"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -98,7 +99,8 @@
       "blog": "Cosa costruiamo e perché, mentre lo costruiamo",
       "places": "Trovare un luogo per nome o numero postale",
       "placesCompare": "Luoghi a confronto: quanto ti costano le imposte in ciascuno",
-      "placesCoverage": "Cosa coprono i luoghi, contato dai dati"
+      "placesCoverage": "Cosa coprono i luoghi, contato dai dati",
+      "askSolon": "Comprendi le regole e prepara una proposta."
     }
   },
   "Nav": {
