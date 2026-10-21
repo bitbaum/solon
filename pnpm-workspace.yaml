@@ -17,3 +17,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - "@bitbaum/design-tokens"
   - bip-kit@0.6.0
+  - "@bitbaum/chatkit"

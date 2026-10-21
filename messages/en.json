@@ -58,7 +58,8 @@
       "blog": "Blog",
       "places": "Places",
       "placesCompare": "Compare",
-      "placesCoverage": "Coverage"
+      "placesCoverage": "Coverage",
+      "askSolon": "Ask Solon"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -98,7 +99,8 @@
       "blog": "What we build, and why, as we build it",
       "places": "Find a place by name or postcode",
       "placesCompare": "Places side by side: what tax costs you in each",
-      "placesCoverage": "What Places covers, counted from the data"
+      "placesCoverage": "What Places covers, counted from the data",
+      "askSolon": "Understand the rules and draft a proposal."
     }
   },
   "Nav": {
