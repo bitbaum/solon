@@ -9,6 +9,23 @@ itself reads that status from is `src/lib/content/capabilities.ts`.
 
 ## Now
 
+### The law as data: every law in Switzerland and Liechtenstein {#law}
+
+The law of every authority, as the publisher published it: who enacted it, from
+when to when it was in force, where it applies, and a hash that proves the copy
+is the publisher's. Not summaries, not our own wording. Causius reads it from
+here; until then it reads the publishers directly. The design, the measured
+size (21,728 federal and cantonal texts in force, as LexFind counts them on
+2026-10-22) and the sources are in `docs/design/2026-10-law-as-data.md`.
+
+- [ ] The register of what exists: every act of the Confederation, the cantons and Liechtenstein, with its number, names and official link, and a coverage page counted from the data {#law-register}
+- [ ] Federal text from Fedlex, every act in force, checked against the publisher every day {#law-federal}
+- [ ] Liechtenstein text from gesetze.li {#law-li}
+- [ ] Cantonal text, one publisher at a time, Zürich first {#law-cantons}
+- [ ] Earlier versions of every act, and what changed between them {#law-history}
+- [ ] Municipal regulations, commune by commune {#law-communes}
+- [ ] A public API, and Causius reading the law from here with the publisher as its fallback {#law-api}
+
 ### Every organization on its own pages
 
 Most app pages still read the oldest organization. Solon governs many, so every
@@ -90,6 +107,31 @@ flowing through OrangeCat.
 - [ ] A revenue-share policy for partners, versioned like every other policy
 - [ ] OrangeCat reads the current version before a payout, never a copy
 
+### One list of the kinds of group {#group-kinds}
+
+A town, a canton, a company, an association, a network state and a charter city
+all govern: they have members, rules, decisions and a record. Solon should hold
+them as one kind of thing at different sizes. `jurisdictions` already separates
+states from founded and proposed places; what is missing is the list of kinds
+and what each must declare.
+
+- [ ] The kinds in one config list (single source of truth), each declaring its decision rules, its membership, whether it holds money and what territory, if any, it claims
+- [ ] Places and organizations read that list; no kind is named in code anywhere else
+- [ ] A founding path for each kind, starting with the association and the quarter
+
+### A place with a common fund and a budget {#commons}
+
+A quarter such as Witikon is not a tax authority, and does not need to be one to
+act as one. Anyone can found it as a place with a common fund: people give, the
+group decides, and the money is spent in the open the way a commune's budget is.
+The fund is OrangeCat's (an entity that can hold a wallet); Solon decides and
+keeps the record. Solon's own treasury stays watch-only.
+
+- [ ] A founded place holds a fund on OrangeCat that people can give to
+- [ ] The budget as a decision: lines, amounts, a period, voted by the group
+- [ ] Spending checked against the budget; the record shows what each line was used for
+- [ ] A founded place's budget set beside a commune's, line by line
+
 ### Mandates and receipts: decisions that carry themselves out
 
 A closed decision hands a signed instruction to OrangeCat (money) or Loki
@@ -101,6 +143,18 @@ evidence, not authority: each executor re-verifies the signatures itself.
 - [ ] Loki executor: re-verify, then act
 - [ ] OrangeCat executor: treasury spend and budget allocation
 - [ ] Unmandated outflow from a watched treasury raises a `SAFETY` proposal
+
+### Hiring a manager: contracts with success measures {#contracts}
+
+A group can hire a company to run what it needs, which hires others for waste,
+security or sanitation. Each is a contract judged by measures, paid for results,
+and replaceable by vote when it fails. In Solon a contract is a mandate (above)
+with terms: who, to do what, paid how, judged by which measures, until when.
+
+- [ ] A mandate carries its terms: scope, payment, measures, end date
+- [ ] The measures, who measures them and who may dispute a reading are charter data, not code
+- [ ] Renewal, and replacement of a contractor, by vote; the record keeps the reasons
+- [ ] A contractor's subcontractors visible in the record
 
 ### Passkeys and other signers
 
@@ -149,6 +203,11 @@ publication over Nostr so the record outlives any one server.
 Church tax, wealth tax and fixed per-head taxes are not included. A commune
 whose canton tariff or local multiplier is not modelled yet is drawn as having
 no data; `/places/coverage` shows how much is covered.
+
+Liechtenstein is on the map too since 2026-10-22: its eleven communes and its two
+regions, Oberland and Unterland, found by name and by postcode (the postcodes
+come from swisstopo's official directory). It has no tax model yet, so it shows
+no tax figures.
 
 ### One-click governance, Bitcoin optional
 
