@@ -1,0 +1,91 @@
+name: Places load
+
+# By hand: one Places import or fetch against the production database.
+#
+# The daily timer (/api/cron/places) fetches the sources that have something
+# to fetch. A hand-kept file (adapter "fixture", e.g. li-constitution-communes)
+# has nothing to fetch, so it reaches production only through `places:import`,
+# and a source that builds on it (Liechtenstein's postcodes need its communes)
+# fails until it has. This runs that step on the box, from a fresh checkout of
+# main, with the box's own DATABASE_URL read into this process alone.
+#
+# dry_run=true (default) reports what would change and writes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "import (a file in the repo) or fetch (from the publisher)"
+        type: choice
+        options: [import, fetch]
+        default: import
+      source:
+        description: "Source key from src/lib/config/places/sources.ts"
+        type: string
+        required: true
+      file:
+        description: "For import: the file, under data/places/"
+        type: string
+        default: ""
+      dry_run:
+        description: "Only report what would change"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check the inputs
+        env:
+          KIND: ${{ inputs.kind }}
+          SOURCE: ${{ inputs.source }}
+          FILE: ${{ inputs.file }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE" =~ ^[a-z0-9-]+$ ]] || { echo "source must be a registry key"; exit 1; }
+          if [ "$KIND" = import ]; then
+            [[ "$FILE" =~ ^data/places/[A-Za-z0-9_./-]+$ && "$FILE" != *..* ]] || { echo "file must be under data/places/"; exit 1; }
+          fi
+
+      - name: Run it on the box
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          SHA: ${{ github.sha }}
+          KIND: ${{ inputs.kind }}
+          SOURCE: ${{ inputs.source }}
+          FILE: ${{ inputs.file }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
+            "SHA=$SHA KIND=$KIND SOURCE=$SOURCE FILE=$FILE DRY=$DRY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+          set -euo pipefail
+          WD=$(mktemp -d /tmp/solon-places.XXXXXX)
+          trap 'rm -rf "$WD"' EXIT
+          git clone -q https://github.com/bitbaum/solon "$WD/repo"
+          cd "$WD/repo" && git checkout -q "$SHA"
+          PNPM="corepack pnpm"; $PNPM --version >/dev/null 2>&1 || PNPM="npx --yes pnpm@11"
+          $PNPM install --frozen-lockfile >install.log 2>&1 || { echo "install failed:"; tail -n 20 install.log; exit 1; }
+          envf=/opt/solon/shared/.env; [ -f "$envf" ] || envf=/opt/solon/app/.env
+          set -a
+          eval "$(grep -E '^(DATABASE_URL|PLACES_SNAPSHOT_DIR)=' "$envf")"
+          set +a
+          export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
+          flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
+          if [ "$KIND" = import ]; then
+            $PNPM run places:import "$SOURCE" "$FILE" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
+          else
+            $PNPM run places:fetch "$SOURCE" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
+          fi
+          REMOTE
+          rm -f ~/.ssh/id
+          while IFS= read -r line; do echo "::notice::$line"; done < out.txt
+          exit "${status:-0}"
