@@ -444,7 +444,8 @@ export const SOURCES: readonly SourceInput[] = [
         {
           column: "Kantonskürzel",
           values: [""],
-          reason: "a Liechtenstein commune; the directory covers both countries",
+          reason:
+            "a Liechtenstein commune; the directory covers both countries (swisstopo-postcode-localities-li)",
         },
         {
           column: "BFS-Nr",
@@ -493,5 +494,60 @@ export const SOURCES: readonly SourceInput[] = [
       quantization: 30000,
     },
     packs: ["switzerland"],
+  },
+  {
+    // Kept by hand: Liechtenstein's two Landschaften and eleven communes, and
+    // which commune lies in which. The Constitution lists them (Verfassung des
+    // Fürstentums Liechtenstein, LR 101, Art. 1, read 2026-10-22 at
+    // https://www.gesetze.li/konso/1921015000, version 45); an official act is
+    // not protected (Urheberrechtsgesetz, LR 231.1, Art. 5). The communes are
+    // keyed by the numbers, and named as, swisstopo's official directory of
+    // localities lists them (7001–7011, download of 2026-09-30, read
+    // 2026-10-22), whose terms ask for the source to be named; so this source
+    // carries those terms. The file is `data/places/liechtenstein/communes.json`,
+    // handed to `places:import`; a merger or a new commune is an edit to it,
+    // citing the act that made it.
+    key: "li-constitution-communes",
+    publisher: "Principality of Liechtenstein; Federal Office of Topography (swisstopo)",
+    dataset:
+      "Verfassung des Fürstentums Liechtenstein, Art. 1; municipality numbers from the official directory of localities",
+    homepage: "https://www.gesetze.li/konso/1921015000",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Constitution of the Principality of Liechtenstein, Art. 1; Federal Office of Topography swisstopo, official directory of localities",
+      de: "Verfassung des Fürstentums Liechtenstein, Art. 1; Bundesamt für Landestopografie swisstopo, amtliches Ortschaftenverzeichnis",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 2 1 *",
+    adapter: "fixture",
+    packs: ["liechtenstein"],
+  },
+  {
+    // Confirmed 2026-10-22: the same directory as swisstopo-postcode-localities
+    // (same URL and terms) lists Liechtenstein's 13 postcodes in 20 rows, each
+    // with its commune's number (7001–7011) and no canton. This source reads
+    // those rows and nothing else.
+    key: "swisstopo-postcode-localities-li",
+    publisher: "Federal Office of Topography (swisstopo)",
+    dataset: "Official directory of localities with postcodes: Liechtenstein",
+    homepage: "https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Federal Office of Topography swisstopo, official directory of localities",
+      de: "Bundesamt für Landestopografie swisstopo, amtliches Ortschaftenverzeichnis",
+      fr: "Office fédéral de topographie swisstopo, répertoire officiel des localités",
+    },
+    cadence: "15 4 3 * *",
+    adapter: "csv_postcodes",
+    options: {
+      url: "https://data.geo.admin.ch/ch.swisstopo-vd.ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz/ortschaftenverzeichnis_plz_2056.csv.zip",
+      postcode: "PLZ4",
+      locality: "Ortschaftsname",
+      place: { scheme: "li_municipality", column: "BFS-Nr" },
+      share: { column: "Adressenanteil", divideBy: 100 },
+      validFrom: "Validity",
+      where: [{ column: "Kantonskürzel", values: [""] }],
+    },
+    packs: ["liechtenstein"],
   },
 ];

@@ -61,4 +61,24 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     pattern: "[1-9][0-9]{1,2}",
     reserved: true,
   },
+  {
+    // The two Landschaften the Constitution divides the country into (LR 101,
+    // Art. 1), by the names it gives them in brackets and uses for the two
+    // electoral districts (Art. 46). There is no numbered code for them.
+    key: "li_landschaft",
+    label: { en: "Liechtenstein region (Landschaft)", de: "Landschaft Liechtenstein" },
+    pattern: "Oberland|Unterland",
+    reserved: true,
+  },
+  {
+    // The number swisstopo's official directory of localities gives each of
+    // Liechtenstein's communes in its BFS-Nr column: 7001 Vaduz … 7011 Schellenberg.
+    key: "li_municipality",
+    label: {
+      en: "Liechtenstein municipality number",
+      de: "Gemeindenummer Liechtenstein",
+    },
+    pattern: "70(0[1-9]|1[01])",
+    reserved: true,
+  },
 ];

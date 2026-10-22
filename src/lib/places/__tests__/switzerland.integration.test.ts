@@ -319,15 +319,18 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     // A word no name holds is set aside, not fatal.
     expect((await top("gemeinde thalwil"))[0]).toBe("Thalwil");
 
-    // Every place in the database, each of its words misspelled once.
+    // Every Swiss place, each of its words misspelled once. The search still
+    // looks through every pack, so another country's place may answer first.
     const index = await loadPackIndex(db, config, ON, "de");
     const places = (
       await Promise.all(
-        index.flatMap((pack) =>
-          pack.levels
-            .filter((level) => level.count > 0)
-            .map((level) => placesAtLevel(db, config, pack.key, level.key, ON, "de")),
-        ),
+        index
+          .filter((pack) => pack.key === "switzerland")
+          .flatMap((pack) =>
+            pack.levels
+              .filter((level) => level.count > 0)
+              .map((level) => placesAtLevel(db, config, pack.key, level.key, ON, "de")),
+          ),
       )
     ).flat();
     const names = [...new Set(places.map((p) => p.name))];
