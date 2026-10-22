@@ -11,6 +11,7 @@ import { readShapefile } from "../adapters/shapefile";
 import { fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
 import { importBatchSchema, type BatchJurisdiction, type ImportBatch } from "../importer/batch";
+import { checkBatch } from "../importer/validate";
 
 const FIXTURES = join(__dirname, "fixtures", "switzerland");
 const fixture = (name: string) => new Uint8Array(readFileSync(join(FIXTURES, name)));
@@ -371,6 +372,86 @@ describe("swisstopo's postcode directory", () => {
     expect(() => decodeCsvAnyForm(zipSync({ "a.csv": csv, "b.csv": csv }))).toThrow(
       /holds 2 CSV files/,
     );
+  });
+});
+
+describe("swisstopo's postcode directory, Liechtenstein's part", () => {
+  const SOURCE = "swisstopo-postcode-localities-li";
+  const csv = new Uint8Array(
+    readFileSync(
+      join(__dirname, "fixtures", "liechtenstein", "postcode-localities-2026-09-30.csv"),
+    ),
+  );
+
+  it("reads only the rows without a canton, by Liechtenstein's commune numbers", () => {
+    const skipped: { row: string; reason: string }[] = [];
+    const batch = mapSource(
+      SOURCE,
+      zipSync({ "AMTOVZ_CSV_LV95/AMTOVZ_CSV_LV95.csv": csv }),
+      skipped,
+    );
+    expect(batch.pack).toBe("liechtenstein");
+    expect(batch.postcodes).toHaveLength(20);
+    expect(new Set(batch.postcodes.map((p) => p.postcode)).size).toBe(13);
+    expect(new Set(batch.postcodes.map((p) => p.place.value)).size).toBe(11);
+    expect(batch.postcodes.every((p) => p.place.scheme === "li_municipality")).toBe(true);
+    expect(batch.postcodes.find((p) => p.postcode === "9490")).toEqual({
+      postcode: "9490",
+      locality: "Vaduz",
+      place: { scheme: "li_municipality", value: "7001" },
+      share: 1,
+      validFrom: "2008-07-01",
+      validTo: null,
+    });
+    // A Swiss row is not this source's subject: left out, not reported.
+    expect(batch.postcodes.some((p) => p.postcode === "9470")).toBe(false);
+    expect(skipped).toEqual([]);
+  });
+
+  it("refuses a directory without the column it keeps rows by", () => {
+    const text =
+      "PLZ4;Ortschaftsname;BFS-Nr;Adressenanteil;Validity\r\n9490;Vaduz;7001;100 %;2008-07-01\r\n";
+    expect(() => mapSource(SOURCE, new TextEncoder().encode(text))).toThrow(/Kantonskürzel/);
+  });
+});
+
+describe("Liechtenstein's communes, kept by hand", () => {
+  const batch = mapSource(
+    "li-constitution-communes",
+    new Uint8Array(
+      readFileSync(join(__dirname, "../../../../data/places/liechtenstein/communes.json")),
+    ),
+  );
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "li-constitution-communes").problems).toEqual([]);
+  });
+
+  it("puts each of the eleven communes in the Landschaft the Constitution names", () => {
+    const communes = batch.jurisdictions.filter((j) => j.levelKey === "municipality");
+    expect(communes).toHaveLength(11);
+    const landschaft = (name: string) =>
+      parentOf(batch, "li_municipality", communes.find((c) => c.names[0]?.name === name)!.ref.value)
+        ?.value;
+    expect(
+      ["Vaduz", "Balzers", "Planken", "Schaan", "Triesen", "Triesenberg"].map(landschaft),
+    ).toEqual(Array(6).fill("Oberland"));
+    expect(["Eschen", "Gamprin", "Mauren", "Ruggell", "Schellenberg"].map(landschaft)).toEqual(
+      Array(5).fill("Unterland"),
+    );
+    expect(parentOf(batch, "li_landschaft", "Oberland")).toEqual({
+      scheme: "iso_3166_1",
+      value: "LI",
+    });
+  });
+
+  it("names the country as the pack does, which is what CLDR calls it", () => {
+    const pack = placesConfig.packs.find((p) => p.key === "liechtenstein")!;
+    const root = byRef(batch, "iso_3166_1", "LI");
+    for (const [locale, name] of Object.entries(pack.names)) {
+      expect(new Intl.DisplayNames([locale], { type: "region" }).of("LI")).toBe(name);
+      expect(root.names.find((n) => n.locale === locale)?.name).toBe(name);
+    }
   });
 });
 

@@ -1,4 +1,5 @@
 import type { CountryPackInput } from "../schema";
+import { liechtenstein } from "./liechtenstein";
 import { switzerland } from "./switzerland";
 
 /**
@@ -6,4 +7,4 @@ import { switzerland } from "./switzerland";
  * The engine is proven against a made-up country that lives only in tests
  * (src/lib/places/__tests__/fixtures); a real pack is data like it.
  */
-export const COUNTRY_PACKS: readonly CountryPackInput[] = [switzerland];
+export const COUNTRY_PACKS: readonly CountryPackInput[] = [switzerland, liechtenstein];

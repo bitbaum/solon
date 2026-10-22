@@ -807,6 +807,17 @@ hardcoded date.
 | `swisstopo-commune-boundaries` | every commune's territory, from the latest swissBOUNDARIES3D edition begun (yearly on 1 January, plus mid-year editions for mergers such as 2025-04-06); confirmed 2026-09-30. The layer also holds cantons' lake areas, Liechtenstein and the foreign enclaves, which the source's `where` leaves out; 2,110 communes in 2026-01 | the federal geodata STAC catalogue, zipped Shapefile in LV95 (`shapefile_areas`: snapped to 25 m as read, reprojected to WGS84, one topology keeping 5 % of the points, about 220 KB gzipped) | swisstopo OGD: free use, name the source |
 | `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
+**Liechtenstein** (built 2026-10-22, pack `countries/liechtenstein.ts`: nation,
+the two Landschaften as `landschaft`, the eleven communes; no tax model):
+
+| Source key | What | Access | Terms |
+|---|---|---|---|
+| `li-constitution-communes` | the country, Oberland and Unterland, and which of the eleven communes lies in each, as the Constitution lists them (LR 101, Art. 1; Art. 46 makes the two its electoral districts); communes keyed and named as swisstopo's directory lists them (7001–7011); kept by hand | `data/places/liechtenstein/communes.json`, handed to `places:import` (`fixture`) | official act (Liechtenstein URG, LR 231.1, Art. 5) and swisstopo OGD for the numbers |
+| `swisstopo-postcode-localities-li` | the directory's 13 Liechtenstein postcodes in 20 rows, with each commune's share; the rows without a canton, read with the adapter's `where` | the same zipped CSV as `swisstopo-postcode-localities` (`csv_postcodes`) | swisstopo OGD: free use, name the source |
+
+No ISO 3166-2 codes for the communes: ISO's list is not openly licensed, and
+Wikidata, which carries them under CC0, is the world backbone still to come.
+
 The calculator's exports answer for years it has not published with another
 year's figures (asked on 2026-09-29, "2027" gave the canton a 98% multiplier
 and "2030" 95%). Its adapter therefore asks the calculator's published year

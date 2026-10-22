@@ -21,6 +21,11 @@ const csvPostcodesOptions = z.object({
   place: z.object({ scheme: z.string().min(1), column }),
   /** The locality's share of addresses in the place; `99.5 %` reads as 99.5. */
   share: z.object({ column, divideBy: z.number().positive().default(1) }).optional(),
+  /**
+   * Keep only rows whose column holds one of the values: the part of a
+   * directory this source reads, where one directory covers several packs.
+   */
+  where: z.array(z.object({ column, values: z.array(z.string()).min(1) })).default([]),
   /** An ISO date the row is valid from. */
   validFrom: column.optional(),
   /**
@@ -36,7 +41,7 @@ type CsvPostcodesOptions = z.infer<typeof csvPostcodesOptions>;
 
 export const csvPostcodesAdapter: Adapter<Rows, CsvPostcodesOptions> = {
   key: "csv_postcodes",
-  version: "2",
+  version: "3",
   decode: decodeCsvAnyForm,
   schema: rows,
   options: csvPostcodesOptions,
@@ -46,7 +51,16 @@ export const csvPostcodesAdapter: Adapter<Rows, CsvPostcodesOptions> = {
       throw new Error("postcodes belong to a pack's places; the source names none");
     }
     const postcodes: BatchPostcode[] = [];
+    const absent = options.where.find((w) => !(w.column in table[0]!));
+    if (absent) {
+      throw new Error(`no column ${absent.column} to keep rows by`);
+    }
+    const kept = (row: Record<string, string>) =>
+      options.where.every((w) => w.values.includes(row[w.column]!.trim()));
     for (const [i, row] of table.entries()) {
+      if (!kept(row)) {
+        continue;
+      }
       const where = `row ${i + 2}`;
       const postcode = row[options.postcode]?.trim();
       const locality = row[options.locality]?.trim();

@@ -1,0 +1,361 @@
+{
+  "pack": "liechtenstein",
+  "jurisdictions": [
+    {
+      "ref": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Liechtenstein",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Liechtenstein",
+          "nameType": "self"
+        },
+        {
+          "locale": "fr",
+          "name": "Liechtenstein",
+          "nameType": "self"
+        },
+        {
+          "locale": "it",
+          "name": "Liechtenstein",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "levelKey": "landschaft",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Oberland",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "levelKey": "landschaft",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Unterland",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7001"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Vaduz",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7002"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Triesen",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7003"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Balzers",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7004"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Triesenberg",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7005"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Schaan",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7006"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Planken",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7007"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Eschen",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7008"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Mauren",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7009"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Gamprin",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7010"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Ruggell",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "li_municipality",
+        "value": "7011"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "de",
+          "name": "Schellenberg",
+          "nameType": "self"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7001"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7002"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7003"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7004"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7005"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7006"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Oberland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7007"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7008"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7009"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7010"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "li_municipality",
+        "value": "7011"
+      },
+      "to": {
+        "scheme": "li_landschaft",
+        "value": "Unterland"
+      },
+      "relation": "part_of"
+    }
+  ]
+}
