@@ -4,6 +4,30 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-22
+
+### Added
+
+- **Liechtenstein is on the map.** Its eleven communes and its two regions,
+  Oberland and Unterland, are in Places, found by name and by postcode (9490
+  finds Vaduz). The postcodes come from swisstopo's official directory of
+  localities, the same file the Swiss ones use. Liechtenstein has no tax model
+  yet, so it shows no tax figures. (#277)
+- **Places can be loaded from GitHub.** A hand-kept source, such as
+  Liechtenstein's list of communes, has nothing to fetch, so the daily import
+  skipped it and a later fetch that depends on it would have failed. A
+  dispatch-only workflow now runs an import or a fetch on the server, dry run
+  first. (#279)
+
+### Changed
+
+- **The roadmap records the direction.** The law as data (every law in
+  Switzerland and Liechtenstein) is now the first item under Now, with a design
+  and measured sizes; the roadmap also names one list of the kinds of group,
+  founded places with a common fund and a budget, and contracts with success
+  measures. None of these is built. See `docs/design/2026-10-law-as-data.md` and
+  `docs/design/2026-10-direction-notes.md`.
+
 ## 2026-10-12
 
 ### Changed
