@@ -115,6 +115,39 @@ and `legal_amendments (version_id, amended_by_act, on)` for what changed.
 
 **Applies where** is not a table: it is the place chain over `legal_acts.jurisdiction_id`.
 
+### L0 as built (2026-10-23)
+
+Step L0 is built for the Confederation, the 26 cantons and the intercantonal
+agreements. What differs from §3, and why:
+
+- **Three tables, no text.** `legal_acts`, `legal_act_identifiers` and
+  `legal_act_names` (migration 0015). Versions and provisions are L1.
+- **Two identifier schemes, not one per numbering.** `systematic_number`
+  (read together with the act's authority, which is what makes it unique) and
+  `lexfind_id`. The per-publisher schemes (`ch_sr`, `zh_ls`, …) are not needed
+  until a second source numbers the same act.
+- **An authority key on the act**, with the place it speaks for resolved
+  through Places' identifiers (`iso_3166_1` for the Confederation, `bfs_canton`
+  for a canton). The intercantonal agreements have no single place.
+- **In force is what the register says**, with no end date: LexFind states
+  whether an act is in force, not since when.
+- **Titles and numbers only.** LexFind's keywords are its own editorial work
+  and are not imported until its terms are read; abbreviations will come from
+  each publisher in L1–L3.
+- **Read through LexFind's public JSON**: `entities/extended` gives each
+  authority's stated total; `entities/{id}/systematics` is the tree, and its
+  `tols_for_systematics[]` parameter returns the acts under the named nodes,
+  60 nodes to a request. A read whose count differs from the stated total is
+  refused, so a partial register can never be imported as acts that vanished.
+- **Measured**: 33,441 acts, 22,047 in force (28 authorities), read in about
+  two minutes; a rerun on the same bytes changes nothing and takes two seconds.
+  This replaces the earlier 21,728 / 33,105, which left out the 317 / 333
+  intercantonal acts and was read a day earlier.
+
+Run it with `pnpm run law:register [--dry-run]`, or the *Law register load*
+workflow on the box. The page is `/law/coverage`; the API is
+`/api/v1/law/coverage` and `/api/v1/law/acts`.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in
