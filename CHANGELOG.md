@@ -19,7 +19,10 @@ one to read for the detail. Fixes get the same weight as features.
   from and a hash that proves the copy. Lilex does not say since when a version
   applies, so each is dated by the day it was read and marked as such. Production
   is not loaded yet. (#PR)
-
+- **Every Swiss act can point to the place that publishes it.** The register can
+  now keep, for each act of the Confederation and the cantons, the address of its
+  page at its own authority, and `/api/v1/law/acts` returns it as `officialUrl`.
+  Production is not loaded yet. (#PR)
 - **A register of the law.** Solon now lists every act of the Confederation,
   the 26 cantons and the intercantonal agreements: 33,441 acts, 22,047 of them
   in force, each with its title and its official number, read from LexFind's

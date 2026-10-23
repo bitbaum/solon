@@ -231,6 +231,24 @@ first, treaties last, three seconds apart.
 - **The proof-of-work page ends the run.** It is recognised, never parsed as law,
   never solved; the run reports `stoppedByChallenge` and the next run continues.
 
+### Official links as built (2026-10-23)
+
+`pnpm run law:register links` (or the *Law register load* workflow, source
+`links`) keeps, for every in-force act of the Confederation, the cantons and the
+intercantonal agreements, the address of its page at the authority that
+publishes it, as the identifier `official_url`. LexFind's search results carry it
+(`original_url`): a canton's page for a cantonal act, Fedlex's for a federal one.
+
+- A search by systematic number, one digit at a time, lists every numbered act of
+  an authority a hundred to a page; about 220 requests for all 28 authorities.
+- A list short of the count the register states for the authority is refused, so
+  a partial read can never be applied as links that vanished.
+- A changed link supersedes the old one; an act's link is the German page.
+- Where the canton's page is a wrapper (Zürich's is) the document itself sits one
+  step behind it. Reading the cantons' text is therefore a reader per publisher
+  (L3), starting with Zürich; the link is already what a person needs to check
+  an act against its publisher.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

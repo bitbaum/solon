@@ -14,7 +14,7 @@ on:
       source:
         description: "Which register"
         type: choice
-        options: [lexfind, liechtenstein]
+        options: [lexfind, liechtenstein, links]
         default: lexfind
       dry_run:
         description: "Only report what would change"
@@ -27,7 +27,7 @@ permissions:
 jobs:
   load:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 90
     steps:
       - name: Run it on the box
         env:

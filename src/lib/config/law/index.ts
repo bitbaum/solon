@@ -30,6 +30,7 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "ch_eli",
   "li_lr",
   "li_lgbl",
+  "official_url",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
