@@ -18,6 +18,8 @@ import { readProvision, searchActs } from "../../register/coverage";
 import { importFedlexText } from "../import";
 import { importCantonalText } from "../import-cantonal";
 import { importLilexText } from "../import-lilex";
+import { importZhlexText } from "../import-zhlex";
+import { importOfficialLinks } from "../../register/official-links";
 import { importRegister } from "../../register/import";
 import { liRows, parseSystematicRegister } from "../../register/li-systematic";
 
@@ -416,4 +418,119 @@ describe.skipIf(!RUN)("cantonal text import", () => {
     expect(report.refusedForSpace).toBe(true);
     expect(report.stored).toBe(0);
   });
+});
+
+/** A one-page PDF holding these lines, enough for the text extractor. */
+function tinyPdf(lines: string[]): Uint8Array {
+  const stream = `BT /F1 12 Tf 72 720 Td 14 TL ${lines.map((l) => `(${l}) Tj T*`).join(" ")} ET`;
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  let out = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  objects.forEach((body, i) => {
+    offsets.push(out.length);
+    out += `${i + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = out.length;
+  out += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (const offset of offsets) out += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return new TextEncoder().encode(out);
+}
+
+describe.skipIf(!RUN)("zhlex text import", () => {
+  const lexfindId = base + 8;
+  const pageUrl = `https://www.zh.ch/de/politik-staat/gesetze-beschluesse/gesetzessammlung/zhlex-ls/erlass-${N}-2005_02_27-2006_01_01-129.html`;
+  const pdfUrl = `https://www.notes.zh.ch/appl/zhlex_r.nsf/OpenAttachment?Open&docid=AB12&file=${N}.pdf`;
+  const wrapper = `<a href="${pdfUrl.replace(/&/g, "&amp;")}">PDF</a>`;
+  const serveZh = (async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.startsWith("https://www.zh.ch/")) return new Response(wrapper);
+    if (url.startsWith("https://www.notes.zh.ch/")) {
+      return new Response(
+        Buffer.from(
+          tinyPdf([
+            "Zweck",
+            "Art. 1 Dieses Gesetz regelt etwas.",
+            "Geltung",
+            "Art. 2 Es gilt im Kanton.",
+          ]),
+        ),
+      );
+    }
+    return new Response("<div>Art. 1 Erste Lesung.</div>", {
+      headers: { "content-type": "text/html" },
+    });
+  }) as unknown as typeof fetch;
+
+  it("replaces the first-pass reading with the canton's own text, dated by the canton", async () => {
+    const bytes = new TextEncoder().encode(
+      JSON.stringify({
+        fetchedAt: "2026-10-23T00:00:00.000Z",
+        authorities: [{ code: "ZH", acts: [reg(lexfindId, `Zürcher Gesetz ${N}`, `${N}.zh`)] }],
+      }),
+    );
+    await importLexfindRegister(db, { bytes, url: "test", retrievedAt: new Date(), snapshots });
+    const links = new TextEncoder().encode(
+      JSON.stringify({
+        fetchedAt: "x",
+        authorities: [{ code: "ZH", links: [{ id: lexfindId, url: pageUrl }] }],
+      }),
+    );
+    await importOfficialLinks(db, {
+      bytes: links,
+      url: "test",
+      retrievedAt: new Date(),
+      snapshots,
+    });
+
+    // First the fallback, as the cantons' reader would have read it.
+    const [act] = await searchActs(db, { authority: "zh", number: `${N}.zh` });
+    await importCantonalText(db, {
+      snapshots,
+      today: "2026-10-23",
+      authority: "zh",
+      pauseMs: 0,
+      minFreeBytes: 0,
+      fetchImpl: serveZh,
+    });
+    expect(
+      (await readProvision(db, { actId: act!.id, path: "art_1", lang: "de", on: "2026-10-23" }))!
+        .dateBasis,
+    ).toBe("retrieved");
+
+    const report = await importZhlexText(db, { snapshots, pauseMs: 0, fetchImpl: serveZh });
+    expect(report.failures).toEqual([]);
+    expect(report.stored).toBeGreaterThanOrEqual(1);
+
+    const now = await readProvision(db, {
+      actId: act!.id,
+      path: "art_2",
+      lang: "de",
+      on: "2026-10-23",
+    });
+    expect(now).toMatchObject({
+      heading: "Art. 2 Geltung",
+      text: "Es gilt im Kanton.",
+      inForceFrom: "2006-01-01",
+      dateBasis: "publisher",
+      sourceUrl: pdfUrl,
+    });
+    // The fallback is retired, not deleted: its range is empty, so it is never served.
+    const versions = await db
+      .select()
+      .from(legalActVersions)
+      .where(eq(legalActVersions.actId, act!.id));
+    expect(versions).toHaveLength(2);
+    const retired = versions.find((v) => v.dateBasis === "retrieved")!;
+    expect(retired.inForceTo! < retired.inForceFrom).toBe(true);
+
+    const again = await importZhlexText(db, { snapshots, pauseMs: 0, fetchImpl: serveZh });
+    expect(again.stored).toBe(0);
+  }, 120_000);
 });

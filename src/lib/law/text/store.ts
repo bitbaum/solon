@@ -4,7 +4,7 @@
  * when the publisher gives one, an identifier for the act. Shared by every
  * reader of law text, so they all close the previous version the same way.
  */
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import type { ActTextFormat, ActTextStatus, ActVersionDateBasis } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActVersions, legalProvisions } from "@/lib/db/law-schema";
@@ -61,9 +61,14 @@ export async function storeVersion(
         licenceSpdx: version.source.licenceSpdx,
       })
       .returning({ id: sources.id });
+    // The version this one replaces ends the day before it begins. A reading dated only by the
+    // day it was read, replaced by one with the publisher's own date, would end before it began:
+    // its range is empty, it is never served, and the row stays as the record of what was read.
     await tx
       .update(legalActVersions)
-      .set({ inForceTo: dayBefore(version.inForceFrom) })
+      .set({
+        inForceTo: sql`GREATEST(${dayBefore(version.inForceFrom)}::date, ${legalActVersions.inForceFrom} - 1)`,
+      })
       .where(
         and(
           eq(legalActVersions.actId, version.actId),

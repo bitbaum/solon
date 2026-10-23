@@ -15,7 +15,7 @@ on:
       source:
         description: "Whose laws"
         type: choice
-        options: [fedlex, lilex, cantons]
+        options: [fedlex, lilex, cantons, zhlex]
         default: fedlex
       authority:
         description: "Cantons only: one canton's key (zh, be, ...), or empty for all"

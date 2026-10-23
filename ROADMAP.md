@@ -23,7 +23,7 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 - [ ] Each act's own page at the authority that publishes it, for the Swiss acts (built and tested; the production load is not done), and the communes in the register {#law-register-links}
 - [ ] Federal text from Fedlex, every act in force, checked against the publisher every day. The reader and the store are built and tested; the production load and the daily check are not done {#law-federal}
 - [ ] Liechtenstein text from gesetze.li. The reader is built and tested on the real pages, and dates each version by the day it was read, because Lilex does not state when one took effect; the production load is not done {#law-li}
-- [ ] Cantonal text. A first pass reads each act's document, cut into articles, dated by the day it was read; a reader per canton that takes the canton's own text and its stated date, Zürich first, is not done. The production load is not done {#law-cantons}
+- [ ] Cantonal text. A first pass reads each act's document, cut into articles, dated by the day it was read. Zürich now has a reader on the canton's own publication with the canton's in-force date; the other 25 cantons need theirs. The production loads are not done {#law-cantons}
 - [ ] Earlier versions of every act, and what changed between them {#law-history}
 - [ ] Municipal regulations, commune by commune {#law-communes}
 - [ ] A public API, and Causius reading the law from here with the publisher as its fallback {#law-api}
