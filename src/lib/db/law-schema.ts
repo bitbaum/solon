@@ -197,6 +197,11 @@ export const legalProvisions = pgTable(
   },
   (t) => [
     uniqueIndex("legal_provisions_version_path_key").on(t.versionId, t.path),
+    // 'simple' on purpose: the text is German, French and Italian, and no stemmer is right for all three.
+    index("legal_provisions_search_idx").using(
+      "gin",
+      sql`to_tsvector('simple', ${t.heading} || ' ' || ${t.text})`,
+    ),
     foreignKey({
       columns: [t.versionId],
       foreignColumns: [legalActVersions.id],
