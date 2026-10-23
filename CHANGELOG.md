@@ -14,7 +14,7 @@ one to read for the detail. Fixes get the same weight as features.
   list and counted per authority on `/law/coverage`. Acts can be found by
   authority, number or title at `/api/v1/law/acts`. Only names and numbers so
   far: the text of the laws comes next, publisher by publisher. Liechtenstein
-  and the communes are not listed yet. (#PR) {#law-register}
+  and the communes are not listed yet. (#281) {#law-register}
 
 ## 2026-10-22
 
