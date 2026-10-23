@@ -17,7 +17,6 @@ import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActNames, legalActs } from "@/lib/db/law-schema";
 import { jurisdictionIdentifiers, placeImportRuns, sources } from "@/lib/db/places-schema";
 import { sha256Hex, type SnapshotStore } from "@/lib/places/importer/snapshots";
-import { parseRegisterSnapshot, type RegisterAct } from "./lexfind";
 
 export const IMPORTER_VERSION = "law-register-1";
 const CHUNK = 1000;
@@ -44,8 +43,36 @@ export interface RegisterReport {
   problems: string[];
 }
 
+/** One act as a register states it, whatever the register. */
+export interface ActRow {
+  authority: string;
+  kind: string;
+  inForce: boolean;
+  title: string;
+  /** BCP 47 language of the title. */
+  locale: string;
+  /** What names this act in its register: scheme (config ACT_IDENTIFIER_SCHEMES) and value. */
+  identity: { scheme: string; value: string };
+  /** The number its authority gave it (systematic number), when it has one. */
+  systematicNumber: string | null;
+  /** Further identifiers the register gives the act. */
+  more?: { scheme: string; value: string }[];
+}
+
+export interface RegisterRead {
+  rows: readonly ActRow[];
+  skipped: { row: string; reason: string }[];
+}
+
 export interface RegisterImportOptions {
-  register: LawRegisterSource;
+  /** Which register this is: its key, licence and the scheme that names its acts. */
+  register: Pick<LawRegisterSource, "key" | "licenceSpdx" | "identityScheme">;
+  /**
+   * Maps `bytes` to the acts the register states, and the rows left out on
+   * purpose, with why. Run inside the guarded part of the run, so bytes that
+   * are not a register fail the run and are recorded rather than thrown.
+   */
+  read: () => Promise<RegisterRead> | RegisterRead;
   bytes: Uint8Array;
   url: string | null;
   retrievedAt: Date;
@@ -92,7 +119,8 @@ export async function importRegister(
   try {
     const sha = sha256Hex(options.bytes);
     report.contentSha256 = sha;
-    const snapshot = parseRegisterSnapshot(options.bytes);
+    const { rows, skipped } = await options.read();
+    report.skipped.push(...skipped);
     const snapshotKey = await options.snapshots.put(sha, options.bytes);
     try {
       await db.transaction(async (tx) => {
@@ -112,7 +140,7 @@ export async function importRegister(
         report.sourceId = sourceId;
 
         const places = await placeIdsByAuthority(tx);
-        const known = await currentActs(tx);
+        const known = await currentActs(tx, register.identityScheme);
         const listed = new Set<string>();
         const newActs: (typeof legalActs.$inferInsert)[] = [];
         const newIdentifiers: (typeof legalActIdentifiers.$inferInsert)[] = [];
@@ -121,52 +149,33 @@ export async function importRegister(
         const supersedeIdentifiers: string[] = [];
         const changedActs: { id: string; kind: string; inForce: boolean }[] = [];
 
-        for (const authority of snapshot.authorities) {
-          const authorityKey = register.authorityByCode[authority.code];
-          if (!authorityKey) {
-            report.skipped.push({
-              row: authority.code,
-              reason: `authority ${authority.code} is not in config (${authority.acts.length} acts)`,
+        for (const row of rows) {
+          listed.add(row.identity.value);
+          const existing = known.get(row.identity.value);
+          if (!existing) {
+            const id = randomUUID();
+            newActs.push({
+              id,
+              authority: row.authority,
+              jurisdictionId: places.get(row.authority) ?? null,
+              kind: row.kind,
+              inForce: row.inForce,
+              sourceId,
             });
+            addRows(id, row, sourceId, newIdentifiers, newNames);
             continue;
           }
-          for (const act of authority.acts) {
-            const lexfindId = String(act.id);
-            listed.add(lexfindId);
-            const kind = register.kindByCategory[act.categoryId];
-            if (!kind) {
-              report.skipped.push({
-                row: `${authority.code} ${lexfindId}`,
-                reason: `category ${act.categoryId} is not in config`,
-              });
-              continue;
-            }
-            const existing = known.get(lexfindId);
-            if (!existing) {
-              const id = randomUUID();
-              newActs.push({
-                id,
-                authority: authorityKey,
-                jurisdictionId: places.get(authorityKey) ?? null,
-                kind,
-                inForce: act.inForce,
-                sourceId,
-              });
-              addRows(id, act, sourceId, newIdentifiers, newNames);
-              continue;
-            }
-            if (existing.kind !== kind || existing.inForce !== act.inForce) {
-              changedActs.push({ id: existing.actId, kind, inForce: act.inForce });
-            }
-            if (existing.title !== act.title) {
-              supersedeNames.push(existing.nameId);
-              newNames.push(nameRow(existing.actId, act, sourceId));
-            }
-            if ((existing.number ?? null) !== (act.systematicNumber ?? null)) {
-              if (existing.numberRowId) supersedeIdentifiers.push(existing.numberRowId);
-              if (act.systematicNumber) {
-                newIdentifiers.push(numberRow(existing.actId, act.systematicNumber, sourceId));
-              }
+          if (existing.kind !== row.kind || existing.inForce !== row.inForce) {
+            changedActs.push({ id: existing.actId, kind: row.kind, inForce: row.inForce });
+          }
+          if (existing.title !== row.title) {
+            supersedeNames.push(existing.nameId);
+            newNames.push(nameRow(existing.actId, row, sourceId));
+          }
+          if ((existing.number ?? null) !== (row.systematicNumber ?? null)) {
+            if (existing.numberRowId) supersedeIdentifiers.push(existing.numberRowId);
+            if (row.systematicNumber) {
+              newIdentifiers.push(numberRow(existing.actId, row.systematicNumber, sourceId));
             }
           }
         }
@@ -229,9 +238,9 @@ export async function importRegister(
   return report;
 }
 
-const nameRow = (actId: string, act: RegisterAct, sourceId: string) => ({
+const nameRow = (actId: string, act: ActRow, sourceId: string) => ({
   actId,
-  locale: "de",
+  locale: act.locale,
   kind: "title",
   text: act.title,
   sourceId,
@@ -245,12 +254,15 @@ const numberRow = (actId: string, value: string, sourceId: string) => ({
 
 function addRows(
   actId: string,
-  act: RegisterAct,
+  act: ActRow,
   sourceId: string,
   identifiers: (typeof legalActIdentifiers.$inferInsert)[],
   names: (typeof legalActNames.$inferInsert)[],
 ): void {
-  identifiers.push({ actId, scheme: "lexfind_id", value: String(act.id), sourceId });
+  identifiers.push({ actId, scheme: act.identity.scheme, value: act.identity.value, sourceId });
+  for (const more of act.more ?? []) {
+    identifiers.push({ actId, scheme: more.scheme, value: more.value, sourceId });
+  }
   if (act.systematicNumber) identifiers.push(numberRow(actId, act.systematicNumber, sourceId));
   names.push(nameRow(actId, act, sourceId));
 }
@@ -289,7 +301,7 @@ interface KnownAct {
 }
 
 /** Every act the register has stated, by the register's own id. */
-async function currentActs(db: Reader): Promise<Map<string, KnownAct>> {
+async function currentActs(db: Reader, identityScheme: string): Promise<Map<string, KnownAct>> {
   const acts = await db
     .select({
       actId: legalActs.id,
@@ -302,7 +314,7 @@ async function currentActs(db: Reader): Promise<Map<string, KnownAct>> {
       legalActIdentifiers,
       and(
         eq(legalActIdentifiers.actId, legalActs.id),
-        eq(legalActIdentifiers.scheme, "lexfind_id"),
+        eq(legalActIdentifiers.scheme, identityScheme),
         isNull(legalActIdentifiers.supersededAt),
       ),
     );

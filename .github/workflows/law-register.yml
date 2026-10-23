@@ -1,7 +1,8 @@
 name: Law register load
 
-# By hand: read the law register (LexFind's list of every federal and cantonal
-# act) and import it into the production database. About two minutes: one polite
+# By hand: read a law register and import it into the production database:
+# LexFind's list of every federal and cantonal act, or Liechtenstein's
+# Systematic Register (a PDF on gesetze.li). About two minutes: one polite
 # request per slice of each authority's tree, then one transaction. Runs on the
 # box from a fresh checkout of main, with the box's own DATABASE_URL read into
 # this process alone. Rerunning it changes nothing unless the register changed.
@@ -10,6 +11,11 @@ name: Law register load
 on:
   workflow_dispatch:
     inputs:
+      source:
+        description: "Which register"
+        type: choice
+        options: [lexfind, liechtenstein]
+        default: lexfind
       dry_run:
         description: "Only report what would change"
         type: boolean
@@ -28,6 +34,7 @@ jobs:
           SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
           SHA: ${{ github.sha }}
           DRY: ${{ inputs.dry_run }}
+          SOURCE: ${{ inputs.source }}
         run: |
           set -euo pipefail
           IP=167.233.22.31
@@ -35,7 +42,7 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY SOURCE=$SOURCE bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-law.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -49,7 +56,7 @@ jobs:
           set +a
           export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
           flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
-          $PNPM run law:register $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
+          $PNPM run law:register "$SOURCE" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
           REMOTE
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt

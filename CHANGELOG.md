@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Liechtenstein's laws are in the register.** The 3,407 acts in force in the
+  Government's Systematic Register (statutes, ordinances, notices, decrees and
+  treaties) are listed with their LR number, their title and the Landesgesetzblatt
+  issue that published them, beside the Swiss ones on `/law/coverage` and at
+  `/api/v1/law/acts?authority=li`. Names and numbers only; the text from
+  gesetze.li comes next. The communes are not listed yet. (#283) {#law-register-li}
+
 - **A register of the law.** Solon now lists every act of the Confederation,
   the 26 cantons and the intercantonal agreements: 33,441 acts, 22,047 of them
   in force, each with its title and its official number, read from LexFind's

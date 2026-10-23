@@ -9,12 +9,13 @@
 import { randomInt } from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
-import { LEXFIND } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { legalActIdentifiers, legalActNames, legalActs } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { searchActs } from "../coverage";
 import { importRegister } from "../import";
+import { importLexfindRegister } from "../lexfind";
+import { liRows, parseSystematicRegister } from "../li-systematic";
 import type { RegisterSnapshot } from "../lexfind";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -72,8 +73,7 @@ const act = (id: number, title: string, number: string | null, inForce = true) =
 });
 
 const run = (bytes: Uint8Array, dryRun = false) =>
-  importRegister(db, {
-    register: LEXFIND,
+  importLexfindRegister(db, {
     bytes,
     url: "test",
     retrievedAt: new Date(),
@@ -187,5 +187,36 @@ describe.skipIf(!RUN)("law register import", () => {
     const report = await run(new TextEncoder().encode('{"authorities":"nope"}'));
     expect(report.status).toBe("failed");
     expect(report.problems.length).toBeGreaterThan(0);
+  });
+
+  it("takes a second register, Liechtenstein's, named by LR number, with its Landesgesetzblatt issue", async () => {
+    const lr = `999.${base}`;
+    const page = `${lr} G vom 17. September 2008 über die Ausländer (Auslän-\ndergesetz; AuG) ........ 2008 311`;
+    const read = () => liRows(parseSystematicRegister([page]));
+    const apply = () =>
+      importRegister(db, {
+        register: {
+          key: "li-systematic-register",
+          licenceSpdx: "LicenseRef-li-official-act",
+          identityScheme: "li_lr",
+        },
+        bytes: new TextEncoder().encode(page),
+        url: "test",
+        retrievedAt: new Date(),
+        snapshots,
+        read,
+      });
+    const first = await apply();
+    expect(first.status).toBe("applied");
+    expect(first.counts.actsInserted).toBe(1);
+    const [hit] = await searchActs(db, { authority: "li", number: lr });
+    expect(hit).toMatchObject({
+      kind: "statute",
+      inForce: true,
+      title: "G vom 17. September 2008 über die Ausländer (Ausländergesetz; AuG)",
+    });
+    const again = await apply();
+    expect(again.counts.actsInserted).toBe(0);
+    expect(again.counts.namesInserted).toBe(0);
   });
 });

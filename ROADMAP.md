@@ -19,7 +19,8 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 2026-10-22) and the sources are in `docs/design/2026-10-law-as-data.md`.
 
 - [x] The register of what exists for the Confederation, the 26 cantons and the intercantonal agreements: 33,441 acts (22,047 in force) with title and number, read from LexFind's list, and a coverage page counted from the data. No text yet {#law-register}
-- [ ] The register for Liechtenstein, and each act's official link beside LexFind's {#law-register-li}
+- [x] The register for Liechtenstein: the 3,407 acts of the Government's Systematic Register, named by LR number with the Landesgesetzblatt issue that published each {#law-register-li}
+- [ ] Each act's official link beside the register's own, and the communes in the register {#law-register-links}
 - [ ] Federal text from Fedlex, every act in force, checked against the publisher every day. The reader and the store are built and tested; the production load and the daily check are not done {#law-federal}
 - [ ] Liechtenstein text from gesetze.li {#law-li}
 - [ ] Cantonal text, one publisher at a time, Zürich first {#law-cantons}

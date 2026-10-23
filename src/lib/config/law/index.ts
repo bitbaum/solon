@@ -11,6 +11,7 @@ export const ACT_KINDS = [
   "statute",
   "ordinance",
   "decree",
+  "notice",
   "regulation",
   "treaty",
   "intercantonal_agreement",
@@ -23,7 +24,13 @@ export type ActKind = (typeof ACT_KINDS)[number];
  * The ways an act is found: a number its authority gave it, the register's own
  * id, and the Confederation's European Legislation Identifier.
  */
-export const ACT_IDENTIFIER_SCHEMES = ["systematic_number", "lexfind_id", "ch_eli"] as const;
+export const ACT_IDENTIFIER_SCHEMES = [
+  "systematic_number",
+  "lexfind_id",
+  "ch_eli",
+  "li_lr",
+  "li_lgbl",
+] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
 /** Whether the publisher calls a text the authentic one or a consolidated reading of it. */
@@ -77,6 +84,7 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ne", name: "Neuchâtel", place: { scheme: "bfs_canton", value: "24" } },
   { key: "ge", name: "Genève", place: { scheme: "bfs_canton", value: "25" } },
   { key: "ju", name: "Jura", place: { scheme: "bfs_canton", value: "26" } },
+  { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
 ];
 
 /**
@@ -91,6 +99,8 @@ export interface LawRegisterSource {
   homepage: string;
   /** The Places licence class the imported facts fall under. */
   licenceSpdx: string;
+  /** The identifier scheme that names an act in this register. */
+  identityScheme: ActIdentifierScheme;
   /** The register's own abbreviation for each authority it lists. */
   authorityByCode: Readonly<Record<string, string>>;
   /** The register's category id to an act kind. */
@@ -102,6 +112,7 @@ export const LEXFIND: LawRegisterSource = {
   publisher: "LexFind.ch",
   homepage: "https://www.lexfind.ch",
   licenceSpdx: "LicenseRef-ch-official-act",
+  identityScheme: "lexfind_id",
   authorityByCode: {
     CH: "ch",
     Intlex: "intercantonal",
@@ -175,3 +186,52 @@ export const FEDLEX: LawTextSource = {
   // Classified Compilation (SR) it serves here is the consolidated reading.
   textStatus: "consolidated",
 };
+
+/**
+ * Liechtenstein's Systematic Register (Systematisches Register), published by
+ * the Government's legal service (Rechtsdienst der Regierung) as a PDF on
+ * gesetze.li: every act in force at the reference day, by LR number, with the
+ * Landesgesetzblatt issue that published it. The register itself states that
+ * it has no legal force; the acts it lists are the law.
+ */
+export const LI_SYSTEMATIC_REGISTER = {
+  key: "li-systematic-register",
+  authority: "li",
+  publisher: "Rechtsdienst der Regierung des Fürstentums Liechtenstein",
+  homepage: "https://www.gesetze.li",
+  /** The page that links the current edition of the PDF. */
+  listing: "https://www.gesetze.li/konso/systematisches-register",
+  /** Laws and official acts are not protected by copyright in Liechtenstein (URG Art. 5). */
+  licenceSpdx: "LicenseRef-li-official-act",
+  identityScheme: "li_lr" as ActIdentifierScheme,
+  locale: "de",
+  /** The kind an act is, by the abbreviation or word its title opens with. */
+  kindByLeadingWord: {
+    G: "statute",
+    Gesetz: "statute",
+    Hausgesetz: "statute",
+    V: "ordinance",
+    Verordnung: "ordinance",
+    Km: "notice",
+    Kundmachung: "notice",
+    Verfassung: "constitution",
+    Verfassungsgesetz: "constitution",
+    FinB: "decree",
+    Finanzbeschluss: "decree",
+    Hofdekret: "decree",
+    Hofkanzleidekret: "decree",
+    Handschreiben: "decree",
+    Bm: "notice",
+    Bekanntmachung: "notice",
+    FV: "ordinance",
+  } as Readonly<Record<string, ActKind>>,
+  /** The kind of a leading word that ends this way, tried in order (Asylgesetz, Geschäftsordnung). */
+  kindByLeadingSuffix: [
+    ["verordnung", "ordinance"],
+    ["gesetzbuch", "statute"],
+    ["gesetz", "statute"],
+    ["ordnung", "regulation"],
+  ] as readonly (readonly [string, ActKind])[],
+  /** LR numbers that open with this are treaties (Staatsverträge). */
+  treatyPrefix: "0.",
+} as const;

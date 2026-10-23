@@ -1199,7 +1199,7 @@
       "totals": "acts in force. {notInForce} listed as no longer in force. Text held for {withText}.",
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
-      "note": "Liechtenstein and the communes are not listed yet."
+      "note": "The communes are not listed yet."
     }
   }
 }

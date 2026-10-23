@@ -10,6 +10,14 @@
  * around.
  */
 import { z } from "zod";
+import { LEXFIND, type LawRegisterSource } from "@/lib/config/law";
+import type { Database } from "@/lib/db/client";
+import {
+  importRegister,
+  type ActRow,
+  type RegisterImportOptions,
+  type RegisterReport,
+} from "./import";
 
 const BASE = "https://www.lexfind.ch/api/fe/de";
 const USER_AGENT = "solon-law-register (cato@orangecat.ch)";
@@ -132,4 +140,58 @@ export async function fetchRegister(
     onProgress(entity.abbreviation, byId.size);
   }
   return { fetchedAt: new Date().toISOString(), authorities };
+}
+
+/**
+ * A stored LexFind snapshot as the generic rows the importer applies, with the
+ * authorities and categories the config does not know left out and reported.
+ */
+export function lexfindRows(
+  snapshot: RegisterSnapshot,
+  register: Pick<LawRegisterSource, "authorityByCode" | "kindByCategory">,
+): { rows: ActRow[]; skipped: { row: string; reason: string }[] } {
+  const rows: ActRow[] = [];
+  const skipped: { row: string; reason: string }[] = [];
+  for (const authority of snapshot.authorities) {
+    const key = register.authorityByCode[authority.code];
+    if (!key) {
+      skipped.push({
+        row: authority.code,
+        reason: `authority ${authority.code} is not in config (${authority.acts.length} acts)`,
+      });
+      continue;
+    }
+    for (const act of authority.acts) {
+      const kind = register.kindByCategory[act.categoryId];
+      if (!kind) {
+        skipped.push({
+          row: `${authority.code} ${act.id}`,
+          reason: `category ${act.categoryId} is not in config`,
+        });
+        continue;
+      }
+      rows.push({
+        authority: key,
+        kind,
+        inForce: act.inForce,
+        title: act.title,
+        locale: "de",
+        identity: { scheme: "lexfind_id", value: String(act.id) },
+        systematicNumber: act.systematicNumber,
+      });
+    }
+  }
+  return { rows, skipped };
+}
+
+/** Reads a stored LexFind snapshot and applies it. */
+export async function importLexfindRegister(
+  db: Database,
+  options: Omit<RegisterImportOptions, "register" | "read">,
+): Promise<RegisterReport> {
+  return importRegister(db, {
+    ...options,
+    register: LEXFIND,
+    read: () => lexfindRows(parseRegisterSnapshot(options.bytes), LEXFIND),
+  });
 }

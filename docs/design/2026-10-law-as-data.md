@@ -178,6 +178,38 @@ by `pnpm run law:text fedlex` or the *Law text load* workflow on the box.
 - **Not yet**: the daily check that re-fetches a sample and compares hashes;
   French and Italian (the same command with `--lang`); earlier versions (L4).
 
+### L2 as built, the register half (2026-10-23): Liechtenstein
+
+Liechtenstein has no API and no listing Solon may read in a browser's way:
+gesetze.li's listing pages sit behind a proof-of-work script, and the
+"Gebietssystematik" table is filled by it. What the Government's legal service
+does publish is the **Systematic Register** (Systematisches Register), a PDF
+that lists every act in force at a reference day by LR number, with the
+Landesgesetzblatt issue (year and number) that published it. It is linked from
+`/konso/systematisches-register`; the register itself states that it has no
+legal force, which is why it is used to learn *what exists* and the acts
+themselves are the text.
+
+- **Read in two requests**, six seconds apart: the listing page, then the PDF it
+  names. A response that is the proof-of-work page, or a "PDF" that is not one,
+  stops the run; it is never solved.
+- **Parsed from the PDF's text**: an act opens a line with its LR number and ends,
+  within a few lines, with dot leaders and its Landesgesetzblatt issue. Words
+  broken at a line end are made whole, except before "und". A line that opens
+  with a number and never reaches an issue is a heading. Acts from the Austrian
+  era (ASW) have no issue and are kept by LR number alone.
+- **Named by LR number** (`li_lr`), with the issue as `li_lgbl` (`2008/311`). The
+  Lilex page of an act is `/konso/<year><number to three digits>000`, which L2's
+  text step will use.
+- **All listed acts are in force**: the register lists the acts in force at its
+  reference day. The old versions inside it are history for L4.
+- **Measured**: 3,407 acts (4 constitutional texts, 363 statutes, 698
+  ordinances, 75 decrees, 2,225 treaties, 18 notices, 9 regulations, 16 not
+  classified). The classification is by how a title opens (config, not code).
+
+The importer was made source-agnostic for this: a register is a function from
+its bytes to `ActRow`s, and the importer applies rows whatever their origin.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in
