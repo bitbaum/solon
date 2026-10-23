@@ -249,6 +249,32 @@ publishes it, as the identifier `official_url`. LexFind's search results carry i
   (L3), starting with Zürich; the link is already what a person needs to check
   an act against its publisher.
 
+### Cantonal text as built (2026-10-23): the first pass, by document
+
+`pnpm run law:text cantons [--authority zh]` reads each in-force cantonal and
+intercantonal act's document, the canton's PDF as the register keeps it at
+`/tol/<id>/de` (HTML where it is HTML), keeps it under its sha256, and cuts it
+into articles. **This is the stated fallback, not the source of record**: the
+design's rule is a reader per canton that takes the canton's own publication, with
+the date it states; Zürich's act pages, for instance, are wrappers around a PDF on
+another host, and carry the in-force date in their address. Until a canton's reader
+exists, its acts are held this way, dated by the day they were read.
+
+- **A PDF loses structure.** Margin notes run into the text and glue to the heading
+  ("Kanton ZürichArt. 1"). The cutter takes the headings in the order the act numbers
+  them (a reference to a later article met first is passed over) and titles an
+  article with the margin note before its heading. On Zürich's constitution it finds
+  139 of 141 articles, with a title on nearly all; a few titles are cut short. An act
+  with no headings is one provision, `text`. The snapshot keeps the PDF, so a better
+  cutter can be run over the same bytes later.
+- **Room is checked first**: the run refuses to start with under 3 GB free where
+  snapshots are kept, and reports the free space. A full load is several gigabytes.
+- **Resumable and polite**: 1.2 seconds between documents; acts already held are
+  not read again; the limit counts versions stored.
+- **LexFind's terms are still unread** (open question 4 in the direction notes). The
+  documents are the cantons' acts, not protected (URG Art. 5); the route to them is
+  LexFind's, which is why it is named a fallback.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in
