@@ -83,6 +83,8 @@ export interface ActSearchHit {
   title: string | null;
   systematicNumber: string | null;
   lexfindId: string | null;
+  /** The act's own page at the authority that publishes it, when the register gives one. */
+  officialUrl: string | null;
 }
 
 /** Acts by authority and/or an exact systematic number, or a title fragment. */
@@ -93,7 +95,8 @@ export async function searchActs(
 ): Promise<ActSearchHit[]> {
   const rows = await db.execute(sql`
     SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
-           n.text AS title, num.value AS "systematicNumber", lf.value AS "lexfindId"
+           n.text AS title, num.value AS "systematicNumber", lf.value AS "lexfindId",
+           ou.value AS "officialUrl"
     FROM legal_acts a
     LEFT JOIN legal_act_names n
       ON n.act_id = a.id AND n.kind = 'title' AND n.superseded_at IS NULL
@@ -101,6 +104,8 @@ export async function searchActs(
       ON num.act_id = a.id AND num.scheme = 'systematic_number' AND num.superseded_at IS NULL
     LEFT JOIN legal_act_identifiers lf
       ON lf.act_id = a.id AND lf.scheme = 'lexfind_id' AND lf.superseded_at IS NULL
+    LEFT JOIN legal_act_identifiers ou
+      ON ou.act_id = a.id AND ou.scheme = 'official_url' AND ou.superseded_at IS NULL
     WHERE (${filter.authority ?? null}::text IS NULL OR a.authority = ${filter.authority ?? null})
       AND (${filter.number ?? null}::text IS NULL OR num.value = ${filter.number ?? null})
       AND (${filter.title ?? null}::text IS NULL
@@ -120,6 +125,8 @@ export interface ProvisionHit {
   lang: string;
   inForceFrom: string;
   inForceTo: string | null;
+  /** `publisher` when the publisher states the date, `retrieved` when it is the day Solon read the page. */
+  dateBasis: string;
   status: string;
   /** The publisher's page the copy was read from, and the hash that proves the copy. */
   sourceUrl: string | null;
@@ -138,7 +145,7 @@ export async function readProvision(
   const rows = await db.execute(sql`
     SELECT v.act_id AS "actId", p.path, p.heading, p.text, v.lang,
            v.in_force_from::text AS "inForceFrom", v.in_force_to::text AS "inForceTo",
-           v.status, s.url AS "sourceUrl", s.content_sha256 AS "contentSha256"
+           v.date_basis AS "dateBasis", v.status, s.url AS "sourceUrl", s.content_sha256 AS "contentSha256"
     FROM legal_provisions p
     JOIN legal_act_versions v ON v.id = p.version_id
     JOIN sources s ON s.id = v.source_id

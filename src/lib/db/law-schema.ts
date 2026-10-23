@@ -153,6 +153,8 @@ export const legalActVersions = pgTable(
     inForceFrom: date("in_force_from").notNull(),
     /** Null while this is the version in force; the day before the next one takes over. */
     inForceTo: date("in_force_to"),
+    /** Key in config ACT_VERSION_DATE_BASES: whether `inForceFrom` is the publisher's date or the day it was read. */
+    dateBasis: text("date_basis").notNull().default("publisher"),
     /** Key in config ACT_TEXT_STATUSES: whether the publisher calls the text authentic. */
     status: text("status").notNull(),
     /** Key in config ACT_TEXT_FORMATS. */

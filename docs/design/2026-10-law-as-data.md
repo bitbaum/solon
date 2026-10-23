@@ -210,6 +210,71 @@ themselves are the text.
 The importer was made source-agnostic for this: a register is a function from
 its bytes to `ActRow`s, and the importer applies rows whatever their origin.
 
+### L2 as built, the text half (2026-10-23): Liechtenstein from Lilex
+
+`pnpm run law:text lilex` (or the *Law text load* workflow, source `lilex`) reads
+each register act's page on gesetze.li, `/konso/html/<id>`, where the id is the
+Landesgesetzblatt issue: year, number to three digits, `000`. Two acts need a
+listed exception (the ABGB has no issue; the Civil Procedure Code is published in
+two parts), and an issue like `60/1` is not guessed. Acts are read statutes
+first, treaties last, three seconds apart.
+
+- **Provisions** are the page's `div.art` blocks, under the anchor with its colon
+  made an underscore (`art:2a` is `art_2a`, `par:1096` is `par_1096`); footnote
+  marks are dropped. An act with no articles is one provision, `text`. Where a
+  page repeats an anchor (the same article in more than one wording) the first
+  is kept; the page is in the snapshot.
+- **Lilex does not state when a consolidated version took effect.** The version
+  is therefore dated by the day it was read, and says so: `date_basis` is
+  `retrieved`, not `publisher` (migration 0017). This is *as at*, not *in force
+  since*, and nothing may present it as the latter.
+- **The proof-of-work page ends the run.** It is recognised, never parsed as law,
+  never solved; the run reports `stoppedByChallenge` and the next run continues.
+
+### Official links as built (2026-10-23)
+
+`pnpm run law:register links` (or the *Law register load* workflow, source
+`links`) keeps, for every in-force act of the Confederation, the cantons and the
+intercantonal agreements, the address of its page at the authority that
+publishes it, as the identifier `official_url`. LexFind's search results carry it
+(`original_url`): a canton's page for a cantonal act, Fedlex's for a federal one.
+
+- A search by systematic number, one digit at a time, lists every numbered act of
+  an authority a hundred to a page; about 220 requests for all 28 authorities.
+- A list short of the count the register states for the authority is refused, so
+  a partial read can never be applied as links that vanished.
+- A changed link supersedes the old one; an act's link is the German page.
+- Where the canton's page is a wrapper (Zürich's is) the document itself sits one
+  step behind it. Reading the cantons' text is therefore a reader per publisher
+  (L3), starting with Zürich; the link is already what a person needs to check
+  an act against its publisher.
+
+### Cantonal text as built (2026-10-23): the first pass, by document
+
+`pnpm run law:text cantons [--authority zh]` reads each in-force cantonal and
+intercantonal act's document, the canton's PDF as the register keeps it at
+`/tol/<id>/de` (HTML where it is HTML), keeps it under its sha256, and cuts it
+into articles. **This is the stated fallback, not the source of record**: the
+design's rule is a reader per canton that takes the canton's own publication, with
+the date it states; Zürich's act pages, for instance, are wrappers around a PDF on
+another host, and carry the in-force date in their address. Until a canton's reader
+exists, its acts are held this way, dated by the day they were read.
+
+- **A PDF loses structure.** Margin notes run into the text and glue to the heading
+  ("Kanton ZürichArt. 1"). The cutter takes the headings in the order the act numbers
+  them (a reference to a later article met first is passed over) and titles an
+  article with the margin note before its heading. On Zürich's constitution it finds
+  139 of 141 articles, with a title on nearly all; a few titles are cut short. An act
+  with no headings is one provision, `text`. The snapshot keeps the PDF, so a better
+  cutter can be run over the same bytes later.
+- **Room is checked first**: the run refuses to start with under 3 GB free where
+  snapshots are kept, and reports the free space. A full load is several gigabytes.
+- **Resumable and polite**: 1.2 seconds between documents; acts already held are
+  not read again; the limit counts versions stored.
+- **LexFind's terms are still unread** (open question 4 in the direction notes). The
+  documents are the cantons' acts, not protected (URG Art. 5); the route to them is
+  LexFind's, which is why it is named a fallback.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

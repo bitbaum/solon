@@ -14,6 +14,7 @@ import { legalActIdentifiers, legalActNames, legalActs } from "@/lib/db/law-sche
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { searchActs } from "../coverage";
 import { importRegister } from "../import";
+import { importOfficialLinks } from "../official-links";
 import { importLexfindRegister } from "../lexfind";
 import { liRows, parseSystematicRegister } from "../li-systematic";
 import type { RegisterSnapshot } from "../lexfind";
@@ -218,5 +219,41 @@ describe.skipIf(!RUN)("law register import", () => {
     const again = await apply();
     expect(again.counts.actsInserted).toBe(0);
     expect(again.counts.namesInserted).toBe(0);
+  });
+
+  it("keeps each act's own page as its official link, and a changed link supersedes the old", async () => {
+    const link = (id: number, url: string) =>
+      new TextEncoder().encode(
+        JSON.stringify({
+          fetchedAt: "2026-10-23T00:00:00.000Z",
+          authorities: [{ code: "ZH", links: [{ id, url }] }],
+        }),
+      );
+    const apply = (bytes: Uint8Array, dryRun = false) =>
+      importOfficialLinks(db, { bytes, url: "test", retrievedAt: new Date(), snapshots, dryRun });
+
+    const dry = await apply(link(A, "https://canton.example/a"), true);
+    expect(dry).toMatchObject({ status: "dry_run", linksInserted: 1 });
+    expect(
+      (await searchActs(db, { authority: "zh", number: `${N}.10` }))[0]!.officialUrl,
+    ).toBeNull();
+
+    const first = await apply(link(A, "https://canton.example/a"));
+    expect(first).toMatchObject({ status: "applied", linksInserted: 1, linksSuperseded: 0 });
+    expect((await searchActs(db, { authority: "zh", number: `${N}.10` }))[0]!.officialUrl).toBe(
+      "https://canton.example/a",
+    );
+
+    const again = await apply(link(A, "https://canton.example/a"));
+    expect(again).toMatchObject({ linksInserted: 0, linksSuperseded: 0 });
+
+    const moved = await apply(link(A, "https://canton.example/a2"));
+    expect(moved).toMatchObject({ linksInserted: 1, linksSuperseded: 1 });
+    expect((await searchActs(db, { authority: "zh", number: `${N}.10` }))[0]!.officialUrl).toBe(
+      "https://canton.example/a2",
+    );
+
+    const unknown = await apply(link(base + 999_999, "https://canton.example/x"));
+    expect(unknown.unknownActs).toBe(1);
   });
 });

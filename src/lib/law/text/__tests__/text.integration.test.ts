@@ -16,6 +16,10 @@ import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importLexfindRegister } from "../../register/lexfind";
 import { readProvision, searchActs } from "../../register/coverage";
 import { importFedlexText } from "../import";
+import { importCantonalText } from "../import-cantonal";
+import { importLilexText } from "../import-lilex";
+import { importRegister } from "../../register/import";
+import { liRows, parseSystematicRegister } from "../../register/li-systematic";
 
 const RUN = process.env.INTEGRATION === "1";
 
@@ -173,6 +177,7 @@ describe.skipIf(!RUN)("fedlex text import", () => {
       inForceFrom: "2020-01-01",
       inForceTo: null,
       status: "consolidated",
+      dateBasis: "publisher",
       sourceUrl: `https://x/${N}/a-2020`,
     });
     expect(provision!.contentSha256).toMatch(/^[0-9a-f]{64}$/);
@@ -259,5 +264,156 @@ describe.skipIf(!RUN)("fedlex text import", () => {
     expect(first).toMatchObject({ stored: 1, remaining: 1 });
     const second = await run({ day: "2026-10-23", limit: 1 });
     expect(second).toMatchObject({ stored: 1, remaining: 0 });
+  });
+});
+
+describe.skipIf(!RUN)("lilex text import", () => {
+  const lr = `998.${base}`;
+  const issue = (base % 800) + 100;
+  const actPage = `<div class="htit1">Gesetz</div><div class="art"><a name="art:1"></a>Art. 1<div class="sacht">Zweck</div><div class="abs">Text.</div></div>`;
+  const serving = (body: string) => (async () => new Response(body)) as unknown as typeof fetch;
+  const read = (fetchImpl: typeof fetch) =>
+    importLilexText(db, { snapshots, today: "2026-10-23", lr, pauseMs: 0, fetchImpl });
+
+  it("is set up: the register holds the act, named by LR number with its issue", async () => {
+    const line = `${lr} G vom 17. September 2008 über etwas ........ 2008 ${issue}`;
+    const report = await importRegister(db, {
+      register: {
+        key: "li-systematic-register",
+        licenceSpdx: "LicenseRef-li-official-act",
+        identityScheme: "li_lr",
+      },
+      bytes: new TextEncoder().encode(line),
+      url: "test",
+      retrievedAt: new Date(),
+      snapshots,
+      read: () => liRows(parseSystematicRegister([line])),
+    });
+    expect(report.counts.actsInserted).toBe(1);
+  });
+
+  it("stops at the proof-of-work page and stores nothing", async () => {
+    const report = await read(serving("<script>array_to_hex_string()</script>"));
+    expect(report.stoppedByChallenge).toBe(true);
+    expect(report.stored).toBe(0);
+  });
+
+  it("reports a page that is not an act, and does not store it", async () => {
+    const report = await read(serving("<html>Nicht gefunden</html>"));
+    expect(report.failures).toEqual([{ lr, reason: "no act at that page" }]);
+    expect(report.stored).toBe(0);
+  });
+
+  it("stores the act dated by the day it was read, cited to Lilex's page and hash", async () => {
+    const report = await read(serving(actPage));
+    expect(report).toMatchObject({ stored: 1, provisions: 1, failures: [] });
+    const [act] = await searchActs(db, { authority: "li", number: lr });
+    const provision = await readProvision(db, {
+      actId: act!.id,
+      path: "art_1",
+      lang: "de",
+      on: "2026-10-23",
+    });
+    expect(provision).toMatchObject({
+      heading: "Art. 1 Zweck",
+      text: "Text.",
+      inForceFrom: "2026-10-23",
+      dateBasis: "retrieved",
+      status: "consolidated",
+      sourceUrl: `https://www.gesetze.li/konso/html/2008${String(issue).padStart(3, "0")}000`,
+    });
+    expect(provision!.contentSha256).toMatch(/^[0-9a-f]{64}$/);
+    const [version] = await db
+      .select({ basis: legalActVersions.dateBasis })
+      .from(legalActVersions)
+      .where(eq(legalActVersions.actId, act!.id));
+    expect(version!.basis).toBe("retrieved");
+  });
+
+  it("does not read an act it already holds", async () => {
+    const report = await read(serving("must not be fetched"));
+    expect(report.wanted).toBe(0);
+  });
+});
+
+describe.skipIf(!RUN)("cantonal text import", () => {
+  const html = (n: number) =>
+    `<div>Zweck</div><div>Art. 1 Dieses Gesetz regelt ${n}.</div><div>Geltung</div><div>Art. 2 Es gilt überall.</div>`;
+  const serving = (body: string, type = "text/html") =>
+    (async () =>
+      new Response(body, { headers: { "content-type": type } })) as unknown as typeof fetch;
+  const lexfindId = base + 7;
+  const run = (fetchImpl: typeof fetch, extra: { dryRun?: boolean } = {}) =>
+    importCantonalText(db, {
+      snapshots,
+      today: "2026-10-23",
+      authority: "gl",
+      pauseMs: 0,
+      minFreeBytes: 0,
+      fetchImpl,
+      ...extra,
+    });
+
+  it("is set up: a Glarus act in the register", async () => {
+    const bytes = new TextEncoder().encode(
+      JSON.stringify({
+        fetchedAt: "2026-10-23T00:00:00.000Z",
+        authorities: [{ code: "GL", acts: [reg(lexfindId, `Glarner Gesetz ${N}`, `${N}.gl`)] }],
+      }),
+    );
+    const report = await importLexfindRegister(db, {
+      bytes,
+      url: "test",
+      retrievedAt: new Date(),
+      snapshots,
+    });
+    expect(report.counts.actsInserted).toBe(1);
+  });
+
+  it("a dry run reads and cuts the document but stores nothing", async () => {
+    const report = await run(serving(html(1)), { dryRun: true });
+    expect(report.status).toBe("dry_run");
+    expect(report.stored).toBeGreaterThanOrEqual(1);
+    const [act] = await searchActs(db, { authority: "gl", number: `${N}.gl` });
+    expect(
+      await db.select().from(legalActVersions).where(eq(legalActVersions.actId, act!.id)),
+    ).toEqual([]);
+  });
+
+  it("stores the act's articles, dated by the day it was read, cited to the document and its hash", async () => {
+    const report = await run(serving(html(2)));
+    expect(report.failures).toEqual([]);
+    expect(report.stored).toBeGreaterThanOrEqual(1);
+    const [act] = await searchActs(db, { authority: "gl", number: `${N}.gl` });
+    const provision = await readProvision(db, {
+      actId: act!.id,
+      path: "art_2",
+      lang: "de",
+      on: "2026-10-23",
+    });
+    expect(provision).toMatchObject({
+      text: "Es gilt überall.",
+      inForceFrom: "2026-10-23",
+      sourceUrl: `https://www.lexfind.ch/tol/${lexfindId}/de`,
+    });
+    expect(provision!.contentSha256).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("does not read an act it already holds", async () => {
+    const report = await run(serving("must not be used"));
+    expect(report.stored).toBe(0);
+  });
+
+  it("refuses to start with too little room for the snapshots", async () => {
+    const report = await importCantonalText(db, {
+      snapshots,
+      today: "2026-10-23",
+      authority: "gl",
+      pauseMs: 0,
+      minFreeBytes: Number.MAX_SAFE_INTEGER,
+      fetchImpl: serving(html(3)),
+    });
+    expect(report.refusedForSpace).toBe(true);
+    expect(report.stored).toBe(0);
   });
 });

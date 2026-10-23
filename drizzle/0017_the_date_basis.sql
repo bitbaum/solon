@@ -1,0 +1,1 @@
+ALTER TABLE "legal_act_versions" ADD COLUMN "date_basis" text DEFAULT 'publisher' NOT NULL;

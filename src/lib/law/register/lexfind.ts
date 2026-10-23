@@ -19,7 +19,7 @@ import {
   type RegisterReport,
 } from "./import";
 
-const BASE = "https://www.lexfind.ch/api/fe/de";
+export const BASE = "https://www.lexfind.ch/api/fe/de";
 const USER_AGENT = "solon-law-register (cato@orangecat.ch)";
 /** The systematic ids one request names; more than this overruns the URL limit. */
 const SLICE = 60;
@@ -65,12 +65,16 @@ export const parseRegisterSnapshot = (bytes: Uint8Array): RegisterSnapshot =>
 
 type Fetch = typeof fetch;
 
-async function getJson(doFetch: Fetch, url: string): Promise<unknown> {
+export async function getJson(doFetch: Fetch, url: string, body?: unknown): Promise<unknown> {
   let last = "";
   for (let attempt = 1; attempt <= 4; attempt++) {
     try {
       const response = await doFetch(url, {
-        headers: { "user-agent": USER_AGENT },
+        ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
+        headers: {
+          "user-agent": USER_AGENT,
+          ...(body === undefined ? {} : { "content-type": "application/json" }),
+        },
         signal: AbortSignal.timeout(120_000),
       });
       const text = await response.text();
@@ -84,7 +88,7 @@ async function getJson(doFetch: Fetch, url: string): Promise<unknown> {
   throw new Error(`${url}: ${last}`);
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * The whole register, as of now. `onProgress` hears each authority as it is

@@ -1,10 +1,12 @@
 /**
  * Read a law register and import it (design: docs/design/2026-10-law-as-data.md, L0 and L2).
  *
- *   pnpm run law:register [lexfind|liechtenstein] [--dry-run] [--file <snapshot>]
+ *   pnpm run law:register [lexfind|liechtenstein|links] [--dry-run] [--file <snapshot>]
  *
  * lexfind (the default) lists the Confederation, the cantons and the
- * intercantonal agreements; about two minutes of polite requests.
+ * intercantonal agreements; about two minutes of polite requests. links reads,
+ * for each of those acts, the address of its page at the authority that
+ * publishes it (about half an hour of polite requests).
  * liechtenstein reads the Government's Systematic Register, a PDF on
  * gesetze.li. --file imports a snapshot a previous run stored. Exit 1 on a
  * failed run, so a runner alerts.
@@ -14,6 +16,7 @@ import { LEXFIND, LI_SYSTEMATIC_REGISTER } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister } from "@/lib/law/register/import";
+import { fetchOfficialLinks, importOfficialLinks } from "@/lib/law/register/official-links";
 import { fetchRegister, importLexfindRegister } from "@/lib/law/register/lexfind";
 import {
   fetchLiechtensteinRegister,
@@ -23,7 +26,9 @@ import {
 const args = process.argv.slice(2);
 const fileAt = args.indexOf("--file");
 const file = fileAt >= 0 ? args[fileAt + 1] : undefined;
-const [source = "lexfind"] = args.filter((a, i) => !a.startsWith("--") && i !== fileAt + 1);
+const [source = "lexfind"] = args.filter(
+  (a, i) => !a.startsWith("--") && (fileAt < 0 || i !== fileAt + 1),
+);
 
 async function main(): Promise<number> {
   const common = {
@@ -48,6 +53,17 @@ async function main(): Promise<number> {
       bytes,
       url: fileUrl ?? LEXFIND.homepage,
     });
+  } else if (source === "links") {
+    let bytes: Uint8Array;
+    if (file) {
+      bytes = new Uint8Array(readFileSync(file));
+    } else {
+      const snapshot = await fetchOfficialLinks(fetch, (code, links) =>
+        console.error(`read ${code}: ${links} links`),
+      );
+      bytes = new TextEncoder().encode(JSON.stringify(snapshot));
+    }
+    report = await importOfficialLinks(db, { ...common, bytes, url: fileUrl ?? LEXFIND.homepage });
   } else if (source === "liechtenstein") {
     const fetched = file
       ? { bytes: new Uint8Array(readFileSync(file)), url: fileUrl! }
@@ -65,7 +81,7 @@ async function main(): Promise<number> {
     });
   } else {
     console.error(
-      "usage: pnpm run law:register [lexfind|liechtenstein] [--dry-run] [--file <snapshot>]",
+      "usage: pnpm run law:register [lexfind|liechtenstein|links] [--dry-run] [--file <snapshot>]",
     );
     return 2;
   }

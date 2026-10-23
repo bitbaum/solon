@@ -8,8 +8,9 @@ export const dynamic = "force-dynamic";
 /**
  * Acts in the register. `?authority=` is an authority key, `?number=` an exact
  * systematic number, `?title=` a fragment of the title, `?inForce=1` leaves out
- * acts the register no longer calls in force. Names and numbers only: the text
- * of the law is not held yet.
+ * acts the register no longer calls in force. Each act carries its own page at
+ * the authority that publishes it (`officialUrl`) when the register gives one;
+ * its text is read through `/api/v1/law/provisions`.
  */
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
