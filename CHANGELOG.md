@@ -15,6 +15,12 @@ one to read for the detail. Fixes get the same weight as features.
   authority, number or title at `/api/v1/law/acts`. Only names and numbers so
   far: the text of the laws comes next, publisher by publisher. Liechtenstein
   and the communes are not listed yet. (#281) {#law-register}
+- **Solon can hold the text of the law.** The Confederation's acts can now be
+  read from Fedlex, article by article, with the page they came from and a hash
+  that proves the copy, and looked up as they stood on any day a held version
+  covers (`/api/v1/law/provisions`). The loading tool is built and tested on
+  real federal acts; production is not loaded yet, so `/law/coverage` still
+  shows no text held. (#282)
 
 ## 2026-10-22
 

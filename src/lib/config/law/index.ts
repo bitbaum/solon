@@ -19,9 +19,20 @@ export const ACT_KINDS = [
 ] as const;
 export type ActKind = (typeof ACT_KINDS)[number];
 
-/** The ways an act is found: a number its authority gave it, and the register's own id. */
-export const ACT_IDENTIFIER_SCHEMES = ["systematic_number", "lexfind_id"] as const;
+/**
+ * The ways an act is found: a number its authority gave it, the register's own
+ * id, and the Confederation's European Legislation Identifier.
+ */
+export const ACT_IDENTIFIER_SCHEMES = ["systematic_number", "lexfind_id", "ch_eli"] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
+
+/** Whether the publisher calls a text the authentic one or a consolidated reading of it. */
+export const ACT_TEXT_STATUSES = ["authentic", "consolidated"] as const;
+export type ActTextStatus = (typeof ACT_TEXT_STATUSES)[number];
+
+/** What a version's snapshot holds. */
+export const ACT_TEXT_FORMATS = ["html"] as const;
+export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
 
 export const ACT_NAME_KINDS = ["title"] as const;
 export type ActNameKind = (typeof ACT_NAME_KINDS)[number];
@@ -132,4 +143,35 @@ export const LEXFIND: LawRegisterSource = {
     8: "decree",
     9: "communal_act",
   },
+};
+
+/**
+ * A publisher of law text (step L1 onward): where an authority's consolidated
+ * acts are read from. The reader for a source is code; everything it needs to
+ * name is here.
+ */
+export interface LawTextSource {
+  key: string;
+  authority: string;
+  publisher: string;
+  homepage: string;
+  /** The Places licence class the text falls under (Art. 5 URG: not protected). */
+  licenceSpdx: string;
+  /** Languages the publisher holds each act in, and how it names them. */
+  languages: Readonly<Record<string, string>>;
+  /** What the publisher calls the text it serves: the consolidated reading, not the official compilation. */
+  textStatus: ActTextStatus;
+}
+
+export const FEDLEX: LawTextSource = {
+  key: "fedlex",
+  authority: "ch",
+  publisher: "Fedlex, the Federal Chancellery",
+  homepage: "https://www.fedlex.admin.ch",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  // BCP 47 → the EU authority-table code Fedlex's metadata uses.
+  languages: { de: "DEU", fr: "FRA", it: "ITA" },
+  // Fedlex states that only the Official Compilation (AS) is authentic; the
+  // Classified Compilation (SR) it serves here is the consolidated reading.
+  textStatus: "consolidated",
 };

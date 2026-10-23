@@ -29,6 +29,7 @@
     "places:import": "tsx scripts/places-import.ts",
     "places:fetch": "tsx scripts/places-fetch.ts",
     "law:register": "tsx scripts/law-register.ts",
+    "law:text": "tsx scripts/law-text.ts",
     "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {

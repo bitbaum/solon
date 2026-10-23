@@ -148,6 +148,36 @@ Run it with `pnpm run law:register [--dry-run]`, or the *Law register load*
 workflow on the box. The page is `/law/coverage`; the API is
 `/api/v1/law/coverage` and `/api/v1/law/acts`.
 
+### L1 as built (2026-10-23): federal text, German first
+
+`legal_act_versions` and `legal_provisions` (migration 0016) hold the text. Run
+by `pnpm run law:text fedlex` or the *Law text load* workflow on the box.
+
+- **One SPARQL query lists every version in force on a day**: the Classified
+  Compilation's `eli/cc` acts only (the Official Compilation's `eli/oc`
+  entries share their systematic numbers), whose consolidation had begun and
+  not ended by that day. It returns 5,331 acts for 2026-10-23 against 5,339
+  the register says are in force, every one of them in the register. A repealed
+  act's last consolidation has ended, which is what keeps it from being read as
+  current (the old and the new data-protection act share the number 235.1).
+- **A number two acts share is not guessed.** Where more than one `eli/cc` act
+  carries the same systematic number the run reports it as ambiguous and
+  stores neither.
+- **Each version cites its retrieval**: Fedlex's page, the sha256 of the bytes
+  and where they are kept. `GET /api/v1/law/provisions` returns the article
+  with that URL and hash, as it stood on any date a held version covers.
+- **A newer version closes the held one** the day before it takes over; nothing
+  is deleted, so "what applied on 2024-06-01" is a lookup.
+- **Articles are the provisions**, under Fedlex's own anchors (`art_270_b`).
+  An act without articles (an exchange of notes, a decree) is one provision,
+  `text`, holding the page as plain text. Preambles and annexes of acts that
+  do have articles stay in the snapshot and are not provisions yet.
+- **Resumable and polite**: an identifying user agent, a pause between files,
+  a limit on versions stored per run that failures do not use up, and a run
+  that stops anywhere continues where it left off.
+- **Not yet**: the daily check that re-fetches a sample and compares hashes;
+  French and Italian (the same command with `--lang`); earlier versions (L4).
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

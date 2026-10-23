@@ -10,7 +10,9 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  date,
   foreignKey,
+  integer,
   index,
   pgTable,
   text,
@@ -129,6 +131,74 @@ export const legalActNames = pgTable(
       columns: [t.sourceId],
       foreignColumns: [sources.id],
       name: "legal_act_names_source_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+  ],
+);
+
+/**
+ * One consolidated text of an act, in one language, in force from one date
+ * (design §3). `sourceId` cites the retrieval: the publisher's URL, the sha256
+ * of the bytes and where they are kept, so the copy can be checked against the
+ * publisher at any time.
+ */
+export const legalActVersions = pgTable(
+  "legal_act_versions",
+  {
+    id: text("id").primaryKey().$defaultFn(uuid),
+    actId: text("act_id").notNull(),
+    /** BCP 47. A version is one language; nothing is translated here. */
+    lang: text("lang").notNull(),
+    inForceFrom: date("in_force_from").notNull(),
+    /** Null while this is the version in force; the day before the next one takes over. */
+    inForceTo: date("in_force_to"),
+    /** Key in config ACT_TEXT_STATUSES: whether the publisher calls the text authentic. */
+    status: text("status").notNull(),
+    /** Key in config ACT_TEXT_FORMATS. */
+    format: text("format").notNull(),
+    sourceId: text("source_id").notNull(),
+    recordedAt: recordedAt(),
+  },
+  (t) => [
+    uniqueIndex("legal_act_versions_act_lang_from_key").on(t.actId, t.lang, t.inForceFrom),
+    foreignKey({
+      columns: [t.actId],
+      foreignColumns: [legalActs.id],
+      name: "legal_act_versions_act_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+    foreignKey({
+      columns: [t.sourceId],
+      foreignColumns: [sources.id],
+      name: "legal_act_versions_source_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+  ],
+);
+
+/** The text of a version by provision, so one article is one lookup. */
+export const legalProvisions = pgTable(
+  "legal_provisions",
+  {
+    id: text("id").primaryKey().$defaultFn(uuid),
+    versionId: text("version_id").notNull(),
+    /** The publisher's own anchor: art_270_b. */
+    path: text("path").notNull(),
+    /** As the act heads it: "Art. 270b Anfechtung des Anfangsmietzinses". */
+    heading: text("heading").notNull(),
+    text: text("text").notNull(),
+    /** Position in the act, from 0. */
+    ord: integer("ord").notNull(),
+  },
+  (t) => [
+    uniqueIndex("legal_provisions_version_path_key").on(t.versionId, t.path),
+    foreignKey({
+      columns: [t.versionId],
+      foreignColumns: [legalActVersions.id],
+      name: "legal_provisions_version_id_fkey",
     })
       .onDelete("restrict")
       .onUpdate("cascade"),
