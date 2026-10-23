@@ -13,7 +13,7 @@ one to read for the detail. Fixes get the same weight as features.
   treaties) are listed with their LR number, their title and the Landesgesetzblatt
   issue that published them, beside the Swiss ones on `/law/coverage` and at
   `/api/v1/law/acts?authority=li`. Names and numbers only; the text from
-  gesetze.li comes next. The communes are not listed yet. (#PR) {#law-register-li}
+  gesetze.li comes next. The communes are not listed yet. (#283) {#law-register-li}
 
 - **A register of the law.** Solon now lists every act of the Confederation,
   the 26 cantons and the intercantonal agreements: 33,441 acts, 22,047 of them
