@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The text of the law can be searched.** `GET /api/v1/law/search?q=` ranks the
+  provisions in force that match, optionally by authority or language, and each
+  hit names the act, the article, the publisher's page and the hash of the copy,
+  so an answer built on it can cite exactly what it read.
+  {#law-search}
 - **Laws can be found and read on Solon.** A new page, Find a law, searches the
   register by title or number and by whose law it is; each act opens with its
   provisions, a link to the publisher, the page the copy was read from and its

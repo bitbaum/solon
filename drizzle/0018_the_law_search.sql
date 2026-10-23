@@ -1,0 +1,1 @@
+CREATE INDEX "legal_provisions_search_idx" ON "legal_provisions" USING gin (to_tsvector('simple', "heading" || ' ' || "text"));
