@@ -46,7 +46,7 @@ export const ACT_VERSION_DATE_BASES = ["publisher", "retrieved"] as const;
 export type ActVersionDateBasis = (typeof ACT_VERSION_DATE_BASES)[number];
 
 /** What a version's snapshot holds. */
-export const ACT_TEXT_FORMATS = ["html"] as const;
+export const ACT_TEXT_FORMATS = ["html", "pdf"] as const;
 export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
 
 export const ACT_NAME_KINDS = ["title"] as const;
@@ -265,4 +265,24 @@ export const LILEX = {
     // The Civil Procedure Code of 1912 is published in two parts.
     "271.0": "1912009001",
   } as Readonly<Record<string, string>>,
+} as const;
+
+/**
+ * Cantonal and intercantonal acts, read as a document (step L3, first pass).
+ * Each canton publishes its collection on its own platform, and a reader for
+ * each is the aim. Until one exists for a canton, the act's own document, the
+ * canton's PDF as LexFind keeps it at `/tol/<id>/<lang>`, is read instead.
+ * That is a stated fallback, not the source of record: the act's official
+ * page is the `official_url` the register keeps beside it.
+ */
+export const CANTONAL_DOCUMENTS = {
+  key: "lexfind-documents",
+  /** Where an act's document is: `<base><register id>/<lang>`. */
+  base: "https://www.lexfind.ch/tol/",
+  locale: "de",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  textStatus: "consolidated" as ActTextStatus,
+  /** An authority is read by this reader when its place is a canton, or it is the intercantonal one. */
+  placeScheme: "bfs_canton",
+  intercantonalAuthority: "intercantonal",
 } as const;

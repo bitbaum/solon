@@ -15,8 +15,12 @@ on:
       source:
         description: "Whose laws"
         type: choice
-        options: [fedlex, lilex]
+        options: [fedlex, lilex, cantons]
         default: fedlex
+      authority:
+        description: "Cantons only: one canton's key (zh, be, ...), or empty for all"
+        type: string
+        default: ""
       lang:
         description: "Language of the texts (Fedlex only)"
         type: choice
@@ -47,15 +51,17 @@ jobs:
           LANGUAGE: ${{ inputs.lang }}
           SOURCE: ${{ inputs.source }}
           LIMIT: ${{ inputs.limit }}
+          AUTHORITY: ${{ inputs.authority }}
         run: |
           set -euo pipefail
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
+          [[ "$AUTHORITY" =~ ^[a-z]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
           IP=167.233.22.31
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -69,7 +75,8 @@ jobs:
           set +a
           export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
           flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
-          $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+          auth=""; [ -n "$AUTHORITY" ] && auth="--authority $AUTHORITY"
+          $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
           REMOTE
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt
