@@ -10,11 +10,10 @@
 import { randomInt } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
-import { LEXFIND } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
-import { importRegister } from "../../register/import";
+import { importLexfindRegister } from "../../register/lexfind";
 import { readProvision, searchActs } from "../../register/coverage";
 import { importFedlexText } from "../import";
 
@@ -96,8 +95,7 @@ describe.skipIf(!RUN)("fedlex text import", () => {
         ],
       }),
     );
-    const report = await importRegister(db, {
-      register: LEXFIND,
+    const report = await importLexfindRegister(db, {
       bytes,
       url: "test",
       retrievedAt: new Date(),
@@ -242,8 +240,7 @@ describe.skipIf(!RUN)("fedlex text import", () => {
         ],
       }),
     );
-    await importRegister(db, {
-      register: LEXFIND,
+    await importLexfindRegister(db, {
       bytes,
       url: "test",
       retrievedAt: new Date(),

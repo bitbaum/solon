@@ -633,7 +633,7 @@
       "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
-      "note": "Liechtenstein und die Gemeinden sind noch nicht aufgeführt."
+      "note": "Die Gemeinden sind noch nicht aufgeführt."
     }
   }
 }

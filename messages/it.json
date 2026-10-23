@@ -633,7 +633,7 @@
       "totals": "atti in vigore. {notInForce} elencati come non più in vigore. Testo conservato per {withText}.",
       "authorities": "Autorità",
       "row": "{inForce} in vigore · {notInForce} no",
-      "note": "Il Liechtenstein e i comuni non sono ancora elencati."
+      "note": "I comuni non sono ancora elencati."
     }
   }
 }

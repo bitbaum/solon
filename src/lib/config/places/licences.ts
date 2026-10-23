@@ -24,4 +24,7 @@ export const LICENCES = [
   // Swiss official acts, decisions and their official figures (tax tariffs, rates set
   // by a canton or commune) are not protected: Art. 5 URG, SR 231.1. Public domain.
   { spdx: "LicenseRef-ch-official-act", requiresAttribution: false, shareAlike: false },
+  // Liechtenstein's laws and official acts are not protected either: URG Art. 5
+  // (LR 231.1). The same class as the Swiss ones above, under its own name.
+  { spdx: "LicenseRef-li-official-act", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];
