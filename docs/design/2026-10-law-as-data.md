@@ -275,6 +275,31 @@ exists, its acts are held this way, dated by the day they were read.
   documents are the cantons' acts, not protected (URG Art. 5); the route to them is
   LexFind's, which is why it is named a fallback.
 
+### Zürich's own text as built (2026-10-23): the first cantonal reader
+
+`pnpm run law:text zhlex` (or the *Law text load* workflow, source `zhlex`) reads
+each Zürich act from ZH-Lex, the canton's own collection, instead of the
+first-pass document. The act's `official_url` (the register keeps it) is a
+wrapper page; it links the PDF of the current version on another canton host,
+and its address carries the dates: `erlass-<LS>-<enacted>-<in force>-<amendment>`.
+
+- **The date is the canton's**: `date_basis: publisher`, the in-force day from the
+  address. Only addresses on `www.zh.ch` (the page; `http://` is read as https) and
+  `www.notes.zh.ch` (the file) are fetched, whatever a page links to. The file host
+  answers with a one-line `window.location` redirect to the PDF; it is followed
+  once, to a file under the same path on the same host.
+- **It retires the first-pass reading of the same act.** A reading dated only by the
+  day it was read would end the day before the canton's older date began: an empty
+  range, never served, kept as the record of what was read. The same guard keeps any
+  closed version from ending before it began.
+- **Acts whose address states no in-force day** (an old PDF on `www2.zhlex.zh.ch`, 14
+  in the first 54 read, or a page whose day is blank, `…-2016_04_11--100.html`) have no
+  date to give a version. They keep the first-pass reading and are counted as `undated`.
+- **History is on the page**: each act's page lists its earlier versions with the day
+  they ceased to be in force, so Zürich can have its history (L4) by following those
+  links; not done.
+- Measured on the constitution: 139 provisions, in force since 2006-01-01.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

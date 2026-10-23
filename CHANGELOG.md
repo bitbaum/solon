@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Zürich's laws can be read from the canton's own collection.** The loading
+  tool takes each Zürich act's current version from ZH-Lex, the canton's PDF, with
+  the day the canton says it took effect, and retires the first-pass reading of the
+  same act. The constitution comes in at 139 articles, in force since 1 January
+  2006. Production is not loaded yet. (#285)
 - **Liechtenstein's laws are in the register.** The 3,407 acts in force in the
   Government's Systematic Register (statutes, ordinances, notices, decrees and
   treaties) are listed with their LR number, their title and the Landesgesetzblatt

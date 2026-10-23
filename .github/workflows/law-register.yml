@@ -41,7 +41,7 @@ jobs:
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
+          ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
             "SHA=$SHA DRY=$DRY SOURCE=$SOURCE bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-law.XXXXXX)

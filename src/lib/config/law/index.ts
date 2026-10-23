@@ -286,3 +286,21 @@ export const CANTONAL_DOCUMENTS = {
   placeScheme: "bfs_canton",
   intercantonalAuthority: "intercantonal",
 } as const;
+
+/**
+ * Zürich's own collection, ZH-Lex (zh.ch). An act's page names the PDF of its
+ * current version, on another of the canton's hosts, and carries the day that
+ * version took effect in its address:
+ * `erlass-<LS number>-<enacted>-<in force>-<amendment number>.html`.
+ */
+export const ZHLEX = {
+  key: "zhlex",
+  authority: "zh",
+  publisher: "Kanton Zürich, ZH-Lex",
+  /** Only addresses on these hosts are fetched. */
+  pageHost: "www.zh.ch",
+  fileHost: "www.notes.zh.ch",
+  locale: "de",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  textStatus: "consolidated" as ActTextStatus,
+} as const;
