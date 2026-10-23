@@ -177,6 +177,7 @@ describe.skipIf(!RUN)("fedlex text import", () => {
       inForceFrom: "2020-01-01",
       inForceTo: null,
       status: "consolidated",
+      dateBasis: "publisher",
       sourceUrl: `https://x/${N}/a-2020`,
     });
     expect(provision!.contentSha256).toMatch(/^[0-9a-f]{64}$/);
@@ -317,6 +318,7 @@ describe.skipIf(!RUN)("lilex text import", () => {
       heading: "Art. 1 Zweck",
       text: "Text.",
       inForceFrom: "2026-10-23",
+      dateBasis: "retrieved",
       status: "consolidated",
       sourceUrl: `https://www.gesetze.li/konso/html/2008${String(issue).padStart(3, "0")}000`,
     });
