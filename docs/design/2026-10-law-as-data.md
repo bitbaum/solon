@@ -241,8 +241,11 @@ publishes it, as the identifier `official_url`. LexFind's search results carry i
 
 - A search by systematic number, one digit at a time, lists every numbered act of
   an authority a hundred to a page; about 220 requests for all 28 authorities.
-- A list short of the count the register states for the authority is refused, so
-  a partial read can never be applied as links that vanished.
+- A list under 95% of the count the register states for an authority is refused. A
+  few acts are always missed, those whose systematic number has no digit (4 of Schwyz's
+  430); the snapshot records how many per authority. A short list is safe for links,
+  unlike the register's: they are only added or replaced, never removed for an act
+  absent from a list.
 - A changed link supersedes the old one; an act's link is the German page.
 - Where the canton's page is a wrapper (Zürich's is) the document itself sits one
   step behind it. Reading the cantons' text is therefore a reader per publisher

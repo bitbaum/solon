@@ -9,8 +9,9 @@
  * link is kept as the act's `official_url`, so every act points to the place
  * that publishes it, not to LexFind.
  *
- * As with the register, a read that finds fewer acts than the register states
- * is refused, so a partial list can never be applied as links that vanished.
+ * A list well short of the count the register states (under 95%) is refused. A
+ * few acts are always missing, those whose number has no digit; the snapshot
+ * says how many per authority.
  */
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
@@ -44,6 +45,8 @@ const searchPage = z.object({
 
 export const linksSnapshotSchema = z.object({
   fetchedAt: z.string(),
+  /** Acts in force the search did not find, per authority (no digit in their number). */
+  missing: z.record(z.string(), z.number().int()).optional(),
   authorities: z.array(
     z.object({
       code: z.string().min(1),
@@ -65,6 +68,7 @@ export async function fetchOfficialLinks(
 ): Promise<LinksSnapshot> {
   const entities = z.array(entitySchema).parse(await getJson(doFetch, `${BASE}/entities/extended`));
   const authorities: LinksSnapshot["authorities"] = [];
+  const missing: Record<string, number> = {};
   for (const entity of entities) {
     const found = new Map<number, string | null>();
     for (const digit of "0123456789") {
@@ -99,16 +103,21 @@ export async function fetchOfficialLinks(
       }
       await sleep(pauseMs);
     }
-    if (found.size !== entity.status.active_texts_of_law) {
+    // Acts with no digit in their systematic number are not found by this search. A short list is
+    // safe here, unlike the register's: links are only ever added or replaced, never taken away
+    // for an act missing from a list. But a list far short means the read went wrong.
+    const stated = entity.status.active_texts_of_law;
+    if (found.size < stated * 0.95 || found.size > stated) {
       throw new Error(
-        `${entity.abbreviation}: found ${found.size} acts in force, the register states ${entity.status.active_texts_of_law}`,
+        `${entity.abbreviation}: found ${found.size} acts in force, the register states ${stated}`,
       );
     }
+    missing[entity.abbreviation] = stated - found.size;
     const links = [...found].flatMap(([id, url]) => (url ? [{ id, url }] : []));
     authorities.push({ code: entity.abbreviation, links });
     onProgress(entity.abbreviation, links.length);
   }
-  return { fetchedAt: new Date().toISOString(), authorities };
+  return { fetchedAt: new Date().toISOString(), authorities, missing };
 }
 
 export interface LinksReport {
