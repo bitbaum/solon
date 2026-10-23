@@ -20,7 +20,7 @@ one to read for the detail. Fixes get the same weight as features.
   that proves the copy, and looked up as they stood on any day a held version
   covers (`/api/v1/law/provisions`). The loading tool is built and tested on
   real federal acts; production is not loaded yet, so `/law/coverage` still
-  shows no text held. (#PR)
+  shows no text held. (#282)
 
 ## 2026-10-22
 
