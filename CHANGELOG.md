@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Laws can be found and read on Solon.** A new page, Find a law, searches the
+  register by title or number and by whose law it is; each act opens with its
+  provisions, a link to the publisher, the page the copy was read from and its
+  hash. A version the publisher does not date says it was read on that day.
+  {#law-reading}
 - **Zürich's laws can be read from the canton's own collection.** The loading
   tool takes each Zürich act's current version from ZH-Lex, the canton's PDF, with
   the day the canton says it took effect, and retires the first-pass reading of the

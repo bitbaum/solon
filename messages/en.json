@@ -1199,7 +1199,52 @@
       "totals": "acts in force. {notInForce} listed as no longer in force. Text held for {withText}.",
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
-      "note": "The communes are not listed yet."
+      "note": "The communes are not listed yet.",
+      "readLink": "Find and read an act →"
+    },
+    "index": {
+      "metaTitle": "Find a law",
+      "metaDescription": "Find an act of Switzerland or Liechtenstein by its title or number, and read it as its publisher wrote it.",
+      "kicker": "Law",
+      "title": "Find a law",
+      "intro": "Every act Solon lists, by its title or by its number in the collection that numbers it. The text is the publisher's, with the page it came from and a hash that proves the copy.",
+      "searchLabel": "Title or number",
+      "searchPlaceholder": "A title, or a number such as 220",
+      "authorityLabel": "Whose law",
+      "anyAuthority": "Any",
+      "searchButton": "Search",
+      "noHits": "Nothing found.",
+      "hits": "{count, plural, one {# act} other {# acts}} found",
+      "notInForce": "not in force",
+      "coverageLink": "What the register lists, counted from the data →"
+    },
+    "act": {
+      "kicker": "Law",
+      "atPublisher": "Open at the publisher →",
+      "inForceSince": "In force since {date}, as the publisher states.",
+      "readOn": "The publisher does not state since when this version applies. Read on {date}.",
+      "copy": "Copy read on {date}.",
+      "copyFrom": "The page it was read from",
+      "noText": "The text of this act is not held yet.",
+      "provisions": "Provisions",
+      "provisionCount": "{count, plural, one {# provision} other {# provisions}}",
+      "pages": "Pages",
+      "previous": "← Previous",
+      "next": "Next →",
+      "pageOf": "Page {page} of {pages}",
+      "back": "← Find another law"
+    },
+    "kinds": {
+      "constitution": "constitution",
+      "statute": "statute",
+      "ordinance": "ordinance",
+      "decree": "decree",
+      "notice": "notice",
+      "regulation": "regulation",
+      "treaty": "treaty",
+      "intercantonal_agreement": "intercantonal agreement",
+      "communal_act": "communal act",
+      "other": "other"
     }
   }
 }

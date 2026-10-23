@@ -633,7 +633,52 @@
       "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
-      "note": "Die Gemeinden sind noch nicht aufgeführt."
+      "note": "Die Gemeinden sind noch nicht aufgeführt.",
+      "readLink": "Einen Erlass finden und lesen →"
+    },
+    "index": {
+      "metaTitle": "Erlass finden",
+      "metaDescription": "Einen Erlass der Schweiz oder Liechtensteins nach Titel oder Nummer finden und im Wortlaut des Herausgebers lesen.",
+      "kicker": "Recht",
+      "title": "Erlass finden",
+      "intro": "Jeder Erlass, den Solon führt, nach Titel oder nach seiner Nummer in der Sammlung, die ihn nummeriert. Der Wortlaut ist der des Herausgebers, mit der Seite, von der er gelesen wurde, und einem Hash, der die Kopie belegt.",
+      "searchLabel": "Titel oder Nummer",
+      "searchPlaceholder": "Ein Titel oder eine Nummer wie 220",
+      "authorityLabel": "Wessen Recht",
+      "anyAuthority": "Alle",
+      "searchButton": "Suchen",
+      "noHits": "Nichts gefunden.",
+      "hits": "{count, plural, one {# Erlass} other {# Erlasse}} gefunden",
+      "notInForce": "nicht in Kraft",
+      "coverageLink": "Was das Register führt, aus den Daten gezählt →"
+    },
+    "act": {
+      "kicker": "Recht",
+      "atPublisher": "Beim Herausgeber öffnen →",
+      "inForceSince": "In Kraft seit {date}, wie der Herausgeber angibt.",
+      "readOn": "Der Herausgeber gibt nicht an, seit wann diese Fassung gilt. Gelesen am {date}.",
+      "copy": "Kopie gelesen am {date}.",
+      "copyFrom": "Die Seite, von der sie gelesen wurde",
+      "noText": "Der Wortlaut dieses Erlasses ist noch nicht gespeichert.",
+      "provisions": "Bestimmungen",
+      "provisionCount": "{count, plural, one {# Bestimmung} other {# Bestimmungen}}",
+      "pages": "Seiten",
+      "previous": "← Zurück",
+      "next": "Weiter →",
+      "pageOf": "Seite {page} von {pages}",
+      "back": "← Anderen Erlass suchen"
+    },
+    "kinds": {
+      "constitution": "Verfassung",
+      "statute": "Gesetz",
+      "ordinance": "Verordnung",
+      "decree": "Beschluss",
+      "notice": "Kundmachung",
+      "regulation": "Reglement",
+      "treaty": "Staatsvertrag",
+      "intercantonal_agreement": "interkantonale Vereinbarung",
+      "communal_act": "Gemeindeerlass",
+      "other": "anderes"
     }
   }
 }

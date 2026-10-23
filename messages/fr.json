@@ -633,7 +633,52 @@
       "totals": "actes en vigueur. {notInForce} listés comme n'étant plus en vigueur. Texte conservé pour {withText}.",
       "authorities": "Autorités",
       "row": "{inForce} en vigueur · {notInForce} non",
-      "note": "Les communes ne sont pas encore listées."
+      "note": "Les communes ne sont pas encore listées.",
+      "readLink": "Trouver et lire un acte →"
+    },
+    "index": {
+      "metaTitle": "Trouver un acte",
+      "metaDescription": "Trouver un acte de la Suisse ou du Liechtenstein par son titre ou son numéro, et le lire tel que son éditeur l'a écrit.",
+      "kicker": "Droit",
+      "title": "Trouver un acte",
+      "intro": "Chaque acte que Solon liste, par son titre ou par son numéro dans le recueil qui le numérote. Le texte est celui de l'éditeur, avec la page d'où il a été lu et un hash qui prouve la copie.",
+      "searchLabel": "Titre ou numéro",
+      "searchPlaceholder": "Un titre, ou un numéro comme 220",
+      "authorityLabel": "Le droit de qui",
+      "anyAuthority": "Tous",
+      "searchButton": "Chercher",
+      "noHits": "Rien trouvé.",
+      "hits": "{count, plural, one {# acte trouvé} other {# actes trouvés}}",
+      "notInForce": "pas en vigueur",
+      "coverageLink": "Ce que le registre liste, compté à partir des données →"
+    },
+    "act": {
+      "kicker": "Droit",
+      "atPublisher": "Ouvrir chez l'éditeur →",
+      "inForceSince": "En vigueur depuis le {date}, selon l'éditeur.",
+      "readOn": "L'éditeur n'indique pas depuis quand cette version s'applique. Lue le {date}.",
+      "copy": "Copie lue le {date}.",
+      "copyFrom": "La page d'où elle a été lue",
+      "noText": "Le texte de cet acte n'est pas encore conservé.",
+      "provisions": "Dispositions",
+      "provisionCount": "{count, plural, one {# disposition} other {# dispositions}}",
+      "pages": "Pages",
+      "previous": "← Précédent",
+      "next": "Suivant →",
+      "pageOf": "Page {page} sur {pages}",
+      "back": "← Trouver un autre acte"
+    },
+    "kinds": {
+      "constitution": "constitution",
+      "statute": "loi",
+      "ordinance": "ordonnance",
+      "decree": "arrêté",
+      "notice": "publication",
+      "regulation": "règlement",
+      "treaty": "traité",
+      "intercantonal_agreement": "convention intercantonale",
+      "communal_act": "acte communal",
+      "other": "autre"
     }
   }
 }

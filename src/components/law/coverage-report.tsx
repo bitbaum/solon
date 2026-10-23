@@ -1,4 +1,5 @@
 import type { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { LawCoverage } from "@/lib/law/register/coverage";
 
@@ -57,6 +58,11 @@ export default function LawCoverageReport({ coverage, t }: LawCoverageReportProp
         </div>
 
         <p className="text-xs text-fg-tertiary">{t("coverage.note")}</p>
+        <p className="text-sm">
+          <Link href="/law" className="text-fg-secondary underline">
+            {t("coverage.readLink")}
+          </Link>
+        </p>
       </div>
     </PageLayout>
   );
