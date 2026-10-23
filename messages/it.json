@@ -621,5 +621,19 @@
     "tryAgain": "Riprova",
     "back": "Torna a Solon",
     "readFreely": "Non serve mai un account per leggere qualcosa su Solon."
+  },
+  "Law": {
+    "coverage": {
+      "metaTitle": "Copertura del diritto",
+      "metaDescription": "Quali atti della Svizzera e del Liechtenstein elenca il registro di Solon, per autorità, contati dai dati.",
+      "kicker": "Diritto",
+      "title": "Che cosa elenca il registro",
+      "intro": "Contato dai dati, letto presso l'editore il {date}. Solo titoli e numeri: il testo degli atti non è ancora conservato.",
+      "neverRetrieved": "Il registro non è ancora stato letto.",
+      "totals": "atti in vigore. {notInForce} elencati come non più in vigore. Testo conservato per {withText}.",
+      "authorities": "Autorità",
+      "row": "{inForce} in vigore · {notInForce} no",
+      "note": "Il Liechtenstein e i comuni non sono ancora elencati."
+    }
   }
 }

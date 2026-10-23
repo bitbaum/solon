@@ -28,6 +28,7 @@
     "places:sync-config": "tsx scripts/places-sync-config.ts",
     "places:import": "tsx scripts/places-import.ts",
     "places:fetch": "tsx scripts/places-fetch.ts",
+    "law:register": "tsx scripts/law-register.ts",
     "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts"
   },
   "dependencies": {

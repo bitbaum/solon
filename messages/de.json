@@ -621,5 +621,19 @@
     "tryAgain": "Nochmals versuchen",
     "back": "Zurück zu Solon",
     "readFreely": "Um auf Solon etwas zu lesen, brauchen Sie nie ein Konto."
+  },
+  "Law": {
+    "coverage": {
+      "metaTitle": "Abdeckung des Rechts",
+      "metaDescription": "Welche Erlasse der Schweiz und Liechtensteins das Register von Solon führt, je Behörde, aus den Daten gezählt.",
+      "kicker": "Recht",
+      "title": "Was das Register führt",
+      "intro": "Aus den Daten gezählt, am {date} beim Herausgeber gelesen. Nur Titel und Nummern: der Wortlaut der Erlasse ist noch nicht gespeichert.",
+      "neverRetrieved": "Das Register wurde noch nicht gelesen.",
+      "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
+      "authorities": "Behörden",
+      "row": "{inForce} in Kraft · {notInForce} nicht",
+      "note": "Liechtenstein und die Gemeinden sind noch nicht aufgeführt."
+    }
   }
 }

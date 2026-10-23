@@ -1187,5 +1187,19 @@
     "tryAgain": "Try again",
     "back": "Back to Solon",
     "readFreely": "You never need an account to read anything on Solon."
+  },
+  "Law": {
+    "coverage": {
+      "metaTitle": "Law coverage",
+      "metaDescription": "Which laws of Switzerland and Liechtenstein Solon's register lists, per authority, counted from the data.",
+      "kicker": "Law",
+      "title": "What the register lists",
+      "intro": "Counted from the data, read from the publisher on {date}. Names and numbers only: the text of the law is not held yet.",
+      "neverRetrieved": "The register has not been read yet.",
+      "totals": "acts in force. {notInForce} listed as no longer in force. Text held for {withText}.",
+      "authorities": "Authorities",
+      "row": "{inForce} in force · {notInForce} not",
+      "note": "Liechtenstein and the communes are not listed yet."
+    }
   }
 }

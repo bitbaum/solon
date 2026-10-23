@@ -4,6 +4,18 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-23
+
+### Added
+
+- **A register of the law.** Solon now lists every act of the Confederation,
+  the 26 cantons and the intercantonal agreements: 33,441 acts, 22,047 of them
+  in force, each with its title and its official number, read from LexFind's
+  list and counted per authority on `/law/coverage`. Acts can be found by
+  authority, number or title at `/api/v1/law/acts`. Only names and numbers so
+  far: the text of the laws comes next, publisher by publisher. Liechtenstein
+  and the communes are not listed yet. (#PR) {#law-register}
+
 ## 2026-10-22
 
 ### Added
