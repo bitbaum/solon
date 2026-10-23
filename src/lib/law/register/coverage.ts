@@ -3,10 +3,10 @@
  * page is computed from the tables, never typed"). The view is pure; the loader
  * counts in the database.
  */
-import { count, eq, max, sql } from "drizzle-orm";
+import { count, countDistinct, eq, isNull, max, sql } from "drizzle-orm";
 import { LAW_AUTHORITIES, LEXFIND } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
-import { legalActs } from "@/lib/db/law-schema";
+import { legalActs, legalActVersions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
 
 export interface AuthorityCoverage {
@@ -14,7 +14,7 @@ export interface AuthorityCoverage {
   name: string;
   inForce: number;
   notInForce: number;
-  /** Acts of this authority whose text Solon holds: none until step L1. */
+  /** Acts of this authority whose text Solon holds, in any language. */
   withText: number;
 }
 
@@ -27,11 +27,13 @@ export interface LawCoverage {
 
 export interface CoverageCounts {
   counts: readonly { authority: string; inForce: boolean; acts: number }[];
+  /** Acts per authority that have a current version of their text. */
+  withText?: readonly { authority: string; acts: number }[];
   retrievedAt: Date | null;
 }
 
 /** Pure: shapes the counts, listing every configured authority, even with no acts. */
-export function lawCoverage({ counts, retrievedAt }: CoverageCounts): LawCoverage {
+export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCounts): LawCoverage {
   const authorities = LAW_AUTHORITIES.map((authority): AuthorityCoverage => {
     const mine = counts.filter((row) => row.authority === authority.key);
     return {
@@ -39,7 +41,7 @@ export function lawCoverage({ counts, retrievedAt }: CoverageCounts): LawCoverag
       name: authority.name,
       inForce: mine.filter((row) => row.inForce).reduce((sum, row) => sum + row.acts, 0),
       notInForce: mine.filter((row) => !row.inForce).reduce((sum, row) => sum + row.acts, 0),
-      withText: 0,
+      withText: withText.find((row) => row.authority === authority.key)?.acts ?? 0,
     };
   });
   const sum = (pick: (a: AuthorityCoverage) => number) =>
@@ -60,11 +62,17 @@ export async function loadLawCoverage(db: Database): Promise<LawCoverage> {
     .select({ authority: legalActs.authority, inForce: legalActs.inForce, acts: count() })
     .from(legalActs)
     .groupBy(legalActs.authority, legalActs.inForce);
+  const withText = await db
+    .select({ authority: legalActs.authority, acts: countDistinct(legalActVersions.actId) })
+    .from(legalActVersions)
+    .innerJoin(legalActs, eq(legalActs.id, legalActVersions.actId))
+    .where(isNull(legalActVersions.inForceTo))
+    .groupBy(legalActs.authority);
   const [latest] = await db
     .select({ at: max(sources.retrievedAt) })
     .from(sources)
     .where(eq(sources.sourceKey, LEXFIND.key));
-  return lawCoverage({ counts, retrievedAt: latest?.at ?? null });
+  return lawCoverage({ counts, withText, retrievedAt: latest?.at ?? null });
 }
 
 export interface ActSearchHit {
@@ -102,4 +110,43 @@ export async function searchActs(
     LIMIT ${limit}
   `);
   return rows.rows as unknown as ActSearchHit[];
+}
+
+export interface ProvisionHit {
+  actId: string;
+  path: string;
+  heading: string;
+  text: string;
+  lang: string;
+  inForceFrom: string;
+  inForceTo: string | null;
+  status: string;
+  /** The publisher's page the copy was read from, and the hash that proves the copy. */
+  sourceUrl: string | null;
+  contentSha256: string;
+}
+
+/**
+ * One provision as it stood on `on` (ISO date), in `lang`. Every answer carries
+ * where it came from, so a client that does not trust Solon can fetch the
+ * publisher's page and compare the hash.
+ */
+export async function readProvision(
+  db: Database,
+  input: { actId: string; path: string; lang: string; on: string },
+): Promise<ProvisionHit | null> {
+  const rows = await db.execute(sql`
+    SELECT v.act_id AS "actId", p.path, p.heading, p.text, v.lang,
+           v.in_force_from::text AS "inForceFrom", v.in_force_to::text AS "inForceTo",
+           v.status, s.url AS "sourceUrl", s.content_sha256 AS "contentSha256"
+    FROM legal_provisions p
+    JOIN legal_act_versions v ON v.id = p.version_id
+    JOIN sources s ON s.id = v.source_id
+    WHERE v.act_id = ${input.actId} AND v.lang = ${input.lang} AND p.path = ${input.path}
+      AND v.in_force_from <= ${input.on}::date
+      AND (v.in_force_to IS NULL OR v.in_force_to >= ${input.on}::date)
+    ORDER BY v.in_force_from DESC
+    LIMIT 1
+  `);
+  return (rows.rows[0] as unknown as ProvisionHit | undefined) ?? null;
 }
