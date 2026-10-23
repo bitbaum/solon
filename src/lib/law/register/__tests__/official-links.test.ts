@@ -55,10 +55,16 @@ describe("fetchOfficialLinks", () => {
     ]);
   });
 
-  it("refuses a list short of the acts the register states", async () => {
-    const { doFetch } = register(4);
-    await expect(fetchOfficialLinks(doFetch, undefined, 0)).rejects.toThrow(
-      "XX: found 3 acts in force, the register states 4",
+  it("reports the few acts the search cannot find, and refuses a list well short of the register's", async () => {
+    const few = await fetchOfficialLinks(register(3).doFetch, undefined, 0);
+    expect(few.missing).toEqual({ XX: 0 });
+    // 3 of 100 is not "a few missing": the read went wrong.
+    await expect(fetchOfficialLinks(register(100).doFetch, undefined, 0)).rejects.toThrow(
+      "XX: found 3 acts in force, the register states 100",
+    );
+    // An authority that lists more than the register states is wrong too.
+    await expect(fetchOfficialLinks(register(2).doFetch, undefined, 0)).rejects.toThrow(
+      "the register states 2",
     );
   });
 });
