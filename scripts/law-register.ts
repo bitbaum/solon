@@ -26,7 +26,9 @@ import {
 const args = process.argv.slice(2);
 const fileAt = args.indexOf("--file");
 const file = fileAt >= 0 ? args[fileAt + 1] : undefined;
-const [source = "lexfind"] = args.filter((a, i) => !a.startsWith("--") && i !== fileAt + 1);
+const [source = "lexfind"] = args.filter(
+  (a, i) => !a.startsWith("--") && (fileAt < 0 || i !== fileAt + 1),
+);
 
 async function main(): Promise<number> {
   const common = {
