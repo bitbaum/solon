@@ -14,6 +14,11 @@ one to read for the detail. Fixes get the same weight as features.
   issue that published them, beside the Swiss ones on `/law/coverage` and at
   `/api/v1/law/acts?authority=li`. Names and numbers only; the text from
   gesetze.li comes next. The communes are not listed yet. (#283) {#law-register-li}
+- **Solon can read Liechtenstein's laws from gesetze.li.** The loading tool
+  reads each act's consolidated page, article by article, with the page it came
+  from and a hash that proves the copy. Lilex does not say since when a version
+  applies, so each is dated by the day it was read and marked as such. Production
+  is not loaded yet. (#PR)
 
 - **A register of the law.** Solon now lists every act of the Confederation,
   the 26 cantons and the intercantonal agreements: 33,441 acts, 22,047 of them

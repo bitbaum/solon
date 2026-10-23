@@ -12,18 +12,12 @@
 import { and, eq, isNull } from "drizzle-orm";
 import { FEDLEX } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
-import {
-  legalActIdentifiers,
-  legalActs,
-  legalActVersions,
-  legalProvisions,
-} from "@/lib/db/law-schema";
-import { sources } from "@/lib/db/places-schema";
-import { sha256Hex, type SnapshotStore } from "@/lib/places/importer/snapshots";
+import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
+import type { SnapshotStore } from "@/lib/places/importer/snapshots";
+import { storeVersion } from "./store";
 import { fetchHtml, listVersionsOn, parseProvisions, type FedlexVersion } from "./fedlex";
 
 export const TEXT_IMPORTER_VERSION = "law-text-fedlex-1";
-const CHUNK = 500;
 
 export interface TextOptions {
   lang: string;
@@ -58,12 +52,6 @@ export interface TextReport {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const dayBefore = (iso: string): string => {
-  const d = new Date(`${iso}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() - 1);
-  return d.toISOString().slice(0, 10);
-};
-
 /** Register acts of the authority, by their systematic number. */
 async function actsBySr(db: Database): Promise<Map<string, string>> {
   const rows = await db
@@ -142,72 +130,28 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
       if (provisions.length === 0) {
         throw new Error("no articles found in the page");
       }
-      const sha = sha256Hex(bytes);
-      const snapshotKey = dryRun ? `dry/${sha}` : await snapshots.put(sha, bytes);
-      if (!dryRun) {
-        await db.transaction(async (tx) => {
-          const [source] = await tx
-            .insert(sources)
-            .values({
-              sourceKey: FEDLEX.key,
-              retrievedAt: new Date(),
-              url: version.url,
-              contentSha256: sha,
-              snapshotKey,
-              importerVersion: TEXT_IMPORTER_VERSION,
-              licenceSpdx: FEDLEX.licenceSpdx,
-            })
-            .returning({ id: sources.id });
-          // Close the version this one replaces before the new one becomes current.
-          await tx
-            .update(legalActVersions)
-            .set({ inForceTo: dayBefore(version.date) })
-            .where(
-              and(
-                eq(legalActVersions.actId, actId),
-                eq(legalActVersions.lang, lang),
-                isNull(legalActVersions.inForceTo),
-              ),
-            );
-          const [row] = await tx
-            .insert(legalActVersions)
-            .values({
-              actId,
-              lang,
-              inForceFrom: version.date,
-              status: FEDLEX.textStatus,
-              format: "html",
-              sourceId: source!.id,
-            })
-            .returning({ id: legalActVersions.id });
-          for (let i = 0; i < provisions.length; i += CHUNK) {
-            await tx.insert(legalProvisions).values(
-              provisions.slice(i, i + CHUNK).map((p, j) => ({
-                versionId: row!.id,
-                path: p.path,
-                heading: p.heading,
-                text: p.text,
-                ord: i + j,
-              })),
-            );
-          }
-          const known = await tx
-            .select({ id: legalActIdentifiers.id })
-            .from(legalActIdentifiers)
-            .where(
-              and(
-                eq(legalActIdentifiers.actId, actId),
-                eq(legalActIdentifiers.scheme, "ch_eli"),
-                isNull(legalActIdentifiers.supersededAt),
-              ),
-            );
-          if (known.length === 0) {
-            await tx
-              .insert(legalActIdentifiers)
-              .values({ actId, scheme: "ch_eli", value: version.eli, sourceId: source!.id });
-          }
-        });
-      }
+      await storeVersion(
+        db,
+        snapshots,
+        {
+          actId,
+          lang,
+          inForceFrom: version.date,
+          dateBasis: "publisher",
+          status: FEDLEX.textStatus,
+          format: "html",
+          bytes,
+          url: version.url,
+          provisions,
+          source: {
+            key: FEDLEX.key,
+            licenceSpdx: FEDLEX.licenceSpdx,
+            importerVersion: TEXT_IMPORTER_VERSION,
+          },
+          identifier: { scheme: "ch_eli", value: version.eli },
+        },
+        dryRun,
+      );
       report.stored++;
       report.provisions += provisions.length;
       say(`${version.sr} ${version.date}: ${provisions.length} articles`);

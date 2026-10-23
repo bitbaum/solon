@@ -210,6 +210,27 @@ themselves are the text.
 The importer was made source-agnostic for this: a register is a function from
 its bytes to `ActRow`s, and the importer applies rows whatever their origin.
 
+### L2 as built, the text half (2026-10-23): Liechtenstein from Lilex
+
+`pnpm run law:text lilex` (or the *Law text load* workflow, source `lilex`) reads
+each register act's page on gesetze.li, `/konso/html/<id>`, where the id is the
+Landesgesetzblatt issue: year, number to three digits, `000`. Two acts need a
+listed exception (the ABGB has no issue; the Civil Procedure Code is published in
+two parts), and an issue like `60/1` is not guessed. Acts are read statutes
+first, treaties last, three seconds apart.
+
+- **Provisions** are the page's `div.art` blocks, under the anchor with its colon
+  made an underscore (`art:2a` is `art_2a`, `par:1096` is `par_1096`); footnote
+  marks are dropped. An act with no articles is one provision, `text`. Where a
+  page repeats an anchor (the same article in more than one wording) the first
+  is kept; the page is in the snapshot.
+- **Lilex does not state when a consolidated version took effect.** The version
+  is therefore dated by the day it was read, and says so: `date_basis` is
+  `retrieved`, not `publisher` (migration 0017). This is *as at*, not *in force
+  since*, and nothing may present it as the latter.
+- **The proof-of-work page ends the run.** It is recognised, never parsed as law,
+  never solved; the run reports `stoppedByChallenge` and the next run continues.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

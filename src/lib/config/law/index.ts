@@ -37,6 +37,13 @@ export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 export const ACT_TEXT_STATUSES = ["authentic", "consolidated"] as const;
 export type ActTextStatus = (typeof ACT_TEXT_STATUSES)[number];
 
+/**
+ * How a version's first day is known: the publisher states it, or the publisher
+ * states only that its page is current and the day it was read stands in.
+ */
+export const ACT_VERSION_DATE_BASES = ["publisher", "retrieved"] as const;
+export type ActVersionDateBasis = (typeof ACT_VERSION_DATE_BASES)[number];
+
 /** What a version's snapshot holds. */
 export const ACT_TEXT_FORMATS = ["html"] as const;
 export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
@@ -234,4 +241,27 @@ export const LI_SYSTEMATIC_REGISTER = {
   ] as readonly (readonly [string, ActKind])[],
   /** LR numbers that open with this are treaties (Staatsverträge). */
   treatyPrefix: "0.",
+} as const;
+
+/**
+ * Liechtenstein's consolidated acts, read from Lilex (gesetze.li). A page is
+ * `/konso/html/<id>`, and the id is the Landesgesetzblatt issue: year, number to
+ * three digits, `000`. The exceptions are listed here as they are found.
+ */
+export const LILEX = {
+  key: "lilex",
+  authority: "li",
+  publisher: "Rechtsdienst der Regierung des Fürstentums Liechtenstein (Lilex)",
+  homepage: "https://www.gesetze.li",
+  page: "https://www.gesetze.li/konso/html/",
+  licenceSpdx: "LicenseRef-li-official-act",
+  locale: "de",
+  textStatus: "consolidated" as ActTextStatus,
+  /** Acts whose page id is not their issue's: by LR number. Checked against the live pages, 2026-10-22. */
+  idByLr: {
+    // The ABGB is Austrian-era law (ASW) and has no Landesgesetzblatt issue.
+    "210.0": "1003001000",
+    // The Civil Procedure Code of 1912 is published in two parts.
+    "271.0": "1912009001",
+  } as Readonly<Record<string, string>>,
 } as const;

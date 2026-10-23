@@ -1,17 +1,24 @@
 name: Law text load
 
-# By hand: read the text of the Confederation's laws from Fedlex and store it in
-# the production database (design L1). Resumable: an act whose version is already
+# By hand: read the text of the Confederation's laws from Fedlex, or
+# Liechtenstein's from Lilex (gesetze.li), and store it in the production
+# database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
-# two seconds per act, politely paced; the first full German load takes a few hours.
+# two seconds per Fedlex act and three per Lilex act, politely paced; a full load
+# takes a few hours. Lilex stops the run if it answers with its proof-of-work page.
 # Runs on the box from a fresh checkout of main with the box's own DATABASE_URL.
 #
 # dry_run=true (default) fetches and parses but stores nothing.
 on:
   workflow_dispatch:
     inputs:
+      source:
+        description: "Whose laws"
+        type: choice
+        options: [fedlex, lilex]
+        default: fedlex
       lang:
-        description: "Language of the texts"
+        description: "Language of the texts (Fedlex only)"
         type: choice
         options: [de, fr, it]
         default: de
@@ -38,6 +45,7 @@ jobs:
           SHA: ${{ github.sha }}
           DRY: ${{ inputs.dry_run }}
           LANGUAGE: ${{ inputs.lang }}
+          SOURCE: ${{ inputs.source }}
           LIMIT: ${{ inputs.limit }}
         run: |
           set -euo pipefail
@@ -47,7 +55,7 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE LIMIT=$LIMIT bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -61,7 +69,7 @@ jobs:
           set +a
           export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
           flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
-          $PNPM run law:text fedlex --lang "$LANGUAGE" --limit "$LIMIT" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+          $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
           REMOTE
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt

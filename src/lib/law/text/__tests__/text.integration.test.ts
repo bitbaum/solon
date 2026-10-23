@@ -16,6 +16,9 @@ import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importLexfindRegister } from "../../register/lexfind";
 import { readProvision, searchActs } from "../../register/coverage";
 import { importFedlexText } from "../import";
+import { importLilexText } from "../import-lilex";
+import { importRegister } from "../../register/import";
+import { liRows, parseSystematicRegister } from "../../register/li-systematic";
 
 const RUN = process.env.INTEGRATION === "1";
 
@@ -259,5 +262,73 @@ describe.skipIf(!RUN)("fedlex text import", () => {
     expect(first).toMatchObject({ stored: 1, remaining: 1 });
     const second = await run({ day: "2026-10-23", limit: 1 });
     expect(second).toMatchObject({ stored: 1, remaining: 0 });
+  });
+});
+
+describe.skipIf(!RUN)("lilex text import", () => {
+  const lr = `998.${base}`;
+  const issue = (base % 800) + 100;
+  const actPage = `<div class="htit1">Gesetz</div><div class="art"><a name="art:1"></a>Art. 1<div class="sacht">Zweck</div><div class="abs">Text.</div></div>`;
+  const serving = (body: string) => (async () => new Response(body)) as unknown as typeof fetch;
+  const read = (fetchImpl: typeof fetch) =>
+    importLilexText(db, { snapshots, today: "2026-10-23", lr, pauseMs: 0, fetchImpl });
+
+  it("is set up: the register holds the act, named by LR number with its issue", async () => {
+    const line = `${lr} G vom 17. September 2008 über etwas ........ 2008 ${issue}`;
+    const report = await importRegister(db, {
+      register: {
+        key: "li-systematic-register",
+        licenceSpdx: "LicenseRef-li-official-act",
+        identityScheme: "li_lr",
+      },
+      bytes: new TextEncoder().encode(line),
+      url: "test",
+      retrievedAt: new Date(),
+      snapshots,
+      read: () => liRows(parseSystematicRegister([line])),
+    });
+    expect(report.counts.actsInserted).toBe(1);
+  });
+
+  it("stops at the proof-of-work page and stores nothing", async () => {
+    const report = await read(serving("<script>array_to_hex_string()</script>"));
+    expect(report.stoppedByChallenge).toBe(true);
+    expect(report.stored).toBe(0);
+  });
+
+  it("reports a page that is not an act, and does not store it", async () => {
+    const report = await read(serving("<html>Nicht gefunden</html>"));
+    expect(report.failures).toEqual([{ lr, reason: "no act at that page" }]);
+    expect(report.stored).toBe(0);
+  });
+
+  it("stores the act dated by the day it was read, cited to Lilex's page and hash", async () => {
+    const report = await read(serving(actPage));
+    expect(report).toMatchObject({ stored: 1, provisions: 1, failures: [] });
+    const [act] = await searchActs(db, { authority: "li", number: lr });
+    const provision = await readProvision(db, {
+      actId: act!.id,
+      path: "art_1",
+      lang: "de",
+      on: "2026-10-23",
+    });
+    expect(provision).toMatchObject({
+      heading: "Art. 1 Zweck",
+      text: "Text.",
+      inForceFrom: "2026-10-23",
+      status: "consolidated",
+      sourceUrl: `https://www.gesetze.li/konso/html/2008${String(issue).padStart(3, "0")}000`,
+    });
+    expect(provision!.contentSha256).toMatch(/^[0-9a-f]{64}$/);
+    const [version] = await db
+      .select({ basis: legalActVersions.dateBasis })
+      .from(legalActVersions)
+      .where(eq(legalActVersions.actId, act!.id));
+    expect(version!.basis).toBe("retrieved");
+  });
+
+  it("does not read an act it already holds", async () => {
+    const report = await read(serving("must not be fetched"));
+    expect(report.wanted).toBe(0);
   });
 });

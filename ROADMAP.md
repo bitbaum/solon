@@ -22,7 +22,7 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 - [x] The register for Liechtenstein: the 3,407 acts of the Government's Systematic Register, named by LR number with the Landesgesetzblatt issue that published each {#law-register-li}
 - [ ] Each act's official link beside the register's own, and the communes in the register {#law-register-links}
 - [ ] Federal text from Fedlex, every act in force, checked against the publisher every day. The reader and the store are built and tested; the production load and the daily check are not done {#law-federal}
-- [ ] Liechtenstein text from gesetze.li {#law-li}
+- [ ] Liechtenstein text from gesetze.li. The reader is built and tested on the real pages, and dates each version by the day it was read, because Lilex does not state when one took effect; the production load is not done {#law-li}
 - [ ] Cantonal text, one publisher at a time, Zürich first {#law-cantons}
 - [ ] Earlier versions of every act, and what changed between them {#law-history}
 - [ ] Municipal regulations, commune by commune {#law-communes}
