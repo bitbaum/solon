@@ -59,10 +59,38 @@ const fallbackTerms = (text: string): string[] => [
   ...new Set((text.toLowerCase().match(/[\p{L}]{5,}/gu) ?? []).slice(0, 8)),
 ];
 
-export async function planResearch(turns: readonly Turn[], ask: Completer): Promise<Plan> {
+/**
+ * A plan that did not do its job: no act pointed at, or every search word is one
+ * the person typed (the model copied instead of translating into the law's
+ * language, so the search cannot find a German provision from English words).
+ */
+export function weakPlan(plan: Plan, lastMessage: string): boolean {
+  const typed = new Set(lastMessage.toLowerCase().match(/[\p{L}]+/gu) ?? []);
+  const words = plan.groups.flat().map((w) => w.toLowerCase());
+  return plan.acts.length === 0 || words.every((w) => typed.has(w));
+}
+
+const RETRY =
+  "\n\nYour previous answer was not usable: it named no act, or it copied the user's own words. Name the acts that govern this question (a distinctive word of each German title) and give the groups as stems in German, not the user's language.";
+
+export async function planResearch(
+  turns: readonly Turn[],
+  ask: Completer,
+  /** Asked once more, if the first plan is weak; a different model, when there is one. */
+  askAgain?: Completer,
+): Promise<Plan> {
+  const first = await planOnce(turns, ask, PROMPT);
+  if (!askAgain || !weakPlan(first, turns.at(-1)?.content ?? "")) return first;
+  const second = await planOnce(turns, askAgain, PROMPT + RETRY);
+  // The second opinion stands unless it is also weak and says less than the first.
+  const last = turns.at(-1)?.content ?? "";
+  return weakPlan(second, last) && second.acts.length < first.acts.length ? first : second;
+}
+
+async function planOnce(turns: readonly Turn[], ask: Completer, prompt: string): Promise<Plan> {
   const last = turns.at(-1)?.content ?? "";
   const messages: ChatMessage[] = [
-    { role: "system", content: PROMPT },
+    { role: "system", content: prompt },
     ...turns.slice(-6).map((t) => ({ role: t.role, content: t.content.slice(0, 1500) })),
   ];
   let planned: Partial<Plan> | null = null;
