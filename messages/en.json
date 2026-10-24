@@ -1216,7 +1216,8 @@
       "noHits": "Nothing found.",
       "hits": "{count, plural, one {# act} other {# acts}} found",
       "notInForce": "not in force",
-      "coverageLink": "What the register lists, counted from the data →"
+      "coverageLink": "What the register lists, counted from the data →",
+      "askLink": "Ask the law a question →"
     },
     "act": {
       "kicker": "Law",
@@ -1245,6 +1246,28 @@
       "intercantonal_agreement": "intercantonal agreement",
       "communal_act": "communal act",
       "other": "other"
+    },
+    "ask": {
+      "metaTitle": "Ask the law",
+      "title": "Ask the law",
+      "description": "Ask in plain words, in any language. The answer comes from the published text of the law of Switzerland, its cantons and Liechtenstein, and names the provisions it rests on.",
+      "placeholder": "Is it legal to keep a fox in Graubünden?",
+      "new": "New conversation",
+      "footnote": "Legal information from the published text, not advice for your case. Check the sources.",
+      "startersTitle": "What does the law say?",
+      "starters": {
+        "one": "Is it legal to keep a fox in Graubünden?",
+        "two": "And in Lucerne?",
+        "three": "Can a landlord in Zürich raise the rent during a lease?"
+      },
+      "steps": {
+        "plan": "Working out which law applies",
+        "search": "Searching the provisions",
+        "write": "Writing the answer"
+      },
+      "failed": "Solon could not answer. Try again, or search the law directly.",
+      "findLaw": "Find a law",
+      "coverage": "What the register holds"
     }
   }
 }

@@ -650,7 +650,8 @@
       "noHits": "Rien trouvé.",
       "hits": "{count, plural, one {# acte trouvé} other {# actes trouvés}}",
       "notInForce": "pas en vigueur",
-      "coverageLink": "Ce que le registre liste, compté à partir des données →"
+      "coverageLink": "Ce que le registre liste, compté à partir des données →",
+      "askLink": "Poser une question au droit →"
     },
     "act": {
       "kicker": "Droit",
@@ -679,6 +680,28 @@
       "intercantonal_agreement": "convention intercantonale",
       "communal_act": "acte communal",
       "other": "autre"
+    },
+    "ask": {
+      "metaTitle": "Interroger le droit",
+      "title": "Interroger le droit",
+      "description": "Posez votre question en mots simples, dans n'importe quelle langue. La réponse vient du texte publié du droit de la Suisse, de ses cantons et du Liechtenstein, et nomme les dispositions sur lesquelles elle repose.",
+      "placeholder": "Est-il permis de garder un renard aux Grisons ?",
+      "new": "Nouvelle conversation",
+      "footnote": "Information juridique tirée du texte publié, pas un conseil pour votre cas. Vérifiez les sources.",
+      "startersTitle": "Que dit le droit ?",
+      "starters": {
+        "one": "Est-il permis de garder un renard aux Grisons ?",
+        "two": "Et à Lucerne ?",
+        "three": "Un bailleur peut-il augmenter le loyer en cours de bail à Zurich ?"
+      },
+      "steps": {
+        "plan": "Je cherche quel droit s'applique",
+        "search": "Je parcours les dispositions",
+        "write": "J'écris la réponse"
+      },
+      "failed": "Solon n'a pas pu répondre. Réessayez ou cherchez le droit directement.",
+      "findLaw": "Trouver un acte",
+      "coverage": "Ce que le registre contient"
     }
   }
 }

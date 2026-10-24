@@ -25,6 +25,11 @@ export default function LawIndex({ query, authority, searchAction, hits, t }: La
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
       <div className="mx-auto max-w-3xl space-y-10">
         <p className="text-fg-secondary">{t("index.intro")}</p>
+        <p>
+          <Link href="/law/ask" className="font-medium text-fg-primary underline">
+            {t("index.askLink")}
+          </Link>
+        </p>
         <form action={searchAction} method="get" role="search" className="space-y-4">
           <div>
             <label htmlFor="law-q" className="block text-sm font-medium text-fg-primary">

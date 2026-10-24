@@ -4,6 +4,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { selfOriginOf } from "@/lib/auth/actor";
 import type { ChatEvent } from "@/lib/chat/events";
+import { readJsonBounded } from "@/lib/chat/body";
 import { allowAssistantRequest } from "@/lib/chat/rate-limit";
 import { governancePrompt } from "@/lib/chat/prompt";
 
@@ -22,35 +23,18 @@ export async function POST(req: Request) {
   const session = await auth();
   if (!session) return Response.json({ error: "Sign in to ask Solon." }, { status: 401 });
   // Bound the request before parsing; content-length alone can be absent or forged.
-  const reader = req.body?.getReader();
-  if (!reader) return Response.json({ error: "A message is required." }, { status: 400 });
-  const chunks: Uint8Array[] = [];
-  let bytes = 0;
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    bytes += value.byteLength;
-    if (bytes > 100000) {
-      await reader.cancel();
-      return Response.json(
-        { error: "This conversation is too long. Start a new one." },
-        { status: 413 },
-      );
-    }
-    chunks.push(value);
-  }
-  const buffer = new Uint8Array(bytes);
-  let offset = 0;
-  for (const chunk of chunks) {
-    buffer.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  let body: unknown;
-  try {
-    body = JSON.parse(new TextDecoder().decode(buffer));
-  } catch {
-    body = null;
-  }
+  const read = await readJsonBounded(req);
+  if (!read.ok)
+    return Response.json(
+      {
+        error:
+          read.status === 413
+            ? "This conversation is too long. Start a new one."
+            : "A message is required.",
+      },
+      { status: read.status },
+    );
+  const body = read.body;
   const parsed = Body.safeParse(body);
   if (!parsed.success || parsed.data.messages.at(-1)?.role !== "user")
     return Response.json({ error: "Send a question of up to 12000 characters." }, { status: 400 });

@@ -1,0 +1,45 @@
+/**
+ * The names people use for an authority, in the languages of the country, so a
+ * question that says "Lucerne" or "Graubünden" or "Tessin" finds its law. Keys
+ * are LAW_AUTHORITIES keys. Matching ignores case and accents.
+ */
+export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  ch: [
+    "switzerland",
+    "schweiz",
+    "suisse",
+    "svizzera",
+    "swiss federal",
+    "federal",
+    "bund",
+    "confederation",
+  ],
+  zh: ["zurich", "zuerich", "zürich"],
+  be: ["bern", "berne"],
+  lu: ["luzern", "lucerne", "lucerna"],
+  ur: ["uri"],
+  sz: ["schwyz"],
+  ow: ["obwalden"],
+  nw: ["nidwalden"],
+  gl: ["glarus", "glaris"],
+  zg: ["zug", "zoug"],
+  fr: ["fribourg", "freiburg", "friburgo"],
+  so: ["solothurn", "soleure", "soletta"],
+  bs: ["basel", "basel-stadt", "bale", "basilea"],
+  bl: ["basel", "basel-landschaft", "baselland", "bale-campagne"],
+  sh: ["schaffhausen", "schaffhouse"],
+  ar: ["appenzell", "ausserrhoden"],
+  ai: ["appenzell", "innerrhoden"],
+  sg: ["st. gallen", "st gallen", "sankt gallen", "saint-gall", "san gallo"],
+  gr: ["graubunden", "graubuenden", "grisons", "grigioni", "grischun"],
+  ag: ["aargau", "argovie", "argovia"],
+  tg: ["thurgau", "thurgovie", "turgovia"],
+  ti: ["ticino", "tessin", "tessin"],
+  vd: ["vaud", "waadt"],
+  vs: ["valais", "wallis", "vallese"],
+  ne: ["neuchatel", "neuenburg"],
+  ge: ["geneve", "geneva", "genf", "ginevra"],
+  ju: ["jura"],
+  li: ["liechtenstein"],
+  bfs261: ["city of zurich", "stadt zurich", "stadt zuerich", "ville de zurich", "citta di zurigo"],
+};

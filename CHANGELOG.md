@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **You can ask the law a question.** `/law/ask` is a chat, built on the same chat as
+  Loki and OrangeCat, open to everyone and in any language. It works out which
+  places the question is about ("and in Lucerne?" keeps the fox from the question
+  before), searches those places' provisions, and answers only from them, each
+  statement linked to the provision it rests on. Search can also take several
+  authorities at once.
+  {#law-ask}
 - **The City of Zürich's own laws can be loaded, with their history.** A reader
   for the city's Amtliche Sammlung takes each act's versions with the days the
   city states, and any other commune joins by adding one reader. The loading

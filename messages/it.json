@@ -650,7 +650,8 @@
       "noHits": "Niente trovato.",
       "hits": "{count, plural, one {# atto trovato} other {# atti trovati}}",
       "notInForce": "non in vigore",
-      "coverageLink": "Che cosa elenca il registro, contato dai dati →"
+      "coverageLink": "Che cosa elenca il registro, contato dai dati →",
+      "askLink": "Fare una domanda al diritto →"
     },
     "act": {
       "kicker": "Diritto",
@@ -679,6 +680,28 @@
       "intercantonal_agreement": "convenzione intercantonale",
       "communal_act": "atto comunale",
       "other": "altro"
+    },
+    "ask": {
+      "metaTitle": "Interrogare il diritto",
+      "title": "Interrogare il diritto",
+      "description": "Fate la vostra domanda con parole semplici, in qualsiasi lingua. La risposta viene dal testo pubblicato del diritto della Svizzera, dei suoi cantoni e del Liechtenstein, e indica le disposizioni su cui si basa.",
+      "placeholder": "È permesso tenere una volpe nei Grigioni?",
+      "new": "Nuova conversazione",
+      "footnote": "Informazione giuridica tratta dal testo pubblicato, non una consulenza per il vostro caso. Verificate le fonti.",
+      "startersTitle": "Che cosa dice il diritto?",
+      "starters": {
+        "one": "È permesso tenere una volpe nei Grigioni?",
+        "two": "E a Lucerna?",
+        "three": "Un locatore può aumentare la pigione durante la locazione a Zurigo?"
+      },
+      "steps": {
+        "plan": "Cerco quale diritto si applica",
+        "search": "Scorro le disposizioni",
+        "write": "Scrivo la risposta"
+      },
+      "failed": "Solon non ha potuto rispondere. Riprovate o cercate il diritto direttamente.",
+      "findLaw": "Trovare un atto",
+      "coverage": "Che cosa contiene il registro"
     }
   }
 }
