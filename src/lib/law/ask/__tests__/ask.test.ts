@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { groupsQueries, termsQuery, type ProvisionHit } from "../../search";
 import { answerMessages, sourcesOf } from "../answer";
-import { planResearch, weakPlan } from "../plan";
+import { planResearch, weakPlan, type Completer } from "../plan";
 import { authoritiesNamed } from "../places";
 
 describe("places in a question", () => {
@@ -107,7 +107,7 @@ describe("planning a search", () => {
     const good =
       '{"question":"fox in Lucerne","language":"English","acts":["Tierschutzverordnung"],"groups":[["Fuchs"],["Haltung"]],"authorities":["gr"]}';
     // Only a single-message conversation (system prompt + one turn) is planned well.
-    const byLength = async (o: { messages: { content: string }[] }) => ({
+    const byLength: Completer = async (o) => ({
       text: o.messages.length === 2 ? good : weak,
     });
     const plan = await planResearch(
