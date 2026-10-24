@@ -75,7 +75,18 @@ export interface SearchInput {
   authorities?: readonly string[];
   lang?: string;
   limit?: number;
+  /** How hard ranking prefers fundamental acts; see `RANKING`. */
+  ranking?: Partial<typeof RANKING>;
 }
+
+/**
+ * Ranking prefers the fundamental act: a provision's text score is weighted down
+ * for each level its act sits below the top of its collection's numbering
+ * (220 → 221.213.11) and for being an ordinance rather than a statute. Words
+ * alone put a short ordinance that happens to repeat the question's words above
+ * the statute that makes the rule.
+ */
+export const RANKING = { depth: 0.3, ordinance: 0.8 };
 
 export async function searchProvisions(db: Database, input: SearchInput): Promise<ProvisionHit[]> {
   const limit = Math.min(Math.max(input.limit ?? 10, 1), SEARCH_LIMIT_MAX);
@@ -108,28 +119,36 @@ async function run(
   // Authority keys never contain a comma, so a list travels as one string.
   const authorities = input.authorities?.length ? input.authorities.join(",") : null;
   const lang = input.lang ?? null;
+  const depth = Math.min(Math.max(input.ranking?.depth ?? RANKING.depth, 0), 3);
+  const ordinance = Math.min(Math.max(input.ranking?.ordinance ?? RANKING.ordinance, 0.05), 1);
   const tsq =
     "prefix" in by
       ? sql`to_tsquery('simple', ${by.prefix})`
       : sql`websearch_to_tsquery('simple', ${by.q})`;
   // Provisions already found by an earlier, more exact query; "act#path" cannot contain a comma.
   const skipped = skip.join(",");
-  const result = await db.execute(sql`
+  // A loose query on a common word can match most of the law; it is cut off rather than allowed to hold the database.
+  const result = await db
+    .transaction(async (tx) => {
+      await tx.execute(sql`SET LOCAL statement_timeout = 5000`);
+      return tx.execute(sql`
     WITH query AS (SELECT ${tsq} AS tsq),
     hits AS (
       SELECT p.id, p.version_id, p.path, p.heading, p.text,
-             ts_rank_cd(to_tsvector('simple', p.heading || ' ' || p.text), query.tsq) AS rank
-      FROM legal_provisions p, query
+             ts_rank_cd(to_tsvector('simple', p.heading || ' ' || p.text), query.tsq)
+               / (1 + ${depth}::float * (coalesce(array_length(string_to_array(num.value, '.'), 1), 1) - 1))
+               * (CASE WHEN a.kind IN ('statute', 'constitution', 'treaty') THEN 1 ELSE ${ordinance}::float END) AS rank
+      FROM legal_provisions p
+      CROSS JOIN query
+      JOIN legal_act_versions v ON v.id = p.version_id AND v.in_force_to IS NULL
+      JOIN legal_acts a ON a.id = v.act_id AND a.in_force
+      LEFT JOIN legal_act_identifiers num
+        ON num.act_id = a.id AND num.scheme = 'systematic_number' AND num.superseded_at IS NULL
       WHERE to_tsvector('simple', p.heading || ' ' || p.text) @@ query.tsq
-        AND EXISTS (
-          SELECT 1 FROM legal_act_versions v
-          JOIN legal_acts a ON a.id = v.act_id
-          WHERE v.id = p.version_id AND v.in_force_to IS NULL AND a.in_force
-            AND (${authority}::text IS NULL OR a.authority = ${authority})
-            AND (${authorities}::text IS NULL OR a.authority = ANY(string_to_array(${authorities}, ',')))
-            AND (${lang}::text IS NULL OR v.lang = ${lang})
-            AND (v.act_id || '#' || p.path) <> ALL(string_to_array(${skipped}, ','))
-        )
+        AND (${authority}::text IS NULL OR a.authority = ${authority})
+        AND (${authorities}::text IS NULL OR a.authority = ANY(string_to_array(${authorities}, ',')))
+        AND (${lang}::text IS NULL OR v.lang = ${lang})
+        AND (v.act_id || '#' || p.path) <> ALL(string_to_array(${skipped}, ','))
       ORDER BY rank DESC, p.id
       LIMIT ${limit}
     )
@@ -149,5 +168,10 @@ async function run(
       ON num.act_id = a.id AND num.scheme = 'systematic_number' AND num.superseded_at IS NULL
     ORDER BY h.rank DESC, h.id
   `);
-  return result.rows as unknown as ProvisionHit[];
+    })
+    .catch((error: unknown) => {
+      if ((error as { cause?: { code?: string } })?.cause?.code === "57014") return null;
+      throw error;
+    });
+  return (result?.rows ?? []) as unknown as ProvisionHit[];
 }

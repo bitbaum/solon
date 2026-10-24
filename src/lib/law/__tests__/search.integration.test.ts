@@ -15,7 +15,7 @@ describe.skipIf(!RUN)("searchProvisions", () => {
   });
 
   it("never returns more than the limit asked, capped", async () => {
-    const hits = await searchProvisions(db, { q: "der OR die OR das", limit: 3 });
+    const hits = await searchProvisions(db, { q: "Begriffsbestimmungen OR Zweck", limit: 3 });
     expect(hits.length).toBeLessThanOrEqual(3);
     for (const hit of hits) {
       expect(hit.contentSha256).toMatch(/^[0-9a-f]{64}$/);

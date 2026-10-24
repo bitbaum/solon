@@ -30,7 +30,8 @@
     "places:fetch": "tsx scripts/places-fetch.ts",
     "law:register": "tsx scripts/law-register.ts",
     "law:text": "tsx scripts/law-text.ts",
-    "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts"
+    "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts",
+    "check:law-search": "tsx scripts/check-law-search.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.7",
