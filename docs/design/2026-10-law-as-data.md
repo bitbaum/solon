@@ -334,6 +334,25 @@ versions, back to the 1970s for the Gemeindeordnung. The tables are JSON in an
 HTML attribute; that is read in one place (`zurich-city.ts`). The city's oldest
 versions repeat and overlap first days; one is kept per day, the longest-running.
 
+### Asking the law as built (2026-10-24)
+
+`/law/ask` and `POST /api/law/ask` (design: the retrieval layer). Three steps,
+each its own file in `src/lib/law/ask`:
+
+1. **plan**: the conversation becomes a standalone question, the places it is
+   about (the places named in the last message are always added, by
+   `AUTHORITY_ALIASES`; the Confederation always), and 4 to 10 stems as the law
+   would word them. The model translates ("fox" to Fuchs); a failed model call
+   falls back to the person's own words.
+2. **retrieve**: a few provisions per place, ranked, so a comparison between
+   cantons has both sides. Search is a prefix OR over the versions in force
+   (`termsQuery`), on the full-text index of migration 0018.
+3. **answer**: the model sees the numbered provisions and no other law, cites
+   each statement `[L1]`, and says what is missing when they do not settle it.
+
+The chat is chatkit's. Public, rate-limited by address. Causius reads the same
+engine as a tool, so there is one researcher, not two.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

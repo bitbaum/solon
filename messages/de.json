@@ -650,7 +650,8 @@
       "noHits": "Nichts gefunden.",
       "hits": "{count, plural, one {# Erlass} other {# Erlasse}} gefunden",
       "notInForce": "nicht in Kraft",
-      "coverageLink": "Was das Register führt, aus den Daten gezählt →"
+      "coverageLink": "Was das Register führt, aus den Daten gezählt →",
+      "askLink": "Dem Recht eine Frage stellen →"
     },
     "act": {
       "kicker": "Recht",
@@ -679,6 +680,28 @@
       "intercantonal_agreement": "interkantonale Vereinbarung",
       "communal_act": "Gemeindeerlass",
       "other": "anderes"
+    },
+    "ask": {
+      "metaTitle": "Das Recht fragen",
+      "title": "Das Recht fragen",
+      "description": "Fragen Sie in einfachen Worten, in jeder Sprache. Die Antwort stammt aus dem veröffentlichten Text des Rechts der Schweiz, ihrer Kantone und Liechtensteins und nennt die Bestimmungen, auf die sie sich stützt.",
+      "placeholder": "Darf man in Graubünden einen Fuchs halten?",
+      "new": "Neues Gespräch",
+      "footnote": "Rechtsinformation aus dem veröffentlichten Text, keine Beratung für Ihren Fall. Prüfen Sie die Quellen.",
+      "startersTitle": "Was sagt das Recht?",
+      "starters": {
+        "one": "Darf man in Graubünden einen Fuchs halten?",
+        "two": "Und in Luzern?",
+        "three": "Darf ein Vermieter in Zürich den Mietzins während des Mietverhältnisses erhöhen?"
+      },
+      "steps": {
+        "plan": "Ich ermittle, welches Recht gilt",
+        "search": "Ich durchsuche die Bestimmungen",
+        "write": "Ich schreibe die Antwort"
+      },
+      "failed": "Solon konnte nicht antworten. Versuchen Sie es erneut oder suchen Sie das Recht direkt.",
+      "findLaw": "Einen Erlass finden",
+      "coverage": "Was das Register führt"
     }
   }
 }
