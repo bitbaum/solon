@@ -45,7 +45,16 @@ export async function POST(req: Request) {
       emit({ type: "step", step: "plan" });
       const ask: Completer = (options) =>
         complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
-      const plan = await planResearch(turns, ask);
+      // A second opinion from the next model in the chain, if the first plan is weak.
+      const askAgain: Completer = (options) =>
+        complete({
+          ...options,
+          chain: [...chain.slice(1), ...chain.slice(0, 1)],
+          env: process.env,
+          timeoutMs: 20000,
+          signal,
+        });
+      const plan = await planResearch(turns, ask, askAgain);
       emit({ type: "plan", authorities: plan.authorities, acts: plan.acts, groups: plan.groups });
       emit({ type: "step", step: "search" });
       const found = await retrieve(db, plan);

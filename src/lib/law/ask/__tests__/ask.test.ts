@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { groupsQueries, termsQuery, type ProvisionHit } from "../../search";
 import { answerMessages, sourcesOf } from "../answer";
-import { planResearch } from "../plan";
+import { planResearch, weakPlan } from "../plan";
 import { authoritiesNamed } from "../places";
 
 describe("places in a question", () => {
@@ -81,6 +81,48 @@ describe("planning a search", () => {
     expect(plan.terms).toEqual(["Fuchs", "Wildtier", "Bewilligung"]);
     expect(plan.language).toBe("English");
     expect(plan.acts).toEqual(["Tierschutzverordnung"]);
+  });
+
+  it("asks a second model when the plan names no act or only repeats the person's words", async () => {
+    const copied =
+      '{"question":"q","language":"English","acts":[],"groups":[["legal","graubünden"]]}';
+    const good =
+      '{"question":"q","language":"English","acts":["Tierschutzverordnung"],"groups":[["Fuchs"],["Haltung"]]}';
+    const turns = [{ role: "user" as const, content: "Is it legal to keep a fox in Graubünden?" }];
+    const plan = await planResearch(turns, model(copied), model(good));
+    expect(plan.acts).toEqual(["Tierschutzverordnung"]);
+    expect(plan.groups).toEqual([["Fuchs"], ["Haltung"]]);
+    // A good first plan is not second-guessed.
+    let asked = 0;
+    const counting = async () => {
+      asked++;
+      return { text: good };
+    };
+    await planResearch(turns, model(good), counting);
+    expect(asked).toBe(0);
+  });
+
+  it("keeps the first plan when the second says less", async () => {
+    const some = '{"question":"q","language":"English","acts":["Jagdgesetz"],"groups":[["jagd"]]}';
+    const none = '{"question":"q","language":"English","acts":[],"groups":[["fox"]]}';
+    const turns = [{ role: "user" as const, content: "Is a fox huntable?" }];
+    const plan = await planResearch(turns, model(none), model(none));
+    expect(plan.acts).toEqual([]);
+    expect((await planResearch(turns, model(some), model(none))).acts).toEqual(["Jagdgesetz"]);
+  });
+
+  it("calls a plan weak by what it names, not how long it is", () => {
+    const plan = {
+      question: "q",
+      authorities: ["ch"],
+      terms: [],
+      groups: [["Fuchs"]],
+      acts: ["Tierschutzgesetz"],
+      language: "English",
+    };
+    expect(weakPlan(plan, "Is it legal to keep a fox?")).toBe(false);
+    expect(weakPlan({ ...plan, acts: [] }, "Is it legal to keep a fox?")).toBe(true);
+    expect(weakPlan({ ...plan, groups: [["fox"]] }, "Is it legal to keep a fox?")).toBe(true);
   });
 
   it("still searches when the model fails", async () => {

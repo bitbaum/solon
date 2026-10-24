@@ -8,6 +8,10 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **A weak search plan gets a second opinion.** When the model that plans a search
+  names no act, or only repeats the words of the question instead of putting them
+  into the law's language, the next model in the chain is asked once more, so one
+  unlucky model no longer decides whether a rule is found. {#law-ask}
 - **The law chat starts from the act a lawyer would open.** The model now says which
   statutes or ordinances probably govern a question (it points; it does not answer),
   and the chat searches those acts first with the question's ideas, then reads what
