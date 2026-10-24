@@ -72,7 +72,7 @@ describe("planning a search", () => {
         { role: "user", content: "and in Lucerne?" },
       ],
       model(
-        '{"question":"Is it legal to keep a fox in Lucerne?","authorities":["gr","xx"],"language":"English","groups":[["Fuchs","Wildtier"],["Bewilligung"]]}',
+        '{"question":"Is it legal to keep a fox in Lucerne?","authorities":["gr","xx"],"language":"English","acts":["Tierschutzverordnung","x"],"groups":[["Fuchs","Wildtier"],["Bewilligung"]]}',
       ),
     );
     expect(plan.question).toBe("Is it legal to keep a fox in Lucerne?");
@@ -80,6 +80,7 @@ describe("planning a search", () => {
     expect(plan.groups).toEqual([["Fuchs", "Wildtier"], ["Bewilligung"]]);
     expect(plan.terms).toEqual(["Fuchs", "Wildtier", "Bewilligung"]);
     expect(plan.language).toBe("English");
+    expect(plan.acts).toEqual(["Tierschutzverordnung"]);
   });
 
   it("still searches when the model fails", async () => {
@@ -133,7 +134,14 @@ describe("the answer's sources", () => {
   it("puts the provisions, and only those, in front of the model", () => {
     const messages = answerMessages(
       [{ role: "user", content: "fox?" }],
-      { question: "fox?", authorities: ["ch", "gr"], terms: [], groups: [], language: "English" },
+      {
+        question: "fox?",
+        authorities: ["ch", "gr"],
+        terms: [],
+        groups: [],
+        acts: [],
+        language: "English",
+      },
       [hit],
     );
     expect(messages[0]!.content).toContain("[L1] Graubünden");

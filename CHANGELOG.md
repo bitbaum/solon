@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The law chat starts from the act a lawyer would open.** The model now says which
+  statutes or ordinances probably govern a question (it points; it does not answer),
+  and the chat searches those acts first with the question's ideas, then reads what
+  they say. One question asked twice no longer depends on which words ranked.
+  {#law-ask}
 - **The law chat looks wider before it chooses.** It now considers up to fifteen
   provisions per place and lets the model pick the few that apply, so a rule the
   words rank twelfth is still found. {#law-ask}

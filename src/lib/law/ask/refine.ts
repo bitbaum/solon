@@ -16,14 +16,14 @@ const KEYS = new Set(LAW_AUTHORITIES.map((a) => a.key));
 
 interface Review {
   relevant: number[];
-  missing: { authorities: string[]; groups: string[][] }[];
+  missing: { authorities: string[]; act?: string; groups: string[][] }[];
 }
 
 const PROMPT = `You check the result of a search of Swiss and Liechtenstein law. Reply with JSON only:
-{"relevant": [0, 3], "missing": [{"authorities": ["ch"], "groups": [["..."], ["..."]]}]}
+{"relevant": [0, 3], "missing": [{"authorities": ["ch"], "act": "Tierschutzverordnung", "groups": [["..."], ["..."]]}]}
 
 - relevant: the numbers of the provisions that bear on the question. A provision about a different subject that happens to share a word is not relevant.
-- missing: 0 to 2 further searches, only when an obvious provision is not among those found (the permit rule, the duty, the canton's own act). authorities: keys from ${LAW_AUTHORITIES.map((a) => a.key).join(", ")}. groups: 2 ideas, each 2 to 4 stems as the law words them, in German (French or Italian for places that speak them). Leave "missing" empty when the found provisions are enough.`;
+- missing: 0 to 2 further searches, only when an obvious provision is not among those found (the permit rule, the duty, the canton's own act). act: optional, one distinctive word of the German title of the act you expect to hold the rule (the statute or ordinance a lawyer would open first; you are pointing at where to look, not answering). authorities: keys from ${LAW_AUTHORITIES.map((a) => a.key).join(", ")}. groups: 2 ideas, each 2 to 4 stems as the law words them, in German (French or Italian for places that speak them). Leave "missing" empty when the found provisions are enough.`;
 
 const numbers = (value: unknown): number[] =>
   Array.isArray(value) ? value.filter((n): n is number => Number.isInteger(n)) : [];
@@ -35,7 +35,7 @@ function parse(text: string): Review | null {
   try {
     const raw = JSON.parse(text.slice(start, end + 1)) as Record<string, unknown>;
     const missing = (Array.isArray(raw.missing) ? raw.missing : []).slice(0, 2).flatMap((m) => {
-      const item = m as { authorities?: unknown; groups?: unknown };
+      const item = m as { authorities?: unknown; groups?: unknown; act?: unknown };
       const authorities = (Array.isArray(item.authorities) ? item.authorities : []).filter(
         (key): key is string => typeof key === "string" && KEYS.has(key),
       );
@@ -45,7 +45,11 @@ function parse(text: string): Review | null {
         )
         .filter((g) => g.length > 0)
         .slice(0, 3);
-      return authorities.length && groups.length ? [{ authorities, groups }] : [];
+      const act =
+        typeof item.act === "string" && item.act.trim().length >= 4
+          ? item.act.trim().slice(0, 60)
+          : undefined;
+      return authorities.length && groups.length ? [{ authorities, act, groups }] : [];
     });
     return { relevant: numbers(raw.relevant), missing };
   } catch {

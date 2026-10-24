@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       const ask: Completer = (options) =>
         complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
       const plan = await planResearch(turns, ask);
+      emit({ type: "plan", authorities: plan.authorities, acts: plan.acts, groups: plan.groups });
       emit({ type: "step", step: "search" });
       const found = await retrieve(db, plan);
       emit({ type: "step", step: "check" });

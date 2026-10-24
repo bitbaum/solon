@@ -20,7 +20,14 @@ const hit = (path: string, heading: string): ProvisionHit => ({
   rank: 1,
 });
 
-const plan = { question: "fox?", authorities: ["ch"], terms: [], groups: [], language: "English" };
+const plan = {
+  question: "fox?",
+  authorities: ["ch"],
+  terms: [],
+  groups: [],
+  acts: [],
+  language: "English",
+};
 // Further searches would need a database; these cases make none.
 const noDb = {} as Database;
 const model = (text: string) => async () => ({ text });
