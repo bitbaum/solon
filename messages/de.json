@@ -697,7 +697,8 @@
       "steps": {
         "plan": "Ich ermittle, welches Recht gilt",
         "search": "Ich durchsuche die Bestimmungen",
-        "write": "Ich schreibe die Antwort"
+        "write": "Ich schreibe die Antwort",
+        "check": "Ich prüfe, welche Bestimmungen gelten"
       },
       "failed": "Solon konnte nicht antworten. Versuchen Sie es erneut oder suchen Sie das Recht direkt.",
       "findLaw": "Einen Erlass finden",

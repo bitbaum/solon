@@ -697,7 +697,8 @@
       "steps": {
         "plan": "Cerco quale diritto si applica",
         "search": "Scorro le disposizioni",
-        "write": "Scrivo la risposta"
+        "write": "Scrivo la risposta",
+        "check": "Verifico quali disposizioni si applicano"
       },
       "failed": "Solon non ha potuto rispondere. Riprovate o cercate il diritto direttamente.",
       "findLaw": "Trovare un atto",

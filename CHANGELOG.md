@@ -8,6 +8,10 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The law chat checks its own search.** After searching, it reads the headings of
+  what it found, keeps the provisions that bear on the question, drops the ones that
+  only share a word, and searches again for an obvious rule that is missing (the
+  permit, the canton's own act). {#law-ask}
 - **Search finds a provision by its ideas.** The law search and the law chat now ask for
   provisions that contain every idea of a question first (the animal and the
   permit), then the main idea alone, instead of ranking a common word like
