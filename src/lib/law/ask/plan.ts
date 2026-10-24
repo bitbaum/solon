@@ -79,12 +79,26 @@ export async function planResearch(
   /** Asked once more, if the first plan is weak; a different model, when there is one. */
   askAgain?: Completer,
 ): Promise<Plan> {
-  const first = await planOnce(turns, ask, PROMPT);
-  if (!askAgain || !weakPlan(first, turns.at(-1)?.content ?? "")) return first;
-  const second = await planOnce(turns, askAgain, PROMPT + RETRY);
-  // The second opinion stands unless it is also weak and says less than the first.
   const last = turns.at(-1)?.content ?? "";
-  return weakPlan(second, last) && second.acts.length < first.acts.length ? first : second;
+  const first = await planOnce(turns, ask, PROMPT);
+  if (!weakPlan(first, last)) return first;
+  const second = askAgain ? await planOnce(turns, askAgain, PROMPT + RETRY) : first;
+  if (!weakPlan(second, last)) return second;
+  // A follow-up ("And in Lucerne?") has no subject of its own. Plan the whole conversation as one question.
+  const earlier = turns.filter((t) => t.role === "user");
+  if (earlier.length > 1) {
+    const joined = [{ role: "user" as const, content: earlier.map((t) => t.content).join(" ") }];
+    const third = await planOnce(joined, askAgain ?? ask, PROMPT + RETRY);
+    if (!weakPlan(third, earlier.map((t) => t.content).join(" "))) {
+      // The places are the ones the person named last, plus whatever the plan found.
+      return {
+        ...third,
+        authorities: [...new Set([...third.authorities, ...authoritiesNamed(last)])],
+      };
+    }
+  }
+  // None of them did better: the plan that named the most acts stands.
+  return second.acts.length < first.acts.length ? first : second;
 }
 
 async function planOnce(turns: readonly Turn[], ask: Completer, prompt: string): Promise<Plan> {
