@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Search puts the fundamental act first.** A short ordinance that repeats the
+  question's words no longer outranks the statute that makes the rule, and a
+  search that would take too long is cut off instead of holding the database.
+  A fixed set of questions (`pnpm run check:law-search`) measures whether the
+  right provision is found. {#law-ask}
 - **The law chat checks its own search.** After searching, it reads the headings of
   what it found, keeps the provisions that bear on the question, drops the ones that
   only share a word, and searches again for an obvious rule that is missing (the

@@ -48,7 +48,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unknown authority" }, { status: 400 });
   if (lang && !/^[a-z]{2}$/.test(lang))
     return NextResponse.json({ error: "lang is two letters" }, { status: 400 });
+  const number = (name: string): number | undefined => {
+    const value = Number.parseFloat(params.get(name) ?? "");
+    return Number.isFinite(value) ? value : undefined;
+  };
   const hits = await searchProvisions(db, {
+    ranking: { depth: number("w_depth"), ordinance: number("w_ordinance") },
     q: terms.length || groups.length ? undefined : q,
     terms: terms.length && !groups.length ? terms : undefined,
     groups: groups.length ? groups : undefined,
