@@ -13,6 +13,20 @@ export const PER_AUTHORITY = 15;
 export async function retrieve(db: Database, plan: Plan): Promise<ProvisionHit[]> {
   const seen = new Set<string>();
   const out: ProvisionHit[] = [];
+  // The acts the model points at first, searched with the question's ideas: the rule itself, not a word that ranks.
+  for (const act of plan.acts) {
+    for (const hit of await searchProvisions(db, {
+      groups: plan.groups,
+      title: act,
+      authorities: plan.authorities,
+      limit: 8,
+    })) {
+      const key = `${hit.actId}#${hit.path}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(hit);
+    }
+  }
   for (const authority of plan.authorities) {
     const hits = await searchProvisions(db, {
       groups: plan.groups,

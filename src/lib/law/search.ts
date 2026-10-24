@@ -75,6 +75,8 @@ export interface SearchInput {
   authorities?: readonly string[];
   lang?: string;
   limit?: number;
+  /** Only acts whose title contains this word (Tierschutzverordnung, Obligationenrecht). */
+  title?: string;
   /** How hard ranking prefers fundamental acts; see `RANKING`. */
   ranking?: Partial<typeof RANKING>;
 }
@@ -119,6 +121,13 @@ async function run(
   // Authority keys never contain a comma, so a list travels as one string.
   const authorities = input.authorities?.length ? input.authorities.join(",") : null;
   const lang = input.lang ?? null;
+  // LIKE wildcards in the word are text, not patterns.
+  const title = input.title
+    ? `%${input.title
+        .trim()
+        .slice(0, 60)
+        .replace(/[\\%_]/g, "\\$&")}%`
+    : null;
   const depth = Math.min(Math.max(input.ranking?.depth ?? RANKING.depth, 0), 3);
   const ordinance = Math.min(Math.max(input.ranking?.ordinance ?? RANKING.ordinance, 0.05), 1);
   const tsq =
@@ -148,6 +157,9 @@ async function run(
         AND (${authority}::text IS NULL OR a.authority = ${authority})
         AND (${authorities}::text IS NULL OR a.authority = ANY(string_to_array(${authorities}, ',')))
         AND (${lang}::text IS NULL OR v.lang = ${lang})
+        AND (${title}::text IS NULL OR EXISTS (
+          SELECT 1 FROM legal_act_names t
+          WHERE t.act_id = a.id AND t.kind = 'title' AND t.superseded_at IS NULL AND t.text ILIKE ${title}))
         AND (v.act_id || '#' || p.path) <> ALL(string_to_array(${skipped}, ','))
       ORDER BY rank DESC, p.id
       LIMIT ${limit}

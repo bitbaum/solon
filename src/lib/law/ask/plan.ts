@@ -18,6 +18,8 @@ export interface Plan {
   terms: string[];
   /** The same words as ideas: each a list of alternative stems, the thing asked about first. */
   groups: string[][];
+  /** A word from the titles of the acts that probably govern it ("Tierschutzverordnung", "Obligationenrecht"). */
+  acts: string[];
   /** The language to answer in, in English ("English", "German", "Russian"). */
   language: string;
 }
@@ -30,11 +32,12 @@ export type Completer = (
 const KEYS = new Set(LAW_AUTHORITIES.map((a) => a.key));
 
 const PROMPT = `You prepare a search of Swiss and Liechtenstein law. Reply with JSON only:
-{"question": "...", "language": "...", "authorities": ["..."], "groups": [["..."], ["..."]]}
+{"question": "...", "language": "...", "authorities": ["..."], "acts": ["..."], "groups": [["..."], ["..."]]}
 
 - question: the user's latest question as one complete question that needs no earlier messages.
 - authorities: keys of the places the latest question is about, from: ${LAW_AUTHORITIES.map((a) => `${a.key} (${a.name})`).join(", ")}. Include every place named, and for a comparison with an earlier place include both. Leave out "ch".
 - language: the language of the user's latest message, in English ("English", "German", "Russian").
+- acts: up to 3 acts that probably govern the question, each as one distinctive word of its German title ("Tierschutzverordnung", "Obligationenrecht", "Jagdgesetz", "Strassenverkehrsgesetz"). You are only pointing at where to look; what the law says is read from the text, not from you.
 - groups: 2 or 3 ideas the provisions must contain together, each a list of 2 to 4 alternative stems as the LAW would word it, in German (and French or Italian for places that speak them). The first idea is the thing the question is about, its most specific nouns (["Fuchs","Füchse","Wildtier"]); then the act or duty (["Haltung","halten","Bewilligung"]). Stems that match inflections. Never a question word, never a word that fits any law ("Gesetz", "Person").`;
 
 const parse = (text: string): Partial<Plan> | null => {
@@ -75,6 +78,10 @@ export async function planResearch(turns: readonly Turn[], ask: Completer): Prom
     .map((group) => strings(group).slice(0, 6))
     .filter((group) => group.length > 0)
     .slice(0, 4);
+  const acts = strings(planned?.acts)
+    .map((a) => a.trim())
+    .filter((a) => a.length >= 4 && a.length <= 60)
+    .slice(0, 3);
   const terms = groups.length ? groups.flat() : fallbackTerms(last);
   return {
     question:
@@ -83,6 +90,7 @@ export async function planResearch(turns: readonly Turn[], ask: Completer): Prom
         : last,
     authorities,
     terms,
+    acts,
     groups: groups.length ? groups : [terms],
     language:
       typeof planned?.language === "string" && planned.language.trim()
