@@ -1263,7 +1263,8 @@
       "steps": {
         "plan": "Working out which law applies",
         "search": "Searching the provisions",
-        "write": "Writing the answer"
+        "write": "Writing the answer",
+        "check": "Checking which provisions apply"
       },
       "failed": "Solon could not answer. Try again, or search the law directly.",
       "findLaw": "Find a law",

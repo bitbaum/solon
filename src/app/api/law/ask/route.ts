@@ -7,7 +7,8 @@ import type { LawChatEvent } from "@/lib/chat/events";
 import { allowAssistantRequest } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { answerMessages, sourcesOf } from "@/lib/law/ask/answer";
-import { planResearch } from "@/lib/law/ask/plan";
+import { planResearch, type Completer } from "@/lib/law/ask/plan";
+import { refine } from "@/lib/law/ask/refine";
 import { retrieve } from "@/lib/law/ask/retrieve";
 
 export const maxDuration = 60;
@@ -42,11 +43,13 @@ export async function POST(req: Request) {
   return sseResponse<LawChatEvent>(
     async (emit, signal) => {
       emit({ type: "step", step: "plan" });
-      const plan = await planResearch(turns, (options) =>
-        complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal }),
-      );
+      const ask: Completer = (options) =>
+        complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
+      const plan = await planResearch(turns, ask);
       emit({ type: "step", step: "search" });
-      const hits = await retrieve(db, plan);
+      const found = await retrieve(db, plan);
+      emit({ type: "step", step: "check" });
+      const hits = await refine(db, ask, plan, found);
       emit({ type: "sources", sources: sourcesOf(hits) });
       emit({ type: "step", step: "write" });
       let finished = false;
