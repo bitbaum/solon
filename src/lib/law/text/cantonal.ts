@@ -72,7 +72,7 @@ export function cleanPdfText(raw: string): string {
  * ("Art. 5 Abs. 2", "nach Art. 5 des Gesetzes") is not one of these.
  */
 const CANDIDATE =
-  /(?<!\d)(Art\.|Artikel|§)\s*(\d+)\s*([a-z]{0,3})(?![\p{L}\d])\.?(?:\s+|(?=[A-ZÄÖÜ]))(?=(?:\d{1,2}\s+)?[A-ZÄÖÜ])(?!Abs\.|al\.|lit\.|let\.|cpv\.|Ziff\.|ch\.)/gu;
+  /(?<!\d)(Art\.|Artikel|§)\s*(\d+)\s*(bis|ter|quater|quinquies|sexies|septies|octies|novies|decies|[a-z]?)(?![\p{L}\d])\.?(?:\s+|(?=[A-ZÄÖÜ]))(?=(?:\d{1,2}\s+)?[A-ZÄÖÜ])(?!Abs\.|al\.|lit\.|let\.|cpv\.|Ziff\.|ch\.)/gu;
 
 /** Order of articles: 5 < 5a < 5b < 6. */
 const rank = (n: number, letters: string): number =>

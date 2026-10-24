@@ -14,7 +14,7 @@ export async function retrieve(db: Database, plan: Plan): Promise<ProvisionHit[]
   const out: ProvisionHit[] = [];
   for (const authority of plan.authorities) {
     const hits = await searchProvisions(db, {
-      terms: plan.terms,
+      groups: plan.groups,
       authority,
       limit: PER_AUTHORITY,
     });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { termsQuery, type ProvisionHit } from "../../search";
+import { groupsQueries, termsQuery, type ProvisionHit } from "../../search";
 import { answerMessages, sourcesOf } from "../answer";
 import { planResearch } from "../plan";
 import { authoritiesNamed } from "../places";
@@ -40,6 +40,27 @@ describe("the search terms", () => {
   });
 });
 
+describe("ideas as queries", () => {
+  it("asks for every idea together first, then the first alone, then any word", () => {
+    expect(
+      groupsQueries([
+        ["Fuchs", "Wildtier"],
+        ["Haltung", "Bewilligung"],
+      ]),
+    ).toEqual([
+      "(fuchs:* | wildtier:*) & (haltung:* | bewilligung:*)",
+      "fuchs:* | wildtier:*",
+      "fuchs:* | wildtier:* | haltung:* | bewilligung:*",
+    ]);
+  });
+
+  it("does not repeat itself for one idea, and drops an idea with no usable word", () => {
+    expect(groupsQueries([["Fuchs"]])).toEqual(["fuchs:*"]);
+    expect(groupsQueries([["Fuchs"], ["a"]])).toEqual(["fuchs:*"]);
+    expect(groupsQueries([])).toEqual([]);
+  });
+});
+
 describe("planning a search", () => {
   const model = (text: string) => async () => ({ text });
 
@@ -51,12 +72,14 @@ describe("planning a search", () => {
         { role: "user", content: "and in Lucerne?" },
       ],
       model(
-        '{"question":"Is it legal to keep a fox in Lucerne?","authorities":["gr","xx"],"terms":["Fuchs","Wildtier","Bewilligung"]}',
+        '{"question":"Is it legal to keep a fox in Lucerne?","authorities":["gr","xx"],"language":"English","groups":[["Fuchs","Wildtier"],["Bewilligung"]]}',
       ),
     );
     expect(plan.question).toBe("Is it legal to keep a fox in Lucerne?");
     expect(plan.authorities).toEqual(["ch", "gr", "lu"]);
+    expect(plan.groups).toEqual([["Fuchs", "Wildtier"], ["Bewilligung"]]);
     expect(plan.terms).toEqual(["Fuchs", "Wildtier", "Bewilligung"]);
+    expect(plan.language).toBe("English");
   });
 
   it("still searches when the model fails", async () => {
@@ -110,7 +133,7 @@ describe("the answer's sources", () => {
   it("puts the provisions, and only those, in front of the model", () => {
     const messages = answerMessages(
       [{ role: "user", content: "fox?" }],
-      { question: "fox?", authorities: ["ch", "gr"], terms: [] },
+      { question: "fox?", authorities: ["ch", "gr"], terms: [], groups: [], language: "English" },
       [hit],
     );
     expect(messages[0]!.content).toContain("[L1] Graubünden");

@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Search finds a provision by its ideas.** The law search and the law chat now ask for
+  provisions that contain every idea of a question first (the animal and the
+  permit), then the main idea alone, instead of ranking a common word like
+  "permit" above the rare one that matters. The chat answers in the language of
+  the question. {#law-ask}
 - **You can ask the law a question.** `/law/ask` is a chat, built on the same chat as
   Loki and OrangeCat, open to everyone and in any language. It works out which
   places the question is about ("and in Lucerne?" keeps the fox from the question
