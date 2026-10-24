@@ -31,6 +31,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "li_lr",
   "li_lgbl",
   "official_url",
+  /** `<publisher key>:<the publisher's own number for the act>`; names an act in a municipal collection. */
+  "publisher_ref",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
@@ -93,6 +95,9 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ge", name: "Genève", place: { scheme: "bfs_canton", value: "25" } },
   { key: "ju", name: "Jura", place: { scheme: "bfs_canton", value: "26" } },
   { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
+  // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
+  // whose collection a reader in src/lib/law/publishers covers.
+  { key: "bfs261", name: "Zürich (city)", place: { scheme: "bfs_municipality", value: "261" } },
 ];
 
 /**

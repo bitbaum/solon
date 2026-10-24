@@ -27,7 +27,7 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 - [x] Acts can be found and read on Solon itself, with the publisher's link, the page each copy was read from and its hash {#law-reading}
 - [x] Search over the text of the provisions in force, ranked, each hit citing its act, anchor, publisher's page and hash; the first piece of the retrieval layer for the assistants {#law-search}
 - [ ] Earlier versions of every act, and what changed between them {#law-history}
-- [ ] Municipal regulations, commune by commune {#law-communes}
+- [ ] Municipal regulations, commune by commune. The City of Zürich's collection has a reader (one adapter per commune, a shared loader), current versions and history; the production load and the other communes are not done {#law-communes}
 - [ ] A public API, and Causius reading the law from here with the publisher as its fallback {#law-api}
 
 ### Every organization on its own pages

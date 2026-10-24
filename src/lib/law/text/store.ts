@@ -19,6 +19,12 @@ export interface VersionToStore {
   lang: string;
   /** First day the text applies; see `dateBasis` for how that is known. */
   inForceFrom: string;
+  /**
+   * Set for an earlier version stored after a later one: it ends on this day and
+   * the version in force is left alone. Unset, the version is the latest and
+   * closes whatever is open.
+   */
+  inForceTo?: string;
   dateBasis: ActVersionDateBasis;
   status: ActTextStatus;
   format: ActTextFormat;
@@ -64,24 +70,27 @@ export async function storeVersion(
     // The version this one replaces ends the day before it begins. A reading dated only by the
     // day it was read, replaced by one with the publisher's own date, would end before it began:
     // its range is empty, it is never served, and the row stays as the record of what was read.
-    await tx
-      .update(legalActVersions)
-      .set({
-        inForceTo: sql`GREATEST(${dayBefore(version.inForceFrom)}::date, ${legalActVersions.inForceFrom} - 1)`,
-      })
-      .where(
-        and(
-          eq(legalActVersions.actId, version.actId),
-          eq(legalActVersions.lang, version.lang),
-          isNull(legalActVersions.inForceTo),
-        ),
-      );
+    if (!version.inForceTo) {
+      await tx
+        .update(legalActVersions)
+        .set({
+          inForceTo: sql`GREATEST(${dayBefore(version.inForceFrom)}::date, ${legalActVersions.inForceFrom} - 1)`,
+        })
+        .where(
+          and(
+            eq(legalActVersions.actId, version.actId),
+            eq(legalActVersions.lang, version.lang),
+            isNull(legalActVersions.inForceTo),
+          ),
+        );
+    }
     const [row] = await tx
       .insert(legalActVersions)
       .values({
         actId: version.actId,
         lang: version.lang,
         inForceFrom: version.inForceFrom,
+        inForceTo: version.inForceTo ?? null,
         dateBasis: version.dateBasis,
         status: version.status,
         format: version.format,
