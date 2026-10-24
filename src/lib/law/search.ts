@@ -48,30 +48,72 @@ export function termsQuery(terms: readonly string[]): string {
   return [...new Set(words.flatMap(spellings))].map((word) => `${word}:*`).join(" | ");
 }
 
-export async function searchProvisions(
-  db: Database,
-  input: {
-    q?: string;
-    /** Distinctive words, any of which may match; takes the place of `q`. */
-    terms?: readonly string[];
-    authority?: string;
-    /** Any of these authorities. */
-    authorities?: readonly string[];
-    lang?: string;
-    limit?: number;
-  },
-): Promise<ProvisionHit[]> {
-  const q = (input.q ?? "").trim().slice(0, 200);
-  const prefix = input.terms ? termsQuery(input.terms) : "";
-  if (!q && !prefix) return [];
+/**
+ * Groups of stems as the queries to try, most exact first. A group holds
+ * alternatives for one idea (Fuchs, Wildtier); the ideas are asked for together
+ * first, then the first idea alone (the thing the question is about), then all
+ * the words loosely. One loose query ranks a common word ("Bewilligung") above
+ * the rare one that matters, so the loose query is the last resort, not the first.
+ */
+export function groupsQueries(groups: readonly (readonly string[])[]): string[] {
+  const queries = groups.map((group) => termsQuery(group)).filter(Boolean);
+  const tiers: string[] = [];
+  if (queries.length > 1) tiers.push(queries.map((q) => `(${q})`).join(" & "));
+  if (queries.length > 0) tiers.push(queries[0]!);
+  if (queries.length > 1) tiers.push(queries.join(" | "));
+  return [...new Set(tiers)];
+}
+
+export interface SearchInput {
+  q?: string;
+  /** Distinctive words, any of which may match; takes the place of `q`. */
+  terms?: readonly string[];
+  /** Ideas, each a list of alternative stems; see `groupsQueries`. Takes the place of `terms`. */
+  groups?: readonly (readonly string[])[];
+  authority?: string;
+  /** Any of these authorities. */
+  authorities?: readonly string[];
+  lang?: string;
+  limit?: number;
+}
+
+export async function searchProvisions(db: Database, input: SearchInput): Promise<ProvisionHit[]> {
   const limit = Math.min(Math.max(input.limit ?? 10, 1), SEARCH_LIMIT_MAX);
+  const q = (input.q ?? "").trim().slice(0, 200);
+  const tiers = input.groups?.length
+    ? groupsQueries(input.groups)
+    : input.terms
+      ? [termsQuery(input.terms)].filter(Boolean)
+      : [];
+  if (tiers.length === 0) return q ? run(db, input, { q }, limit, []) : [];
+  const found: ProvisionHit[] = [];
+  for (const prefix of tiers) {
+    if (found.length >= limit) break;
+    const more = await run(db, input, { prefix }, limit - found.length, found.map(idOf));
+    found.push(...more);
+  }
+  return found;
+}
+
+const idOf = (hit: ProvisionHit): string => `${hit.actId}#${hit.path}`;
+
+async function run(
+  db: Database,
+  input: SearchInput,
+  by: { q: string } | { prefix: string },
+  limit: number,
+  skip: readonly string[],
+): Promise<ProvisionHit[]> {
   const authority = input.authority ?? null;
   // Authority keys never contain a comma, so a list travels as one string.
   const authorities = input.authorities?.length ? input.authorities.join(",") : null;
   const lang = input.lang ?? null;
-  const tsq = prefix
-    ? sql`to_tsquery('simple', ${prefix})`
-    : sql`websearch_to_tsquery('simple', ${q})`;
+  const tsq =
+    "prefix" in by
+      ? sql`to_tsquery('simple', ${by.prefix})`
+      : sql`websearch_to_tsquery('simple', ${by.q})`;
+  // Provisions already found by an earlier, more exact query; "act#path" cannot contain a comma.
+  const skipped = skip.join(",");
   const result = await db.execute(sql`
     WITH query AS (SELECT ${tsq} AS tsq),
     hits AS (
@@ -86,6 +128,7 @@ export async function searchProvisions(
             AND (${authority}::text IS NULL OR a.authority = ${authority})
             AND (${authorities}::text IS NULL OR a.authority = ANY(string_to_array(${authorities}, ',')))
             AND (${lang}::text IS NULL OR v.lang = ${lang})
+            AND (v.act_id || '#' || p.path) <> ALL(string_to_array(${skipped}, ','))
         )
       ORDER BY rank DESC, p.id
       LIMIT ${limit}
