@@ -65,7 +65,7 @@ export async function refine(
   const listing = hits
     .map(
       (hit, i) =>
-        `[${i}] ${hit.authority.toUpperCase()} · ${hit.title ?? ""} · ${hit.heading}\n${hit.text.slice(0, 220).replace(/\s+/g, " ")}`,
+        `[${i}] ${hit.authority.toUpperCase()} · ${hit.title ?? ""} · ${hit.heading}\n${hit.text.slice(0, 160).replace(/\s+/g, " ")}`,
     )
     .join("\n");
   let review: Review | null = null;

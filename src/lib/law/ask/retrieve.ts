@@ -7,7 +7,8 @@ import type { Database } from "@/lib/db/client";
 import { searchProvisions, type ProvisionHit } from "../search";
 import type { Plan } from "./plan";
 
-export const PER_AUTHORITY = 6;
+/** Wide on purpose: the model that reads the headings next (refine.ts) picks the few that apply. */
+export const PER_AUTHORITY = 15;
 
 export async function retrieve(db: Database, plan: Plan): Promise<ProvisionHit[]> {
   const seen = new Set<string>();

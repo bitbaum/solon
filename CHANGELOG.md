@@ -8,6 +8,9 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The law chat looks wider before it chooses.** It now considers up to fifteen
+  provisions per place and lets the model pick the few that apply, so a rule the
+  words rank twelfth is still found. {#law-ask}
 - **Search puts the fundamental act first.** A short ordinance that repeats the
   question's words no longer outranks the statute that makes the rule, and a
   search that would take too long is cut off instead of holding the database.
