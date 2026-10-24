@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The City of Zürich's own laws can be loaded, with their history.** A reader
+  for the city's Amtliche Sammlung takes each act's versions with the days the
+  city states, and any other commune joins by adding one reader. The loading
+  tool takes `municipal --publisher zurich-city`, and `--history` adds the
+  earlier versions.
+  {#law-communes}
 - **The text of the law can be searched.** `GET /api/v1/law/search?q=` ranks the
   provisions in force that match, optionally by authority or language, and each
   hit names the act, the article, the publisher's page and the hash of the copy,

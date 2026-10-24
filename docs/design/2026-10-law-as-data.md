@@ -303,6 +303,37 @@ and its address carries the dates: `erlass-<LS>-<enacted>-<in force>-<amendment>
   links; not done.
 - Measured on the constitution: 139 provisions, in force since 2006-01-01.
 
+### Municipal collections as built (2026-10-24): the City of Zürich
+
+Where the law lives: all of it is in Solon's own database on our server. Causius
+holds no law; it asks Solon and cites what comes back.
+
+A commune's collection is read through one **adapter** (`src/lib/law/publishers`),
+four things each: `list` the acts, `versions` of an act with the days the
+publisher states, `document` of a version, and a polite `fetch`. The loader
+(`load.ts`), the store, the reading pages and the search never change for a new
+commune; it is one adapter in `PUBLISHERS` and one line in `LAW_AUTHORITIES`
+(key `bfs<number>`, the place being the commune's BFS number).
+
+- An act is named in its collection by `publisher_ref` (`<publisher>:<number>`),
+  a new identifier scheme, and carries its page as `official_url`.
+- A version is stored with the publisher's own first day (`dateBasis: publisher`).
+  The latest version closes the open one; an earlier version, stored later, ends
+  the day before the next begins and leaves the version in force alone
+  (`storeVersion`'s `inForceTo`).
+- A version that has not started yet waits: the version in force today is the
+  one served, so a law passed for next year is never shown as the law today.
+- Loads are resumable and polite: a version already held is skipped, the request
+  rate is slow, the publisher's own hosts only. Current versions first;
+  `--history` adds the earlier ones.
+
+The City of Zürich (`zurich-city`): the Amtliche Sammlung at stadt-zuerich.ch/as,
+about 790 acts, PDFs. Each act's page states, per version, the day it was
+decided, the day it took effect and the day it ended, and lists its other
+versions, back to the 1970s for the Gemeindeordnung. The tables are JSON in an
+HTML attribute; that is read in one place (`zurich-city.ts`). The city's oldest
+versions repeat and overlap first days; one is kept per day, the longest-running.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

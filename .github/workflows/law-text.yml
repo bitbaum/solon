@@ -15,7 +15,7 @@ on:
       source:
         description: "Whose laws"
         type: choice
-        options: [fedlex, lilex, cantons, zhlex]
+        options: [fedlex, lilex, cantons, zhlex, municipal]
         default: fedlex
       authority:
         description: "Cantons only: one canton's key (zh, be, ...), or empty for all"
@@ -26,6 +26,14 @@ on:
         type: choice
         options: [de, fr, it]
         default: de
+      publisher:
+        description: "Municipal only: a collection's key (zurich-city, ...)"
+        type: string
+        default: zurich-city
+      history:
+        description: "Municipal only: also store the earlier versions the publisher lists"
+        type: boolean
+        default: false
       limit:
         description: "Store at most this many versions in this run"
         type: string
@@ -52,16 +60,19 @@ jobs:
           SOURCE: ${{ inputs.source }}
           LIMIT: ${{ inputs.limit }}
           AUTHORITY: ${{ inputs.authority }}
+          PUBLISHER: ${{ inputs.publisher }}
+          HISTORY: ${{ inputs.history }}
         run: |
           set -euo pipefail
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
           [[ "$AUTHORITY" =~ ^[a-z]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
+          [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
           IP=167.233.22.31
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -76,6 +87,8 @@ jobs:
           export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
           flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
           auth=""; [ -n "$AUTHORITY" ] && auth="--authority $AUTHORITY"
+          [ "$SOURCE" = "municipal" ] && auth="--publisher $PUBLISHER"
+          [ "$HISTORY" = "true" ] && auth="$auth --history"
           $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
           REMOTE
           rm -f ~/.ssh/id

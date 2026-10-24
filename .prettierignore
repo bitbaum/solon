@@ -48,3 +48,6 @@ drizzle/meta
 # so OrangeCat's formatting is the formatting.
 src/lib/collective-kinds/
 src/lib/tax-model/
+
+# Publishers' pages kept as test fixtures, byte for byte.
+**/*.fixture.html
