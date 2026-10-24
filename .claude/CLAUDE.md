@@ -79,6 +79,9 @@ building a screen and run its pre-PR checklist. Solon's own gates are
 
 ## Don't
 
+- Ask the owner about branches or PRs. Finished work ships without asking:
+  open a non-draft PR, follow it to the live site, hand over the URL. See
+  `AGENTS.md` → "CI".
 - Skip signature verification on a vote.
 - Add an amount field to the treasury. It is **watch-only** by design — a label
   and an address, with no code path that can spend.
