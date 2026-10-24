@@ -8,6 +8,9 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **"And in Lucerne?" keeps its subject.** When a follow-up question has no subject of
+  its own and the model cannot plan from it, the whole conversation is planned as one
+  question, with the place named last added. {#law-ask}
 - **A weak search plan gets a second opinion.** When the model that plans a search
   names no act, or only repeats the words of the question instead of putting them
   into the law's language, the next model in the chain is asked once more, so one

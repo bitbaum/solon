@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { groupsQueries, termsQuery, type ProvisionHit } from "../../search";
 import { answerMessages, sourcesOf } from "../answer";
-import { planResearch, weakPlan } from "../plan";
+import { planResearch, weakPlan, type Completer } from "../plan";
 import { authoritiesNamed } from "../places";
 
 describe("places in a question", () => {
@@ -100,6 +100,27 @@ describe("planning a search", () => {
     };
     await planResearch(turns, model(good), counting);
     expect(asked).toBe(0);
+  });
+
+  it("plans the whole conversation when a follow-up has no subject of its own", async () => {
+    const weak = '{"question":"lucerne","language":"English","acts":[],"groups":[["lucerne"]]}';
+    const good =
+      '{"question":"fox in Lucerne","language":"English","acts":["Tierschutzverordnung"],"groups":[["Fuchs"],["Haltung"]],"authorities":["gr"]}';
+    // Only a single-message conversation (system prompt + one turn) is planned well.
+    const byLength: Completer = async (o) => ({
+      text: o.messages.length === 2 ? good : weak,
+    });
+    const plan = await planResearch(
+      [
+        { role: "user", content: "Is it legal to keep a fox in Graubünden?" },
+        { role: "assistant", content: "A permit is needed." },
+        { role: "user", content: "And in Lucerne?" },
+      ],
+      byLength,
+      byLength,
+    );
+    expect(plan.acts).toEqual(["Tierschutzverordnung"]);
+    expect(plan.authorities).toEqual(expect.arrayContaining(["ch", "gr", "lu"]));
   });
 
   it("keeps the first plan when the second says less", async () => {
