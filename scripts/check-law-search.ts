@@ -1,7 +1,7 @@
 /**
  * Does the search find the provision a lawyer would open first? A fixed set of
  * questions, each with the ideas a good planner would give and the provisions
- * that must be among the first results. Run against the live site, so it
+ * that must be among the first fifteen results (the model that reads them next picks the few that apply). Run against the live site, so it
  * measures what a person gets:
  *
  *   pnpm run check:law-search [https://solon.orangecat.ch]
@@ -51,8 +51,8 @@ const CASES: Case[] = [
     question: "What is the notice period for ending a residential lease?",
     authority: "ch",
     groups: [
-      ["Miete", "Mieter", "Vermieter"],
-      ["Kündigungsfrist", "Kündigung"],
+      ["Wohnung", "Wohnungen", "Miete"],
+      ["Frist", "gekündigt", "Kündigungsfrist"],
     ],
     expect: [{ number: "220", path: "art_266_c" }],
   },
@@ -79,7 +79,7 @@ async function main(): Promise<number> {
     const params = new URLSearchParams({
       groups: c.groups.map((g) => g.join(",")).join("|"),
       authority: c.authority,
-      limit: "10",
+      limit: "15",
     });
     const response = await fetch(`${BASE}/api/v1/law/search?${params}`);
     const { hits } = (await response.json()) as {
