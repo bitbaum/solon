@@ -8,6 +8,9 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Citations in the law chat are written so they link.** The chat's answers cite
+  provisions as `[L3]`; the instruction now says no spaces inside the brackets, which
+  one model had been adding. {#law-ask}
 - **"And in Lucerne?" keeps its subject.** When a follow-up question has no subject of
   its own and the model cannot plan from it, the whole conversation is planned as one
   question, with the place named last added. {#law-ask}
