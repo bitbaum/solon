@@ -1,3 +1,4 @@
+import { mailConfigured } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getLocale } from "next-intl/server";
 import { authLabelsFor, isDeliverable, signInMethods } from "@bitbaum/accountkit/auth";
@@ -123,7 +124,7 @@ export default async function AccountPage() {
       <section className="bg-surface-base border border-default rounded-surface p-6 mb-8">
         <SolonAccount
           labels={authLabelsFor(locale)}
-          methods={signInMethods(process.env, false)}
+          methods={signInMethods(process.env, mailConfigured())}
           user={{
             name: user.name ?? "",
             email: isDeliverable(user.email) ? user.email : null,

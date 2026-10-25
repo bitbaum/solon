@@ -1,3 +1,4 @@
+import { mailConfigured } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { authLabelsFor, signInMethods } from "@bitbaum/accountkit/auth";
@@ -11,7 +12,7 @@ import { entryHref } from "@/lib/auth/entry-href";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ from?: string; error?: string }>;
+  searchParams: Promise<{ from?: string; next?: string; token?: string; error?: string }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -30,17 +31,26 @@ export default async function SignInPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const query = await searchParams;
   const from = returnPath(query.from, "/account");
-  const next = getPathname({ href: from, locale });
-  if ((await auth())?.actorId) redirect(next);
+  const next = query.next
+    ? returnPath(query.next, getPathname({ href: "/account", locale }))
+    : getPathname({ href: from, locale });
+  if ((await auth())?.actorId && !query.token && query.error !== "INVALID_TOKEN") redirect(next);
   const labels = authLabelsFor(locale);
 
   return (
-    <PageLayout title={labels.signIn} kicker="Solon">
+    <PageLayout
+      title={
+        query.token || query.error === "INVALID_TOKEN"
+          ? (labels.recovery?.reset ?? labels.signIn)
+          : labels.signIn
+      }
+      kicker="Solon"
+    >
       <div className="max-w-md">
         {authEnabled ? (
           <SolonSignIn
             labels={labels}
-            methods={signInMethods(process.env, false)}
+            methods={signInMethods(process.env, mailConfigured())}
             next={next}
             signInPath={getPathname({ href: "/sign-in", locale })}
             signUpHref={entryHref("sign-up", locale, from)}
