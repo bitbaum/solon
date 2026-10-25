@@ -12,7 +12,13 @@ import { entryHref } from "@/lib/auth/entry-href";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ from?: string; next?: string; token?: string; error?: string }>;
+  searchParams: Promise<{
+    from?: string;
+    next?: string;
+    token?: string;
+    method?: string;
+    error?: string;
+  }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -34,13 +40,18 @@ export default async function SignInPage({ params, searchParams }: Props) {
   const next = query.next
     ? returnPath(query.next, getPathname({ href: "/account", locale }))
     : getPathname({ href: from, locale });
-  if ((await auth())?.actorId && !query.token && query.error !== "INVALID_TOKEN") redirect(next);
+  if (
+    (await auth())?.actorId &&
+    !query.token &&
+    (query.error !== "INVALID_TOKEN" || query.method === "magic-link")
+  )
+    redirect(next);
   const labels = authLabelsFor(locale);
 
   return (
     <PageLayout
       title={
-        query.token || query.error === "INVALID_TOKEN"
+        query.token || (query.error === "INVALID_TOKEN" && query.method !== "magic-link")
           ? (labels.recovery?.reset ?? labels.signIn)
           : labels.signIn
       }

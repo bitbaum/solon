@@ -34,8 +34,8 @@
     "check:law-search": "tsx scripts/check-law-search.ts"
   },
   "dependencies": {
-    "@better-auth/passkey": "^1.7.7",
-    "@bitbaum/accountkit": "github:bitbaum/accountkit#v0.6.2",
+    "@better-auth/passkey": "^1.7.10",
+    "@bitbaum/accountkit": "github:bitbaum/accountkit#v0.6.3",
     "@bitbaum/ai-kit": "^1.21.0",
     "@bitbaum/chatkit": "^0.13.0",
     "@bitbaum/geo-kit": "git+https://github.com/bitbaum/geo-kit.git#a337aec928cf7804fecf459c308d366b90f4b2fa",
@@ -45,7 +45,7 @@
     "@noble/hashes": "2.4.0",
     "@noble/secp256k1": "3.2.0",
     "@scure/base": "^2.4.0",
-    "better-auth": "^1.7.7",
+    "better-auth": "^1.7.10",
     "bip-kit": "^0.6.0",
     "bs58check": "^4.0.0",
     "clsx": "2.1.1",
