@@ -1,0 +1,88 @@
+{
+  "blocks": {
+    "shell": {
+      "package": "@bitbaum/sitekit",
+      "status": "pending",
+      "bindings": [],
+      "gap": {
+        "owner": "fleet-remediation",
+        "reason": "Existing product header/footer still render locally. Migrate through shared slots in a separate UI wave; do not couple account recovery with a shell replacement.",
+        "replacementCondition": "Shared renderer/theme adopted and browser/domain fixtures pass in its own UI wave."
+      }
+    },
+    "identity": {
+      "package": "@bitbaum/accountkit",
+      "bindings": [
+        {
+          "file": "src/lib/auth/index.ts",
+          "symbols": ["createAuthRuntime", "createAuthMailer"]
+        },
+        {
+          "file": "src/components/auth/account-screens.tsx",
+          "symbols": ["SignInForm", "SignUpForm", "AccountPanel"]
+        }
+      ]
+    },
+    "publishing": {
+      "package": "bip-kit",
+      "bindings": [
+        {
+          "file": "src/components/site/development-records.tsx",
+          "symbols": ["DevelopmentPage"]
+        },
+        {
+          "file": "src/app/[locale]/blog/[slug]/page.tsx",
+          "symbols": ["ArticleBody"]
+        }
+      ]
+    },
+    "design": {
+      "package": "@bitbaum/design-tokens",
+      "status": "pending",
+      "bindings": [],
+      "gap": {
+        "owner": "fleet-remediation",
+        "reason": "Existing product CSS/Tailwind owns semantic tokens; shared token package is not installed or imported. Preserve the current appearance while mapping roles in the separate UI migration.",
+        "replacementCondition": "Shared renderer/theme adopted and browser/domain fixtures pass in its own UI wave."
+      }
+    },
+    "ai": {
+      "package": "@bitbaum/ai-kit",
+      "bindings": [
+        {
+          "file": "src/app/api/chat/route.ts",
+          "symbols": ["completeStream"]
+        },
+        {
+          "file": "src/app/api/law/ask/route.ts",
+          "symbols": ["complete", "completeStream"]
+        }
+      ]
+    },
+    "chat": {
+      "package": "@bitbaum/chatkit",
+      "bindings": [
+        {
+          "file": "src/components/chat/governance-chat.tsx",
+          "symbols": ["ChatScreen", "Composer", "ChatThread"]
+        },
+        {
+          "file": "src/components/law/law-chat.tsx",
+          "symbols": ["ChatScreen", "Composer", "ChatThread"]
+        }
+      ]
+    }
+  },
+  "migration": {
+    "scope": "This wave completes the account mail/recovery binding. Pending blocks are known missing adoption, not exceptions or successful composition. The strict composition audit must continue to report them until migrated.",
+    "mail": {
+      "package": "@bitbaum/mail-kit",
+      "via": "@bitbaum/accountkit/auth/mail",
+      "binding": "src/lib/auth/index.ts",
+      "verification": "Real adapter is intercepted only for synthetic local browser tests; production delivery remains unverified."
+    }
+  },
+  "productOwned": {
+    "domain": "Governance, legal sources, evidence and law-specific prompts remain Solon domain behavior."
+  }
+}

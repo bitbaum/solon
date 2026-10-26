@@ -1,3 +1,4 @@
+import { mailConfigured } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { authLabelsFor, signInMethods } from "@bitbaum/accountkit/auth";
@@ -39,7 +40,7 @@ export default async function SignUpPage({ params, searchParams }: Props) {
         {authEnabled ? (
           <SolonSignUp
             labels={labels}
-            methods={signInMethods(process.env, false)}
+            methods={signInMethods(process.env, mailConfigured())}
             next={next}
             signUpPath={getPathname({ href: "/sign-up", locale })}
             signInHref={entryHref("sign-in", locale, from)}

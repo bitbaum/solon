@@ -58,3 +58,6 @@ next-env.d.ts
 
 # Scratch files
 /tmp/
+
+# Synthetic account browser evidence is uploaded by CI.
+auth-journey-artifacts/

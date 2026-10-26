@@ -1,3 +1,4 @@
+import { createAuthMailer } from "@bitbaum/accountkit/auth/mail";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isDeliverable } from "@bitbaum/accountkit/auth";
@@ -21,11 +22,17 @@ import { dbConfigured, getDb } from "@/lib/db/client";
  * was OrangeCat, so their seats, votes and Loki grants stay theirs with no
  * data migration. Everyone else is their account id.
  */
+export const authSite = {
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://solon.orangecat.ch",
+  title: "Solon",
+  slug: "solon",
+};
+export const authMail = createAuthMailer({ site: authSite });
+export const mailConfigured = () => authMail.configured;
+
 export const { GET, POST, getSession, requireUser, authStatus, getAuth } = createAuthRuntime({
-  site: { url: "https://solon.orangecat.ch", title: "Solon", slug: "solon" },
-  // Solon sends no mail yet: the sign-in link and address confirmation stay
-  // hidden, and a password account signs in at once.
-  mail: { configured: false, send: async () => {} },
+  site: authSite,
+  mail: authMail,
   isDatabaseConfigured: () => dbConfigured(),
   getDatabase: () => getDb(),
   legacyIdentityProvider: "orangecat",
