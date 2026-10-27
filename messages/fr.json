@@ -686,7 +686,6 @@
       "title": "Interroger le droit",
       "description": "Posez votre question en mots simples, dans n'importe quelle langue. La réponse vient du texte publié du droit de la Suisse, de ses cantons et du Liechtenstein, et nomme les dispositions sur lesquelles elle repose.",
       "placeholder": "Est-il permis de garder un renard aux Grisons ?",
-      "new": "Nouvelle conversation",
       "footnote": "Information juridique tirée du texte publié, pas un conseil pour votre cas. Vérifiez les sources.",
       "startersTitle": "Que dit le droit ?",
       "starters": {

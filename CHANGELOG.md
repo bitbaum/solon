@@ -4,6 +4,15 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-10-27
+
+### Changed
+
+- **Ask Solon and Ask the law are the fleet's chat app.** A chat list (a drawer on a phone,
+  a rail on a wide screen) with search, rename and delete; New chat; Temporary chat; and
+  the open conversation back after a reload. Chats stay on this device. Pictures cannot be
+  attached yet, because neither route reads files.
+
 ## 2026-10-23
 
 ### Added
