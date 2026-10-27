@@ -37,7 +37,7 @@
     "@better-auth/passkey": "^1.7.12",
     "@bitbaum/accountkit": "^0.8.0",
     "@bitbaum/ai-kit": "^1.21.4",
-    "@bitbaum/chatkit": "^0.20.1",
+    "@bitbaum/chatkit": "^0.21.0",
     "@bitbaum/geo-kit": "^0.1.1",
     "@bitbaum/mail-kit": "0.2.0",
     "@bitbaum/searchkit": "^0.2.2",
