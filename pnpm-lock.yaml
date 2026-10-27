@@ -12,26 +12,26 @@ importers:
         specifier: ^1.7.12
         version: 1.7.12(@better-auth/core@1.7.12(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-call@1.4.4(zod@4.6.7))(jose@6.2.8)(kysely@0.29.6)(nanostores@1.5.5))(@better-auth/utils@0.5.0)(@better-fetch/fetch@1.3.2)(better-auth@1.7.12(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.11)(@types/pg@8.23.1)(kysely@0.29.6)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7)(@playwright/test@1.64.1)(@types/node@26.6.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5(@types/node@26.6.5)(vite@8.2.2(@types/node@26.6.5)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15))))(better-call@1.4.4(zod@4.6.7))(nanostores@1.5.5)
       '@bitbaum/accountkit':
-        specifier: github:bitbaum/accountkit#a303242f586d7ac2b2568bbe8d3da94d8b0be768
-        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/a303242f586d7ac2b2568bbe8d3da94d8b0be768(8034b41c615a3228d2e99a4ab3fd79a2)
+        specifier: ^0.8.0
+        version: 0.8.0(8034b41c615a3228d2e99a4ab3fd79a2)
       '@bitbaum/ai-kit':
         specifier: ^1.21.4
         version: 1.21.4(react@19.3.1)
       '@bitbaum/chatkit':
-        specifier: ^0.17.0
-        version: 0.17.0(react@19.3.1)
+        specifier: ^0.19.0
+        version: 0.19.0(react@19.3.1)
       '@bitbaum/geo-kit':
-        specifier: github:bitbaum/geo-kit#fce36b959056799d500371181468844aed7ed513
-        version: https://codeload.github.com/bitbaum/geo-kit/tar.gz/fce36b959056799d500371181468844aed7ed513
+        specifier: ^0.1.1
+        version: 0.1.1
       '@bitbaum/mail-kit':
         specifier: 0.2.0
         version: 0.2.0
       '@bitbaum/searchkit':
-        specifier: github:bitbaum/searchkit#09532b1974c7cb92f38c98decaeed334f3ffea72
-        version: https://codeload.github.com/bitbaum/searchkit/tar.gz/09532b1974c7cb92f38c98decaeed334f3ffea72(react@19.3.1)
+        specifier: ^0.2.2
+        version: 0.2.2(react@19.3.1)
       '@fleet/design-tokens':
-        specifier: github:bitbaum/design-tokens#5c31f48743dabf9294bf9380a15862b4efbc68a0
-        version: '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/5c31f48743dabf9294bf9380a15862b4efbc68a0'
+        specifier: npm:@bitbaum/design-tokens@^1.2.0
+        version: '@bitbaum/design-tokens@1.2.0'
       '@noble/hashes':
         specifier: 2.4.0
         version: 2.4.0
@@ -45,8 +45,8 @@ importers:
         specifier: ^1.7.12
         version: 1.7.12(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.11)(@types/pg@8.23.1)(kysely@0.29.6)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7)(@playwright/test@1.64.1)(@types/node@26.6.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5(@types/node@26.6.5)(vite@8.2.2(@types/node@26.6.5)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15)))
       bip-kit:
-        specifier: ^0.6.0
-        version: 0.6.0(react@19.3.1)
+        specifier: ^0.6.1
+        version: 0.6.1(react@19.3.1)
       bs58check:
         specifier: ^4.0.0
         version: 4.0.0
@@ -337,9 +337,8 @@ packages:
   '@better-fetch/fetch@1.3.2':
     resolution: {integrity: sha512-Gs7n99b5tqUC6cQAPbV0uED3IraHB6xQbHLQ/C3l7ZFafHScOx9pQ+DYmP5blbLFShVWLqxNUlI9wi4xU/X+ow==}
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/a303242f586d7ac2b2568bbe8d3da94d8b0be768':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/a303242f586d7ac2b2568bbe8d3da94d8b0be768}
-    version: 0.8.0
+  '@bitbaum/accountkit@0.8.0':
+    resolution: {integrity: sha512-vHQBkiL86Tf2EwXUGsWmzu+1QSg3PtT2uWX4frmc3RbB1tm7EHjvptWORF77MQc6seyNNi39uO+brqgJcegtyA==}
     engines: {node: '>=20'}
     peerDependencies:
       '@better-auth/passkey': ^1.7.10
@@ -369,30 +368,27 @@ packages:
       react:
         optional: true
 
-  '@bitbaum/chatkit@0.17.0':
-    resolution: {integrity: sha512-9Q8nsvMi86akETbi4cWTYPqMiH60DksmAY8c1O+VVs6WqHYCpXeiLd6WGRGFVAW1Zbl4gYSoQA0+i0OOV8l5IA==}
+  '@bitbaum/chatkit@0.19.0':
+    resolution: {integrity: sha512-bM0cefE0+25BV+MDrgt1L6XcFhKUdmSULQj8uMaHVYkUvoUZGaLfXvAacc9gFYRScUIOhWE4NycmclLuVYdcDA==}
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
       react: '>=18'
 
-  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/5c31f48743dabf9294bf9380a15862b4efbc68a0':
-    resolution: {gitHosted: true, integrity: sha512-+mbpCQtD9yphGFDOIDP0HSRabf/w4loKc0OYd1bfFAr7GBSiVGk7IRzukbKOuxGuH3WVkYgsHM7m2RXiEfKhIA==, tarball: https://codeload.github.com/bitbaum/design-tokens/tar.gz/5c31f48743dabf9294bf9380a15862b4efbc68a0}
-    version: 1.2.0
+  '@bitbaum/design-tokens@1.2.0':
+    resolution: {integrity: sha512-13TSrgYbEzSqt5FNfW3HSJIFcenUto8nKlk4J4IUsepL0gsTBoZ0YDMiJTaJKmR8sPPmcCS94Z/xgUBQW43itw==}
     engines: {node: '>=20'}
 
-  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/fce36b959056799d500371181468844aed7ed513':
-    resolution: {gitHosted: true, integrity: sha512-XsCtYqbH8d8dJa1DJWAi7pu5K5fOHoGY/T0e39lQ8GypGavjgxv1W6TBHRG7A/YW+88Ysac4Hh+xQmba1/9kXA==, tarball: https://codeload.github.com/bitbaum/geo-kit/tar.gz/fce36b959056799d500371181468844aed7ed513}
-    version: 0.1.1
+  '@bitbaum/geo-kit@0.1.1':
+    resolution: {integrity: sha512-WozxmyHftt4V4S694LqC4JHXzWIxa8ZbjHwmLBGxKjKpZCU+IUAGO91RApj5/+AIcmuZazgDYHoav6FpporzOg==}
     engines: {node: '>=20'}
 
   '@bitbaum/mail-kit@0.2.0':
     resolution: {integrity: sha512-YkgMFRQ6HuzIB0q/Ao4FB4zb/YxVc0iKyVdRkFe2psJ4CQJvGxBfDlURomZMkgQfpBQox4QiT/iN9IGRz6SeTg==}
     engines: {node: '>=20'}
 
-  '@bitbaum/searchkit@https://codeload.github.com/bitbaum/searchkit/tar.gz/09532b1974c7cb92f38c98decaeed334f3ffea72':
-    resolution: {gitHosted: true, integrity: sha512-zUU6UUFB8x2ZYzngjJgif2iyJHxNx7gBLrS4dufNAUyLlmRk9BQBuY8q1BuaK6xAEGSU2JPz23zbwoyLRlZHLg==, tarball: https://codeload.github.com/bitbaum/searchkit/tar.gz/09532b1974c7cb92f38c98decaeed334f3ffea72}
-    version: 0.2.2
+  '@bitbaum/searchkit@0.2.2':
+    resolution: {integrity: sha512-LvUqHepcwd488rSUu7EmRzcgfNYtz1RP4qnyPFMQ7nL1/DSwW1TGiiVWoT3/ytE4zmK/mWEFJxx5g77fidLe0w==}
     peerDependencies:
       react: '>=18'
     peerDependenciesMeta:
@@ -2191,8 +2187,8 @@ packages:
   bidi-js@1.1.0:
     resolution: {integrity: sha512-fX1Onk0tdVPC7obPWB5EbJ1z7NVhLq4m2xZLq2YXBkxzMXIGRpNMU88n0EPgWseKl12J7zXs7qrDxPK4sRs2fg==}
 
-  bip-kit@0.6.0:
-    resolution: {integrity: sha512-evyb2/RtTK7EXrQBde3misyHj/vCZYxJLVBv285iPa3nKl8Mr60sAIspCaSL6SFY0872Jz5MX7gf/uJ0Avvtew==}
+  bip-kit@0.6.1:
+    resolution: {integrity: sha512-lwWnRDCuhrO5YzBeaASjQwVoyIcDwGqEH3cskqa2ylIgyPagtVE6+ppDze+rkEBzVmKkUXREW5ydXOr2Kw3Oow==}
     engines: {node: '>=20'}
     peerDependencies:
       katex: '>=0.16'
@@ -4295,7 +4291,7 @@ snapshots:
 
   '@better-fetch/fetch@1.3.2': {}
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/a303242f586d7ac2b2568bbe8d3da94d8b0be768(8034b41c615a3228d2e99a4ab3fd79a2)':
+  '@bitbaum/accountkit@0.8.0(8034b41c615a3228d2e99a4ab3fd79a2)':
     dependencies:
       limitkit: 0.2.0
       react: 19.3.1
@@ -4316,17 +4312,17 @@ snapshots:
     transitivePeerDependencies:
       - canvas
 
-  '@bitbaum/chatkit@0.17.0(react@19.3.1)':
+  '@bitbaum/chatkit@0.19.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
 
-  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/5c31f48743dabf9294bf9380a15862b4efbc68a0': {}
+  '@bitbaum/design-tokens@1.2.0': {}
 
-  '@bitbaum/geo-kit@https://codeload.github.com/bitbaum/geo-kit/tar.gz/fce36b959056799d500371181468844aed7ed513': {}
+  '@bitbaum/geo-kit@0.1.1': {}
 
   '@bitbaum/mail-kit@0.2.0': {}
 
-  '@bitbaum/searchkit@https://codeload.github.com/bitbaum/searchkit/tar.gz/09532b1974c7cb92f38c98decaeed334f3ffea72(react@19.3.1)':
+  '@bitbaum/searchkit@0.2.2(react@19.3.1)':
     optionalDependencies:
       react: 19.3.1
 
@@ -5708,7 +5704,7 @@ snapshots:
     dependencies:
       require-from-string: 2.0.2
 
-  bip-kit@0.6.0(react@19.3.1):
+  bip-kit@0.6.1(react@19.3.1):
     dependencies:
       react: 19.3.1
 
