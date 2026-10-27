@@ -204,7 +204,7 @@ body {
 .solon-chat {
   min-width: 0;
 }
-.solon-chat .ck-screen {
+.solon-chat .ck-app {
   height: min(75dvh, 56rem);
   min-height: 26rem;
 }
