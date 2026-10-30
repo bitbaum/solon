@@ -14,6 +14,8 @@ import {
   formatMoney,
   lowestTotals,
   parseAmount,
+  parseAmounts,
+  rowShows,
   type ColumnEstimate,
   type CompareColumn,
   type CompareTaxPack,
@@ -40,6 +42,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
         const input = pack ? inputs[pack.key] : undefined;
         return estimateColumn(column, pack, {
           base: input ? parseAmount(input.amount) : null,
+          amounts: parseAmounts(input?.amounts),
           variant: input?.variant ?? "",
           conditions: input?.conditions ?? {},
         });
@@ -47,6 +50,14 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     [columns, taxPacks, inputs],
   );
   const lowest = lowestTotals(estimates);
+  /** Rows for wealth or a church show once the reader enters wealth or names the church. */
+  const shows = (pack: CompareTaxPack, row: Parameters<typeof rowShows>[0]) =>
+    rowShows(row, {
+      base: null,
+      variant: "",
+      amounts: parseAmounts(inputs[pack.key]?.amounts),
+      conditions: inputs[pack.key]?.conditions ?? {},
+    });
   const money = formatMoney;
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 1 });
@@ -216,59 +227,63 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                 ))}
               </ComparisonRow>
               {taxPacks.flatMap((pack) =>
-                pack.components.map((component) => (
-                  <ComparisonRow
-                    key={`${pack.key}-${component.key}`}
-                    label={component.label}
-                    labelClassName="text-fg-secondary"
-                    columnCount={count}
-                  >
-                    {columns.map((column, i) => {
-                      const e = estimates[i]!;
-                      const result =
-                        e.kind === "estimate" && column.packKey === pack.key
-                          ? e.estimate.components.find((c) => c.key === component.key)
-                          : undefined;
-                      return (
-                        <td key={column.slugPath} className={`${cell} text-fg-primary`}>
-                          {e.kind !== "estimate" || !result || result.amount === null ? (
-                            <span className="text-fg-tertiary">–</span>
-                          ) : result.applies ? (
-                            money(result.amount, e)
-                          ) : (
-                            <span className="text-fg-tertiary">{t("doesNotApply")}</span>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </ComparisonRow>
-                )),
+                pack.components
+                  .filter((c) => shows(pack, c))
+                  .map((component) => (
+                    <ComparisonRow
+                      key={`${pack.key}-${component.key}`}
+                      label={component.label}
+                      labelClassName="text-fg-secondary"
+                      columnCount={count}
+                    >
+                      {columns.map((column, i) => {
+                        const e = estimates[i]!;
+                        const result =
+                          e.kind === "estimate" && column.packKey === pack.key
+                            ? e.estimate.components.find((c) => c.key === component.key)
+                            : undefined;
+                        return (
+                          <td key={column.slugPath} className={`${cell} text-fg-primary`}>
+                            {e.kind !== "estimate" || !result || result.amount === null ? (
+                              <span className="text-fg-tertiary">–</span>
+                            ) : result.applies ? (
+                              money(result.amount, e)
+                            ) : (
+                              <span className="text-fg-tertiary">{t("doesNotApply")}</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </ComparisonRow>
+                  )),
               )}
               {taxPacks.flatMap((pack) =>
-                pack.multiplierRows.map((row) => (
-                  <ComparisonRow
-                    key={`${pack.key}-${row.key}`}
-                    label={t("multiplier", { metric: row.metric, level: row.level })}
-                    labelClassName="text-fg-secondary"
-                    columnCount={count}
-                  >
-                    {columns.map((column) => {
-                      const value =
-                        column.packKey === pack.key ? column.multipliers[row.key] : undefined;
-                      return (
-                        <td key={column.slugPath} className={`${cell} text-fg-primary`}>
-                          {value === undefined ? (
-                            <span className="text-fg-tertiary">–</span>
-                          ) : value === null ? (
-                            <span className="text-fg-tertiary">{t("notRecorded")}</span>
-                          ) : (
-                            percent(value)
-                          )}
-                        </td>
-                      );
-                    })}
-                  </ComparisonRow>
-                )),
+                pack.multiplierRows
+                  .filter((r) => shows(pack, r))
+                  .map((row) => (
+                    <ComparisonRow
+                      key={`${pack.key}-${row.key}`}
+                      label={t("multiplier", { metric: row.metric, level: row.level })}
+                      labelClassName="text-fg-secondary"
+                      columnCount={count}
+                    >
+                      {columns.map((column) => {
+                        const value =
+                          column.packKey === pack.key ? column.multipliers[row.key] : undefined;
+                        return (
+                          <td key={column.slugPath} className={`${cell} text-fg-primary`}>
+                            {value === undefined ? (
+                              <span className="text-fg-tertiary">–</span>
+                            ) : value === null ? (
+                              <span className="text-fg-tertiary">{t("notRecorded")}</span>
+                            ) : (
+                              percent(value)
+                            )}
+                          </td>
+                        );
+                      })}
+                    </ComparisonRow>
+                  )),
               )}
               <ComparisonRow
                 label={t("taxedBy")}

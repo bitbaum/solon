@@ -16,16 +16,55 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * Schema version 5: Basel-Landschaft's tariff is a formula (logarithmic
  * pieces), and the federal tax is not levied below CHF 25. Schema version 6:
  * Vaud's cantonal and communal tax together take at most 30 % of the income,
- * reduced in proportion above it (absent elsewhere, so nothing is limited). Church
- * tax is not modelled yet: the register publishes its multipliers per
- * denomination, and which parish levies it is not imported,
- * so a church component waits for the parishes (§6.1). Nor are fixed per-head
- * taxes (Zürich's CHF 24, Lucerne's CHF 50): schema version 1 has no fixed amount.
+ * reduced in proportion above it (absent elsewhere, so nothing is limited).
+ *
+ * Schema version 7: wealth tax on taxable wealth, the canton's basic wealth
+ * tariff (divided for a couple where the canton divides it) times the
+ * canton's and the commune's wealth multipliers; and church tax, a church's
+ * tariff times the commune's rate for that church, as the tax calculator
+ * computes it. A church's tariff is the canton's basic tariff unless the
+ * canton levies it on something else (`ch-church-tariffs`). Schema version 8:
+ * where church tax is levied on the cantonal tax (Jura), every church rate is
+ * scaled by the canton's multiplier. The calculator gives one rate per
+ * commune and church; where parishes in one commune levy different rates, it
+ * shows one of them. Fixed per-head taxes: the canton's, per person or per
+ * household (`tax.head`, a `fixed` tariff per variant, 0 where none), a
+ * church's on top for its members, and a commune's and a parish's own per
+ * adult where they set it (Solothurn's).
  */
+const DENOMINATIONS = ["reformed", "catholic", "christ_catholic"] as const;
+const churchComponents = (on: "income" | "wealth") =>
+  DENOMINATIONS.map((denomination) => {
+    const prefix = on === "income" ? "tax.church" : "tax.church.wealth";
+    return {
+      key: on === "income" ? `church_${denomination}` : `wealth_church_${denomination}`,
+      ...(on === "wealth" && { base: "taxable_wealth" }),
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: `${prefix}.tariff.${denomination}` },
+      divisor:
+        on === "income"
+          ? { level: "canton", metric: "tax.income.divisor" }
+          : { level: "canton", metric: "tax.wealth.divisor", optional: true },
+      multipliers: [
+        {
+          level: "municipality",
+          metric: `${prefix}.${denomination}`,
+          scaledBy: { level: "canton", metric: `${prefix}.scale`, optional: true },
+        },
+      ],
+    };
+  });
+
 export const switzerlandIncomeTax = {
-  schemaVersion: 6,
+  schemaVersion: 8,
   base: "taxable_income",
-  inputs: ["taxable_income"],
+  inputs: [
+    "taxable_income",
+    "taxable_wealth",
+    "church_reformed",
+    "church_catholic",
+    "church_christ_catholic",
+  ],
   variants: ["single", "married"],
   components: [
     { key: "federal", tariff: { level: "nation", metric: "tax.income.tariff" } },
@@ -46,6 +85,45 @@ export const switzerlandIncomeTax = {
       tariff: { level: "canton", metric: "tax.income.tariff.communal" },
       divisor: { level: "canton", metric: "tax.income.divisor" },
       multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
+    },
+    ...churchComponents("income"),
+    {
+      key: "wealth_cantonal",
+      base: "taxable_wealth",
+      tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
+      divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
+      multipliers: [{ level: "canton", metric: "tax.wealth.multiplier" }],
+    },
+    {
+      key: "wealth_communal",
+      base: "taxable_wealth",
+      tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
+      divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
+      multipliers: [{ level: "municipality", metric: "tax.wealth.multiplier" }],
+    },
+    ...churchComponents("wealth"),
+    { key: "head", tariff: { level: "canton", metric: "tax.head" } },
+    ...DENOMINATIONS.map((denomination) => ({
+      key: `head_church_${denomination}`,
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: "tax.head.church" },
+    })),
+    ...DENOMINATIONS.map((denomination) => ({
+      key: `head_parish_${denomination}`,
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: "tax.head.adults" },
+      multipliers: [
+        {
+          level: "municipality",
+          metric: `tax.head.church.communal.${denomination}`,
+          optional: true,
+        },
+      ],
+    })),
+    {
+      key: "head_communal",
+      tariff: { level: "canton", metric: "tax.head.adults" },
+      multipliers: [{ level: "municipality", metric: "tax.head.communal", optional: true }],
     },
   ],
   limits: [
@@ -75,6 +153,61 @@ const switzerlandTaxLabels: TaxLabels = {
         fr: "Après les déductions, comme dans la déclaration d'impôt ; pas le salaire brut.",
         it: "Dopo le deduzioni, come nella dichiarazione d'imposta; non il salario lordo.",
       },
+    },
+    taxable_wealth: {
+      label: {
+        en: "Taxable wealth (optional)",
+        de: "Steuerbares Vermögen (optional)",
+        fr: "Fortune imposable (facultatif)",
+        it: "Sostanza imponibile (facoltativo)",
+      },
+      hint: {
+        en: "After debts are taken off; the tariff takes off the canton's allowance.",
+        de: "Nach Abzug der Schulden; den Freibetrag des Kantons zieht der Tarif ab.",
+        fr: "Après déduction des dettes ; le barème déduit la franchise du canton.",
+        it: "Dopo la deduzione dei debiti; la tariffa deduce la franchigia del cantone.",
+      },
+    },
+    church_reformed: {
+      label: {
+        en: "Evangelical Reformed",
+        de: "Evangelisch-reformiert",
+        fr: "Réformée évangélique",
+        it: "Evangelica riformata",
+      },
+    },
+    church_catholic: {
+      label: {
+        en: "Roman Catholic",
+        de: "Römisch-katholisch",
+        fr: "Catholique romaine",
+        it: "Cattolica romana",
+      },
+    },
+    church_christ_catholic: {
+      label: {
+        en: "Christian Catholic",
+        de: "Christkatholisch",
+        fr: "Catholique-chrétienne",
+        it: "Cattolica cristiana",
+      },
+    },
+  },
+  choices: {
+    church: {
+      label: {
+        en: "Church tax",
+        de: "Kirchensteuer",
+        fr: "Impôt ecclésiastique",
+        it: "Imposta di culto",
+      },
+      none: {
+        en: "Not a member of a church that levies tax",
+        de: "Kein Mitglied einer steuererhebenden Kirche",
+        fr: "Pas membre d'une Église qui prélève l'impôt",
+        it: "Non membro di una chiesa che riscuote l'imposta",
+      },
+      options: ["church_reformed", "church_catholic", "church_christ_catholic"],
     },
   },
   variants: {
@@ -110,6 +243,102 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt communal",
       it: "Imposta comunale",
     },
+    church_reformed: {
+      en: "Church tax",
+      de: "Kirchensteuer",
+      fr: "Impôt ecclésiastique",
+      it: "Imposta di culto",
+    },
+    church_catholic: {
+      en: "Church tax",
+      de: "Kirchensteuer",
+      fr: "Impôt ecclésiastique",
+      it: "Imposta di culto",
+    },
+    church_christ_catholic: {
+      en: "Church tax",
+      de: "Kirchensteuer",
+      fr: "Impôt ecclésiastique",
+      it: "Imposta di culto",
+    },
+    wealth_cantonal: {
+      en: "Cantonal wealth tax",
+      de: "Staatssteuer auf dem Vermögen",
+      fr: "Impôt cantonal sur la fortune",
+      it: "Imposta cantonale sulla sostanza",
+    },
+    wealth_communal: {
+      en: "Communal wealth tax",
+      de: "Gemeindesteuer auf dem Vermögen",
+      fr: "Impôt communal sur la fortune",
+      it: "Imposta comunale sulla sostanza",
+    },
+    head: {
+      en: "Per-head tax",
+      de: "Personalsteuer",
+      fr: "Taxe personnelle",
+      it: "Imposta personale",
+    },
+    head_church_reformed: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_church_catholic: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_church_christ_catholic: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_parish_reformed: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_parish_catholic: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_parish_christ_catholic: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_communal: {
+      en: "Communal per-head tax",
+      de: "Gemeinde-Personalsteuer",
+      fr: "Taxe personnelle communale",
+      it: "Imposta personale comunale",
+    },
+    wealth_church_reformed: {
+      en: "Church tax on wealth",
+      de: "Kirchensteuer auf dem Vermögen",
+      fr: "Impôt ecclésiastique sur la fortune",
+      it: "Imposta di culto sulla sostanza",
+    },
+    wealth_church_catholic: {
+      en: "Church tax on wealth",
+      de: "Kirchensteuer auf dem Vermögen",
+      fr: "Impôt ecclésiastique sur la fortune",
+      it: "Imposta di culto sulla sostanza",
+    },
+    wealth_church_christ_catholic: {
+      en: "Church tax on wealth",
+      de: "Kirchensteuer auf dem Vermögen",
+      fr: "Impôt ecclésiastique sur la fortune",
+      it: "Imposta di culto sulla sostanza",
+    },
   },
   rate: {
     yours: {
@@ -128,10 +357,10 @@ const switzerlandTaxLabels: TaxLabels = {
   // The income the golden fixtures check against the federal calculator.
   exampleBase: 100_000,
   excludes: {
-    en: "Not included: church tax, wealth tax and fixed per-head taxes, such as CHF 24 a person in Zürich or CHF 50 in Lucerne.",
-    de: "Nicht enthalten: Kirchensteuer, Vermögenssteuer und feste Kopfsteuern, etwa CHF 24 pro Person in Zürich oder CHF 50 in Luzern.",
-    fr: "Non compris : impôt ecclésiastique, impôt sur la fortune et impôts par tête, comme CHF 24 par personne à Zurich ou CHF 50 à Lucerne.",
-    it: "Non incluse: imposta di culto, imposta sulla sostanza e imposte pro capite, come CHF 24 a persona a Zurigo o CHF 50 a Lucerna.",
+    en: "Church tax assumes both partners belong to the same church.",
+    de: "Die Kirchensteuer nimmt an, dass beide Partner derselben Kirche angehören.",
+    fr: "L'impôt ecclésiastique suppose que les deux partenaires appartiennent à la même Église.",
+    it: "L'imposta di culto presume che entrambi i partner appartengano alla stessa chiesa.",
   },
 };
 
@@ -235,6 +464,9 @@ export const switzerland: CountryPackInput = {
     "swisstopo-postcode-localities",
     "swisstopo-commune-boundaries",
     "ch-cantonal-tax-steps",
+    "estv-wealth-tax-scales",
+    "ch-church-tariffs",
+    "ch-per-head-taxes",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,

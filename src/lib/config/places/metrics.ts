@@ -95,4 +95,320 @@ export const METRICS: readonly MetricInput[] = [
     // read as a fraction (119 for 1.19) still falls far outside.
     plausible: { min: 0, max: 6 },
   },
+  {
+    // The wealth tariff a canton's and its communes' multipliers apply to.
+    key: "tax.wealth.tariff.basic",
+    label: {
+      en: "Basic wealth tax tariff",
+      de: "Grundtarif Vermögenssteuer (einfache Steuer)",
+      fr: "barème de base de l'impôt sur la fortune",
+      it: "tariffa di base dell'imposta sulla sostanza",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The canton's or commune's multiplier on the basic wealth tax; the same as
+    // on income in most places, not in all (Fribourg's communes).
+    key: "tax.wealth.multiplier",
+    label: {
+      en: "Tax multiplier on wealth",
+      de: "Steuerfuss auf dem Vermögen",
+      fr: "coefficient d'impôt sur la fortune",
+      it: "moltiplicatore d'imposta sulla sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // A commune's church tax rate for members of the Evangelical Reformed church, on the basic income tax.
+    key: "tax.church.reformed",
+    label: {
+      en: "Church tax rate on income (Evangelical Reformed)",
+      de: "Kirchensteuerfuss auf dem Einkommen (evangelisch-reformiert)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (réformée évangélique)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Evangelical Reformed church, on the basic wealth tax.
+    key: "tax.church.wealth.reformed",
+    label: {
+      en: "Church tax rate on wealth (Evangelical Reformed)",
+      de: "Kirchensteuerfuss auf dem Vermögen (evangelisch-reformiert)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (réformée évangélique)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Roman Catholic church, on the basic income tax.
+    key: "tax.church.catholic",
+    label: {
+      en: "Church tax rate on income (Roman Catholic)",
+      de: "Kirchensteuerfuss auf dem Einkommen (römisch-katholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (catholique romaine)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Roman Catholic church, on the basic wealth tax.
+    key: "tax.church.wealth.catholic",
+    label: {
+      en: "Church tax rate on wealth (Roman Catholic)",
+      de: "Kirchensteuerfuss auf dem Vermögen (römisch-katholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (catholique romaine)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Christian Catholic church, on the basic income tax.
+    key: "tax.church.christ_catholic",
+    label: {
+      en: "Church tax rate on income (Christian Catholic)",
+      de: "Kirchensteuerfuss auf dem Einkommen (christkatholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (catholique-chrétienne)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Christian Catholic church, on the basic wealth tax.
+    key: "tax.church.wealth.christ_catholic",
+    label: {
+      en: "Church tax rate on wealth (Christian Catholic)",
+      de: "Kirchensteuerfuss auf dem Vermögen (christkatholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (catholique-chrétienne)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // The tariff the Evangelical Reformed church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.reformed",
+    label: {
+      en: "Church tax base on income (Evangelical Reformed)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (evangelisch-reformiert)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (réformée évangélique)",
+      it: "base dell'imposta di culto sul reddito (evangelica riformata)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Roman Catholic church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.catholic",
+    label: {
+      en: "Church tax base on income (Roman Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (römisch-katholisch)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (catholique romaine)",
+      it: "base dell'imposta di culto sul reddito (cattolica romana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Christian Catholic church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.christ_catholic",
+    label: {
+      en: "Church tax base on income (Christian Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (christkatholisch)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (catholique-chrétienne)",
+      it: "base dell'imposta di culto sul reddito (cattolica cristiana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Where church tax is levied on the cantonal tax rather than the basic tax,
+    // the canton's multiplier on income, by which every church rate is scaled.
+    key: "tax.church.scale",
+    label: {
+      en: "Church tax levied on the cantonal tax on income",
+      de: "Kirchensteuer auf der Staatssteuer auf dem Einkommen",
+      fr: "impôt ecclésiastique sur l'impôt cantonal sur le revenu",
+      it: "imposta di culto sull'imposta cantonale sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // The tariff the Evangelical Reformed church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.reformed",
+    label: {
+      en: "Church tax base on wealth (Evangelical Reformed)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (evangelisch-reformiert)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (réformée évangélique)",
+      it: "base dell'imposta di culto sulla sostanza (evangelica riformata)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Roman Catholic church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.catholic",
+    label: {
+      en: "Church tax base on wealth (Roman Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (römisch-katholisch)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (catholique romaine)",
+      it: "base dell'imposta di culto sulla sostanza (cattolica romana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Christian Catholic church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.christ_catholic",
+    label: {
+      en: "Church tax base on wealth (Christian Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (christkatholisch)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (catholique-chrétienne)",
+      it: "base dell'imposta di culto sulla sostanza (cattolica cristiana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Where church tax is levied on the cantonal tax rather than the basic tax,
+    // the canton's multiplier on wealth, by which every church rate is scaled.
+    key: "tax.church.wealth.scale",
+    label: {
+      en: "Church tax levied on the cantonal tax on wealth",
+      de: "Kirchensteuer auf der Staatssteuer auf dem Vermögen",
+      fr: "impôt ecclésiastique sur l'impôt cantonal sur la fortune",
+      it: "imposta di culto sull'imposta cantonale sulla sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // Applied to the basic wealth tariff as tax.income.divisor is to income's.
+    key: "tax.wealth.divisor",
+    label: {
+      en: "Wealth divisor (splitting)",
+      de: "Divisor des Vermögens (Splitting)",
+      fr: "diviseur de la fortune (splitting)",
+      it: "divisore della sostanza (splitting)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 1, max: 3 },
+  },
+  {
+    // A canton's fixed tax per head (Personalsteuer, taxe personnelle), for a
+    // household of the variant: per person in some cantons, per household in
+    // others. 0 where the canton levies none.
+    key: "tax.head",
+    label: {
+      en: "Per-head tax",
+      de: "Personalsteuer",
+      fr: "taxe personnelle",
+      it: "imposta personale",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Added to the per-head tax for a member of a church that levies one.
+    key: "tax.head.church",
+    label: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "taxe personnelle ecclésiastique",
+      it: "imposta personale di culto",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // How many adults of the variant's household a commune's per-head tax counts.
+    key: "tax.head.adults",
+    label: {
+      en: "Adults liable to the communal per-head tax",
+      de: "Personen mit Gemeinde-Personalsteuer",
+      fr: "adultes soumis à la taxe personnelle communale",
+      it: "adulti soggetti all'imposta personale comunale",
+    },
+    valueType: "tariff",
+    unit: "count",
+  },
+  {
+    // A commune's own per-head tax, per adult, where the commune sets it (Solothurn's).
+    key: "tax.head.communal",
+    label: {
+      en: "Communal per-head tax",
+      de: "Gemeinde-Personalsteuer",
+      fr: "taxe personnelle communale",
+      it: "imposta personale comunale",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Evangelical Reformed church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.reformed",
+    label: {
+      en: "Parish per-head tax (Evangelical Reformed)",
+      de: "Personalsteuer der Kirchgemeinde (evangelisch-reformiert)",
+      fr: "taxe personnelle paroissiale (réformée évangélique)",
+      it: "imposta personale parrocchiale (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Roman Catholic church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.catholic",
+    label: {
+      en: "Parish per-head tax (Roman Catholic)",
+      de: "Personalsteuer der Kirchgemeinde (römisch-katholisch)",
+      fr: "taxe personnelle paroissiale (catholique romaine)",
+      it: "imposta personale parrocchiale (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Christian Catholic church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.christ_catholic",
+    label: {
+      en: "Parish per-head tax (Christian Catholic)",
+      de: "Personalsteuer der Kirchgemeinde (christkatholisch)",
+      fr: "taxe personnelle paroissiale (catholique-chrétienne)",
+      it: "imposta personale parrocchiale (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
 ];

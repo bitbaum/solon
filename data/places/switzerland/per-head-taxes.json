@@ -1,0 +1,7087 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 48
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 70
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 30
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 70
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 30
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 1
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 2
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 60
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 60
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 20
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 40
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 10
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 10
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 25
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 10
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 25
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 10
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2401"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2401"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 70
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2402"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2402"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2403"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2404"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2405"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2406"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2407"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2408"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2421"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2422"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2424"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2425"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2426"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2427"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2428"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2430"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2445"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2455"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2457"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2457"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2461"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2463"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2464"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2465"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2471"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2472"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2473"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2474"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2475"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2476"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2477"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2478"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2479"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2480"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2481"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2491"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2492"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2493"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2495"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2497"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2499"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2500"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2501"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 42
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2502"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2503"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2511"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2513"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2514"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2516"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2517"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2518"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2519"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2523"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2524"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2525"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2526"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2527"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2528"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2530"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2532"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2534"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2535"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2541"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2542"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2543"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2544"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2545"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2546"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2547"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2548"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2549"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2550"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2551"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2553"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2554"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2555"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2556"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2571"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2572"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2572"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2573"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2574"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2575"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2576"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2578"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2579"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2580"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2581"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2582"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2583"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2584"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2585"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2586"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2601"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2611"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2612"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2613"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2614"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 30
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2615"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2615"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 70
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2616"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2617"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 80
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2618"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 40
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2619"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 45
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2620"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2621"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 70
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2622"
+      },
+      "metricKey": "tax.head.communal",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 60
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2401"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2401"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2401"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2402"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2402"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2402"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2403"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2403"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2403"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2404"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2404"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2404"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2404"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2405"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2405"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2405"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2406"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2406"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2406"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2407"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2407"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2407"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2408"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2408"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2408"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2421"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2421"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2421"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2422"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2422"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2422"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2424"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2424"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2424"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2425"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2425"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2425"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2426"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2426"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2426"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2427"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2427"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2427"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2428"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2428"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2428"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2428"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2430"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2430"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2430"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2445"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2445"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2445"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2455"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 8
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2455"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2455"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2457"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2457"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2457"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2461"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2461"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2461"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2463"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2463"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2463"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2464"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 8
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2464"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2464"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2465"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2465"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2465"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2471"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2471"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2471"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2472"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2472"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2472"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2473"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2473"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2473"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2474"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2474"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2474"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2475"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2475"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2475"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2476"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2476"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2476"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2477"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2477"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2477"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2478"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2478"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2478"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2479"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2479"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2479"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2480"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2480"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2480"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2481"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2481"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2481"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2491"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2491"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2491"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2492"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2492"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2492"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2493"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2493"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2493"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2495"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2495"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2495"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2497"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2497"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2497"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2499"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2499"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2499"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2500"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2500"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2500"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2501"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2501"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2501"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2502"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2502"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2502"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2503"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2503"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2503"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2511"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2511"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2511"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2513"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2513"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2513"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2514"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2514"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2514"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2516"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2516"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2516"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2517"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2517"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2517"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2518"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2518"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2518"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2519"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2519"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2519"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2523"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2523"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2523"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2524"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2524"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2524"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2525"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2525"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2525"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2526"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2526"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2526"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2527"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2527"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2527"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2528"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2528"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2528"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2530"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2530"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2530"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2532"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2532"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2532"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2534"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2534"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2534"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2535"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2535"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2535"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2541"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2541"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2541"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2542"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2542"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2542"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2543"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2543"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2543"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2543"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2544"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2544"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2544"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 12
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2544"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2545"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2545"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2545"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2546"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2546"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2546"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2546"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2547"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2547"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2547"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2548"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2548"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2548"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2549"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2549"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2549"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2549"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2550"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2550"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 6
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2550"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2551"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2551"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 6
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2551"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2553"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2553"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 6
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2553"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2554"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2554"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2554"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 5
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2554"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2555"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2555"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2555"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2556"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2556"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 6
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2556"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2556"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2571"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2571"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2571"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2572"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2572"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2572"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2573"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2573"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2573"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2574"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2574"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2574"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2575"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2575"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2575"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2576"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2576"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2576"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2578"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2578"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2578"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2579"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2579"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2579"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2580"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2580"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2580"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2581"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2581"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2581"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2582"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2582"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2582"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2583"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2583"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2583"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2584"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2584"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2584"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2585"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2585"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2585"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2586"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2586"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 50
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2586"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2586"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2601"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2601"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2601"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2611"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2611"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2611"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2612"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2612"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2612"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2613"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2613"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2613"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2614"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2614"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2614"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2615"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2615"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2615"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2616"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2616"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2616"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2617"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2617"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2617"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2618"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2618"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2618"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2619"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2619"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2619"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2620"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2620"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2620"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2620"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2621"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2621"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2621"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2622"
+      },
+      "metricKey": "tax.head.church.communal.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2622"
+      },
+      "metricKey": "tax.head.church.communal.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 20
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "2622"
+      },
+      "metricKey": "tax.head.church.communal.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0
+    }
+  ]
+}

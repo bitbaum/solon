@@ -146,11 +146,21 @@ const scalesOptions = exportOptions.extend({
           /** A tariff amount below this is not levied (the federal tax's CHF 25). */
           minimum: z.number().min(0).optional(),
           /**
-           * This target's tariff is also `metric`'s for a place with no row of
-           * target `unless` (a canton's basic tariff is its communes' tariff,
-           * unless the canton gives them one of their own).
+           * This target's tariff is also each `metric`'s: for a place with no
+           * row of target `unless` (a canton's basic tariff is its communes'
+           * tariff, unless the canton gives them one of their own), and not
+           * for the canton codes in `notFor` (a church whose rates apply to
+           * something else there).
            */
-          alsoAs: z.object({ metric: z.string().min(1), unless: z.string().min(1) }).optional(),
+          alsoAs: z
+            .array(
+              z.object({
+                metric: z.string().min(1),
+                unless: z.string().min(1).optional(),
+                notFor: z.array(z.string().min(1)).default([]),
+              }),
+            )
+            .default([]),
         })
         .refine(oneWayToPlace, "give either place or cantons"),
     )
@@ -286,7 +296,7 @@ function unreadable(
 
 export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
   key: "estv_tax_scales",
-  version: "6",
+  version: "7",
   decode: decodeJsonEnvelope,
   schema: scales,
   options: scalesOptions,
@@ -316,9 +326,13 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
       const roundedBy = target.cantonRounding[row.Location.Canton] ?? target.rounding;
       const tariffMetrics = [
         target.metric,
-        ...(target.alsoAs && !placeGroups.has(`${target.alsoAs.unless} ${row.Location.Canton}`)
-          ? [target.alsoAs.metric]
-          : []),
+        ...target.alsoAs
+          .filter(
+            (also) =>
+              !also.notFor.includes(row.Location.Canton) &&
+              !(also.unless && placeGroups.has(`${also.unless} ${row.Location.Canton}`)),
+          )
+          .map((also) => also.metric),
       ];
       for (const { variant, divided } of variantsOf(row, groups, options)) {
         const key = `${place.scheme}:${place.value} ${target.metric} ${variant}`;
@@ -386,9 +400,19 @@ type Rates = z.infer<typeof rates>;
 
 const ratesOptions = exportOptions
   .extend({
-    /** The row field holding the multiplier, and the metric it is. */
-    field: z.string().min(1),
-    metric: z.string().min(1),
+    /**
+     * The row fields holding multipliers, and the metric each is. A field may
+     * be read for some of the communes' cantons only (`cantons`).
+     */
+    fields: z
+      .array(
+        z.object({
+          field: z.string().min(1),
+          metric: z.string().min(1),
+          cantons: z.array(z.string().min(1)).optional(),
+        }),
+      )
+      .min(1),
     /** A field in percent has 100 here. */
     divideBy: z.number().positive().default(1),
     /** A place per canton, by the export's canton code: the canton's own multiplier. */
@@ -420,7 +444,7 @@ function placeOfRate(options: RatesOptions, at: z.infer<typeof location>): Exter
 
 export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
   key: "estv_simple_rates",
-  version: "3",
+  version: "4",
   decode: decodeJsonEnvelope,
   schema: rates,
   options: ratesOptions,
@@ -436,22 +460,27 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
       if (!place) {
         continue;
       }
-      const value = row[options.field];
-      if (typeof value !== "number") {
-        throw new Error(`${place.scheme}:${place.value} ${year}: ${options.field} is not a number`);
+      for (const { field, metric, cantons } of options.fields) {
+        if (cantons && !cantons.includes(row.Location.Canton)) {
+          continue;
+        }
+        const value = row[field];
+        if (typeof value !== "number") {
+          throw new Error(`${place.scheme}:${place.value} ${year}: ${field} is not a number`);
+        }
+        const key = `${place.scheme}:${place.value} ${metric}`;
+        const fact: BatchFact = {
+          jurisdiction: place,
+          metricKey: metric,
+          variant: null,
+          ...fiscalYearPeriod(year, pack.fiscalYear.startMonthDay),
+          value: value / options.divideBy,
+        };
+        if (facts.has(key) && facts.get(key)!.value !== fact.value) {
+          throw new Error(`${key} ${year}: the export gives two different multipliers`);
+        }
+        facts.set(key, fact);
       }
-      const key = `${place.scheme}:${place.value}`;
-      const fact: BatchFact = {
-        jurisdiction: place,
-        metricKey: options.metric,
-        variant: null,
-        ...fiscalYearPeriod(year, pack.fiscalYear.startMonthDay),
-        value: value / options.divideBy,
-      };
-      if (facts.has(key) && facts.get(key)!.value !== fact.value) {
-        throw new Error(`${key} ${year}: the export gives two different multipliers`);
-      }
-      facts.set(key, fact);
     }
     return { pack: pack.key, jurisdictions: [], relations: [], facts: [...facts.values()] };
   },

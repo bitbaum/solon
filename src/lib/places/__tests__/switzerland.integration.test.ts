@@ -81,6 +81,10 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["zurich-statistical-quarters", "statistical-quarters.json"],
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
   ["estv-income-tax-scales", "estv-scales-2025.json"],
+  ["estv-wealth-tax-scales", "estv-wealth-scales-2025.json"],
+  ["ch-church-tariffs", "../../../../../../data/places/switzerland/church-tariffs.json"],
+  // The hand-kept file, cut to the places above (adapters.test.ts checks the whole file).
+  ["ch-per-head-taxes", "per-head-taxes-cut.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
   ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
@@ -93,15 +97,54 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
  * The Federal Tax Administration's calculator (API_calculateSimpleTaxes), 2025,
  * taxable income CHF 100,000, no church tax, asked on 2026-09-29 (Zürich and
  * Küsnacht) and 2026-09-30 (Biel/Bienne, Canton of Bern). Zürich's CHF 24 per
- * person Personalsteuer is left out: the model has no fixed amounts yet.
+ * person Personalsteuer (`PersonalTax`) is its own column since 2026-10-30.
  */
 const GOLDEN_2025 = [
-  { commune: "261", variant: "single", federal: 2688, canton: 6083, communal: 7386 },
-  { commune: "261", variant: "married", federal: 1816, canton: 4689, communal: 5694 },
-  { commune: "154", variant: "single", federal: 2688, canton: 6083, communal: 4531 },
-  { commune: "154", variant: "married", federal: 1816, canton: 4689, communal: 3493 },
-  { commune: "371", variant: "single", federal: 2688, canton: 13373, communal: 7327 },
-  { commune: "371", variant: "married", federal: 1816, canton: 11365, communal: 6227 },
+  { commune: "261", variant: "single", federal: 2688, canton: 6083, communal: 7386, head: 24 },
+  { commune: "261", variant: "married", federal: 1816, canton: 4689, communal: 5694, head: 48 },
+  { commune: "154", variant: "single", federal: 2688, canton: 6083, communal: 4531, head: 24 },
+  { commune: "154", variant: "married", federal: 1816, canton: 4689, communal: 3493, head: 48 },
+  { commune: "371", variant: "single", federal: 2688, canton: 13373, communal: 7327, head: 0 },
+  { commune: "371", variant: "married", federal: 1816, canton: 11365, communal: 6227, head: 0 },
+] as const;
+
+/**
+ * The same calculator, 2025, taxable income CHF 100,000 and taxable wealth
+ * CHF 1,234,567, both partners Evangelical Reformed, asked on 2026-10-30.
+ */
+const GOLDEN_WEALTH_CHURCH_2025 = [
+  {
+    commune: "261",
+    variant: "single",
+    church: 621,
+    wealthCanton: 1268,
+    wealthCommunal: 1539,
+    wealthChurch: 129,
+  },
+  {
+    commune: "261",
+    variant: "married",
+    church: 479,
+    wealthCanton: 1152,
+    wealthCommunal: 1398,
+    wealthChurch: 118,
+  },
+  {
+    commune: "371",
+    variant: "single",
+    church: 1034,
+    wealthCanton: 3489,
+    wealthCommunal: 1912,
+    wealthChurch: 270,
+  },
+  {
+    commune: "371",
+    variant: "married",
+    church: 879,
+    wealthCanton: 3489,
+    wealthCommunal: 1912,
+    wealthChurch: 270,
+  },
 ] as const;
 
 const geometryFiles = new Map<string, Uint8Array>();
@@ -261,7 +304,9 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       const e = estimatePlace(map!, place, { base: 100_000, variant: g.variant, conditions: {} });
       expect(e.kind, `${g.commune} ${g.variant}`).toBe("estimate");
       if (e.kind === "estimate") {
-        expect(Math.abs(e.estimate.total - (g.federal + g.canton + g.communal))).toBeLessThan(3);
+        expect(
+          Math.abs(e.estimate.total - (g.federal + g.canton + g.communal + g.head)),
+        ).toBeLessThan(3);
       }
     }
     expect(map!.sources.map((s) => s.dataset)).toEqual(
@@ -490,6 +535,39 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     },
   );
 
+  it.each(GOLDEN_WEALTH_CHURCH_2025)(
+    "estimates commune $commune, $variant, with wealth and church tax as the federal calculator does",
+    async ({ commune, variant, church, wealthCanton, wealthCommunal, wealthChurch }) => {
+      const chain = await loadChain(db, await placeId("bfs_municipality", commune), "2025-06-30");
+      const chainFacts = await loadFacts(
+        db,
+        chain.map((p) => p.id),
+        "2025-06-30",
+      );
+      const facts = evaluatorFacts(chain, chainFacts);
+      const estimate = evaluate(switzerlandIncomeTax, facts, {
+        values: { taxable_income: 100_000, taxable_wealth: 1_234_567, church_reformed: true },
+        variant,
+      });
+      expect(estimate.complete).toBe(true);
+      const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
+      expect(Math.abs(amount("church_reformed") - church)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_cantonal") - wealthCanton)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_communal") - wealthCommunal)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_church_reformed") - wealthChurch)).toBeLessThan(1);
+      // No wealth and no church: those components ask nothing, and add nothing.
+      const plain = evaluate(switzerlandIncomeTax, facts, {
+        values: { taxable_income: 100_000 },
+        variant,
+      });
+      expect(plain.complete).toBe(true);
+      expect(plain.total).toBeCloseTo(
+        estimate.total - church - wealthCanton - wealthCommunal - wealthChurch,
+        -1,
+      );
+    },
+  );
+
   it("compares places as the federal calculator does, and says why a figure is missing", async () => {
     const pathOf = async (id: string) =>
       (
@@ -543,7 +621,9 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     const columnOf: Record<string, number> = { "261": 0, "154": 1 };
     for (const g of GOLDEN_2025.filter((g) => g.commune in columnOf)) {
       const i = columnOf[g.commune]!;
-      expect(Math.abs(total(i, g.variant) - (g.federal + g.canton + g.communal))).toBeLessThan(3);
+      expect(
+        Math.abs(total(i, g.variant) - (g.federal + g.canton + g.communal + g.head)),
+      ).toBeLessThan(3);
     }
     // Witikon levies nothing itself: its tax is the City of Zürich's.
     expect(total(2, "single")).toBe(total(0, "single"));

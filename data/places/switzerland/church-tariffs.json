@@ -1,0 +1,171 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.tariff.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.01
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.wealth.tariff.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.0003,
+        "rounding": {
+          "base": 1000
+        }
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.tariff.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.01
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.wealth.tariff.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.0003,
+        "rounding": {
+          "base": 1000
+        }
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.tariff.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.01
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.church.wealth.tariff.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.0003,
+        "rounding": {
+          "base": 1000
+        }
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.church.tariff.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 1
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.church.wealth.tariff.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.1,
+        "rounding": {
+          "base": 1000
+        }
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.church.tariff.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 1
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.church.wealth.tariff.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0.1,
+        "rounding": {
+          "base": 1000
+        }
+      }
+    }
+  ]
+}

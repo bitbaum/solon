@@ -16,7 +16,7 @@ import type { GeometryCollection, Topology } from "topojson-specification";
 import type { FeatureCollection, Geometry } from "geojson";
 import { Link } from "@/i18n/navigation";
 import { REGISTER_POLICY_DEFAULTS } from "@/lib/config/places/policies";
-import { compareHref, formatMoney, parseAmount } from "@/lib/places/compare-view";
+import { compareHref, formatMoney, parseAmount, parseAmounts } from "@/lib/places/compare-view";
 import type { AddressHit } from "@/lib/places/address-search";
 import {
   areaBounds,
@@ -171,6 +171,7 @@ export default function PlacesMap({ packKey }: { packKey: string }) {
   const estimateInput = useMemo(
     () => ({
       base: entered ?? taxPack?.exampleBase ?? null,
+      amounts: parseAmounts(input?.amounts),
       variant: input?.variant ?? "",
       conditions: input?.conditions ?? {},
     }),

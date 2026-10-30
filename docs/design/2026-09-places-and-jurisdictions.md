@@ -426,7 +426,8 @@ Nothing in that block is read by name anywhere in `src/`. The engine iterates
 the sketch in three ways. The levels stop at what P1 imports (nation, canton,
 district, municipality, and the City of Zürich's districts and statistical
 quarters as `partial`); parishes and school communities come with P2. The
-income-tax model has no church component for the same reason. And the
+income-tax model had no church component for the same reason; it has one
+since 2026-10-30, at the commune's rate (§6.2). And the
 nation has no identifier source yet, so the commune-register source creates
 the root and states its ISO code, set in that source's options; a later
 world source matches it by that code.
@@ -693,6 +694,43 @@ married, CHF 23,456 to 3 million, 2026) found one remaining gap:
   where the model divides by 1.9 there too; the canton's and the commune's tax
   are each CHF 2–3 lower than the calculator's. Below the top step it matches.
   To be confirmed in the canton's tax act before it is modelled.
+
+**Built (wealth and church tax, 2026-10-30)**: schema version 7
+(`@bitbaum/tax-model` 0.8.1) lets a component read a base of its own and
+applies it only when that input is given. The Swiss model adds the cantonal
+and communal wealth tax (the canton's basic wealth tariff, source
+`estv-wealth-tax-scales`, times the canton's and the commune's wealth
+multipliers) and church tax on income and on wealth (the basic tax times the
+commune's rate for the member's church), read from the same rates export as
+the multipliers. The calculator rounds wealth down to CHF 1,000 in every
+modelled canton. Measured 2026-10-30 against the calculator at CHF 100,000
+income and CHF 1,234,567 and 987,654 wealth, single and married, Reformed and
+Roman Catholic, in one commune of each modelled canton: every component
+matches to the franc in all 21 modelled cantons, for all three churches;
+Zürich and Biel/Bienne are golden cases for 2025. Each church has a tariff
+of its own, the canton's basic tariff unless the canton levies church tax on
+something else: Uri's churches on 1 % of taxable income and 0.3 per mille of
+wealth, Basel-Landschaft's Reformed and Christian Catholic churches on income
+and wealth themselves (`data/places/switzerland/church-tariffs.json`, source
+`ch-church-tariffs`, measured, the cantons' acts to be cited); Jura's on the
+cantonal tax, through schema version 8's `scaledBy` (the church rate times
+the canton's multiplier). Neuchâtel divides a couple's wealth by 1.923, read
+as income's divisor is (`tax.wealth.divisor`). Fixed per-head taxes are
+`fixed` tariffs per canton and household (`tax.head`: Zürich's and Ticino's
+per person, Lucerne's, Nidwalden's, Schaffhausen's, Uri's, Geneva's and
+Valais's per household, 0 elsewhere), a church's on top for its members
+(Uri, Geneva, Neuchâtel), and Solothurn's communes' and parishes' own per
+adult (`data/places/switzerland/per-head-taxes.json`, source
+`ch-per-head-taxes`, measured for 2025 and 2026 in every canton and every
+Solothurn commune). With them, the whole bill (income, church, wealth and
+per-head tax) matches the calculator's total to the franc in two communes of
+every modelled canton, for every church, single and married. Not yet:
+
+- The caps on income and wealth tax together (Basel-Stadt, Aargau, Ticino;
+  Valais and Geneva are not modelled) are not modelled; they bind only where
+  wealth is large against income.
+- Where parishes in one commune levy different church rates, the export gives
+  one of them.
 
 ### 6.3 "Takes tax" is derived
 
