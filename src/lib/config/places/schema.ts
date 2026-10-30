@@ -62,6 +62,20 @@ export const taxLabelsSchema = z.object({
   ),
   variants: z.record(z.string(), localizedTextSchema),
   components: z.record(z.string(), localizedTextSchema),
+  /**
+   * Yes-or-no inputs of which at most one is true, asked as one question:
+   * which church, if any. `none` labels the answer that sets none of them.
+   */
+  choices: z
+    .record(
+      z.string(),
+      z.object({
+        label: localizedTextSchema,
+        none: localizedTextSchema,
+        options: z.array(z.string().min(1)).min(2),
+      }),
+    )
+    .default({}),
   /** Said once beside every estimate. */
   excludes: localizedTextSchema,
   /**
@@ -272,6 +286,19 @@ function taxModelProblems(pack: CountryPack, metrics: ReadonlyMap<string, Metric
         .map((c) => `component "${c.key}"`),
     ];
     problems.push(...unlabelled.map((what) => `${prefix}: ${what} has no label`));
+    const amounts = new Set([model.base, ...model.components.flatMap((c) => c.base ?? [])]);
+    const chosen = new Set<string>();
+    for (const [key, choice] of Object.entries(labels.choices)) {
+      for (const option of choice.options) {
+        if (!model.inputs.includes(option) || amounts.has(option)) {
+          problems.push(`${prefix}: choice "${key}" offers "${option}", not a yes-or-no input`);
+        }
+        if (chosen.has(option)) {
+          problems.push(`${prefix}: "${option}" is offered by more than one choice`);
+        }
+        chosen.add(option);
+      }
+    }
   }
   const levels = new Set(pack.levels.map((level) => level.key));
   const refs: { reader: string; ref: FactRef; valueType: "tariff" | "number" }[] = [

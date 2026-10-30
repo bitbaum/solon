@@ -259,8 +259,24 @@ export function taxPackView(
       levelKey: ref.level,
       metric: metric ? localized(metric.label, locale) : ref.metric,
       level: levelName(ref.level),
+      when: ref.when ?? null,
     });
   }
+  const amountKeys = [
+    ...new Set(model.components.flatMap((c) => (c.base && c.base !== model.base ? [c.base] : []))),
+  ];
+  const choices = Object.entries(labels.choices);
+  const chosen = new Set(choices.flatMap(([, choice]) => choice.options));
+  /** A component shows when its own condition holds, or one of its multipliers' does. */
+  const whenOf = (c: (typeof model.components)[number]): string[] => {
+    if (c.when) {
+      return [c.when];
+    }
+    const multipliers = c.multipliers ?? [];
+    return multipliers.length > 0 && multipliers.every((m) => m.when)
+      ? multipliers.map((m) => m.when!)
+      : [];
+  };
   return {
     key: pack.key,
     name: localized(pack.names, locale),
@@ -269,7 +285,16 @@ export function taxPackView(
     taxYear: taxYear(pack.fiscalYear.startMonthDay, on),
     model,
     base: inputOf(model.base),
-    conditions: model.inputs.filter((key) => key !== model.base).map(inputOf),
+    amounts: amountKeys.map(inputOf),
+    conditions: model.inputs
+      .filter((key) => key !== model.base && !amountKeys.includes(key) && !chosen.has(key))
+      .map(inputOf),
+    choices: choices.map(([key, choice]) => ({
+      key,
+      label: localized(choice.label, locale),
+      none: localized(choice.none, locale),
+      options: choice.options.map(inputOf),
+    })),
     variants: model.variants.map((key) => ({
       key,
       label: localized(labels.variants[key]!, locale),
@@ -277,6 +302,8 @@ export function taxPackView(
     components: model.components.map((c) => ({
       key: c.key,
       label: localized(labels.components[c.key]!, locale),
+      base: c.base && c.base !== model.base ? c.base : null,
+      when: whenOf(c),
     })),
     multiplierRows: [...rows.values()],
     levelNames: Object.fromEntries(pack.levels.map((l) => [l.key, levelName(l.key)])),

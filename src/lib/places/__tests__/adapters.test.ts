@@ -455,6 +455,42 @@ describe("Liechtenstein's communes, kept by hand", () => {
   });
 });
 
+describe("per-head taxes and church tariffs, kept by hand", () => {
+  const read = (key: string, file: string) =>
+    mapSource(
+      key,
+      new Uint8Array(readFileSync(join(__dirname, "../../../../data/places/switzerland", file))),
+    );
+
+  it("pass the batch check against the pack", () => {
+    const heads = read("ch-per-head-taxes", "per-head-taxes.json");
+    expect(checkBatch(heads, placesConfig, "ch-per-head-taxes").problems).toEqual([]);
+    const tariffs = read("ch-church-tariffs", "church-tariffs.json");
+    expect(checkBatch(tariffs, placesConfig, "ch-church-tariffs").problems).toEqual([]);
+  });
+
+  it("states every canton's per-head tax for both households, and every Solothurn commune's", () => {
+    const heads = read("ch-per-head-taxes", "per-head-taxes.json");
+    const cantons = new Set(
+      heads.facts.filter((f) => f.metricKey === "tax.head").map((f) => f.jurisdiction.value),
+    );
+    expect(cantons.size).toBe(26);
+    const zurich = heads.facts.filter(
+      (f) => f.metricKey === "tax.head" && f.jurisdiction.value === "1",
+    );
+    expect(zurich.map((f) => [f.variant, f.value])).toEqual([
+      ["single", { kind: "fixed", currency: "CHF", amount: 24 }],
+      ["married", { kind: "fixed", currency: "CHF", amount: 48 }],
+    ]);
+    const solothurn = new Set(
+      heads.facts
+        .filter((f) => f.metricKey === "tax.head.communal")
+        .map((f) => f.jurisdiction.value),
+    );
+    expect(solothurn.size).toBe(104);
+  });
+});
+
 describe("the cantons' tax steps, kept by hand", () => {
   const file = join(__dirname, "../../../../data/places/switzerland/tax-steps.csv");
   const batch = mapSource("ch-cantonal-tax-steps", new Uint8Array(readFileSync(file)));
@@ -543,9 +579,17 @@ describe("the Federal Tax Administration's exports", () => {
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
     // Two federal tariffs, and per variant a basic tariff, a communal tariff
     // and a divisor for Aargau, Zürich, Bern, Fribourg, Ticino, Nidwalden,
-    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz.
-    // Valais's rows are not read: it is not modelled.
-    expect(scales.facts).toHaveLength(80);
+    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz
+    // (78). The basic tariff is also each church's tariff, three per variant,
+    // except Uri's churches and Basel-Landschaft's Reformed and Christian
+    // Catholic ones, whose tariffs are kept by hand (68). Valais's rows are
+    // not read: it is not modelled.
+    expect(scales.facts).toHaveLength(148);
+    expect(
+      scales.facts.filter(
+        (f) => f.jurisdiction.value === "4" && f.metricKey.startsWith("tax.church"),
+      ),
+    ).toEqual([]);
     expect(scales.facts.some((f) => f.jurisdiction.value === "23")).toBe(false);
   });
 
@@ -627,6 +671,12 @@ describe("the Federal Tax Administration's exports", () => {
     "vd-income-tax-reduction",
     new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-reduction.csv")),
   ).facts.filter((f) => f.validFrom === "2025-01-01");
+  const perHead = mapSource(
+    "ch-per-head-taxes",
+    new Uint8Array(
+      readFileSync(join(__dirname, "../../../../data/places/switzerland/per-head-taxes.json")),
+    ),
+  ).facts;
   const vaudLimit = mapSource(
     "vd-income-tax-limit",
     new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-limit.csv")),
@@ -834,22 +884,26 @@ describe("the Federal Tax Administration's exports", () => {
     "estimates $commune, $variant, at CHF $income, as the calculator does",
     ({ canton: cantonCode, own, variant, federal, cantonal, communal, income }) => {
       const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-      const facts = [...scales.facts, ...canton.facts, ...vaudReduction, ...vaudLimit].flatMap(
-        (f) => {
-          const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
-          return (level === "nation" && f.jurisdiction.value === "CH") ||
-            (level === "canton" && f.jurisdiction.value === cantonCode)
-            ? [
-                {
-                  level,
-                  metric: f.metricKey,
-                  ...(f.variant ? { variant: f.variant } : {}),
-                  value: f.value,
-                },
-              ]
-            : [];
-        },
-      );
+      const facts = [
+        ...scales.facts,
+        ...canton.facts,
+        ...vaudReduction,
+        ...vaudLimit,
+        ...perHead,
+      ].flatMap((f) => {
+        const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
+        return (level === "nation" && f.jurisdiction.value === "CH") ||
+          (level === "canton" && f.jurisdiction.value === cantonCode)
+          ? [
+              {
+                level,
+                metric: f.metricKey,
+                ...(f.variant ? { variant: f.variant } : {}),
+                value: f.value,
+              },
+            ]
+          : [];
+      });
       facts.push({ level: "municipality", metric: "tax.multiplier", value: own });
       const estimate = evaluate(switzerlandIncomeTax, facts, {
         values: { taxable_income: income },
@@ -902,9 +956,14 @@ describe("the Federal Tax Administration's exports", () => {
     expect(skipped).toEqual([]);
   });
 
-  const multiplier = (scheme: string, value: string, multiplier: number) => ({
+  const multiplier = (
+    scheme: string,
+    value: string,
+    multiplier: number,
+    metricKey = "tax.multiplier",
+  ) => ({
     jurisdiction: { scheme, value },
-    metricKey: "tax.multiplier",
+    metricKey,
     variant: null,
     validFrom: "2025-01-01",
     validTo: "2026-01-01",
@@ -913,7 +972,13 @@ describe("the Federal Tax Administration's exports", () => {
 
   it("records the canton's own multiplier", () => {
     const rates = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-    expect(rates.facts).toEqual([
+    const of = (metric: string) => rates.facts.filter((f) => f.metricKey === metric);
+    // On wealth, Fribourg's canton levies 100 % where it levies 96 % on income.
+    expect(of("tax.wealth.multiplier")).toContainEqual(
+      multiplier("bfs_canton", "10", 1, "tax.wealth.multiplier"),
+    );
+    expect(of("tax.wealth.multiplier")).toHaveLength(13);
+    expect(of("tax.multiplier")).toEqual([
       multiplier("bfs_canton", "19", 1.11),
       multiplier("bfs_canton", "1", 0.98),
       multiplier("bfs_canton", "2", 2.975),
@@ -933,9 +998,28 @@ describe("the Federal Tax Administration's exports", () => {
   it("records each commune's multiplier by its FSO number, for the listed cantons only", () => {
     // Zürich's communes have their own source.
     const rates = mapSource("estv-commune-multipliers", fixture("estv-commune-rates-2025.json"));
-    expect(rates.facts).toEqual([
-      multiplier("bfs_municipality", "371", 1.63),
-      multiplier("bfs_municipality", "1206", 1.03),
+    const of = (metric: string) =>
+      rates.facts.filter((f) => f.metricKey === metric).map((f) => [f.jurisdiction.value, f.value]);
+    expect(of("tax.multiplier")).toEqual([
+      ["371", 1.63],
+      ["1206", 1.03],
+    ]);
+    // Wealth and church rates for Zürich's communes too, which give their income rate themselves.
+    expect(of("tax.wealth.multiplier")).toEqual([
+      ["261", 1.19],
+      ["371", 1.63],
+      ["1206", 1.03],
+    ]);
+    // Every church's rate, Uri's too: its base is a church tariff of its own.
+    expect(of("tax.church.reformed")).toEqual([
+      ["261", 0.1],
+      ["371", 0.23],
+      ["1206", 1.15],
+    ]);
+    expect(of("tax.church.wealth.christ_catholic")).toEqual([
+      ["261", 0.14],
+      ["371", 0.28],
+      ["1206", 0],
     ]);
   });
 

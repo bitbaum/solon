@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/tax-model@0.7.0 (src/index.ts).
+// VENDORED from bitbaum/orangecat packages/tax-model@0.9.0 (src/index.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -23,6 +23,7 @@ export {
   type Piece,
   type RatePoint,
   type ReductionRef,
+  type ScaleRef,
   type Rounding,
   type ShareLimit,
   type Step,

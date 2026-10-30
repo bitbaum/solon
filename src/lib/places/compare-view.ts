@@ -53,12 +53,29 @@ export interface CompareTaxPack {
   taxYear: string;
   model: TaxModel;
   base: CompareInput;
-  /** The model's yes-or-no inputs. */
+  /** Further amounts a component reads instead of the base (taxable wealth); optional. */
+  amounts: CompareInput[];
+  /** The model's yes-or-no inputs that no choice asks. */
   conditions: CompareInput[];
+  /** Yes-or-no inputs asked as one question, of which at most one is true. */
+  choices: { key: string; label: string; none: string; options: CompareInput[] }[];
   variants: { key: string; label: string }[];
-  components: { key: string; label: string }[];
-  /** One row per multiplier the model reads: the metric and the level that publishes it, named. */
-  multiplierRows: { key: string; levelKey: string; metric: string; level: string }[];
+  /**
+   * `base`: the amount input the component reads, shown only once it is
+   * entered. `when`: inputs of which one must be true for it to show.
+   */
+  components: { key: string; label: string; base: string | null; when: string[] }[];
+  /**
+   * One row per multiplier the model reads: the metric and the level that
+   * publishes it, named; `when`, the input that must be true for it to show.
+   */
+  multiplierRows: {
+    key: string;
+    levelKey: string;
+    metric: string;
+    level: string;
+    when: string | null;
+  }[];
   levelNames: Record<string, string>;
   excludes: string;
   /** The effective rate in the pack's words, or null for the generic message. */
@@ -81,6 +98,8 @@ export interface Comparison {
 /** The reader's inputs, kept on their device. */
 export interface EstimateInput {
   base: number | null;
+  /** The pack's further amounts, by input key; an amount not entered is left out. */
+  amounts?: Record<string, number | null>;
   variant: string;
   conditions: Record<string, boolean>;
 }
@@ -138,7 +157,15 @@ export function estimateColumn(
   let estimate: Estimate;
   try {
     estimate = evaluate(pack.model, column.facts, {
-      values: { ...input.conditions, [pack.model.base]: input.base },
+      values: {
+        ...input.conditions,
+        ...Object.fromEntries(
+          Object.entries(input.amounts ?? {}).flatMap(([key, value]) =>
+            value === null ? [] : [[key, value] as const],
+          ),
+        ),
+        [pack.model.base]: input.base,
+      },
       variant,
     });
   } catch {
@@ -195,4 +222,21 @@ export function parseAmount(text: string): number | null {
 /** A pack's sentence with its `{name}` placeholders filled; an unknown one is left as written. */
 export function fillTemplate(template: string, values: Readonly<Record<string, string>>): string {
   return template.replace(/\{(\w+)\}/g, (placeholder, name: string) => values[name] ?? placeholder);
+}
+
+/** Whether a row that depends on these inputs shows: a base entered, one of `when` true. */
+export function rowShows(
+  row: { base?: string | null; when: readonly string[] | string | null },
+  input: EstimateInput,
+): boolean {
+  const when = row.when === null ? [] : typeof row.when === "string" ? [row.when] : row.when;
+  const entered = !row.base || (input.amounts?.[row.base] ?? null) !== null;
+  return entered && (when.length === 0 || when.some((key) => input.conditions[key] === true));
+}
+
+/** Typed amounts as numbers, by input key; one not typed (or not a number) is null. */
+export function parseAmounts(
+  typed: Readonly<Record<string, string>> | undefined,
+): Record<string, number | null> {
+  return Object.fromEntries(Object.entries(typed ?? {}).map(([key, t]) => [key, parseAmount(t)]));
 }

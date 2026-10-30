@@ -11,6 +11,8 @@ import type { CompareTaxPack } from "@/lib/places/compare-view";
 
 export interface PackInput {
   amount: string;
+  /** Further amounts as typed, by input key (taxable wealth). */
+  amounts: Record<string, string>;
   variant: string;
   conditions: Record<string, boolean>;
 }
@@ -67,6 +69,12 @@ function parseSaved(json: string): Record<string, Partial<PackInput>> {
 function inputFor(pack: CompareTaxPack, saved: Partial<PackInput> | undefined): PackInput {
   return {
     amount: typeof saved?.amount === "string" ? saved.amount : "",
+    amounts: Object.fromEntries(
+      pack.amounts.map((a) => {
+        const typed = saved?.amounts?.[a.key];
+        return [a.key, typeof typed === "string" ? typed : ""];
+      }),
+    ),
     variant:
       typeof saved?.variant === "string" && pack.variants.some((v) => v.key === saved.variant)
         ? saved.variant
