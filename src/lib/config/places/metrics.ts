@@ -95,4 +95,108 @@ export const METRICS: readonly MetricInput[] = [
     // read as a fraction (119 for 1.19) still falls far outside.
     plausible: { min: 0, max: 6 },
   },
+  {
+    // The wealth tariff a canton's and its communes' multipliers apply to.
+    key: "tax.wealth.tariff.basic",
+    label: {
+      en: "Basic wealth tax tariff",
+      de: "Grundtarif Vermögenssteuer (einfache Steuer)",
+      fr: "barème de base de l'impôt sur la fortune",
+      it: "tariffa di base dell'imposta sulla sostanza",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The canton's or commune's multiplier on the basic wealth tax; the same as
+    // on income in most places, not in all (Fribourg's communes).
+    key: "tax.wealth.multiplier",
+    label: {
+      en: "Tax multiplier on wealth",
+      de: "Steuerfuss auf dem Vermögen",
+      fr: "coefficient d'impôt sur la fortune",
+      it: "moltiplicatore d'imposta sulla sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // A commune's church tax rate for members of the Evangelical Reformed church, on the basic income tax.
+    key: "tax.church.reformed",
+    label: {
+      en: "Church tax rate on income (Evangelical Reformed)",
+      de: "Kirchensteuerfuss auf dem Einkommen (evangelisch-reformiert)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (réformée évangélique)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Evangelical Reformed church, on the basic wealth tax.
+    key: "tax.church.wealth.reformed",
+    label: {
+      en: "Church tax rate on wealth (Evangelical Reformed)",
+      de: "Kirchensteuerfuss auf dem Vermögen (evangelisch-reformiert)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (réformée évangélique)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Roman Catholic church, on the basic income tax.
+    key: "tax.church.catholic",
+    label: {
+      en: "Church tax rate on income (Roman Catholic)",
+      de: "Kirchensteuerfuss auf dem Einkommen (römisch-katholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (catholique romaine)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Roman Catholic church, on the basic wealth tax.
+    key: "tax.church.wealth.catholic",
+    label: {
+      en: "Church tax rate on wealth (Roman Catholic)",
+      de: "Kirchensteuerfuss auf dem Vermögen (römisch-katholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (catholique romaine)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Christian Catholic church, on the basic income tax.
+    key: "tax.church.christ_catholic",
+    label: {
+      en: "Church tax rate on income (Christian Catholic)",
+      de: "Kirchensteuerfuss auf dem Einkommen (christkatholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur le revenu (catholique-chrétienne)",
+      it: "moltiplicatore dell'imposta di culto sul reddito (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
+  {
+    // A commune's church tax rate for members of the Christian Catholic church, on the basic wealth tax.
+    key: "tax.church.wealth.christ_catholic",
+    label: {
+      en: "Church tax rate on wealth (Christian Catholic)",
+      de: "Kirchensteuerfuss auf dem Vermögen (christkatholisch)",
+      fr: "coefficient de l'impôt ecclésiastique sur la fortune (catholique-chrétienne)",
+      it: "moltiplicatore dell'imposta di culto sulla sostanza (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 2 },
+  },
 ];

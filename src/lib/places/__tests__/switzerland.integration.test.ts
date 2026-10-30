@@ -81,6 +81,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["zurich-statistical-quarters", "statistical-quarters.json"],
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
   ["estv-income-tax-scales", "estv-scales-2025.json"],
+  ["estv-wealth-tax-scales", "estv-wealth-scales-2025.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
   ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
@@ -102,6 +103,45 @@ const GOLDEN_2025 = [
   { commune: "154", variant: "married", federal: 1816, canton: 4689, communal: 3493 },
   { commune: "371", variant: "single", federal: 2688, canton: 13373, communal: 7327 },
   { commune: "371", variant: "married", federal: 1816, canton: 11365, communal: 6227 },
+] as const;
+
+/**
+ * The same calculator, 2025, taxable income CHF 100,000 and taxable wealth
+ * CHF 1,234,567, both partners Evangelical Reformed, asked on 2026-10-30.
+ */
+const GOLDEN_WEALTH_CHURCH_2025 = [
+  {
+    commune: "261",
+    variant: "single",
+    church: 621,
+    wealthCanton: 1268,
+    wealthCommunal: 1539,
+    wealthChurch: 129,
+  },
+  {
+    commune: "261",
+    variant: "married",
+    church: 479,
+    wealthCanton: 1152,
+    wealthCommunal: 1398,
+    wealthChurch: 118,
+  },
+  {
+    commune: "371",
+    variant: "single",
+    church: 1034,
+    wealthCanton: 3489,
+    wealthCommunal: 1912,
+    wealthChurch: 270,
+  },
+  {
+    commune: "371",
+    variant: "married",
+    church: 879,
+    wealthCanton: 3489,
+    wealthCommunal: 1912,
+    wealthChurch: 270,
+  },
 ] as const;
 
 const geometryFiles = new Map<string, Uint8Array>();
@@ -487,6 +527,39 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       expect(Math.abs(amount("federal") - federal)).toBeLessThan(1);
       expect(Math.abs(amount("cantonal") - canton)).toBeLessThan(1);
       expect(Math.abs(amount("communal") - communal)).toBeLessThan(1);
+    },
+  );
+
+  it.each(GOLDEN_WEALTH_CHURCH_2025)(
+    "estimates commune $commune, $variant, with wealth and church tax as the federal calculator does",
+    async ({ commune, variant, church, wealthCanton, wealthCommunal, wealthChurch }) => {
+      const chain = await loadChain(db, await placeId("bfs_municipality", commune), "2025-06-30");
+      const chainFacts = await loadFacts(
+        db,
+        chain.map((p) => p.id),
+        "2025-06-30",
+      );
+      const facts = evaluatorFacts(chain, chainFacts);
+      const estimate = evaluate(switzerlandIncomeTax, facts, {
+        values: { taxable_income: 100_000, taxable_wealth: 1_234_567, church_reformed: true },
+        variant,
+      });
+      expect(estimate.complete).toBe(true);
+      const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
+      expect(Math.abs(amount("church") - church)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_cantonal") - wealthCanton)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_communal") - wealthCommunal)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_church") - wealthChurch)).toBeLessThan(1);
+      // No wealth and no church: those components ask nothing, and add nothing.
+      const plain = evaluate(switzerlandIncomeTax, facts, {
+        values: { taxable_income: 100_000 },
+        variant,
+      });
+      expect(plain.complete).toBe(true);
+      expect(plain.total).toBeCloseTo(
+        estimate.total - church - wealthCanton - wealthCommunal - wealthChurch,
+        -1,
+      );
     },
   );
 

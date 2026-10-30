@@ -62,6 +62,54 @@ const cantonRounding = Object.fromEntries(
     rounding ? [[code, rounding]] : [],
   ),
 );
+/**
+ * The tax calculator's household groups, for income and wealth tables alike.
+ * Single people with children are taxed on the married tariff; the model's
+ * "single" is a single person without children. A couple's income is the one
+ * the calculator divides. Vaud has no table for single people without
+ * children; the calculator taxes them on its cohabiting table (divisor 1).
+ */
+const SCALE_VARIANTS = [
+  { variant: "single", group: "LEDIG_OHNE_KINDER", fallbackGroup: "LEDIG_KONKUBINAT" },
+  { variant: "married", group: "VERHEIRATET", divided: true },
+];
+
+/**
+ * How the calculator's table types read. Confirmed 2026-10-01: a BUND table's
+ * Taxes is the tax the tariff states at each step, and the calculator keeps it
+ * where the rates below would give another amount (Ticino; the federal
+ * tariff's top). Fribourg's tables give average rates, and a couple's table of
+ * its own. Uri's and Obwalden's tables are one flat rate, Basel-Landschaft's a
+ * formula per piece of income.
+ */
+const SCALE_TABLE_TYPES = {
+  BUND: "stepped",
+  ZUERICH: "widths",
+  FREIBURG: "average",
+  FLATTAX: "flat",
+  FORMEL: "formula",
+} as const;
+
+/**
+ * The calculator rounds taxable wealth down to CHF 1,000 before every
+ * modelled canton's tariff (measured 2026-10-30: CHF 1,234,567 and 1,234,000
+ * give the same tax in all of them, to the franc).
+ */
+const WEALTH_ROUNDING = { base: 1000 };
+
+/**
+ * Cantons whose church rates are multiples of the basic income and wealth
+ * tax, as the model reads them. Measured 2026-10-30 against the calculator,
+ * single and married, Reformed and Roman Catholic. Not: Uri, whose rates are
+ * per mille of taxable income; Jura, whose rates apply to the cantonal tax
+ * rather than the basic tax. In Basel-Landschaft the Reformed and Christian
+ * Catholic rates are per mille of income too (the Roman Catholic one is a
+ * multiple): it is in `CHURCH_CANTONS`, which the Roman Catholic rates read,
+ * and not in `EVERY_CHURCH_CANTONS`, which the others read.
+ */
+const CHURCH_CANTONS = Object.keys(MODELLED_CANTONS).filter((c) => c !== "UR" && c !== "JU");
+const EVERY_CHURCH_CANTONS = CHURCH_CANTONS.filter((c) => c !== "BL");
+
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
 
@@ -274,29 +322,49 @@ export const SOURCES: readonly SourceInput[] = [
           cantonRounding,
         },
       ],
-      // Single people with children are taxed on the married tariff; the model's
-      // "single" is a single person without children. A couple's income is the
-      // one the calculator divides. Vaud has no table for single people without
-      // children; the calculator taxes them on its cohabiting table (divisor 1).
-      variants: [
-        { variant: "single", group: "LEDIG_OHNE_KINDER", fallbackGroup: "LEDIG_KONKUBINAT" },
-        { variant: "married", group: "VERHEIRATET", divided: true },
-      ],
+      variants: SCALE_VARIANTS,
       everyVariantGroup: "ALLE",
-      // Confirmed 2026-10-01: a BUND table's Taxes is the tax the tariff states
-      // at each step, and the calculator keeps it where the rates below would
-      // give another amount (Ticino; the federal tariff's top). Fribourg's
-      // tables give average rates, and a couple's table of its own.
-      // Uri's and Obwalden's tables are one flat rate, Basel-Landschaft's a
-      // formula per piece of income.
-      tableTypes: {
-        BUND: "stepped",
-        ZUERICH: "widths",
-        FREIBURG: "average",
-        FLATTAX: "flat",
-        FORMEL: "formula",
-      },
+      tableTypes: SCALE_TABLE_TYPES,
       splittingBuiltIn: ["FREIBURG"],
+    },
+    packs: ["switzerland"],
+  },
+  {
+    // Confirmed 2026-10-30: the same export's wealth tables (VERMOEGENSSTEUER),
+    // one basic tariff per canton, in the same table types and household
+    // groups; the allowance is the tariff's first step at 0. Rates are per
+    // mille of wealth, which the export writes as a percent like income's.
+    key: "estv-wealth-tax-scales",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: wealth tax scales",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/#/taxdata/tax-scales",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator: tax scales",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner: Steuertarife",
+    },
+    cadence: "30 5 2 * *",
+    adapter: "estv_tax_scales",
+    options: {
+      url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_exportManyTaxScales",
+      yearRange: {
+        url: "https://swisstaxcalculator.estv.admin.ch/delegate/ost-integration/v1/lg-proxy/operation/c3b67379_ESTV/API_getTaxYearRange",
+        calculator: 1,
+      },
+      taxGroup: 88,
+      fromYear: 2021,
+      taxType: "VERMOEGENSSTEUER",
+      targets: [
+        {
+          target: "KANTON",
+          metric: "tax.wealth.tariff.basic",
+          cantons: modelledCantons,
+          rounding: WEALTH_ROUNDING,
+        },
+      ],
+      variants: SCALE_VARIANTS,
+      everyVariantGroup: "ALLE",
+      tableTypes: SCALE_TABLE_TYPES,
     },
     packs: ["switzerland"],
   },
@@ -374,8 +442,10 @@ export const SOURCES: readonly SourceInput[] = [
       },
       taxGroup: 88,
       fromYear: 2021,
-      field: "IncomeRateCanton",
-      metric: "tax.multiplier",
+      fields: [
+        { field: "IncomeRateCanton", metric: "tax.multiplier" },
+        { field: "FortuneRateCanton", metric: "tax.wealth.multiplier" },
+      ],
       divideBy: 100,
       cantons: modelledCantons,
     },
@@ -408,10 +478,41 @@ export const SOURCES: readonly SourceInput[] = [
       },
       taxGroup: 30,
       fromYear: 2021,
-      field: "IncomeRateCity",
-      metric: "tax.multiplier",
+      fields: [
+        { field: "IncomeRateCity", metric: "tax.multiplier", cantons: ESTV_COMMUNE_CANTONS },
+        // Zürich's communes too: the canton's own file gives their income rate
+        // only. Where a Zürich commune levies several rates the export shows
+        // one, but that commune has no income rate, so it is never estimated.
+        { field: "FortuneRateCity", metric: "tax.wealth.multiplier" },
+        {
+          field: "IncomeRateProtestant",
+          metric: "tax.church.reformed",
+          cantons: EVERY_CHURCH_CANTONS,
+        },
+        { field: "IncomeRateRoman", metric: "tax.church.catholic", cantons: CHURCH_CANTONS },
+        {
+          field: "IncomeRateChrist",
+          metric: "tax.church.christ_catholic",
+          cantons: EVERY_CHURCH_CANTONS,
+        },
+        {
+          field: "FortuneRateProtestant",
+          metric: "tax.church.wealth.reformed",
+          cantons: EVERY_CHURCH_CANTONS,
+        },
+        {
+          field: "FortuneRateRoman",
+          metric: "tax.church.wealth.catholic",
+          cantons: CHURCH_CANTONS,
+        },
+        {
+          field: "FortuneRateChrist",
+          metric: "tax.church.wealth.christ_catholic",
+          cantons: EVERY_CHURCH_CANTONS,
+        },
+      ],
       divideBy: 100,
-      communes: { scheme: "bfs_municipality", cantons: ESTV_COMMUNE_CANTONS },
+      communes: { scheme: "bfs_municipality", cantons: Object.keys(MODELLED_CANTONS) },
     },
     packs: ["switzerland"],
   },

@@ -386,9 +386,19 @@ type Rates = z.infer<typeof rates>;
 
 const ratesOptions = exportOptions
   .extend({
-    /** The row field holding the multiplier, and the metric it is. */
-    field: z.string().min(1),
-    metric: z.string().min(1),
+    /**
+     * The row fields holding multipliers, and the metric each is. A field may
+     * be read for some of the communes' cantons only (`cantons`).
+     */
+    fields: z
+      .array(
+        z.object({
+          field: z.string().min(1),
+          metric: z.string().min(1),
+          cantons: z.array(z.string().min(1)).optional(),
+        }),
+      )
+      .min(1),
     /** A field in percent has 100 here. */
     divideBy: z.number().positive().default(1),
     /** A place per canton, by the export's canton code: the canton's own multiplier. */
@@ -420,7 +430,7 @@ function placeOfRate(options: RatesOptions, at: z.infer<typeof location>): Exter
 
 export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
   key: "estv_simple_rates",
-  version: "3",
+  version: "4",
   decode: decodeJsonEnvelope,
   schema: rates,
   options: ratesOptions,
@@ -436,22 +446,27 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
       if (!place) {
         continue;
       }
-      const value = row[options.field];
-      if (typeof value !== "number") {
-        throw new Error(`${place.scheme}:${place.value} ${year}: ${options.field} is not a number`);
+      for (const { field, metric, cantons } of options.fields) {
+        if (cantons && !cantons.includes(row.Location.Canton)) {
+          continue;
+        }
+        const value = row[field];
+        if (typeof value !== "number") {
+          throw new Error(`${place.scheme}:${place.value} ${year}: ${field} is not a number`);
+        }
+        const key = `${place.scheme}:${place.value} ${metric}`;
+        const fact: BatchFact = {
+          jurisdiction: place,
+          metricKey: metric,
+          variant: null,
+          ...fiscalYearPeriod(year, pack.fiscalYear.startMonthDay),
+          value: value / options.divideBy,
+        };
+        if (facts.has(key) && facts.get(key)!.value !== fact.value) {
+          throw new Error(`${key} ${year}: the export gives two different multipliers`);
+        }
+        facts.set(key, fact);
       }
-      const key = `${place.scheme}:${place.value}`;
-      const fact: BatchFact = {
-        jurisdiction: place,
-        metricKey: options.metric,
-        variant: null,
-        ...fiscalYearPeriod(year, pack.fiscalYear.startMonthDay),
-        value: value / options.divideBy,
-      };
-      if (facts.has(key) && facts.get(key)!.value !== fact.value) {
-        throw new Error(`${key} ${year}: the export gives two different multipliers`);
-      }
-      facts.set(key, fact);
     }
     return { pack: pack.key, jurisdictions: [], relations: [], facts: [...facts.values()] };
   },

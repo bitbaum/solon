@@ -902,9 +902,14 @@ describe("the Federal Tax Administration's exports", () => {
     expect(skipped).toEqual([]);
   });
 
-  const multiplier = (scheme: string, value: string, multiplier: number) => ({
+  const multiplier = (
+    scheme: string,
+    value: string,
+    multiplier: number,
+    metricKey = "tax.multiplier",
+  ) => ({
     jurisdiction: { scheme, value },
-    metricKey: "tax.multiplier",
+    metricKey,
     variant: null,
     validFrom: "2025-01-01",
     validTo: "2026-01-01",
@@ -913,7 +918,13 @@ describe("the Federal Tax Administration's exports", () => {
 
   it("records the canton's own multiplier", () => {
     const rates = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-    expect(rates.facts).toEqual([
+    const of = (metric: string) => rates.facts.filter((f) => f.metricKey === metric);
+    // On wealth, Fribourg's canton levies 100 % where it levies 96 % on income.
+    expect(of("tax.wealth.multiplier")).toContainEqual(
+      multiplier("bfs_canton", "10", 1, "tax.wealth.multiplier"),
+    );
+    expect(of("tax.wealth.multiplier")).toHaveLength(13);
+    expect(of("tax.multiplier")).toEqual([
       multiplier("bfs_canton", "19", 1.11),
       multiplier("bfs_canton", "1", 0.98),
       multiplier("bfs_canton", "2", 2.975),
@@ -933,9 +944,26 @@ describe("the Federal Tax Administration's exports", () => {
   it("records each commune's multiplier by its FSO number, for the listed cantons only", () => {
     // Zürich's communes have their own source.
     const rates = mapSource("estv-commune-multipliers", fixture("estv-commune-rates-2025.json"));
-    expect(rates.facts).toEqual([
-      multiplier("bfs_municipality", "371", 1.63),
-      multiplier("bfs_municipality", "1206", 1.03),
+    const of = (metric: string) =>
+      rates.facts.filter((f) => f.metricKey === metric).map((f) => [f.jurisdiction.value, f.value]);
+    expect(of("tax.multiplier")).toEqual([
+      ["371", 1.63],
+      ["1206", 1.03],
+    ]);
+    // Wealth and church rates for Zürich's communes too, which give their income rate themselves.
+    expect(of("tax.wealth.multiplier")).toEqual([
+      ["261", 1.19],
+      ["371", 1.63],
+      ["1206", 1.03],
+    ]);
+    // Uri's church rates are per mille of income, not a multiple: not read.
+    expect(of("tax.church.reformed")).toEqual([
+      ["261", 0.1],
+      ["371", 0.23],
+    ]);
+    expect(of("tax.church.wealth.christ_catholic")).toEqual([
+      ["261", 0.14],
+      ["371", 0.28],
     ]);
   });
 
