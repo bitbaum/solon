@@ -1,0 +1,3965 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Hirschberg (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell Eggerstanden (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell Steinegg (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell (Rüte) (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell Meistersrüte (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Appenzell (Schwende) (9050)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Weissbad (Rüte) (9057)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Schwende (9057)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Weissbad (Schwende) (9057)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Wasserauen (9057)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Brülisau (9058)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Niederwil SG (9203)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Waldkirch (9205)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Niederwil b. Waldkirch (9205)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Oberbüren (9245)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Sonnental (9245)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Sonnental (9247)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Brübach (9247)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Bernhardzell (9304)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Au SG (9434)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Heerbrugg b. Au (9435)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Heerbrugg b.Balgach (9435)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Heerbrugg b.Berneck (9435)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Kriessern (9451)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Montlingen (9462)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Oberriet SG (9463)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Kobelwald (9463)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Lenggenwil (9525)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Zuckenriet (9526)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Dietenwil (9526)",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "levelKey": "locality",
+      "identifiers": [],
+      "names": [
+        {
+          "locale": "de",
+          "name": "Niederhelfenschwil (9527)",
+          "nameType": "self"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3101"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3101"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3101"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3112"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3424"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3444"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3444"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3424"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3424"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3424"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3424"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3444"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3231"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3231"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3231"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3231"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3254"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3254"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3254"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3254"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3423"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3423"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3423"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "to": {
+        "scheme": "bfs_municipality",
+        "value": "3423"
+      },
+      "relation": "part_of"
+    }
+  ],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.56
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.56
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.58
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.58
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.9
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.9
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.16
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.16
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000002"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.63
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.63
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000003"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.58
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.58
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000004"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.71
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.71
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000007"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.56
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.56
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905000010"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700002"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.81
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.13
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.11
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905700003"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.82
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.66
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.82
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.66
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.16
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.1
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.16
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "905800000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920300000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.26
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.26
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.26
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.26
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "920500001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.27
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.27
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924500001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.0
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "924700002"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.22
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "930400000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.93
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.99
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.93
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.99
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.21
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.21
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943400000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.93
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.99
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.93
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.99
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943500000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.61
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.61
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "943600001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.92
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.92
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.18
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "944200001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.23
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "945100000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946200000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.95
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.28
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "946300001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.25
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952500000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952600001"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.wealth.multiplier",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.04
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.wealth.reformed",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.wealth.catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    },
+    {
+      "jurisdiction": {
+        "scheme": "estv_tax_location",
+        "value": "952700000"
+      },
+      "metricKey": "tax.church.wealth.christ_catholic",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.24
+    }
+  ]
+}

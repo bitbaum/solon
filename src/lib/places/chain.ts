@@ -164,6 +164,81 @@ export async function loadFacts(
 }
 
 /** The current instruments of these places on `on`. */
+/**
+ * The places directly inside these that refine them: their level stands for
+ * the parent's (`refining` lists those level keys), current on `on`, with
+ * their names. A commune whose rate depends on the locality lists its
+ * localities here.
+ */
+export async function loadRefinements(
+  db: Executor,
+  parentIds: readonly string[],
+  refining: readonly string[],
+  on: string,
+): Promise<{ parentId: string; place: ChainPlace }[]> {
+  if (parentIds.length === 0 || refining.length === 0) {
+    return [];
+  }
+  const children = await db
+    .select({
+      parentId: jurisdictionRelations.toId,
+      id: jurisdictions.id,
+      countryPack: jurisdictions.countryPack,
+      levelKey: jurisdictions.levelKey,
+      slugPath: jurisdictions.slugPath,
+    })
+    .from(jurisdictionRelations)
+    .innerJoin(jurisdictions, eq(jurisdictions.id, jurisdictionRelations.fromId))
+    .where(
+      and(
+        inArray(jurisdictionRelations.toId, [...parentIds]),
+        eq(jurisdictionRelations.relation, "part_of"),
+        isNull(jurisdictionRelations.supersededAt),
+        or(isNull(jurisdictionRelations.validFrom), lte(jurisdictionRelations.validFrom, on)),
+        or(isNull(jurisdictionRelations.validTo), gt(jurisdictionRelations.validTo, on)),
+        inArray(jurisdictions.levelKey, [...refining]),
+      ),
+    );
+  if (children.length === 0) {
+    return [];
+  }
+  const names = await db
+    .select({
+      jurisdictionId: jurisdictionNames.jurisdictionId,
+      locale: jurisdictionNames.locale,
+      script: jurisdictionNames.script,
+      name: jurisdictionNames.name,
+      nameType: jurisdictionNames.nameType,
+    })
+    .from(jurisdictionNames)
+    .where(
+      and(
+        inArray(
+          jurisdictionNames.jurisdictionId,
+          children.map((c) => c.id),
+        ),
+        isNull(jurisdictionNames.supersededAt),
+      ),
+    );
+  return children.map(({ parentId, ...child }) => ({
+    parentId,
+    place: {
+      ...child,
+      depth: null,
+      names: names
+        .filter((n) => n.jurisdictionId === child.id)
+        .map(({ jurisdictionId: _, ...name }) => name),
+    },
+  }));
+}
+
+/** Each level of a pack that stands for another, by level key. */
+export function standsForLevels(levels: readonly { key: string; standsFor?: string }[]) {
+  return Object.fromEntries(
+    levels.flatMap((level) => (level.standsFor ? [[level.key, level.standsFor] as const] : [])),
+  );
+}
+
 export async function loadInstruments(
   db: Executor,
   jurisdictionIds: string[],
@@ -194,23 +269,30 @@ export async function loadInstruments(
 
 /**
  * The chain's facts in the evaluator's terms: each fact published by the
- * level of the place that holds it. Pure. When a period has several facts for
+ * level of the place that holds it, or by the level that place's level
+ * stands for (`standsFor`, by level key). Pure. When several places give one
+ * key, the nearest in the chain wins; when a period has several facts for
  * one key, the newest period wins.
  */
 export function evaluatorFacts(
   chain: readonly ChainPlace[],
   chainFacts: readonly ChainFact[],
+  standsFor: Readonly<Record<string, string>> = {},
 ): EvaluatorFact[] {
-  const levelOf = new Map(chain.map((place) => [place.id, place.levelKey]));
+  const placeOf = new Map(chain.map((place) => [place.id, place]));
+  const rank = (id: string) => placeOf.get(id)?.depth ?? Number.MAX_SAFE_INTEGER;
   const newest = new Map<string, ChainFact & { level: string }>();
   for (const fact of chainFacts) {
-    const level = levelOf.get(fact.jurisdictionId);
-    if (!level) {
+    const own = placeOf.get(fact.jurisdictionId)?.levelKey;
+    if (!own) {
       continue;
     }
+    const level = standsFor[own] ?? own;
     const key = `${level} ${fact.metricKey} ${fact.variant ?? ""}`;
     const seen = newest.get(key);
-    if (!seen || seen.validFrom < fact.validFrom) {
+    const nearer = seen && rank(fact.jurisdictionId) < rank(seen.jurisdictionId);
+    const same = seen && rank(fact.jurisdictionId) === rank(seen.jurisdictionId);
+    if (!seen || nearer || (same && seen.validFrom < fact.validFrom)) {
       newest.set(key, { ...fact, level });
     }
   }

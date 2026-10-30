@@ -411,4 +411,32 @@ export const METRICS: readonly MetricInput[] = [
     unit: "currency",
     plausible: { min: 0, max: 500 },
   },
+  {
+    // A further cantonal multiplier on the basic income and wealth tax that no
+    // reduction of the canton's own touches: Geneva's 1 centime for home care
+    // (LCAC, rsGE D 3 07, art. 2 para. 2).
+    key: "tax.multiplier.extra",
+    label: {
+      en: "Further cantonal multiplier",
+      de: "Zusätzlicher kantonaler Steuerfuss",
+      fr: "centime additionnel supplémentaire",
+      it: "moltiplicatore cantonale supplementare",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+  },
+  {
+    // A supplementary wealth tax levied as it stands, on no multiplier: Geneva's
+    // (LIPP, rsGE D 3 08, art. 59 para. 2). A flat 0 where a canton levies none.
+    key: "tax.wealth.tariff.supplement",
+    label: {
+      en: "Supplementary wealth tax tariff",
+      de: "Tarif der zusätzlichen Vermögenssteuer",
+      fr: "barème de l'impôt supplémentaire sur la fortune",
+      it: "tariffa dell'imposta supplementare sulla sostanza",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
 ];

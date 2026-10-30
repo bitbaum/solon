@@ -469,6 +469,16 @@ describe("per-head taxes and church tariffs, kept by hand", () => {
     expect(checkBatch(tariffs, placesConfig, "ch-church-tariffs").problems).toEqual([]);
   });
 
+  it("place each locality whose rates differ inside its commune, at the level that stands for it", () => {
+    const localities = read("estv-tax-localities", "tax-localities.json");
+    expect(checkBatch(localities, placesConfig, "estv-tax-localities").problems).toEqual([]);
+    expect(localities.jurisdictions.every((j) => j.levelKey === "locality")).toBe(true);
+    const communes = new Set(localities.relations.map((r) => r.to.value));
+    expect([...communes].sort()).toEqual(["3101", "3112", "3231", "3254", "3423", "3424", "3444"]);
+    const adjustments = read("ch-cantonal-adjustments", "cantonal-adjustments.json");
+    expect(checkBatch(adjustments, placesConfig, "ch-cantonal-adjustments").problems).toEqual([]);
+  });
+
   it("states every canton's per-head tax for both households, and every Solothurn commune's", () => {
     const heads = read("ch-per-head-taxes", "per-head-taxes.json");
     const cantons = new Set(

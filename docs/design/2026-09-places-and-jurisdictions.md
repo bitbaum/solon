@@ -732,6 +732,37 @@ every modelled canton, for every church, single and married. Not yet:
 - Where parishes in one commune levy different church rates, the export gives
   one of them.
 
+**Built (Thurgau, St. Gallen, Appenzell Innerrhoden and Geneva, 2026-10-30)**:
+measured against the calculator's whole bill (single and married, Reformed,
+CHF 100,000 income and CHF 500,000 wealth) in every commune of the four
+cantons and every locality below: 460 cases, all to the franc.
+
+- Every one of the 644 localities of Thurgau, St. Gallen and Appenzell
+  Innerrhoden was asked: in 153 of their 160 communes all localities pay
+  alike, so the export's one rate per commune holds. In seven (Appenzell,
+  Schwende-Rüte, Au, Oberbüren, Waldkirch, Oberriet, Niederhelfenschwil) the
+  school district or the parish depends on the locality. Their localities are
+  places at the `locality` level, which `standsFor` the municipality: a
+  locality's rate stands for its commune's, and the nearest place in a chain
+  wins (`evaluatorFacts`). The export's rows for those communes are skipped
+  with that reason, so a commune does not show one locality's rate as its own;
+  its page lists its localities to choose from, and `/compare` offers them in
+  its column (`data/places/switzerland/tax-localities.json`, source
+  `estv-tax-localities`).
+- Geneva: the cantonal tax carries 47.5 and 1 centimes (LCAC, rsGE D 3 07,
+  art. 2); on income the 147.5 % is reduced by 12 % and the 1 % is not, which
+  the model reads as the existing reduction and a further canton multiplier,
+  `tax.multiplier.extra`. Wealth carries the supplementary tax of LIPP art. 59
+  para. 2, on no multiplier, at the law's rates on the brackets the calculator
+  indexes each year (`tax.wealth.tariff.supplement`, 0 in every other canton),
+  and Geneva does not round wealth (`data/places/switzerland/cantonal-adjustments.json`,
+  source `ch-cantonal-adjustments`).
+- An estimate is a bill: each tax is rounded to the franc and the total is
+  their sum, as the calculator states it, so the rows shown add up to the
+  total shown (`compare-view.ts`).
+
+Not yet: Valais (see `MODELLED_CANTONS` in `sources.ts`).
+
 ### 6.3 "Takes tax" is derived
 
 An authority takes income tax in a period exactly when a model component

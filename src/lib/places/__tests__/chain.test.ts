@@ -44,4 +44,24 @@ describe("evaluatorFacts", () => {
       ]),
     ).toEqual([{ level: "parish", metric: "test.multiplier", value: 1.3 }]);
   });
+
+  it("lets a place whose level stands for its parent's give that level's figure, nearest first", () => {
+    const chain = [place("lane", "hamlet", 0), place("mill", "parish", 1)];
+    const both = [fact("mill", 1.2), fact("lane", 1.5)];
+    expect(evaluatorFacts(chain, both, { hamlet: "parish" })).toEqual([
+      { level: "parish", metric: "test.multiplier", value: 1.5 },
+    ]);
+    // Without the mapping, the hamlet's figure is its own level's.
+    expect(
+      evaluatorFacts(chain, both)
+        .map((f) => f.level)
+        .sort(),
+    ).toEqual(["hamlet", "parish"]);
+    // An older period of the nearer place still wins over the parent's newer one.
+    expect(
+      evaluatorFacts(chain, [fact("mill", 1.2, "2025-07-01"), fact("lane", 1.5)], {
+        hamlet: "parish",
+      }),
+    ).toEqual([{ level: "parish", metric: "test.multiplier", value: 1.5 }]);
+  });
 });

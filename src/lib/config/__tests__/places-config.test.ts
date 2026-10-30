@@ -207,3 +207,19 @@ describe("placesConfigProblems names what is wrong", () => {
     ).toContain('identifier scheme "testland_register": pattern does not compile');
   });
 });
+
+describe("a level that stands for another", () => {
+  it("must stand for a level above it", () => {
+    expect(
+      broken((config) => {
+        const p = pack(config);
+        p.levels.find((l) => l.key === "parish")!.standsFor = "hamlet";
+      }),
+    ).toEqual([`pack "testland": level "parish" stands for "hamlet", which is not above it`]);
+    expect(
+      broken((config) => {
+        pack(config).levels.find((l) => l.key === "hamlet")!.standsFor = "parish";
+      }),
+    ).toEqual([]);
+  });
+});

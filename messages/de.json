@@ -465,7 +465,8 @@
       "title": "Steuern",
       "levies": "Erhebt Steuern: Die hier festgelegten Sätze fliessen ins Steuermodell von {pack} ein.",
       "none": "Erhebt keine eigenen Steuern. Hier gelten die Steuern der Orte, zu denen er gehört.",
-      "noModel": "Für {pack} gibt es noch kein Steuermodell."
+      "noModel": "Für {pack} gibt es noch kein Steuermodell.",
+      "refinedBy": "Der Steuerfuss hängt davon ab, wo in {place} Sie wohnen. Wählen Sie Ihre Ortschaft:"
     },
     "otherNames": "Weitere Namen",
     "identifiers": "Kennungen",
@@ -558,7 +559,7 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Noch nicht erfasst",
       "taxedBy": "Erhoben von",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Noch nicht verglichen",
       "laterText": "Mitwirkung, was ein Wegzug bedeutet, Status und Grösse folgen, sobald ihre Daten importiert sind.",
       "coverageLink": "Was Orte abdeckt →",

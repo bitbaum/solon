@@ -27,7 +27,9 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * where church tax is levied on the cantonal tax (Jura), every church rate is
  * scaled by the canton's multiplier. The calculator gives one rate per
  * commune and church; where parishes in one commune levy different rates, it
- * shows one of them. Fixed per-head taxes: the canton's, per person or per
+ * shows one of them. A canton may levy a further multiplier that its own
+ * reduction does not touch, and a supplementary wealth tax on no multiplier
+ * (both Geneva's). Fixed per-head taxes: the canton's, per person or per
  * household (`tax.head`, a `fixed` tariff per variant, 0 where none), a
  * church's on top for its members, and a commune's and a parish's own per
  * adult where they set it (Solothurn's).
@@ -78,6 +80,7 @@ export const switzerlandIncomeTax = {
           metric: "tax.multiplier",
           reducedBy: { level: "canton", metric: "tax.income.basic.reduction", optional: true },
         },
+        { level: "canton", metric: "tax.multiplier.extra", optional: true },
       ],
     },
     {
@@ -92,7 +95,15 @@ export const switzerlandIncomeTax = {
       base: "taxable_wealth",
       tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
       divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
-      multipliers: [{ level: "canton", metric: "tax.wealth.multiplier" }],
+      multipliers: [
+        { level: "canton", metric: "tax.wealth.multiplier" },
+        { level: "canton", metric: "tax.multiplier.extra", optional: true },
+      ],
+    },
+    {
+      key: "wealth_supplement",
+      base: "taxable_wealth",
+      tariff: { level: "canton", metric: "tax.wealth.tariff.supplement" },
     },
     {
       key: "wealth_communal",
@@ -267,6 +278,12 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt cantonal sur la fortune",
       it: "Imposta cantonale sulla sostanza",
     },
+    wealth_supplement: {
+      en: "Supplementary wealth tax",
+      de: "Zusätzliche Vermögenssteuer",
+      fr: "Impôt supplémentaire sur la fortune",
+      it: "Imposta supplementare sulla sostanza",
+    },
     wealth_communal: {
       en: "Communal wealth tax",
       de: "Gemeindesteuer auf dem Vermögen",
@@ -435,6 +452,15 @@ export const switzerland: CountryPackInput = {
         it: "quartiere statistico",
       },
     },
+    {
+      // Where a commune's rates depend on the locality (its school communes or
+      // parishes differ), its localities carry the rates in its stead.
+      key: "locality",
+      parent: "municipality",
+      coverage: "partial",
+      standsFor: "municipality",
+      names: { en: "Locality", de: "Ortschaft", fr: "localité", it: "località" },
+    },
   ],
   identifierSchemes: [
     "iso_3166_1",
@@ -444,6 +470,7 @@ export const switzerland: CountryPackInput = {
     "bfs_municipality_version",
     "zurich_city_district",
     "zurich_statistical_quarter",
+    "estv_tax_location",
   ],
   postcodePattern: "[1-9][0-9]{3}",
   // Confirmed 2026-09-30: the federal geoportal's search, open to any origin
@@ -467,6 +494,8 @@ export const switzerland: CountryPackInput = {
     "estv-wealth-tax-scales",
     "ch-church-tariffs",
     "ch-per-head-taxes",
+    "ch-cantonal-adjustments",
+    "estv-tax-localities",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,

@@ -11,7 +11,9 @@ import {
 } from "../compare";
 import {
   compareHref,
+  componentRowShows,
   estimateColumn,
+  multiplierRowShows,
   fillTemplate,
   lowestTotals,
   parseAmount,
@@ -154,6 +156,26 @@ describe("estimateColumn", () => {
     expect(estimate(bare.columns[0])).toEqual({ kind: "not_recorded", levels: ["parish"] });
   });
 
+  it("asks for the place inside when only the places that refine this one hold its figure", () => {
+    const bare = compare([{ chain: [hamlet, parish, shire, realm], facts: FACTS.slice(0, 3) }]);
+    const refined = {
+      ...bare.columns[0]!,
+      refinedBy: [
+        { name: "Lane", slugPath: "testland/x/lane", levelKey: "lane", standsFor: "parish" },
+      ],
+    };
+    expect(estimate(refined)).toEqual({ kind: "needs_lower_place", levels: ["lane"] });
+  });
+
+  it("bills each tax in whole units, so the rows shown add up to the total shown", () => {
+    const e = estimateColumn(oak!, pack, { base: 1003, variant: "alone", conditions: {} });
+    if (e.kind !== "estimate") throw new Error(e.kind);
+    for (const c of e.estimate.components) {
+      expect(Number.isInteger(c.amount)).toBe(true);
+    }
+    expect(e.estimate.total).toBe(e.estimate.components.reduce((t, c) => t + (c.amount ?? 0), 0));
+  });
+
   it("waits for an amount, and runs no model without a pack", () => {
     expect(estimate(oak, null)).toEqual({ kind: "no_input" });
     expect(estimateColumn(oak!, undefined, { base: 1, variant: "", conditions: {} })).toEqual({
@@ -230,5 +252,49 @@ describe("compareHref", () => {
     expect(compareHref(["switzerland/zurich", "a&b"])).toBe(
       "/compare?p=switzerland/zurich&p=a%26b",
     );
+  });
+});
+
+describe("which rows say something", () => {
+  const at = (amounts: (number | null)[]): ColumnEstimate => ({
+    kind: "estimate",
+    currency: "XTS",
+    formatLocale: "en",
+    estimate: {
+      components: amounts.map((amount, i) => ({
+        key: `c${i}`,
+        applies: true,
+        tariffAmount: amount,
+        divisor: null,
+        multiplier: null,
+        amount,
+        missing: [],
+      })),
+      total: 0,
+      effectiveRate: 0,
+      currency: "XTS",
+      complete: true,
+      missing: [],
+    },
+  });
+  const columns = [{ packKey: "p" }, { packKey: "p" }];
+
+  it("hides a tax that is 0 in every column, and shows every tax before any estimate", () => {
+    const estimates = [at([0, 12]), at([0, 0])];
+    expect(componentRowShows("p", "c0", columns, estimates)).toBe(false);
+    expect(componentRowShows("p", "c1", columns, estimates)).toBe(true);
+    expect(
+      componentRowShows("p", "c0", columns, [{ kind: "no_input" }, { kind: "no_input" }]),
+    ).toBe(true);
+  });
+
+  it("hides an optional multiplier no column records, never a required one", () => {
+    const withRates: { packKey: string; multipliers: Record<string, number | null> }[] = [
+      { packKey: "p", multipliers: { a: null, b: 0.5 } },
+      { packKey: "p", multipliers: { a: null } },
+    ];
+    expect(multiplierRowShows("p", { key: "a", optional: true }, withRates)).toBe(false);
+    expect(multiplierRowShows("p", { key: "b", optional: true }, withRates)).toBe(true);
+    expect(multiplierRowShows("p", { key: "a", optional: false }, withRates)).toBe(true);
   });
 });
