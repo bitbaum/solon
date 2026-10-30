@@ -562,7 +562,8 @@
       "later": "Pas encore comparé",
       "laterText": "La participation, ce qu’implique un départ, le statut et la taille viendront quand leurs données seront importées.",
       "coverageLink": "Ce que couvrent les lieux →",
-      "disclaimer": "Une estimation tirée des barèmes publiés, pas une taxation."
+      "disclaimer": "Une estimation tirée des barèmes publiés, pas une taxation.",
+      "act": "Ce que vous pouvez faire"
     },
     "map": {
       "searchLabel": "Chercher une adresse, un lieu ou un code postal",
@@ -608,6 +609,12 @@
       "trayLabel": "À comparer : {places}",
       "trayClear": "Vider",
       "trayCompare": "Comparer {count, plural, one {# lieu} other {# lieux}}"
+    },
+    "actions": {
+      "title": "Ce que vous pouvez faire",
+      "intro": "Chaque lien ouvre la page de l’autorité compétente.",
+      "due": "En général jusqu’au {date, date, ::dMMMM}",
+      "dueSource": "source"
     }
   },
   "AuthError": {

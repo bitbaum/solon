@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
+import ActionList from "./action-list";
 import SourceList from "./source-list";
 
 export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
@@ -95,6 +96,23 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
             {t("compareLink")}
           </Link>
         </section>
+
+        {view.actions.length > 0 && (
+          <section
+            aria-labelledby="place-actions"
+            className="rounded-surface border border-default bg-surface-base p-6"
+          >
+            <h2 id="place-actions" className="mb-1 font-semibold text-fg-primary">
+              {t("actions.title")}
+            </h2>
+            <p className="mb-4 text-sm text-fg-secondary">{t("actions.intro")}</p>
+            <ActionList
+              actions={view.actions}
+              due={(date) => t("actions.due", { date })}
+              dueSource={t("actions.dueSource")}
+            />
+          </section>
+        )}
 
         {(view.otherNames.length > 0 || view.identifiers.length > 0) && (
           <dl className="space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">

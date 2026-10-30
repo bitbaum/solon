@@ -75,6 +75,7 @@ describe("checkBatch", () => {
       facts: [],
       postcodes: [row, { ...row, postcode: "80530" }, row],
       areas: [],
+      instruments: [],
       geometry: null,
     };
     expect(checkBatch(swiss, config, "swisstopo-postcode-localities").problems).toEqual([

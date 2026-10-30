@@ -19,7 +19,7 @@
  * places: names, identifiers and relations of this source that the batch no
  * longer states are superseded, and so are its postcodes (a postcode source
  * states its whole directory) and its areas (a geometry source states every
- * area it draws, with the file they are drawn in). Facts are per period, so a batch that omits
+ * area it draws, with the file they are drawn in) and its instruments. Facts are per period, so a batch that omits
  * an old period leaves it standing; a changed value supersedes the old one.
  * Places this source knew and the batch omits are reported, not ended: only a
  * source can say when a place ended.
@@ -33,6 +33,7 @@ import {
   areaAssertions,
   areas,
   facts,
+  instruments,
   jurisdictionIdentifiers,
   jurisdictionNames,
   jurisdictionRelations,
@@ -92,6 +93,8 @@ export const CHANGE_KINDS = [
   "postcodesSuperseded",
   "areasInserted",
   "areasSuperseded",
+  "instrumentsInserted",
+  "instrumentsSuperseded",
 ] as const;
 export type ChangeKind = (typeof CHANGE_KINDS)[number];
 export type ChangeCounts = Record<ChangeKind, number>;
@@ -364,6 +367,7 @@ async function applyBatch(
     ...batch.facts.map((f) => f.jurisdiction),
     ...batch.postcodes.map((p) => p.place),
     ...batch.areas.map((a) => a.place),
+    ...batch.instruments.map((i) => i.place),
     ...batch.jurisdictions.flatMap((j) => j.names.flatMap((n) => (n.usedBy ? [n.usedBy] : []))),
   ]);
   const idOf = (ref: ExternalRef, where: string): string => {
@@ -789,6 +793,7 @@ async function applyBatch(
   }
 
   await applyAreas(tx, source, batch, sourceId, geometrySha, idOf, counts, now);
+  await applyInstruments(tx, source, batch, sourceId, idOf, counts, now);
 
   // --- Current places this source knew and no longer mentions: reported, never ended here. ---
   const known = await tx
@@ -845,6 +850,68 @@ async function packInvariants(tx: Tx, pack: CountryPack): Promise<string[]> {
     places.map((p) => ({ id: p.id, levelKey: p.levelKey, label: p.slugPath ?? p.id })),
     edges,
   );
+}
+
+/**
+ * Instruments: the source's whole list, like postcodes. What it no longer
+ * states, or states differently (a moved page, a new deadline), is superseded.
+ */
+async function applyInstruments(
+  tx: Tx,
+  source: Source,
+  batch: ImportBatch,
+  sourceId: string,
+  idOf: (ref: ExternalRef, where: string) => string,
+  counts: ChangeCounts,
+  now: Date,
+): Promise<void> {
+  const current = await tx
+    .select({
+      id: instruments.id,
+      jurisdictionId: instruments.jurisdictionId,
+      kind: instruments.kind,
+      officialUrl: instruments.officialUrl,
+      requirements: instruments.requirements,
+      validFrom: instruments.validFrom,
+      validTo: instruments.validTo,
+    })
+    .from(instruments)
+    .innerJoin(sources, eq(sources.id, instruments.sourceId))
+    .where(and(eq(sources.sourceKey, source.key), isNull(instruments.supersededAt)));
+  const keyOf = (r: { jurisdictionId: string; kind: string; validFrom: string | null }) =>
+    canonical([r.jurisdictionId, r.kind, r.validFrom]);
+  const wanted = new Map(
+    batch.instruments.map((i) => {
+      const row = {
+        jurisdictionId: idOf(i.place, `instrument ${i.kind}`),
+        kind: i.kind,
+        eligibility: {},
+        requirements: i.requirements,
+        officialUrl: i.officialUrl,
+        validFrom: i.validFrom,
+        validTo: i.validTo,
+      };
+      return [keyOf(row), row] as const;
+    }),
+  );
+  for (const have of current) {
+    const want = wanted.get(keyOf(have));
+    if (
+      want !== undefined &&
+      want.officialUrl === have.officialUrl &&
+      want.validTo === have.validTo &&
+      canonical(want.requirements) === canonical(have.requirements)
+    ) {
+      wanted.delete(keyOf(have));
+      continue;
+    }
+    await tx.update(instruments).set({ supersededAt: now }).where(eq(instruments.id, have.id));
+    counts.instrumentsSuperseded += 1;
+  }
+  if (wanted.size > 0) {
+    await tx.insert(instruments).values([...wanted.values()].map((r) => ({ ...r, sourceId })));
+    counts.instrumentsInserted += wanted.size;
+  }
 }
 
 /**

@@ -422,6 +422,54 @@ describe.runIf(RUN)("Testland, through the importer", () => {
     expect(shire).toContain(">Northshire <");
   });
 
+  it("offers each step at the nearest place that offers it, and supersedes a moved page", async () => {
+    const moot = {
+      place: register("T110"),
+      kind: "testland_moot",
+      officialUrl: "https://north.invalid/moot",
+      requirements: { deadline: "03-31", deadlineSource: "https://north.invalid/dates" },
+      validFrom: null,
+      validTo: null,
+    };
+    const toll = { ...moot, place: register("T100"), kind: "testland_toll", requirements: {} };
+    toll.officialUrl = "https://realm.invalid/toll";
+    const withSteps = { ...testlandBatch(), instruments: [moot, toll] };
+
+    const first = await importBatch(withSteps);
+    expect(first.counts).toMatchObject({ instrumentsInserted: 2, instrumentsSuperseded: 0 });
+    expect((await importBatch(withSteps)).counts).toMatchObject({
+      instrumentsInserted: 0,
+      instrumentsSuperseded: 0,
+    });
+
+    const hamlet = await loadPlacePage(
+      db,
+      testland,
+      "testland/northshire/millbrook/oak-hollow",
+      ON,
+      "en",
+    );
+    expect(hamlet!.actions.map((a) => [a.label, a.url, a.offeredBy.name])).toEqual([
+      ["Speak at the moot", "https://north.invalid/moot", "Northshire"],
+      ["Pay the toll", "https://realm.invalid/toll", "Testland"],
+    ]);
+    const html = await renderPlacePage("testland/northshire/millbrook/oak-hollow", "en");
+    expect(html).toContain('href="https://north.invalid/moot"');
+    expect(html).toContain("Usually due by March 31");
+    expect(html).toContain('href="https://north.invalid/dates"');
+
+    const moved = {
+      ...withSteps,
+      instruments: [{ ...moot, officialUrl: "https://north.invalid/thing" }],
+    };
+    expect((await importBatch(moved)).counts).toMatchObject({
+      instrumentsInserted: 1,
+      instrumentsSuperseded: 2,
+    });
+    const after = await loadPlacePage(db, testland, "testland/northshire", ON, "en");
+    expect(after!.actions.map((a) => a.url)).toEqual(["https://north.invalid/thing"]);
+  });
+
   it("has no page for a path nobody holds, or a pack the config lacks", async () => {
     expect(await loadPlacePage(db, testland, "testland/nowhere", ON, "en")).toBeNull();
     expect(await loadPlacePage(db, placesConfig, "testland/northshire", ON, "en")).toBeNull();

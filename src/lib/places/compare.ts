@@ -10,7 +10,15 @@ import type { Database } from "@/lib/db/client";
 import { jurisdictions } from "@/lib/db/places-schema";
 import { evaluate, modelRefs, taxingLevels, type TaxModel } from "@/lib/tax-model";
 import { fiscalYearPeriod } from "./adapters/csv-facts";
-import { evaluatorFacts, loadChain, loadFacts, type ChainFact, type ChainPlace } from "./chain";
+import {
+  evaluatorFacts,
+  loadChain,
+  loadFacts,
+  loadInstruments,
+  type ChainFact,
+  type ChainInstrument,
+  type ChainPlace,
+} from "./chain";
 import {
   multiplierRowKey,
   type CompareColumn,
@@ -18,11 +26,13 @@ import {
   type Comparison,
 } from "./compare-view";
 import { loadRetrievals } from "./place-page";
-import { displayName, localized, placeSources } from "./place-view";
+import { displayName, localized, placeActions, placeSources } from "./place-view";
 
 export interface ComparedPlace {
   chain: ChainPlace[];
   facts: ChainFact[];
+  /** What the chain offers today, whatever year the figures are for. */
+  instruments?: ChainInstrument[];
 }
 
 /** How many fiscal years back a comparison looks for figures not yet published for this one. */
@@ -71,10 +81,20 @@ export async function loadComparison(
     }
   }
 
-  const retrievals = await loadRetrievals(
-    db,
-    places.flatMap((place) => modelFacts(config, place).map((f) => f.sourceId)),
+  places = await Promise.all(
+    places.map(async (place) => ({
+      ...place,
+      instruments: await loadInstruments(
+        db,
+        place.chain.map((p) => p.id),
+        on,
+      ),
+    })),
   );
+  const retrievals = await loadRetrievals(db, [
+    ...places.flatMap((place) => modelFacts(config, place).map((f) => f.sourceId)),
+    ...places.flatMap((place) => (place.instruments ?? []).map((i) => i.sourceId)),
+  ]);
   const view = comparisonView({ config, places, on: period, locale });
   return {
     ...view,
@@ -203,6 +223,7 @@ export function comparisonView(input: {
             return [row.key, typeof fact?.value === "number" ? fact.value : null];
           }),
       ),
+      actions: placeActions(config, chain, compared.instruments ?? [], locale),
     });
   }
   return { columns, taxPacks: [...taxPacks.values()], notFound };

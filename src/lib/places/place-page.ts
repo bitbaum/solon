@@ -14,7 +14,7 @@ import {
   jurisdictions,
   sources,
 } from "@/lib/db/places-schema";
-import { loadChain, loadFacts } from "./chain";
+import { loadChain, loadFacts, loadInstruments } from "./chain";
 import { placeView, type PlaceView } from "./place-view";
 
 export async function loadPlacePage(
@@ -34,6 +34,11 @@ export async function loadPlacePage(
 
   const chain = await loadChain(db, place.id, on);
   const facts = await loadFacts(
+    db,
+    chain.map((p) => p.id),
+    on,
+  );
+  const instruments = await loadInstruments(
     db,
     chain.map((p) => p.id),
     on,
@@ -72,9 +77,18 @@ export async function loadPlacePage(
     ...names.map((r) => r.sourceId),
     ...relations.map((r) => r.sourceId),
     ...facts.filter((f) => f.jurisdictionId === place.id).map((f) => f.sourceId),
+    ...instruments.map((i) => i.sourceId),
   ]);
 
-  return placeView({ config, chain, facts, identifiers, sources: retrievals, locale });
+  return placeView({
+    config,
+    chain,
+    facts,
+    identifiers,
+    instruments,
+    sources: retrievals,
+    locale,
+  });
 }
 
 /** The latest retrieval of each source among these `sources` rows. */

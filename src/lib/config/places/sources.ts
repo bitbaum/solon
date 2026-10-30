@@ -65,6 +65,17 @@ const cantonRounding = Object.fromEntries(
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
 
+/** How a hand-kept tax-steps file reads: one row per place and step, the place by `scheme`. */
+const TAX_STEPS_OPTIONS = (scheme: string) => ({
+  place: { scheme, column: "place" },
+  kind: {
+    column: "kind",
+    values: { file: "tax_return", pay: "tax_payment", extend: "tax_deadline_extension" },
+  },
+  url: "url",
+  deadline: { column: "deadline", source: "source_url" },
+});
+
 /**
  * The source registry: one entry per dataset — publisher, licence, cadence and
  * the adapter that reads it (§8.2). Each importer's first task is to confirm
@@ -548,6 +559,46 @@ export const SOURCES: readonly SourceInput[] = [
       validFrom: "Validity",
       where: [{ column: "Kantonskürzel", values: [""] }],
     },
+    packs: ["liechtenstein"],
+  },
+  {
+    // Kept by hand: each canton's own page to file a tax return, to pay and to
+    // ask for more time, and the usual filing deadline with the page that
+    // states it. Every row was opened on the canton's site before it was
+    // added; the file keeps the sentence each deadline is read from. A moved
+    // page is an edit to the file, then `places:import`.
+    key: "ch-cantonal-tax-steps",
+    publisher: "Swiss cantonal tax administrations",
+    dataset: "Where to file a tax return, pay tax and ask for more time, per canton",
+    homepage: "https://github.com/bitbaum/solon/blob/main/data/places/switzerland/tax-steps.csv",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "The cantons' tax administrations, each on its own website",
+      de: "Die kantonalen Steuerverwaltungen, je auf ihrer eigenen Website",
+      fr: "Les administrations fiscales cantonales, chacune sur son propre site",
+      it: "Le amministrazioni cantonali delle contribuzioni, ciascuna sul proprio sito",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_instruments",
+    options: TAX_STEPS_OPTIONS("bfs_canton"),
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand, as ch-cantonal-tax-steps: the Tax Administration of the
+    // Principality's own pages, at national level (its communes do not assess).
+    key: "li-tax-steps",
+    publisher: "Liechtenstein Tax Administration (Steuerverwaltung)",
+    dataset: "Where to file a tax return, pay tax and ask for more time",
+    homepage: "https://github.com/bitbaum/solon/blob/main/data/places/liechtenstein/tax-steps.csv",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Liechtenstein Tax Administration, on its own website",
+      de: "Steuerverwaltung des Fürstentums Liechtenstein, auf ihrer eigenen Website",
+    },
+    cadence: "0 6 3 1 *",
+    adapter: "csv_instruments",
+    options: TAX_STEPS_OPTIONS("iso_3166_1"),
     packs: ["liechtenstein"],
   },
 ];

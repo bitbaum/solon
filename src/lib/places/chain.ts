@@ -11,6 +11,7 @@ import { and, eq, inArray, isNull, lte, or, gt, sql } from "drizzle-orm";
 import type { Database, Tx } from "@/lib/db/client";
 import {
   facts,
+  instruments,
   jurisdictionNames,
   jurisdictionRelations,
   jurisdictions,
@@ -41,6 +42,16 @@ export interface ChainFact {
   variant: string | null;
   validFrom: string;
   value: number | Tariff;
+  sourceId: string;
+}
+
+/** A way to take part that a place in the chain offers (§4.7). */
+export interface ChainInstrument {
+  jurisdictionId: string;
+  kind: string;
+  officialUrl: string | null;
+  /** As the importer stored it: the batch's `requirements`. */
+  requirements: { deadline?: string; deadlineSource?: string };
   sourceId: string;
 }
 
@@ -148,6 +159,35 @@ export async function loadFacts(
     variant: row.variant,
     validFrom: row.validFrom,
     value: row.valueNumeric !== null ? Number(row.valueNumeric) : (row.valueJson as Tariff),
+    sourceId: row.sourceId,
+  }));
+}
+
+/** The current instruments of these places on `on`. */
+export async function loadInstruments(
+  db: Executor,
+  jurisdictionIds: string[],
+  on: string,
+): Promise<ChainInstrument[]> {
+  if (jurisdictionIds.length === 0) {
+    return [];
+  }
+  const rows = await db
+    .select()
+    .from(instruments)
+    .where(
+      and(
+        inArray(instruments.jurisdictionId, jurisdictionIds),
+        isNull(instruments.supersededAt),
+        or(isNull(instruments.validFrom), lte(instruments.validFrom, on)),
+        or(isNull(instruments.validTo), gt(instruments.validTo, on)),
+      ),
+    );
+  return rows.map((row) => ({
+    jurisdictionId: row.jurisdictionId,
+    kind: row.kind,
+    officialUrl: row.officialUrl,
+    requirements: row.requirements as ChainInstrument["requirements"],
     sourceId: row.sourceId,
   }));
 }

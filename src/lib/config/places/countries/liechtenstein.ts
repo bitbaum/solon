@@ -47,5 +47,6 @@ export const liechtenstein: CountryPackInput = {
   // Every Liechtenstein postcode in swisstopo's directory lies in 9485–9498;
   // no Swiss postcode starts 948 or 949.
   postcodePattern: "94[89][0-9]",
-  sources: ["li-constitution-communes", "swisstopo-postcode-localities-li"],
+  sources: ["li-constitution-communes", "swisstopo-postcode-localities-li", "li-tax-steps"],
+  instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
 };

@@ -6,7 +6,7 @@
  * component imports it.
  */
 import { evaluate, type Estimate, type Fact, type TaxModel } from "@/lib/tax-model";
-import type { PlaceSource } from "./place-view";
+import type { PlaceAction, PlaceSource } from "./place-view";
 
 export interface ComparePlaceRef {
   name: string;
@@ -32,6 +32,8 @@ export interface CompareColumn {
    * recorded, absent when the row's level is not in its chain.
    */
   multipliers: Record<string, number | null>;
+  /** What a resident can do there: file, pay, ask for time, at the authority's own page. */
+  actions: PlaceAction[];
 }
 
 export interface CompareInput {
