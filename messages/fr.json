@@ -711,5 +711,12 @@
       "findLaw": "Trouver un acte",
       "coverage": "Ce que le registre contient"
     }
+  },
+  "LostPassword": {
+    "title": "Mot de passe perdu ?",
+    "lede": "Ce Solon ne peut pas encore envoyer d’e-mails : un mot de passe ne peut donc pas être réinitialisé par lien.",
+    "passkey": "Si vous avez ajouté une clé d’accès à votre compte, connectez-vous avec elle ci-dessus.",
+    "orangecat": "Si votre compte est relié à OrangeCat, continuez avec OrangeCat ci-dessus.",
+    "contact": "Sinon, écrivez à <mail>{email}</mail> depuis l’adresse de votre compte."
   }
 }
