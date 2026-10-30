@@ -23,3 +23,8 @@ minimumReleaseAgeExclude:
   - "@bitbaum/searchkit@0.2.3"
   - "@bitbaum/ai-kit@1.21.5"
   - limitkit@0.2.1
+
+overrides:
+  # Security floors (2026-10-30 dev-toolchain sweep): stay inside the
+  # major the parents already allow; pnpm does not re-resolve these on update.
+  "vite@8": "^8.2.4"
