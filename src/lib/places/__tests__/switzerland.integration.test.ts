@@ -86,6 +86,8 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   // The hand-kept file, cut to the places above (adapters.test.ts checks the whole file).
   ["ch-per-head-taxes", "per-head-taxes-cut.json"],
   ["ch-cantonal-adjustments", "cantonal-adjustments-cut.json"],
+  // The cut has no Valais commune.
+  ["vs-income-tax", "valais-income-tax-cut.json"],
   // None of the cut's communes has localities with rates of their own.
   ["estv-tax-localities", "tax-localities-cut.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
@@ -682,7 +684,10 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     const swiss = packs.find((p) => p.key === "switzerland")!;
     const metric = (level: string) => swiss.metrics.find((m) => m.levelName === level)!;
     expect(metric("Confederation")).toMatchObject({ places: 1, of: 1, inTaxModel: true });
-    const communal = swiss.metrics.find((m) => m.levelName === "Municipality" && m.inTaxModel)!;
+    const communal = swiss.metrics.find(
+      (m) => m.levelName === "Municipality" && m.metricLabel === "Tax multiplier",
+    )!;
+    expect(communal.inTaxModel).toBe(true);
     expect(communal.places).toBeGreaterThanOrEqual(2);
     expect(communal.places).toBeLessThan(communal.of);
     expect(swiss.sources.every((s) => s.retrievedOn !== null)).toBe(true);

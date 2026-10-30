@@ -578,7 +578,7 @@ left out like Zürich's. Not yet:
 - Splitting cantons that do not match yet: see the next paragraph.
 - Vaud: built since, below.
 - Basel-Landschaft (a formula), Uri and Obwalden (flat tax), Schwyz
-  (separate commune tariffs): built since, below. Valais: not yet, below.
+  (separate commune tariffs): built since, below. Valais: built since, below.
 
 **Built (P2, splitting)**: the calculator's export gives each row a
 `Splitting` divisor; the importer records it per canton and variant as
@@ -661,14 +661,7 @@ tariff; for every other canton the importer gives the communes the basic
 tariff (`alsoAs`). All four match to the franc (196 cases); Liestal, Schwyz
 (also at CHF 777,777), Altdorf and Sarnen are golden cases in the adapter's
 tests, and so is a couple in Aarau at CHF 30,000, whose federal CHF 3 is not
-levied. Not yet:
-
-- Valais: its exported tables (type `FREIBURG`, a canton and a communes'
-  table) do not give the calculator's figures: a single person's rates match
-  the table only with its thresholds stretched by about 2.01 to 2.02,
-  unevenly (the canton indexes its tariff, which the export does not say), and
-  a couple's tax is cut by 35 % with floors and caps that differ between canton
-  and communes. To be read from the canton's own publication.
+levied. Valais was not yet among them; it is built since, below.
 
 **Built (P2, Vaud's limit)**: the live check after the four cantons above
 found Vaud's single people at CHF 777,777 about CHF 15,800 too high. Vaud's
@@ -727,7 +720,7 @@ per-head tax) matches the calculator's total to the franc in two communes of
 every modelled canton, for every church, single and married. Not yet:
 
 - The caps on income and wealth tax together (Basel-Stadt, Aargau, Ticino;
-  Valais and Geneva are not modelled) are not modelled; they bind only where
+  Valais, Geneva) are not modelled; they bind only where
   wealth is large against income.
 - Where parishes in one commune levy different church rates, the export gives
   one of them.
@@ -761,7 +754,38 @@ cantons and every locality below: 460 cases, all to the franc.
   their sum, as the calculator states it, so the rows shown add up to the
   total shown (`compare-view.ts`).
 
-Not yet: Valais (see `MODELLED_CANTONS` in `sources.ts`).
+**Built (Valais, 2026-10-30)**: all 26 cantons. Valais's exported tables
+are the base tariffs of its tax law (StG, SGS 642.1, art. 32 and 178), which
+the canton and each commune read at an indexed income. Schema version 9
+(`@bitbaum/tax-model` 0.10.0) adds what that needs, and nothing that names
+Valais:
+
+- A divisor's `scaledBy`: the income divisor is multiplied by the index of the
+  level that levies the tax, `tax.income.index` (art. 32 para. 4; art. 178
+  para. 5, where each commune's assembly decides how far it follows). The
+  canton's is 2.0072, 1.1⁷ × 1.03. The communes' run from 1.1 to 2.07, and 107
+  of 122 (108 in 2025) are of the same form, 1.1ᵃ × (1 + p/100). Measured, for 2025 and 2026,
+  at twelve incomes each, single and married.
+- A component's `rebate`: a couple's tax is cut by 35 %, at least CHF 680 and
+  at most CHF 4,900, for canton and commune each, after the commune's
+  coefficient (art. 32 para. 3a, art. 178 para. 3a, which state CHF 600 and
+  4,500 before indexing and the Grand Council's increase).
+- A component's `floor`: the cantonal income tax is at least CHF 10, even on
+  no income (art. 32 para. 6).
+
+Data: `data/places/switzerland/valais-income-tax.json` (source
+`vs-income-tax`). Checked against the calculator's whole bill in every
+commune at five incomes the indexes were not fitted to (CHF 28,000 to
+222,222, single and married, with CHF 500,000 wealth): 1,195 of 1,220 bills
+to the franc, the other 25 within CHF 1, always in the communal income tax,
+for 2025 and 2026. No index reproduces those last francs together with the
+commune's other incomes, so they are the calculator's own rounding, which
+the act does not state.
+
+The same check found that Uri and Solothurn do not round wealth (the
+calculator's tax moves between CHF 1,234,100 and 1,234,567 there); they are
+now out of the CHF 1,000 rounding with Geneva, and all 25 other cantons match
+the calculator's total again in every case.
 
 ### 6.3 "Takes tax" is derived
 

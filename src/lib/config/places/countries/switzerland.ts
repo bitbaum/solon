@@ -33,6 +33,12 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * household (`tax.head`, a `fixed` tariff per variant, 0 where none), a
  * church's on top for its members, and a commune's and a parish's own per
  * adult where they set it (Solothurn's).
+ *
+ * Schema version 9 (Valais): a canton, and each of its communes, moves its
+ * tariff to higher incomes by an index of its own (`tax.income.index`, absent
+ * elsewhere); a couple's income tax is cut by a share between a least and a
+ * most amount (`tax.income.rebate`, recorded for the couple only); and the
+ * cantonal income tax is at least a minimum tax (`tax.income.floor`).
  */
 const DENOMINATIONS = ["reformed", "catholic", "christ_catholic"] as const;
 const churchComponents = (on: "income" | "wealth") =>
@@ -57,8 +63,22 @@ const churchComponents = (on: "income" | "wealth") =>
     };
   });
 
+/** A couple's rebate on an income tax, where the canton records one. */
+const incomeRebate = {
+  share: { level: "canton", metric: "tax.income.rebate", optional: true },
+  least: { level: "canton", metric: "tax.income.rebate.least", optional: true },
+  most: { level: "canton", metric: "tax.income.rebate.most", optional: true },
+};
+
+/** The income divisor, moved by the index of the level that levies the tax. */
+const indexedDivisor = (level: "canton" | "municipality") => ({
+  level: "canton",
+  metric: "tax.income.divisor",
+  scaledBy: { level, metric: "tax.income.index", optional: true },
+});
+
 export const switzerlandIncomeTax = {
-  schemaVersion: 8,
+  schemaVersion: 9,
   base: "taxable_income",
   inputs: [
     "taxable_income",
@@ -73,7 +93,7 @@ export const switzerlandIncomeTax = {
     {
       key: "cantonal",
       tariff: { level: "canton", metric: "tax.income.tariff.basic" },
-      divisor: { level: "canton", metric: "tax.income.divisor" },
+      divisor: indexedDivisor("canton"),
       multipliers: [
         {
           level: "canton",
@@ -82,12 +102,15 @@ export const switzerlandIncomeTax = {
         },
         { level: "canton", metric: "tax.multiplier.extra", optional: true },
       ],
+      rebate: incomeRebate,
+      floor: { level: "canton", metric: "tax.income.floor", optional: true },
     },
     {
       key: "communal",
       tariff: { level: "canton", metric: "tax.income.tariff.communal" },
-      divisor: { level: "canton", metric: "tax.income.divisor" },
+      divisor: indexedDivisor("municipality"),
       multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
+      rebate: incomeRebate,
     },
     ...churchComponents("income"),
     {
@@ -495,6 +518,7 @@ export const switzerland: CountryPackInput = {
     "ch-church-tariffs",
     "ch-per-head-taxes",
     "ch-cantonal-adjustments",
+    "vs-income-tax",
     "estv-tax-localities",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],

@@ -26,9 +26,9 @@ const HUNDRED_DIVIDED = { base: 100, divided: 100 };
  * rate except seven whose rates depend on the locality (LOCALITY_COMMUNES),
  * and Geneva, with its cantonal adjustments (ch-cantonal-adjustments), match
  * the calculator's whole bill in every commune and locality, 2026-10-30.
- * Not yet: Valais, whose tables the calculator applies to an indexed income
- * (one factor for the canton, one per commune, which the export does not
- * carry) with a couple's rebate capped per canton and commune.
+ * Valais, whose tables the calculator reads at an indexed income (one index
+ * for the canton, one per commune) with a couple's rebate and a minimum tax
+ * (vs-income-tax), matches it in every commune, 2026-10-30.
  */
 const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   ZH: { fso: "1", rounding: HUNDRED },
@@ -54,6 +54,7 @@ const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   TI: { fso: "21", rounding: HUNDRED },
   VD: { fso: "22", rounding: HUNDRED_DIVIDED },
   NE: { fso: "24", rounding: HUNDRED_DIVIDED },
+  VS: { fso: "23", rounding: HUNDRED },
   GE: { fso: "25", rounding: HUNDRED },
   JU: { fso: "26", rounding: HUNDRED },
 };
@@ -98,13 +99,15 @@ const SCALE_TABLE_TYPES = {
 
 /**
  * The calculator rounds taxable wealth down to CHF 1,000 before every
- * modelled canton's tariff but Geneva's (measured 2026-10-30: CHF 1,234,567
- * and 1,234,000 give the same tax in all of them, to the franc; in Geneva
- * the wealth as entered reproduces it at CHF 150,000 to 5 million).
+ * modelled canton's tariff but Uri's, Solothurn's and Geneva's (measured
+ * 2026-10-30 in each canton's first commune: CHF 1,234,000, 1,234,099,
+ * 1,234,100, 1,234,567 and 1,234,999 give the same tax, and 1,235,000 more;
+ * in Uri and Solothurn the tax moves within those, so the wealth as entered
+ * reproduces it, as in Geneva at CHF 150,000 to 5 million).
  */
 const WEALTH_ROUNDING = Object.fromEntries(
   Object.keys(MODELLED_CANTONS)
-    .filter((code) => code !== "GE")
+    .filter((code) => !["UR", "SO", "GE"].includes(code))
     .map((code) => [code, { base: 1000 }]),
 );
 
@@ -347,7 +350,7 @@ export const SOURCES: readonly SourceInput[] = [
           ],
         },
         {
-          // Schwyz's communes (and Valais's, not modelled yet) have their own tariff.
+          // Schwyz's and Valais's communes have their own tariff.
           target: "GEMEINDE",
           metric: "tax.income.tariff.communal",
           cantons: modelledCantons,
@@ -470,6 +473,34 @@ export const SOURCES: readonly SourceInput[] = [
     attribution: {
       en: "Swiss Federal Tax Administration, tax calculator (measured)",
       de: "Eidgenössische Steuerverwaltung, Steuerrechner (gemessen)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand: what Valais's tax law (StG, SGS 642.1) adds to the
+    // exported tables, which are its base tariffs (art. 32, art. 178). The
+    // canton and each commune read their tariff at the income divided by an
+    // index of their own (art. 32 para. 4; art. 178 para. 5, where each
+    // commune's assembly decides how far it follows), `tax.income.index`; a
+    // couple's tax is cut by 35 %, at least CHF 680 and at most CHF 4,900, the
+    // amounts as indexed and raised by the Grand Council (art. 32 para. 3a,
+    // art. 178 para. 3a: CHF 600 and 4,500 in the act); and the cantonal tax
+    // is at least CHF 10 (art. 32 para. 6). The indexes and the amounts are
+    // measured: every commune at five incomes, single, and two married, for
+    // 2025 and 2026, 2026-10-30, to the franc.
+    key: "vs-income-tax",
+    publisher: "Canton of Valais; Swiss Federal Tax Administration (ESTV)",
+    dataset: "Valais income tax: indexes, couple's rebate and minimum tax",
+    homepage:
+      "https://github.com/bitbaum/solon/blob/main/data/places/switzerland/valais-income-tax.json",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Canton of Valais, tax law (StG) art. 32 and 178; Swiss Federal Tax Administration (measured)",
+      de: "Kanton Wallis, Steuergesetz (StG) Art. 32 und 178; Eidgenössische Steuerverwaltung (gemessen)",
+      fr: "Canton du Valais, loi fiscale (LF) art. 32 et 178 ; Administration fédérale des contributions (mesuré)",
     },
     // Nothing to fetch: the file is handed in (`places:import`) after each edit.
     cadence: "0 6 4 1 *",
