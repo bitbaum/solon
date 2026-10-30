@@ -5,6 +5,7 @@ import {
   placesConfigSchema,
   type PlacesConfig,
 } from "@/lib/config/places";
+import { countryPackSchema } from "@/lib/config/places/schema";
 import {
   TESTLAND_PACK,
   TESTLAND_TAX,
@@ -51,7 +52,8 @@ describe("a contributed pack (Testland)", () => {
   it("fills in defaults", () => {
     const pack = testland.packs.find((p) => p.key === "testland")!;
     expect(pack.levels.find((l) => l.key === "realm")!.coverage).toBe("full");
-    expect(pack.instrumentKinds).toEqual([]);
+    const { instrumentKinds: _, ...withoutKinds } = TESTLAND_PACK;
+    expect(countryPackSchema.parse(withoutKinds).instrumentKinds).toEqual([]);
   });
 });
 

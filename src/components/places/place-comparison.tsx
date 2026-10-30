@@ -5,6 +5,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
+import ActionList from "./action-list";
 import ComparisonRow, { comparisonCell as cell } from "./comparison-row";
 import {
   compareHref,
@@ -26,6 +27,7 @@ import {
  */
 export default function PlaceComparison({ comparison }: { comparison: Comparison }) {
   const t = useTranslations("Places.compare");
+  const ta = useTranslations("Places.actions");
   const format = useFormatter();
   const { columns, taxPacks } = comparison;
   const [inputs, updateInput] = useDeviceInputs(taxPacks);
@@ -288,6 +290,28 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                 ))}
               </ComparisonRow>
             </>
+          )}
+          {columns.some((column) => column.actions.length > 0) && (
+            <ComparisonRow
+              label={t("act")}
+              labelClassName="font-medium text-fg-primary"
+              columnCount={count}
+            >
+              {columns.map((column) => (
+                <td key={column.slugPath} className={`${cell} text-sm`}>
+                  {column.actions.length === 0 ? (
+                    <span className="text-fg-tertiary">–</span>
+                  ) : (
+                    <ActionList
+                      actions={column.actions}
+                      due={(date) => ta("due", { date })}
+                      dueSource={ta("dueSource")}
+                      showOfferedBy={false}
+                    />
+                  )}
+                </td>
+              ))}
+            </ComparisonRow>
           )}
           <ComparisonRow label={t("later")} labelClassName="text-fg-secondary" columnCount={count}>
             <td colSpan={count} className={`${cell} text-fg-secondary`}>

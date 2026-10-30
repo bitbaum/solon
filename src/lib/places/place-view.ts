@@ -5,7 +5,13 @@
  */
 import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
 import { taxingLevels } from "@/lib/tax-model";
-import { evaluatorFacts, type ChainFact, type ChainName, type ChainPlace } from "./chain";
+import {
+  evaluatorFacts,
+  type ChainFact,
+  type ChainInstrument,
+  type ChainName,
+  type ChainPlace,
+} from "./chain";
 
 export interface PlaceLink {
   name: string;
@@ -28,6 +34,18 @@ export interface PlaceSource {
   retrievedAt: string;
 }
 
+/** Something a resident can do, at the authority that offers it. */
+export interface PlaceAction {
+  kind: string;
+  /** What following the link does, in the reader's language. */
+  label: string;
+  url: string;
+  /** The place whose authority offers it: the canton, for a commune. */
+  offeredBy: PlaceLink;
+  /** The usual last day each year (`MM-DD`) and the page that states it. */
+  deadline: { monthDay: string; source: string } | null;
+}
+
 export interface PlaceView {
   id: string;
   slugPath: string;
@@ -42,6 +60,8 @@ export interface PlaceView {
   identifiers: PlaceIdentifier[];
   /** Null when the pack has no tax model yet. */
   takesTax: boolean | null;
+  /** What a resident can do here, one per kind, in the registry's order. */
+  actions: PlaceAction[];
   sources: PlaceSource[];
 }
 
@@ -50,6 +70,7 @@ export interface PlaceViewInput {
   chain: readonly ChainPlace[];
   facts: readonly ChainFact[];
   identifiers: readonly { scheme: string; value: string }[];
+  instruments: readonly ChainInstrument[];
   /** The latest retrieval of each source that stated something about the place. */
   sources: readonly { sourceKey: string; retrievedAt: Date }[];
   locale: string;
@@ -131,8 +152,54 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
       pack.taxModel && place.levelKey
         ? taxingLevels(pack.taxModel, evaluatorFacts(chain, input.facts)).includes(place.levelKey)
         : null,
+    actions: placeActions(config, input.chain, input.instruments, locale),
     sources: placeSources(config, input.sources, locale),
   };
+}
+
+/**
+ * For each instrument kind, the one offered nearest the place: its own, else
+ * its parent's, up the chain; places beside the chain come last. Pure.
+ */
+export function placeActions(
+  config: PlacesConfig,
+  chain: readonly ChainPlace[],
+  instruments: readonly ChainInstrument[],
+  locale: string,
+): PlaceAction[] {
+  const place = chain.find((p) => p.depth === 0);
+  const pack = config.packs.find((p) => p.key === place?.countryPack);
+  if (!pack) {
+    return [];
+  }
+  const rank = (p: ChainPlace) => p.depth ?? Number.MAX_SAFE_INTEGER;
+  const byId = new Map(chain.map((p) => [p.id, p]));
+  return config.instrumentKinds.flatMap((kind) => {
+    const offered = instruments
+      .filter((i) => i.kind === kind.key && i.officialUrl !== null && byId.has(i.jurisdictionId))
+      .sort((a, b) => rank(byId.get(a.jurisdictionId)!) - rank(byId.get(b.jurisdictionId)!));
+    const nearest = offered[0];
+    if (kind.retired || !nearest) {
+      return [];
+    }
+    const by = byId.get(nearest.jurisdictionId)!;
+    const level = pack.levels.find((l) => l.key === by.levelKey);
+    const { deadline, deadlineSource } = nearest.requirements;
+    return [
+      {
+        kind: kind.key,
+        label: localized(kind.label, locale),
+        url: nearest.officialUrl!,
+        offeredBy: {
+          name: displayName(by.names, locale, pack.defaultLocales),
+          levelName: level ? localized(level.names, locale) : "",
+          slugPath: by.slugPath,
+        },
+        deadline:
+          deadline && deadlineSource ? { monthDay: deadline, source: deadlineSource } : null,
+      },
+    ];
+  });
 }
 
 /** The registered sources behind these retrievals, in the reader's language. */

@@ -550,4 +550,35 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["liechtenstein"],
   },
+  {
+    // Kept by hand: each canton's own page to file a tax return, to pay and to
+    // ask for more time, and the usual filing deadline with the page that
+    // states it. Every row was opened on the canton's site before it was
+    // added; the file keeps the sentence each deadline is read from. A moved
+    // page is an edit to the file, then `places:import`.
+    key: "ch-cantonal-tax-steps",
+    publisher: "Swiss cantonal tax administrations",
+    dataset: "Where to file a tax return, pay tax and ask for more time, per canton",
+    homepage: "https://github.com/bitbaum/solon/blob/main/data/places/switzerland/tax-steps.csv",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "The cantons' tax administrations, each on its own website",
+      de: "Die kantonalen Steuerverwaltungen, je auf ihrer eigenen Website",
+      fr: "Les administrations fiscales cantonales, chacune sur son propre site",
+      it: "Le amministrazioni cantonali delle contribuzioni, ciascuna sul proprio sito",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_instruments",
+    options: {
+      place: { scheme: "bfs_canton", column: "place" },
+      kind: {
+        column: "kind",
+        values: { file: "tax_return", pay: "tax_payment", extend: "tax_deadline_extension" },
+      },
+      url: "url",
+      deadline: { column: "deadline", source: "source_url" },
+    },
+    packs: ["switzerland"],
+  },
 ];

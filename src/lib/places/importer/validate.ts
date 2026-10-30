@@ -102,6 +102,29 @@ export function checkBatch(
 
   problems.push(...areaProblems(batch, levels, identifierProblem));
 
+  const kinds = new Map(config.instrumentKinds.map((k) => [k.key, k]));
+  const instrumentKeys = new Set<string>();
+  for (const row of batch.instruments) {
+    const key = `${refKey(row.place)} ${row.kind} ${row.validFrom ?? "-"}`;
+    const where = `instrument ${key}`;
+    if (instrumentKeys.has(key)) {
+      problems.push(`${where} appears twice`);
+    }
+    instrumentKeys.add(key);
+    const kind = kinds.get(row.kind);
+    if (!kind) {
+      problems.push(`${where}: instrument kind "${row.kind}" is not in the registry`);
+    } else if (kind.retired) {
+      problems.push(`${where}: instrument kind "${row.kind}" is retired`);
+    } else if (!pack.instrumentKinds.includes(row.kind)) {
+      problems.push(`${where}: pack "${pack.key}" does not take instrument kind "${row.kind}"`);
+    }
+    const problem = identifierProblem(row.place, where);
+    if (problem) {
+      problems.push(problem);
+    }
+  }
+
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
   const factKeys = new Set<string>();
   const accepted: BatchFact[] = [];

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import type { PlacesConfig } from "@/lib/config/places/schema";
-import type { ChainPlace } from "../chain";
-import { displayName, localized, placeView } from "../place-view";
+import type { ChainInstrument, ChainPlace } from "../chain";
+import { displayName, localized, placeActions, placeView } from "../place-view";
 import { withTestland } from "./fixtures/testland/config";
 
 const testland = withTestland(placesConfig);
@@ -31,7 +31,15 @@ const CHAIN = [
 ];
 
 const view = (config: PlacesConfig, locale = "en") =>
-  placeView({ config, chain: CHAIN, facts: [], identifiers: [], sources: [], locale })!;
+  placeView({
+    config,
+    chain: CHAIN,
+    facts: [],
+    identifiers: [],
+    instruments: [],
+    sources: [],
+    locale,
+  })!;
 
 describe("displayName", () => {
   const names = [
@@ -79,9 +87,67 @@ describe("placeView", () => {
         chain: CHAIN,
         facts: [],
         identifiers: [],
+        instruments: [],
         sources: [],
         locale: "en",
       }),
     ).toBeNull();
+  });
+});
+
+describe("placeActions", () => {
+  const offered = (
+    jurisdictionId: string,
+    kind: string,
+    officialUrl: string,
+    requirements: ChainInstrument["requirements"] = {},
+  ): ChainInstrument => ({ jurisdictionId, kind, officialUrl, requirements, sourceId: "s" });
+
+  it("takes each kind from the place nearest the reader's, in the registry's order", () => {
+    const actions = placeActions(
+      testland,
+      CHAIN,
+      [
+        offered("realm", "testland_toll", "https://realm.invalid/toll"),
+        offered("north", "testland_moot", "https://north.invalid/moot", {
+          deadline: "03-31",
+          deadlineSource: "https://north.invalid/dates",
+        }),
+        offered("realm", "testland_moot", "https://realm.invalid/moot"),
+      ],
+      "de",
+    );
+    expect(actions).toEqual([
+      {
+        kind: "testland_moot",
+        label: "Am Thing sprechen",
+        url: "https://north.invalid/moot",
+        offeredBy: { name: "Northshire", levelName: "Grafschaft", slugPath: "testland/northshire" },
+        deadline: { monthDay: "03-31", source: "https://north.invalid/dates" },
+      },
+      {
+        kind: "testland_toll",
+        label: "Pay the toll",
+        url: "https://realm.invalid/toll",
+        offeredBy: { name: "Testland", levelName: "Reich", slugPath: "testland" },
+        deadline: null,
+      },
+    ]);
+  });
+
+  it("prefers the chain to a place beside it, and offers nothing it does not hold", () => {
+    const actions = placeActions(
+      testland,
+      CHAIN,
+      [
+        offered("guild", "testland_moot", "https://guild.invalid/moot"),
+        offered("mill", "testland_moot", "https://mill.invalid/moot"),
+      ],
+      "en",
+    );
+    expect(actions.map((a) => [a.kind, a.url])).toEqual([
+      ["testland_moot", "https://mill.invalid/moot"],
+    ]);
+    expect(placeActions(testland, CHAIN, [], "en")).toEqual([]);
   });
 });

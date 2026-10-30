@@ -234,7 +234,9 @@ export const switzerland: CountryPackInput = {
     "estv-commune-multipliers",
     "swisstopo-postcode-localities",
     "swisstopo-commune-boundaries",
+    "ch-cantonal-tax-steps",
   ],
+  instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,
   taxLabels: switzerlandTaxLabels,
 };

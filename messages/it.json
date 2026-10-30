@@ -562,7 +562,8 @@
       "later": "Non ancora confrontato",
       "laterText": "Partecipazione, cosa comporta andarsene, statuto e dimensioni arriveranno quando i loro dati saranno importati.",
       "coverageLink": "Cosa coprono i luoghi →",
-      "disclaimer": "Una stima dalle tariffe pubblicate, non una tassazione."
+      "disclaimer": "Una stima dalle tariffe pubblicate, non una tassazione.",
+      "act": "Cosa può fare"
     },
     "map": {
       "searchLabel": "Cerca un indirizzo, un luogo o un numero postale",
@@ -608,6 +609,12 @@
       "trayLabel": "Da confrontare: {places}",
       "trayClear": "Svuota",
       "trayCompare": "Confronta {count, plural, one {# luogo} other {# luoghi}}"
+    },
+    "actions": {
+      "title": "Cosa può fare",
+      "intro": "Ogni link apre la pagina dell’autorità competente.",
+      "due": "Di regola entro il {date, date, ::dMMMM}",
+      "dueSource": "fonte"
     }
   },
   "AuthError": {

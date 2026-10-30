@@ -105,6 +105,36 @@ export const batchPostcodeSchema = z.object({
   ...period,
 });
 
+/** A day of the year, `MM-DD`. */
+const monthDay = z
+  .string()
+  .regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, "a month and day, month first");
+
+/**
+ * A way to take part, at the authority that offers it (§4.7): the authority's
+ * own page for it, and what the source states about it. A source states its
+ * whole list; what it no longer states is superseded.
+ */
+export const batchInstrumentSchema = z.object({
+  place: externalRefSchema,
+  /** A key of the instrument-kind registry the pack takes. */
+  kind: z.string().min(1),
+  officialUrl: z.url({ protocol: /^https$/ }),
+  requirements: z
+    .object({
+      /** The usual last day, each year, as the authority states it. */
+      deadline: monthDay.optional(),
+      /** The authority's page that states the deadline. */
+      deadlineSource: z.url({ protocol: /^https$/ }).optional(),
+    })
+    .strict()
+    .refine((r) => (r.deadline === undefined) === (r.deadlineSource === undefined), {
+      message: "a deadline needs the page that states it, and only a deadline has one",
+    })
+    .default({}),
+  ...period,
+});
+
 /** A place's land, as one feature of the batch's geometry file draws it. */
 export const batchAreaSchema = z.object({
   place: externalRefSchema,
@@ -134,6 +164,7 @@ export const importBatchSchema = z.object({
   relations: z.array(batchRelationSchema).default([]),
   facts: z.array(batchFactSchema).default([]),
   postcodes: z.array(batchPostcodeSchema).default([]),
+  instruments: z.array(batchInstrumentSchema).default([]),
   /** A geometry source states all its areas at once, with the file they are drawn in. */
   areas: z.array(batchAreaSchema).default([]),
   geometry: batchGeometrySchema.nullable().default(null),
@@ -147,6 +178,7 @@ export type BatchName = z.infer<typeof batchNameSchema>;
 export type BatchRelation = z.infer<typeof batchRelationSchema>;
 export type BatchFact = z.infer<typeof batchFactSchema>;
 export type BatchPostcode = z.infer<typeof batchPostcodeSchema>;
+export type BatchInstrument = z.infer<typeof batchInstrumentSchema>;
 export type BatchArea = z.infer<typeof batchAreaSchema>;
 export type BatchGeometry = z.infer<typeof batchGeometrySchema>;
 

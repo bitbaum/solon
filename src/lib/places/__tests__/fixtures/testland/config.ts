@@ -11,6 +11,7 @@ import {
   definePlacesConfig,
   type CountryPackInput,
   type IdentifierSchemeInput,
+  type InstrumentKindInput,
   type MetricInput,
   type PlacesConfig,
   type SourceInput,
@@ -57,6 +58,7 @@ export const TESTLAND_PACK = {
   ],
   identifierSchemes: ["testland_register", "testland_hamlet"],
   sources: ["testland-register"],
+  instrumentKinds: ["testland_moot", "testland_toll"],
   taxModel: TESTLAND_TAX,
   taxLabels: {
     inputs: {
@@ -107,6 +109,11 @@ export const TESTLAND_METRICS = [
   },
 ] satisfies MetricInput[];
 
+export const TESTLAND_INSTRUMENT_KINDS = [
+  { key: "testland_moot", label: { en: "Speak at the moot", de: "Am Thing sprechen" } },
+  { key: "testland_toll", label: { en: "Pay the toll" } },
+] satisfies InstrumentKindInput[] as InstrumentKindInput[];
+
 export const TESTLAND_SOURCES = [
   {
     key: "testland-register",
@@ -128,5 +135,6 @@ export function withTestland(base: PlacesConfig): PlacesConfig {
     sources: [...base.sources, ...TESTLAND_SOURCES],
     metrics: [...base.metrics, ...TESTLAND_METRICS],
     identifierSchemes: [...base.identifierSchemes, ...TESTLAND_SCHEMES],
+    instrumentKinds: [...base.instrumentKinds, ...TESTLAND_INSTRUMENT_KINDS],
   });
 }
