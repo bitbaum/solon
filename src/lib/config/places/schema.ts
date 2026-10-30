@@ -64,6 +64,23 @@ export const taxLabelsSchema = z.object({
   components: z.record(z.string(), localizedTextSchema),
   /** Said once beside every estimate. */
   excludes: localizedTextSchema,
+  /**
+   * The effective rate in the country's words, which say what the base is
+   * ("of taxable income"): `yours` with `{rate}`, `example` with `{rate}` and
+   * `{amount}`. Absent: the generic "of your income".
+   */
+  rate: z
+    .object({
+      yours: localizedTextSchema.refine(
+        (text) => Object.values(text).every((t) => t.includes("{rate}")),
+        "every locale names {rate}",
+      ),
+      example: localizedTextSchema.refine(
+        (text) => Object.values(text).every((t) => t.includes("{rate}") && t.includes("{amount}")),
+        "every locale names {rate} and {amount}",
+      ),
+    })
+    .optional(),
   /** The base the map shows until the reader enters theirs: an example, and labelled as one. */
   exampleBase: z.number().positive().optional(),
 });

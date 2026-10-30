@@ -2,7 +2,12 @@
 
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { formatMoney, type ColumnEstimate, type CompareTaxPack } from "@/lib/places/compare-view";
+import {
+  fillTemplate,
+  formatMoney,
+  type ColumnEstimate,
+  type CompareTaxPack,
+} from "@/lib/places/compare-view";
 import type { MapPlace } from "@/lib/places/map-view";
 
 interface MapCardProps {
@@ -35,6 +40,16 @@ export default function MapCard({
   const format = useFormatter();
   const levelList = (levels: string[]) =>
     format.list(levels.map((level) => taxPack?.levelNames[level] ?? level));
+  const rateLine = (rate: number, amount: string) => {
+    const percent = format.number(rate, { style: "percent", maximumFractionDigits: 1 });
+    if (taxPack?.rate) {
+      return fillTemplate(example ? taxPack.rate.example : taxPack.rate.yours, {
+        rate: percent,
+        amount,
+      });
+    }
+    return example ? t("rateExample", { rate, amount }) : tc("rate", { rate });
+  };
 
   return (
     <section
@@ -64,12 +79,10 @@ export default function MapCard({
             {formatMoney(estimate.estimate.total, estimate)}
           </p>
           <p className="text-sm text-fg-secondary">
-            {example
-              ? t("rateExample", {
-                  rate: estimate.estimate.effectiveRate,
-                  amount: formatMoney(taxPack?.exampleBase ?? 0, estimate),
-                })
-              : tc("rate", { rate: estimate.estimate.effectiveRate })}
+            {rateLine(
+              estimate.estimate.effectiveRate,
+              formatMoney(taxPack?.exampleBase ?? 0, estimate),
+            )}
           </p>
           {rank && (
             <p className="mt-1 text-sm text-fg-secondary">

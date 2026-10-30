@@ -111,6 +111,20 @@ const switzerlandTaxLabels: TaxLabels = {
       it: "Imposta comunale",
     },
   },
+  rate: {
+    yours: {
+      en: "{rate} of your taxable income",
+      de: "{rate} Ihres steuerbaren Einkommens",
+      fr: "{rate} de votre revenu imposable",
+      it: "{rate} del tuo reddito imponibile",
+    },
+    example: {
+      en: "{rate} of an example taxable income of {amount}",
+      de: "{rate} eines steuerbaren Beispieleinkommens von {amount}",
+      fr: "{rate} d’un revenu imposable d’exemple de {amount}",
+      it: "{rate} di un reddito imponibile d’esempio di {amount}",
+    },
+  },
   // The income the golden fixtures check against the federal calculator.
   exampleBase: 100_000,
   excludes: {

@@ -260,6 +260,12 @@ export function taxPackView(
     multiplierRows: [...rows.values()],
     levelNames: Object.fromEntries(pack.levels.map((l) => [l.key, levelName(l.key)])),
     excludes: localized(labels.excludes, locale),
+    rate: labels.rate
+      ? {
+          yours: localized(labels.rate.yours, locale),
+          example: localized(labels.rate.example, locale),
+        }
+      : null,
     exampleBase: labels.exampleBase ?? null,
   };
 }

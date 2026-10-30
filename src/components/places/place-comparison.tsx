@@ -5,9 +5,11 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
+import ComparisonRow, { comparisonCell as cell } from "./comparison-row";
 import {
   compareHref,
   estimateColumn,
+  fillTemplate,
   formatMoney,
   lowestTotals,
   parseAmount,
@@ -46,6 +48,16 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
   const money = formatMoney;
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 1 });
+  const rateLine = (pack: CompareTaxPack | undefined, rate: number) =>
+    pack?.rate
+      ? fillTemplate(pack.rate.yours, {
+          rate: format.number(rate, {
+            style: "percent",
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          }),
+        })
+      : t("rate", { rate });
   const levelList = (pack: CompareTaxPack | undefined, levels: string[]) =>
     format.list(levels.map((level) => pack?.levelNames[level] ?? level));
 
@@ -70,11 +82,11 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
         const more = e.estimate.total - least;
         return (
           <>
-            <span className="block text-lg font-semibold text-fg-primary">
+            <span className="block text-base font-semibold text-fg-primary sm:text-lg">
               {money(e.estimate.total, e)}
             </span>
             <span className="block text-xs text-fg-secondary">
-              {t("rate", { rate: e.estimate.effectiveRate })}
+              {rateLine(pack, e.estimate.effectiveRate)}
             </span>
             {complete.length >= 2 && (
               <span className="mt-1 block text-xs text-fg-secondary">
@@ -111,8 +123,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     }
   };
 
-  const rowHeader = "sticky left-0 z-10 bg-surface-base px-4 py-3 text-left align-top font-normal";
-  const cell = "px-4 py-3 align-top";
+  const count = columns.length;
 
   return (
     <div className="space-y-8">
@@ -142,12 +153,12 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
           <caption className="sr-only">{t("caption")}</caption>
           <thead>
             <tr className="border-b border-default">
-              <td className={`${rowHeader} w-28 sm:w-44`} />
+              <td className="sticky left-0 z-10 hidden w-44 bg-surface-base sm:table-cell" />
               {columns.map((column) => (
                 <th
                   key={column.slugPath}
                   scope="col"
-                  className={`${cell} min-w-36 text-left sm:min-w-44`}
+                  className="min-w-28 px-2 py-3 text-left align-top sm:min-w-44 sm:px-4"
                 >
                   <Link
                     href={`/places/${column.slugPath}`}
@@ -173,38 +184,43 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
             </tr>
           </thead>
           {taxPacks.length > 0 && (
-            <tbody>
-              <tr className="border-b border-default bg-surface-raised">
-                <th
-                  scope="colgroup"
-                  colSpan={columns.length + 1}
-                  className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-caps text-fg-secondary"
-                >
-                  <span className="sticky left-4 inline-block max-w-[calc(100vw-5rem)]">
-                    {single
-                      ? t(comparison.earlierYear ? "moneyEarlier" : "money", {
-                          year: single.taxYear,
-                        })
-                      : t("moneyNoYear")}
-                  </span>
-                </th>
-              </tr>
-              <tr className="border-b border-default">
-                <th scope="row" className={`${rowHeader} font-medium text-fg-primary`}>
-                  {t("total")}
-                </th>
+            <>
+              <tbody>
+                <tr className="border-b border-default bg-surface-raised">
+                  <th
+                    scope="colgroup"
+                    colSpan={columns.length + 1}
+                    className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-caps text-fg-secondary"
+                  >
+                    <span className="sticky left-4 inline-block max-w-[calc(100vw-5rem)]">
+                      {single
+                        ? t(comparison.earlierYear ? "moneyEarlier" : "money", {
+                            year: single.taxYear,
+                          })
+                        : t("moneyNoYear")}
+                    </span>
+                  </th>
+                </tr>
+              </tbody>
+              <ComparisonRow
+                label={t("total")}
+                labelClassName="font-medium text-fg-primary"
+                columnCount={count}
+              >
                 {columns.map((column, i) => (
                   <td key={column.slugPath} className={cell}>
                     {totalCell(column, estimates[i]!)}
                   </td>
                 ))}
-              </tr>
+              </ComparisonRow>
               {taxPacks.flatMap((pack) =>
                 pack.components.map((component) => (
-                  <tr key={`${pack.key}-${component.key}`} className="border-b border-default">
-                    <th scope="row" className={`${rowHeader} text-fg-secondary`}>
-                      {component.label}
-                    </th>
+                  <ComparisonRow
+                    key={`${pack.key}-${component.key}`}
+                    label={component.label}
+                    labelClassName="text-fg-secondary"
+                    columnCount={count}
+                  >
                     {columns.map((column, i) => {
                       const e = estimates[i]!;
                       const result =
@@ -223,15 +239,17 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                         </td>
                       );
                     })}
-                  </tr>
+                  </ComparisonRow>
                 )),
               )}
               {taxPacks.flatMap((pack) =>
                 pack.multiplierRows.map((row) => (
-                  <tr key={`${pack.key}-${row.key}`} className="border-b border-default">
-                    <th scope="row" className={`${rowHeader} text-fg-secondary`}>
-                      {t("multiplier", { metric: row.metric, level: row.level })}
-                    </th>
+                  <ComparisonRow
+                    key={`${pack.key}-${row.key}`}
+                    label={t("multiplier", { metric: row.metric, level: row.level })}
+                    labelClassName="text-fg-secondary"
+                    columnCount={count}
+                  >
                     {columns.map((column) => {
                       const value =
                         column.packKey === pack.key ? column.multipliers[row.key] : undefined;
@@ -247,13 +265,14 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                         </td>
                       );
                     })}
-                  </tr>
+                  </ComparisonRow>
                 )),
               )}
-              <tr className="border-b border-default">
-                <th scope="row" className={`${rowHeader} text-fg-secondary`}>
-                  {t("taxedBy")}
-                </th>
+              <ComparisonRow
+                label={t("taxedBy")}
+                labelClassName="text-fg-secondary"
+                columnCount={count}
+              >
                 {columns.map((column) => (
                   <td key={column.slugPath} className={`${cell} text-fg-primary`}>
                     {column.taxedBy.length === 0 ? (
@@ -267,22 +286,17 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                     )}
                   </td>
                 ))}
-              </tr>
-            </tbody>
+              </ComparisonRow>
+            </>
           )}
-          <tbody>
-            <tr>
-              <th scope="row" className={`${rowHeader} text-fg-secondary`}>
-                {t("later")}
-              </th>
-              <td colSpan={columns.length} className={`${cell} text-fg-secondary`}>
-                {t("laterText")}{" "}
-                <Link href="/places/coverage" className="text-fg-primary hover:underline">
-                  {t("coverageLink")}
-                </Link>
-              </td>
-            </tr>
-          </tbody>
+          <ComparisonRow label={t("later")} labelClassName="text-fg-secondary" columnCount={count}>
+            <td colSpan={count} className={`${cell} text-fg-secondary`}>
+              {t("laterText")}{" "}
+              <Link href="/places/coverage" className="text-fg-primary hover:underline">
+                {t("coverageLink")}
+              </Link>
+            </td>
+          </ComparisonRow>
         </table>
       </div>
 
