@@ -21,8 +21,8 @@ importers:
         specifier: ^0.21.3
         version: 0.21.3(react@19.3.1)
       '@bitbaum/geo-kit':
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.2.0
+        version: 0.2.0(topojson-client@3.1.0)
       '@bitbaum/mail-kit':
         specifier: 0.2.0
         version: 0.2.0
@@ -379,9 +379,17 @@ packages:
     resolution: {integrity: sha512-13TSrgYbEzSqt5FNfW3HSJIFcenUto8nKlk4J4IUsepL0gsTBoZ0YDMiJTaJKmR8sPPmcCS94Z/xgUBQW43itw==}
     engines: {node: '>=20'}
 
-  '@bitbaum/geo-kit@0.1.2':
-    resolution: {integrity: sha512-0+tvcB3joZ8x9QMMrHfJbi1S3uPs+vqB4emxXJMdL/KxPLYkXcgdPqnKC5k1Ll+dJ2p/N6FCiPNRU/vWObBA1Q==}
+  '@bitbaum/geo-kit@0.2.0':
+    resolution: {integrity: sha512-wKV0LsWlt77/bFzoKLOHnjGqrcQoR6aIoGwqo1wAdHG/FPiL4cL+BIHkwquuRPHHMutnI7zyCoy6RHx8J2eKow==}
     engines: {node: '>=20'}
+    peerDependencies:
+      d3-geo: ^3.1.0
+      topojson-client: ^3.1.0
+    peerDependenciesMeta:
+      d3-geo:
+        optional: true
+      topojson-client:
+        optional: true
 
   '@bitbaum/mail-kit@0.2.0':
     resolution: {integrity: sha512-YkgMFRQ6HuzIB0q/Ao4FB4zb/YxVc0iKyVdRkFe2psJ4CQJvGxBfDlURomZMkgQfpBQox4QiT/iN9IGRz6SeTg==}
@@ -4399,7 +4407,9 @@ snapshots:
 
   '@bitbaum/design-tokens@1.2.0': {}
 
-  '@bitbaum/geo-kit@0.1.2': {}
+  '@bitbaum/geo-kit@0.2.0(topojson-client@3.1.0)':
+    optionalDependencies:
+      topojson-client: 3.1.0
 
   '@bitbaum/mail-kit@0.2.0': {}
 
