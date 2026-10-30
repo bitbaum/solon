@@ -638,18 +638,23 @@ describe("the Federal Tax Administration's exports", () => {
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
     // Two federal tariffs, and per variant a basic tariff, a communal tariff
     // and a divisor for Aargau, Zürich, Bern, Fribourg, Ticino, Nidwalden,
-    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz
-    // (78). The basic tariff is also each church's tariff, three per variant,
-    // except Uri's churches and Basel-Landschaft's Reformed and Christian
-    // Catholic ones, whose tariffs are kept by hand (68). Valais's rows are
-    // not read: it is not modelled.
-    expect(scales.facts).toHaveLength(148);
+    // Glarus, Schwyz, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and
+    // Valais (84). The basic tariff is also each church's tariff, three per
+    // variant, except Uri's churches and Basel-Landschaft's Reformed and
+    // Christian Catholic ones, whose tariffs are kept by hand (74).
+    expect(scales.facts).toHaveLength(160);
     expect(
       scales.facts.filter(
         (f) => f.jurisdiction.value === "4" && f.metricKey.startsWith("tax.church"),
       ),
     ).toEqual([]);
-    expect(scales.facts.some((f) => f.jurisdiction.value === "23")).toBe(false);
+    // Valais does not split a couple's income: it cuts their tax instead
+    // (vs-income-tax), so its divisor is 1 for both.
+    expect(
+      scales.facts
+        .filter((f) => f.jurisdiction.value === "23" && f.metricKey === "tax.income.divisor")
+        .map((f) => f.value),
+    ).toEqual([1, 1]);
   });
 
   it("gives the communes the canton's basic tariff, unless the canton gives them their own", () => {

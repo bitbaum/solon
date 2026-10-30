@@ -1,0 +1,1525 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [],
+  "relations": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.0072
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.income.rebate",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.35
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.income.rebate.least",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 680
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.income.rebate.most",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 4900
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.income.floor",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 10
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6002"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6004"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.370953
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6007"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6008"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.824666
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6008"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.948694
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6009"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6010"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06563
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6011"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6021"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.87791
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6022"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.508011
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6023"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824874
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6024"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707134
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6025"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824806
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6032"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6033"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.508011
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6034"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.610575
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6035"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.691034
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6037"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6052"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.771612
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6054"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707112
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6056"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.771518
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6056"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6057"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.77153
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6058"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 2.007157
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6058"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6061"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824686
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6076"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6077"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.007157
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6082"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.739362
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6083"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.464194
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6084"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6087"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.6105
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6089"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.87791
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6090"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.581224
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6101"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.658766
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6102"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.537368
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6104"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6109"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.410813
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6110"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707134
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6111"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.626568
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6112"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6113"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.371012
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6113"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.410888
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6116"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707112
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6117"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.581234
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6118"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.626621
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6119"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877952
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6131"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707112
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6133"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.860257
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6133"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.860121
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6134"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.437451
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6135"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551945
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6136"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877957
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6137"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824666
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6139"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.658822
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6140"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551945
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6141"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877952
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6142"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6151"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.478757
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6152"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.96823
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6153"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.948695
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6154"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.948694
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6155"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.371012
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6156"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877952
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6157"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.626621
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6158"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.659004
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6159"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.739421
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6172"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6173"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6177"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551975
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6181"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.437537
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6191"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.437572
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6192"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.410837
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6193"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551944
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6194"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551944
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6195"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.62662
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6197"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.410837
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6198"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707112
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6199"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.860121
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6201"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.437537
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6202"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.552007
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6203"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.464077
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6204"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707112
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6205"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.371012
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6205"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.410888
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6211"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.789378
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6211"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.860207
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6212"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.789279
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6213"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065627
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6214"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6215"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.913269
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6217"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824725
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6218"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.007204
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6219"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877952
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6220"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.658766
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6232"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551944
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6235"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551945
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6238"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.508011
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6239"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06563
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6240"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065714
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6246"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.739344
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6248"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.789279
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6252"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551814
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6253"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065545
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6254"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877957
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6261"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.551814
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6263"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.824725
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6265"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.707144
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6266"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6267"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.099811
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6281"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.877952
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6282"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6283"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.739362
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6285"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.397543
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6286"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.739344
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6287"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6288"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.331017
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6288"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.610575
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6289"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.659004
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6290"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.464107
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6290"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.537341
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6291"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.370953
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6292"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.771582
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6293"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.968269
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6294"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6295"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.691034
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6295"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 1.691039
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6296"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.065646
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6297"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 1.877957
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6297"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 2.065611
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6298"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.610501
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6299"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 1.626621
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_municipality",
+        "value": "6300"
+      },
+      "metricKey": "tax.income.index",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 2.06559
+    }
+  ]
+}

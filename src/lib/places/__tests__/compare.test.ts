@@ -267,6 +267,7 @@ describe("which rows say something", () => {
         tariffAmount: amount,
         divisor: null,
         multiplier: null,
+        rebate: null,
         amount,
         missing: [],
       })),
