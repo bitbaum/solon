@@ -85,6 +85,8 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
   ["swisstopo-commune-boundaries", "swissboundaries3d_2026-01_cut.shp.zip"],
+  // The hand-kept file, cut to the cantons above (adapters.test.ts checks the whole file).
+  ["ch-cantonal-tax-steps", "tax-steps-cut.csv"],
 ];
 
 /**
@@ -511,6 +513,15 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       "de",
     );
     expect(comparison.notFound).toEqual(["switzerland/nowhere"]);
+    // A commune offers its canton's steps: file, pay, ask for time, with the deadline's page.
+    const city = comparison.columns.find((c) => c.slugPath === zurich)!;
+    expect(city.actions.map((a) => [a.label, a.offeredBy.levelName])).toEqual([
+      ["Steuererklärung einreichen", "Kanton"],
+      ["Steuern bezahlen", "Kanton"],
+      ["Fristerstreckung beantragen", "Kanton"],
+    ]);
+    expect(city.actions[0]!.url).toMatch(/^https:\/\/[a-z.]*zh\.ch\//);
+    expect(city.actions[0]!.deadline).toMatchObject({ monthDay: "03-31" });
     expect(comparison.earlierYear).toBe(false);
     // The cut's tariffs end with 2025, so a day in 2026 compares 2025, and says so.
     const later = await loadComparison(db, config, [zurich, kusnacht], "2026-09-30", "de");

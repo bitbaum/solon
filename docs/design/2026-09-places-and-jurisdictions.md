@@ -323,6 +323,20 @@ state and a founded place are compared from each one's single source.
 `ballots (id, jurisdiction_id, instrument_id, vote_date, title_key|title, official_url,
 source_id, status)`: scheduled popular votes (P2).
 
+**Built (the tax steps, 2026-10-30)**: the first instruments are the steps a
+resident takes with the authority that assesses their tax: `tax_return`,
+`tax_payment`, `tax_deadline_extension` (`instrument-kinds.ts`). A batch states
+`instruments` (place, kind, the authority's own page, and where it states one the
+usual deadline with the page that states it, in `requirements`); a source states
+its whole list, and what it no longer states is superseded, as postcodes are.
+`csv_instruments` reads `data/places/switzerland/tax-steps.csv`, kept by hand
+(source `ch-cantonal-tax-steps`): every row was opened on the canton's site and
+keeps the sentence it was read from. 25 cantons; Ticino's site and Liechtenstein's
+could not be opened, so neither has rows, and Basel-Landschaft has only its e-tax
+portal. A place shows, per kind, the step offered nearest it (a commune shows its
+canton's): "What you can do" on the place page and a row of the same name on
+`/compare`.
+
 ### 4.8 Organizations about a place, and changes to existing tables
 
 - `organization_places (organization_id, jurisdiction_id, role)`, with roles from

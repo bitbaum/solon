@@ -455,6 +455,32 @@ describe("Liechtenstein's communes, kept by hand", () => {
   });
 });
 
+describe("the cantons' tax steps, kept by hand", () => {
+  const file = join(__dirname, "../../../../data/places/switzerland/tax-steps.csv");
+  const batch = mapSource("ch-cantonal-tax-steps", new Uint8Array(readFileSync(file)));
+  const rows = parseCsv(readFileSync(file, "utf8"));
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "ch-cantonal-tax-steps").problems).toEqual([]);
+  });
+
+  it("gives every row the sentence it was read from, and every deadline its page", () => {
+    for (const row of rows) {
+      expect(row.quote, `${row.place} ${row.kind}`).not.toBe("");
+      expect(row.source_url, `${row.place} ${row.kind}`).toMatch(/^https:\/\//);
+    }
+    const deadlines = batch.instruments.filter((i) => i.requirements.deadline);
+    expect(deadlines.every((i) => i.kind === "tax_return")).toBe(true);
+  });
+
+  it("reads a word it does not know as a mistake, not as nothing", () => {
+    const bad = "place,kind,url,deadline,source_url,quote\n1,submit,https://zh.ch/,,,x\n";
+    expect(() => mapSource("ch-cantonal-tax-steps", new TextEncoder().encode(bad))).toThrow(
+      /"submit" in kind names no instrument kind/,
+    );
+  });
+});
+
 describe("the Federal Tax Administration's exports", () => {
   const skipped: { row: string; reason: string }[] = [];
   const scales = mapSource("estv-income-tax-scales", fixture("estv-scales-2025.json"), skipped);
