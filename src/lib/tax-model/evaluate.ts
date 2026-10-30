@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/tax-model@0.10.0 (src/evaluate.ts).
+// VENDORED from bitbaum/orangecat packages/tax-model@0.11.0 (src/evaluate.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -229,7 +229,25 @@ export function evaluate(model: TaxModel, facts: readonly Fact[], input: Evaluat
         throw new Error(`tariffs in ${currency} and ${tariff.currency} cannot be combined`);
       }
       currency = tariff.currency;
-      const own = baseOf(component.base ?? model.base);
+      let own = baseOf(component.base ?? model.base);
+      for (const added of component.adds ?? []) {
+        if (input.values[added.input] === undefined) {
+          continue;
+        }
+        const share = lookup(added.scaledBy);
+        if (share === undefined) {
+          if (!added.scaledBy.optional) {
+            missing.push(ref(added.scaledBy));
+          }
+          continue;
+        }
+        if (typeof share !== 'number' || !(share >= 0) || !Number.isFinite(share)) {
+          throw new Error(
+            `${describe(added.scaledBy)}: a share added to the base must be a non-negative number`
+          );
+        }
+        own += roundDown(baseOf(added.input), added.rounding) * share;
+      }
       tariffAmount =
         divisor === null ? applyTariff(own, tariff) : dividedAmount(own, divisor, tariff);
     }

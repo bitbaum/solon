@@ -1,0 +1,136 @@
+{
+  "pack": "liechtenstein",
+  "jurisdictions": [],
+  "relations": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "metricKey": "tax.income.tariff",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "stepped",
+        "currency": "CHF",
+        "rounding": {
+          "base": 10
+        },
+        "steps": [
+          {
+            "from": 15900,
+            "base": 0,
+            "rate": 0.01
+          },
+          {
+            "from": 21141,
+            "base": 53.23,
+            "rate": 0.03
+          },
+          {
+            "from": 42281,
+            "base": 687.24,
+            "rate": 0.04
+          },
+          {
+            "from": 73991,
+            "base": 1955.55,
+            "rate": 0.05
+          },
+          {
+            "from": 105701,
+            "base": 3541.06,
+            "rate": 0.06
+          },
+          {
+            "from": 137411,
+            "base": 5443.72,
+            "rate": 0.065
+          },
+          {
+            "from": 169121,
+            "base": 7504.47,
+            "rate": 0.07
+          },
+          {
+            "from": 211401,
+            "base": 10464.08,
+            "rate": 0.08
+          }
+        ]
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "metricKey": "tax.income.tariff",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "stepped",
+        "currency": "CHF",
+        "rounding": {
+          "base": 10
+        },
+        "steps": [
+          {
+            "from": 31711,
+            "base": 0.11,
+            "rate": 0.01
+          },
+          {
+            "from": 42281,
+            "base": 105.43,
+            "rate": 0.03
+          },
+          {
+            "from": 84561,
+            "base": 1374.44,
+            "rate": 0.04
+          },
+          {
+            "from": 147981,
+            "base": 3911.05,
+            "rate": 0.05
+          },
+          {
+            "from": 211401,
+            "base": 7082.06,
+            "rate": 0.06
+          },
+          {
+            "from": 274821,
+            "base": 10887.37,
+            "rate": 0.065
+          },
+          {
+            "from": 338241,
+            "base": 15009.87,
+            "rate": 0.07
+          },
+          {
+            "from": 422801,
+            "base": 20929.08,
+            "rate": 0.08
+          }
+        ]
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "iso_3166_1",
+        "value": "LI"
+      },
+      "metricKey": "tax.wealth.yield",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": 0.04
+    }
+  ]
+}

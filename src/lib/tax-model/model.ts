@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/tax-model@0.10.0 (src/model.ts).
+// VENDORED from bitbaum/orangecat packages/tax-model@0.11.0 (src/model.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -23,13 +23,13 @@
  * `logarithmic` tariff and a tariff's `minimum`; 6 adds the model's `limits`;
  * 7 adds a component's own `base` and the `fixed` tariff; 8 adds a multiplier's
  * `scaledBy`; 9 adds a divisor's `scaledBy` and a component's `rebate` and
- * `floor`.
+ * `floor`; 10 adds a component's `adds`.
  * A model says
  * which version it needs, so an evaluator that predates a feature refuses the
  * model instead of ignoring it.
  */
-export const TAX_MODEL_SCHEMA_VERSION = 9;
-const SUPPORTED_SCHEMA_VERSIONS: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+export const TAX_MODEL_SCHEMA_VERSION = 10;
+const SUPPORTED_SCHEMA_VERSIONS: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 /** Where a component reads a number: the fact a level publishes under a metric key. */
 export interface FactRef {
@@ -109,6 +109,20 @@ export interface ShareLimit {
   share: LimitRef;
 }
 
+/**
+ * An input added to a component's base, times a fact: a yield the law
+ * assumes on wealth and taxes as income (Liechtenstein's 4 % Sollertrag).
+ * Needs `schemaVersion` 10.
+ */
+export interface AddedInput {
+  /** A number input listed in `inputs`. Not given: nothing is added. */
+  input: string;
+  /** The share of the input that is added; a fraction (0.04 = 4 %). */
+  scaledBy: ScaleRef;
+  /** The input is rounded down to a multiple of this before it is scaled. */
+  rounding?: number;
+}
+
 export interface TaxComponent {
   /** Unique within the model; the result reports each component under it. */
   key: string;
@@ -134,6 +148,11 @@ export interface TaxComponent {
    * facts are not required of an estimate without it. Needs `schemaVersion` 7.
    */
   base?: string;
+  /**
+   * Inputs added to the base, each times a fact, before the tariff (and its
+   * rounding) applies. Needs `schemaVersion` 10.
+   */
+  adds?: readonly AddedInput[];
   /** Taken off the amount after its multipliers. Needs `schemaVersion` 9. */
   rebate?: RebateRef;
   /**
@@ -144,7 +163,7 @@ export interface TaxComponent {
 }
 
 export interface TaxModel {
-  schemaVersion: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  schemaVersion: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
   /** The input the tariffs are applied to. Must be listed in `inputs`. */
   base: string;
   /** Every input the model reads: the base amount and any boolean conditions. */
@@ -261,13 +280,15 @@ export interface Fact {
 }
 
 /**
- * Every fact a component reads: its tariff, its divisor and its scale, then
- * its multipliers, their reductions and scales, then its rebate and floor.
+ * Every fact a component reads: its tariff, the scales of what it adds to its
+ * base, its divisor and its scale, then its multipliers, their reductions and
+ * scales, then its rebate and floor.
  */
 export function componentRefs(component: TaxComponent): FactRef[] {
   const { divisor, rebate, floor } = component;
   return [
     component.tariff,
+    ...(component.adds ?? []).map(a => a.scaledBy),
     ...(divisor ? [divisor, ...(divisor.scaledBy ? [divisor.scaledBy] : [])] : []),
     ...(component.multipliers ?? []).flatMap(m => [
       m,
@@ -331,6 +352,21 @@ export function modelProblems(model: TaxModel): string[] {
       problems.push(
         `component "${component.key}" has a scaled divisor, which needs schemaVersion 9`
       );
+    }
+    if (component.adds !== undefined) {
+      if (model.schemaVersion < 10) {
+        problems.push(`component "${component.key}" adds inputs, which needs schemaVersion 10`);
+      }
+      for (const added of component.adds) {
+        if (!model.inputs.includes(added.input)) {
+          problems.push(`component "${component.key}" adds undeclared input "${added.input}"`);
+        }
+        if (added.rounding !== undefined && !(added.rounding > 0)) {
+          problems.push(
+            `component "${component.key}" rounds "${added.input}" by a step that is not positive`
+          );
+        }
+      }
     }
     if (component.rebate !== undefined && model.schemaVersion < 9) {
       problems.push(`component "${component.key}" has a rebate, which needs schemaVersion 9`);
