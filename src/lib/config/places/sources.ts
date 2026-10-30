@@ -99,13 +99,15 @@ const SCALE_TABLE_TYPES = {
 
 /**
  * The calculator rounds taxable wealth down to CHF 1,000 before every
- * modelled canton's tariff but Geneva's (measured 2026-10-30: CHF 1,234,567
- * and 1,234,000 give the same tax in all of them, to the franc; in Geneva
- * the wealth as entered reproduces it at CHF 150,000 to 5 million).
+ * modelled canton's tariff but Uri's, Solothurn's and Geneva's (measured
+ * 2026-10-30 in each canton's first commune: CHF 1,234,000, 1,234,099,
+ * 1,234,100, 1,234,567 and 1,234,999 give the same tax, and 1,235,000 more;
+ * in Uri and Solothurn the tax moves within those, so the wealth as entered
+ * reproduces it, as in Geneva at CHF 150,000 to 5 million).
  */
 const WEALTH_ROUNDING = Object.fromEntries(
   Object.keys(MODELLED_CANTONS)
-    .filter((code) => code !== "GE")
+    .filter((code) => !["UR", "SO", "GE"].includes(code))
     .map((code) => [code, { base: 1000 }]),
 );
 

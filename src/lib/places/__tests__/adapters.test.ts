@@ -505,9 +505,7 @@ describe("Valais's income tax, kept by hand", () => {
   const batch = mapSource(
     "vs-income-tax",
     new Uint8Array(
-      readFileSync(
-        join(__dirname, "../../../../data/places/switzerland/valais-income-tax.json"),
-      ),
+      readFileSync(join(__dirname, "../../../../data/places/switzerland/valais-income-tax.json")),
     ),
   );
   const at = (metric: string, scheme: string, value: string, on: string) =>
@@ -543,10 +541,7 @@ describe("Valais's income tax, kept by hand", () => {
       expect(communes).toHaveLength(122);
     }
     // Brig-Glis, measured at five incomes.
-    expect(at("tax.income.index", "bfs_municipality", "6002", "2026-06-30")).toBeCloseTo(
-      2.0657,
-      3,
-    );
+    expect(at("tax.income.index", "bfs_municipality", "6002", "2026-06-30")).toBeCloseTo(2.0657, 3);
   });
 });
 

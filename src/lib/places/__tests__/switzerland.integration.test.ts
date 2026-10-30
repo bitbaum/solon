@@ -684,7 +684,10 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     const swiss = packs.find((p) => p.key === "switzerland")!;
     const metric = (level: string) => swiss.metrics.find((m) => m.levelName === level)!;
     expect(metric("Confederation")).toMatchObject({ places: 1, of: 1, inTaxModel: true });
-    const communal = swiss.metrics.find((m) => m.levelName === "Municipality" && m.inTaxModel)!;
+    const communal = swiss.metrics.find(
+      (m) => m.levelName === "Municipality" && m.metricLabel === "Tax multiplier",
+    )!;
+    expect(communal.inTaxModel).toBe(true);
     expect(communal.places).toBeGreaterThanOrEqual(2);
     expect(communal.places).toBeLessThan(communal.of);
     expect(swiss.sources.every((s) => s.retrievedOn !== null)).toBe(true);
