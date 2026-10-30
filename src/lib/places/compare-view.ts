@@ -59,6 +59,8 @@ export interface CompareTaxPack {
   multiplierRows: { key: string; levelKey: string; metric: string; level: string }[];
   levelNames: Record<string, string>;
   excludes: string;
+  /** The effective rate in the pack's words, or null for the generic message. */
+  rate: { yours: string; example: string } | null;
   /** The base the map shows until the reader enters theirs; null without one. */
   exampleBase: number | null;
 }
@@ -186,4 +188,9 @@ export function parseAmount(text: string): number | null {
   }
   const value = Number(digits);
   return Number.isSafeInteger(value) ? value : null;
+}
+
+/** A pack's sentence with its `{name}` placeholders filled; an unknown one is left as written. */
+export function fillTemplate(template: string, values: Readonly<Record<string, string>>): string {
+  return template.replace(/\{(\w+)\}/g, (placeholder, name: string) => values[name] ?? placeholder);
 }

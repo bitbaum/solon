@@ -12,6 +12,7 @@ import {
 import {
   compareHref,
   estimateColumn,
+  fillTemplate,
   lowestTotals,
   parseAmount,
   type ColumnEstimate,
@@ -95,6 +96,8 @@ describe("comparisonView", () => {
         { key: "together", label: "Together" },
       ],
       excludes: "Not included: the tithe.",
+      // Testland says nothing about its base: the generic "of your income".
+      rate: null,
     });
     expect(pack.multiplierRows.map((r) => [r.key, r.level])).toEqual([
       ["shire/test.multiplier", "Shire"],
@@ -115,6 +118,21 @@ describe("comparisonView", () => {
   it("leaves out a place whose pack the config lacks", () => {
     const stray = { ...hamlet, countryPack: "atlantis", slugPath: "atlantis/x" };
     expect(compare([{ chain: [stray], facts: [] }]).notFound).toEqual(["atlantis/x"]);
+  });
+});
+
+describe("fillTemplate", () => {
+  it("fills each placeholder the pack's sentence names, wherever it stands", () => {
+    expect(fillTemplate("{rate} Ihres steuerbaren Einkommens", { rate: "15,9 %" })).toBe(
+      "15,9 % Ihres steuerbaren Einkommens",
+    );
+    expect(fillTemplate("{rate} of {amount}", { rate: "9.8%", amount: "CHF 100'000" })).toBe(
+      "9.8% of CHF 100'000",
+    );
+  });
+
+  it("leaves a placeholder it has no value for as written", () => {
+    expect(fillTemplate("{rate} of {amount}", { rate: "9.8%" })).toBe("9.8% of {amount}");
   });
 });
 
