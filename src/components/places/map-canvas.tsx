@@ -138,7 +138,12 @@ export default function MapCanvas({
         onPointerLeave={() => setTip(null)}
       />
       <div className="absolute right-3 top-3 flex flex-col overflow-hidden rounded-control border border-default bg-surface-overlay">
-        <button type="button" aria-label={zoomIn} className={control} onClick={() => mapRef.current?.zoomBy(1.6)}>
+        <button
+          type="button"
+          aria-label={zoomIn}
+          className={control}
+          onClick={() => mapRef.current?.zoomBy(1.6)}
+        >
           +
         </button>
         <button
