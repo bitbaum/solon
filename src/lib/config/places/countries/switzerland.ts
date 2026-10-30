@@ -19,22 +19,41 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * reduced in proportion above it (absent elsewhere, so nothing is limited).
  *
  * Schema version 7: wealth tax on taxable wealth, the canton's basic wealth
- * tariff times the canton's and the commune's wealth multipliers; and church
- * tax, the basic income and wealth tax times the commune's rate for the
- * member's church, as the tax calculator computes it. The calculator gives
- * one rate per commune and church; where parishes in one commune levy
- * different rates, it shows one of them. Fixed per-head taxes (Zürich's
- * CHF 24, Lucerne's CHF 50) are not modelled yet: no export states them.
+ * tariff (divided for a couple where the canton divides it) times the
+ * canton's and the commune's wealth multipliers; and church tax, a church's
+ * tariff times the commune's rate for that church, as the tax calculator
+ * computes it. A church's tariff is the canton's basic tariff unless the
+ * canton levies it on something else (`ch-church-tariffs`). Schema version 8:
+ * where church tax is levied on the cantonal tax (Jura), every church rate is
+ * scaled by the canton's multiplier. The calculator gives one rate per
+ * commune and church; where parishes in one commune levy different rates, it
+ * shows one of them.
  */
-const church = (metric: string) =>
-  (["reformed", "catholic", "christ_catholic"] as const).map((denomination) => ({
-    level: "municipality",
-    metric: `${metric}.${denomination}`,
-    when: `church_${denomination}`,
-  }));
+const DENOMINATIONS = ["reformed", "catholic", "christ_catholic"] as const;
+const churchComponents = (on: "income" | "wealth") =>
+  DENOMINATIONS.map((denomination) => {
+    const prefix = on === "income" ? "tax.church" : "tax.church.wealth";
+    return {
+      key: on === "income" ? `church_${denomination}` : `wealth_church_${denomination}`,
+      ...(on === "wealth" && { base: "taxable_wealth" }),
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: `${prefix}.tariff.${denomination}` },
+      divisor:
+        on === "income"
+          ? { level: "canton", metric: "tax.income.divisor" }
+          : { level: "canton", metric: "tax.wealth.divisor", optional: true },
+      multipliers: [
+        {
+          level: "municipality",
+          metric: `${prefix}.${denomination}`,
+          scaledBy: { level: "canton", metric: `${prefix}.scale`, optional: true },
+        },
+      ],
+    };
+  });
 
 export const switzerlandIncomeTax = {
-  schemaVersion: 7,
+  schemaVersion: 8,
   base: "taxable_income",
   inputs: [
     "taxable_income",
@@ -64,30 +83,22 @@ export const switzerlandIncomeTax = {
       divisor: { level: "canton", metric: "tax.income.divisor" },
       multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
     },
-    {
-      key: "church",
-      tariff: { level: "canton", metric: "tax.income.tariff.basic" },
-      divisor: { level: "canton", metric: "tax.income.divisor" },
-      multipliers: church("tax.church"),
-    },
+    ...churchComponents("income"),
     {
       key: "wealth_cantonal",
       base: "taxable_wealth",
       tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
+      divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
       multipliers: [{ level: "canton", metric: "tax.wealth.multiplier" }],
     },
     {
       key: "wealth_communal",
       base: "taxable_wealth",
       tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
+      divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
       multipliers: [{ level: "municipality", metric: "tax.wealth.multiplier" }],
     },
-    {
-      key: "wealth_church",
-      base: "taxable_wealth",
-      tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
-      multipliers: church("tax.church.wealth"),
-    },
+    ...churchComponents("wealth"),
   ],
   limits: [
     {
@@ -206,7 +217,19 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt communal",
       it: "Imposta comunale",
     },
-    church: {
+    church_reformed: {
+      en: "Church tax",
+      de: "Kirchensteuer",
+      fr: "Impôt ecclésiastique",
+      it: "Imposta di culto",
+    },
+    church_catholic: {
+      en: "Church tax",
+      de: "Kirchensteuer",
+      fr: "Impôt ecclésiastique",
+      it: "Imposta di culto",
+    },
+    church_christ_catholic: {
       en: "Church tax",
       de: "Kirchensteuer",
       fr: "Impôt ecclésiastique",
@@ -224,7 +247,19 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt communal sur la fortune",
       it: "Imposta comunale sulla sostanza",
     },
-    wealth_church: {
+    wealth_church_reformed: {
+      en: "Church tax on wealth",
+      de: "Kirchensteuer auf dem Vermögen",
+      fr: "Impôt ecclésiastique sur la fortune",
+      it: "Imposta di culto sulla sostanza",
+    },
+    wealth_church_catholic: {
+      en: "Church tax on wealth",
+      de: "Kirchensteuer auf dem Vermögen",
+      fr: "Impôt ecclésiastique sur la fortune",
+      it: "Imposta di culto sulla sostanza",
+    },
+    wealth_church_christ_catholic: {
       en: "Church tax on wealth",
       de: "Kirchensteuer auf dem Vermögen",
       fr: "Impôt ecclésiastique sur la fortune",
@@ -355,6 +390,8 @@ export const switzerland: CountryPackInput = {
     "swisstopo-postcode-localities",
     "swisstopo-commune-boundaries",
     "ch-cantonal-tax-steps",
+    "estv-wealth-tax-scales",
+    "ch-church-tariffs",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,

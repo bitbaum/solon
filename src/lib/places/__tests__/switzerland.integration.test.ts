@@ -82,6 +82,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["zurich-municipal-multipliers", "multipliers-2020-2026.csv"],
   ["estv-income-tax-scales", "estv-scales-2025.json"],
   ["estv-wealth-tax-scales", "estv-wealth-scales-2025.json"],
+  ["ch-church-tariffs", "../../../../../../data/places/switzerland/church-tariffs.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
   ["estv-commune-multipliers", "estv-commune-rates-2025.json"],
   ["swisstopo-postcode-localities", "postcode-localities-2026-09-30.csv"],
@@ -546,10 +547,10 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
       });
       expect(estimate.complete).toBe(true);
       const amount = (key: string) => estimate.components.find((c) => c.key === key)!.amount!;
-      expect(Math.abs(amount("church") - church)).toBeLessThan(1);
+      expect(Math.abs(amount("church_reformed") - church)).toBeLessThan(1);
       expect(Math.abs(amount("wealth_cantonal") - wealthCanton)).toBeLessThan(1);
       expect(Math.abs(amount("wealth_communal") - wealthCommunal)).toBeLessThan(1);
-      expect(Math.abs(amount("wealth_church") - wealthChurch)).toBeLessThan(1);
+      expect(Math.abs(amount("wealth_church_reformed") - wealthChurch)).toBeLessThan(1);
       // No wealth and no church: those components ask nothing, and add nothing.
       const plain = evaluate(switzerlandIncomeTax, facts, {
         values: { taxable_income: 100_000 },

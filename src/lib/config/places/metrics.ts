@@ -199,4 +199,123 @@ export const METRICS: readonly MetricInput[] = [
     unit: "ratio",
     plausible: { min: 0, max: 2 },
   },
+  {
+    // The tariff the Evangelical Reformed church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.reformed",
+    label: {
+      en: "Church tax base on income (Evangelical Reformed)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (evangelisch-reformiert)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (réformée évangélique)",
+      it: "base dell'imposta di culto sul reddito (evangelica riformata)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Roman Catholic church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.catholic",
+    label: {
+      en: "Church tax base on income (Roman Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (römisch-katholisch)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (catholique romaine)",
+      it: "base dell'imposta di culto sul reddito (cattolica romana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Christian Catholic church's rates on income apply to: the canton's basic
+    // income tariff in most cantons, a share of income where the church's rate is one.
+    key: "tax.church.tariff.christ_catholic",
+    label: {
+      en: "Church tax base on income (Christian Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Einkommen (christkatholisch)",
+      fr: "base de l'impôt ecclésiastique sur le revenu (catholique-chrétienne)",
+      it: "base dell'imposta di culto sul reddito (cattolica cristiana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Where church tax is levied on the cantonal tax rather than the basic tax,
+    // the canton's multiplier on income, by which every church rate is scaled.
+    key: "tax.church.scale",
+    label: {
+      en: "Church tax levied on the cantonal tax on income",
+      de: "Kirchensteuer auf der Staatssteuer auf dem Einkommen",
+      fr: "impôt ecclésiastique sur l'impôt cantonal sur le revenu",
+      it: "imposta di culto sull'imposta cantonale sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // The tariff the Evangelical Reformed church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.reformed",
+    label: {
+      en: "Church tax base on wealth (Evangelical Reformed)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (evangelisch-reformiert)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (réformée évangélique)",
+      it: "base dell'imposta di culto sulla sostanza (evangelica riformata)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Roman Catholic church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.catholic",
+    label: {
+      en: "Church tax base on wealth (Roman Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (römisch-katholisch)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (catholique romaine)",
+      it: "base dell'imposta di culto sulla sostanza (cattolica romana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // The tariff the Christian Catholic church's rates on wealth apply to: the canton's basic
+    // wealth tariff in most cantons, a share of wealth where the church's rate is one.
+    key: "tax.church.wealth.tariff.christ_catholic",
+    label: {
+      en: "Church tax base on wealth (Christian Catholic)",
+      de: "Bemessung der Kirchensteuer auf dem Vermögen (christkatholisch)",
+      fr: "base de l'impôt ecclésiastique sur la fortune (catholique-chrétienne)",
+      it: "base dell'imposta di culto sulla sostanza (cattolica cristiana)",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Where church tax is levied on the cantonal tax rather than the basic tax,
+    // the canton's multiplier on wealth, by which every church rate is scaled.
+    key: "tax.church.wealth.scale",
+    label: {
+      en: "Church tax levied on the cantonal tax on wealth",
+      de: "Kirchensteuer auf der Staatssteuer auf dem Vermögen",
+      fr: "impôt ecclésiastique sur l'impôt cantonal sur la fortune",
+      it: "imposta di culto sull'imposta cantonale sulla sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 6 },
+  },
+  {
+    // Applied to the basic wealth tariff as tax.income.divisor is to income's.
+    key: "tax.wealth.divisor",
+    label: {
+      en: "Wealth divisor (splitting)",
+      de: "Divisor des Vermögens (Splitting)",
+      fr: "diviseur de la fortune (splitting)",
+      it: "divisore della sostanza (splitting)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 1, max: 3 },
+  },
 ];

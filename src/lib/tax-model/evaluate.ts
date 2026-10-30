@@ -1,4 +1,4 @@
-// VENDORED from bitbaum/orangecat packages/tax-model@0.8.1 (src/evaluate.ts).
+// VENDORED from bitbaum/orangecat packages/tax-model@0.9.0 (src/evaluate.ts).
 // Do not edit here: change the package, then copy it back byte for byte.
 // The package has no repository of its own yet; when it does (or ships on npm),
 // this directory becomes a dependency and disappears.
@@ -248,7 +248,20 @@ export function evaluate(model: TaxModel, facts: readonly Fact[], input: Evaluat
             reduction = share;
           }
         }
-        multiplier += value * (1 - reduction);
+        let scale = 1;
+        if (m.scaledBy !== undefined) {
+          const factor = lookup(m.scaledBy);
+          if (factor === undefined) {
+            if (!m.scaledBy.optional) {
+              missing.push(ref(m.scaledBy));
+            }
+          } else if (typeof factor !== 'number' || !(factor >= 0) || !Number.isFinite(factor)) {
+            throw new Error(`${describe(m.scaledBy)}: a scale must be a non-negative number`);
+          } else {
+            scale = factor;
+          }
+        }
+        multiplier += value * scale * (1 - reduction);
       }
     }
 

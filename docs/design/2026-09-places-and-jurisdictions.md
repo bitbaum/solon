@@ -706,14 +706,17 @@ the multipliers. The calculator rounds wealth down to CHF 1,000 in every
 modelled canton. Measured 2026-10-30 against the calculator at CHF 100,000
 income and CHF 1,234,567 and 987,654 wealth, single and married, Reformed and
 Roman Catholic, in one commune of each modelled canton: every component
-matches to the franc in 17 cantons; Zürich and Biel/Bienne are golden cases
-for 2025. Not yet:
+matches to the franc in all 21 modelled cantons, for all three churches;
+Zürich and Biel/Bienne are golden cases for 2025. Each church has a tariff
+of its own, the canton's basic tariff unless the canton levies church tax on
+something else: Uri's churches on 1 % of taxable income and 0.3 per mille of
+wealth, Basel-Landschaft's Reformed and Christian Catholic churches on income
+and wealth themselves (`data/places/switzerland/church-tariffs.json`, source
+`ch-church-tariffs`, measured, the cantons' acts to be cited); Jura's on the
+cantonal tax, through schema version 8's `scaledBy` (the church rate times
+the canton's multiplier). Neuchâtel divides a couple's wealth by 1.923, read
+as income's divisor is (`tax.wealth.divisor`). Not yet:
 
-- Uri's church rates, and Basel-Landschaft's Reformed and Christian Catholic
-  ones, are per mille of taxable income, and Jura's apply to the cantonal tax;
-  none is read, so a member there sees "not recorded".
-- Neuchâtel's wealth table divides by 1.92, which the importer refuses with
-  that reason; an estimate there is complete without wealth.
 - The caps on income and wealth tax together (Basel-Stadt, Aargau, Ticino;
   Valais and Geneva are not modelled) are not modelled; they bind only where
   wealth is large against income.

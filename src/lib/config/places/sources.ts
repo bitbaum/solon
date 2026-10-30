@@ -98,17 +98,26 @@ const SCALE_TABLE_TYPES = {
 const WEALTH_ROUNDING = { base: 1000 };
 
 /**
- * Cantons whose church rates are multiples of the basic income and wealth
- * tax, as the model reads them. Measured 2026-10-30 against the calculator,
- * single and married, Reformed and Roman Catholic. Not: Uri, whose rates are
- * per mille of taxable income; Jura, whose rates apply to the cantonal tax
- * rather than the basic tax. In Basel-Landschaft the Reformed and Christian
- * Catholic rates are per mille of income too (the Roman Catholic one is a
- * multiple): it is in `CHURCH_CANTONS`, which the Roman Catholic rates read,
- * and not in `EVERY_CHURCH_CANTONS`, which the others read.
+ * Where a church's rates apply to something other than the canton's basic
+ * tax, by canton code, as the calculator applies them (measured 2026-10-30,
+ * single and married, income and wealth). Uri's churches levy their rate on a
+ * share of taxable income and wealth, and Basel-Landschaft's Reformed and
+ * Christian Catholic churches theirs on income and wealth themselves: those
+ * tariffs are kept by hand in `ch-church-tariffs` instead. Jura's churches
+ * levy theirs on the cantonal tax: their rates are scaled by the canton's
+ * multiplier (`tax.church.scale`).
  */
-const CHURCH_CANTONS = Object.keys(MODELLED_CANTONS).filter((c) => c !== "UR" && c !== "JU");
-const EVERY_CHURCH_CANTONS = CHURCH_CANTONS.filter((c) => c !== "BL");
+const CHURCH_BASE_ELSEWHERE = {
+  reformed: ["UR", "BL"],
+  catholic: ["UR"],
+  christ_catholic: ["UR", "BL"],
+} as const;
+const churchTariffs = (prefix: string) =>
+  Object.entries(CHURCH_BASE_ELSEWHERE).map(([denomination, notFor]) => ({
+    metric: `${prefix}.${denomination}`,
+    notFor: [...notFor],
+  }));
+const CHURCH_ON_CANTONAL_TAX = ["JU"];
 
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
@@ -311,7 +320,10 @@ export const SOURCES: readonly SourceInput[] = [
           cantons: modelledCantons,
           divisor: { metric: "tax.income.divisor" },
           cantonRounding,
-          alsoAs: { metric: "tax.income.tariff.communal", unless: "GEMEINDE" },
+          alsoAs: [
+            { metric: "tax.income.tariff.communal", unless: "GEMEINDE" },
+            ...churchTariffs("tax.church.tariff"),
+          ],
         },
         {
           // Schwyz's communes (and Valais's, not modelled yet) have their own tariff.
@@ -360,6 +372,10 @@ export const SOURCES: readonly SourceInput[] = [
           metric: "tax.wealth.tariff.basic",
           cantons: modelledCantons,
           rounding: WEALTH_ROUNDING,
+          // Neuchâtel divides a couple's wealth by 1.923, as income is divided
+          // elsewhere (measured 2026-10-30 at CHF 500,000).
+          divisor: { metric: "tax.wealth.divisor" },
+          alsoAs: churchTariffs("tax.church.wealth.tariff"),
         },
       ],
       variants: SCALE_VARIANTS,
@@ -392,6 +408,29 @@ export const SOURCES: readonly SourceInput[] = [
       fromYear: 2021,
       facts: [{ metric: "tax.income.basic.reduction", column: "reduction" }],
     },
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand, measured: where a church's rate applies to income and
+    // wealth themselves rather than to the basic tax (Uri's churches, on 1 %
+    // of taxable income and 0.3 per mille of taxable wealth; Basel-Landschaft's
+    // Reformed and Christian Catholic churches, a percent of income and per
+    // mille of wealth). The calculator applies these (measured 2026-10-30,
+    // 2025 and 2026, single and married); the cantons' acts that state them
+    // are to be cited here once found. `CHURCH_BASE_ELSEWHERE` keeps the
+    // basic tariff from standing in for them.
+    key: "ch-church-tariffs",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: church tax bases, measured",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator (measured)",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner (gemessen)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
     packs: ["switzerland"],
   },
   {
@@ -445,6 +484,12 @@ export const SOURCES: readonly SourceInput[] = [
       fields: [
         { field: "IncomeRateCanton", metric: "tax.multiplier" },
         { field: "FortuneRateCanton", metric: "tax.wealth.multiplier" },
+        { field: "IncomeRateCanton", metric: "tax.church.scale", cantons: CHURCH_ON_CANTONAL_TAX },
+        {
+          field: "FortuneRateCanton",
+          metric: "tax.church.wealth.scale",
+          cantons: CHURCH_ON_CANTONAL_TAX,
+        },
       ],
       divideBy: 100,
       cantons: modelledCantons,
@@ -487,28 +532,23 @@ export const SOURCES: readonly SourceInput[] = [
         {
           field: "IncomeRateProtestant",
           metric: "tax.church.reformed",
-          cantons: EVERY_CHURCH_CANTONS,
         },
-        { field: "IncomeRateRoman", metric: "tax.church.catholic", cantons: CHURCH_CANTONS },
+        { field: "IncomeRateRoman", metric: "tax.church.catholic" },
         {
           field: "IncomeRateChrist",
           metric: "tax.church.christ_catholic",
-          cantons: EVERY_CHURCH_CANTONS,
         },
         {
           field: "FortuneRateProtestant",
           metric: "tax.church.wealth.reformed",
-          cantons: EVERY_CHURCH_CANTONS,
         },
         {
           field: "FortuneRateRoman",
           metric: "tax.church.wealth.catholic",
-          cantons: CHURCH_CANTONS,
         },
         {
           field: "FortuneRateChrist",
           metric: "tax.church.wealth.christ_catholic",
-          cantons: EVERY_CHURCH_CANTONS,
         },
       ],
       divideBy: 100,

@@ -543,9 +543,17 @@ describe("the Federal Tax Administration's exports", () => {
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
     // Two federal tariffs, and per variant a basic tariff, a communal tariff
     // and a divisor for Aargau, Zürich, Bern, Fribourg, Ticino, Nidwalden,
-    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz.
-    // Valais's rows are not read: it is not modelled.
-    expect(scales.facts).toHaveLength(80);
+    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz
+    // (78). The basic tariff is also each church's tariff, three per variant,
+    // except Uri's churches and Basel-Landschaft's Reformed and Christian
+    // Catholic ones, whose tariffs are kept by hand (68). Valais's rows are
+    // not read: it is not modelled.
+    expect(scales.facts).toHaveLength(148);
+    expect(
+      scales.facts.filter(
+        (f) => f.jurisdiction.value === "4" && f.metricKey.startsWith("tax.church"),
+      ),
+    ).toEqual([]);
     expect(scales.facts.some((f) => f.jurisdiction.value === "23")).toBe(false);
   });
 
@@ -956,14 +964,16 @@ describe("the Federal Tax Administration's exports", () => {
       ["371", 1.63],
       ["1206", 1.03],
     ]);
-    // Uri's church rates are per mille of income, not a multiple: not read.
+    // Every church's rate, Uri's too: its base is a church tariff of its own.
     expect(of("tax.church.reformed")).toEqual([
       ["261", 0.1],
       ["371", 0.23],
+      ["1206", 1.15],
     ]);
     expect(of("tax.church.wealth.christ_catholic")).toEqual([
       ["261", 0.14],
       ["371", 0.28],
+      ["1206", 0],
     ]);
   });
 
