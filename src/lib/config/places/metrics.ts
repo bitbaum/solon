@@ -82,6 +82,74 @@ export const METRICS: readonly MetricInput[] = [
     plausible: { min: 0, max: 0.5 },
   },
   {
+    // The index by which a canton or a commune moves its income tariff to
+    // higher incomes to offset inflation, each on its own schedule (Valais:
+    // StG art. 32 para. 4 for the canton, art. 178 para. 5 for its communes).
+    // The tariff is read at the income divided by it. Absent: 1.
+    key: "tax.income.index",
+    label: {
+      en: "Income tariff index",
+      de: "Indexierung des Einkommenstarifs",
+      fr: "indexation du barème sur le revenu",
+      it: "indicizzazione della tariffa sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 1, max: 3 },
+  },
+  {
+    // The share by which a couple's income tax is cut (Valais: 35 %, StG art.
+    // 32 para. 3a and art. 178 para. 3a). Recorded for the couple only.
+    key: "tax.income.rebate",
+    label: {
+      en: "Rebate on the income tax",
+      de: "Ermässigung der Einkommenssteuer",
+      fr: "rabais d'impôt sur le revenu",
+      it: "riduzione dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 0.6 },
+  },
+  {
+    key: "tax.income.rebate.least",
+    label: {
+      en: "Least rebate on the income tax",
+      de: "Mindestermässigung der Einkommenssteuer",
+      fr: "rabais minimal d'impôt sur le revenu",
+      it: "riduzione minima dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 5_000 },
+  },
+  {
+    key: "tax.income.rebate.most",
+    label: {
+      en: "Most rebate on the income tax",
+      de: "Höchstermässigung der Einkommenssteuer",
+      fr: "rabais maximal d'impôt sur le revenu",
+      it: "riduzione massima dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 20_000 },
+  },
+  {
+    // The least cantonal income tax a taxpayer owes (Valais: CHF 10, StG art.
+    // 32 para. 6).
+    key: "tax.income.floor",
+    label: {
+      en: "Minimum income tax",
+      de: "Mindeststeuer auf dem Einkommen",
+      fr: "impôt minimal sur le revenu",
+      it: "imposta minima sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 1_000 },
+  },
+  {
     key: "tax.multiplier",
     label: {
       en: "Tax multiplier",

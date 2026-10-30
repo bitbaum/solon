@@ -501,6 +501,55 @@ describe("per-head taxes and church tariffs, kept by hand", () => {
   });
 });
 
+describe("Valais's income tax, kept by hand", () => {
+  const batch = mapSource(
+    "vs-income-tax",
+    new Uint8Array(
+      readFileSync(
+        join(__dirname, "../../../../data/places/switzerland/valais-income-tax.json"),
+      ),
+    ),
+  );
+  const at = (metric: string, scheme: string, value: string, on: string) =>
+    batch.facts.find(
+      (f) =>
+        f.metricKey === metric &&
+        f.jurisdiction.scheme === scheme &&
+        f.jurisdiction.value === value &&
+        f.validFrom <= on &&
+        (f.validTo === null || on < f.validTo),
+    )?.value;
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "vs-income-tax").problems).toEqual([]);
+  });
+
+  it("gives the canton its index, a couple's rebate and the minimum tax", () => {
+    expect(at("tax.income.rebate", "bfs_canton", "23", "2026-06-30")).toBe(0.35);
+    expect(at("tax.income.rebate.most", "bfs_canton", "23", "2026-06-30")).toBe(4900);
+    expect(at("tax.income.floor", "bfs_canton", "23", "2026-06-30")).toBe(10);
+    expect(at("tax.income.index", "bfs_canton", "23", "2026-06-30")).toBeCloseTo(2.007, 3);
+  });
+
+  it("gives every Valais commune an index, for both years", () => {
+    for (const on of ["2025-06-30", "2026-06-30"]) {
+      const communes = batch.facts.filter(
+        (f) =>
+          f.metricKey === "tax.income.index" &&
+          f.jurisdiction.scheme === "bfs_municipality" &&
+          f.validFrom <= on &&
+          (f.validTo === null || on < f.validTo),
+      );
+      expect(communes).toHaveLength(122);
+    }
+    // Brig-Glis, measured at five incomes.
+    expect(at("tax.income.index", "bfs_municipality", "6002", "2026-06-30")).toBeCloseTo(
+      2.0657,
+      3,
+    );
+  });
+});
+
 describe("the cantons' tax steps, kept by hand", () => {
   const file = join(__dirname, "../../../../data/places/switzerland/tax-steps.csv");
   const batch = mapSource("ch-cantonal-tax-steps", new Uint8Array(readFileSync(file)));

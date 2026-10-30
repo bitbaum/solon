@@ -86,6 +86,8 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   // The hand-kept file, cut to the places above (adapters.test.ts checks the whole file).
   ["ch-per-head-taxes", "per-head-taxes-cut.json"],
   ["ch-cantonal-adjustments", "cantonal-adjustments-cut.json"],
+  // The cut has no Valais commune.
+  ["vs-income-tax", "valais-income-tax-cut.json"],
   // None of the cut's communes has localities with rates of their own.
   ["estv-tax-localities", "tax-localities-cut.json"],
   ["estv-canton-multipliers", "estv-rates-2025.json"],
