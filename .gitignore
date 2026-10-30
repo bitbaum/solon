@@ -20,8 +20,6 @@
 # production
 /build
 
-# copied from node_modules before dev and build (scripts/build/vendor-maplibre.mjs)
-/public/vendor/
 
 # misc
 .DS_Store

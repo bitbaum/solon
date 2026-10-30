@@ -582,6 +582,8 @@
       "viewMap": "Karte",
       "viewList": "Liste",
       "mapLabel": "Karte: {level}",
+      "zoomIn": "Vergrössern",
+      "zoomOut": "Verkleinern",
       "loading": "Karte wird geladen…",
       "loadError": "Die Karte konnte nicht geladen werden. Suche und Übersicht unten funktionieren weiterhin.",
       "mapUnavailable": "Die Karte kann in diesem Browser nicht gezeichnet werden, darum sind die Orte als Liste aufgeführt.",

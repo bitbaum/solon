@@ -357,6 +357,8 @@ export default function PlacesMap({ packKey }: { packKey: string }) {
                   }}
                   describe={describe}
                   label={t("mapLabel", { level: ready.levelName })}
+                  zoomIn={t("zoomIn")}
+                  zoomOut={t("zoomOut")}
                   onError={() => setDrawn("error")}
                 />
               ) : (

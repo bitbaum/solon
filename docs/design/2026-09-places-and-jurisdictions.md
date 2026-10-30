@@ -1150,7 +1150,7 @@ concatenated sentences, no dead ends.
   **Built (P1, the map)**: `src/components/places/places-map.tsx` on
   `/places`. The browser loads the map data, then the boundary file through
   geo-kit (manifest revalidated on every load, file checked against its
-  sha256), and draws it with MapLibre GL on an empty style: no base map, the
+  sha256), and draws it with geo-kit's map renderer on no base map: the
   data is the picture. Each commune is coloured by its class among seven
   quantile classes of the estimates on the map (`quantileBreaks`, lowest
   first, spread over the scale); a commune without a figure is `--map-no-data`.
@@ -1164,10 +1164,10 @@ concatenated sentences, no dead ends.
   place's tax, rate and rank, a link to its page and "add to compare"; the
   tray links to `/compare` (up to the Register's `compareLimit`). The list
   (`map-list.tsx`) is the same rows, sortable; on phones it opens first.
-  MapLibre is ESM whose worker URL bundlers cannot follow, so
-  `scripts/build/vendor-maplibre.mjs` copies its files to
-  `public/vendor/maplibre-gl/<version>/` before `dev` and `build` (served
-  immutable), and the canvas imports them at run time. Without JavaScript the
+  The map is the fleet's one renderer, `@bitbaum/geo-kit/map` (since
+  2026-10-30, replacing MapLibre GL): the orthographic globe on Canvas 2D,
+  zoomed in to the country, the same code that draws Substrata's world.
+  Without JavaScript the
   plain search form stands in. Not yet: lakes and canton outlines, earlier
   editions, a base map.
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,
