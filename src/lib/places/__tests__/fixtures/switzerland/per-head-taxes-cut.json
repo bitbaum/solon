@@ -1,0 +1,1266 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 48
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 70
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 30
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 70
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 30
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 50
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 60
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 60
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 20
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 40
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "single",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 24
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.church",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.head.adults",
+      "variant": "married",
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "fixed",
+        "currency": "CHF",
+        "amount": 0
+      }
+    }
+  ]
+}

@@ -455,6 +455,42 @@ describe("Liechtenstein's communes, kept by hand", () => {
   });
 });
 
+describe("per-head taxes and church tariffs, kept by hand", () => {
+  const read = (key: string, file: string) =>
+    mapSource(
+      key,
+      new Uint8Array(readFileSync(join(__dirname, "../../../../data/places/switzerland", file))),
+    );
+
+  it("pass the batch check against the pack", () => {
+    const heads = read("ch-per-head-taxes", "per-head-taxes.json");
+    expect(checkBatch(heads, placesConfig, "ch-per-head-taxes").problems).toEqual([]);
+    const tariffs = read("ch-church-tariffs", "church-tariffs.json");
+    expect(checkBatch(tariffs, placesConfig, "ch-church-tariffs").problems).toEqual([]);
+  });
+
+  it("states every canton's per-head tax for both households, and every Solothurn commune's", () => {
+    const heads = read("ch-per-head-taxes", "per-head-taxes.json");
+    const cantons = new Set(
+      heads.facts.filter((f) => f.metricKey === "tax.head").map((f) => f.jurisdiction.value),
+    );
+    expect(cantons.size).toBe(26);
+    const zurich = heads.facts.filter(
+      (f) => f.metricKey === "tax.head" && f.jurisdiction.value === "1",
+    );
+    expect(zurich.map((f) => [f.variant, f.value])).toEqual([
+      ["single", { kind: "fixed", currency: "CHF", amount: 24 }],
+      ["married", { kind: "fixed", currency: "CHF", amount: 48 }],
+    ]);
+    const solothurn = new Set(
+      heads.facts
+        .filter((f) => f.metricKey === "tax.head.communal")
+        .map((f) => f.jurisdiction.value),
+    );
+    expect(solothurn.size).toBe(104);
+  });
+});
+
 describe("the cantons' tax steps, kept by hand", () => {
   const file = join(__dirname, "../../../../data/places/switzerland/tax-steps.csv");
   const batch = mapSource("ch-cantonal-tax-steps", new Uint8Array(readFileSync(file)));
@@ -635,6 +671,12 @@ describe("the Federal Tax Administration's exports", () => {
     "vd-income-tax-reduction",
     new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-reduction.csv")),
   ).facts.filter((f) => f.validFrom === "2025-01-01");
+  const perHead = mapSource(
+    "ch-per-head-taxes",
+    new Uint8Array(
+      readFileSync(join(__dirname, "../../../../data/places/switzerland/per-head-taxes.json")),
+    ),
+  ).facts;
   const vaudLimit = mapSource(
     "vd-income-tax-limit",
     new Uint8Array(readFileSync("data/places/switzerland/vd-income-tax-limit.csv")),
@@ -842,22 +884,26 @@ describe("the Federal Tax Administration's exports", () => {
     "estimates $commune, $variant, at CHF $income, as the calculator does",
     ({ canton: cantonCode, own, variant, federal, cantonal, communal, income }) => {
       const canton = mapSource("estv-canton-multipliers", fixture("estv-rates-2025.json"));
-      const facts = [...scales.facts, ...canton.facts, ...vaudReduction, ...vaudLimit].flatMap(
-        (f) => {
-          const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
-          return (level === "nation" && f.jurisdiction.value === "CH") ||
-            (level === "canton" && f.jurisdiction.value === cantonCode)
-            ? [
-                {
-                  level,
-                  metric: f.metricKey,
-                  ...(f.variant ? { variant: f.variant } : {}),
-                  value: f.value,
-                },
-              ]
-            : [];
-        },
-      );
+      const facts = [
+        ...scales.facts,
+        ...canton.facts,
+        ...vaudReduction,
+        ...vaudLimit,
+        ...perHead,
+      ].flatMap((f) => {
+        const level = { iso_3166_1: "nation", bfs_canton: "canton" }[f.jurisdiction.scheme];
+        return (level === "nation" && f.jurisdiction.value === "CH") ||
+          (level === "canton" && f.jurisdiction.value === cantonCode)
+          ? [
+              {
+                level,
+                metric: f.metricKey,
+                ...(f.variant ? { variant: f.variant } : {}),
+                value: f.value,
+              },
+            ]
+          : [];
+      });
       facts.push({ level: "municipality", metric: "tax.multiplier", value: own });
       const estimate = evaluate(switzerlandIncomeTax, facts, {
         values: { taxable_income: income },

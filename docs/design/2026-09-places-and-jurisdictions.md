@@ -715,15 +715,22 @@ and wealth themselves (`data/places/switzerland/church-tariffs.json`, source
 `ch-church-tariffs`, measured, the cantons' acts to be cited); Jura's on the
 cantonal tax, through schema version 8's `scaledBy` (the church rate times
 the canton's multiplier). Neuchâtel divides a couple's wealth by 1.923, read
-as income's divisor is (`tax.wealth.divisor`). Not yet:
+as income's divisor is (`tax.wealth.divisor`). Fixed per-head taxes are
+`fixed` tariffs per canton and household (`tax.head`: Zürich's and Ticino's
+per person, Lucerne's, Nidwalden's, Schaffhausen's, Uri's, Geneva's and
+Valais's per household, 0 elsewhere), a church's on top for its members
+(Uri, Geneva, Neuchâtel), and Solothurn's communes' and parishes' own per
+adult (`data/places/switzerland/per-head-taxes.json`, source
+`ch-per-head-taxes`, measured for 2025 and 2026 in every canton and every
+Solothurn commune). With them, the whole bill (income, church, wealth and
+per-head tax) matches the calculator's total to the franc in two communes of
+every modelled canton, for every church, single and married. Not yet:
 
 - The caps on income and wealth tax together (Basel-Stadt, Aargau, Ticino;
   Valais and Geneva are not modelled) are not modelled; they bind only where
   wealth is large against income.
 - Where parishes in one commune levy different church rates, the export gives
   one of them.
-- Fixed per-head taxes (Zürich's CHF 24, Lucerne's CHF 50) wait for a source:
-  schema version 7 can express them as a `fixed` tariff.
 
 ### 6.3 "Takes tax" is derived
 

@@ -27,7 +27,10 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * where church tax is levied on the cantonal tax (Jura), every church rate is
  * scaled by the canton's multiplier. The calculator gives one rate per
  * commune and church; where parishes in one commune levy different rates, it
- * shows one of them.
+ * shows one of them. Fixed per-head taxes: the canton's, per person or per
+ * household (`tax.head`, a `fixed` tariff per variant, 0 where none), a
+ * church's on top for its members, and a commune's and a parish's own per
+ * adult where they set it (Solothurn's).
  */
 const DENOMINATIONS = ["reformed", "catholic", "christ_catholic"] as const;
 const churchComponents = (on: "income" | "wealth") =>
@@ -99,6 +102,29 @@ export const switzerlandIncomeTax = {
       multipliers: [{ level: "municipality", metric: "tax.wealth.multiplier" }],
     },
     ...churchComponents("wealth"),
+    { key: "head", tariff: { level: "canton", metric: "tax.head" } },
+    ...DENOMINATIONS.map((denomination) => ({
+      key: `head_church_${denomination}`,
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: "tax.head.church" },
+    })),
+    ...DENOMINATIONS.map((denomination) => ({
+      key: `head_parish_${denomination}`,
+      when: `church_${denomination}`,
+      tariff: { level: "canton", metric: "tax.head.adults" },
+      multipliers: [
+        {
+          level: "municipality",
+          metric: `tax.head.church.communal.${denomination}`,
+          optional: true,
+        },
+      ],
+    })),
+    {
+      key: "head_communal",
+      tariff: { level: "canton", metric: "tax.head.adults" },
+      multipliers: [{ level: "municipality", metric: "tax.head.communal", optional: true }],
+    },
   ],
   limits: [
     {
@@ -247,6 +273,54 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt communal sur la fortune",
       it: "Imposta comunale sulla sostanza",
     },
+    head: {
+      en: "Per-head tax",
+      de: "Personalsteuer",
+      fr: "Taxe personnelle",
+      it: "Imposta personale",
+    },
+    head_church_reformed: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_church_catholic: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_church_christ_catholic: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "Taxe personnelle ecclésiastique",
+      it: "Imposta personale di culto",
+    },
+    head_parish_reformed: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_parish_catholic: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_parish_christ_catholic: {
+      en: "Parish per-head tax",
+      de: "Personalsteuer der Kirchgemeinde",
+      fr: "Taxe personnelle paroissiale",
+      it: "Imposta personale parrocchiale",
+    },
+    head_communal: {
+      en: "Communal per-head tax",
+      de: "Gemeinde-Personalsteuer",
+      fr: "Taxe personnelle communale",
+      it: "Imposta personale comunale",
+    },
     wealth_church_reformed: {
       en: "Church tax on wealth",
       de: "Kirchensteuer auf dem Vermögen",
@@ -283,10 +357,10 @@ const switzerlandTaxLabels: TaxLabels = {
   // The income the golden fixtures check against the federal calculator.
   exampleBase: 100_000,
   excludes: {
-    en: "Not included: fixed per-head taxes, such as CHF 24 a person in Zürich or CHF 50 in Lucerne. Church tax assumes both partners belong to the same church.",
-    de: "Nicht enthalten: feste Kopfsteuern, etwa CHF 24 pro Person in Zürich oder CHF 50 in Luzern. Die Kirchensteuer nimmt an, dass beide Partner derselben Kirche angehören.",
-    fr: "Non compris : les impôts par tête, comme CHF 24 par personne à Zurich ou CHF 50 à Lucerne. L'impôt ecclésiastique suppose que les deux partenaires appartiennent à la même Église.",
-    it: "Non incluse: le imposte pro capite, come CHF 24 a persona a Zurigo o CHF 50 a Lucerna. L'imposta di culto presume che entrambi i partner appartengano alla stessa chiesa.",
+    en: "Church tax assumes both partners belong to the same church.",
+    de: "Die Kirchensteuer nimmt an, dass beide Partner derselben Kirche angehören.",
+    fr: "L'impôt ecclésiastique suppose que les deux partenaires appartiennent à la même Église.",
+    it: "L'imposta di culto presume che entrambi i partner appartengano alla stessa chiesa.",
   },
 };
 
@@ -392,6 +466,7 @@ export const switzerland: CountryPackInput = {
     "ch-cantonal-tax-steps",
     "estv-wealth-tax-scales",
     "ch-church-tariffs",
+    "ch-per-head-taxes",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,

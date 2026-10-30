@@ -48,6 +48,7 @@ export const tariffSchema = z.discriminatedUnion("kind", [
       )
       .min(1),
   }),
+  z.object({ kind: z.literal("fixed"), ...tariffBase, amount: z.number().min(0) }),
 ]);
 
 const period = {

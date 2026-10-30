@@ -434,6 +434,28 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["switzerland"],
   },
   {
+    // Kept by hand, measured: each canton's fixed per-head tax for a single
+    // person and a couple, the church's on top for its members (Uri, Geneva),
+    // and Solothurn's communes' own per adult, as the calculator applies them
+    // (measured 2026-10-30 for 2025 and 2026, every canton in three communes
+    // and every Solothurn commune). Levied under each canton's tax act (for
+    // instance Schaffhausen's, SHR 641.100 art. 2, and Solothurn's, BGS
+    // 614.11 § 1); the articles that set each amount are to be cited here.
+    key: "ch-per-head-taxes",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: per-head taxes, measured",
+    homepage: "https://swisstaxcalculator.estv.admin.ch/",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator (measured)",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner (gemessen)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["switzerland"],
+  },
+  {
     // Kept by hand: in Vaud, cantonal and communal income tax together may not
     // exceed 30 % of taxable income (LICom, RSV 175.21, art. 8 para. 1), which
     // the calculator applies (measured 2021–2026) and its exports do not carry.

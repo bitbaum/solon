@@ -318,4 +318,97 @@ export const METRICS: readonly MetricInput[] = [
     unit: "ratio",
     plausible: { min: 1, max: 3 },
   },
+  {
+    // A canton's fixed tax per head (Personalsteuer, taxe personnelle), for a
+    // household of the variant: per person in some cantons, per household in
+    // others. 0 where the canton levies none.
+    key: "tax.head",
+    label: {
+      en: "Per-head tax",
+      de: "Personalsteuer",
+      fr: "taxe personnelle",
+      it: "imposta personale",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // Added to the per-head tax for a member of a church that levies one.
+    key: "tax.head.church",
+    label: {
+      en: "Per-head church tax",
+      de: "Kirchliche Personalsteuer",
+      fr: "taxe personnelle ecclésiastique",
+      it: "imposta personale di culto",
+    },
+    valueType: "tariff",
+    unit: "currency",
+  },
+  {
+    // How many adults of the variant's household a commune's per-head tax counts.
+    key: "tax.head.adults",
+    label: {
+      en: "Adults liable to the communal per-head tax",
+      de: "Personen mit Gemeinde-Personalsteuer",
+      fr: "adultes soumis à la taxe personnelle communale",
+      it: "adulti soggetti all'imposta personale comunale",
+    },
+    valueType: "tariff",
+    unit: "count",
+  },
+  {
+    // A commune's own per-head tax, per adult, where the commune sets it (Solothurn's).
+    key: "tax.head.communal",
+    label: {
+      en: "Communal per-head tax",
+      de: "Gemeinde-Personalsteuer",
+      fr: "taxe personnelle communale",
+      it: "imposta personale comunale",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Evangelical Reformed church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.reformed",
+    label: {
+      en: "Parish per-head tax (Evangelical Reformed)",
+      de: "Personalsteuer der Kirchgemeinde (evangelisch-reformiert)",
+      fr: "taxe personnelle paroissiale (réformée évangélique)",
+      it: "imposta personale parrocchiale (evangelica riformata)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Roman Catholic church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.catholic",
+    label: {
+      en: "Parish per-head tax (Roman Catholic)",
+      de: "Personalsteuer der Kirchgemeinde (römisch-katholisch)",
+      fr: "taxe personnelle paroissiale (catholique romaine)",
+      it: "imposta personale parrocchiale (cattolica romana)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
+  {
+    // A parish's own per-head tax per adult member of the Christian Catholic church, where the
+    // parish sets it (Solothurn's).
+    key: "tax.head.church.communal.christ_catholic",
+    label: {
+      en: "Parish per-head tax (Christian Catholic)",
+      de: "Personalsteuer der Kirchgemeinde (christkatholisch)",
+      fr: "taxe personnelle paroissiale (catholique-chrétienne)",
+      it: "imposta personale parrocchiale (cattolica cristiana)",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 500 },
+  },
 ];
