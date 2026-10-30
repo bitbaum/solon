@@ -65,17 +65,6 @@ const cantonRounding = Object.fromEntries(
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
 
-/** How a hand-kept tax-steps file reads: one row per place and step, the place by `scheme`. */
-const TAX_STEPS_OPTIONS = (scheme: string) => ({
-  place: { scheme, column: "place" },
-  kind: {
-    column: "kind",
-    values: { file: "tax_return", pay: "tax_payment", extend: "tax_deadline_extension" },
-  },
-  url: "url",
-  deadline: { column: "deadline", source: "source_url" },
-});
-
 /**
  * The source registry: one entry per dataset — publisher, licence, cadence and
  * the adapter that reads it (§8.2). Each importer's first task is to confirm
@@ -581,24 +570,15 @@ export const SOURCES: readonly SourceInput[] = [
     // Nothing to fetch: the file is handed in (`places:import`) after each edit.
     cadence: "0 6 3 1 *",
     adapter: "csv_instruments",
-    options: TAX_STEPS_OPTIONS("bfs_canton"),
-    packs: ["switzerland"],
-  },
-  {
-    // Kept by hand, as ch-cantonal-tax-steps: the Tax Administration of the
-    // Principality's own pages, at national level (its communes do not assess).
-    key: "li-tax-steps",
-    publisher: "Liechtenstein Tax Administration (Steuerverwaltung)",
-    dataset: "Where to file a tax return, pay tax and ask for more time",
-    homepage: "https://github.com/bitbaum/solon/blob/main/data/places/liechtenstein/tax-steps.csv",
-    licence: "LicenseRef-li-official-act",
-    attribution: {
-      en: "Liechtenstein Tax Administration, on its own website",
-      de: "Steuerverwaltung des Fürstentums Liechtenstein, auf ihrer eigenen Website",
+    options: {
+      place: { scheme: "bfs_canton", column: "place" },
+      kind: {
+        column: "kind",
+        values: { file: "tax_return", pay: "tax_payment", extend: "tax_deadline_extension" },
+      },
+      url: "url",
+      deadline: { column: "deadline", source: "source_url" },
     },
-    cadence: "0 6 3 1 *",
-    adapter: "csv_instruments",
-    options: TAX_STEPS_OPTIONS("iso_3166_1"),
-    packs: ["liechtenstein"],
+    packs: ["switzerland"],
   },
 ];
