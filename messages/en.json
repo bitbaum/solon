@@ -1148,6 +1148,8 @@
       "viewMap": "Map",
       "viewList": "List",
       "mapLabel": "Map: {level}",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
       "loading": "Loading the map…",
       "loadError": "The map could not be loaded. Search and browse below still work.",
       "mapUnavailable": "The map cannot be drawn in this browser, so the places are listed instead.",

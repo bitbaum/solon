@@ -582,6 +582,8 @@
       "viewMap": "Carte",
       "viewList": "Liste",
       "mapLabel": "Carte : {level}",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
       "loading": "Chargement de la carte…",
       "loadError": "La carte n’a pas pu être chargée. La recherche et la liste ci-dessous fonctionnent toujours.",
       "mapUnavailable": "La carte ne peut pas être dessinée dans ce navigateur ; les lieux sont donc listés.",
