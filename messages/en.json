@@ -1031,7 +1031,8 @@
       "title": "Tax",
       "levies": "Levies tax: rates set here enter the tax model of {pack}.",
       "none": "Levies no tax of its own. The taxes here are those of the places it is part of.",
-      "noModel": "No tax model for {pack} yet."
+      "noModel": "No tax model for {pack} yet.",
+      "refinedBy": "The rate depends on where in {place} you live. Choose your locality:"
     },
     "otherNames": "Other names",
     "identifiers": "Identifiers",
@@ -1124,7 +1125,7 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Not recorded yet",
       "taxedBy": "Levied by",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Not compared yet",
       "laterText": "Ways to take part, what leaving involves, status and size come as their data is imported.",
       "coverageLink": "What Places covers →",

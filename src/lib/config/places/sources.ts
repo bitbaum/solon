@@ -21,12 +21,14 @@ const HUNDRED_DIVIDED = { base: 100, divided: 100 };
  * uneven incomes, Vaud with its cantonal reduction from
  * vd-income-tax-reduction; Uri and Obwalden, whose tariff is a flat rate,
  * Basel-Landschaft, whose tariff is a formula, and Schwyz, whose communes
- * have a tariff of their own, 2026-10-01, at CHF 23,456 to 777,777). Not
- * yet: Thurgau, St. Gallen and Appenzell Innerrhoden, whose school communes
- * (and districts) levy their own multipliers, which the export reduces to
- * one; Valais, whose exported tables do not give the calculator's figures
- * (it indexes them, and a couple's rebate has floors and caps per commune);
- * Geneva, whose further reduction the export does not carry.
+ * have a tariff of their own, 2026-10-01, at CHF 23,456 to 777,777).
+ * Thurgau, St. Gallen and Appenzell Innerrhoden, whose communes levy one
+ * rate except seven whose rates depend on the locality (LOCALITY_COMMUNES),
+ * and Geneva, with its cantonal adjustments (ch-cantonal-adjustments), match
+ * the calculator's whole bill in every commune and locality, 2026-10-30.
+ * Not yet: Valais, whose tables the calculator applies to an indexed income
+ * (one factor for the canton, one per commune, which the export does not
+ * carry) with a couple's rebate capped per canton and commune.
  */
 const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   ZH: { fso: "1", rounding: HUNDRED },
@@ -44,11 +46,15 @@ const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   BL: { fso: "13" },
   SH: { fso: "14", rounding: HUNDRED_DIVIDED },
   AR: { fso: "15", rounding: HUNDRED },
+  AI: { fso: "16", rounding: HUNDRED },
+  SG: { fso: "17", rounding: HUNDRED },
   GR: { fso: "18" },
   AG: { fso: "19", rounding: HUNDRED },
+  TG: { fso: "20", rounding: HUNDRED },
   TI: { fso: "21", rounding: HUNDRED },
   VD: { fso: "22", rounding: HUNDRED_DIVIDED },
   NE: { fso: "24", rounding: HUNDRED_DIVIDED },
+  GE: { fso: "25", rounding: HUNDRED },
   JU: { fso: "26", rounding: HUNDRED },
 };
 const modelledCantons = Object.fromEntries(
@@ -92,10 +98,15 @@ const SCALE_TABLE_TYPES = {
 
 /**
  * The calculator rounds taxable wealth down to CHF 1,000 before every
- * modelled canton's tariff (measured 2026-10-30: CHF 1,234,567 and 1,234,000
- * give the same tax in all of them, to the franc).
+ * modelled canton's tariff but Geneva's (measured 2026-10-30: CHF 1,234,567
+ * and 1,234,000 give the same tax in all of them, to the franc; in Geneva
+ * the wealth as entered reproduces it at CHF 150,000 to 5 million).
  */
-const WEALTH_ROUNDING = { base: 1000 };
+const WEALTH_ROUNDING = Object.fromEntries(
+  Object.keys(MODELLED_CANTONS)
+    .filter((code) => code !== "GE")
+    .map((code) => [code, { base: 1000 }]),
+);
 
 /**
  * Where a church's rates apply to something other than the canton's basic
@@ -118,6 +129,16 @@ const churchTariffs = (prefix: string) =>
     notFor: [...notFor],
   }));
 const CHURCH_ON_CANTONAL_TAX = ["JU"];
+
+/**
+ * Communes whose rates depend on the locality, as the calculator applies
+ * them (measured 2026-10-30 over every locality of Thurgau, St. Gallen and
+ * Appenzell Innerrhoden, 644 in 160 communes): Appenzell and Schwende-Rüte,
+ * whose school districts differ; Au, whose Heerbrugg belongs to other school
+ * communes; Oberbüren, Waldkirch, Oberriet and Niederhelfenschwil, whose
+ * parishes differ. Their localities carry the rates (`estv-tax-localities`).
+ */
+const LOCALITY_COMMUNES = ["3101", "3112", "3231", "3254", "3423", "3424", "3444"] as const;
 
 /** Zürich's communes come from the canton's own publication (zurich-municipal-multipliers). */
 const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code !== "ZH");
@@ -371,7 +392,7 @@ export const SOURCES: readonly SourceInput[] = [
           target: "KANTON",
           metric: "tax.wealth.tariff.basic",
           cantons: modelledCantons,
-          rounding: WEALTH_ROUNDING,
+          cantonRounding: WEALTH_ROUNDING,
           // Neuchâtel divides a couple's wealth by 1.923, as income is divided
           // elsewhere (measured 2026-10-30 at CHF 500,000).
           divisor: { metric: "tax.wealth.divisor" },
@@ -445,6 +466,52 @@ export const SOURCES: readonly SourceInput[] = [
     publisher: "Swiss Federal Tax Administration (ESTV)",
     dataset: "Tax calculator: per-head taxes, measured",
     homepage: "https://swisstaxcalculator.estv.admin.ch/",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Swiss Federal Tax Administration, tax calculator (measured)",
+      de: "Eidgenössische Steuerverwaltung, Steuerrechner (gemessen)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand: what the calculator applies on top of the exported tariffs
+    // and multipliers. Geneva: 47.5 and 1 centimes on the cantonal income and
+    // wealth tax (LCAC, rsGE D 3 07, art. 2); on income the cantonal tax
+    // with its 47.5 centimes is reduced by 12 % and the 1 centime is not
+    // (measured 2026-10-30, 2025 and 2026; the act that sets the 12 % is to
+    // be cited); and the supplementary wealth tax of LIPP (rsGE D 3 08)
+    // art. 59 para. 2, at the law's rates on the brackets the calculator
+    // indexes each year (its base wealth table's, measured). Every other
+    // canton: no supplementary wealth tax.
+    key: "ch-cantonal-adjustments",
+    publisher: "Canton of Geneva; Swiss Federal Tax Administration (ESTV)",
+    dataset: "Cantonal adjustments to the tax calculator's exports",
+    homepage:
+      "https://github.com/bitbaum/solon/blob/main/data/places/switzerland/cantonal-adjustments.json",
+    licence: "LicenseRef-ch-official-act",
+    attribution: {
+      en: "Republic and Canton of Geneva, LCAC art. 2 and LIPP art. 59; Swiss Federal Tax Administration (measured)",
+      fr: "République et canton de Genève, LCAC art. 2 et LIPP art. 59 ; Administration fédérale des contributions (mesuré)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["switzerland"],
+  },
+  {
+    // Kept by hand, measured: the localities of the communes whose rates depend
+    // on the locality (LOCALITY_COMMUNES), each with the calculator's own
+    // number for it and the rates it applies there (its detailed answer's
+    // TaxRates), for 2025 and 2026, measured 2026-10-30. Each locality is a
+    // place inside its commune at the level that stands for it.
+    key: "estv-tax-localities",
+    publisher: "Swiss Federal Tax Administration (ESTV)",
+    dataset: "Tax calculator: rates by locality, measured",
+    homepage:
+      "https://github.com/bitbaum/solon/blob/main/data/places/switzerland/tax-localities.json",
     licence: "LicenseRef-ch-official-act",
     attribution: {
       en: "Swiss Federal Tax Administration, tax calculator (measured)",
@@ -575,6 +642,10 @@ export const SOURCES: readonly SourceInput[] = [
       ],
       divideBy: 100,
       communes: { scheme: "bfs_municipality", cantons: Object.keys(MODELLED_CANTONS) },
+      skipCommunes: {
+        values: [...LOCALITY_COMMUNES],
+        reason: "its rates depend on the locality; estv-tax-localities gives them",
+      },
     },
     packs: ["switzerland"],
   },

@@ -43,6 +43,12 @@ export const levelSchema = z
     overlaps: registryKey.optional(),
     /** `partial` when only some parents are divided into this level. */
     coverage: z.enum(LEVEL_COVERAGES).default("full"),
+    /**
+     * A level whose places refine an ancestor's figures: a fact held by one
+     * of them stands for that ancestor level's, and wins over the ancestor's
+     * own (a locality within a commune whose rate depends on the locality).
+     */
+    standsFor: registryKey.optional(),
     names: localizedTextSchema,
   })
   .refine((level) => !(level.parent !== null && level.overlaps !== undefined), {
@@ -251,6 +257,20 @@ function levelProblems(pack: CountryPack): string[] {
     for (const ref of [level.parent, level.overlaps]) {
       if (ref && !byKey.has(ref)) {
         problems.push(`pack "${pack.key}": level "${level.key}" refers to unknown level "${ref}"`);
+      }
+    }
+    if (level.standsFor) {
+      const ancestors: string[] = [];
+      for (let up = byKey.get(level.parent ?? ""); up; up = byKey.get(up.parent ?? "")) {
+        if (ancestors.includes(up.key)) {
+          break;
+        }
+        ancestors.push(up.key);
+      }
+      if (!ancestors.includes(level.standsFor)) {
+        problems.push(
+          `pack "${pack.key}": level "${level.key}" stands for "${level.standsFor}", which is not above it`,
+        );
       }
     }
     const seen = new Set<string>();

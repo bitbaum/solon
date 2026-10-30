@@ -7,6 +7,7 @@ import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
 import { taxingLevels } from "@/lib/tax-model";
 import {
   evaluatorFacts,
+  standsForLevels,
   type ChainFact,
   type ChainInstrument,
   type ChainName,
@@ -62,6 +63,8 @@ export interface PlaceView {
   takesTax: boolean | null;
   /** What a resident can do here, one per kind, in the registry's order. */
   actions: PlaceAction[];
+  /** Places inside it whose figures refine its own (localities with rates of their own). */
+  refinedBy: PlaceLink[];
   sources: PlaceSource[];
 }
 
@@ -71,6 +74,8 @@ export interface PlaceViewInput {
   facts: readonly ChainFact[];
   identifiers: readonly { scheme: string; value: string }[];
   instruments: readonly ChainInstrument[];
+  /** Places directly inside it whose level stands for its own. */
+  refinements?: readonly ChainPlace[];
   /** The latest retrieval of each source that stated something about the place. */
   sources: readonly { sourceKey: string; retrievedAt: Date }[];
   locale: string;
@@ -150,9 +155,13 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     identifiers,
     takesTax:
       pack.taxModel && place.levelKey
-        ? taxingLevels(pack.taxModel, evaluatorFacts(chain, input.facts)).includes(place.levelKey)
+        ? taxingLevels(
+            pack.taxModel,
+            evaluatorFacts(chain, input.facts, standsForLevels(pack.levels)),
+          ).includes(place.levelKey)
         : null,
     actions: placeActions(config, input.chain, input.instruments, locale),
+    refinedBy: (input.refinements ?? []).map(link),
     sources: placeSources(config, input.sources, locale),
   };
 }

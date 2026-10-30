@@ -53,6 +53,19 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     reserved: true,
   },
   {
+    // The federal tax calculator's number for a locality (a postcode and place
+    // within a commune), where the rates it applies depend on the locality.
+    key: "estv_tax_location",
+    label: {
+      en: "Federal tax calculator locality",
+      de: "Ortschaft im Steuerrechner der ESTV",
+      fr: "localité du calculateur fiscal de l'AFC",
+      it: "località del calcolatore fiscale dell'AFC",
+    },
+    pattern: "[1-9][0-9]{8}",
+    reserved: true,
+  },
+  {
     key: "zurich_statistical_quarter",
     label: {
       en: "City of Zürich statistical quarter",

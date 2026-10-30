@@ -426,6 +426,14 @@ const ratesOptions = exportOptions
     communes: z
       .object({ scheme: z.string().min(1), cantons: z.array(z.string().min(1)).min(1) })
       .optional(),
+    /**
+     * Communes (by BfsID) whose rows are not read, with why: the export's one
+     * rate per commune is wrong for some of their residents, and another
+     * source gives the rates by locality.
+     */
+    skipCommunes: z
+      .object({ values: z.array(z.string().min(1)).min(1), reason: z.string().min(1) })
+      .optional(),
   })
   .refine(
     (o) => (o.cantons === undefined) !== (o.communes === undefined),
@@ -444,12 +452,12 @@ function placeOfRate(options: RatesOptions, at: z.infer<typeof location>): Exter
 
 export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
   key: "estv_simple_rates",
-  version: "4",
+  version: "5",
   decode: decodeJsonEnvelope,
   schema: rates,
   options: ratesOptions,
   ...planning,
-  map: (exported, { pack, options }) => {
+  map: (exported, { pack, options, skip }) => {
     if (!pack) {
       throw new Error("multipliers belong to a pack's places; the source names none");
     }
@@ -458,6 +466,10 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
     for (const row of exported.response.response) {
       const place = placeOfRate(options, row.Location);
       if (!place) {
+        continue;
+      }
+      if (options.skipCommunes?.values.includes(String(row.Location.BfsID))) {
+        skip(`${place.scheme}:${place.value} ${year}`, options.skipCommunes.reason);
         continue;
       }
       for (const { field, metric, cantons } of options.fields) {

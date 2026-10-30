@@ -465,7 +465,8 @@
       "title": "Imposte",
       "levies": "Riscuote imposte: le aliquote fissate qui entrano nel modello fiscale di {pack}.",
       "none": "Non riscuote imposte proprie. Qui valgono le imposte dei luoghi di cui fa parte.",
-      "noModel": "Per {pack} non c'è ancora un modello fiscale."
+      "noModel": "Per {pack} non c'è ancora un modello fiscale.",
+      "refinedBy": "Il moltiplicatore dipende da dove abita a {place}. Scelga la sua località:"
     },
     "otherNames": "Altri nomi",
     "identifiers": "Identificativi",
@@ -558,7 +559,7 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Non ancora registrato",
       "taxedBy": "Riscossa da",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Non ancora confrontato",
       "laterText": "Partecipazione, cosa comporta andarsene, statuto e dimensioni arriveranno quando i loro dati saranno importati.",
       "coverageLink": "Cosa coprono i luoghi →",

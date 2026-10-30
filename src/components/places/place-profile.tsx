@@ -89,6 +89,18 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
                 ? t("tax.levies", { pack: view.packName })
                 : t("tax.none")}
           </p>
+          {view.refinedBy.length > 0 && (
+            <div className="mt-3 text-sm">
+              <p className="mb-1 text-fg-secondary">{t("tax.refinedBy", { place: view.name })}</p>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                {view.refinedBy.map((place, i) => (
+                  <li key={`${place.slugPath}-${i}`}>
+                    <PlaceName place={place} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <Link
             href={compareHref([view.slugPath])}
             className="mt-3 inline-block text-sm text-fg-primary hover:underline"

@@ -1,0 +1,545 @@
+{
+  "pack": "switzerland",
+  "jurisdictions": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": {
+        "kind": "progressive",
+        "currency": "CHF",
+        "brackets": [
+          {
+            "from": 0,
+            "rate": 0
+          },
+          {
+            "from": 118399,
+            "rate": 9.56e-5
+          },
+          {
+            "from": 236796,
+            "rate": 0.0001169
+          },
+          {
+            "from": 355194,
+            "rate": 0.000255
+          },
+          {
+            "from": 473592,
+            "rate": 0.0002763
+          },
+          {
+            "from": 710388,
+            "rate": 0.0004463
+          },
+          {
+            "from": 947183,
+            "rate": 0.0004781
+          },
+          {
+            "from": 1183978,
+            "rate": 0.00068
+          },
+          {
+            "from": 1420774,
+            "rate": 0.0007225
+          },
+          {
+            "from": 1775967,
+            "rate": 0.0009563
+          },
+          {
+            "from": 3551957,
+            "rate": 0.0011475
+          }
+        ]
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.income.basic.reduction",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.12
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.multiplier.extra",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": "2026-01-01",
+      "value": 0.01
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "progressive",
+        "currency": "CHF",
+        "brackets": [
+          {
+            "from": 0,
+            "rate": 0
+          },
+          {
+            "from": 118723,
+            "rate": 9.56e-5
+          },
+          {
+            "from": 237444,
+            "rate": 0.0001169
+          },
+          {
+            "from": 356166,
+            "rate": 0.000255
+          },
+          {
+            "from": 474887,
+            "rate": 0.0002763
+          },
+          {
+            "from": 712331,
+            "rate": 0.0004463
+          },
+          {
+            "from": 949773,
+            "rate": 0.0004781
+          },
+          {
+            "from": 1187216,
+            "rate": 0.00068
+          },
+          {
+            "from": 1424659,
+            "rate": 0.0007225
+          },
+          {
+            "from": 1780824,
+            "rate": 0.0009563
+          },
+          {
+            "from": 3561677,
+            "rate": 0.0011475
+          }
+        ]
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.income.basic.reduction",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.12
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "25"
+      },
+      "metricKey": "tax.multiplier.extra",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": 0.01
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "1"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "2"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "3"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "4"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "5"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "6"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "7"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "8"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "9"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "10"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "11"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "12"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "13"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "14"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "15"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "16"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "17"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "18"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "19"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "20"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "21"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "22"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "23"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "24"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    },
+    {
+      "jurisdiction": {
+        "scheme": "bfs_canton",
+        "value": "26"
+      },
+      "metricKey": "tax.wealth.tariff.supplement",
+      "variant": null,
+      "validFrom": "2025-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "flat",
+        "currency": "CHF",
+        "rate": 0
+      }
+    }
+  ]
+}
