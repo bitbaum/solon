@@ -150,6 +150,21 @@ export const METRICS: readonly MetricInput[] = [
     plausible: { min: 0, max: 1_000 },
   },
   {
+    // The yield the law assumes on wealth and taxes as income, on one tariff
+    // with it (Liechtenstein's Sollertrag: SteG, LR 640.0, art. 5 and art. 14
+    // para. 2 l; 4 % for 2025 by the Finanzgesetz, LGBl. 2024 Nr. 441, art. 2).
+    key: "tax.wealth.yield",
+    label: {
+      en: "Assumed yield on wealth",
+      de: "Sollertrag des Vermögens",
+      fr: "rendement présumé de la fortune",
+      it: "reddito presunto della sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 0.2 },
+  },
+  {
     key: "tax.multiplier",
     label: {
       en: "Tax multiplier",

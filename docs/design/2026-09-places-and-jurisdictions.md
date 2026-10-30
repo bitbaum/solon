@@ -915,12 +915,30 @@ hardcoded date.
 | `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 **Liechtenstein** (built 2026-10-22, pack `countries/liechtenstein.ts`: nation,
-the two Landschaften as `landschaft`, the eleven communes; no tax model):
+the two Landschaften as `landschaft`, the eleven communes; tax model since
+2026-10-30, below):
 
 | Source key | What | Access | Terms |
 |---|---|---|---|
 | `li-constitution-communes` | the country, Oberland and Unterland, and which of the eleven communes lies in each, as the Constitution lists them (LR 101, Art. 1; Art. 46 makes the two its electoral districts); communes keyed and named as swisstopo's directory lists them (7001–7011); kept by hand | `data/places/liechtenstein/communes.json`, handed to `places:import` (`fixture`) | official act (Liechtenstein URG, LR 231.1, Art. 5) and swisstopo OGD for the numbers |
 | `swisstopo-postcode-localities-li` | the directory's 13 Liechtenstein postcodes in 20 rows, with each commune's share; the rows without a canton, read with the adapter's `where` | the same zipped CSV as `swisstopo-postcode-localities` (`csv_postcodes`) | swisstopo OGD: free use, name the source |
+| `li-income-tax` | the country's tariff for a single person and for a couple taxed together (SteG, LR 640.0, art. 19 para. 1 a and c, as amended by LGBl. 2024 Nr. 483, from the tax year 2025), each piece's a·x − b as a step stating the tax at its start, on income rounded down to CHF 10 (art. 18); and the yield assumed on wealth, 4 % (Finanzgesetz 2025, LGBl. 2024 Nr. 441, art. 2; SteG art. 5 from 2026); kept by hand | `data/places/liechtenstein/income-tax.json` (`fixture`) | official act (URG Art. 5) |
+| `li-communal-surcharges` | each commune's surcharge on the country's tax for the tax years 2024 and 2025 (SteG art. 75 para. 3: 150–250 %), each row with the commune's own minutes, notice or report it was read from and the line quoted; kept by hand, a year's row added when the councils fix it in the autumn | `data/places/liechtenstein/communal-surcharges.csv` (`csv_facts`) | official act (URG Art. 5) |
+
+**Built (Liechtenstein's tax, 2026-10-30)**: schema version 10
+(`@bitbaum/tax-model` 0.11.0) adds a component's `adds`, inputs added to its
+base, each times a fact and rounded down first: Liechtenstein taxes no wealth
+on its own but 4 % of it, rounded down to CHF 100, as income on one tariff
+(art. 5, art. 14 para. 2 l, art. 18, art. 19). The model has two components,
+the country's tax and the commune's surcharge on it, read from the same
+tariff. No calculator of the country's could be reached (its tax
+administration's site refuses automated access), so the check is the act
+itself: the model gives art. 19's a·x − b at every income from 0 to CHF
+500,000 in steps of CHF 1,370, single and married (`adapters.test.ts`). Not
+yet: the single parent's tariff (art. 19 para. 1 b), as the Swiss model
+offers no children either; capital payments (art. 18 para. 6); income taxed at
+source (art. 23–25). The effective rate shown counts the tax on the wealth
+yield, which the law taxes as income.
 
 No ISO 3166-2 codes for the communes: ISO's list is not openly licensed, and
 Wikidata, which carries them under CC0, is the world backbone still to come.

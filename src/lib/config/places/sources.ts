@@ -788,6 +788,57 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["liechtenstein"],
   },
   {
+    // Kept by hand from the act: Liechtenstein's tariff for a single person
+    // and for a couple taxed together (SteG, LR 640.0, art. 19 para. 1 a and
+    // c, as amended by LGBl. 2024 Nr. 483, which applies from the tax year
+    // 2025), each piece's a·x − b written as a step that states the tax at its
+    // start, on the income rounded down to CHF 10 (art. 18 para. 1); and the
+    // yield assumed on wealth, 4 % (the Finanzgesetz for 2025, LGBl. 2024
+    // Nr. 441, art. 2 para. 1; SteG art. 5 from 2026). Add a row when the
+    // tariff is next indexed (art. 20) or the yield changes.
+    key: "li-income-tax",
+    publisher: "Principality of Liechtenstein",
+    dataset: "Steuergesetz (SteG) art. 5, 18 and 19; Finanzgesetz 2025 art. 2",
+    homepage: "https://www.gesetze.li/konso/2010340000",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Principality of Liechtenstein, Tax Act (SteG, LR 640.0) art. 5, 18 and 19; Finance Act for 2025 (LGBl. 2024 Nr. 441) art. 2",
+      de: "Fürstentum Liechtenstein, Steuergesetz (SteG, LR 640.0) Art. 5, 18 und 19; Finanzgesetz für das Jahr 2025 (LGBl. 2024 Nr. 441) Art. 2",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "fixture",
+    packs: ["liechtenstein"],
+  },
+  {
+    // Kept by hand: each commune's surcharge on the country's tax, in percent
+    // of it, which its council fixes for a tax year in the autumn of that year
+    // with the next year's budget (SteG art. 75 para. 3: between 150 % and
+    // 250 %). Each row carries the commune's own minutes or budget it was read
+    // from and the line quoted from it. A commune whose decision for a year
+    // could not be read has no row, and its tax shows as not recorded rather
+    // than as a guess.
+    key: "li-communal-surcharges",
+    publisher: "The communes of Liechtenstein",
+    dataset: "Gemeindesteuerzuschläge (council decisions)",
+    homepage:
+      "https://github.com/bitbaum/solon/blob/main/data/places/liechtenstein/communal-surcharges.csv",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "The communes of Liechtenstein, council decisions on the communal surcharge",
+      de: "Die Gemeinden Liechtensteins, Gemeinderatsbeschlüsse zum Gemeindesteuerzuschlag",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "li_municipality", column: "commune" },
+      yearColumn: "tax_year",
+      facts: [{ metric: "tax.multiplier", column: "surcharge_percent", divideBy: 100 }],
+    },
+    packs: ["liechtenstein"],
+  },
+  {
     // Confirmed 2026-10-22: the same directory as swisstopo-postcode-localities
     // (same URL and terms) lists Liechtenstein's 13 postcodes in 20 rows, each
     // with its commune's number (7001–7011) and no canton. This source reads
