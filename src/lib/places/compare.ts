@@ -15,6 +15,8 @@ import {
   loadChain,
   loadFacts,
   loadInstruments,
+  loadRefinements,
+  standsForLevels,
   type ChainFact,
   type ChainInstrument,
   type ChainPlace,
@@ -33,6 +35,8 @@ export interface ComparedPlace {
   facts: ChainFact[];
   /** What the chain offers today, whatever year the figures are for. */
   instruments?: ChainInstrument[];
+  /** The places inside it that refine its figures. */
+  refinements?: ChainPlace[];
 }
 
 /** How many fiscal years back a comparison looks for figures not yet published for this one. */
@@ -81,6 +85,9 @@ export async function loadComparison(
     }
   }
 
+  const refining = config.packs.flatMap((pack) =>
+    pack.levels.flatMap((level) => (level.standsFor ? [level.key] : [])),
+  );
   places = await Promise.all(
     places.map(async (place) => ({
       ...place,
@@ -89,6 +96,14 @@ export async function loadComparison(
         place.chain.map((p) => p.id),
         on,
       ),
+      refinements: (
+        await loadRefinements(
+          db,
+          place.chain.filter((p) => p.depth === 0).map((p) => p.id),
+          refining,
+          on,
+        )
+      ).map((r) => r.place),
     })),
   );
   const retrievals = await loadRetrievals(db, [
@@ -110,11 +125,15 @@ export async function loadComparison(
 /** The chain facts its pack's tax model reads. */
 function modelFacts(config: PlacesConfig, { chain, facts }: ComparedPlace): ChainFact[] {
   const place = chain.find((p) => p.depth === 0);
-  const model = config.packs.find((p) => p.key === place?.countryPack)?.taxModel;
-  if (!model) {
+  const pack = config.packs.find((p) => p.key === place?.countryPack);
+  const model = pack?.taxModel;
+  if (!pack || !model) {
     return [];
   }
-  const levelOf = new Map(chain.map((p) => [p.id, p.levelKey]));
+  const standsFor = standsForLevels(pack.levels);
+  const levelOf = new Map(
+    chain.map((p) => [p.id, p.levelKey ? (standsFor[p.levelKey] ?? p.levelKey) : null]),
+  );
   const read = new Set(modelRefs(model).map((r) => `${r.level} ${r.metric}`));
   return facts.filter((f) => read.has(`${levelOf.get(f.jurisdictionId)} ${f.metricKey}`));
 }
@@ -134,12 +153,17 @@ export function yearsBefore(on: string, years: number): string {
  */
 export function figuresPublished(config: PlacesConfig, place: ComparedPlace): boolean {
   const self = place.chain.find((p) => p.depth === 0);
-  const model = config.packs.find((p) => p.key === self?.countryPack)?.taxModel;
-  if (!model) {
+  const pack = config.packs.find((p) => p.key === self?.countryPack);
+  const model = pack?.taxModel;
+  if (!pack || !model) {
     return true;
   }
   const levels = new Set(place.chain.map((p) => p.levelKey));
-  const facts = evaluatorFacts(place.chain, modelFacts(config, place));
+  const facts = evaluatorFacts(
+    place.chain,
+    modelFacts(config, place),
+    standsForLevels(pack.levels),
+  );
   return model.variants.every((variant) => {
     try {
       return evaluate(model, facts, { values: { [model.base]: 1 }, variant }).missing.every(
@@ -188,7 +212,7 @@ export function comparisonView(input: {
     };
     const nameOf = (p: ChainPlace) => displayName(p.names, locale, pack.defaultLocales);
     const model = pack.taxModel;
-    const facts = evaluatorFacts(chain, modelFacts(config, compared));
+    const facts = evaluatorFacts(chain, modelFacts(config, compared), standsForLevels(pack.levels));
     const taxing = model ? taxingLevels(model, facts) : [];
 
     let taxPack = taxPacks.get(pack.key);
@@ -224,6 +248,19 @@ export function comparisonView(input: {
           }),
       ),
       actions: placeActions(config, chain, compared.instruments ?? [], locale),
+      refinedBy: (compared.refinements ?? []).flatMap((p) => {
+        const level = pack.levels.find((l) => l.key === p.levelKey);
+        return level?.standsFor && p.slugPath
+          ? [
+              {
+                name: nameOf(p),
+                slugPath: p.slugPath,
+                levelKey: level.key,
+                standsFor: level.standsFor,
+              },
+            ]
+          : [];
+      }),
     });
   }
   return { columns, taxPacks: [...taxPacks.values()], notFound };
@@ -251,19 +288,30 @@ export function taxPackView(
     hint: labels.inputs[key]!.hint ? localized(labels.inputs[key]!.hint!, locale) : null,
   });
   const rows = new Map<string, CompareTaxPack["multiplierRows"][number]>();
-  for (const ref of model.components.flatMap((c) => c.multipliers ?? [])) {
-    const key = multiplierRowKey(ref.level, ref.metric);
-    const metric = config.metrics.find((m) => m.key === ref.metric);
-    rows.set(key, {
-      key,
-      levelKey: ref.level,
-      metric: metric ? localized(metric.label, locale) : ref.metric,
-      level: levelName(ref.level),
-      when: ref.when ?? null,
-    });
+  for (const component of model.components) {
+    for (const ref of component.multipliers ?? []) {
+      const key = multiplierRowKey(ref.level, ref.metric);
+      const metric = config.metrics.find((m) => m.key === ref.metric);
+      rows.set(key, {
+        key,
+        levelKey: ref.level,
+        metric: metric ? localized(metric.label, locale) : ref.metric,
+        level: levelName(ref.level),
+        when: ref.when ?? component.when ?? null,
+        optional: ref.optional === true,
+      });
+    }
   }
+  // An amount is any number a component reads besides the model's base: its own
+  // base (a wealth tax), or an input added to its base (Liechtenstein's yield on
+  // wealth). Everything else the model reads is a yes or no.
   const amountKeys = [
-    ...new Set(model.components.flatMap((c) => (c.base && c.base !== model.base ? [c.base] : []))),
+    ...new Set(
+      model.components.flatMap((c) => [
+        ...(c.base && c.base !== model.base ? [c.base] : []),
+        ...("adds" in c && c.adds ? c.adds.map((a) => a.input) : []),
+      ]),
+    ),
   ];
   const choices = Object.entries(labels.choices);
   const chosen = new Set(choices.flatMap(([, choice]) => choice.options));

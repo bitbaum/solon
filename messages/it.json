@@ -59,7 +59,8 @@
       "places": "Luoghi",
       "placesCompare": "Confronta",
       "placesCoverage": "Copertura",
-      "askSolon": "Chiedi a Solon"
+      "askSolon": "Chiedi a Solon",
+      "structures": "Strutture"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -100,7 +101,8 @@
       "places": "Trovare un luogo per nome o numero postale",
       "placesCompare": "Luoghi a confronto: quanto ti costano le imposte in ciascuno",
       "placesCoverage": "Cosa coprono i luoghi, contato dai dati",
-      "askSolon": "Comprendi le regole e prepara una proposta."
+      "askSolon": "Comprendi le regole e prepara una proposta.",
+      "structures": "Forme giuridiche a confronto, con le parole della legge"
     }
   },
   "Nav": {
@@ -465,7 +467,8 @@
       "title": "Imposte",
       "levies": "Riscuote imposte: le aliquote fissate qui entrano nel modello fiscale di {pack}.",
       "none": "Non riscuote imposte proprie. Qui valgono le imposte dei luoghi di cui fa parte.",
-      "noModel": "Per {pack} non c'è ancora un modello fiscale."
+      "noModel": "Per {pack} non c'è ancora un modello fiscale.",
+      "refinedBy": "Il moltiplicatore dipende da dove abita a {place}. Scelga la sua località:"
     },
     "otherNames": "Altri nomi",
     "identifiers": "Identificativi",
@@ -558,12 +561,13 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Non ancora registrato",
       "taxedBy": "Riscossa da",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Non ancora confrontato",
       "laterText": "Partecipazione, cosa comporta andarsene, statuto e dimensioni arriveranno quando i loro dati saranno importati.",
       "coverageLink": "Cosa coprono i luoghi →",
       "disclaimer": "Una stima dalle tariffe pubblicate, non una tassazione.",
-      "act": "Cosa può fare"
+      "act": "Cosa può fare",
+      "perMonth": "{amount} al mese da mettere da parte"
     },
     "map": {
       "searchLabel": "Cerca un indirizzo, un luogo o un numero postale",
@@ -581,6 +585,8 @@
       "viewMap": "Mappa",
       "viewList": "Elenco",
       "mapLabel": "Mappa: {level}",
+      "zoomIn": "Ingrandisci",
+      "zoomOut": "Riduci",
       "loading": "Caricamento della mappa…",
       "loadError": "Non è stato possibile caricare la mappa. La ricerca e l’elenco qui sotto funzionano comunque.",
       "mapUnavailable": "La mappa non può essere disegnata in questo browser, quindi i luoghi sono elencati.",
@@ -614,7 +620,19 @@
       "title": "Cosa può fare",
       "intro": "Ogni link apre la pagina dell’autorità competente.",
       "due": "Di regola entro il {date, date, ::dMMMM}",
-      "dueSource": "fonte"
+      "dueSource": "fonte",
+      "calendar": "Aggiungi le scadenze al calendario",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Dove è indicata la data"
+    },
+    "ask": {
+      "title": "Domande sulle imposte a {place}",
+      "starters": {
+        "one": "Come è tassato il reddito qui?",
+        "two": "Entro quando va presentata qui la dichiarazione d’imposta, e posso avere una proroga?",
+        "three": "C’è un’imposta sulla sostanza qui?"
+      },
+      "placeholder": "Posso dedurre le spese per il tragitto al lavoro?"
     }
   },
   "AuthError": {
@@ -718,5 +736,52 @@
     "passkey": "Se avete aggiunto una passkey al vostro account, accedete con quella qui sopra.",
     "orangecat": "Se il vostro account è collegato a OrangeCat, continuate con OrangeCat qui sopra.",
     "contact": "Altrimenti scrivete a <mail>{email}</mail> dall’indirizzo del vostro account."
+  },
+  "Structures": {
+    "metaTitle": "Strutture a confronto",
+    "kicker": "Strutture",
+    "title": "Strutture a confronto",
+    "description": "Una fondazione, un istituto e una società anonima del Liechtenstein, e una società anonima svizzera: ciò che la legge dice di ciascuna, riga per riga. Ogni dato cita la sua disposizione, verificata a ogni apertura sul diritto che Solon detiene.",
+    "notAdvice": "Qui si espone ciò che dice la legge. Non è una consulenza: quale forma fa per voi lo valuta un fiduciario, avvocato o consulente fiscale abilitato.",
+    "kindsTitle": "Le forme a confronto",
+    "readAct": "Leggi l’atto",
+    "ask": "Chiedi sul diritto",
+    "missing": "Non ancora indicato qui",
+    "source": "{count, plural, one {La disposizione} other {Le # disposizioni}}",
+    "amended": "Questa disposizione è cambiata da quando è stata letta; queste parole vi figurano ancora.",
+    "kinds": {
+      "liFoundation": "Fondazione (Stiftung)",
+      "liEstablishment": "Istituto (Anstalt)",
+      "liCompany": "Società anonima (AG)",
+      "chCompany": "Società anonima (SA)"
+    },
+    "places": {
+      "liechtenstein": "Liechtenstein",
+      "switzerland": "Svizzera"
+    },
+    "rows": {
+      "founders": "Chi può costituirla",
+      "minimumCapital": "Capitale minimo",
+      "register": "Registro pubblico",
+      "supervision": "Vigilanza",
+      "liability": "Chi risponde dei suoi debiti",
+      "profitTax": "Imposta sull’utile",
+      "minimumTax": "Imposta minima annua",
+      "privateWealth": "Se detiene solo patrimonio privato"
+    },
+    "scopes": {
+      "federal": "{rate} federale"
+    },
+    "values": {
+      "naturalOrLegalPersons": "Una o più persone fisiche o giuridiche",
+      "oneOrMoreFounders": "Uno o più fondatori",
+      "oneOrMorePersonsOrCompanies": "Una o più persone o società commerciali",
+      "registeredOrNoticeDeposited": "Iscritta nel registro di commercio dove la legge lo richiede; altrimenti si deposita un avviso di costituzione",
+      "registered": "Iscritta nel registro di commercio",
+      "existsOnceRegistered": "Iscritta nel registro di commercio, ed esiste solo da allora",
+      "charitableOrByChoice": "Vigilata se di pubblica utilità, o se l’atto di fondazione lo prevede",
+      "ownAssetsOnly": "Solo il proprio patrimonio",
+      "minimumTaxOnly": "Solo l’imposta minima, se soddisfa le condizioni di una struttura di patrimonio privato"
+    }
   }
 }

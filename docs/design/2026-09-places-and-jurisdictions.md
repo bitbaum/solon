@@ -578,7 +578,7 @@ left out like Zürich's. Not yet:
 - Splitting cantons that do not match yet: see the next paragraph.
 - Vaud: built since, below.
 - Basel-Landschaft (a formula), Uri and Obwalden (flat tax), Schwyz
-  (separate commune tariffs): built since, below. Valais: not yet, below.
+  (separate commune tariffs): built since, below. Valais: built since, below.
 
 **Built (P2, splitting)**: the calculator's export gives each row a
 `Splitting` divisor; the importer records it per canton and variant as
@@ -661,14 +661,7 @@ tariff; for every other canton the importer gives the communes the basic
 tariff (`alsoAs`). All four match to the franc (196 cases); Liestal, Schwyz
 (also at CHF 777,777), Altdorf and Sarnen are golden cases in the adapter's
 tests, and so is a couple in Aarau at CHF 30,000, whose federal CHF 3 is not
-levied. Not yet:
-
-- Valais: its exported tables (type `FREIBURG`, a canton and a communes'
-  table) do not give the calculator's figures: a single person's rates match
-  the table only with its thresholds stretched by about 2.01 to 2.02,
-  unevenly (the canton indexes its tariff, which the export does not say), and
-  a couple's tax is cut by 35 % with floors and caps that differ between canton
-  and communes. To be read from the canton's own publication.
+levied. Valais was not yet among them; it is built since, below.
 
 **Built (P2, Vaud's limit)**: the live check after the four cantons above
 found Vaud's single people at CHF 777,777 about CHF 15,800 too high. Vaud's
@@ -727,10 +720,72 @@ per-head tax) matches the calculator's total to the franc in two communes of
 every modelled canton, for every church, single and married. Not yet:
 
 - The caps on income and wealth tax together (Basel-Stadt, Aargau, Ticino;
-  Valais and Geneva are not modelled) are not modelled; they bind only where
+  Valais, Geneva) are not modelled; they bind only where
   wealth is large against income.
 - Where parishes in one commune levy different church rates, the export gives
   one of them.
+
+**Built (Thurgau, St. Gallen, Appenzell Innerrhoden and Geneva, 2026-10-30)**:
+measured against the calculator's whole bill (single and married, Reformed,
+CHF 100,000 income and CHF 500,000 wealth) in every commune of the four
+cantons and every locality below: 460 cases, all to the franc.
+
+- Every one of the 644 localities of Thurgau, St. Gallen and Appenzell
+  Innerrhoden was asked: in 153 of their 160 communes all localities pay
+  alike, so the export's one rate per commune holds. In seven (Appenzell,
+  Schwende-Rüte, Au, Oberbüren, Waldkirch, Oberriet, Niederhelfenschwil) the
+  school district or the parish depends on the locality. Their localities are
+  places at the `locality` level, which `standsFor` the municipality: a
+  locality's rate stands for its commune's, and the nearest place in a chain
+  wins (`evaluatorFacts`). The export's rows for those communes are skipped
+  with that reason, so a commune does not show one locality's rate as its own;
+  its page lists its localities to choose from, and `/compare` offers them in
+  its column (`data/places/switzerland/tax-localities.json`, source
+  `estv-tax-localities`).
+- Geneva: the cantonal tax carries 47.5 and 1 centimes (LCAC, rsGE D 3 07,
+  art. 2); on income the 147.5 % is reduced by 12 % and the 1 % is not, which
+  the model reads as the existing reduction and a further canton multiplier,
+  `tax.multiplier.extra`. Wealth carries the supplementary tax of LIPP art. 59
+  para. 2, on no multiplier, at the law's rates on the brackets the calculator
+  indexes each year (`tax.wealth.tariff.supplement`, 0 in every other canton),
+  and Geneva does not round wealth (`data/places/switzerland/cantonal-adjustments.json`,
+  source `ch-cantonal-adjustments`).
+- An estimate is a bill: each tax is rounded to the franc and the total is
+  their sum, as the calculator states it, so the rows shown add up to the
+  total shown (`compare-view.ts`).
+
+**Built (Valais, 2026-10-30)**: all 26 cantons. Valais's exported tables
+are the base tariffs of its tax law (StG, SGS 642.1, art. 32 and 178), which
+the canton and each commune read at an indexed income. Schema version 9
+(`@bitbaum/tax-model` 0.10.0) adds what that needs, and nothing that names
+Valais:
+
+- A divisor's `scaledBy`: the income divisor is multiplied by the index of the
+  level that levies the tax, `tax.income.index` (art. 32 para. 4; art. 178
+  para. 5, where each commune's assembly decides how far it follows). The
+  canton's is 2.0072, 1.1⁷ × 1.03. The communes' run from 1.1 to 2.07, and 107
+  of 122 (108 in 2025) are of the same form, 1.1ᵃ × (1 + p/100). Measured, for 2025 and 2026,
+  at twelve incomes each, single and married.
+- A component's `rebate`: a couple's tax is cut by 35 %, at least CHF 680 and
+  at most CHF 4,900, for canton and commune each, after the commune's
+  coefficient (art. 32 para. 3a, art. 178 para. 3a, which state CHF 600 and
+  4,500 before indexing and the Grand Council's increase).
+- A component's `floor`: the cantonal income tax is at least CHF 10, even on
+  no income (art. 32 para. 6).
+
+Data: `data/places/switzerland/valais-income-tax.json` (source
+`vs-income-tax`). Checked against the calculator's whole bill in every
+commune at five incomes the indexes were not fitted to (CHF 28,000 to
+222,222, single and married, with CHF 500,000 wealth): 1,195 of 1,220 bills
+to the franc, the other 25 within CHF 1, always in the communal income tax,
+for 2025 and 2026. No index reproduces those last francs together with the
+commune's other incomes, so they are the calculator's own rounding, which
+the act does not state.
+
+The same check found that Uri and Solothurn do not round wealth (the
+calculator's tax moves between CHF 1,234,100 and 1,234,567 there); they are
+now out of the CHF 1,000 rounding with Geneva, and all 25 other cantons match
+the calculator's total again in every case.
 
 ### 6.3 "Takes tax" is derived
 
@@ -860,12 +915,30 @@ hardcoded date.
 | `swisstopo-postcode-localities` | every postcode locality, the commune it lies in and its share of the locality's addresses (1,223 of 3,190 postcodes span several communes); confirmed 2026-09-30. The directory also lists Liechtenstein's 11 communes (no canton) and two commune-free areas (BFS 2391 Staatswald Galm, 5391 Comunanza Cadenazzo/Monteceneri); `skipWhen` leaves those 22 rows out and the run reports them | the federal geodata catalogue, zipped semicolon CSV (`csv_postcodes`) | swisstopo OGD: free use, name the source |
 
 **Liechtenstein** (built 2026-10-22, pack `countries/liechtenstein.ts`: nation,
-the two Landschaften as `landschaft`, the eleven communes; no tax model):
+the two Landschaften as `landschaft`, the eleven communes; tax model since
+2026-10-30, below):
 
 | Source key | What | Access | Terms |
 |---|---|---|---|
 | `li-constitution-communes` | the country, Oberland and Unterland, and which of the eleven communes lies in each, as the Constitution lists them (LR 101, Art. 1; Art. 46 makes the two its electoral districts); communes keyed and named as swisstopo's directory lists them (7001–7011); kept by hand | `data/places/liechtenstein/communes.json`, handed to `places:import` (`fixture`) | official act (Liechtenstein URG, LR 231.1, Art. 5) and swisstopo OGD for the numbers |
 | `swisstopo-postcode-localities-li` | the directory's 13 Liechtenstein postcodes in 20 rows, with each commune's share; the rows without a canton, read with the adapter's `where` | the same zipped CSV as `swisstopo-postcode-localities` (`csv_postcodes`) | swisstopo OGD: free use, name the source |
+| `li-income-tax` | the country's tariff for a single person and for a couple taxed together (SteG, LR 640.0, art. 19 para. 1 a and c, as amended by LGBl. 2024 Nr. 483, from the tax year 2025), each piece's a·x − b as a step stating the tax at its start, on income rounded down to CHF 10 (art. 18); and the yield assumed on wealth, 4 % (Finanzgesetz 2025, LGBl. 2024 Nr. 441, art. 2; SteG art. 5 from 2026); kept by hand | `data/places/liechtenstein/income-tax.json` (`fixture`) | official act (URG Art. 5) |
+| `li-communal-surcharges` | each commune's surcharge on the country's tax for the tax years 2024 and 2025 (SteG art. 75 para. 3: 150–250 %), each row with the commune's own minutes, notice or report it was read from and the line quoted; kept by hand, a year's row added when the councils fix it in the autumn | `data/places/liechtenstein/communal-surcharges.csv` (`csv_facts`) | official act (URG Art. 5) |
+
+**Built (Liechtenstein's tax, 2026-10-30)**: schema version 10
+(`@bitbaum/tax-model` 0.11.0) adds a component's `adds`, inputs added to its
+base, each times a fact and rounded down first: Liechtenstein taxes no wealth
+on its own but 4 % of it, rounded down to CHF 100, as income on one tariff
+(art. 5, art. 14 para. 2 l, art. 18, art. 19). The model has two components,
+the country's tax and the commune's surcharge on it, read from the same
+tariff. No calculator of the country's could be reached (its tax
+administration's site refuses automated access), so the check is the act
+itself: the model gives art. 19's a·x − b at every income from 0 to CHF
+500,000 in steps of CHF 1,370, single and married (`adapters.test.ts`). Not
+yet: the single parent's tariff (art. 19 para. 1 b), as the Swiss model
+offers no children either; capital payments (art. 18 para. 6); income taxed at
+source (art. 23–25). The effective rate shown counts the tax on the wealth
+yield, which the law taxes as income.
 
 No ISO 3166-2 codes for the communes: ISO's list is not openly licensed, and
 Wikidata, which carries them under CC0, is the world backbone still to come.
@@ -1077,7 +1150,7 @@ concatenated sentences, no dead ends.
   **Built (P1, the map)**: `src/components/places/places-map.tsx` on
   `/places`. The browser loads the map data, then the boundary file through
   geo-kit (manifest revalidated on every load, file checked against its
-  sha256), and draws it with MapLibre GL on an empty style: no base map, the
+  sha256), and draws it with geo-kit's map renderer on no base map: the
   data is the picture. Each commune is coloured by its class among seven
   quantile classes of the estimates on the map (`quantileBreaks`, lowest
   first, spread over the scale); a commune without a figure is `--map-no-data`.
@@ -1091,10 +1164,10 @@ concatenated sentences, no dead ends.
   place's tax, rate and rank, a link to its page and "add to compare"; the
   tray links to `/compare` (up to the Register's `compareLimit`). The list
   (`map-list.tsx`) is the same rows, sortable; on phones it opens first.
-  MapLibre is ESM whose worker URL bundlers cannot follow, so
-  `scripts/build/vendor-maplibre.mjs` copies its files to
-  `public/vendor/maplibre-gl/<version>/` before `dev` and `build` (served
-  immutable), and the canvas imports them at run time. Without JavaScript the
+  The map is the fleet's one renderer, `@bitbaum/geo-kit/map` (since
+  2026-10-30, replacing MapLibre GL): the orthographic globe on Canvas 2D,
+  zoomed in to the country, the same code that draws Substrata's world.
+  Without JavaScript the
   plain search form stands in. Not yet: lakes and canton outlines, earlier
   editions, a base map.
 - The colour scale and the hatch pattern are **tokens** in `@fleet/design-tokens`,

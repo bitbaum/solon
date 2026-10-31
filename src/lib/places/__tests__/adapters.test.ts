@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
+import { liechtensteinIncomeTax } from "@/lib/config/places/countries/liechtenstein";
 import { switzerlandIncomeTax } from "@/lib/config/places/countries/switzerland";
 import { evaluate } from "@/lib/tax-model";
 import { ADAPTERS, type Probe } from "../adapters";
@@ -469,6 +470,16 @@ describe("per-head taxes and church tariffs, kept by hand", () => {
     expect(checkBatch(tariffs, placesConfig, "ch-church-tariffs").problems).toEqual([]);
   });
 
+  it("place each locality whose rates differ inside its commune, at the level that stands for it", () => {
+    const localities = read("estv-tax-localities", "tax-localities.json");
+    expect(checkBatch(localities, placesConfig, "estv-tax-localities").problems).toEqual([]);
+    expect(localities.jurisdictions.every((j) => j.levelKey === "locality")).toBe(true);
+    const communes = new Set(localities.relations.map((r) => r.to.value));
+    expect([...communes].sort()).toEqual(["3101", "3112", "3231", "3254", "3423", "3424", "3444"]);
+    const adjustments = read("ch-cantonal-adjustments", "cantonal-adjustments.json");
+    expect(checkBatch(adjustments, placesConfig, "ch-cantonal-adjustments").problems).toEqual([]);
+  });
+
   it("states every canton's per-head tax for both households, and every Solothurn commune's", () => {
     const heads = read("ch-per-head-taxes", "per-head-taxes.json");
     const cantons = new Set(
@@ -488,6 +499,153 @@ describe("per-head taxes and church tariffs, kept by hand", () => {
         .map((f) => f.jurisdiction.value),
     );
     expect(solothurn.size).toBe(104);
+  });
+});
+
+describe("Valais's income tax, kept by hand", () => {
+  const batch = mapSource(
+    "vs-income-tax",
+    new Uint8Array(
+      readFileSync(join(__dirname, "../../../../data/places/switzerland/valais-income-tax.json")),
+    ),
+  );
+  const at = (metric: string, scheme: string, value: string, on: string) =>
+    batch.facts.find(
+      (f) =>
+        f.metricKey === metric &&
+        f.jurisdiction.scheme === scheme &&
+        f.jurisdiction.value === value &&
+        f.validFrom <= on &&
+        (f.validTo === null || on < f.validTo),
+    )?.value;
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "vs-income-tax").problems).toEqual([]);
+  });
+
+  it("gives the canton its index, a couple's rebate and the minimum tax", () => {
+    expect(at("tax.income.rebate", "bfs_canton", "23", "2026-06-30")).toBe(0.35);
+    expect(at("tax.income.rebate.most", "bfs_canton", "23", "2026-06-30")).toBe(4900);
+    expect(at("tax.income.floor", "bfs_canton", "23", "2026-06-30")).toBe(10);
+    expect(at("tax.income.index", "bfs_canton", "23", "2026-06-30")).toBeCloseTo(2.007, 3);
+  });
+
+  it("gives every Valais commune an index, for both years", () => {
+    for (const on of ["2025-06-30", "2026-06-30"]) {
+      const communes = batch.facts.filter(
+        (f) =>
+          f.metricKey === "tax.income.index" &&
+          f.jurisdiction.scheme === "bfs_municipality" &&
+          f.validFrom <= on &&
+          (f.validTo === null || on < f.validTo),
+      );
+      expect(communes).toHaveLength(122);
+    }
+    // Brig-Glis, measured at five incomes.
+    expect(at("tax.income.index", "bfs_municipality", "6002", "2026-06-30")).toBeCloseTo(2.0657, 3);
+  });
+});
+
+describe("Liechtenstein's tax, kept by hand from its law and its communes' decisions", () => {
+  const dir = join(__dirname, "../../../../data/places/liechtenstein");
+  const tax = mapSource(
+    "li-income-tax",
+    new Uint8Array(readFileSync(join(dir, "income-tax.json"))),
+  );
+  const surchargeFile = join(dir, "communal-surcharges.csv");
+  const surcharges = mapSource(
+    "li-communal-surcharges",
+    new Uint8Array(readFileSync(surchargeFile)),
+  );
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(tax, placesConfig, "li-income-tax").problems).toEqual([]);
+    expect(checkBatch(surcharges, placesConfig, "li-communal-surcharges").problems).toEqual([]);
+  });
+
+  it("gives every commune's surcharge for 2024 and 2025 the decision it was read from", () => {
+    const rows = parseCsv(readFileSync(surchargeFile, "utf8"));
+    for (const row of rows) {
+      // The year itself, or the budget year after it, which a council fixes it with.
+      expect(row.quote, `${row.name} ${row.tax_year}`).toMatch(
+        new RegExp(`${row.tax_year}|${Number(row.tax_year) + 1}`),
+      );
+      expect(row.source_url, `${row.name} ${row.tax_year}`).toMatch(/^https:\/\//);
+      // SteG art. 75 para. 3.
+      expect(Number(row.surcharge_percent)).toBeGreaterThanOrEqual(150);
+      expect(Number(row.surcharge_percent)).toBeLessThanOrEqual(250);
+    }
+    for (const year of ["2024", "2025"]) {
+      expect(new Set(rows.filter((r) => r.tax_year === year).map((r) => r.commune)).size).toBe(11);
+    }
+  });
+
+  /** SteG art. 19 para. 1 a and c, as the act states each piece: a·x − b. */
+  const ARTICLE_19: Record<string, [number, number, number][]> = {
+    single: [
+      [15_856, 0.01, 159],
+      [21_141, 0.03, 581],
+      [42_281, 0.04, 1_004],
+      [73_991, 0.05, 1_744],
+      [105_701, 0.06, 2_801],
+      [137_411, 0.065, 3_488],
+      [169_121, 0.07, 4_334],
+      [211_401, 0.08, 6_448],
+    ],
+    married: [
+      [31_711, 0.01, 317],
+      [42_281, 0.03, 1_163],
+      [84_561, 0.04, 2_008],
+      [147_981, 0.05, 3_488],
+      [211_401, 0.06, 5_602],
+      [274_821, 0.065, 6_976],
+      [338_241, 0.07, 8_667],
+      [422_801, 0.08, 12_895],
+    ],
+  };
+  const byLaw = (variant: string, x: number) => {
+    const piece = ARTICLE_19[variant]!.filter(([from]) => from <= x).at(-1);
+    return piece ? Math.max(0, piece[1] * x - piece[2]) : 0;
+  };
+  const facts = (commune: string) => [
+    ...tax.facts.map((f) => ({
+      level: "nation",
+      metric: f.metricKey,
+      ...(f.variant ? { variant: f.variant } : {}),
+      value: f.value as never,
+    })),
+    {
+      level: "municipality",
+      metric: "tax.multiplier",
+      value: surcharges.facts.find(
+        (f) => f.jurisdiction.value === commune && f.validFrom === "2025-01-01",
+      )!.value as number,
+    },
+  ];
+
+  it("states the act's tax at every income, single and married", () => {
+    for (const variant of ["single", "married"]) {
+      for (let x = 0; x <= 500_000; x += 1_370) {
+        const estimate = evaluate(liechtensteinIncomeTax, facts("7001"), {
+          values: { taxable_income: x },
+          variant,
+        });
+        const national = estimate.components.find((c) => c.key === "national")!.amount!;
+        expect(national, `${variant} ${x}`).toBeCloseTo(byLaw(variant, x), 6);
+      }
+    }
+  });
+
+  it("adds 4 % of the wealth, rounded down to CHF 100, and the commune's surcharge", () => {
+    // Mauren, 2025: 160 % (council, 26 November 2025).
+    const estimate = evaluate(liechtensteinIncomeTax, facts("7008"), {
+      values: { taxable_income: 100_000, taxable_wealth: 1_000_099 },
+      variant: "single",
+    });
+    // 100,000 + 4 % of 1,000,000: 140,000 at 6.5 % less 3,488 = 5,612.
+    expect(estimate.components[0]!.amount).toBeCloseTo(5_612, 6);
+    expect(estimate.components[1]!.amount).toBeCloseTo(5_612 * 1.6, 6);
+    expect(estimate.complete).toBe(true);
   });
 });
 
@@ -514,6 +672,29 @@ describe("the cantons' tax steps, kept by hand", () => {
     expect(() => mapSource("ch-cantonal-tax-steps", new TextEncoder().encode(bad))).toThrow(
       /"submit" in kind names no instrument kind/,
     );
+  });
+});
+
+describe("Liechtenstein's tax steps, at each commune's own office", () => {
+  const file = join(__dirname, "../../../../data/places/liechtenstein/tax-steps.csv");
+  const batch = mapSource("li-communal-tax-steps", new Uint8Array(readFileSync(file)));
+  const rows = parseCsv(readFileSync(file, "utf8"));
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "li-communal-tax-steps").problems).toEqual([]);
+  });
+
+  it("tells every commune's residents where to file, each row with the sentence it was read from", () => {
+    const filing = new Set(rows.filter((r) => r.kind === "file").map((r) => r.place));
+    expect(filing.size).toBe(11);
+    for (const row of rows) {
+      expect(row.quote, `${row.place} ${row.kind}`).not.toBe("");
+      expect(row.url, `${row.place} ${row.kind}`).toMatch(/^https:\/\/(www\.)?[a-z]+\.li\//);
+    }
+    // Only where the commune names the day: Triesenberg and Eschen, 24 April.
+    expect(
+      batch.instruments.filter((i) => i.requirements.deadline).map((i) => i.requirements.deadline),
+    ).toHaveLength(2);
   });
 });
 
@@ -579,18 +760,23 @@ describe("the Federal Tax Administration's exports", () => {
     expect(tariff("bfs_canton", "2", "single")).toBeDefined();
     // Two federal tariffs, and per variant a basic tariff, a communal tariff
     // and a divisor for Aargau, Zürich, Bern, Fribourg, Ticino, Nidwalden,
-    // Glarus, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and Schwyz
-    // (78). The basic tariff is also each church's tariff, three per variant,
-    // except Uri's churches and Basel-Landschaft's Reformed and Christian
-    // Catholic ones, whose tariffs are kept by hand (68). Valais's rows are
-    // not read: it is not modelled.
-    expect(scales.facts).toHaveLength(148);
+    // Glarus, Schwyz, Schaffhausen, Vaud, Basel-Landschaft, Uri, Obwalden and
+    // Valais (84). The basic tariff is also each church's tariff, three per
+    // variant, except Uri's churches and Basel-Landschaft's Reformed and
+    // Christian Catholic ones, whose tariffs are kept by hand (74).
+    expect(scales.facts).toHaveLength(160);
     expect(
       scales.facts.filter(
         (f) => f.jurisdiction.value === "4" && f.metricKey.startsWith("tax.church"),
       ),
     ).toEqual([]);
-    expect(scales.facts.some((f) => f.jurisdiction.value === "23")).toBe(false);
+    // Valais does not split a couple's income: it cuts their tax instead
+    // (vs-income-tax), so its divisor is 1 for both.
+    expect(
+      scales.facts
+        .filter((f) => f.jurisdiction.value === "23" && f.metricKey === "tax.income.divisor")
+        .map((f) => f.value),
+    ).toEqual([1, 1]);
   });
 
   it("gives the communes the canton's basic tariff, unless the canton gives them their own", () => {

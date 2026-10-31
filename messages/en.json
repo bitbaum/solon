@@ -59,7 +59,8 @@
       "places": "Places",
       "placesCompare": "Compare",
       "placesCoverage": "Coverage",
-      "askSolon": "Ask Solon"
+      "askSolon": "Ask Solon",
+      "structures": "Structures"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -100,7 +101,8 @@
       "places": "Find a place by name or postcode",
       "placesCompare": "Places side by side: what tax costs you in each",
       "placesCoverage": "What Places covers, counted from the data",
-      "askSolon": "Understand the rules and draft a proposal."
+      "askSolon": "Understand the rules and draft a proposal.",
+      "structures": "Legal forms side by side, in the words of the law"
     }
   },
   "Nav": {
@@ -1031,7 +1033,8 @@
       "title": "Tax",
       "levies": "Levies tax: rates set here enter the tax model of {pack}.",
       "none": "Levies no tax of its own. The taxes here are those of the places it is part of.",
-      "noModel": "No tax model for {pack} yet."
+      "noModel": "No tax model for {pack} yet.",
+      "refinedBy": "The rate depends on where in {place} you live. Choose your locality:"
     },
     "otherNames": "Other names",
     "identifiers": "Identifiers",
@@ -1124,12 +1127,13 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Not recorded yet",
       "taxedBy": "Levied by",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Not compared yet",
       "laterText": "Ways to take part, what leaving involves, status and size come as their data is imported.",
       "coverageLink": "What Places covers →",
       "disclaimer": "An estimate from the published tariffs, not a tax assessment.",
-      "act": "What you can do"
+      "act": "What you can do",
+      "perMonth": "{amount} a month to put aside"
     },
     "map": {
       "searchLabel": "Find an address, a place or a postcode",
@@ -1147,6 +1151,8 @@
       "viewMap": "Map",
       "viewList": "List",
       "mapLabel": "Map: {level}",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
       "loading": "Loading the map…",
       "loadError": "The map could not be loaded. Search and browse below still work.",
       "mapUnavailable": "The map cannot be drawn in this browser, so the places are listed instead.",
@@ -1180,7 +1186,19 @@
       "title": "What you can do",
       "intro": "Each link opens the authority's own page.",
       "due": "Usually due by {date, date, ::dMMMM}",
-      "dueSource": "source"
+      "dueSource": "source",
+      "calendar": "Add the deadlines to your calendar",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Where the date is stated"
+    },
+    "ask": {
+      "title": "Ask about tax in {place}",
+      "starters": {
+        "one": "How is income taxed here?",
+        "two": "When is the tax return due here, and can I get more time?",
+        "three": "Is there a tax on wealth here?"
+      },
+      "placeholder": "Can I deduct the cost of getting to work?"
     }
   },
   "AuthError": {
@@ -1284,5 +1302,52 @@
     "passkey": "If you added a passkey to your account, sign in with it above.",
     "orangecat": "If your account is linked to OrangeCat, continue with OrangeCat above.",
     "contact": "Otherwise, write to <mail>{email}</mail> from the address on your account."
+  },
+  "Structures": {
+    "metaTitle": "Structures side by side",
+    "kicker": "Structures",
+    "title": "Structures, side by side",
+    "description": "A Liechtenstein foundation, establishment and company, and a Swiss company: what the law says about each, row by row. Every fact quotes its provision, checked against the law Solon holds each time this page opens.",
+    "notAdvice": "This states what the law says. It is not advice: which form suits you is a judgement for a licensed trustee, lawyer or tax adviser.",
+    "kindsTitle": "The forms compared",
+    "readAct": "Read the act",
+    "ask": "Ask about the law",
+    "missing": "Not stated here yet",
+    "source": "{count, plural, one {The provision} other {The # provisions}}",
+    "amended": "This provision has changed since it was read; these words still stand in it.",
+    "kinds": {
+      "liFoundation": "Foundation (Stiftung)",
+      "liEstablishment": "Establishment (Anstalt)",
+      "liCompany": "Company limited by shares (AG)",
+      "chCompany": "Company limited by shares (AG)"
+    },
+    "places": {
+      "liechtenstein": "Liechtenstein",
+      "switzerland": "Switzerland"
+    },
+    "rows": {
+      "founders": "Who may form it",
+      "minimumCapital": "Minimum capital",
+      "register": "Public register",
+      "supervision": "Supervision",
+      "liability": "Who answers for its debts",
+      "profitTax": "Tax on profit",
+      "minimumTax": "Minimum tax a year",
+      "privateWealth": "If it only holds private wealth"
+    },
+    "scopes": {
+      "federal": "{rate} federal"
+    },
+    "values": {
+      "naturalOrLegalPersons": "One or more natural or legal persons",
+      "oneOrMoreFounders": "One or more founders",
+      "oneOrMorePersonsOrCompanies": "One or more persons or trading companies",
+      "registeredOrNoticeDeposited": "Entered in the commercial register where the law requires it; otherwise a formation notice is deposited",
+      "registered": "Entered in the commercial register",
+      "existsOnceRegistered": "Entered in the commercial register, and exists only from then",
+      "charitableOrByChoice": "Supervised if charitable, or if its deed says so",
+      "ownAssetsOnly": "Only its own assets",
+      "minimumTaxOnly": "Only the minimum tax, if it meets the conditions of a private asset structure"
+    }
   }
 }

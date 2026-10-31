@@ -1,9 +1,11 @@
 import type { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
+import { LawChat } from "@/components/law/law-chat";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
+import CalendarButton from "./calendar-button";
 import SourceList from "./source-list";
 
 export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
@@ -89,6 +91,18 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
                 ? t("tax.levies", { pack: view.packName })
                 : t("tax.none")}
           </p>
+          {view.refinedBy.length > 0 && (
+            <div className="mt-3 text-sm">
+              <p className="mb-1 text-fg-secondary">{t("tax.refinedBy", { place: view.name })}</p>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                {view.refinedBy.map((place, i) => (
+                  <li key={`${place.slugPath}-${i}`}>
+                    <PlaceName place={place} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <Link
             href={compareHref([view.slugPath])}
             className="mt-3 inline-block text-sm text-fg-primary hover:underline"
@@ -111,7 +125,19 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
               due={(date) => t("actions.due", { date })}
               dueSource={t("actions.dueSource")}
             />
+            <CalendarButton actions={view.actions} />
           </section>
+        )}
+
+        {view.lawAuthorities && view.lawAuthorities.length > 0 && (
+          <div>
+            <LawChat
+              scope={{ place: view.name, authorities: view.lawAuthorities, topic: "tax" }}
+              title={t("ask.title", { place: view.name })}
+              placeholder={t("ask.placeholder")}
+              starters={[t("ask.starters.one"), t("ask.starters.two"), t("ask.starters.three")]}
+            />
+          </div>
         )}
 
         {(view.otherNames.length > 0 || view.identifiers.length > 0) && (

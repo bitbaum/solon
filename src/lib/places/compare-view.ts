@@ -34,6 +34,11 @@ export interface CompareColumn {
   multipliers: Record<string, number | null>;
   /** What a resident can do there: file, pay, ask for time, at the authority's own page. */
   actions: PlaceAction[];
+  /**
+   * The places inside it that refine its figures (a commune whose rate
+   * depends on the locality): each one's level and the level it stands for.
+   */
+  refinedBy: { name: string; slugPath: string; levelKey: string; standsFor: string }[];
 }
 
 export interface CompareInput {
@@ -75,6 +80,8 @@ export interface CompareTaxPack {
     metric: string;
     level: string;
     when: string | null;
+    /** A multiplier that counts as none where it is not recorded. */
+    optional: boolean;
   }[];
   levelNames: Record<string, string>;
   excludes: string;
@@ -93,6 +100,80 @@ export interface Comparison {
   notFound: string[];
   /** This year's figures are not all published yet, so the latest complete year is shown. */
   earlierYear: boolean;
+}
+
+/**
+ * The packs that can share one situation: those in one currency, whose base
+ * is the same kind of amount, asked once. The form shows the first pack's
+ * words, with every other pack's further amounts, choices and yes-or-no
+ * inputs added; a household it does not know is left to the first pack's.
+ */
+export interface SituationGroup {
+  /** The first pack's key: where the group's form keeps its ids. */
+  key: string;
+  packs: CompareTaxPack[];
+  /** The questions the group's form asks, merged. */
+  pack: CompareTaxPack;
+}
+
+export function situationGroups(packs: readonly CompareTaxPack[]): SituationGroup[] {
+  const groups: SituationGroup[] = [];
+  for (const pack of packs) {
+    const group = groups.find(
+      (g) => g.pack.currency === pack.currency && g.pack.base.key === pack.base.key,
+    );
+    if (!group) {
+      groups.push({ key: pack.key, packs: [pack], pack });
+      continue;
+    }
+    const merged = group.pack;
+    const add = <T extends { key: string }>(into: T[], more: T[]) => [
+      ...into,
+      ...more.filter((m) => !into.some((i) => i.key === m.key)),
+    ];
+    // A hint one country gives would be wrong for the other ("4 % of it is
+    // taxed as income" is Liechtenstein's): where they differ, neither is shown.
+    const sameHint = (into: CompareInput[], more: CompareInput[]) =>
+      into.map((i) => {
+        const other = more.find((m) => m.key === i.key);
+        return other && other.hint !== i.hint ? { ...i, hint: null } : i;
+      });
+    group.packs.push(pack);
+    group.pack = {
+      ...merged,
+      name: `${merged.name} · ${pack.name}`,
+      base: sameHint([merged.base], [pack.base])[0]!,
+      amounts: add(sameHint(merged.amounts, pack.amounts), pack.amounts),
+      conditions: add(merged.conditions, pack.conditions),
+      choices: add(merged.choices, pack.choices),
+    };
+  }
+  return groups;
+}
+
+type MultiplierRow = CompareTaxPack["multiplierRows"][number];
+
+/**
+ * One row per multiplier as the reader reads it: a commune's multiplier in
+ * Switzerland and in Liechtenstein is one row, each column filled from its own
+ * country's figure. Rows keep the order they first appear in.
+ */
+export function mergedMultiplierRows(
+  packs: readonly CompareTaxPack[],
+  labelOf: (row: MultiplierRow) => string,
+  keep: (pack: CompareTaxPack, row: MultiplierRow) => boolean,
+): { label: string; rows: (MultiplierRow & { packKey: string })[] }[] {
+  const merged: { label: string; rows: (MultiplierRow & { packKey: string })[] }[] = [];
+  for (const pack of packs)
+    for (const row of pack.multiplierRows) {
+      if (!keep(pack, row)) continue;
+      const label = labelOf(row);
+      const entry = { ...row, packKey: pack.key };
+      const at = merged.find((m) => m.label === label);
+      if (at) at.rows.push(entry);
+      else merged.push({ label, rows: [entry] });
+    }
+  return merged;
 }
 
 /** The reader's inputs, kept on their device. */
@@ -141,7 +222,7 @@ export function compareHref(slugPaths: readonly string[]): string {
 }
 
 export function estimateColumn(
-  column: Pick<CompareColumn, "facts" | "levels">,
+  column: Pick<CompareColumn, "facts" | "levels"> & Partial<Pick<CompareColumn, "refinedBy">>,
   pack: CompareTaxPack | undefined,
   input: EstimateInput,
 ): ColumnEstimate {
@@ -173,6 +254,13 @@ export function estimateColumn(
   }
   if (!estimate.complete) {
     const levels = [...new Set(estimate.missing.map((ref) => ref.level))];
+    const refined = column.refinedBy ?? [];
+    if (levels.every((level) => refined.some((r) => r.standsFor === level))) {
+      return {
+        kind: "needs_lower_place",
+        levels: [...new Set(refined.map((r) => r.levelKey))],
+      };
+    }
     const below = levels.filter((level) => !column.levels.includes(level));
     return below.length > 0
       ? { kind: "needs_lower_place", levels: below }
@@ -180,9 +268,31 @@ export function estimateColumn(
   }
   return {
     kind: "estimate",
-    estimate,
+    estimate: billed(estimate, pack.model, input.base),
     currency: estimate.currency ?? pack.currency,
     formatLocale: pack.formatLocale,
+  };
+}
+
+/**
+ * The estimate as a bill: each tax rounded to the whole unit, as the
+ * authorities and the federal calculator state it, and the total their sum,
+ * so the rows shown add up to the total shown.
+ */
+function billed(estimate: Estimate, model: TaxModel, base: number): Estimate {
+  const components = estimate.components.map((c) =>
+    c.amount === null ? c : { ...c, amount: Math.round(c.amount) },
+  );
+  const sum = (keep: (key: string) => boolean) =>
+    components.reduce((total, c) => total + (keep(c.key) ? (c.amount ?? 0) : 0), 0);
+  const onBase = new Set(
+    model.components.filter((c) => (c.base ?? model.base) === model.base).map((c) => c.key),
+  );
+  return {
+    ...estimate,
+    components,
+    total: sum(() => true),
+    effectiveRate: base > 0 ? sum((key) => onBase.has(key)) / base : 0,
   };
 }
 
@@ -239,4 +349,40 @@ export function parseAmounts(
   typed: Readonly<Record<string, string>> | undefined,
 ): Record<string, number | null> {
   return Object.fromEntries(Object.entries(typed ?? {}).map(([key, t]) => [key, parseAmount(t)]));
+}
+
+/**
+ * Whether a tax's row says anything: some column of the pack has an amount
+ * other than 0 for it, or nothing is estimated yet (the rows then show what
+ * will be counted).
+ */
+export function componentRowShows(
+  packKey: string,
+  key: string,
+  columns: readonly Pick<CompareColumn, "packKey">[],
+  estimates: readonly ColumnEstimate[],
+): boolean {
+  if (estimates.every((e) => e.kind !== "estimate")) {
+    return true;
+  }
+  return columns.some((column, i) => {
+    const e = estimates[i];
+    const amount =
+      e?.kind === "estimate" && column.packKey === packKey
+        ? e.estimate.components.find((c) => c.key === key)?.amount
+        : null;
+    return amount !== null && amount !== undefined && amount !== 0;
+  });
+}
+
+/** Whether a multiplier's row says anything: required, or recorded in some column of the pack. */
+export function multiplierRowShows(
+  packKey: string,
+  row: Pick<CompareTaxPack["multiplierRows"][number], "key" | "optional">,
+  columns: readonly Pick<CompareColumn, "packKey" | "multipliers">[],
+): boolean {
+  return (
+    !row.optional ||
+    columns.some((c) => c.packKey === packKey && (c.multipliers[row.key] ?? null) !== null)
+  );
 }

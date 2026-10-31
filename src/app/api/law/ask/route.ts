@@ -10,6 +10,7 @@ import { answerMessages, sourcesOf } from "@/lib/law/ask/answer";
 import { planResearch, type Completer } from "@/lib/law/ask/plan";
 import { refine } from "@/lib/law/ask/refine";
 import { retrieve } from "@/lib/law/ask/retrieve";
+import { applyScope, scopeContext } from "@/lib/law/ask/scope";
 
 export const maxDuration = 60;
 
@@ -18,6 +19,14 @@ const Body = z.object({
     .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(6000) }))
     .min(1)
     .max(20),
+  /** Asked from a place's page: its authorities are always searched. */
+  scope: z
+    .object({
+      place: z.string().min(1).max(120),
+      authorities: z.array(z.string().max(40)).max(8),
+      topic: z.enum(["tax"]).optional(),
+    })
+    .optional(),
 });
 
 /** Public: the law is public. Bounded by origin, size and a per-address rate. */
@@ -39,7 +48,7 @@ export async function POST(req: Request) {
       { error: "Please wait a few minutes before asking again." },
       { status: 429, headers: { "Retry-After": "600" } },
     );
-  const turns = parsed.data.messages;
+  const { messages: turns, scope } = parsed.data;
   return sseResponse<LawChatEvent>(
     async (emit, signal) => {
       emit({ type: "step", step: "plan" });
@@ -54,7 +63,7 @@ export async function POST(req: Request) {
           timeoutMs: 20000,
           signal,
         });
-      const plan = await planResearch(turns, ask, askAgain);
+      const plan = applyScope(await planResearch(turns, ask, askAgain, scopeContext(scope)), scope);
       emit({ type: "plan", authorities: plan.authorities, acts: plan.acts, groups: plan.groups });
       emit({ type: "step", step: "search" });
       const found = await retrieve(db, plan);

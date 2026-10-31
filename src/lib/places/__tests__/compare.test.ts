@@ -5,17 +5,22 @@ import type { ChainFact, ChainPlace } from "../chain";
 import {
   comparisonView,
   figuresPublished,
+  taxPackView,
   taxYear,
   yearsBefore,
   type ComparedPlace,
 } from "../compare";
 import {
   compareHref,
+  componentRowShows,
   estimateColumn,
+  multiplierRowShows,
   fillTemplate,
   lowestTotals,
   parseAmount,
   type ColumnEstimate,
+  mergedMultiplierRows,
+  situationGroups,
 } from "../compare-view";
 import { withTestland } from "./fixtures/testland/config";
 
@@ -154,6 +159,26 @@ describe("estimateColumn", () => {
     expect(estimate(bare.columns[0])).toEqual({ kind: "not_recorded", levels: ["parish"] });
   });
 
+  it("asks for the place inside when only the places that refine this one hold its figure", () => {
+    const bare = compare([{ chain: [hamlet, parish, shire, realm], facts: FACTS.slice(0, 3) }]);
+    const refined = {
+      ...bare.columns[0]!,
+      refinedBy: [
+        { name: "Lane", slugPath: "testland/x/lane", levelKey: "lane", standsFor: "parish" },
+      ],
+    };
+    expect(estimate(refined)).toEqual({ kind: "needs_lower_place", levels: ["lane"] });
+  });
+
+  it("bills each tax in whole units, so the rows shown add up to the total shown", () => {
+    const e = estimateColumn(oak!, pack, { base: 1003, variant: "alone", conditions: {} });
+    if (e.kind !== "estimate") throw new Error(e.kind);
+    for (const c of e.estimate.components) {
+      expect(Number.isInteger(c.amount)).toBe(true);
+    }
+    expect(e.estimate.total).toBe(e.estimate.components.reduce((t, c) => t + (c.amount ?? 0), 0));
+  });
+
   it("waits for an amount, and runs no model without a pack", () => {
     expect(estimate(oak, null)).toEqual({ kind: "no_input" });
     expect(estimateColumn(oak!, undefined, { base: 1, variant: "", conditions: {} })).toEqual({
@@ -230,5 +255,111 @@ describe("compareHref", () => {
     expect(compareHref(["switzerland/zurich", "a&b"])).toBe(
       "/compare?p=switzerland/zurich&p=a%26b",
     );
+  });
+});
+
+describe("which rows say something", () => {
+  const at = (amounts: (number | null)[]): ColumnEstimate => ({
+    kind: "estimate",
+    currency: "XTS",
+    formatLocale: "en",
+    estimate: {
+      components: amounts.map((amount, i) => ({
+        key: `c${i}`,
+        applies: true,
+        tariffAmount: amount,
+        divisor: null,
+        multiplier: null,
+        rebate: null,
+        amount,
+        missing: [],
+      })),
+      total: 0,
+      effectiveRate: 0,
+      currency: "XTS",
+      complete: true,
+      missing: [],
+    },
+  });
+  const columns = [{ packKey: "p" }, { packKey: "p" }];
+
+  it("hides a tax that is 0 in every column, and shows every tax before any estimate", () => {
+    const estimates = [at([0, 12]), at([0, 0])];
+    expect(componentRowShows("p", "c0", columns, estimates)).toBe(false);
+    expect(componentRowShows("p", "c1", columns, estimates)).toBe(true);
+    expect(
+      componentRowShows("p", "c0", columns, [{ kind: "no_input" }, { kind: "no_input" }]),
+    ).toBe(true);
+  });
+
+  it("hides an optional multiplier no column records, never a required one", () => {
+    const withRates: { packKey: string; multipliers: Record<string, number | null> }[] = [
+      { packKey: "p", multipliers: { a: null, b: 0.5 } },
+      { packKey: "p", multipliers: { a: null } },
+    ];
+    expect(multiplierRowShows("p", { key: "a", optional: true }, withRates)).toBe(false);
+    expect(multiplierRowShows("p", { key: "b", optional: true }, withRates)).toBe(true);
+    expect(multiplierRowShows("p", { key: "a", optional: false }, withRates)).toBe(true);
+  });
+});
+
+describe("one situation for countries in one currency", () => {
+  const other = (key: string, currency: string, extra: Partial<typeof pack> = {}) => ({
+    ...pack,
+    key,
+    name: key,
+    currency,
+    ...extra,
+  });
+
+  it("asks once for packs in one currency, with every question either asks", () => {
+    const second = other("neighbour", pack.currency, {
+      amounts: [{ key: "holdings", label: "Holdings", hint: null }],
+      conditions: [],
+      choices: [],
+    });
+    const groups = situationGroups([pack, second, other("faraway", "XXX")]);
+    expect(groups.map((g) => g.packs.map((p) => p.key))).toEqual([
+      [pack.key, "neighbour"],
+      ["faraway"],
+    ]);
+    expect(groups[0]!.pack.name).toBe(`${pack.name} · neighbour`);
+    expect(groups[0]!.pack.amounts.map((a) => a.key)).toContain("holdings");
+    expect(groups[0]!.pack.variants).toEqual(pack.variants);
+  });
+
+  it("drops a hint the countries word differently, so neither country's is shown as both", () => {
+    const worded = (hint: string) =>
+      other("x", pack.currency, { amounts: [{ key: "wealth", label: "Wealth", hint }] });
+    const [group] = situationGroups([worded("4 % is taxed as income"), worded("Debts off")]);
+    expect(group!.pack.amounts).toEqual([{ key: "wealth", label: "Wealth", hint: null }]);
+    const [alike] = situationGroups([worded("Debts off"), worded("Debts off")]);
+    expect(alike!.pack.amounts[0]!.hint).toBe("Debts off");
+  });
+
+  it("puts one multiplier as the reader reads it in one row, each country's figure in it", () => {
+    const second = other("neighbour", pack.currency);
+    const rows = mergedMultiplierRows(
+      [pack, second],
+      (row) => `${row.metric} (${row.level})`,
+      () => true,
+    );
+    expect(rows).toHaveLength(pack.multiplierRows.length);
+    expect(rows[0]!.rows.map((r) => r.packKey)).toEqual([pack.key, "neighbour"]);
+    const none = mergedMultiplierRows(
+      [pack],
+      (row) => row.key,
+      () => false,
+    );
+    expect(none).toEqual([]);
+  });
+});
+
+describe("what a country asks", () => {
+  it("asks Liechtenstein's wealth as an amount, read through its yield, never as a yes or no", () => {
+    const li = placesConfig.packs.find((p) => p.key === "liechtenstein")!;
+    const view = taxPackView(placesConfig, li, "2026-06-30", "en")!;
+    expect(view.amounts.map((a) => a.key)).toEqual(["taxable_wealth"]);
+    expect(view.conditions).toEqual([]);
   });
 });

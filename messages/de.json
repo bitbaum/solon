@@ -59,7 +59,8 @@
       "places": "Orte",
       "placesCompare": "Vergleichen",
       "placesCoverage": "Abdeckung",
-      "askSolon": "Solon fragen"
+      "askSolon": "Solon fragen",
+      "structures": "Strukturen"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -100,7 +101,8 @@
       "places": "Einen Ort nach Name oder Postleitzahl finden",
       "placesCompare": "Orte nebeneinander: was Sie die Steuern an jedem kosten",
       "placesCoverage": "Was Orte abdeckt, aus den Daten gezählt",
-      "askSolon": "Die Regeln verstehen und einen Vorschlag entwerfen."
+      "askSolon": "Die Regeln verstehen und einen Vorschlag entwerfen.",
+      "structures": "Rechtsformen im Vergleich, in den Worten des Gesetzes"
     }
   },
   "Nav": {
@@ -465,7 +467,8 @@
       "title": "Steuern",
       "levies": "Erhebt Steuern: Die hier festgelegten Sätze fliessen ins Steuermodell von {pack} ein.",
       "none": "Erhebt keine eigenen Steuern. Hier gelten die Steuern der Orte, zu denen er gehört.",
-      "noModel": "Für {pack} gibt es noch kein Steuermodell."
+      "noModel": "Für {pack} gibt es noch kein Steuermodell.",
+      "refinedBy": "Der Steuerfuss hängt davon ab, wo in {place} Sie wohnen. Wählen Sie Ihre Ortschaft:"
     },
     "otherNames": "Weitere Namen",
     "identifiers": "Kennungen",
@@ -558,12 +561,13 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Noch nicht erfasst",
       "taxedBy": "Erhoben von",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Noch nicht verglichen",
       "laterText": "Mitwirkung, was ein Wegzug bedeutet, Status und Grösse folgen, sobald ihre Daten importiert sind.",
       "coverageLink": "Was Orte abdeckt →",
       "disclaimer": "Eine Schätzung aus den veröffentlichten Tarifen, keine Steuerveranlagung.",
-      "act": "Was Sie tun können"
+      "act": "Was Sie tun können",
+      "perMonth": "{amount} pro Monat zurückzulegen"
     },
     "map": {
       "searchLabel": "Adresse, Ort oder Postleitzahl suchen",
@@ -581,6 +585,8 @@
       "viewMap": "Karte",
       "viewList": "Liste",
       "mapLabel": "Karte: {level}",
+      "zoomIn": "Vergrössern",
+      "zoomOut": "Verkleinern",
       "loading": "Karte wird geladen…",
       "loadError": "Die Karte konnte nicht geladen werden. Suche und Übersicht unten funktionieren weiterhin.",
       "mapUnavailable": "Die Karte kann in diesem Browser nicht gezeichnet werden, darum sind die Orte als Liste aufgeführt.",
@@ -614,7 +620,19 @@
       "title": "Was Sie tun können",
       "intro": "Jeder Link führt auf die Seite der zuständigen Behörde.",
       "due": "In der Regel bis {date, date, ::dMMMM}",
-      "dueSource": "Quelle"
+      "dueSource": "Quelle",
+      "calendar": "Fristen in den Kalender übernehmen",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Wo das Datum steht"
+    },
+    "ask": {
+      "title": "Fragen zu den Steuern in {place}",
+      "starters": {
+        "one": "Wie wird das Einkommen hier besteuert?",
+        "two": "Bis wann ist die Steuererklärung hier fällig, und kann ich Aufschub bekommen?",
+        "three": "Gibt es hier eine Vermögenssteuer?"
+      },
+      "placeholder": "Kann ich die Kosten für den Arbeitsweg abziehen?"
     }
   },
   "AuthError": {
@@ -718,5 +736,52 @@
     "passkey": "Wenn Sie Ihrem Konto einen Passkey hinzugefügt haben, melden Sie sich oben damit an.",
     "orangecat": "Wenn Ihr Konto mit OrangeCat verbunden ist, fahren Sie oben mit OrangeCat fort.",
     "contact": "Sonst schreiben Sie an <mail>{email}</mail>, von der Adresse Ihres Kontos aus."
+  },
+  "Structures": {
+    "metaTitle": "Strukturen im Vergleich",
+    "kicker": "Strukturen",
+    "title": "Strukturen im Vergleich",
+    "description": "Eine liechtensteinische Stiftung, Anstalt und Aktiengesellschaft und eine Schweizer Aktiengesellschaft: was das Gesetz über jede sagt, Zeile für Zeile. Jede Angabe zitiert ihre Bestimmung, bei jedem Aufruf mit dem Recht abgeglichen, das Solon führt.",
+    "notAdvice": "Hier steht, was das Gesetz sagt. Es ist keine Beratung: Welche Form zu Ihnen passt, beurteilt ein zugelassener Treuhänder, Anwalt oder Steuerberater.",
+    "kindsTitle": "Die verglichenen Formen",
+    "readAct": "Erlass lesen",
+    "ask": "Zum Recht fragen",
+    "missing": "Hier noch nicht erfasst",
+    "source": "{count, plural, one {Die Bestimmung} other {Die # Bestimmungen}}",
+    "amended": "Diese Bestimmung wurde seit dem Lesen geändert; diese Worte stehen noch darin.",
+    "kinds": {
+      "liFoundation": "Stiftung",
+      "liEstablishment": "Anstalt",
+      "liCompany": "Aktiengesellschaft (AG)",
+      "chCompany": "Aktiengesellschaft (AG)"
+    },
+    "places": {
+      "liechtenstein": "Liechtenstein",
+      "switzerland": "Schweiz"
+    },
+    "rows": {
+      "founders": "Wer sie gründen kann",
+      "minimumCapital": "Mindestkapital",
+      "register": "Öffentliches Register",
+      "supervision": "Aufsicht",
+      "liability": "Wer für ihre Schulden haftet",
+      "profitTax": "Steuer auf den Gewinn",
+      "minimumTax": "Mindeststeuer pro Jahr",
+      "privateWealth": "Wenn sie nur Privatvermögen hält"
+    },
+    "scopes": {
+      "federal": "{rate} Bund"
+    },
+    "values": {
+      "naturalOrLegalPersons": "Eine oder mehrere natürliche oder juristische Personen",
+      "oneOrMoreFounders": "Ein oder mehrere Gründer",
+      "oneOrMorePersonsOrCompanies": "Eine oder mehrere Personen oder Handelsgesellschaften",
+      "registeredOrNoticeDeposited": "Im Handelsregister eingetragen, wo das Gesetz es verlangt; sonst wird eine Gründungsanzeige hinterlegt",
+      "registered": "Im Handelsregister eingetragen",
+      "existsOnceRegistered": "Im Handelsregister eingetragen und erst ab dann bestehend",
+      "charitableOrByChoice": "Beaufsichtigt, wenn gemeinnützig oder wenn die Stiftungsurkunde es vorsieht",
+      "ownAssetsOnly": "Nur ihr eigenes Vermögen",
+      "minimumTaxOnly": "Nur die Mindestertragssteuer, wenn sie die Bedingungen einer Privatvermögensstruktur erfüllt"
+    }
   }
 }

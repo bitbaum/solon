@@ -3,19 +3,24 @@
 import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { useDeviceInputs } from "./device-inputs";
+import { groupInput, useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
 import ActionList from "./action-list";
+import CalendarButton from "./calendar-button";
+import TotalCell from "./total-cell";
 import ComparisonRow, { comparisonCell as cell } from "./comparison-row";
 import {
   compareHref,
   estimateColumn,
-  fillTemplate,
   formatMoney,
   lowestTotals,
   parseAmount,
+  componentRowShows,
+  multiplierRowShows,
   parseAmounts,
   rowShows,
+  mergedMultiplierRows,
+  situationGroups,
   type ColumnEstimate,
   type CompareColumn,
   type CompareTaxPack,
@@ -33,6 +38,8 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
   const format = useFormatter();
   const { columns, taxPacks } = comparison;
   const [inputs, updateInput] = useDeviceInputs(taxPacks);
+  /** One form for the countries that can share one: Switzerland and Liechtenstein, both in francs. */
+  const groups = useMemo(() => situationGroups(taxPacks), [taxPacks]);
   const packOf = (column: CompareColumn) => taxPacks.find((p) => p.key === column.packKey);
 
   const estimates: ColumnEstimate[] = useMemo(
@@ -61,19 +68,6 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
   const money = formatMoney;
   const percent = (value: number) =>
     format.number(value, { style: "percent", maximumFractionDigits: 1 });
-  const rateLine = (pack: CompareTaxPack | undefined, rate: number) =>
-    pack?.rate
-      ? fillTemplate(pack.rate.yours, {
-          rate: format.number(rate, {
-            style: "percent",
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          }),
-        })
-      : t("rate", { rate });
-  const levelList = (pack: CompareTaxPack | undefined, levels: string[]) =>
-    format.list(levels.map((level) => pack?.levelNames[level] ?? level));
-
   const complete = columns.flatMap((column, i) => {
     const e = estimates[i]!;
     return e.kind === "estimate" ? [{ column, e }] : [];
@@ -87,67 +81,32 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     compareHref(columns.map((c) => c.slugPath).filter((path) => path !== slugPath));
   const single = taxPacks.length === 1 ? taxPacks[0] : undefined;
 
-  const totalCell = (column: CompareColumn, e: ColumnEstimate) => {
-    const pack = packOf(column);
-    switch (e.kind) {
-      case "estimate": {
-        const least = lowest.get(e.currency)!;
-        const more = e.estimate.total - least;
-        return (
-          <>
-            <span className="block text-base font-semibold text-fg-primary sm:text-lg">
-              {money(e.estimate.total, e)}
-            </span>
-            <span className="block text-xs text-fg-secondary">
-              {rateLine(pack, e.estimate.effectiveRate)}
-            </span>
-            {complete.length >= 2 && (
-              <span className="mt-1 block text-xs text-fg-secondary">
-                {more < 0.5 ? (
-                  <span className="rounded-pill border border-accent px-2 py-0.5 text-fg-primary">
-                    {t("lowest")}
-                  </span>
-                ) : (
-                  t("more", { amount: money(more, e) })
-                )}
-              </span>
-            )}
-          </>
-        );
-      }
-      case "no_input":
-        return <span className="text-fg-tertiary">{t("enterAmount")}</span>;
-      case "no_model":
-        return <span className="text-fg-secondary">{t("noModel", { pack: column.packName })}</span>;
-      case "needs_lower_place":
-        return (
-          <span className="text-fg-secondary">
-            {t("needsLowerPlace", { levels: levelList(pack, e.levels) })}
-          </span>
-        );
-      case "not_recorded":
-        return (
-          <span className="text-fg-secondary">
-            {t("notRecordedFor", { levels: levelList(pack, e.levels) })}
-          </span>
-        );
-      case "error":
-        return <span className="text-fg-secondary">{t("error")}</span>;
-    }
-  };
+  const multiplierRows = mergedMultiplierRows(
+    taxPacks,
+    (row) => t("multiplier", { metric: row.metric, level: row.level }),
+    (pack, row) => shows(pack, row) && multiplierRowShows(pack.key, row, columns),
+  );
 
   const count = columns.length;
 
   return (
     <div className="space-y-8">
-      {taxPacks.map((pack) => (
+      {groups.map((group) => (
         <TaxSituation
-          key={pack.key}
-          pack={pack}
-          input={inputs[pack.key]!}
-          onChange={(patch) => updateInput(pack.key, patch)}
+          key={group.key}
+          pack={group.pack}
+          input={groupInput(
+            inputs,
+            group.packs.map((p) => p.key),
+          )}
+          onChange={(patch) =>
+            updateInput(
+              group.packs.map((p) => p.key),
+              patch,
+            )
+          }
           title={
-            taxPacks.length > 1 ? t("yourSituationIn", { pack: pack.name }) : t("yourSituation")
+            groups.length > 1 ? t("yourSituationIn", { pack: group.pack.name }) : t("yourSituation")
           }
           idPrefix="compare"
         />
@@ -222,13 +181,25 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
               >
                 {columns.map((column, i) => (
                   <td key={column.slugPath} className={cell}>
-                    {totalCell(column, estimates[i]!)}
+                    <TotalCell
+                      column={column}
+                      estimate={estimates[i]!}
+                      pack={packOf(column)}
+                      paths={columns.map((c) => c.slugPath)}
+                      least={
+                        complete.length >= 2 && estimates[i]!.kind === "estimate"
+                          ? (lowest.get((estimates[i] as { currency: string }).currency) ?? null)
+                          : null
+                      }
+                    />
                   </td>
                 ))}
               </ComparisonRow>
               {taxPacks.flatMap((pack) =>
                 pack.components
-                  .filter((c) => shows(pack, c))
+                  .filter(
+                    (c) => shows(pack, c) && componentRowShows(pack.key, c.key, columns, estimates),
+                  )
                   .map((component) => (
                     <ComparisonRow
                       key={`${pack.key}-${component.key}`}
@@ -257,34 +228,33 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                     </ComparisonRow>
                   )),
               )}
-              {taxPacks.flatMap((pack) =>
-                pack.multiplierRows
-                  .filter((r) => shows(pack, r))
-                  .map((row) => (
-                    <ComparisonRow
-                      key={`${pack.key}-${row.key}`}
-                      label={t("multiplier", { metric: row.metric, level: row.level })}
-                      labelClassName="text-fg-secondary"
-                      columnCount={count}
-                    >
-                      {columns.map((column) => {
-                        const value =
-                          column.packKey === pack.key ? column.multipliers[row.key] : undefined;
-                        return (
-                          <td key={column.slugPath} className={`${cell} text-fg-primary`}>
-                            {value === undefined ? (
-                              <span className="text-fg-tertiary">–</span>
-                            ) : value === null ? (
-                              <span className="text-fg-tertiary">{t("notRecorded")}</span>
-                            ) : (
-                              percent(value)
-                            )}
-                          </td>
-                        );
-                      })}
-                    </ComparisonRow>
-                  )),
-              )}
+              {multiplierRows.map(({ label, rows }) => (
+                <ComparisonRow
+                  key={label}
+                  label={label}
+                  labelClassName="text-fg-secondary"
+                  columnCount={count}
+                >
+                  {columns.map((column) => {
+                    const row = rows.find((r) => r.packKey === column.packKey);
+                    const value = row ? column.multipliers[row.key] : undefined;
+                    return (
+                      <td key={column.slugPath} className={`${cell} text-fg-primary`}>
+                        {value === undefined ||
+                        (value === null &&
+                          (row!.optional ||
+                            column.refinedBy.some((r) => r.standsFor === row!.levelKey))) ? (
+                          <span className="text-fg-tertiary">–</span>
+                        ) : value === null ? (
+                          <span className="text-fg-tertiary">{t("notRecorded")}</span>
+                        ) : (
+                          percent(value)
+                        )}
+                      </td>
+                    );
+                  })}
+                </ComparisonRow>
+              ))}
               <ComparisonRow
                 label={t("taxedBy")}
                 labelClassName="text-fg-secondary"
@@ -297,7 +267,13 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                     ) : (
                       column.taxedBy.map((p) => (
                         <span key={`${p.levelName}-${p.name}`} className="block">
-                          {t("taxedByPlace", { name: p.name, level: p.levelName })}
+                          {t.rich("taxedByPlace", {
+                            name: p.name,
+                            level: p.levelName,
+                            small: (chunks) => (
+                              <span className="text-xs text-fg-tertiary">{chunks}</span>
+                            ),
+                          })}
                         </span>
                       ))
                     )}
@@ -317,12 +293,15 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                   {column.actions.length === 0 ? (
                     <span className="text-fg-tertiary">–</span>
                   ) : (
-                    <ActionList
-                      actions={column.actions}
-                      due={(date) => ta("due", { date })}
-                      dueSource={ta("dueSource")}
-                      showOfferedBy={false}
-                    />
+                    <>
+                      <ActionList
+                        actions={column.actions}
+                        due={(date) => ta("due", { date })}
+                        dueSource={ta("dueSource")}
+                        showOfferedBy={false}
+                      />
+                      <CalendarButton actions={column.actions} />
+                    </>
                   )}
                 </td>
               ))}

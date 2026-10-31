@@ -19,7 +19,12 @@ minimumReleaseAgeExclude:
   - bip-kit@0.6.0
   - "@bitbaum/chatkit"
   - "@bitbaum/accountkit@0.8.0 || 0.8.1 || 0.9.0 || 0.9.1 || 0.10.0 || 0.12.0 || 0.13.0 || 0.14.0"
-  - "@bitbaum/geo-kit@0.1.2"
+  - "@bitbaum/geo-kit@0.1.2 || 0.2.0 || 0.3.0"
   - "@bitbaum/searchkit@0.2.3"
   - "@bitbaum/ai-kit@1.21.5"
   - limitkit@0.2.1
+
+overrides:
+  # Security floors (2026-10-30 dev-toolchain sweep): stay inside the
+  # major the parents already allow; pnpm does not re-resolve these on update.
+  "vite@8": "^8.2.4"

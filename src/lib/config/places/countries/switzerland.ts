@@ -27,10 +27,18 @@ import type { CountryPackInput, TaxLabels } from "../schema";
  * where church tax is levied on the cantonal tax (Jura), every church rate is
  * scaled by the canton's multiplier. The calculator gives one rate per
  * commune and church; where parishes in one commune levy different rates, it
- * shows one of them. Fixed per-head taxes: the canton's, per person or per
+ * shows one of them. A canton may levy a further multiplier that its own
+ * reduction does not touch, and a supplementary wealth tax on no multiplier
+ * (both Geneva's). Fixed per-head taxes: the canton's, per person or per
  * household (`tax.head`, a `fixed` tariff per variant, 0 where none), a
  * church's on top for its members, and a commune's and a parish's own per
  * adult where they set it (Solothurn's).
+ *
+ * Schema version 9 (Valais): a canton, and each of its communes, moves its
+ * tariff to higher incomes by an index of its own (`tax.income.index`, absent
+ * elsewhere); a couple's income tax is cut by a share between a least and a
+ * most amount (`tax.income.rebate`, recorded for the couple only); and the
+ * cantonal income tax is at least a minimum tax (`tax.income.floor`).
  */
 const DENOMINATIONS = ["reformed", "catholic", "christ_catholic"] as const;
 const churchComponents = (on: "income" | "wealth") =>
@@ -55,8 +63,22 @@ const churchComponents = (on: "income" | "wealth") =>
     };
   });
 
+/** A couple's rebate on an income tax, where the canton records one. */
+const incomeRebate = {
+  share: { level: "canton", metric: "tax.income.rebate", optional: true },
+  least: { level: "canton", metric: "tax.income.rebate.least", optional: true },
+  most: { level: "canton", metric: "tax.income.rebate.most", optional: true },
+};
+
+/** The income divisor, moved by the index of the level that levies the tax. */
+const indexedDivisor = (level: "canton" | "municipality") => ({
+  level: "canton",
+  metric: "tax.income.divisor",
+  scaledBy: { level, metric: "tax.income.index", optional: true },
+});
+
 export const switzerlandIncomeTax = {
-  schemaVersion: 8,
+  schemaVersion: 9,
   base: "taxable_income",
   inputs: [
     "taxable_income",
@@ -71,20 +93,24 @@ export const switzerlandIncomeTax = {
     {
       key: "cantonal",
       tariff: { level: "canton", metric: "tax.income.tariff.basic" },
-      divisor: { level: "canton", metric: "tax.income.divisor" },
+      divisor: indexedDivisor("canton"),
       multipliers: [
         {
           level: "canton",
           metric: "tax.multiplier",
           reducedBy: { level: "canton", metric: "tax.income.basic.reduction", optional: true },
         },
+        { level: "canton", metric: "tax.multiplier.extra", optional: true },
       ],
+      rebate: incomeRebate,
+      floor: { level: "canton", metric: "tax.income.floor", optional: true },
     },
     {
       key: "communal",
       tariff: { level: "canton", metric: "tax.income.tariff.communal" },
-      divisor: { level: "canton", metric: "tax.income.divisor" },
+      divisor: indexedDivisor("municipality"),
       multipliers: [{ level: "municipality", metric: "tax.multiplier" }],
+      rebate: incomeRebate,
     },
     ...churchComponents("income"),
     {
@@ -92,7 +118,15 @@ export const switzerlandIncomeTax = {
       base: "taxable_wealth",
       tariff: { level: "canton", metric: "tax.wealth.tariff.basic" },
       divisor: { level: "canton", metric: "tax.wealth.divisor", optional: true },
-      multipliers: [{ level: "canton", metric: "tax.wealth.multiplier" }],
+      multipliers: [
+        { level: "canton", metric: "tax.wealth.multiplier" },
+        { level: "canton", metric: "tax.multiplier.extra", optional: true },
+      ],
+    },
+    {
+      key: "wealth_supplement",
+      base: "taxable_wealth",
+      tariff: { level: "canton", metric: "tax.wealth.tariff.supplement" },
     },
     {
       key: "wealth_communal",
@@ -267,6 +301,12 @@ const switzerlandTaxLabels: TaxLabels = {
       fr: "Impôt cantonal sur la fortune",
       it: "Imposta cantonale sulla sostanza",
     },
+    wealth_supplement: {
+      en: "Supplementary wealth tax",
+      de: "Zusätzliche Vermögenssteuer",
+      fr: "Impôt supplémentaire sur la fortune",
+      it: "Imposta supplementare sulla sostanza",
+    },
     wealth_communal: {
       en: "Communal wealth tax",
       de: "Gemeindesteuer auf dem Vermögen",
@@ -435,6 +475,15 @@ export const switzerland: CountryPackInput = {
         it: "quartiere statistico",
       },
     },
+    {
+      // Where a commune's rates depend on the locality (its school communes or
+      // parishes differ), its localities carry the rates in its stead.
+      key: "locality",
+      parent: "municipality",
+      coverage: "partial",
+      standsFor: "municipality",
+      names: { en: "Locality", de: "Ortschaft", fr: "localité", it: "località" },
+    },
   ],
   identifierSchemes: [
     "iso_3166_1",
@@ -444,6 +493,7 @@ export const switzerland: CountryPackInput = {
     "bfs_municipality_version",
     "zurich_city_district",
     "zurich_statistical_quarter",
+    "estv_tax_location",
   ],
   postcodePattern: "[1-9][0-9]{3}",
   // Confirmed 2026-09-30: the federal geoportal's search, open to any origin
@@ -467,6 +517,9 @@ export const switzerland: CountryPackInput = {
     "estv-wealth-tax-scales",
     "ch-church-tariffs",
     "ch-per-head-taxes",
+    "ch-cantonal-adjustments",
+    "vs-income-tax",
+    "estv-tax-localities",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: switzerlandIncomeTax,

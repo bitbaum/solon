@@ -82,6 +82,89 @@ export const METRICS: readonly MetricInput[] = [
     plausible: { min: 0, max: 0.5 },
   },
   {
+    // The index by which a canton or a commune moves its income tariff to
+    // higher incomes to offset inflation, each on its own schedule (Valais:
+    // StG art. 32 para. 4 for the canton, art. 178 para. 5 for its communes).
+    // The tariff is read at the income divided by it. Absent: 1.
+    key: "tax.income.index",
+    label: {
+      en: "Income tariff index",
+      de: "Indexierung des Einkommenstarifs",
+      fr: "indexation du barème sur le revenu",
+      it: "indicizzazione della tariffa sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 1, max: 3 },
+  },
+  {
+    // The share by which a couple's income tax is cut (Valais: 35 %, StG art.
+    // 32 para. 3a and art. 178 para. 3a). Recorded for the couple only.
+    key: "tax.income.rebate",
+    label: {
+      en: "Rebate on the income tax",
+      de: "Ermässigung der Einkommenssteuer",
+      fr: "rabais d'impôt sur le revenu",
+      it: "riduzione dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 0.6 },
+  },
+  {
+    key: "tax.income.rebate.least",
+    label: {
+      en: "Least rebate on the income tax",
+      de: "Mindestermässigung der Einkommenssteuer",
+      fr: "rabais minimal d'impôt sur le revenu",
+      it: "riduzione minima dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 5_000 },
+  },
+  {
+    key: "tax.income.rebate.most",
+    label: {
+      en: "Most rebate on the income tax",
+      de: "Höchstermässigung der Einkommenssteuer",
+      fr: "rabais maximal d'impôt sur le revenu",
+      it: "riduzione massima dell'imposta sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 20_000 },
+  },
+  {
+    // The least cantonal income tax a taxpayer owes (Valais: CHF 10, StG art.
+    // 32 para. 6).
+    key: "tax.income.floor",
+    label: {
+      en: "Minimum income tax",
+      de: "Mindeststeuer auf dem Einkommen",
+      fr: "impôt minimal sur le revenu",
+      it: "imposta minima sul reddito",
+    },
+    valueType: "number",
+    unit: "currency",
+    plausible: { min: 0, max: 1_000 },
+  },
+  {
+    // The yield the law assumes on wealth and taxes as income, on one tariff
+    // with it (Liechtenstein's Sollertrag: SteG, LR 640.0, art. 5 and art. 14
+    // para. 2 l; 4 % for 2025 by the Finanzgesetz, LGBl. 2024 Nr. 441, art. 2).
+    key: "tax.wealth.yield",
+    label: {
+      en: "Assumed yield on wealth",
+      de: "Sollertrag des Vermögens",
+      fr: "rendement présumé de la fortune",
+      it: "reddito presunto della sostanza",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 0.2 },
+  },
+  {
     key: "tax.multiplier",
     label: {
       en: "Tax multiplier",
@@ -410,5 +493,33 @@ export const METRICS: readonly MetricInput[] = [
     valueType: "number",
     unit: "currency",
     plausible: { min: 0, max: 500 },
+  },
+  {
+    // A further cantonal multiplier on the basic income and wealth tax that no
+    // reduction of the canton's own touches: Geneva's 1 centime for home care
+    // (LCAC, rsGE D 3 07, art. 2 para. 2).
+    key: "tax.multiplier.extra",
+    label: {
+      en: "Further cantonal multiplier",
+      de: "Zusätzlicher kantonaler Steuerfuss",
+      fr: "centime additionnel supplémentaire",
+      it: "moltiplicatore cantonale supplementare",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+  },
+  {
+    // A supplementary wealth tax levied as it stands, on no multiplier: Geneva's
+    // (LIPP, rsGE D 3 08, art. 59 para. 2). A flat 0 where a canton levies none.
+    key: "tax.wealth.tariff.supplement",
+    label: {
+      en: "Supplementary wealth tax tariff",
+      de: "Tarif der zusätzlichen Vermögenssteuer",
+      fr: "barème de l'impôt supplémentaire sur la fortune",
+      it: "tariffa dell'imposta supplementare sulla sostanza",
+    },
+    valueType: "tariff",
+    unit: "currency",
   },
 ];

@@ -59,7 +59,8 @@
       "places": "Lieux",
       "placesCompare": "Comparer",
       "placesCoverage": "Couverture",
-      "askSolon": "Demander à Solon"
+      "askSolon": "Demander à Solon",
+      "structures": "Structures"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -100,7 +101,8 @@
       "places": "Trouver un lieu par nom ou code postal",
       "placesCompare": "Des lieux côte à côte : ce que l’impôt vous coûte dans chacun",
       "placesCoverage": "Ce que couvrent les lieux, compté à partir des données",
-      "askSolon": "Comprendre les règles et préparer une proposition."
+      "askSolon": "Comprendre les règles et préparer une proposition.",
+      "structures": "Formes juridiques comparées, dans les mots de la loi"
     }
   },
   "Nav": {
@@ -465,7 +467,8 @@
       "title": "Impôts",
       "levies": "Prélève l'impôt : les taux fixés ici entrent dans le modèle fiscal de {pack}.",
       "none": "Ne prélève pas d'impôt propre. Ici s'appliquent les impôts des lieux dont il fait partie.",
-      "noModel": "Pas encore de modèle fiscal pour {pack}."
+      "noModel": "Pas encore de modèle fiscal pour {pack}.",
+      "refinedBy": "Le taux dépend de l’endroit où vous habitez à {place}. Choisissez votre localité :"
     },
     "otherNames": "Autres noms",
     "identifiers": "Identifiants",
@@ -558,12 +561,13 @@
       "multiplier": "{metric} ({level})",
       "notRecorded": "Pas encore recensé",
       "taxedBy": "Prélevé par",
-      "taxedByPlace": "{name} ({level})",
+      "taxedByPlace": "{name} <small>({level})</small>",
       "later": "Pas encore comparé",
       "laterText": "La participation, ce qu’implique un départ, le statut et la taille viendront quand leurs données seront importées.",
       "coverageLink": "Ce que couvrent les lieux →",
       "disclaimer": "Une estimation tirée des barèmes publiés, pas une taxation.",
-      "act": "Ce que vous pouvez faire"
+      "act": "Ce que vous pouvez faire",
+      "perMonth": "{amount} par mois à mettre de côté"
     },
     "map": {
       "searchLabel": "Chercher une adresse, un lieu ou un code postal",
@@ -581,6 +585,8 @@
       "viewMap": "Carte",
       "viewList": "Liste",
       "mapLabel": "Carte : {level}",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
       "loading": "Chargement de la carte…",
       "loadError": "La carte n’a pas pu être chargée. La recherche et la liste ci-dessous fonctionnent toujours.",
       "mapUnavailable": "La carte ne peut pas être dessinée dans ce navigateur ; les lieux sont donc listés.",
@@ -614,7 +620,19 @@
       "title": "Ce que vous pouvez faire",
       "intro": "Chaque lien ouvre la page de l’autorité compétente.",
       "due": "En général jusqu’au {date, date, ::dMMMM}",
-      "dueSource": "source"
+      "dueSource": "source",
+      "calendar": "Ajouter les délais à votre calendrier",
+      "calendarEvent": "{action} : {place}",
+      "calendarSource": "Où la date est indiquée"
+    },
+    "ask": {
+      "title": "Questions sur l’impôt à {place}",
+      "starters": {
+        "one": "Comment le revenu est-il imposé ici ?",
+        "two": "Quand la déclaration d’impôt est-elle due ici, et puis-je obtenir un délai ?",
+        "three": "Y a-t-il un impôt sur la fortune ici ?"
+      },
+      "placeholder": "Puis-je déduire les frais de trajet au travail ?"
     }
   },
   "AuthError": {
@@ -718,5 +736,52 @@
     "passkey": "Si vous avez ajouté une clé d’accès à votre compte, connectez-vous avec elle ci-dessus.",
     "orangecat": "Si votre compte est relié à OrangeCat, continuez avec OrangeCat ci-dessus.",
     "contact": "Sinon, écrivez à <mail>{email}</mail> depuis l’adresse de votre compte."
+  },
+  "Structures": {
+    "metaTitle": "Structures comparées",
+    "kicker": "Structures",
+    "title": "Structures comparées",
+    "description": "Une fondation, un établissement et une société anonyme du Liechtenstein, et une société anonyme suisse : ce que la loi dit de chacun, ligne par ligne. Chaque fait cite sa disposition, vérifiée à chaque ouverture contre le droit que Solon détient.",
+    "notAdvice": "Ceci expose ce que dit la loi. Ce n’est pas un conseil : la forme qui vous convient relève d’un fiduciaire, d’un avocat ou d’un conseiller fiscal agréé.",
+    "kindsTitle": "Les formes comparées",
+    "readAct": "Lire l’acte",
+    "ask": "Poser une question sur le droit",
+    "missing": "Pas encore indiqué ici",
+    "source": "{count, plural, one {La disposition} other {Les # dispositions}}",
+    "amended": "Cette disposition a changé depuis sa lecture ; ces mots y figurent toujours.",
+    "kinds": {
+      "liFoundation": "Fondation (Stiftung)",
+      "liEstablishment": "Établissement (Anstalt)",
+      "liCompany": "Société anonyme (AG)",
+      "chCompany": "Société anonyme (SA)"
+    },
+    "places": {
+      "liechtenstein": "Liechtenstein",
+      "switzerland": "Suisse"
+    },
+    "rows": {
+      "founders": "Qui peut la constituer",
+      "minimumCapital": "Capital minimum",
+      "register": "Registre public",
+      "supervision": "Surveillance",
+      "liability": "Qui répond de ses dettes",
+      "profitTax": "Impôt sur le bénéfice",
+      "minimumTax": "Impôt minimum par an",
+      "privateWealth": "Si elle ne détient que du patrimoine privé"
+    },
+    "scopes": {
+      "federal": "{rate} fédéral"
+    },
+    "values": {
+      "naturalOrLegalPersons": "Une ou plusieurs personnes physiques ou morales",
+      "oneOrMoreFounders": "Un ou plusieurs fondateurs",
+      "oneOrMorePersonsOrCompanies": "Une ou plusieurs personnes ou sociétés commerciales",
+      "registeredOrNoticeDeposited": "Inscrite au registre du commerce là où la loi l’exige ; sinon un avis de constitution est déposé",
+      "registered": "Inscrite au registre du commerce",
+      "existsOnceRegistered": "Inscrite au registre du commerce, et n’existe qu’à partir de là",
+      "charitableOrByChoice": "Surveillée si elle est d’utilité publique, ou si son acte le prévoit",
+      "ownAssetsOnly": "Seulement son propre patrimoine",
+      "minimumTaxOnly": "Seulement l’impôt minimum, si elle remplit les conditions d’une structure de patrimoine privé"
+    }
   }
 }

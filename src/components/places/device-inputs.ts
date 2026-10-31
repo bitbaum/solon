@@ -90,12 +90,48 @@ export function useDeviceInputs(packs: readonly CompareTaxPack[]) {
     const saved = parseSaved(json);
     return Object.fromEntries(packs.map((pack) => [pack.key, inputFor(pack, saved[pack.key])]));
   }, [json, packs]);
-  const update = (packKey: string, patch: Partial<PackInput>) =>
-    save(
-      JSON.stringify({
-        ...parseSaved(snapshot()),
-        [packKey]: { ...inputs[packKey]!, ...patch },
-      }),
-    );
+  /**
+   * Write a change to every pack named, each taking only what it asks: an
+   * amount or a yes-or-no it reads, a household it knows. One situation typed
+   * once serves every country it fits.
+   */
+  const update = (packKeys: string | readonly string[], patch: Partial<PackInput>) => {
+    const saved = parseSaved(snapshot());
+    for (const key of typeof packKeys === "string" ? [packKeys] : packKeys) {
+      const pack = packs.find((p) => p.key === key);
+      const current = inputs[key];
+      if (!pack || !current) continue;
+      const asks = new Set([
+        ...pack.amounts.map((a) => a.key),
+        ...pack.conditions.map((c) => c.key),
+        ...pack.choices.flatMap((c) => c.options.map((o) => o.key)),
+      ]);
+      const fits = <T>(values: Record<string, T>): Record<string, T> =>
+        Object.fromEntries(Object.entries(values).filter(([k]) => asks.has(k)));
+      saved[key] = {
+        ...current,
+        ...(patch.amount !== undefined && { amount: patch.amount }),
+        ...(patch.amounts && { amounts: { ...current.amounts, ...fits(patch.amounts) } }),
+        ...(patch.conditions && { conditions: fits(patch.conditions) }),
+        ...(patch.variant !== undefined &&
+          pack.variants.some((v) => v.key === patch.variant) && { variant: patch.variant }),
+      };
+    }
+    save(JSON.stringify(saved));
+  };
   return [inputs, update] as const;
+}
+
+/** A group's situation as its form shows it: the first pack's, with what the others ask added. */
+export function groupInput(
+  inputs: Record<string, PackInput>,
+  packKeys: readonly string[],
+): PackInput {
+  const members = packKeys.flatMap((key) => (inputs[key] ? [inputs[key]] : []));
+  const first = members[0]!;
+  return {
+    ...first,
+    amounts: Object.assign({}, ...members.map((m) => m.amounts), first.amounts),
+    conditions: Object.assign({}, ...members.map((m) => m.conditions), first.conditions),
+  };
 }
