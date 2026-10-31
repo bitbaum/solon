@@ -764,11 +764,14 @@
       "founders": "Qui peut la constituer",
       "minimumCapital": "Capital minimum",
       "register": "Registre public",
+      "qualifiedMember": "Un membre agréé au conseil",
       "supervision": "Surveillance",
       "liability": "Qui répond de ses dettes",
       "profitTax": "Impôt sur le bénéfice",
       "minimumTax": "Impôt minimum par an",
-      "privateWealth": "Si elle ne détient que du patrimoine privé"
+      "privateWealth": "Si elle ne détient que du patrimoine privé",
+      "taxReturn": "Quand la déclaration d’impôt est due",
+      "annualAccounts": "Comptes annuels"
     },
     "scopes": {
       "federal": "{rate} fédéral"
@@ -782,7 +785,10 @@
       "existsOnceRegistered": "Inscrite au registre du commerce, et n’existe qu’à partir de là",
       "charitableOrByChoice": "Surveillée si elle est d’utilité publique, ou si son acte le prévoit",
       "ownAssetsOnly": "Seulement son propre patrimoine",
-      "minimumTaxOnly": "Seulement l’impôt minimum, si elle remplit les conditions d’une structure de patrimoine privé"
+      "minimumTaxOnly": "Seulement l’impôt minimum, si elle remplit les conditions d’une structure de patrimoine privé",
+      "licensedTrusteeOnBoard": "Au moins un membre gérant doit détenir une autorisation selon la loi sur les fiduciaires",
+      "byDateSetYearly": "À la date que l’administration fiscale fixe chaque année ; prolongeable sur demande écrite",
+      "withinSixMonths": "Dans les six mois suivant la fin de l’exercice, approuvés par l’assemblée générale ordinaire"
     }
   },
   "Chat": {
