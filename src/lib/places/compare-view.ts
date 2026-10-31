@@ -102,6 +102,80 @@ export interface Comparison {
   earlierYear: boolean;
 }
 
+/**
+ * The packs that can share one situation: those in one currency, whose base
+ * is the same kind of amount, asked once. The form shows the first pack's
+ * words, with every other pack's further amounts, choices and yes-or-no
+ * inputs added; a household it does not know is left to the first pack's.
+ */
+export interface SituationGroup {
+  /** The first pack's key: where the group's form keeps its ids. */
+  key: string;
+  packs: CompareTaxPack[];
+  /** The questions the group's form asks, merged. */
+  pack: CompareTaxPack;
+}
+
+export function situationGroups(packs: readonly CompareTaxPack[]): SituationGroup[] {
+  const groups: SituationGroup[] = [];
+  for (const pack of packs) {
+    const group = groups.find(
+      (g) => g.pack.currency === pack.currency && g.pack.base.key === pack.base.key,
+    );
+    if (!group) {
+      groups.push({ key: pack.key, packs: [pack], pack });
+      continue;
+    }
+    const merged = group.pack;
+    const add = <T extends { key: string }>(into: T[], more: T[]) => [
+      ...into,
+      ...more.filter((m) => !into.some((i) => i.key === m.key)),
+    ];
+    // A hint one country gives would be wrong for the other ("4 % of it is
+    // taxed as income" is Liechtenstein's): where they differ, neither is shown.
+    const sameHint = (into: CompareInput[], more: CompareInput[]) =>
+      into.map((i) => {
+        const other = more.find((m) => m.key === i.key);
+        return other && other.hint !== i.hint ? { ...i, hint: null } : i;
+      });
+    group.packs.push(pack);
+    group.pack = {
+      ...merged,
+      name: `${merged.name} · ${pack.name}`,
+      base: sameHint([merged.base], [pack.base])[0]!,
+      amounts: add(sameHint(merged.amounts, pack.amounts), pack.amounts),
+      conditions: add(merged.conditions, pack.conditions),
+      choices: add(merged.choices, pack.choices),
+    };
+  }
+  return groups;
+}
+
+type MultiplierRow = CompareTaxPack["multiplierRows"][number];
+
+/**
+ * One row per multiplier as the reader reads it: a commune's multiplier in
+ * Switzerland and in Liechtenstein is one row, each column filled from its own
+ * country's figure. Rows keep the order they first appear in.
+ */
+export function mergedMultiplierRows(
+  packs: readonly CompareTaxPack[],
+  labelOf: (row: MultiplierRow) => string,
+  keep: (pack: CompareTaxPack, row: MultiplierRow) => boolean,
+): { label: string; rows: (MultiplierRow & { packKey: string })[] }[] {
+  const merged: { label: string; rows: (MultiplierRow & { packKey: string })[] }[] = [];
+  for (const pack of packs)
+    for (const row of pack.multiplierRows) {
+      if (!keep(pack, row)) continue;
+      const label = labelOf(row);
+      const entry = { ...row, packKey: pack.key };
+      const at = merged.find((m) => m.label === label);
+      if (at) at.rows.push(entry);
+      else merged.push({ label, rows: [entry] });
+    }
+  return merged;
+}
+
 /** The reader's inputs, kept on their device. */
 export interface EstimateInput {
   base: number | null;

@@ -5,6 +5,7 @@ import type { ChainFact, ChainPlace } from "../chain";
 import {
   comparisonView,
   figuresPublished,
+  taxPackView,
   taxYear,
   yearsBefore,
   type ComparedPlace,
@@ -18,6 +19,8 @@ import {
   lowestTotals,
   parseAmount,
   type ColumnEstimate,
+  mergedMultiplierRows,
+  situationGroups,
 } from "../compare-view";
 import { withTestland } from "./fixtures/testland/config";
 
@@ -297,5 +300,66 @@ describe("which rows say something", () => {
     expect(multiplierRowShows("p", { key: "a", optional: true }, withRates)).toBe(false);
     expect(multiplierRowShows("p", { key: "b", optional: true }, withRates)).toBe(true);
     expect(multiplierRowShows("p", { key: "a", optional: false }, withRates)).toBe(true);
+  });
+});
+
+describe("one situation for countries in one currency", () => {
+  const other = (key: string, currency: string, extra: Partial<typeof pack> = {}) => ({
+    ...pack,
+    key,
+    name: key,
+    currency,
+    ...extra,
+  });
+
+  it("asks once for packs in one currency, with every question either asks", () => {
+    const second = other("neighbour", pack.currency, {
+      amounts: [{ key: "holdings", label: "Holdings", hint: null }],
+      conditions: [],
+      choices: [],
+    });
+    const groups = situationGroups([pack, second, other("faraway", "XXX")]);
+    expect(groups.map((g) => g.packs.map((p) => p.key))).toEqual([
+      [pack.key, "neighbour"],
+      ["faraway"],
+    ]);
+    expect(groups[0]!.pack.name).toBe(`${pack.name} · neighbour`);
+    expect(groups[0]!.pack.amounts.map((a) => a.key)).toContain("holdings");
+    expect(groups[0]!.pack.variants).toEqual(pack.variants);
+  });
+
+  it("drops a hint the countries word differently, so neither country's is shown as both", () => {
+    const worded = (hint: string) =>
+      other("x", pack.currency, { amounts: [{ key: "wealth", label: "Wealth", hint }] });
+    const [group] = situationGroups([worded("4 % is taxed as income"), worded("Debts off")]);
+    expect(group!.pack.amounts).toEqual([{ key: "wealth", label: "Wealth", hint: null }]);
+    const [alike] = situationGroups([worded("Debts off"), worded("Debts off")]);
+    expect(alike!.pack.amounts[0]!.hint).toBe("Debts off");
+  });
+
+  it("puts one multiplier as the reader reads it in one row, each country's figure in it", () => {
+    const second = other("neighbour", pack.currency);
+    const rows = mergedMultiplierRows(
+      [pack, second],
+      (row) => `${row.metric} (${row.level})`,
+      () => true,
+    );
+    expect(rows).toHaveLength(pack.multiplierRows.length);
+    expect(rows[0]!.rows.map((r) => r.packKey)).toEqual([pack.key, "neighbour"]);
+    const none = mergedMultiplierRows(
+      [pack],
+      (row) => row.key,
+      () => false,
+    );
+    expect(none).toEqual([]);
+  });
+});
+
+describe("what a country asks", () => {
+  it("asks Liechtenstein's wealth as an amount, read through its yield, never as a yes or no", () => {
+    const li = placesConfig.packs.find((p) => p.key === "liechtenstein")!;
+    const view = taxPackView(placesConfig, li, "2026-06-30", "en")!;
+    expect(view.amounts.map((a) => a.key)).toEqual(["taxable_wealth"]);
+    expect(view.conditions).toEqual([]);
   });
 });

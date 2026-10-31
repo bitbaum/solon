@@ -302,8 +302,16 @@ export function taxPackView(
       });
     }
   }
+  // An amount is any number a component reads besides the model's base: its own
+  // base (a wealth tax), or an input added to its base (Liechtenstein's yield on
+  // wealth). Everything else the model reads is a yes or no.
   const amountKeys = [
-    ...new Set(model.components.flatMap((c) => (c.base && c.base !== model.base ? [c.base] : []))),
+    ...new Set(
+      model.components.flatMap((c) => [
+        ...(c.base && c.base !== model.base ? [c.base] : []),
+        ...("adds" in c && c.adds ? c.adds.map((a) => a.input) : []),
+      ]),
+    ),
   ];
   const choices = Object.entries(labels.choices);
   const chosen = new Set(choices.flatMap(([, choice]) => choice.options));
