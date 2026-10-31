@@ -624,6 +624,15 @@
       "calendar": "Aggiungi le scadenze al calendario",
       "calendarEvent": "{action}: {place}",
       "calendarSource": "Dove è indicata la data"
+    },
+    "ask": {
+      "title": "Domande sulle imposte a {place}",
+      "starters": {
+        "one": "Come è tassato il reddito qui?",
+        "two": "Entro quando va presentata qui la dichiarazione d’imposta, e posso avere una proroga?",
+        "three": "C’è un’imposta sulla sostanza qui?"
+      },
+      "placeholder": "Posso dedurre le spese per il tragitto al lavoro?"
     }
   },
   "AuthError": {

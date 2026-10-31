@@ -624,6 +624,15 @@
       "calendar": "Fristen in den Kalender übernehmen",
       "calendarEvent": "{action}: {place}",
       "calendarSource": "Wo das Datum steht"
+    },
+    "ask": {
+      "title": "Fragen zu den Steuern in {place}",
+      "starters": {
+        "one": "Wie wird das Einkommen hier besteuert?",
+        "two": "Bis wann ist die Steuererklärung hier fällig, und kann ich Aufschub bekommen?",
+        "three": "Gibt es hier eine Vermögenssteuer?"
+      },
+      "placeholder": "Kann ich die Kosten für den Arbeitsweg abziehen?"
     }
   },
   "AuthError": {

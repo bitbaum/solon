@@ -1,6 +1,7 @@
 import type { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
+import { LawChat } from "@/components/law/law-chat";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
@@ -126,6 +127,17 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
             />
             <CalendarButton actions={view.actions} />
           </section>
+        )}
+
+        {view.lawAuthorities && view.lawAuthorities.length > 0 && (
+          <div>
+            <LawChat
+              scope={{ place: view.name, authorities: view.lawAuthorities, topic: "tax" }}
+              title={t("ask.title", { place: view.name })}
+              placeholder={t("ask.placeholder")}
+              starters={[t("ask.starters.one"), t("ask.starters.two"), t("ask.starters.three")]}
+            />
+          </div>
         )}
 
         {(view.otherNames.length > 0 || view.identifiers.length > 0) && (

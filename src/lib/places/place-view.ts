@@ -65,6 +65,8 @@ export interface PlaceView {
   actions: PlaceAction[];
   /** Places inside it whose figures refine its own (localities with rates of their own). */
   refinedBy: PlaceLink[];
+  /** The law register's authorities whose law applies here; set by the page loader. */
+  lawAuthorities?: string[];
   sources: PlaceSource[];
 }
 

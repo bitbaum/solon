@@ -624,6 +624,15 @@
       "calendar": "Ajouter les délais à votre calendrier",
       "calendarEvent": "{action} : {place}",
       "calendarSource": "Où la date est indiquée"
+    },
+    "ask": {
+      "title": "Questions sur l’impôt à {place}",
+      "starters": {
+        "one": "Comment le revenu est-il imposé ici ?",
+        "two": "Quand la déclaration d’impôt est-elle due ici, et puis-je obtenir un délai ?",
+        "three": "Y a-t-il un impôt sur la fortune ici ?"
+      },
+      "placeholder": "Puis-je déduire les frais de trajet au travail ?"
     }
   },
   "AuthError": {
