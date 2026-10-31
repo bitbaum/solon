@@ -125,22 +125,30 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
             </Link>
           </div>
 
-          <button
-            type="button"
-            className="flex h-11 w-11 items-center justify-center text-fg-primary lg:hidden"
-            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
-            aria-expanded={mobileOpen}
-            aria-controls="site-menu"
-            onClick={() => setMobileOpen((o) => !o)}
-          >
-            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
-              {mobileOpen ? (
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" />
-              ) : (
-                <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" strokeWidth="2" />
-              )}
-            </svg>
-          </button>
+          {/* On a phone, Sign in stays beside the menu, as in the fleet's other apps. */}
+          <div className="flex min-w-0 items-center gap-2 lg:hidden">
+            {authEnabled && (
+              <span className="block min-w-0 max-w-[9rem] truncate">
+                <AuthControl />
+              </span>
+            )}
+            <button
+              type="button"
+              className="flex h-11 w-11 items-center justify-center text-fg-primary lg:hidden"
+              aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
+              aria-expanded={mobileOpen}
+              aria-controls="site-menu"
+              onClick={() => setMobileOpen((o) => !o)}
+            >
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden="true">
+                {mobileOpen ? (
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" />
+                ) : (
+                  <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" strokeWidth="2" />
+                )}
+              </svg>
+            </button>
+          </div>
         </nav>
       </header>
 
