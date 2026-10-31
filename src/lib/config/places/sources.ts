@@ -788,6 +788,35 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["liechtenstein"],
   },
   {
+    // Kept by hand: where a Liechtenstein resident files the return, pays and
+    // asks for more time. Each commune's tax office (Gemeindesteuerkasse, SteG
+    // art. 80) takes the return, so each step is at the commune's own page.
+    // The return is due by the date printed on it, not a fixed day in law, so
+    // no row carries a deadline. Each row keeps the sentence it was read from.
+    key: "li-communal-tax-steps",
+    publisher: "The communes of Liechtenstein",
+    dataset: "Where to file a tax return, pay tax and ask for more time, per commune",
+    homepage: "https://github.com/bitbaum/solon/blob/main/data/places/liechtenstein/tax-steps.csv",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "The communes of Liechtenstein, each on its own website",
+      de: "Die Gemeinden Liechtensteins, je auf ihrer eigenen Website",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_instruments",
+    options: {
+      place: { scheme: "li_municipality", column: "place" },
+      kind: {
+        column: "kind",
+        values: { file: "tax_return", pay: "tax_payment", extend: "tax_deadline_extension" },
+      },
+      url: "url",
+      deadline: { column: "deadline", source: "source_url" },
+    },
+    packs: ["liechtenstein"],
+  },
+  {
     // Kept by hand from the act: Liechtenstein's tariff for a single person
     // and for a couple taxed together (SteG, LR 640.0, art. 19 para. 1 a and
     // c, as amended by LGBl. 2024 Nr. 483, which applies from the tax year

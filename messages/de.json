@@ -564,7 +564,8 @@
       "laterText": "Mitwirkung, was ein Wegzug bedeutet, Status und Grösse folgen, sobald ihre Daten importiert sind.",
       "coverageLink": "Was Orte abdeckt →",
       "disclaimer": "Eine Schätzung aus den veröffentlichten Tarifen, keine Steuerveranlagung.",
-      "act": "Was Sie tun können"
+      "act": "Was Sie tun können",
+      "perMonth": "{amount} pro Monat zurückzulegen"
     },
     "map": {
       "searchLabel": "Adresse, Ort oder Postleitzahl suchen",
@@ -617,7 +618,10 @@
       "title": "Was Sie tun können",
       "intro": "Jeder Link führt auf die Seite der zuständigen Behörde.",
       "due": "In der Regel bis {date, date, ::dMMMM}",
-      "dueSource": "Quelle"
+      "dueSource": "Quelle",
+      "calendar": "Fristen in den Kalender übernehmen",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Wo das Datum steht"
     }
   },
   "AuthError": {

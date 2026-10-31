@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { groupInput, useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
 import ActionList from "./action-list";
+import CalendarButton from "./calendar-button";
 import TotalCell from "./total-cell";
 import ComparisonRow, { comparisonCell as cell } from "./comparison-row";
 import {
@@ -292,12 +293,15 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                   {column.actions.length === 0 ? (
                     <span className="text-fg-tertiary">–</span>
                   ) : (
-                    <ActionList
-                      actions={column.actions}
-                      due={(date) => ta("due", { date })}
-                      dueSource={ta("dueSource")}
-                      showOfferedBy={false}
-                    />
+                    <>
+                      <ActionList
+                        actions={column.actions}
+                        due={(date) => ta("due", { date })}
+                        dueSource={ta("dueSource")}
+                        showOfferedBy={false}
+                      />
+                      <CalendarButton actions={column.actions} />
+                    </>
                   )}
                 </td>
               ))}

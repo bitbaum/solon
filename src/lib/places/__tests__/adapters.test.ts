@@ -675,6 +675,29 @@ describe("the cantons' tax steps, kept by hand", () => {
   });
 });
 
+describe("Liechtenstein's tax steps, at each commune's own office", () => {
+  const file = join(__dirname, "../../../../data/places/liechtenstein/tax-steps.csv");
+  const batch = mapSource("li-communal-tax-steps", new Uint8Array(readFileSync(file)));
+  const rows = parseCsv(readFileSync(file, "utf8"));
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(batch, placesConfig, "li-communal-tax-steps").problems).toEqual([]);
+  });
+
+  it("tells every commune's residents where to file, each row with the sentence it was read from", () => {
+    const filing = new Set(rows.filter((r) => r.kind === "file").map((r) => r.place));
+    expect(filing.size).toBe(11);
+    for (const row of rows) {
+      expect(row.quote, `${row.place} ${row.kind}`).not.toBe("");
+      expect(row.url, `${row.place} ${row.kind}`).toMatch(/^https:\/\/(www\.)?[a-z]+\.li\//);
+    }
+    // Only where the commune names the day: Triesenberg and Eschen, 24 April.
+    expect(
+      batch.instruments.filter((i) => i.requirements.deadline).map((i) => i.requirements.deadline),
+    ).toHaveLength(2);
+  });
+});
+
 describe("the Federal Tax Administration's exports", () => {
   const skipped: { row: string; reason: string }[] = [];
   const scales = mapSource("estv-income-tax-scales", fixture("estv-scales-2025.json"), skipped);

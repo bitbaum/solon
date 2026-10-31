@@ -179,7 +179,9 @@ export const liechtenstein: CountryPackInput = {
     "swisstopo-postcode-localities-li",
     "li-income-tax",
     "li-communal-surcharges",
+    "li-communal-tax-steps",
   ],
+  instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: liechtensteinIncomeTax,
   taxLabels: liechtensteinTaxLabels,
 };

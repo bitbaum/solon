@@ -1130,7 +1130,8 @@
       "laterText": "Ways to take part, what leaving involves, status and size come as their data is imported.",
       "coverageLink": "What Places covers →",
       "disclaimer": "An estimate from the published tariffs, not a tax assessment.",
-      "act": "What you can do"
+      "act": "What you can do",
+      "perMonth": "{amount} a month to put aside"
     },
     "map": {
       "searchLabel": "Find an address, a place or a postcode",
@@ -1183,7 +1184,10 @@
       "title": "What you can do",
       "intro": "Each link opens the authority's own page.",
       "due": "Usually due by {date, date, ::dMMMM}",
-      "dueSource": "source"
+      "dueSource": "source",
+      "calendar": "Add the deadlines to your calendar",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Where the date is stated"
     }
   },
   "AuthError": {
