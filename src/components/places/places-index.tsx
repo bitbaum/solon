@@ -94,7 +94,7 @@ export default function PlacesIndex({
           <PlacesMap packKey={mapPack} />
         </div>
       )}
-      <div className="mx-auto max-w-3xl space-y-10">
+      <div className="max-w-3xl space-y-10">
         {mapPack && !search ? <noscript>{form}</noscript> : form}
 
         {search && (

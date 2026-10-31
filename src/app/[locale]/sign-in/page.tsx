@@ -4,6 +4,7 @@ import { authLabelsFor, signInMethods } from "@bitbaum/accountkit/auth";
 import { returnPath } from "@bitbaum/accountkit/orangecat";
 import { SolonSignIn } from "@/components/auth/account-screens";
 import LostPasswordHelp from "@/components/auth/lost-password-help";
+import { getTranslations } from "next-intl/server";
 import PageLayout from "@/components/ui/page-layout";
 import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
@@ -60,6 +61,7 @@ export default async function SignInPage({ params, searchParams }: Props) {
           : labels.signIn
       }
       kicker="Solon"
+      description={(await getTranslations({ locale, namespace: "Site" }))("accountIntro")}
     >
       <div className="max-w-md">
         {authEnabled ? (

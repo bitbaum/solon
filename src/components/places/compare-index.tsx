@@ -36,7 +36,7 @@ export default function CompareIndex({
   const full = compared.length >= limit;
   return (
     <PageLayout title={t("compare.title")} kicker={t("compare.kicker")}>
-      <div className="mx-auto max-w-5xl space-y-10">
+      <div className="max-w-5xl space-y-10">
         <p className="max-w-3xl text-fg-secondary">{t("compare.intro", { limit })}</p>
 
         {comparison.notFound.length > 0 && (

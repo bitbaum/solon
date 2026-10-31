@@ -23,7 +23,7 @@ const authorityName = (key: string): string =>
 export default function LawIndex({ query, authority, searchAction, hits, t }: LawIndexProps) {
   return (
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
-      <div className="mx-auto max-w-3xl space-y-10">
+      <div className="max-w-3xl space-y-10">
         <p className="text-fg-secondary">{t("index.intro")}</p>
         <p>
           <Link href="/law/ask" className="font-medium text-fg-primary underline">

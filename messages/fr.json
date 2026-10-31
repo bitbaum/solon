@@ -103,7 +103,8 @@
       "placesCoverage": "Ce que couvrent les lieux, compté à partir des données",
       "askSolon": "Comprendre les règles et préparer une proposition.",
       "structures": "Formes juridiques comparées, dans les mots de la loi"
-    }
+    },
+    "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
   "Nav": {
     "home": "Solon — accueil",

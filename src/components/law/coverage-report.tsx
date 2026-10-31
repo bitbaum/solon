@@ -20,7 +20,7 @@ export default function LawCoverageReport({ coverage, t }: LawCoverageReportProp
   const { authorities, totals, retrievedOn } = coverage;
   return (
     <PageLayout title={t("coverage.title")} kicker={t("coverage.kicker")}>
-      <div className="mx-auto max-w-3xl space-y-8">
+      <div className="max-w-3xl space-y-8">
         <p className="text-sm text-fg-secondary">
           {retrievedOn ? t("coverage.intro", { date: retrievedOn }) : t("coverage.neverRetrieved")}
         </p>

@@ -45,7 +45,7 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
       title={view.name}
       kicker={t("kicker", { level: view.levelName, pack: view.packName })}
     >
-      <div className="mx-auto max-w-3xl space-y-10">
+      <div className="max-w-3xl space-y-10">
         <p className="flex flex-wrap items-center gap-3 text-sm text-fg-secondary">
           <span className="rounded-pill border border-default px-3 py-1 text-fg-primary">
             {t("official")}
