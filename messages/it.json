@@ -716,7 +716,7 @@
       "startersTitle": "Che cosa dice il diritto?",
       "starters": {
         "one": "È permesso tenere una volpe nei Grigioni?",
-        "two": "E a Lucerna?",
+        "two": "Quale preavviso deve dare un inquilino a Berna?",
         "three": "Un locatore può aumentare la pigione durante la locazione a Zurigo?"
       },
       "steps": {
@@ -782,6 +782,75 @@
       "charitableOrByChoice": "Vigilata se di pubblica utilità, o se l’atto di fondazione lo prevede",
       "ownAssetsOnly": "Solo il proprio patrimonio",
       "minimumTaxOnly": "Solo l’imposta minima, se soddisfa le condizioni di una struttura di patrimonio privato"
+    }
+  },
+  "Chat": {
+    "copy": "Copia",
+    "copied": "Copiato",
+    "listen": "Ascolta",
+    "share": "Condividi",
+    "retry": "Riprova",
+    "stop": "Stop",
+    "working": "Un momento…",
+    "stopped": "Interrotto. Invia di nuovo il messaggio.",
+    "jump": "Vai all’ultimo messaggio",
+    "failed": "Non ha funzionato.",
+    "loading": "Caricamento della conversazione",
+    "replies": "Risposte suggerite",
+    "thoughtFor": "Ha riflettuto per {time}",
+    "thought": "Cosa ha fatto",
+    "thinking": "Sta pensando",
+    "send": "Invia",
+    "voice": "Parla invece di scrivere",
+    "voiceStop": "Termina la registrazione",
+    "cancelRecording": "Annulla la registrazione",
+    "confirmRecording": "Fatto — usa quello che ho detto",
+    "listening": "Ti ascolto…",
+    "transcribing": "Trascrizione in corso…",
+    "queue": "Metti in coda un messaggio…",
+    "dismiss": "Nascondi",
+    "retryTake": "Riprova",
+    "dictation": {
+      "mic": "Il microfono è bloccato. Consentilo per questo sito e riprova.",
+      "silence": "Non è stato sentito nulla. Riprova, un po’ più vicino al microfono.",
+      "unavailable": "L’inserimento vocale non è disponibile al momento. Scrivi oppure riprova più tardi.",
+      "fileTooLarge": "Questa registrazione è troppo grande per essere trascritta qui."
+    },
+    "app": {
+      "chats": "Conversazioni",
+      "openChats": "Apri le conversazioni",
+      "closeChats": "Chiudi le conversazioni",
+      "newChat": "Nuova conversazione",
+      "untitled": "Nuova conversazione",
+      "more": "Altro per questa conversazione",
+      "temporary": "Conversazione temporanea",
+      "temporaryNote": "Non salvata. Sparisce quando la lasci.",
+      "share": "Condividi questa conversazione",
+      "rename": "Rinomina",
+      "renameField": "Nome di questa conversazione",
+      "delete": "Elimina",
+      "deleteAsk": "Eliminare «{title}»?",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "search": "Cerca nelle conversazioni",
+      "today": "Oggi",
+      "yesterday": "Ieri",
+      "earlier": "Prima",
+      "noChats": "Ancora nessuna conversazione. Quello che chiedi viene conservato qui.",
+      "noMatch": "Nessuna conversazione si chiama «{query}».",
+      "loadingChats": "Caricamento delle conversazioni…",
+      "listFailed": "Le conversazioni non si sono caricate.",
+      "tryAgain": "Riprova",
+      "answering": "Sta rispondendo…",
+      "chatActions": "Rinomina o elimina «{title}»",
+      "queued": "Parte quando questa risposta è finita",
+      "unqueue": "Non inviare «{text}»",
+      "dismiss": "Nascondi",
+      "problems": {
+        "load": "Le conversazioni non si sono caricate.",
+        "save": "Non è stato salvato. Controlla la connessione e riprova.",
+        "open": "Questa conversazione non si è aperta. Riprova."
+      }
     }
   }
 }

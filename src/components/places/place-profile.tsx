@@ -135,6 +135,7 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
               scope={{ place: view.name, authorities: view.lawAuthorities, topic: "tax" }}
               title={t("ask.title", { place: view.name })}
               placeholder={t("ask.placeholder")}
+              storeKey={`solon-tax:${view.slugPath}`}
               starters={[t("ask.starters.one"), t("ask.starters.two"), t("ask.starters.three")]}
             />
           </div>

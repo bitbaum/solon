@@ -716,7 +716,7 @@
       "startersTitle": "Que dit le droit ?",
       "starters": {
         "one": "Est-il permis de garder un renard aux Grisons ?",
-        "two": "Et à Lucerne ?",
+        "two": "Quel préavis un locataire doit-il donner à Berne ?",
         "three": "Un bailleur peut-il augmenter le loyer en cours de bail à Zurich ?"
       },
       "steps": {
@@ -782,6 +782,75 @@
       "charitableOrByChoice": "Surveillée si elle est d’utilité publique, ou si son acte le prévoit",
       "ownAssetsOnly": "Seulement son propre patrimoine",
       "minimumTaxOnly": "Seulement l’impôt minimum, si elle remplit les conditions d’une structure de patrimoine privé"
+    }
+  },
+  "Chat": {
+    "copy": "Copier",
+    "copied": "Copié",
+    "listen": "Écouter",
+    "share": "Partager",
+    "retry": "Réessayer",
+    "stop": "Stop",
+    "working": "Un instant…",
+    "stopped": "Interrompu. Renvoyez le message.",
+    "jump": "Aller au dernier message",
+    "failed": "Cela n’a pas fonctionné.",
+    "loading": "Chargement de la conversation",
+    "replies": "Réponses suggérées",
+    "thoughtFor": "A réfléchi pendant {time}",
+    "thought": "Ce qu'il a fait",
+    "thinking": "Réfléchit",
+    "send": "Envoyer",
+    "voice": "Parler au lieu d’écrire",
+    "voiceStop": "Arrêter l’enregistrement",
+    "cancelRecording": "Annuler l’enregistrement",
+    "confirmRecording": "Terminé — utiliser ce que j’ai dit",
+    "listening": "Je vous écoute…",
+    "transcribing": "Transcription en cours…",
+    "queue": "Mettre un message en attente…",
+    "dismiss": "Masquer",
+    "retryTake": "Réessayer",
+    "dictation": {
+      "mic": "Le microphone est bloqué. Autorisez-le pour ce site et réessayez.",
+      "silence": "Rien n’a été entendu. Réessayez, un peu plus près du micro.",
+      "unavailable": "La saisie vocale n’est pas disponible pour le moment. Écrivez à la place ou réessayez plus tard.",
+      "fileTooLarge": "Cet enregistrement est trop volumineux pour être transcrit ici."
+    },
+    "app": {
+      "chats": "Conversations",
+      "openChats": "Ouvrir vos conversations",
+      "closeChats": "Fermer les conversations",
+      "newChat": "Nouvelle conversation",
+      "untitled": "Nouvelle conversation",
+      "more": "Plus pour cette conversation",
+      "temporary": "Conversation temporaire",
+      "temporaryNote": "Non enregistrée. Disparaît quand vous la quittez.",
+      "share": "Partager cette conversation",
+      "rename": "Renommer",
+      "renameField": "Nom de cette conversation",
+      "delete": "Supprimer",
+      "deleteAsk": "Supprimer « {title} » ?",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "search": "Rechercher des conversations",
+      "today": "Aujourd’hui",
+      "yesterday": "Hier",
+      "earlier": "Plus tôt",
+      "noChats": "Aucune conversation pour l’instant. Ce que vous demandez est conservé ici.",
+      "noMatch": "Aucune conversation ne s’appelle « {query} ».",
+      "loadingChats": "Chargement de vos conversations…",
+      "listFailed": "Vos conversations n’ont pas pu être chargées.",
+      "tryAgain": "Réessayer",
+      "answering": "Répond…",
+      "chatActions": "Renommer ou supprimer « {title} »",
+      "queued": "Part quand cette réponse est terminée",
+      "unqueue": "Ne pas envoyer « {text} »",
+      "dismiss": "Masquer",
+      "problems": {
+        "load": "Vos conversations n’ont pas pu être chargées.",
+        "save": "Ce n’est pas enregistré. Vérifiez la connexion et réessayez.",
+        "open": "Cette conversation ne s’est pas ouverte. Réessayez."
+      }
     }
   }
 }
