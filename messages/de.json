@@ -764,11 +764,14 @@
       "founders": "Wer sie gründen kann",
       "minimumCapital": "Mindestkapital",
       "register": "Öffentliches Register",
+      "qualifiedMember": "Ein bewilligtes Mitglied in der Verwaltung",
       "supervision": "Aufsicht",
       "liability": "Wer für ihre Schulden haftet",
       "profitTax": "Steuer auf den Gewinn",
       "minimumTax": "Mindeststeuer pro Jahr",
-      "privateWealth": "Wenn sie nur Privatvermögen hält"
+      "privateWealth": "Wenn sie nur Privatvermögen hält",
+      "taxReturn": "Wann die Steuererklärung fällig ist",
+      "annualAccounts": "Jahresrechnung"
     },
     "scopes": {
       "federal": "{rate} Bund"
@@ -782,7 +785,10 @@
       "existsOnceRegistered": "Im Handelsregister eingetragen und erst ab dann bestehend",
       "charitableOrByChoice": "Beaufsichtigt, wenn gemeinnützig oder wenn die Stiftungsurkunde es vorsieht",
       "ownAssetsOnly": "Nur ihr eigenes Vermögen",
-      "minimumTaxOnly": "Nur die Mindestertragssteuer, wenn sie die Bedingungen einer Privatvermögensstruktur erfüllt"
+      "minimumTaxOnly": "Nur die Mindestertragssteuer, wenn sie die Bedingungen einer Privatvermögensstruktur erfüllt",
+      "licensedTrusteeOnBoard": "Mindestens ein geschäftsführendes Mitglied braucht eine Bewilligung nach dem Treuhändergesetz",
+      "byDateSetYearly": "Bis zur Frist, die die Steuerverwaltung jährlich festsetzt; auf schriftliches Gesuch verlängerbar",
+      "withinSixMonths": "Innert sechs Monaten nach Ablauf des Geschäftsjahres, genehmigt an der ordentlichen Generalversammlung"
     }
   },
   "Chat": {

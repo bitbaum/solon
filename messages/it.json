@@ -764,11 +764,14 @@
       "founders": "Chi può costituirla",
       "minimumCapital": "Capitale minimo",
       "register": "Registro pubblico",
+      "qualifiedMember": "Un membro autorizzato nel consiglio",
       "supervision": "Vigilanza",
       "liability": "Chi risponde dei suoi debiti",
       "profitTax": "Imposta sull’utile",
       "minimumTax": "Imposta minima annua",
-      "privateWealth": "Se detiene solo patrimonio privato"
+      "privateWealth": "Se detiene solo patrimonio privato",
+      "taxReturn": "Quando è dovuta la dichiarazione d’imposta",
+      "annualAccounts": "Conti annuali"
     },
     "scopes": {
       "federal": "{rate} federale"
@@ -782,7 +785,10 @@
       "existsOnceRegistered": "Iscritta nel registro di commercio, ed esiste solo da allora",
       "charitableOrByChoice": "Vigilata se di pubblica utilità, o se l’atto di fondazione lo prevede",
       "ownAssetsOnly": "Solo il proprio patrimonio",
-      "minimumTaxOnly": "Solo l’imposta minima, se soddisfa le condizioni di una struttura di patrimonio privato"
+      "minimumTaxOnly": "Solo l’imposta minima, se soddisfa le condizioni di una struttura di patrimonio privato",
+      "licensedTrusteeOnBoard": "Almeno un membro con poteri di gestione deve avere un’autorizzazione secondo la legge sui fiduciari",
+      "byDateSetYearly": "Entro il termine che l’amministrazione fiscale fissa ogni anno; prorogabile su domanda scritta",
+      "withinSixMonths": "Entro sei mesi dalla chiusura dell’esercizio, approvati dall’assemblea generale ordinaria"
     }
   },
   "Chat": {

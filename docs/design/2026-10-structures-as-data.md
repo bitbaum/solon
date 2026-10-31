@@ -109,6 +109,20 @@ founders, minimum capital, public register, supervision, liability, profit
 tax, minimum tax and the private asset structure. A row with no provision
 behind it is shown as not stated. Fund forms wait for their acts.
 
+### 3.2 S1 so far (2026-10-31)
+
+What the law requires of each form, as rows with the same check: a licensed
+member on the board (PGR Art. 180a, foundations included, as its Abs. 3
+says), when the tax return is due (SteG Art. 95: set yearly by the tax
+administration, extendable on a written request) and the yearly accounts of
+a Swiss company (OR Art. 958 Abs. 3, Art. 699 Abs. 2).
+
+Not yet: links to the Liechtenstein commercial register (llv.li) and the
+FMA's register of licensed trustees (fma-li.li). Both refuse automated
+reading (HTTP 403), so neither page has been opened and neither is linked;
+this is open question 2 below. A Swiss company's formation page waits for
+the same reason: the federal portals render only in a browser.
+
 ## 4. Sources, in order
 
 | Jurisdiction | Law in Solon | To add |

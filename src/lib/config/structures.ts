@@ -16,11 +16,14 @@ export const STRUCTURE_ROWS = [
   "founders",
   "minimumCapital",
   "register",
+  "qualifiedMember",
   "supervision",
   "liability",
   "profitTax",
   "minimumTax",
   "privateWealth",
+  "taxReturn",
+  "annualAccounts",
 ] as const;
 export type StructureRow = (typeof STRUCTURE_ROWS)[number];
 
@@ -184,6 +187,42 @@ export const STRUCTURE_KINDS: StructureKind[] = [
           ),
         ],
       },
+      {
+        row: "qualifiedMember",
+        value: text("licensedTrusteeOnBoard"),
+        cites: [
+          cite(
+            "aec6cc20-bb2a-4a89-bb0e-e56530d928a0",
+            "art_180a",
+            "38cd75356af0ef2085816814577064f1b00071e30574eec67fcb27d408624fd6",
+            "Wenigstens ein zur Geschäftsführung und Vertretung befugtes Mitglied der Verwaltung einer Verbandsperson muss ein Staatsangehöriger einer Vertragspartei des Abkommens über den Europäischen Wirtschaftsraum, eine aufgrund staatsvertraglicher Vereinbarung gleichgestellte Person oder eine juristische Person sein und eine Bewilligung nach dem Treuhändergesetz besitzen.",
+          ),
+          cite(
+            "aec6cc20-bb2a-4a89-bb0e-e56530d928a0",
+            "art_180a",
+            "38cd75356af0ef2085816814577064f1b00071e30574eec67fcb27d408624fd6",
+            "Dies gilt nicht für Stiftungen, welche der Aufsicht gemäss Art. 552 § 29 unterstehen.",
+          ),
+        ],
+      },
+      {
+        row: "taxReturn",
+        value: text("byDateSetYearly"),
+        cites: [
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die Frist für die Einreichung der Steuererklärung wird jährlich von der Steuerverwaltung festgesetzt.",
+          ),
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die zuständige Steuerbehörde kann einzelnen Steuerpflichtigen auf schriftliches Gesuch die Einreichungsfrist verlängern.",
+          ),
+        ],
+      },
     ],
   },
   {
@@ -281,6 +320,36 @@ export const STRUCTURE_KINDS: StructureKind[] = [
           ),
         ],
       },
+      {
+        row: "qualifiedMember",
+        value: text("licensedTrusteeOnBoard"),
+        cites: [
+          cite(
+            "aec6cc20-bb2a-4a89-bb0e-e56530d928a0",
+            "art_180a",
+            "38cd75356af0ef2085816814577064f1b00071e30574eec67fcb27d408624fd6",
+            "Wenigstens ein zur Geschäftsführung und Vertretung befugtes Mitglied der Verwaltung einer Verbandsperson muss ein Staatsangehöriger einer Vertragspartei des Abkommens über den Europäischen Wirtschaftsraum, eine aufgrund staatsvertraglicher Vereinbarung gleichgestellte Person oder eine juristische Person sein und eine Bewilligung nach dem Treuhändergesetz besitzen.",
+          ),
+        ],
+      },
+      {
+        row: "taxReturn",
+        value: text("byDateSetYearly"),
+        cites: [
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die Frist für die Einreichung der Steuererklärung wird jährlich von der Steuerverwaltung festgesetzt.",
+          ),
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die zuständige Steuerbehörde kann einzelnen Steuerpflichtigen auf schriftliches Gesuch die Einreichungsfrist verlängern.",
+          ),
+        ],
+      },
     ],
   },
   {
@@ -354,6 +423,36 @@ export const STRUCTURE_KINDS: StructureKind[] = [
           ),
         ],
       },
+      {
+        row: "qualifiedMember",
+        value: text("licensedTrusteeOnBoard"),
+        cites: [
+          cite(
+            "aec6cc20-bb2a-4a89-bb0e-e56530d928a0",
+            "art_180a",
+            "38cd75356af0ef2085816814577064f1b00071e30574eec67fcb27d408624fd6",
+            "Wenigstens ein zur Geschäftsführung und Vertretung befugtes Mitglied der Verwaltung einer Verbandsperson muss ein Staatsangehöriger einer Vertragspartei des Abkommens über den Europäischen Wirtschaftsraum, eine aufgrund staatsvertraglicher Vereinbarung gleichgestellte Person oder eine juristische Person sein und eine Bewilligung nach dem Treuhändergesetz besitzen.",
+          ),
+        ],
+      },
+      {
+        row: "taxReturn",
+        value: text("byDateSetYearly"),
+        cites: [
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die Frist für die Einreichung der Steuererklärung wird jährlich von der Steuerverwaltung festgesetzt.",
+          ),
+          cite(
+            "587d6ca3-f18f-4e73-bfdf-0dc0408692af",
+            "art_95",
+            "7f48fcf5b15fc4f0d598d10197e017a10cb87679ee84515557a568668d910bbd",
+            "Die zuständige Steuerbehörde kann einzelnen Steuerpflichtigen auf schriftliches Gesuch die Einreichungsfrist verlängern.",
+          ),
+        ],
+      },
     ],
   },
   {
@@ -424,6 +523,24 @@ export const STRUCTURE_KINDS: StructureKind[] = [
             "art_68",
             "80d4dd6d76cdc4892c9ac1896086fbe284137eb4b47d574378cbc0df59abba39",
             "Die Gewinnsteuer der Kapitalgesellschaften und Genossenschaften beträgt 8,5 Prozent des Reingewinns.",
+          ),
+        ],
+      },
+      {
+        row: "annualAccounts",
+        value: text("withinSixMonths"),
+        cites: [
+          cite(
+            "75a0a640-b32c-4336-a670-fa4d3aa67826",
+            "art_958",
+            "6418933375fdfdbf6aeb193db5b177a0b86505973a1cfdfca02da7fba5a8a1d8",
+            "Der Geschäftsbericht muss innerhalb von sechs Monaten nach Ablauf des Geschäftsjahres erstellt und dem zuständigen Organ oder den zuständigen Personen zur Genehmigung vorgelegt werden.",
+          ),
+          cite(
+            "75a0a640-b32c-4336-a670-fa4d3aa67826",
+            "art_699",
+            "a5bfdd9809483a159f03ed9904b6bde76db2091c8d2a899401ad3d3b5ad7ffb9",
+            "Die ordentliche Generalversammlung findet jährlich innerhalb von sechs Monaten nach Abschluss des Geschäftsjahres statt.",
           ),
         ],
       },

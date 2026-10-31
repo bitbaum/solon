@@ -1330,11 +1330,14 @@
       "founders": "Who may form it",
       "minimumCapital": "Minimum capital",
       "register": "Public register",
+      "qualifiedMember": "A licensed member on the board",
       "supervision": "Supervision",
       "liability": "Who answers for its debts",
       "profitTax": "Tax on profit",
       "minimumTax": "Minimum tax a year",
-      "privateWealth": "If it only holds private wealth"
+      "privateWealth": "If it only holds private wealth",
+      "taxReturn": "When the tax return is due",
+      "annualAccounts": "Yearly accounts"
     },
     "scopes": {
       "federal": "{rate} federal"
@@ -1348,7 +1351,10 @@
       "existsOnceRegistered": "Entered in the commercial register, and exists only from then",
       "charitableOrByChoice": "Supervised if charitable, or if its deed says so",
       "ownAssetsOnly": "Only its own assets",
-      "minimumTaxOnly": "Only the minimum tax, if it meets the conditions of a private asset structure"
+      "minimumTaxOnly": "Only the minimum tax, if it meets the conditions of a private asset structure",
+      "licensedTrusteeOnBoard": "At least one managing member must hold a licence under the Trustee Act",
+      "byDateSetYearly": "By the date the tax administration sets each year; it can be extended on a written request",
+      "withinSixMonths": "Within six months of the financial year's end, approved at the annual general meeting"
     }
   },
   "Chat": {
