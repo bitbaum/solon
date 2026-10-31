@@ -1190,6 +1190,15 @@
       "calendar": "Add the deadlines to your calendar",
       "calendarEvent": "{action}: {place}",
       "calendarSource": "Where the date is stated"
+    },
+    "ask": {
+      "title": "Ask about tax in {place}",
+      "starters": {
+        "one": "How is income taxed here?",
+        "two": "When is the tax return due here, and can I get more time?",
+        "three": "Is there a tax on wealth here?"
+      },
+      "placeholder": "Can I deduct the cost of getting to work?"
     }
   },
   "AuthError": {

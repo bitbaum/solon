@@ -15,6 +15,7 @@ import {
   sources,
 } from "@/lib/db/places-schema";
 import { loadChain, loadFacts, loadInstruments, loadRefinements } from "./chain";
+import { lawAuthoritiesFor } from "@/lib/law/ask/scope";
 import { placeView, type PlaceView } from "./place-view";
 
 export async function loadPlacePage(
@@ -86,7 +87,21 @@ export async function loadPlacePage(
     ...instruments.map((i) => i.sourceId),
   ]);
 
-  return placeView({
+  // Whose law applies here: the place's own authority and those above it.
+  const chainIdentifiers = await db
+    .select({ scheme: jurisdictionIdentifiers.scheme, value: jurisdictionIdentifiers.value })
+    .from(jurisdictionIdentifiers)
+    .where(
+      and(
+        inArray(
+          jurisdictionIdentifiers.jurisdictionId,
+          chain.map((p) => p.id),
+        ),
+        isNull(jurisdictionIdentifiers.supersededAt),
+      ),
+    );
+
+  const view = placeView({
     config,
     chain,
     facts,
@@ -96,6 +111,7 @@ export async function loadPlacePage(
     sources: retrievals,
     locale,
   });
+  return view && { ...view, lawAuthorities: lawAuthoritiesFor(chainIdentifiers) };
 }
 
 /** The latest retrieval of each source among these `sources` rows. */

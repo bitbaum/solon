@@ -12,6 +12,7 @@ import {
 } from "@bitbaum/chatkit/react";
 import type { LawChatEvent } from "@/lib/chat/events";
 import { Link } from "@/i18n/navigation";
+import type { AskScope } from "@/lib/law/ask/scope";
 
 type Citations = NonNullable<ChatMessageData["citations"]>;
 
@@ -20,7 +21,18 @@ type Citations = NonNullable<ChatMessageData["citations"]>;
  * with the provisions it rests on. Public: the law is. The chat is chatkit's, as
  * in Loki and OrangeCat; what is Solon's is the engine behind /api/law/ask.
  */
-export function LawChat() {
+export function LawChat({
+  scope,
+  title,
+  starters,
+  placeholder,
+}: {
+  /** Asked from a place's page: its law is always searched, and "here" means it. */
+  scope?: AskScope;
+  title?: string;
+  starters?: string[];
+  placeholder?: string;
+} = {}) {
   const t = useTranslations("Law.ask");
   const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [partial, setPartial] = useState("");
@@ -47,6 +59,7 @@ export function LawChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: history.slice(-20).map(({ role, content }) => ({ role, content })),
+          scope,
         }),
         signal: controller.signal,
       });
@@ -106,12 +119,12 @@ export function LawChat() {
     setStopped(true);
   };
   return (
-    <section className="solon-chat" aria-label={t("title")}>
+    <section className="solon-chat" aria-label={title ?? t("title")}>
       <ChatScreen
         fill="parent"
         header={
           <>
-            <strong>{t("title")}</strong>
+            <strong>{title ?? t("title")}</strong>
             <button
               type="button"
               className="ck-glass"
@@ -130,7 +143,7 @@ export function LawChat() {
             onSend={(text) => ask(text)}
             sending={busy}
             onStop={stop}
-            placeholder={t("placeholder")}
+            placeholder={placeholder ?? t("placeholder")}
             voice={{ transcribeUrl: "/api/transcribe" }}
           />
         }
@@ -159,7 +172,7 @@ export function LawChat() {
           empty={
             <ChatStarters
               title={t("startersTitle")}
-              starters={[t("starters.one"), t("starters.two"), t("starters.three")]}
+              starters={starters ?? [t("starters.one"), t("starters.two"), t("starters.three")]}
               onPick={(text) => void ask(text)}
             />
           }

@@ -78,17 +78,20 @@ export async function planResearch(
   ask: Completer,
   /** Asked once more, if the first plan is weak; a different model, when there is one. */
   askAgain?: Completer,
+  /** What the page the question was asked from adds (scope.ts). */
+  context = "",
 ): Promise<Plan> {
   const last = turns.at(-1)?.content ?? "";
-  const first = await planOnce(turns, ask, PROMPT);
+  const prompt = PROMPT + context;
+  const first = await planOnce(turns, ask, prompt);
   if (!weakPlan(first, last)) return first;
-  const second = askAgain ? await planOnce(turns, askAgain, PROMPT + RETRY) : first;
+  const second = askAgain ? await planOnce(turns, askAgain, prompt + RETRY) : first;
   if (!weakPlan(second, last)) return second;
   // A follow-up ("And in Lucerne?") has no subject of its own. Plan the whole conversation as one question.
   const earlier = turns.filter((t) => t.role === "user");
   if (earlier.length > 1) {
     const joined = [{ role: "user" as const, content: earlier.map((t) => t.content).join(" ") }];
-    const third = await planOnce(joined, askAgain ?? ask, PROMPT + RETRY);
+    const third = await planOnce(joined, askAgain ?? ask, prompt + RETRY);
     if (!weakPlan(third, earlier.map((t) => t.content).join(" "))) {
       // The places are the ones the person named last, plus whatever the plan found.
       return {
