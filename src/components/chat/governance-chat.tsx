@@ -1,156 +1,92 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import { readEventStream } from "@bitbaum/ai-kit/sse";
 import { useLocale } from "next-intl";
-import {
-  ChatScreen,
-  ChatStarters,
-  ChatThread,
-  Composer,
-  type ChatMessageData,
-} from "@bitbaum/chatkit/react";
+import { localConversationStore } from "@bitbaum/chatkit";
+import { ChatApp, ChatTurnError, type ChatTransport } from "@bitbaum/chatkit/react";
 import type { ChatEvent } from "@/lib/chat/events";
 import { Link, useRouter } from "@/i18n/navigation";
+import { useChatLabels } from "./use-chat-labels";
 
+const FAILED = "Solon could not answer. Try again.";
+
+/**
+ * Ask Solon about the rules, the ways to decide, or a proposal to draft. The
+ * whole chat is chatkit's ChatApp, as in the fleet's other apps; what is
+ * Solon's is /api/chat. Signed out, sending leads to sign-in and back here.
+ */
 export function GovernanceChat({ signedIn }: { signedIn: boolean }) {
   const locale = useLocale();
   const router = useRouter();
-  const [messages, setMessages] = useState<ChatMessageData[]>([]);
-  const [partial, setPartial] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [stopped, setStopped] = useState(false);
-  const [model, setModel] = useState("");
-  const request = useRef<AbortController | null>(null);
-  useEffect(() => () => request.current?.abort(), []);
-  async function ask(text: string, retry = false): Promise<boolean> {
-    if (request.current || !signedIn) return false;
-    const history = messages.filter((m) => !m.failed);
-    if (!retry) history.push({ id: crypto.randomUUID(), role: "user", content: text });
-    const controller = new AbortController();
-    request.current = controller;
-    setMessages(history);
-    setBusy(true);
-    setStopped(false);
-    setPartial("");
-    try {
+  const labels = useChatLabels();
+  const store = useMemo(() => localConversationStore({ key: "solon-ask" }), []);
+  const transport = useMemo<ChatTransport>(
+    () => async (turn) => {
+      if (!signedIn) {
+        router.push("/sign-in?from=/ask");
+        throw new ChatTurnError("Sign in to ask Solon. You will come back here.");
+      }
+      const messages = [
+        ...turn.history
+          .filter((m) => !m.failed && (m.role === "user" || m.role === "assistant"))
+          .map(({ role, content }) => ({ role, content })),
+        { role: "user", content: turn.text },
+      ].slice(-20);
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          locale,
-          messages: history.slice(-20).map(({ role, content }) => ({ role, content })),
-        }),
-        signal: controller.signal,
+        body: JSON.stringify({ locale, messages }),
+        signal: turn.signal,
       });
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Solon could not answer. Try again.");
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new ChatTurnError(data.error || FAILED);
       }
-      if (!response.body) throw new Error("The answer did not arrive. Try again.");
-      let complete = false;
+      if (!response.body) throw new ChatTurnError("The answer did not arrive. Try again.");
+      turn.update({ status: "Reading the governance rules" });
       let text = "";
+      let answer = "";
       await readEventStream<ChatEvent>(response.body, (event) => {
-        if (controller.signal.aborted) return;
-        if (event.type === "error") throw new Error(event.error);
+        if (event.type === "error") throw new ChatTurnError(event.error || FAILED);
         if (event.type === "text") {
           text += event.text ?? "";
-          setPartial(text);
+          turn.update({ text });
         }
-        if (event.type === "done" && event.text?.trim()) {
-          complete = true;
-          setMessages([
-            ...history,
-            { id: crypto.randomUUID(), role: "assistant", content: event.text },
-          ]);
-          setModel(event.model ?? "");
-        }
+        if (event.type === "done") answer = event.text ?? "";
       });
-      if (!complete && !controller.signal.aborted)
-        throw new Error("The answer was interrupted. Try again.");
-    } catch (err) {
-      if (!controller.signal.aborted)
-        setMessages([
-          ...history,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            content: err instanceof Error ? err.message : "Solon could not answer. Try again.",
-            failed: true,
-          },
-        ]);
-    } finally {
-      if (request.current === controller) {
-        request.current = null;
-        setBusy(false);
-        setPartial("");
-      }
-    }
-    return true;
-  }
-  const send = (text: string) => {
-    if (!signedIn) {
-      router.push("/sign-in?from=/ask");
-      return;
-    }
-    void ask(text);
-  };
-  const stop = () => {
-    request.current?.abort();
-    setStopped(true);
-  };
+      if (!answer.trim()) throw new ChatTurnError("The answer was interrupted. Try again.");
+      return answer;
+    },
+    [signedIn, locale, router],
+  );
   return (
     <section className="solon-chat" aria-label="Ask Solon">
-      <ChatScreen
+      <ChatApp
+        name="Ask Solon"
+        transport={transport}
+        store={store}
+        rememberKey="solon-ask:open"
         fill="parent"
-        header={
-          <>
-            <strong>Solon</strong>
-            <button
-              type="button"
-              className="ck-glass"
-              onClick={() => {
-                request.current?.abort();
-                setMessages([]);
-                setStopped(false);
-                setModel("");
-              }}
-            >
-              New conversation
-            </button>
-          </>
-        }
-        composer={
-          signedIn ? (
-            <Composer
-              onSend={(text) => ask(text)}
-              sending={busy}
-              onStop={stop}
-              placeholder="Ask about a decision, or draft a proposal…"
-              voice={{ transcribeUrl: "/api/transcribe" }}
-            />
-          ) : (
-            <Link className="ck-glass" href="/sign-in?from=/ask">
-              Sign in to ask Solon
-            </Link>
-          )
-        }
-        footnote={
-          model
-            ? `Answered by ${model}. Drafts are not decisions.`
-            : "A conversation stays in this tab. Drafts are not decisions."
-        }
-      >
-        <ChatThread
-          messages={messages}
-          live={busy ? { text: partial, status: "Reading the governance rules" } : null}
-          stopped={stopped}
-          onStop={stop}
-          onRetry={() => {
-            void ask("", true);
-          }}
-          onReply={signedIn ? send : undefined}
-          renderLink={({ href, internal, className, children }) =>
+        locale={locale}
+        railQuery="not all"
+        starters={[
+          "Who can decide what?",
+          "Compare the governance profiles",
+          "Help me draft a proposal",
+        ]}
+        startersTitle="Make the next decision clearer."
+        placeholder="Ask about a decision, or draft a proposal…"
+        composer={{
+          voice: { transcribeUrl: "/api/transcribe" },
+          // /api/chat reads words, not files.
+          attach: false,
+          labels: labels.composer,
+        }}
+        thread={{
+          labels: labels.thread,
+          share: { title: "Ask Solon" },
+          renderLink: ({ href, internal, className, children }) =>
             internal ? (
               <Link href={href} className={className}>
                 {children}
@@ -159,26 +95,29 @@ export function GovernanceChat({ signedIn }: { signedIn: boolean }) {
               <a href={href} className={className} target="_blank" rel="noopener noreferrer">
                 {children}
               </a>
-            )
-          }
-          empty={
-            <ChatStarters
-              title="Make the next decision clearer."
-              starters={[
-                "Who can decide what?",
-                "Compare the governance profiles",
-                "Help me draft a proposal",
-              ]}
-              onPick={send}
-            />
-          }
-        />
-      </ChatScreen>
-      <nav className="flex flex-wrap gap-4 pt-4" aria-label="Continue with Solon">
-        <Link href="/governance/methods">Read the voting rules</Link>
-        <Link href="/propose">Draft a proposal</Link>
-        <Link href="/proposals">Read the decision record</Link>
-      </nav>
+            ),
+        }}
+        labels={labels.app}
+        footnote={
+          <>
+            {signedIn ? (
+              "Drafts are not decisions."
+            ) : (
+              <Link href="/sign-in?from=/ask" className="underline">
+                Sign in to ask Solon
+              </Link>
+            )}{" "}
+            ·{" "}
+            <Link href="/governance/methods" className="underline">
+              Read the voting rules
+            </Link>{" "}
+            ·{" "}
+            <Link href="/proposals" className="underline">
+              Read the decision record
+            </Link>
+          </>
+        }
+      />
     </section>
   );
 }

@@ -189,6 +189,10 @@ body {
 /* Shared chat behavior; Solon keeps the fleet's dark governance palette. */
 .solon-chat {
   min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border-default));
+  border-radius: var(--radius-surface);
+  background: hsl(var(--surface-base));
 }
 .solon-chat .ck-screen {
   height: min(75dvh, 56rem);

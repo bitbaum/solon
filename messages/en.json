@@ -1282,7 +1282,7 @@
       "startersTitle": "What does the law say?",
       "starters": {
         "one": "Is it legal to keep a fox in Graubünden?",
-        "two": "And in Lucerne?",
+        "two": "How much notice must a tenant give in Bern?",
         "three": "Can a landlord in Zürich raise the rent during a lease?"
       },
       "steps": {
@@ -1348,6 +1348,75 @@
       "charitableOrByChoice": "Supervised if charitable, or if its deed says so",
       "ownAssetsOnly": "Only its own assets",
       "minimumTaxOnly": "Only the minimum tax, if it meets the conditions of a private asset structure"
+    }
+  },
+  "Chat": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "listen": "Listen",
+    "share": "Share",
+    "retry": "Try again",
+    "stop": "Stop",
+    "working": "One moment…",
+    "stopped": "Stopped. Send the message again.",
+    "jump": "Jump to the latest message",
+    "failed": "That did not go through.",
+    "loading": "Loading conversation",
+    "replies": "Suggested replies",
+    "thoughtFor": "Thought for {time}",
+    "thought": "What it did",
+    "thinking": "Thinking",
+    "send": "Send",
+    "voice": "Speak instead of typing",
+    "voiceStop": "Stop recording",
+    "cancelRecording": "Cancel recording",
+    "confirmRecording": "Done — use what I said",
+    "listening": "Listening…",
+    "transcribing": "Transcribing…",
+    "queue": "Queue a message…",
+    "dismiss": "Dismiss",
+    "retryTake": "Try again",
+    "dictation": {
+      "mic": "The microphone is blocked. Allow it for this site and try again.",
+      "silence": "Nothing was heard. Try again, a little closer to the mic.",
+      "unavailable": "Voice input is not available right now. Type instead, or try again later.",
+      "fileTooLarge": "That recording is too large to transcribe here."
+    },
+    "app": {
+      "chats": "Chats",
+      "openChats": "Open your chats",
+      "closeChats": "Close chats",
+      "newChat": "New chat",
+      "untitled": "New chat",
+      "more": "More for this chat",
+      "temporary": "Temporary chat",
+      "temporaryNote": "Not saved. Gone when you leave it.",
+      "share": "Share this chat",
+      "rename": "Rename",
+      "renameField": "Name of this chat",
+      "delete": "Delete",
+      "deleteAsk": "Delete “{title}”?",
+      "save": "Save",
+      "cancel": "Cancel",
+      "search": "Search chats",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "earlier": "Earlier",
+      "noChats": "No chats yet. What you ask is kept here.",
+      "noMatch": "No chat is called “{query}”.",
+      "loadingChats": "Loading your chats…",
+      "listFailed": "Your chats did not load.",
+      "tryAgain": "Try again",
+      "answering": "Answering…",
+      "chatActions": "Rename or delete “{title}”",
+      "queued": "Sends when this answer is done",
+      "unqueue": "Do not send “{text}”",
+      "dismiss": "Dismiss",
+      "problems": {
+        "load": "Your chats did not load.",
+        "save": "That was not saved. Check the connection and try again.",
+        "open": "That chat did not open. Try again."
+      }
     }
   }
 }

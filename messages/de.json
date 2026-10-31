@@ -716,7 +716,7 @@
       "startersTitle": "Was sagt das Recht?",
       "starters": {
         "one": "Darf man in Graubünden einen Fuchs halten?",
-        "two": "Und in Luzern?",
+        "two": "Welche Kündigungsfrist gilt für Mieter in Bern?",
         "three": "Darf ein Vermieter in Zürich den Mietzins während des Mietverhältnisses erhöhen?"
       },
       "steps": {
@@ -782,6 +782,75 @@
       "charitableOrByChoice": "Beaufsichtigt, wenn gemeinnützig oder wenn die Stiftungsurkunde es vorsieht",
       "ownAssetsOnly": "Nur ihr eigenes Vermögen",
       "minimumTaxOnly": "Nur die Mindestertragssteuer, wenn sie die Bedingungen einer Privatvermögensstruktur erfüllt"
+    }
+  },
+  "Chat": {
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "listen": "Vorlesen",
+    "share": "Teilen",
+    "retry": "Nochmals versuchen",
+    "stop": "Stopp",
+    "working": "Einen Moment…",
+    "stopped": "Abgebrochen. Sende die Nachricht erneut.",
+    "jump": "Zur neuesten Nachricht",
+    "failed": "Das hat nicht geklappt.",
+    "loading": "Gespräch wird geladen",
+    "replies": "Antwortvorschläge",
+    "thoughtFor": "{time} nachgedacht",
+    "thought": "Was es getan hat",
+    "thinking": "Denkt nach",
+    "send": "Senden",
+    "voice": "Sprechen statt tippen",
+    "voiceStop": "Aufnahme beenden",
+    "cancelRecording": "Aufnahme abbrechen",
+    "confirmRecording": "Fertig — das Gesagte übernehmen",
+    "listening": "Ich höre zu…",
+    "transcribing": "Wird transkribiert…",
+    "queue": "Nachricht vormerken…",
+    "dismiss": "Ausblenden",
+    "retryTake": "Nochmals versuchen",
+    "dictation": {
+      "mic": "Das Mikrofon ist blockiert. Erlaube es für diese Seite und versuche es erneut.",
+      "silence": "Nichts gehört. Versuche es nochmals, etwas näher am Mikrofon.",
+      "unavailable": "Spracheingabe ist gerade nicht verfügbar. Tippe stattdessen oder versuche es später.",
+      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren."
+    },
+    "app": {
+      "chats": "Gespräche",
+      "openChats": "Gespräche öffnen",
+      "closeChats": "Gespräche schliessen",
+      "newChat": "Neues Gespräch",
+      "untitled": "Neues Gespräch",
+      "more": "Mehr zu diesem Gespräch",
+      "temporary": "Temporäres Gespräch",
+      "temporaryNote": "Nicht gespeichert. Weg, sobald du es verlässt.",
+      "share": "Gespräch teilen",
+      "rename": "Umbenennen",
+      "renameField": "Name dieses Gesprächs",
+      "delete": "Löschen",
+      "deleteAsk": "«{title}» löschen?",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "search": "Gespräche durchsuchen",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "earlier": "Früher",
+      "noChats": "Noch keine Gespräche. Was du fragst, wird hier aufbewahrt.",
+      "noMatch": "Kein Gespräch heisst «{query}».",
+      "loadingChats": "Gespräche werden geladen…",
+      "listFailed": "Die Gespräche konnten nicht geladen werden.",
+      "tryAgain": "Nochmals versuchen",
+      "answering": "Antwortet…",
+      "chatActions": "«{title}» umbenennen oder löschen",
+      "queued": "Wird gesendet, sobald die Antwort da ist",
+      "unqueue": "«{text}» nicht senden",
+      "dismiss": "Ausblenden",
+      "problems": {
+        "load": "Die Gespräche konnten nicht geladen werden.",
+        "save": "Das wurde nicht gespeichert. Prüfe die Verbindung und versuche es nochmals.",
+        "open": "Dieses Gespräch liess sich nicht öffnen. Versuche es nochmals."
+      }
     }
   }
 }
