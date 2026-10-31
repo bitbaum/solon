@@ -59,7 +59,8 @@
       "places": "Luoghi",
       "placesCompare": "Confronta",
       "placesCoverage": "Copertura",
-      "askSolon": "Chiedi a Solon"
+      "askSolon": "Chiedi a Solon",
+      "structures": "Strutture"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -100,7 +101,8 @@
       "places": "Trovare un luogo per nome o numero postale",
       "placesCompare": "Luoghi a confronto: quanto ti costano le imposte in ciascuno",
       "placesCoverage": "Cosa coprono i luoghi, contato dai dati",
-      "askSolon": "Comprendi le regole e prepara una proposta."
+      "askSolon": "Comprendi le regole e prepara una proposta.",
+      "structures": "Forme giuridiche a confronto, con le parole della legge"
     }
   },
   "Nav": {
@@ -717,6 +719,53 @@
       "failed": "Solon non ha potuto rispondere. Riprovate o cercate il diritto direttamente.",
       "findLaw": "Trovare un atto",
       "coverage": "Che cosa contiene il registro"
+    }
+  },
+  "Structures": {
+    "metaTitle": "Strutture a confronto",
+    "kicker": "Strutture",
+    "title": "Strutture a confronto",
+    "description": "Una fondazione, un istituto e una società anonima del Liechtenstein, e una società anonima svizzera: ciò che la legge dice di ciascuna, riga per riga. Ogni dato cita la sua disposizione, verificata a ogni apertura sul diritto che Solon detiene.",
+    "notAdvice": "Qui si espone ciò che dice la legge. Non è una consulenza: quale forma fa per voi lo valuta un fiduciario, avvocato o consulente fiscale abilitato.",
+    "kindsTitle": "Le forme a confronto",
+    "readAct": "Leggi l’atto",
+    "ask": "Chiedi sul diritto",
+    "missing": "Non ancora indicato qui",
+    "source": "{count, plural, one {La disposizione} other {Le # disposizioni}}",
+    "amended": "Questa disposizione è cambiata da quando è stata letta; queste parole vi figurano ancora.",
+    "kinds": {
+      "liFoundation": "Fondazione (Stiftung)",
+      "liEstablishment": "Istituto (Anstalt)",
+      "liCompany": "Società anonima (AG)",
+      "chCompany": "Società anonima (SA)"
+    },
+    "places": {
+      "liechtenstein": "Liechtenstein",
+      "switzerland": "Svizzera"
+    },
+    "rows": {
+      "founders": "Chi può costituirla",
+      "minimumCapital": "Capitale minimo",
+      "register": "Registro pubblico",
+      "supervision": "Vigilanza",
+      "liability": "Chi risponde dei suoi debiti",
+      "profitTax": "Imposta sull’utile",
+      "minimumTax": "Imposta minima annua",
+      "privateWealth": "Se detiene solo patrimonio privato"
+    },
+    "scopes": {
+      "federal": "{rate} federale"
+    },
+    "values": {
+      "naturalOrLegalPersons": "Una o più persone fisiche o giuridiche",
+      "oneOrMoreFounders": "Uno o più fondatori",
+      "oneOrMorePersonsOrCompanies": "Una o più persone o società commerciali",
+      "registeredOrNoticeDeposited": "Iscritta nel registro di commercio dove la legge lo richiede; altrimenti si deposita un avviso di costituzione",
+      "registered": "Iscritta nel registro di commercio",
+      "existsOnceRegistered": "Iscritta nel registro di commercio, ed esiste solo da allora",
+      "charitableOrByChoice": "Vigilata se di pubblica utilità, o se l’atto di fondazione lo prevede",
+      "ownAssetsOnly": "Solo il proprio patrimonio",
+      "minimumTaxOnly": "Solo l’imposta minima, se soddisfa le condizioni di una struttura di patrimonio privato"
     }
   }
 }
