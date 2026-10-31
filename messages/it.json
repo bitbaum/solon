@@ -564,7 +564,8 @@
       "laterText": "Partecipazione, cosa comporta andarsene, statuto e dimensioni arriveranno quando i loro dati saranno importati.",
       "coverageLink": "Cosa coprono i luoghi →",
       "disclaimer": "Una stima dalle tariffe pubblicate, non una tassazione.",
-      "act": "Cosa può fare"
+      "act": "Cosa può fare",
+      "perMonth": "{amount} al mese da mettere da parte"
     },
     "map": {
       "searchLabel": "Cerca un indirizzo, un luogo o un numero postale",
@@ -617,7 +618,10 @@
       "title": "Cosa può fare",
       "intro": "Ogni link apre la pagina dell’autorità competente.",
       "due": "Di regola entro il {date, date, ::dMMMM}",
-      "dueSource": "fonte"
+      "dueSource": "fonte",
+      "calendar": "Aggiungi le scadenze al calendario",
+      "calendarEvent": "{action}: {place}",
+      "calendarSource": "Dove è indicata la data"
     }
   },
   "AuthError": {

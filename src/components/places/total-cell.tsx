@@ -45,6 +45,10 @@ export default function TotalCell({ column, estimate: e, pack, paths, least }: T
             {formatMoney(e.estimate.total, e)}
           </span>
           <span className="block text-xs text-fg-secondary">{rate}</span>
+          {/* The bill spread over the year: what to put aside each month for it. */}
+          <span className="block text-xs text-fg-secondary">
+            {t("perMonth", { amount: formatMoney(e.estimate.total / 12, e) })}
+          </span>
           {more !== null && (
             <span className="mt-1 block text-xs text-fg-secondary">
               {more < 0.5 ? (

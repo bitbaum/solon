@@ -4,6 +4,7 @@ import PageLayout from "@/components/ui/page-layout";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
+import CalendarButton from "./calendar-button";
 import SourceList from "./source-list";
 
 export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
@@ -123,6 +124,7 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
               due={(date) => t("actions.due", { date })}
               dueSource={t("actions.dueSource")}
             />
+            <CalendarButton actions={view.actions} />
           </section>
         )}
 
