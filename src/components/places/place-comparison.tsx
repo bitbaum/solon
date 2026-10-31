@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { useDeviceInputs } from "./device-inputs";
+import { groupInput, useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
 import ActionList from "./action-list";
 import TotalCell from "./total-cell";
@@ -18,6 +18,8 @@ import {
   multiplierRowShows,
   parseAmounts,
   rowShows,
+  mergedMultiplierRows,
+  situationGroups,
   type ColumnEstimate,
   type CompareColumn,
   type CompareTaxPack,
@@ -35,6 +37,8 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
   const format = useFormatter();
   const { columns, taxPacks } = comparison;
   const [inputs, updateInput] = useDeviceInputs(taxPacks);
+  /** One form for the countries that can share one: Switzerland and Liechtenstein, both in francs. */
+  const groups = useMemo(() => situationGroups(taxPacks), [taxPacks]);
   const packOf = (column: CompareColumn) => taxPacks.find((p) => p.key === column.packKey);
 
   const estimates: ColumnEstimate[] = useMemo(
@@ -76,18 +80,32 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
     compareHref(columns.map((c) => c.slugPath).filter((path) => path !== slugPath));
   const single = taxPacks.length === 1 ? taxPacks[0] : undefined;
 
+  const multiplierRows = mergedMultiplierRows(
+    taxPacks,
+    (row) => t("multiplier", { metric: row.metric, level: row.level }),
+    (pack, row) => shows(pack, row) && multiplierRowShows(pack.key, row, columns),
+  );
+
   const count = columns.length;
 
   return (
     <div className="space-y-8">
-      {taxPacks.map((pack) => (
+      {groups.map((group) => (
         <TaxSituation
-          key={pack.key}
-          pack={pack}
-          input={inputs[pack.key]!}
-          onChange={(patch) => updateInput(pack.key, patch)}
+          key={group.key}
+          pack={group.pack}
+          input={groupInput(
+            inputs,
+            group.packs.map((p) => p.key),
+          )}
+          onChange={(patch) =>
+            updateInput(
+              group.packs.map((p) => p.key),
+              patch,
+            )
+          }
           title={
-            taxPacks.length > 1 ? t("yourSituationIn", { pack: pack.name }) : t("yourSituation")
+            groups.length > 1 ? t("yourSituationIn", { pack: group.pack.name }) : t("yourSituation")
           }
           idPrefix="compare"
         />
@@ -209,37 +227,33 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                     </ComparisonRow>
                   )),
               )}
-              {taxPacks.flatMap((pack) =>
-                pack.multiplierRows
-                  .filter((r) => shows(pack, r) && multiplierRowShows(pack.key, r, columns))
-                  .map((row) => (
-                    <ComparisonRow
-                      key={`${pack.key}-${row.key}`}
-                      label={t("multiplier", { metric: row.metric, level: row.level })}
-                      labelClassName="text-fg-secondary"
-                      columnCount={count}
-                    >
-                      {columns.map((column) => {
-                        const value =
-                          column.packKey === pack.key ? column.multipliers[row.key] : undefined;
-                        return (
-                          <td key={column.slugPath} className={`${cell} text-fg-primary`}>
-                            {value === undefined ||
-                            (value === null &&
-                              (row.optional ||
-                                column.refinedBy.some((r) => r.standsFor === row.levelKey))) ? (
-                              <span className="text-fg-tertiary">–</span>
-                            ) : value === null ? (
-                              <span className="text-fg-tertiary">{t("notRecorded")}</span>
-                            ) : (
-                              percent(value)
-                            )}
-                          </td>
-                        );
-                      })}
-                    </ComparisonRow>
-                  )),
-              )}
+              {multiplierRows.map(({ label, rows }) => (
+                <ComparisonRow
+                  key={label}
+                  label={label}
+                  labelClassName="text-fg-secondary"
+                  columnCount={count}
+                >
+                  {columns.map((column) => {
+                    const row = rows.find((r) => r.packKey === column.packKey);
+                    const value = row ? column.multipliers[row.key] : undefined;
+                    return (
+                      <td key={column.slugPath} className={`${cell} text-fg-primary`}>
+                        {value === undefined ||
+                        (value === null &&
+                          (row!.optional ||
+                            column.refinedBy.some((r) => r.standsFor === row!.levelKey))) ? (
+                          <span className="text-fg-tertiary">–</span>
+                        ) : value === null ? (
+                          <span className="text-fg-tertiary">{t("notRecorded")}</span>
+                        ) : (
+                          percent(value)
+                        )}
+                      </td>
+                    );
+                  })}
+                </ComparisonRow>
+              ))}
               <ComparisonRow
                 label={t("taxedBy")}
                 labelClassName="text-fg-secondary"
