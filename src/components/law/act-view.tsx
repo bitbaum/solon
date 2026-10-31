@@ -34,7 +34,7 @@ export default function ActViewPage({ act, page, t }: ActViewProps) {
     .join(" · ");
   return (
     <PageLayout title={act.title ?? act.systematicNumber ?? act.id} kicker={t("act.kicker")}>
-      <div className="mx-auto max-w-3xl space-y-8">
+      <div className="max-w-3xl space-y-8">
         <p className="text-fg-secondary">{meta}</p>
 
         <div className={`${cardClass} space-y-2 text-sm`}>

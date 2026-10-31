@@ -103,7 +103,8 @@
       "placesCoverage": "What Places covers, counted from the data",
       "askSolon": "Understand the rules and draft a proposal.",
       "structures": "Legal forms side by side, in the words of the law"
-    }
+    },
+    "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
   "Nav": {
     "home": "Solon — home",

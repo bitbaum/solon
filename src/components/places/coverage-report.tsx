@@ -18,7 +18,7 @@ const cardClass = "rounded-surface border border-default bg-surface-base p-6";
 export default function CoverageReport({ packs, on, t }: CoverageReportProps) {
   return (
     <PageLayout title={t("coverage.title")} kicker={t("coverage.kicker")}>
-      <div className="mx-auto max-w-3xl space-y-12">
+      <div className="max-w-3xl space-y-12">
         <p className="text-sm text-fg-secondary">{t("coverage.intro", { date: on })}</p>
 
         {packs.length === 0 && <p className="text-fg-secondary">{t("coverage.empty")}</p>}

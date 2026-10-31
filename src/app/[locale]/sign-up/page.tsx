@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { authLabelsFor, signInMethods } from "@bitbaum/accountkit/auth";
 import { returnPath } from "@bitbaum/accountkit/orangecat";
 import { SolonSignUp } from "@/components/auth/account-screens";
+import { getTranslations } from "next-intl/server";
 import PageLayout from "@/components/ui/page-layout";
 import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
@@ -35,7 +36,11 @@ export default async function SignUpPage({ params, searchParams }: Props) {
   const labels = authLabelsFor(locale);
 
   return (
-    <PageLayout title={labels.createAccount} kicker="Solon">
+    <PageLayout
+      title={labels.createAccount}
+      kicker="Solon"
+      description={(await getTranslations({ locale, namespace: "Site" }))("accountIntro")}
+    >
       <div className="max-w-md">
         {authEnabled ? (
           <SolonSignUp
