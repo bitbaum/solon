@@ -1,6 +1,6 @@
 # Structures as data: compare a foundation, a fund and a company, and act on it
 
-_Created 2026-10-30. Status: proposed. Builds on `2026-10-law-as-data.md` (the
+_Created 2026-10-30. Status: S0 built for four forms (2026-10-31, §3.1). Builds on `2026-10-law-as-data.md` (the
 law Solon holds) and `2026-09-places-and-jurisdictions.md` (places, facts,
 instruments). Causius's workflow `#wf-vehicle` is the reader that drafts from
 it._
@@ -89,6 +89,25 @@ change is one nullable column, `structure_kind`, on `facts` and `instruments`
 both. Tax rows reuse `@bitbaum/tax-model`: a structure's annual tax is a model
 whose base is its profit or its capital, evaluated in the reader's browser
 on the reader's figures, as income tax is.
+
+### 3.1 As built in S0
+
+S0 keeps the register in config, not in `facts`: `src/lib/config/structures.ts`
+holds the kinds and their facts, each citing an act id, an anchor, the words
+of the provision that state the fact and the sha256 of the provision's text
+when it was read. `/structures` reads every cited provision from
+`legal_provisions` as it stands that day and shows a fact only while each
+provision it cites still contains its words; a provision whose hash has
+changed but still says it is marked as amended. That check, made on every
+render, is stronger than an importer's check made once, and needs no
+migration. The `structure_kind` column waits for the first fact that is not a
+provision's words (a register's fee, a provider list), which is S1.
+
+Built: the Liechtenstein foundation, establishment and company limited by
+shares (PGR, SteG) and the Swiss company limited by shares (OR, DBG); rows for
+founders, minimum capital, public register, supervision, liability, profit
+tax, minimum tax and the private asset structure. A row with no provision
+behind it is shown as not stated. Fund forms wait for their acts.
 
 ## 4. Sources, in order
 

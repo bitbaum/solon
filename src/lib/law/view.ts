@@ -76,3 +76,22 @@ export async function loadActView(
   `);
   return { ...act, version, provisions: provisions.rows as unknown as ActView["provisions"] };
 }
+
+/** The page of an act's version in force that holds a provision, so a link to it lands on it. */
+export async function pageOfProvision(
+  db: Database,
+  input: { id: string; lang: string; path: string },
+): Promise<number | null> {
+  const rows = await db.execute(sql`
+    SELECT (SELECT count(*)::int FROM legal_provisions q
+            WHERE q.version_id = p.version_id AND q.ord < p.ord) AS before
+    FROM legal_provisions p
+    JOIN legal_act_versions v ON v.id = p.version_id
+    WHERE v.act_id = ${input.id} AND v.lang = ${input.lang} AND v.in_force_to IS NULL
+      AND p.path = ${input.path}
+    ORDER BY v.in_force_from DESC
+    LIMIT 1
+  `);
+  const before = (rows.rows[0] as { before: number } | undefined)?.before;
+  return before === undefined ? null : Math.floor(before / PROVISIONS_PER_PAGE) + 1;
+}
