@@ -1,9 +1,11 @@
-import { createAuthMailer } from "@bitbaum/accountkit/auth/mail";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isDeliverable } from "@bitbaum/accountkit/auth";
 import { createAuthRuntime } from "@bitbaum/accountkit/auth/next";
 import { dbConfigured, getDb } from "@/lib/db/client";
+import { authMail, authSite } from "./mail";
+
+export { authSite, mailConfigured } from "./mail";
 
 /**
  * Accounts on Solon — the fleet's one account system
@@ -22,13 +24,6 @@ import { dbConfigured, getDb } from "@/lib/db/client";
  * was OrangeCat, so their seats, votes and Loki grants stay theirs with no
  * data migration. Everyone else is their account id.
  */
-export const authSite = {
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://solon.orangecat.ch",
-  title: "Solon",
-  slug: "solon",
-};
-export const authMail = createAuthMailer({ site: authSite });
-export const mailConfigured = () => authMail.configured;
 
 export const { GET, POST, getSession, requireUser, authStatus, getAuth } = createAuthRuntime({
   site: authSite,

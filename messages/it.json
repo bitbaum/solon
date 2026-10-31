@@ -730,6 +730,13 @@
       "coverage": "Che cosa contiene il registro"
     }
   },
+  "LostPassword": {
+    "title": "Password persa?",
+    "lede": "Questo Solon non può ancora inviare e-mail, quindi una password non può essere reimpostata tramite link.",
+    "passkey": "Se avete aggiunto una passkey al vostro account, accedete con quella qui sopra.",
+    "orangecat": "Se il vostro account è collegato a OrangeCat, continuate con OrangeCat qui sopra.",
+    "contact": "Altrimenti scrivete a <mail>{email}</mail> dall’indirizzo del vostro account."
+  },
   "Structures": {
     "metaTitle": "Strutture a confronto",
     "kicker": "Strutture",

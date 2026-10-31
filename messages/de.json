@@ -730,6 +730,13 @@
       "coverage": "Was das Register führt"
     }
   },
+  "LostPassword": {
+    "title": "Passwort verloren?",
+    "lede": "Dieses Solon kann noch keine E-Mails senden. Ein Passwort lässt sich darum nicht per Link zurücksetzen.",
+    "passkey": "Wenn Sie Ihrem Konto einen Passkey hinzugefügt haben, melden Sie sich oben damit an.",
+    "orangecat": "Wenn Ihr Konto mit OrangeCat verbunden ist, fahren Sie oben mit OrangeCat fort.",
+    "contact": "Sonst schreiben Sie an <mail>{email}</mail>, von der Adresse Ihres Kontos aus."
+  },
   "Structures": {
     "metaTitle": "Strukturen im Vergleich",
     "kicker": "Strukturen",

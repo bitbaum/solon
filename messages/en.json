@@ -1296,6 +1296,13 @@
       "coverage": "What the register holds"
     }
   },
+  "LostPassword": {
+    "title": "Lost your password?",
+    "lede": "This Solon cannot send email yet, so a password cannot be reset by a link.",
+    "passkey": "If you added a passkey to your account, sign in with it above.",
+    "orangecat": "If your account is linked to OrangeCat, continue with OrangeCat above.",
+    "contact": "Otherwise, write to <mail>{email}</mail> from the address on your account."
+  },
   "Structures": {
     "metaTitle": "Structures side by side",
     "kicker": "Structures",
