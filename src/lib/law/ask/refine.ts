@@ -19,7 +19,7 @@ interface Review {
   missing: { authorities: string[]; act?: string; groups: string[][] }[];
 }
 
-const PROMPT = `You check the result of a search of Swiss and Liechtenstein law. Reply with JSON only:
+const PROMPT = `You check the result of a search of the law of Switzerland, Liechtenstein and Luxembourg. Reply with JSON only:
 {"relevant": [0, 3], "missing": [{"authorities": ["ch"], "act": "Tierschutzverordnung", "groups": [["..."], ["..."]]}]}
 
 - relevant: the numbers of the provisions that bear on the question. A provision about a different subject that happens to share a word is not relevant.

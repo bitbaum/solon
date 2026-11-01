@@ -4,6 +4,7 @@
  *   pnpm run law:text fedlex [--lang de] [--limit 200] [--day YYYY-MM-DD] [--dry-run]
  *   pnpm run law:text lilex [--limit 200] [--lr 210.0] [--dry-run]
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
+ *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city [--history] [--limit 200] [--dry-run]
@@ -12,6 +13,7 @@
  * N continues where the last stopped. Exit 1 when an act failed, so a runner alerts.
  */
 import { recutCantonalText } from "@/lib/law/text/recut";
+import { importLegilux } from "@/lib/law/text/import-legilux";
 import { FEDLEX, LILEX } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
@@ -39,6 +41,22 @@ async function main(): Promise<number> {
     const report = await loadPublisher(db, adapter, {
       today: new Date().toISOString().slice(0, 10),
       history: args.includes("--history"),
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 30), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "legilux") {
+    const report = await importLegilux(db, {
       limit: flag("limit") ? Number(flag("limit")) : undefined,
       snapshots: defaultSnapshotStore(),
       dryRun: args.includes("--dry-run"),

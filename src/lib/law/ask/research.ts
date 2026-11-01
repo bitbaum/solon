@@ -71,10 +71,10 @@ const label = (hit: ProvisionHit, i: number) =>
 
 const instructions = (
   web: boolean,
-) => `You research a question about Swiss and Liechtenstein law before it is answered. The provisions found so far are listed below.
+) => `You research a question about the law of Switzerland, Liechtenstein or Luxembourg before it is answered. The provisions found so far are listed below.
 
 If they settle the question, reply with the single word DONE.
-Otherwise call tools to find what is missing: the actual rule, a canton's or a commune's own act, the provision a cross-reference points to${web ? ", or an authority's own page for what the law leaves to it (a deadline set each year, a form, where to file or pay)" : ""}. Search with the law's own words in its language (German, French or Italian). Read a provision before relying on it. ${web ? "Web pages are not law; prefer official pages (admin.ch, the canton's or commune's site, llv.li)." : ""}
+Otherwise call tools to find what is missing: the actual rule, a canton's or a commune's own act, the provision a cross-reference points to${web ? ", or an authority's own page for what the law leaves to it (a deadline set each year, a form, where to file or pay)" : ""}. Search with the law's own words in its language (German, French or Italian). Read a provision before relying on it. ${web ? "Web pages are not law; prefer official pages (admin.ch, the canton's or commune's site, llv.li, gouvernement.lu, guichet.lu)." : ""}
 
 ${TEXT_TOOL_PROTOCOL_HINT}`;
 

@@ -359,6 +359,28 @@ question about Vaduz is asked of Liechtenstein's law too).
 - Swiss communes that publish this way are configs of the same adapter; the
   loader, the store, the tools and the chat do not change.
 
+### Luxembourg as built (2026-11-01): the first country beyond the two
+
+Legilux, the Grand Duchy's official legal database (Ministry of State,
+Central Legislation Service), publishes its data under CC BY 4.0
+(data.public.lu, "Legilux - Journal officiel du Grand-Duché de Luxembourg")
+through a SPARQL endpoint that speaks JOLux, the ontology Fedlex uses. The
+reader (`text/legilux.ts`, `text/import-legilux.ts`; `pnpm run law:text
+legilux`) asks for every consolidated version Legilux marks `applicable`
+(one per act, 1,134 on 2026-11-01), registers those acts as the authority
+`lux` (identifier `lu_eli`, the act's work), and stores each version's
+French HTML cut into its articles under Legilux's own anchors (`art_710-5`),
+dated by the day it applies from.
+
+- An act never amended has no consolidated version; its original text in the
+  Journal officiel is the law in force. Reading those is the next step.
+- Reading an act, a provision or its contents prefers the language asked for
+  and falls back to the one the act is held in, so a French-only act reads
+  wherever German is asked.
+- Swiss federal law is searched when a question is about a Swiss place or
+  names none; a question about Luxembourg or Liechtenstein alone asks their
+  law only (`countryOf`, read from config).
+
 ### Asking the law as built (2026-10-24)
 
 `/law/ask` and `POST /api/law/ask` (design: the retrieval layer). Three steps,

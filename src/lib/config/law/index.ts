@@ -33,6 +33,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "official_url",
   /** `<publisher key>:<the publisher's own number for the act>`; names an act in a municipal collection. */
   "publisher_ref",
+  /** Luxembourg's European Legislation Identifier for the act (its Legilux work). */
+  "lu_eli",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
@@ -97,6 +99,8 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ge", name: "Genève", place: { scheme: "bfs_canton", value: "25" } },
   { key: "ju", name: "Jura", place: { scheme: "bfs_canton", value: "26" } },
   { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
+  // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
+  { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
   // whose collection a reader in src/lib/law/publishers covers.
   {
@@ -353,3 +357,58 @@ export const ZHLEX = {
   licenceSpdx: "LicenseRef-ch-official-act",
   textStatus: "consolidated" as ActTextStatus,
 } as const;
+
+/**
+ * Luxembourg's law, from Legilux, the Grand Duchy's official legal database,
+ * published by the Ministry of State's Central Legislation Service as open
+ * data under CC BY 4.0 (data.public.lu, "Legilux - Journal officiel du
+ * Grand-Duché de Luxembourg"). Its SPARQL endpoint speaks JOLux, the same
+ * ontology as Fedlex: each act (a work) has consolidated versions with the day
+ * they apply from, and each version's French text as HTML on a file store.
+ */
+export const LEGILUX = {
+  key: "legilux",
+  authority: "lux",
+  publisher: "Legilux, Service central de législation, Ministère d'État",
+  homepage: "https://legilux.public.lu",
+  sparql: "https://data.legilux.public.lu/sparqlendpoint",
+  /** Only these hosts are read. */
+  hosts: ["data.legilux.public.lu", "legilux.public.lu"],
+  licenceSpdx: "CC-BY-4.0",
+  locale: "fr",
+  textStatus: "consolidated" as ActTextStatus,
+  /** Legilux's document types, as act kinds. */
+  kinds: {
+    Constitution: "constitution",
+    LOI: "statute",
+    CODE: "statute",
+    RGD: "regulation",
+    RGC: "regulation",
+    RMIN: "regulation",
+    RI: "regulation",
+    AGD: "decree",
+    AGC: "decree",
+    AMIN: "decree",
+    PA: "decree",
+    ORD: "decree",
+  } as Readonly<Record<string, ActKind>>,
+} as const;
+
+/**
+ * The country whose law an authority's law sits within, as ISO 3166-1: a
+ * canton, an intercantonal body and a Swiss commune are CH; Liechtenstein and
+ * its communes LI; Luxembourg LU. Read from config, never typed per authority.
+ */
+export function countryOf(key: string): string | null {
+  const seen = new Set<string>();
+  let authority = LAW_AUTHORITIES.find((a) => a.key === key);
+  while (authority && !seen.has(authority.key)) {
+    seen.add(authority.key);
+    if (authority.place?.scheme === "iso_3166_1") return authority.place.value;
+    if (authority.place?.scheme === "bfs_canton" || authority.key === "intercantonal") return "CH";
+    authority = authority.within
+      ? LAW_AUTHORITIES.find((a) => a.key === authority!.within)
+      : undefined;
+  }
+  return null;
+}

@@ -58,3 +58,23 @@ describe("a commune named in a question", () => {
     ]);
   });
 });
+
+describe("Swiss federal law in a plan", () => {
+  it("is asked about Switzerland, and not about Luxembourg or Liechtenstein alone", async () => {
+    const { planResearch } = await import("../plan");
+    const plan = (authorities: string[]) =>
+      planResearch([{ role: "user", content: "Quel est le capital minimum ?" }], async () => ({
+        text: JSON.stringify({
+          question: "q",
+          authorities,
+          groups: [["capital"]],
+          acts: [],
+          language: "French",
+        }),
+      }));
+    expect((await plan(["lux"])).authorities).toEqual(["lux"]);
+    expect((await plan(["li7001", "li"])).authorities.sort()).toEqual(["li", "li7001"]);
+    expect((await plan(["zh"])).authorities).toEqual(["ch", "zh"]);
+    expect((await plan([])).authorities).toEqual(["ch"]);
+  });
+});
