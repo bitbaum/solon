@@ -91,3 +91,34 @@ describe.skipIf(!RUN)("importLexwork", () => {
     expect(second.versionsStored).toBe(0);
   });
 });
+
+describe.skipIf(!RUN)("importLexwork with a blank old version", () => {
+  it("reports the blank version and still stores the current one", async () => {
+    const blankOld = act(10, "");
+    blankOld.text_of_law.selected_version.json_content = {
+      document: { content: { type: "title", children: [] } },
+    } as never;
+    const host = "cham.tlex.ch";
+    const answers: Record<string, unknown> = {
+      [`https://${host}/api/de/texts_of_law/lightweight_index`]: {
+        "1": [{ id: 1, systematic_number: "9.9-1", title: "Testreglement", abrogated: false }],
+      },
+      [`https://${host}/api/de/texts_of_law/9.9-1/show_as_json`]: act(20, "Aktueller Text."),
+      [`https://${host}/api/de/texts_of_law/9.9-1/versions/10/show_as_json`]: blankOld,
+    };
+    const impl = (async (url: string | URL) => {
+      const body = answers[String(url)];
+      return body ? new Response(JSON.stringify(body)) : new Response("", { status: 404 });
+    }) as unknown as typeof fetch;
+    const report = await importLexwork(db, {
+      snapshots,
+      today: "2026-11-01",
+      host,
+      pauseMs: 0,
+      fetchImpl: impl,
+    });
+    expect(report.failures).toEqual([]);
+    expect(report.emptyAtPublisher).toEqual([`${host} 9.9-1 version 10`]);
+    expect(report.versionsStored).toBe(1);
+  });
+});
