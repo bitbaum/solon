@@ -113,6 +113,12 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/v1/law/changes?since=",
+    description: "what changed in the law Solon holds since a day: new, amended and repealed acts",
+    sample: () => "/api/v1/law/changes",
+  },
+  {
+    method: "GET",
     path: "/api/v1/law/coverage",
     description: "what the law register holds, per authority, counted from the data",
     sample: () => "/api/v1/law/coverage",
@@ -121,7 +127,7 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
     method: "POST",
     path: "/api/mcp",
     description:
-      "the law register as MCP tools for any AI app (Streamable HTTP, public, read-only): law_authorities, law_search, law_find_acts, law_read_act, law_read_provision",
+      "the law register as MCP tools for any AI app (Streamable HTTP, public, read-only): law_authorities, law_search, law_find_acts, law_read_act, law_read_provision, law_changes",
   },
   {
     method: "GET",

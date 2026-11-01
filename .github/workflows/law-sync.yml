@@ -1,0 +1,76 @@
+name: Law sync
+
+# Every day, Solon reads the law again so that what it holds is what is in
+# force (design: law-as-data, "Staying current"): the registers (new and
+# repealed acts), each publisher's new versions (Fedlex, Lilex, the cantons,
+# ZH-Lex, the communes, Legilux), and the documents it holds read again, oldest
+# first, so a text a publisher changed becomes a new version. What changed is
+# served at /api/v1/law/changes and by the MCP tool law_changes.
+#
+# Each step runs on its own; one that fails is reported and the rest go on.
+# Runs on the box from a fresh checkout of main with the box's own DATABASE_URL.
+
+on:
+  schedule:
+    - cron: "23 1 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: law-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - name: Read the law again, on the box
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
+            "SHA=$SHA bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+          set -uo pipefail
+          WD=$(mktemp -d /tmp/solon-law-sync.XXXXXX)
+          trap 'rm -rf "$WD"' EXIT
+          git clone -q https://github.com/bitbaum/solon "$WD/repo"
+          cd "$WD/repo" && git checkout -q "$SHA"
+          PNPM="corepack pnpm"; $PNPM --version >/dev/null 2>&1 || PNPM="npx --yes pnpm@11"
+          $PNPM install --frozen-lockfile >install.log 2>&1 || { echo "install failed:"; tail -n 20 install.log; exit 1; }
+          envf=/opt/solon/shared/.env; [ -f "$envf" ] || envf=/opt/solon/app/.env
+          set -a
+          eval "$(grep -E '^(DATABASE_URL|PLACES_SNAPSHOT_DIR)=' "$envf")"
+          set +a
+          export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
+          failed=""
+          step() {
+            name="$1"; shift
+            echo "== $name"
+            if ! "$@" 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 25; then failed="$failed $name"; fi
+            [ "${PIPESTATUS[0]}" = 0 ] || failed="$failed $name"
+          }
+          step "register lexfind"       $PNPM run law:register lexfind
+          step "register liechtenstein" $PNPM run law:register liechtenstein
+          step "fedlex"                 $PNPM run law:text fedlex --lang de --limit 2000
+          step "lilex"                  $PNPM run law:text lilex --limit 500
+          step "cantons (new acts)"     $PNPM run law:text cantons --limit 2000
+          step "zhlex"                  $PNPM run law:text zhlex --limit 500
+          step "communes"               $PNPM run law:text municipal --publisher all --limit 500
+          step "legilux"                $PNPM run law:text legilux --limit 2000
+          step "refresh held documents" $PNPM run law:text refresh --limit 3000
+          step "recut"                  $PNPM run law:text recut --limit 50000
+          echo "failed steps:${failed:- none}"
+          [ -z "$failed" ]
+          REMOTE
+          rm -f ~/.ssh/id
+          while IFS= read -r line; do echo "::notice::$line"; done < out.txt
+          exit "${status:-0}"

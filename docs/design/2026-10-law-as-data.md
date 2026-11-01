@@ -424,6 +424,28 @@ runs.
 A new authority, a commune or another country, is new rows and an adapter;
 the tools, the MCP server and the chat do not change.
 
+### Staying current as built (2026-11-01)
+
+Every night `.github/workflows/law-sync.yml` runs on the box, one step after
+another, each continuing if one before it failed: the LexFind and
+Liechtenstein registers (new acts, and acts gone from a register marked no
+longer in force), then every text reader (Fedlex, Lilex, the cantons, ZH-Lex,
+every commune in `PUBLISHERS`, Legilux), each of which loads only what it does
+not hold yet.
+
+Publishers that give a version date are read for it. Those that only serve the
+current document (LexFind's cantonal files, Lilex) are read again by
+`law:text refresh` (`src/lib/law/text/refresh.ts`), oldest copy first: the same
+bytes only mark the copy as checked today; different bytes become a new
+version, in force from the day it was read (`date_basis = retrieved`, because
+the publisher did not say). A bot check stops the run rather than being
+worked around.
+
+What changed is one query, `loadLawChanges` (`src/lib/law/register/changes.ts`):
+versions recorded and acts repealed since a day, served at
+`GET /api/v1/law/changes?since=&authority=` and to models as the tool
+`law_changes`.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

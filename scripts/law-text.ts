@@ -5,15 +5,17 @@
  *   pnpm run law:text lilex [--limit 200] [--lr 210.0] [--dry-run]
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
+ *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
- *   pnpm run law:text municipal --publisher zurich-city [--history] [--limit 200] [--dry-run]
+ *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
  * Resumable: acts whose version is already held are skipped, so a run limited to
  * N continues where the last stopped. Exit 1 when an act failed, so a runner alerts.
  */
 import { recutCantonalText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
+import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
@@ -33,14 +35,48 @@ const [sourceKey] = args.filter((a, i) => !a.startsWith("--") && !args[i - 1]?.s
 
 async function main(): Promise<number> {
   if (sourceKey === "municipal") {
-    const adapter = PUBLISHERS[flag("publisher") ?? ""];
-    if (!adapter) {
-      console.error(`--publisher is one of: ${Object.keys(PUBLISHERS).join(", ")}`);
+    // `--publisher all` reads every commune in config, one after another; one that fails does not stop the rest.
+    const which = flag("publisher") ?? "";
+    const adapters =
+      which === "all" ? Object.values(PUBLISHERS) : [PUBLISHERS[which]].filter(Boolean);
+    if (adapters.length === 0) {
+      console.error(`--publisher is all, or one of: ${Object.keys(PUBLISHERS).join(", ")}`);
       return 2;
     }
-    const report = await loadPublisher(db, adapter, {
+    let failures = 0;
+    for (const adapter of adapters) {
+      try {
+        const report = await loadPublisher(db, adapter!, {
+          today: new Date().toISOString().slice(0, 10),
+          history: args.includes("--history"),
+          limit: flag("limit") ? Number(flag("limit")) : undefined,
+          snapshots: defaultSnapshotStore(),
+          dryRun: args.includes("--dry-run"),
+          onProgress: (message) => console.error(message),
+        });
+        failures += report.failures.length;
+        console.log(
+          JSON.stringify(
+            {
+              publisher: adapter!.key,
+              ...report,
+              failures: report.failures.slice(0, 30),
+              failureCount: report.failures.length,
+            },
+            null,
+            2,
+          ),
+        );
+      } catch (error) {
+        failures++;
+        console.log(JSON.stringify({ publisher: adapter!.key, error: String(error) }));
+      }
+    }
+    return failures > 0 ? 1 : 0;
+  }
+  if (sourceKey === "refresh") {
+    const report = await refreshText(db, {
       today: new Date().toISOString().slice(0, 10),
-      history: args.includes("--history"),
       limit: flag("limit") ? Number(flag("limit")) : undefined,
       snapshots: defaultSnapshotStore(),
       dryRun: args.includes("--dry-run"),
@@ -53,7 +89,7 @@ async function main(): Promise<number> {
         2,
       ),
     );
-    return report.failures.length > 0 ? 1 : 0;
+    return report.failures.length > report.checked / 2 ? 1 : 0;
   }
   if (sourceKey === "legilux") {
     const report = await importLegilux(db, {

@@ -11,6 +11,7 @@
 import { z } from "zod";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
+import { loadLawChanges } from "./register/changes";
 import { loadLawCoverage, readProvision, searchActs } from "./register/coverage";
 import { SEARCH_LIMIT_MAX, searchProvisions } from "./search";
 import { loadActContents, loadActView } from "./view";
@@ -195,6 +196,32 @@ export const LAW_TOOLS = [
       });
       if (!provision) throw new Error("No such provision in force on that day.");
       return { ...provision, solonUrl: actUrl(args.act, args.path) };
+    },
+  }),
+  tool({
+    name: "law_changes",
+    title: "What changed in the law",
+    description:
+      "What changed in the law Solon holds since a day: acts first held (`new`), acts whose text a newer version replaced (`amended`), and acts no longer in force (`repealed`), each with the day the new text applies from and when Solon recorded it. Narrow with `authorities`. Use it to answer 'what is new in Zurich's law this month' or to check whether a provision you know has changed.",
+    input: {
+      since: isoDate,
+      authorities: z.array(authority).max(10).optional(),
+      limit: z.number().int().min(1).max(500).optional(),
+    },
+    async run(args, { db }) {
+      const changes = await loadLawChanges(db, {
+        since: args.since,
+        authorities: args.authorities,
+        limit: args.limit ?? 100,
+      });
+      return {
+        since: args.since,
+        changes: changes.map((c) => ({
+          ...c,
+          authorityName: authorityName(c.authority),
+          solonUrl: actUrl(c.actId),
+        })),
+      };
     },
   }),
 ] as const;

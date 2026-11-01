@@ -49,6 +49,7 @@ describe("looking further before answering", () => {
       "law_find_acts",
       "law_read_act",
       "law_read_provision",
+      "law_changes",
     ]);
     expect(offered[1]).toEqual([...offered[0]!, "web_search", "web_read"]);
     expect(webLookupConfigured({ BRAVE_SEARCH_API_KEY: " " })).toBe(false);
