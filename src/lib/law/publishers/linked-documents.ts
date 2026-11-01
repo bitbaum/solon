@@ -70,6 +70,15 @@ export function titleFromFile(href: string): string {
  */
 export function anchorsOf(html: string, base: string): { href: string; text: string }[] {
   const out: { href: string; text: string }[] = [];
+  // A page's own <base href> is what its relative links resolve against (Schellenberg: "/").
+  const declared = /<base\b[^>]*\bhref=(["'])(.*?)\1/i.exec(html)?.[2];
+  if (declared) {
+    try {
+      base = new URL(decode(declared), base).toString();
+    } catch {
+      // keep the page's address
+    }
+  }
   for (const m of html.matchAll(/<a\b([^>]*?)href=(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi)) {
     const clean = (raw: string) =>
       decode(
