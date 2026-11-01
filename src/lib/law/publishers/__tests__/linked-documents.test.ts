@@ -70,3 +70,27 @@ describe("an act's address", () => {
     );
   });
 });
+
+describe("a link whose words are only a button's", () => {
+  it("is named by its title, else its file, and an act offered twice is listed once", () => {
+    const html = `
+      <a href="files/attachments/3-1-abwasserreglement.pdf" title="Dokument herunterladen">Dokument herunterladen</a>
+      <a href="files/attachments/2-1-bauordnung-anhang-zu-bauunterlagen.pdf" title="Bauordnung"></a>
+      <a href="files/attachments/7-1-reglement-sport-und-freizeitanlage.pdf" title="Reglement"></a>
+      <a href="files/attachments/tarifordnung.pdf">Tarifordnung &#xFC;ber die Wasseranschlussgeb&#xFC;hr</a>
+      <a href="files/attachments/6-friedhofordnung.pdf" title="Friedhofordnung"></a>
+      <a href="files/attachments/friedhofordnung-2.pdf" title="Friedhofordnung"></a>`;
+    const acts = actsOf(anchorsOf(html, "https://www.schellenberg.li/service/"), {
+      link: /\/files\/attachments\/([^/?#]+\.pdf)/,
+      include: /reglement|ordnung/i,
+      exclude: /antrag/i,
+    });
+    expect(acts.map((a) => a.title)).toEqual([
+      "Abwasserreglement",
+      "Bauordnung",
+      "Reglement sport und freizeitanlage",
+      "Tarifordnung über die Wasseranschlussgebühr",
+      "Friedhofordnung",
+    ]);
+  });
+});
