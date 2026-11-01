@@ -9,11 +9,12 @@
  * Nothing is deleted. When a newer version of an act appears, the held one is
  * closed the day before it takes over and the new one becomes current.
  */
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { FEDLEX } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
+import { importRegister, type ActRow } from "../register/import";
 import { storeVersion } from "./store";
 import { fetchHtml, listVersionsOn, parseProvisions, type FedlexVersion } from "./fedlex";
 
@@ -39,6 +40,8 @@ export interface TextReport {
   listed: number;
   /** Listed versions whose act the register does not hold. */
   notInRegister: string[];
+  /** Acts Fedlex lists that the register lacked, registered from Fedlex's own list in this run. */
+  registered: string[];
   /** Numbers that more than one act of the publisher carries: not guessed, left alone. */
   ambiguous: string[];
   /** Acts whose listed version is already held. */
@@ -69,6 +72,32 @@ async function actsBySr(db: Database): Promise<Map<string, string>> {
   return new Map(rows.map((row) => [row.sr, row.actId]));
 }
 
+/** An act's Fedlex address without site or language: "eli/cc/2025/162", from either form of it. */
+export const eliPath = (url: string): string | null =>
+  /\/(eli\/cc\/.+?)(?:\/(?:de|fr|it))?$/.exec(url)?.[1] ?? null;
+
+/** Register acts of the authority, by the Fedlex address of their own page. */
+async function actsByEli(db: Database): Promise<Map<string, string>> {
+  const rows = await db
+    .select({ actId: legalActs.id, url: legalActIdentifiers.value })
+    .from(legalActs)
+    .innerJoin(
+      legalActIdentifiers,
+      and(
+        eq(legalActIdentifiers.actId, legalActs.id),
+        inArray(legalActIdentifiers.scheme, ["official_url", "ch_eli"]),
+        isNull(legalActIdentifiers.supersededAt),
+      ),
+    )
+    .where(eq(legalActs.authority, FEDLEX.authority));
+  const out = new Map<string, string>();
+  for (const row of rows) {
+    const path = eliPath(row.url);
+    if (path) out.set(path, row.actId);
+  }
+  return out;
+}
+
 export async function importFedlexText(db: Database, options: TextOptions): Promise<TextReport> {
   const { lang, day, snapshots, dryRun = false, limit = Infinity, pauseMs = 700 } = options;
   const doFetch = options.fetchImpl ?? fetch;
@@ -77,6 +106,7 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
     status: "applied",
     listed: 0,
     notInRegister: [],
+    registered: [],
     ambiguous: [],
     alreadyHeld: 0,
     stored: 0,
@@ -87,6 +117,8 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
   const listed = await listVersionsOn(day, lang, doFetch);
   report.listed = listed.length;
   const acts = await actsBySr(db);
+  const byEli = await actsByEli(db);
+  const withPage = new Set(byEli.values());
 
   const held = await db
     .select({ actId: legalActVersions.actId, from: legalActVersions.inForceFrom })
@@ -99,14 +131,35 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
     elis.set(version.sr, (elis.get(version.sr) ?? new Set()).add(version.eli));
   }
   const todo: { version: FedlexVersion; actId: string }[] = [];
+  /** Versions of acts Fedlex lists and the register lacks. */
+  const missing: FedlexVersion[] = [];
   for (const version of listed) {
+    let actId: string | undefined;
     if ((elis.get(version.sr)?.size ?? 0) > 1) {
-      if (!report.ambiguous.includes(version.sr)) report.ambiguous.push(version.sr);
-      continue;
+      // Two acts carry this number: each is told by the address of its own page, never guessed.
+      const path = eliPath(version.eli);
+      actId = path ? byEli.get(path) : undefined;
+      if (!actId) {
+        const registered = acts.get(version.sr);
+        if (!registered) {
+          // No act of this number is registered at all: each of them is registered from Fedlex's list.
+          report.notInRegister.push(`${version.sr} (${path ?? version.eli})`);
+          missing.push(version);
+        } else if (withPage.has(registered)) {
+          // The register's act has its own page, and this is another act of the same number.
+          report.notInRegister.push(`${version.sr} (${path ?? version.eli})`);
+          missing.push(version);
+        } else if (!report.ambiguous.includes(version.sr)) {
+          report.ambiguous.push(version.sr);
+        }
+        continue;
+      }
+    } else {
+      actId = acts.get(version.sr);
     }
-    const actId = acts.get(version.sr);
     if (!actId) {
       report.notInRegister.push(version.sr);
+      missing.push(version);
       continue;
     }
     const current = heldFrom.get(actId);
@@ -115,6 +168,43 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
       continue;
     }
     todo.push({ version, actId });
+  }
+  // An act Fedlex lists and the register lacks is registered from Fedlex's own list, then read.
+  if (missing.length > 0 && !dryRun) {
+    const rows: ActRow[] = missing.map((v) => ({
+      authority: FEDLEX.authority,
+      kind: v.sr.startsWith("0.") ? "treaty" : "other",
+      inForce: true,
+      title: v.title ?? `SR ${v.sr}`,
+      locale: lang,
+      identity: { scheme: "ch_eli", value: v.eli },
+      systematicNumber: v.sr,
+      more: [
+        { scheme: "official_url", value: `https://www.fedlex.admin.ch/${eliPath(v.eli)}/${lang}` },
+      ],
+    }));
+    await importRegister(db, {
+      register: {
+        key: `${FEDLEX.key}-list`,
+        licenceSpdx: FEDLEX.licenceSpdx,
+        identityScheme: "ch_eli",
+      },
+      read: () => ({ rows, skipped: [] }),
+      bytes: new TextEncoder().encode(JSON.stringify(missing)),
+      url: "https://fedlex.data.admin.ch/sparqlendpoint",
+      retrievedAt: new Date(),
+      snapshots,
+    });
+    const fresh = await actsByEli(db);
+    for (const v of missing) {
+      const id = fresh.get(eliPath(v.eli) ?? "");
+      if (!id) continue;
+      report.registered.push(v.sr);
+      todo.push({ version: v, actId: id });
+    }
+    report.notInRegister = report.notInRegister.filter(
+      (entry) => !report.registered.some((sr) => entry === sr || entry.startsWith(`${sr} (`)),
+    );
   }
   todo.sort((a, b) => a.version.sr.localeCompare(b.version.sr, "en", { numeric: true }));
   let attempted = 0;
