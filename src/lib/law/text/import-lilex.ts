@@ -17,7 +17,16 @@ import { LILEX } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
-import { ChallengeError, fetchLilexPage, lilexId, lilexUrl, parseLilexProvisions } from "./lilex";
+import {
+  ChallengeError,
+  fetchLilexDocument,
+  fetchSystematicIds,
+  lilexId,
+  lilexUrl,
+  parseLilexProvisions,
+  systematicStarts,
+} from "./lilex";
+import { provisionsOfPdf } from "./pdf-provisions";
 import { storeVersion } from "./store";
 
 export const LILEX_IMPORTER_VERSION = "law-text-lilex-1";
@@ -124,21 +133,48 @@ export async function importLilexText(db: Database, options: LilexOptions): Prom
     );
   report.wanted = todo.length;
 
+  // The publisher's own listings (LR number → page id), each asked for once.
+  const listings = new Map<string, Map<string, string>>();
+  const findInListing = async (number: string): Promise<string | null> => {
+    for (const start of systematicStarts(number)) {
+      let ids = listings.get(start);
+      if (!ids) {
+        ids = await fetchSystematicIds(start, options.fetchImpl);
+        listings.set(start, ids);
+        await sleep(pauseMs);
+      }
+      const id = ids.get(number);
+      if (id) return id;
+    }
+    return null;
+  };
+
   let attempted = 0;
   for (const row of todo) {
     if (report.stored >= limit) break;
     attempted++;
-    const id = lilexId(lgblOf.get(row.actId) ?? null, row.number);
-    if (!id) {
-      report.noPageId.push(row.number);
-      continue;
-    }
+    let id = lilexId(lgblOf.get(row.actId) ?? null, row.number);
     try {
-      const bytes = await fetchLilexPage(id, options.fetchImpl);
-      if (!bytes) {
+      let document = id ? await fetchLilexDocument(id, options.fetchImpl) : null;
+      if (!document) {
+        // Not where the issue number puts it: ask the publisher's own listing where the act is.
+        const found = await findInListing(row.number);
+        if (found && found !== id) {
+          id = found;
+          document = await fetchLilexDocument(id, options.fetchImpl);
+        }
+      }
+      if (!id) {
+        report.noPageId.push(row.number);
+        continue;
+      }
+      if (!document) {
         report.failures.push({ lr: row.number, reason: "no act at that page" });
       } else {
-        const provisions = parseLilexProvisions(new TextDecoder().decode(bytes));
+        const provisions =
+          document.format === "pdf"
+            ? (await provisionsOfPdf(document.bytes, LILEX.locale)).provisions
+            : parseLilexProvisions(new TextDecoder().decode(document.bytes));
         if (provisions.length === 0) {
           report.failures.push({ lr: row.number, reason: "no provisions found in the page" });
         } else {
@@ -151,8 +187,8 @@ export async function importLilexText(db: Database, options: LilexOptions): Prom
               inForceFrom: today,
               dateBasis: "retrieved",
               status: LILEX.textStatus,
-              format: "html",
-              bytes,
+              format: document.format,
+              bytes: document.bytes,
               url: lilexUrl(id),
               provisions,
               source: {

@@ -42,13 +42,17 @@ export function decodeEntities(text: string): string {
 
 /** Tags removed, block ends become line breaks, entities decoded, blank lines dropped. */
 export function blockText(fragment: string): string {
-  return decodeEntities(
-    fragment
-      .replace(/<div|<\/div>|<br\s*\/?>|<\/p>/g, (m) => (m === "<div" ? "\n<div" : "\n"))
-      .replace(/<[^>]+>/g, ""),
-  )
-    .split("\n")
-    .map((line) => line.replace(/[ \t]+/g, " ").trim())
-    .filter(Boolean)
-    .join("\n");
+  return (
+    decodeEntities(
+      fragment
+        .replace(/<div|<\/div>|<br\s*\/?>|<\/p>/g, (m) => (m === "<div" ? "\n<div" : "\n"))
+        .replace(/<[^>]+>/g, ""),
+    )
+      // `&#0;` or a stray NUL: Postgres cannot store one.
+      .replace(/\u0000/g, " ")
+      .split("\n")
+      .map((line) => line.replace(/[ \t]+/g, " ").trim())
+      .filter(Boolean)
+      .join("\n")
+  );
 }

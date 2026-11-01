@@ -30,7 +30,9 @@ export function lilexId(lgbl: string | null, lr: string): string | null {
 
 export const lilexUrl = (id: string): string => `${LILEX.page}${id}`;
 
-const isChallenge = (html: string) => html.includes("array_to_hex_string");
+// gesetze.li answers an address it does not know with a maintenance notice that carries the same script.
+const isMaintenance = (html: string) => html.includes("Wartungsarbeiten");
+const isChallenge = (html: string) => html.includes("array_to_hex_string") && !isMaintenance(html);
 const isAct = (html: string) =>
   html.includes('<div class="art"') || html.includes('<div class="htit1"');
 
@@ -50,6 +52,63 @@ export async function fetchLilexPage(
     return null;
   }
   return bytes;
+}
+
+/** The PDF a page links for its text, when the page holds none (a gazette entry, a treaty). */
+export function pdfLinkOf(html: string): string | null {
+  const href = /href="(\/(?:konso|chrono)\/pdf\/[^"]+)"/.exec(html)?.[1];
+  return href ? new URL(href.replace(/&amp;/g, "&"), LILEX.homepage).toString() : null;
+}
+
+/** An act's text as the publisher gives it: its page, or else the PDF of its Landesgesetzblatt entry. */
+export async function fetchLilexDocument(
+  id: string,
+  doFetch: typeof fetch = fetch,
+): Promise<{ bytes: Uint8Array; format: "html" | "pdf" } | null> {
+  const page = await fetchLilexPage(id, doFetch);
+  if (page) return { bytes: page, format: "html" };
+  // No consolidated page: the entry in the gazette, whose text is a PDF.
+  const entry = await doFetch(`${LILEX.homepage}/chrono/${id}`, {
+    headers: { "user-agent": USER_AGENT },
+    signal: AbortSignal.timeout(90_000),
+  });
+  const link = pdfLinkOf(await entry.text());
+  if (!link) return null;
+  const pdf = await doFetch(link, {
+    headers: { "user-agent": USER_AGENT },
+    signal: AbortSignal.timeout(180_000),
+  });
+  const bytes = new Uint8Array(await pdf.arrayBuffer());
+  return new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-" ? { bytes, format: "pdf" } : null;
+}
+
+/** LR number → page id, from a Gebietssystematik page: the publisher's own list of where each act is. */
+export function parseSystematicIds(html: string): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const m of html.matchAll(/<td>(\d+(?:\.\d+)*)<\/td>\s*<td><a href="\/konso\/(\d+)">/g)) {
+    // A treaty is listed once for its main text and again for its parts: the first is the act.
+    if (!out.has(m[1]!)) out.set(m[1]!, m[2]!);
+  }
+  return out;
+}
+
+/** The listings that may hold an act: its own, then each parent ("0.110.042.08" → "0.110.042" → "0.110" → "0"). */
+export function systematicStarts(lr: string): string[] {
+  const parts = lr.split(".");
+  return parts.map((_, i) => parts.slice(0, parts.length - i).join("."));
+}
+
+export async function fetchSystematicIds(
+  lrstart: string,
+  doFetch: typeof fetch = fetch,
+): Promise<Map<string, string>> {
+  const response = await doFetch(
+    `${LILEX.homepage}/konso/gebietssystematik?lrstart=${encodeURIComponent(lrstart)}`,
+    { headers: { "user-agent": USER_AGENT }, signal: AbortSignal.timeout(90_000) },
+  );
+  const html = await response.text();
+  if (isChallenge(html) && !html.includes("<table")) throw new ChallengeError();
+  return parseSystematicIds(html);
 }
 
 const BOUNDARY = /<div class="(?:art|tit\d?|fntext)"|<div class="sacht" style=/g;

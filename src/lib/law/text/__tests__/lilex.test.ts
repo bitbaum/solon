@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ChallengeError, fetchLilexPage, lilexId, lilexUrl, parseLilexProvisions } from "../lilex";
+import {
+  ChallengeError,
+  fetchLilexDocument,
+  fetchLilexPage,
+  lilexId,
+  lilexUrl,
+  parseLilexProvisions,
+  parseSystematicIds,
+  pdfLinkOf,
+  systematicStarts,
+} from "../lilex";
 import { WHOLE_ACT } from "../fedlex";
 
 const PAGE = `<html><body>
@@ -86,5 +96,86 @@ describe("fetchLilexPage", () => {
     await expect(
       fetchLilexPage("1", reply("<script>function array_to_hex_string(){}</script>")),
     ).rejects.toBeInstanceOf(ChallengeError);
+  });
+});
+
+describe("fetchLilexPage on the maintenance notice", () => {
+  it("takes it for a page that is not there, not for the proof-of-work page", async () => {
+    const notice = "<html><script>array_to_hex_string</script>Wartungsarbeiten/Maintenance</html>";
+    expect(
+      await fetchLilexPage(
+        "1941021000",
+        (async () => new Response(notice, { status: 500 })) as unknown as typeof fetch,
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("the publisher's own listing", () => {
+  const LISTING = `<table>
+<tr><td>210.106</td><td><a href="/konso/1010006000">Hofdekret vom 23. Juni 1821 JGS. Nr. 1771, zu § 199 ABGB</a></td><td>1010.006</td></tr>
+<tr><td>0.110</td><td><a href="/konso/1995068001">Abkommen vom 2. Mai 1992 über den Europäischen Wirtschaftsraum</a></td><td></td></tr>
+<tr><td>0.110</td><td><a href="/konso/1995068300">Abkommen, Teil</a></td><td></td></tr>
+</table>`;
+  it("maps each LR number to the id of its page, the first when a treaty is listed again for its parts", () => {
+    expect([...parseSystematicIds(LISTING)]).toEqual([
+      ["210.106", "1010006000"],
+      ["0.110", "1995068001"],
+    ]);
+  });
+  it("asks the act's own listing first, then each parent", () => {
+    expect(systematicStarts("0.110.042.08")).toEqual(["0.110.042.08", "0.110.042", "0.110", "0"]);
+    expect(systematicStarts("641")).toEqual(["641"]);
+  });
+});
+
+describe("fetchLilexDocument", () => {
+  const route = (routes: Record<string, Response>) =>
+    (async (url: string) =>
+      routes[url] ?? new Response("", { status: 404 })) as unknown as typeof fetch;
+
+  it("reads a consolidated page as HTML", async () => {
+    const doc = await fetchLilexDocument(
+      "2008311000",
+      route({ [lilexUrl("2008311000")]: new Response(PAGE) }),
+    );
+    expect(doc!.format).toBe("html");
+  });
+  it("falls back to the PDF of the gazette entry when there is no consolidated page", async () => {
+    const pdf = new Response(new TextEncoder().encode("%PDF-1.4 text"));
+    const doc = await fetchLilexDocument(
+      "1941021000",
+      route({
+        [lilexUrl("1941021000")]: new Response(
+          "<html>Wartungsarbeiten array_to_hex_string</html>",
+          { status: 500 },
+        ),
+        "https://www.gesetze.li/chrono/1941021000": new Response(
+          '<a href="/chrono/pdf/1941021000">PDF</a>',
+        ),
+        "https://www.gesetze.li/chrono/pdf/1941021000": pdf,
+      }),
+    );
+    expect(doc!.format).toBe("pdf");
+    expect(new TextDecoder().decode(doc!.bytes.slice(0, 5))).toBe("%PDF-");
+  });
+  it("is null when the entry links no PDF", async () => {
+    expect(
+      await fetchLilexDocument(
+        "1",
+        route({
+          [lilexUrl("1")]: new Response("<html>Wartungsarbeiten array_to_hex_string</html>", {
+            status: 500,
+          }),
+          "https://www.gesetze.li/chrono/1": new Response("<html>nothing</html>"),
+        }),
+      ),
+    ).toBeNull();
+  });
+  it("finds the PDF link of a page", () => {
+    expect(pdfLinkOf('<a href="/konso/pdf/1995068001?version=7&amp;x=1">')).toBe(
+      "https://www.gesetze.li/konso/pdf/1995068001?version=7&x=1",
+    );
+    expect(pdfLinkOf("<html></html>")).toBeNull();
   });
 });
