@@ -1290,11 +1290,18 @@
         "plan": "Working out which law applies",
         "search": "Searching the provisions",
         "write": "Writing the answer",
-        "check": "Checking which provisions apply"
+        "check": "Checking which provisions apply",
+        "research": "Looking further: the web and the provisions cited"
       },
       "failed": "Solon could not answer. Try again, or search the law directly.",
       "findLaw": "Find a law",
-      "coverage": "What the register holds"
+      "coverage": "What the register holds",
+      "activity": {
+        "web": "Searched the web: {detail}",
+        "read": "Read {detail}",
+        "law": "Read {detail}",
+        "search": "Searched the law again: {detail}"
+      }
     }
   },
   "LostPassword": {

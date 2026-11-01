@@ -724,11 +724,18 @@
         "plan": "Je cherche quel droit s'applique",
         "search": "Je parcours les dispositions",
         "write": "J'écris la réponse",
-        "check": "Je vérifie quelles dispositions s'appliquent"
+        "check": "Je vérifie quelles dispositions s'appliquent",
+        "research": "Chercher plus loin : sur le web et dans les dispositions citées"
       },
       "failed": "Solon n'a pas pu répondre. Réessayez ou cherchez le droit directement.",
       "findLaw": "Trouver un acte",
-      "coverage": "Ce que le registre contient"
+      "coverage": "Ce que le registre contient",
+      "activity": {
+        "web": "Recherché sur le web : {detail}",
+        "read": "Lu : {detail}",
+        "law": "Lu : {detail}",
+        "search": "Recherché à nouveau dans le droit : {detail}"
+      }
     }
   },
   "LostPassword": {

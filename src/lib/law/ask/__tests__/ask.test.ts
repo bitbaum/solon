@@ -189,7 +189,7 @@ describe("the answer's sources", () => {
     expect(sourcesOf([hit])).toEqual([
       expect.objectContaining({
         id: "L1",
-        href: "/law/11111111-1111-1111-1111-111111111111#art_12",
+        href: "/law/11111111-1111-1111-1111-111111111111?at=art_12#art_12",
       }),
     ]);
   });

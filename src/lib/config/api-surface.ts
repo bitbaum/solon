@@ -95,6 +95,36 @@ export const API_ENDPOINTS: ApiEndpoint[] = [
   },
   {
     method: "GET",
+    path: "/api/v1/law/search?q=",
+    description:
+      "the provisions in force that match, ranked, across federal, cantonal, Liechtenstein and communal law; each with the publisher's page and the hash of the copy",
+    sample: () => "/api/v1/law/search?q=Mindestertragssteuer&authority=li",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/law/acts?title=",
+    description: "acts by title, number or authority, with the publisher's own page",
+    sample: () => "/api/v1/law/acts?number=220&authority=ch",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/law/provisions?act=&path=",
+    description: "one provision as in force on a day, with its source and hash",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/law/coverage",
+    description: "what the law register holds, per authority, counted from the data",
+    sample: () => "/api/v1/law/coverage",
+  },
+  {
+    method: "POST",
+    path: "/api/mcp",
+    description:
+      "the law register as MCP tools for any AI app (Streamable HTTP, public, read-only): law_authorities, law_search, law_find_acts, law_read_act, law_read_provision",
+  },
+  {
+    method: "GET",
     path: "/api/health",
     description: "service health",
     sample: () => "/api/health",

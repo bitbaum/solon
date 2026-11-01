@@ -353,6 +353,30 @@ each its own file in `src/lib/law/ask`:
 The chat is chatkit's. Public, rate-limited by address. Causius reads the same
 engine as a tool, so there is one researcher, not two.
 
+### Tools for models as built (2026-11-01)
+
+The register is a set of tools any model can call, defined once in
+`src/lib/law/tools.ts`: `law_authorities` (who makes law and what is held),
+`law_search` (the provisions in force, ranked, narrowed by authority or act
+title), `law_find_acts`, `law_read_act` (an act's table of contents) and
+`law_read_provision` (one provision as in force on a day, with the publisher's
+page and the hash of the copy). Each runs the code its `/api/v1/law` twin
+runs.
+
+- **Any AI app**: `POST /api/mcp`, a stateless MCP server (Streamable HTTP,
+  JSON responses), public and read-only as the law is, bounded per address.
+  Claude, ChatGPT, Cursor or an agent of our own connect to
+  `https://solon.orangecat.ch/api/mcp`.
+- **Solon's own chat**: after the search and its check, a research step
+  (`ask/research.ts`) lets the model call the same tools, and `web_search` /
+  `web_read` from `@bitbaum/ai-kit/web` when a search backend is configured,
+  for two rounds at most. A provision it reads joins the sources as `[L#]`; a
+  page it reads is a web source `[W#]`, never cited as law. If no model can
+  call tools, the answer is written from what the search found, as before.
+
+A new authority, a commune or another country, is new rows and an adapter;
+the tools, the MCP server and the chat do not change.
+
 ## 4. Sources, licences and how each is read
 
 Licences: acts and official decisions are not protected by copyright in

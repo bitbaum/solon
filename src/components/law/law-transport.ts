@@ -17,9 +17,19 @@ import type { AskScope } from "@/lib/law/ask/scope";
 type Citations = NonNullable<ChatMessageData["citations"]>;
 
 export interface LawTransportWords {
-  step: (step: "plan" | "search" | "check" | "write") => string;
+  step: (step: "plan" | "search" | "check" | "research" | "write") => string;
+  /** One line for what the research step did: searched the web, read a page or a provision. */
+  activity: (kind: "web" | "read" | "law" | "search", detail: string) => string;
   failed: string;
 }
+
+const hostOf = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
 
 export function lawTransport(scope: AskScope | undefined, words: LawTransportWords): ChatTransport {
   return async (turn) => {
@@ -52,6 +62,14 @@ export function lawTransport(scope: AskScope | undefined, words: LawTransportWor
         const label = words.step(event.step);
         steps.push({ label });
         turn.update({ status: label, steps: [...steps], text });
+      }
+      if (event.type === "activity") {
+        const [kind, ...rest] = event.label.split(":");
+        const detail = rest.join(":");
+        if (kind === "web" || kind === "read" || kind === "law" || kind === "search") {
+          steps.push({ label: words.activity(kind, kind === "read" ? hostOf(detail) : detail) });
+          turn.update({ status: steps.at(-1)!.label, steps: [...steps], text });
+        }
       }
       if (event.type === "sources")
         citations = Object.fromEntries(

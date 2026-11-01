@@ -724,11 +724,18 @@
         "plan": "Ich ermittle, welches Recht gilt",
         "search": "Ich durchsuche die Bestimmungen",
         "write": "Ich schreibe die Antwort",
-        "check": "Ich prüfe, welche Bestimmungen gelten"
+        "check": "Ich prüfe, welche Bestimmungen gelten",
+        "research": "Weiter suchen: im Web und in den verwiesenen Bestimmungen"
       },
       "failed": "Solon konnte nicht antworten. Versuchen Sie es erneut oder suchen Sie das Recht direkt.",
       "findLaw": "Einen Erlass finden",
-      "coverage": "Was das Register führt"
+      "coverage": "Was das Register führt",
+      "activity": {
+        "web": "Im Web gesucht: {detail}",
+        "read": "Gelesen: {detail}",
+        "law": "Gelesen: {detail}",
+        "search": "Erneut im Recht gesucht: {detail}"
+      }
     }
   },
   "LostPassword": {
