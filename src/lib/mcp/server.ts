@@ -13,10 +13,10 @@ import { LAW_TOOLS, runLawTool } from "@/lib/law/tools";
 export const MCP_SERVER_INFO = { name: "solon", title: "Solon", version: "1.0.0" } as const;
 
 const INSTRUCTIONS =
-  "Solon holds the law of Switzerland (the Confederation, intercantonal law and all 26 cantons), of Liechtenstein, and of communes that publish a collection, " +
+  "Solon holds the law of Switzerland (the Confederation, intercantonal law and all 26 cantons), of Liechtenstein, of Luxembourg, and of communes whose acts it reads, " +
   "as the publishers publish it: every act's provisions in force, each with the publisher's page it was read from and the sha256 of that page. " +
-  "Search with the law's own words in its language (German, French or Italian), narrow by authority, then read the provision and cite it with its link. " +
-  "Federal law applies throughout Switzerland; a canton's law adds to it; a commune's applies in that commune. Solon states what the law says; it is not advice.";
+  "Search with the law's own words in its language (German, French or Italian; Luxembourg's is French), narrow by authority, then read the provision and cite it with its link. " +
+  "Swiss federal law applies throughout Switzerland and nowhere else; a canton's law adds to it; a commune's applies in that commune. Liechtenstein and Luxembourg each have their own national law. Solon states what the law says; it is not advice.";
 
 async function call(name: string, args: unknown, db: Database): Promise<CallToolResult> {
   const outcome = await runLawTool(name, args, { db });

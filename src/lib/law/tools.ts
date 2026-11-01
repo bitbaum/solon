@@ -43,7 +43,7 @@ export const LAW_TOOLS = [
     name: "law_authorities",
     title: "Who makes law, and what Solon holds",
     description:
-      "Lists every authority whose law Solon holds — the Swiss Confederation, intercantonal bodies, each of the 26 cantons, Liechtenstein, and the communes that publish a collection — with its key and how many acts in force Solon holds, and how many with their text. Call it first to learn the authority keys the other tools take (e.g. 'ch', 'zh', 'ge', 'li', 'bfs261').",
+      "Lists every authority whose law Solon holds — the Swiss Confederation, intercantonal bodies, each of the 26 cantons, Liechtenstein, Luxembourg, and the communes whose acts Solon reads — with its key and how many acts in force Solon holds, and how many with their text. Call it first to learn the authority keys the other tools take (e.g. 'ch', 'zh', 'ge', 'li', 'lux', 'bfs261', 'li7001').",
     input: {},
     async run(_args, { db }) {
       const coverage = await loadLawCoverage(db);
@@ -67,7 +67,7 @@ export const LAW_TOOLS = [
     name: "law_search",
     title: "Search the provisions in force",
     description:
-      "Full-text search over every provision in force that Solon holds, ranked so the fundamental act comes before an ordinance. Search with the words the LAW would use, in its language (German for most of Switzerland and Liechtenstein, French for Geneva, Vaud, Neuchâtel, Jura, Italian for Ticino): either `query` (all its words), `terms` (stems, any may match: ['Fuchs','Wildtier']) or `ideas` (each idea a list of alternative stems; provisions with every idea rank first: [['Miete','Mietzins'],['Erhöhung','erhöhen']]). Narrow with `authorities` (keys from law_authorities; the federal law 'ch' applies everywhere in Switzerland) and `title` (a word of the act's title, e.g. 'Steuergesetz'). Each hit names the act, the anchor, an excerpt, the publisher's page, the hash of the copy and a Solon link to cite.",
+      "Full-text search over every provision in force that Solon holds, ranked so the fundamental act comes before an ordinance. Search with the words the LAW would use, in its language (German for most of Switzerland and Liechtenstein, French for Geneva, Vaud, Neuchâtel, Jura and Luxembourg, Italian for Ticino): either `query` (all its words), `terms` (stems, any may match: ['Fuchs','Wildtier']) or `ideas` (each idea a list of alternative stems; provisions with every idea rank first: [['Miete','Mietzins'],['Erhöhung','erhöhen']]). Narrow with `authorities` (keys from law_authorities; the federal law 'ch' applies everywhere in Switzerland, and only there) and `title` (a word of the act's title, e.g. 'Steuergesetz'). Each hit names the act, the anchor, an excerpt, the publisher's page, the hash of the copy and a Solon link to cite.",
     input: {
       query: z.string().max(300).optional(),
       terms: z.array(z.string().max(60)).max(20).optional(),

@@ -46,28 +46,60 @@ const decode = (s: string) =>
     .replace(/&shy;|\u00ad/g, "")
     .replace(/&ndash;/g, "–")
     .replace(/&mdash;/g, "—")
-    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)));
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)));
 
-/** The links of a page, each with the words a reader sees on it. */
+/** A button's own words ("Dokument herunterladen"), which name no act. */
+const BUTTON = /^(?:dokument |datei )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen)$/i;
+
+/** A file's name as words: "3-1-abwasserreglement.pdf" → "Abwasserreglement". */
+export function titleFromFile(href: string): string {
+  const name = decodeURIComponent(href.split(/[?#]/)[0]!.split("/").pop() ?? "")
+    .replace(/\.pdf$/i, "")
+    .replace(/^[\d\s._-]+/, "")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+(?:anhang|zum download|zum downloaden|\d{6,}).*$/i, "")
+    .trim();
+  return name ? name[0]!.toUpperCase() + name.slice(1) : "";
+}
+
+/**
+ * The links of a page, each with the words that name it: the link's text, or
+ * when that is only a button's ("Dokument herunterladen"), its title, or else
+ * its file's name.
+ */
 export function anchorsOf(html: string, base: string): { href: string; text: string }[] {
   const out: { href: string; text: string }[] = [];
-  for (const m of html.matchAll(/<a\b[^>]*?href=(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi)) {
-    const text = decode(
-      m[3]!
-        .replace(/<svg[\s\S]*?<\/svg>/gi, " ")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim(),
-    )
-      .replace(/\.pdf$/i, "")
-      // A download button's own words are not the act's title ("… als PDF herunterladen").
-      .replace(/\s*(?:als PDF herunterladen|\(PDF[^)]*\)|PDF herunterladen)$/i, "")
-      .trim();
+  for (const m of html.matchAll(/<a\b([^>]*?)href=(["'])(.*?)\2([^>]*)>([\s\S]*?)<\/a>/gi)) {
+    const clean = (raw: string) =>
+      decode(
+        raw
+          .replace(/<svg[\s\S]*?<\/svg>/gi, " ")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim(),
+      )
+        .replace(/\.pdf$/i, "")
+        // A download button's own words are not the act's title ("… als PDF herunterladen").
+        .replace(/\s*(?:als PDF herunterladen|\(PDF[^)]*\)|PDF herunterladen)$/i, "")
+        .trim();
+    let href: string;
     try {
-      out.push({ href: new URL(decode(m[2]!), base).toString(), text });
+      href = new URL(decode(m[3]!), base).toString();
     } catch {
-      // not an address
+      continue; // not an address
     }
+    const title = /\btitle=(["'])(.*?)\1/i.exec(`${m[1]} ${m[4]}`)?.[2] ?? "";
+    const fromFile = titleFromFile(href);
+    const named = [clean(m[5]!), clean(title)].find((t) => t && !BUTTON.test(t));
+    // A bare kind ("Reglement") says less than the file's name ("Reglement Sport und Freizeitanlage").
+    const bare =
+      named &&
+      /^(?:reglement|ordnung|verordnung|hausordnung|tarifordnung|tarifblatt|statuten|richtlinien?|dokument)$/i.test(
+        named,
+      ) &&
+      fromFile.length > named.length;
+    out.push({ href, text: (bare ? fromFile : named) || fromFile });
   }
   return out;
 }
@@ -78,11 +110,22 @@ export function actsOf(
   config: Pick<LinkedDocumentsConfig, "link" | "include" | "exclude" | "kind">,
 ): ListedAct[] {
   const seen = new Set<string>();
+  const titles = new Set<string>();
   const acts: ListedAct[] = [];
   for (const a of anchors) {
     const id = config.link.exec(a.href)?.[1];
     if (!id || seen.has(id) || !a.text) continue;
     if (!config.include.test(a.text) || config.exclude.test(a.text)) continue;
+    // One act per title: a page that offers the same act twice, under two file names, lists it once.
+    const key = a.text
+      .toLowerCase()
+      .replace(/ä/g, "ae")
+      .replace(/ö/g, "oe")
+      .replace(/ü/g, "ue")
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim();
+    if (titles.has(key)) continue;
+    titles.add(key);
     seen.add(id);
     // A cache-buster changes on every visit ("?t=639291088808965558"); the act's address does not.
     const url = new URL(a.href);
@@ -171,7 +214,7 @@ const CONCRETE_FILE = /\/download_file\/(?:view\/|force\/)?([0-9a-f-]{1,40})(?:[
 
 /** A file a WordPress site serves from its uploads, named by its path there. */
 const WORDPRESS_FILE = /\/wp-content\/uploads\/((?:\d{4}\/\d{2}\/)?[^/?#]+\.pdf)(?:[?#]|$)/i;
-/** A file in a media archive (Ruggell), named by its file name. */
+/** A file in a media archive (Ruggell, Schellenberg), named by its file name. */
 const MEDIA_ARCHIVE_FILE = /\/files\/(?:medienarchiv|attachments)\/([^/?#]+\.pdf)(?:[?#]|$)/i;
 
 const liCommune = (
@@ -238,4 +281,13 @@ export const eschen = liCommune(
   ["https://www.eschen.li/verwaltung-service/service/download/"],
   undefined,
   WORDPRESS_FILE,
+);
+export const schellenberg = liCommune(
+  "schellenberg",
+  "li7008",
+  "Gemeinde Schellenberg",
+  "https://www.schellenberg.li/",
+  ["https://www.schellenberg.li/service/reglemente"],
+  undefined,
+  MEDIA_ARCHIVE_FILE,
 );

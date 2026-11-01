@@ -59,8 +59,9 @@ export async function loadActView(
            (SELECT count(*)::int FROM legal_provisions p WHERE p.version_id = v.id) AS "provisionCount"
     FROM legal_act_versions v
     JOIN sources s ON s.id = v.source_id
-    WHERE v.act_id = ${input.id} AND v.lang = ${input.lang} AND v.in_force_to IS NULL
-    ORDER BY v.in_force_from DESC
+    WHERE v.act_id = ${input.id} AND v.in_force_to IS NULL
+    -- The language asked for, else the one the act is held in (Luxembourg's is French).
+    ORDER BY (v.lang = ${input.lang}) DESC, v.in_force_from DESC
     LIMIT 1
   `);
   const found = versions.rows[0] as (NonNullable<ActView["version"]> & { id: string }) | undefined;
@@ -87,9 +88,9 @@ export async function pageOfProvision(
             WHERE q.version_id = p.version_id AND q.ord < p.ord) AS before
     FROM legal_provisions p
     JOIN legal_act_versions v ON v.id = p.version_id
-    WHERE v.act_id = ${input.id} AND v.lang = ${input.lang} AND v.in_force_to IS NULL
+    WHERE v.act_id = ${input.id} AND v.in_force_to IS NULL
       AND p.path = ${input.path}
-    ORDER BY v.in_force_from DESC
+    ORDER BY (v.lang = ${input.lang}) DESC, v.in_force_from DESC
     LIMIT 1
   `);
   const before = (rows.rows[0] as { before: number } | undefined)?.before;
@@ -104,8 +105,12 @@ export async function loadActContents(
   const rows = await db.execute(sql`
     SELECT p.path, p.heading
     FROM legal_provisions p
-    JOIN legal_act_versions v ON v.id = p.version_id
-    WHERE v.act_id = ${input.id} AND v.lang = ${input.lang} AND v.in_force_to IS NULL
+    WHERE p.version_id = (
+      SELECT v.id FROM legal_act_versions v
+      WHERE v.act_id = ${input.id} AND v.in_force_to IS NULL
+      ORDER BY (v.lang = ${input.lang}) DESC, v.in_force_from DESC
+      LIMIT 1
+    )
     ORDER BY p.ord
     LIMIT ${input.limit ?? 2000}
   `);

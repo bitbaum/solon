@@ -149,10 +149,11 @@ export async function readProvision(
     FROM legal_provisions p
     JOIN legal_act_versions v ON v.id = p.version_id
     JOIN sources s ON s.id = v.source_id
-    WHERE v.act_id = ${input.actId} AND v.lang = ${input.lang} AND p.path = ${input.path}
+    WHERE v.act_id = ${input.actId} AND p.path = ${input.path}
       AND v.in_force_from <= ${input.on}::date
       AND (v.in_force_to IS NULL OR v.in_force_to >= ${input.on}::date)
-    ORDER BY v.in_force_from DESC
+    -- The language asked for, else the one the act is held in.
+    ORDER BY (v.lang = ${input.lang}) DESC, v.in_force_from DESC
     LIMIT 1
   `);
   return (rows.rows[0] as unknown as ProvisionHit | undefined) ?? null;
