@@ -63,6 +63,8 @@ export interface LawAuthority {
   key: string;
   name: string;
   place: { scheme: string; value: string } | null;
+  /** The authority whose law also applies wherever this one's does: a commune's canton or country. */
+  within?: string;
 }
 
 export const LAW_AUTHORITIES: readonly LawAuthority[] = [
@@ -97,7 +99,49 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
   // whose collection a reader in src/lib/law/publishers covers.
-  { key: "bfs261", name: "Zürich (city)", place: { scheme: "bfs_municipality", value: "261" } },
+  {
+    key: "bfs261",
+    name: "Zürich (city)",
+    place: { scheme: "bfs_municipality", value: "261" },
+    within: "zh",
+  },
+  // Liechtenstein's communes: `li<number>`, the place the commune's number in the Liechtenstein register.
+  {
+    key: "li7001",
+    name: "Vaduz",
+    place: { scheme: "li_municipality", value: "7001" },
+    within: "li",
+  },
+  {
+    key: "li7005",
+    name: "Schaan",
+    place: { scheme: "li_municipality", value: "7005" },
+    within: "li",
+  },
+  {
+    key: "li7006",
+    name: "Planken",
+    place: { scheme: "li_municipality", value: "7006" },
+    within: "li",
+  },
+  {
+    key: "li7007",
+    name: "Eschen-Nendeln",
+    place: { scheme: "li_municipality", value: "7007" },
+    within: "li",
+  },
+  {
+    key: "li7009",
+    name: "Gamprin",
+    place: { scheme: "li_municipality", value: "7009" },
+    within: "li",
+  },
+  {
+    key: "li7010",
+    name: "Ruggell",
+    place: { scheme: "li_municipality", value: "7010" },
+    within: "li",
+  },
 ];
 
 /**

@@ -1,0 +1,72 @@
+import { describe, expect, it } from "vitest";
+import { actsOf, anchorsOf, versionOf } from "../linked-documents";
+
+const config = {
+  link: /\/download_file\/(?:view\/|force\/)?([0-9a-f-]{1,40})(?:[/?#]|$)/i,
+  include: /reglement|ordnung|tarif/i,
+  exclude: /antrag|formular/i,
+};
+
+describe("a commune's acts, as linked from its own pages", () => {
+  const html = `
+    <a href="https://www.schaan.li/download_file/force/33607/288"><svg><path d="M1"/></svg> Vereinsreglement </a>
+    <a href="/download_file/view/98" target="_blank">Kundmachungs&shy;reglement.pdf</a>
+    <a href="/download_file/view/98">Kundmachungsreglement (again)</a>
+    <a href="/download_file/view/172">Antrag Reglement Beiträge</a>
+    <a href="/download_file/view/97">Formular Anfrage Personendaten</a>
+    <a href="/gemeinde/kontakt">Kontakt</a>
+    <a href="/download_file/view/df9e8feb-1f9c-499e-a060-fb32a629f268">Tarifblatt zum Abwasserreglement (gültig ab 01.01.2027)</a>`;
+
+  it("titles each act by its link, once per document, and leaves forms out", () => {
+    const acts = actsOf(anchorsOf(html, "https://www.planken.li/service/"), config);
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([
+      ["33607", "Vereinsreglement"],
+      ["98", "Kundmachungsreglement"],
+      [
+        "df9e8feb-1f9c-499e-a060-fb32a629f268",
+        "Tarifblatt zum Abwasserreglement (gültig ab 01.01.2027)",
+      ],
+    ]);
+    expect(acts[1]!.pageUrl).toBe("https://www.planken.li/download_file/view/98");
+    expect(acts.every((a) => a.kind === "communal_act")).toBe(true);
+  });
+
+  it("dates a version by the title's 'gültig ab', else by the day it is read", () => {
+    expect(versionOf("Tarifordnung (gültig ab 01.01.2027)", "u", "2026-11-01")).toEqual({
+      inForceFrom: "2027-01-01",
+      inForceTo: null,
+      pageUrl: "u",
+    });
+    expect(versionOf("Tarifblatt (gültig bis 31.12.2026)", "u", "2026-11-01")).toEqual({
+      inForceFrom: "2026-11-01",
+      inForceTo: null,
+      pageUrl: "u",
+      dateBasis: "retrieved",
+    });
+  });
+});
+
+describe("a download button's words", () => {
+  it("are not part of the act's title", () => {
+    const [a] = anchorsOf(
+      '<a href="https://www.eschen.li/wp-content/uploads/2022/10/Abwasserreglement-2013.pdf"><span>Abwasserreglement</span> als PDF herunterladen</a>',
+      "https://www.eschen.li/",
+    );
+    expect(a!.text).toBe("Abwasserreglement");
+  });
+});
+
+describe("an act's address", () => {
+  it("drops the cache-buster a page adds on every visit", () => {
+    const acts = actsOf(
+      anchorsOf(
+        '<a href="https://www.ruggell.li/files/medienarchiv/029_Abfallreglement.pdf?t=639291088808965558">029 Abfallreglement</a>',
+        "https://www.ruggell.li/",
+      ),
+      { link: /\/files\/medienarchiv\/([^/?#]+\.pdf)/, include: /reglement/i, exclude: /antrag/i },
+    );
+    expect(acts[0]!.pageUrl).toBe(
+      "https://www.ruggell.li/files/medienarchiv/029_Abfallreglement.pdf",
+    );
+  });
+});

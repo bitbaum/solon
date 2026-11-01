@@ -32,5 +32,10 @@ export function authoritiesNamed(text: string): string[] {
   }
   // The city's own collection applies wherever Zürich is meant.
   if (found.has("zh")) found.add("bfs261");
+  // A commune's law sits within its canton's or country's: Vaduz is asked with Liechtenstein.
+  for (const key of [...found]) {
+    const within = LAW_AUTHORITIES.find((a) => a.key === key)?.within;
+    if (within && within !== "ch") found.add(within);
+  }
   return [...found];
 }
