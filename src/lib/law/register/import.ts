@@ -172,6 +172,17 @@ export async function importRegister(
             supersedeNames.push(existing.nameId);
             newNames.push(nameRow(existing.actId, row, sourceId));
           }
+          // A page the publisher moved, or one first read at a wrong address, follows the register.
+          const page = row.more?.find((m) => m.scheme === "official_url")?.value;
+          if (page && existing.officialUrl !== page) {
+            if (existing.officialUrlRowId) supersedeIdentifiers.push(existing.officialUrlRowId);
+            newIdentifiers.push({
+              actId: existing.actId,
+              scheme: "official_url",
+              value: page,
+              sourceId,
+            });
+          }
           if ((existing.number ?? null) !== (row.systematicNumber ?? null)) {
             if (existing.numberRowId) supersedeIdentifiers.push(existing.numberRowId);
             if (row.systematicNumber) {
@@ -298,6 +309,9 @@ interface KnownAct {
   nameId: string;
   number: string | undefined;
   numberRowId: string | undefined;
+  /** The act's current page at its publisher, so a changed address replaces it. */
+  officialUrl?: string;
+  officialUrlRowId?: string;
 }
 
 /** Every act the register has stated, by the register's own id. */
@@ -362,6 +376,23 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
     if (known) {
       known.number = number.value;
       known.numberRowId = number.id;
+    }
+  }
+  const pages = await db
+    .select({
+      id: legalActIdentifiers.id,
+      actId: legalActIdentifiers.actId,
+      value: legalActIdentifiers.value,
+    })
+    .from(legalActIdentifiers)
+    .where(
+      and(eq(legalActIdentifiers.scheme, "official_url"), isNull(legalActIdentifiers.supersededAt)),
+    );
+  for (const page of pages) {
+    const known = byAct.get(page.actId);
+    if (known) {
+      known.officialUrl = page.value;
+      known.officialUrlRowId = page.id;
     }
   }
   return byLexfind;
