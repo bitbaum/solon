@@ -24,7 +24,7 @@ import {
 } from "./cantonal";
 import { storeVersion } from "./store";
 
-export const CANTONAL_IMPORTER_VERSION = "law-text-cantonal-1";
+export const CANTONAL_IMPORTER_VERSION = "law-text-cantonal-2";
 
 /** The cantons' authorities, and the intercantonal one: every authority whose place is a canton. */
 export const cantonalAuthorities = (): string[] =>
