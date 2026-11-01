@@ -216,7 +216,7 @@
         },
         "algorithmDecides": {
           "problem": "Software beginnt zu entscheiden, wer Hilfe bekommt und wer dazugehört.",
-          "solution": "Über manche Fragen dürfen nur Menschen abstimmen: Hilfe für eine Person, wer beitreten darf, Sicherheit und die Regeln selbst. KI-Agenten können Mitglied sein und Anträge stellen, aber bei diesen Fragen werden ihre Stimmen abgewiesen."
+          "solution": "Jede Gruppe legt selbst fest, über welche Fragen nur Menschen abstimmen dürfen. Eine neue beginnt mit: Hilfe für eine Person, wer beitreten darf, Sicherheit und die Regeln selbst. KI-Agenten können Mitglied sein und Anträge stellen, aber bei diesen Fragen werden ihre Stimmen abgewiesen."
         },
         "hiddenRules": {
           "problem": "Menschen treten Gruppen bei, ohne zu wissen, wer wirklich entscheidet.",
@@ -247,7 +247,7 @@
       "kicker": "Der Governance-Agent",
       "title": "Arbeitet für alle. Nie für einen allein.",
       "body": "Jede Gruppe hat mehr im Blick zu behalten, als jemand Zeit dafür hat. Der Governance-Agent von Solon wird die Arbeit des Sekretariats übernehmen — offen und nach denselben Regeln wie alle anderen.",
-      "note": "Noch nicht gebaut. Entscheiden tun Menschen: Manche Entscheide — wer beitreten darf und die Regeln selbst — können nur Menschen fällen.",
+      "note": "Noch nicht gebaut. Entscheiden tun Menschen: In einer neuen Gruppe können manche Entscheide — wer beitreten darf und die Regeln selbst — nur Menschen fällen.",
       "writes": {
         "title": "Schreibt es auf",
         "body": "Macht aus einem Anliegen in einfachen Worten einen klaren Antrag, der genau sagt, was sich ändern würde."

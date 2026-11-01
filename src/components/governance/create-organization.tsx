@@ -237,8 +237,8 @@ export default function CreateOrganization({
           ))}
         </select>
         {/* The one line a non-lawyer can act on, from the same registry the
-            votes will be counted by. Changing it later is a humans-only
-            supermajority vote, so it is said here, before signing. */}
+            votes will be counted by. Changing it later is a governance-rules
+            vote (humans-only by default), so it is said here, before signing. */}
         <p className="mt-1.5 text-xs text-fg-tertiary">
           {GOVERNANCE_PROFILES[profile].suitedTo} Changing this later takes a governance-rules vote.
         </p>

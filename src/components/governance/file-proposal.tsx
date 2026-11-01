@@ -7,6 +7,7 @@ import { canonicalJson, sha256Hex } from "@/lib/domain/canonical";
 import { ALL_METHODS, methodSpec } from "@/lib/domain/methods";
 import { optionsSchema } from "@/lib/domain/methods/types";
 import { CATEGORY_LABEL } from "@/lib/config/governance";
+import type { DecisionCategory } from "@/lib/db/enums";
 import {
   DEFAULT_CATEGORY,
   FILEABLE_CATEGORIES,
@@ -25,21 +26,26 @@ interface Verdict {
 
 // Which categories can be filed here, and what each one commits the proposer
 // to, both come from the rules themselves (lib/domain/proposal-draft reads
-// lib/config/governance). This file used to carry its own copy of the hints —
-// "Humans only, supermajority" — which is a sentence that must never drift from
-// the table it describes, because a member reads it right before signing.
-const CATEGORIES = FILEABLE_CATEGORIES.map((value) => ({
-  value,
-  label: CATEGORY_LABEL[value],
-  hint: categoryConsequence(value),
-}));
+// lib/config/governance and the organization's own humans-only list). This file
+// used to carry its own copy of the hints — "Humans only, supermajority" — which
+// is a sentence that must never drift from the rule it describes, because a
+// member reads it right before signing.
+const categoriesFor = (humansOnlyCategories: readonly DecisionCategory[]) =>
+  FILEABLE_CATEGORIES.map((value) => ({
+    value,
+    label: CATEGORY_LABEL[value],
+    hint: categoryConsequence(value, humansOnlyCategories),
+  }));
 
 export default function FileProposal({
   orgSlug,
+  humansOnlyCategories,
   memberAddress,
   initial = null,
 }: {
   orgSlug: string;
+  /** The organization's own list of categories only people vote on. */
+  humansOnlyCategories: readonly DecisionCategory[];
   /** The member's Bitcoin address, when they have one to sign with. */
   memberAddress: string | null;
   /** Pre-filled from a link (OrangeCat, a ratification link). Everything stays editable. */
@@ -53,6 +59,7 @@ export default function FileProposal({
   const [signature, setSignature] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
+  const categories = useMemo(() => categoriesFor(humansOnlyCategories), [humansOnlyCategories]);
 
   // The answer space, parsed from one line per option. Kept as text in the UI
   // and validated by the same schema the server uses, so the proposer sees the
@@ -121,7 +128,7 @@ export default function FileProposal({
     }
   }
 
-  const active = CATEGORIES.find((c) => c.value === category);
+  const active = categories.find((c) => c.value === category);
 
   if (verdict?.created) {
     return (
@@ -171,7 +178,7 @@ export default function FileProposal({
           onChange={(e) => setCategory(e.target.value)}
           className="field mt-2"
         >
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <option key={c.value} value={c.value}>
               {c.label}
             </option>

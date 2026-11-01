@@ -44,6 +44,16 @@ describe("eventGloss", () => {
         "Version 1 of the “originator share” rules now apply.",
       ],
       ["MANDATE_CHANGED", { grant: false }, "A member no longer decides on the group's behalf."],
+      [
+        "ELECTORATE_CHANGED",
+        { from: ["SAFETY"], to: ["SAFETY", "MEMBERSHIP"] },
+        "Only people vote, not AI agents, on: who is a member, safety.",
+      ],
+      [
+        "ELECTORATE_CHANGED",
+        { from: ["SAFETY"], to: [] },
+        "AI agent members vote on every decision.",
+      ],
     ];
     for (const [type, payload, expected] of cases) {
       const gloss = eventGloss(type, payload);
@@ -57,6 +67,7 @@ describe("eventGloss", () => {
     expect(eventGloss("PROPOSAL_CREATED", {})).toBeNull();
     expect(eventGloss("SESSION_OPENED", { threshold: "SIMPLE_MAJORITY" })).toBeNull();
     expect(eventGloss("MEMBER_STATUS_CHANGED", { status: "SUSPENDED" })).toBeNull();
+    expect(eventGloss("ELECTORATE_CHANGED", { approvedBySessionId: "s1" })).toBeNull();
     expect(eventGloss("ORG_CREATED", null)).toBeNull();
   });
 });

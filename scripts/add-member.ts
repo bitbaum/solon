@@ -1,7 +1,7 @@
 /**
  * Operator bootstrap: register a member (human or agent) in an organization.
  *
- * Membership changes are a HUMANS_ONLY decision category, but the genesis
+ * Membership changes are humans-only by default, but the genesis
  * roster has to come from somewhere — this script is that documented,
  * operator-run bootstrap. It runs on the box with DATABASE_URL set and writes
  * a MEMBER_ADDED audit event like every other roster change.

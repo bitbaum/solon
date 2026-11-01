@@ -17,7 +17,7 @@ import {
   type DecisionCategory,
   type SessionOutcome,
 } from "@/lib/db/enums";
-import { proposalStanding } from "./plain-words";
+import { agentSuffrage, proposalStanding } from "./plain-words";
 
 export const EVENT_LABEL: Record<AuditEventType, string> = {
   ORG_CREATED: "Organization created",
@@ -30,6 +30,7 @@ export const EVENT_LABEL: Record<AuditEventType, string> = {
   POLICY_ACTIVATED: "New rules took effect",
   MANDATE_CHANGED: "Someone was given or lost a role",
   PROFILE_CHANGED: "How decisions are made changed",
+  ELECTORATE_CHANGED: "Who may vote changed",
 };
 
 type Payload = Record<string, unknown>;
@@ -104,6 +105,9 @@ export function eventGloss(type: AuditEventType, payload: unknown): string | nul
     case "PROFILE_CHANGED": {
       const to = text(p, "to");
       return to ? `From now on: ${profileFor(to).label.toLowerCase()}.` : null;
+    }
+    case "ELECTORATE_CHANGED": {
+      return Array.isArray(p.to) ? agentSuffrage(p.to.filter(isCategory)) : null;
     }
     case "MEMBER_STATUS_CHANGED":
       return null;

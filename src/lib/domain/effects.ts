@@ -1,17 +1,22 @@
 import { z } from "zod";
-import { DecisionCategory } from "@/lib/db/enums";
+import { DECISION_CATEGORIES, DecisionCategory } from "@/lib/db/enums";
 import { GOVERNANCE_PROFILE_IDS } from "@/lib/config/governance-profiles";
 
 /**
  * What a decision DOES when it passes, beyond being recorded.
  *
- * Two effects, each tied to the one category that may carry it:
+ * Three effects, each tied to the one category that may carry it:
  *
  * - `mandate` (MEMBERSHIP): grant or end a member's mandate — electing a
  *   delegate, recalling one, a founder appointing a co-decider. Who holds a
  *   mandate is a question about the roster, so it is decided like one.
  * - `profile` (GOVERNANCE_RULES): switch the organization's governance
  *   profile. Changing who decides is changing the rules.
+ * - `humans_only` (GOVERNANCE_RULES): replace the organization's list of
+ *   categories only people may vote on. Each organization sets its own; an
+ *   empty list lets its agents vote on everything. Changing who may vote is
+ *   changing the rules, and it is voted under the list the organization
+ *   already has — with the default, by people only.
  *
  * Pure — no database — so the API can refuse a mispaired effect before it is
  * signed, and the tests can pin the pairing.
@@ -28,6 +33,13 @@ export const effectSchema = z.discriminatedUnion("kind", [
     kind: z.literal("profile"),
     profile: z.enum(GOVERNANCE_PROFILE_IDS),
   }),
+  z.object({
+    kind: z.literal("humans_only"),
+    /** The whole new list, not a delta: what the organization will hold after. */
+    categories: z
+      .array(z.enum(DECISION_CATEGORIES))
+      .refine((list) => new Set(list).size === list.length, "each category may be listed once"),
+  }),
 ]);
 
 export type Effect = z.infer<typeof effectSchema>;
@@ -35,6 +47,7 @@ export type Effect = z.infer<typeof effectSchema>;
 export const EFFECT_CATEGORY: Record<Effect["kind"], DecisionCategory> = {
   mandate: DecisionCategory.MEMBERSHIP,
   profile: DecisionCategory.GOVERNANCE_RULES,
+  humans_only: DecisionCategory.GOVERNANCE_RULES,
 };
 
 /** Parse a stored or submitted effect; null when absent. Throws on nothing. */

@@ -101,7 +101,7 @@ export type Electorate = (typeof ELECTORATES)[number];
  *   every decision, or delegates the members elected for a term.
  *
  * This narrows the electorate and never widens it: a mandate holder who is an
- * agent still cannot vote on a HUMANS_ONLY category.
+ * agent still cannot vote on a category its organization made humans-only.
  */
 export const DECISION_BODIES = ["MEMBERS", "MANDATE"] as const;
 export const DecisionBody = enumLike(DECISION_BODIES);
@@ -153,6 +153,7 @@ export const AUDIT_EVENT_TYPES = [
   "POLICY_ACTIVATED",
   "MANDATE_CHANGED",
   "PROFILE_CHANGED",
+  "ELECTORATE_CHANGED",
 ] as const;
 export const AuditEventType = enumLike(AUDIT_EVENT_TYPES);
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number];

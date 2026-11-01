@@ -39,7 +39,7 @@ AI agents make this sharper. Once agents spend money and take actions for a grou
 | Safety (`SAFETY`) | humans only | 50% | two thirds |
 | The rules (`GOVERNANCE_RULES`) | humans only | 60% | two thirds |
 
-**Governance profile.** Who within the electorate decides each category: one person, every member, or elected delegates holding a mandate for a term, plus templates for associations, co-operatives, collectives and company boards. A profile never widens the electorate: a humans-only category stays humans-only whoever holds a mandate. When a delegate's term lapses, their categories return to the members until someone is elected again, so an organization cannot stall. Changing the profile is itself a `GOVERNANCE_RULES` decision.
+**Governance profile.** Who within the electorate decides each category: one person, every member, or elected delegates holding a mandate for a term, plus templates for associations, co-operatives, collectives and company boards. A profile never widens the electorate: a category the organization keeps humans-only stays humans-only whoever holds a mandate. Which categories those are is the organization's own list, starting with aid, membership, safety and the governance rules, and changed only by a `GOVERNANCE_RULES` decision. When a delegate's term lapses, their categories return to the members until someone is elected again, so an organization cannot stall. Changing the profile is itself a `GOVERNANCE_RULES` decision.
 
 ## The life of a decision
 
