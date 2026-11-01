@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.12",
-    "@bitbaum/accountkit": "^0.18.1",
+    "@bitbaum/accountkit": "^0.19.0",
     "@bitbaum/ai-kit": "^1.22.0",
     "@bitbaum/chatkit": "^0.22.0",
     "@bitbaum/geo-kit": "^0.3.0",
