@@ -93,3 +93,72 @@ describe("fetchDocument", () => {
     expect(await fetchDocument("1", "de", reply({ body: "gone", status: 404 }))).toBeNull();
   });
 });
+
+describe("parseCantonalProvisions on what the cantons' PDFs do (measured 2026-11-01)", () => {
+  const paths = (text: string) => parseCantonalProvisions(text).map((p) => p.path);
+
+  it("reads a paragraph number glued to the text (Neuchâtel, Ticino)", () => {
+    const ne = [
+      "Art. 1 1Le présent règlement règle l'exécution de la loi.",
+      "Art. 2 1Le présent arrêté entre en vigueur avec effet immédiat.",
+      "2Il sera publié dans la Feuille officielle.",
+    ].join("\n");
+    expect(paths(ne)).toEqual(["art_1", "art_2"]);
+  });
+
+  it("reads an article whose number has a footnote glued to it, by the act's order", () => {
+    const ti = [
+      "Scopo",
+      "Art. 13 La presente legge disciplina l’applicazione delle norme federali.",
+      "Provvedimento sostitutivo",
+      "Art. 2 1Può essere ordinato un provvedimento sostitutivo.",
+      "Art. 3 Esecuzione.",
+    ].join("\n");
+    const out = parseCantonalProvisions(ti);
+    expect(out.map((p) => p.path)).toEqual(["art_1", "art_2", "art_3"]);
+    expect(out[0]!.heading).toBe("Art. 1 Scopo");
+    const ne =
+      "Art. 1 Objet.\nArt. 23) Le service informatique est l'exploitant.\nArt. 3 1La commission est nommée.";
+    expect(paths(ne)).toEqual(["art_1", "art_2", "art_3"]);
+  });
+
+  it("keeps a real two-digit article when the act has reached it", () => {
+    const text = Array.from({ length: 14 }, (_, i) => `Art. ${i + 1} Text ${i + 1}.`).join("\n");
+    expect(paths(text).slice(-3)).toEqual(["art_12", "art_13", "art_14"]);
+  });
+
+  it("reads a § followed by a numbered title (Schwyz) and a starred article (St. Gallen)", () => {
+    const sz =
+      "I. Allgemeine Bestimmungen\n§ 1 1. Gegenstand\nDieses Gesetz regelt die Finanzen.\n§ 2 2. Geltungsbereich\n1 Dieses Gesetz gilt für die Gemeinden.\n§ 3 3 3. Begriffe\nText.";
+    expect(paths(sz)).toEqual(["par_1", "par_2", "par_3"]);
+    const sg =
+      "Art. 1* Arbeitsverhältnis\n1 In ein unbefristetes Arbeitsverhältnis tritt, wer die Voraussetzungen von Art. 49 des Gesetzes erfüllt.\nArt. 2 Lohn\nText.";
+    expect(paths(sg)).toEqual(["art_1", "art_2"]);
+  });
+
+  it("reads French and Italian signs and capitals", () => {
+    expect(paths("Article 1 Écoles.\nArticle 2 À Genève.\nArticolo 3 Entrata in vigore.")).toEqual([
+      "art_1",
+      "art_2",
+      "art_3",
+    ]);
+  });
+
+  it("still passes over a reference, and keeps bis articles", () => {
+    expect(
+      paths(
+        "Art. 1 Gestützt auf Art. 5 des Gesetzes und Art. 7 Abs. 2.\nArt. 2 Text.\nArt. 2bis Mehr.\nArt. 3 Ende.",
+      ),
+    ).toEqual(["art_1", "art_2", "art_2bis", "art_3"]);
+  });
+});
+
+describe("the first article by its name", () => {
+  it("reads 'Article premier', with a note glued to it, as article 1 (Neuchâtel, Geneva, Vaud, Jura)", () => {
+    const ne =
+      "arrête:\nArticle premier2) Le département est compétent.\nArt. 23) Le service informatique est l'exploitant.\nArt. 3 1La commission est nommée.";
+    const out = parseCantonalProvisions(ne);
+    expect(out.map((p) => p.path)).toEqual(["art_1", "art_2", "art_3"]);
+    expect(out[0]!.text).toBe("Le département est compétent.");
+  });
+});

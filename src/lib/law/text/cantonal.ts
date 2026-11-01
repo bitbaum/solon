@@ -70,9 +70,24 @@ export function cleanPdfText(raw: string): string {
  * into the line before it, or glue the heading to its first word ("Art. 4Der"),
  * so neither the start of a line nor a space is required. A reference
  * ("Art. 5 Abs. 2", "nach Art. 5 des Gesetzes") is not one of these.
+ *
+ * What the cantons' PDFs also do, measured on the acts held whole (2026-11-01):
+ * glue the paragraph number to the text ("Art. 2 1La présente loi", Neuchâtel,
+ * Ticino), glue a footnote number to the article's ("Art. 13" for article 1,
+ * note 3; "Art. 23)"), number the title after the § ("§ 1 1. Gegenstand",
+ * Schwyz), mark an amended article with a star ("Art. 1* Arbeitsverhältnis",
+ * St. Gallen), and begin with any capital, not only a German one ("Article",
+ * "Articolo", É, À).
  */
 const CANDIDATE =
-  /(?<!\d)(Art\.|Artikel|§)\s*(\d+)\s*(bis|ter|quater|quinquies|sexies|septies|octies|novies|decies|[a-z]?)(?![\p{L}\d])\.?(?:\s+|(?=[A-ZÄÖÜ]))(?=(?:\d{1,2}\s+)?[A-ZÄÖÜ])(?!Abs\.|al\.|lit\.|let\.|cpv\.|Ziff\.|ch\.)/gu;
+  /(?<!\d)(Art\.|Artikel|Article|Articolo|§)\s*(\d+)(?:\s*(bis|ter|quater|quinquies|sexies|septies|octies|novies|decies)|([a-z]?))(?![\p{L}\d])(?:\s*\d{0,3}\))?\*?\.?(?:\s+|(?=\p{Lu}))(?=(?:\d{1,3}\s*)?(?:\d{1,2}\.\s+)?(?:\d{1,2}\s*)?(?:[a-z]\)\s+)?[\p{Lu}«"(…])(?!Abs\.|Absatz|al\.|alinéa|lit\.|let\.|cpv\.|capoverso|Ziff\.|ch\.)/gu;
+
+/**
+ * How many article numbers ahead the next heading may be. Repealed articles
+ * are often printed as one line ("Art. 91-94 …", Ticino's tax law), so the next
+ * one met can be several numbers on; further than this, a number is a reference.
+ */
+const LOOK_AHEAD = 10;
 
 /** Order of articles: 5 < 5a < 5b < 6. */
 const rank = (n: number, letters: string): number =>
@@ -85,6 +100,8 @@ interface Heading {
   /** Where the heading starts and where its text begins. */
   at: number;
   textAt: number;
+  /** Read as a shorter number than printed ("Art. 13" as article 1, note 3). */
+  split?: boolean;
 }
 
 /**
@@ -93,20 +110,39 @@ interface Heading {
  * a reference to a later article met first is passed over.
  */
 function pickHeadings(text: string): Heading[] {
-  const candidates = [...text.matchAll(CANDIDATE)].map((m): Heading => ({
-    sign: m[1]!.toLowerCase().startsWith("art") ? "art" : "par",
-    label: `${m[1]} ${m[2]}${m[3]}`,
-    rank: rank(Number(m[2]), m[3]!.toLowerCase()),
-    at: m.index!,
-    textAt: m.index! + m[0].length,
-  }));
+  const candidates = [...text.matchAll(CANDIDATE)].flatMap((m): Heading[] => {
+    const sign = m[1]!.toLowerCase().startsWith("art") ? "art" : "par";
+    const letters = (m[3] ?? m[4] ?? "").toLowerCase();
+    const digits = m[2]!;
+    const at = m.index!;
+    const textAt = m.index! + m[0].length;
+    const heading = (n: string, split = false): Heading => ({
+      sign,
+      label: `${m[1]} ${n}${m[3] ? ` ${m[3]}` : (m[4] ?? "")}`,
+      rank: rank(Number(n), letters),
+      at,
+      textAt,
+      split,
+    });
+    // "Art. 13" may be article 1 with note 3: each shorter number is a candidate too,
+    // but only as the very next article (see pickHeadings).
+    const shorter = letters
+      ? []
+      : [1, 2, 3]
+          .map((cut) => digits.slice(0, -cut))
+          .filter((n) => n.length > 0 && !n.startsWith("0"));
+    return [heading(digits), ...shorter.map((n) => heading(n, true))];
+  });
   const picked: Heading[] = [];
   let lastRank = 0;
   let from = 0;
   for (;;) {
     const window = candidates.filter(
       (c) =>
-        c.at >= from && c.rank > lastRank && c.rank <= Math.floor(lastRank / 1000) * 1000 + 4000,
+        c.at >= from &&
+        c.rank > lastRank &&
+        c.rank <= Math.floor(lastRank / 1000) * 1000 + LOOK_AHEAD * 1000 &&
+        (!c.split || Math.floor(c.rank / 1000) === Math.floor(lastRank / 1000) + 1),
     );
     if (window.length === 0) break;
     const best = window.reduce((a, b) =>
@@ -128,7 +164,13 @@ const isMarginNote = (line: string): boolean =>
  * note that titles it when the PDF puts one before the heading; the whole text
  * when there are no headings.
  */
-export function parseCantonalProvisions(text: string, title = ""): Provision[] {
+export function parseCantonalProvisions(raw: string, title = ""): Provision[] {
+  // "Article premier", "Art. 1er", "Articolo primo": article 1, with any note glued on ("premier2)").
+  // Only the heading changes; the text of every article is the document's.
+  const text = raw.replace(
+    /(Article|Articolo|Art\.)\s*(?:premier|première|1er|primo)(?=[\d\s)])/g,
+    "$1 1 ",
+  );
   const headings = pickHeadings(text);
   if (headings.length === 0) {
     return text.trim() ? [{ path: WHOLE_ACT, heading: title, text: text.trim() }] : [];
@@ -143,7 +185,10 @@ export function parseCantonalProvisions(text: string, title = ""): Provision[] {
     const prevStart = text.lastIndexOf("\n", lineStart - 2) + 1;
     const prev = text.slice(prevStart, lineStart - 1).trim();
     const floor = i === 0 ? 0 : headings[i - 1]!.textAt;
-    return prevStart > floor && isMarginNote(prev)
+    // The first heading may take its note from the text's first line.
+    return lineStart > 0 &&
+      (prevStart > floor || (i === 0 && prevStart === 0)) &&
+      isMarginNote(prev)
       ? { end: prevStart, note: prev }
       : { end: Math.max(lineStart, floor), note: "" };
   });
