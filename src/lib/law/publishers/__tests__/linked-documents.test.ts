@@ -94,3 +94,15 @@ describe("a link whose words are only a button's", () => {
     ]);
   });
 });
+
+describe("a page that declares its own base", () => {
+  it("resolves relative links against it, not the page's address", () => {
+    const [a] = anchorsOf(
+      '<html><head><base href="/"></head><body><a href="files/attachments/reglement-gemeindepolizei.pdf">Reglement Gemeindepolizei</a></body></html>',
+      "https://www.schellenberg.li/service",
+    );
+    expect(a!.href).toBe(
+      "https://www.schellenberg.li/files/attachments/reglement-gemeindepolizei.pdf",
+    );
+  });
+});
