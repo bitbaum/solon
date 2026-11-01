@@ -22,6 +22,7 @@ import {
   fetchDocument,
   parseCantonalProvisions,
 } from "./cantonal";
+import { provisionsOfPdf } from "./pdf-provisions";
 import { storeVersion } from "./store";
 
 export const CANTONAL_IMPORTER_VERSION = "law-text-cantonal-2";
@@ -149,8 +150,18 @@ export async function importCantonalText(
       if (!document) {
         report.failures.push({ id: row.registerId, reason: "no document" });
       } else {
-        const text = cleanPdfText(await documentText(document.bytes, document.kind));
-        const provisions = parseCantonalProvisions(text);
+        // A scan has no text layer: read it by OCR, in any of the three languages (the file's own is not known).
+        const { provisions, scanned } =
+          document.kind === "pdf"
+            ? await provisionsOfPdf(document.bytes, "de+fr+it", () =>
+                say(`${row.authority} ${row.registerId}: no text layer, reading by OCR`),
+              )
+            : {
+                provisions: parseCantonalProvisions(
+                  cleanPdfText(await documentText(document.bytes, document.kind)),
+                ),
+                scanned: false,
+              };
         if (provisions.length === 0) {
           report.failures.push({ id: row.registerId, reason: "no text in the document" });
         } else {
@@ -170,7 +181,9 @@ export async function importCantonalText(
               source: {
                 key: CANTONAL_DOCUMENTS.key,
                 licenceSpdx: CANTONAL_DOCUMENTS.licenceSpdx,
-                importerVersion: CANTONAL_IMPORTER_VERSION,
+                importerVersion: scanned
+                  ? `${CANTONAL_IMPORTER_VERSION}+ocr`
+                  : CANTONAL_IMPORTER_VERSION,
               },
             },
             dryRun,

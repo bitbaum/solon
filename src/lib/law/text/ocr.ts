@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { getDocumentProxy, renderPageAsImage } from "unpdf";
 
-/** Tesseract's names for the languages acts are published in. */
+/** Tesseract's names for the languages acts are published in; "de+fr+it" reads a page in any of them. */
 const TESSERACT_LANG: Record<string, string> = { de: "deu", fr: "fra", it: "ita", en: "eng" };
 
 /** Pages are drawn at about 216 dpi (PDF units are 1/72 in), enough for type set at 9 pt. */
@@ -24,7 +24,8 @@ export async function ocrPdfText(
   const { createWorker } = await import("tesseract.js");
   const pdf = await getDocumentProxy(new Uint8Array(bytes));
   const pages = Math.min(pdf.numPages, options.maxPages ?? 200);
-  const worker = await createWorker(TESSERACT_LANG[lang] ?? "deu", 1, {
+  const named = lang.split("+").map((l) => TESSERACT_LANG[l] ?? "deu");
+  const worker = await createWorker(named.join("+"), 1, {
     // The language data is fetched once and kept; the default is the working directory.
     cachePath: options.cachePath ?? join(tmpdir(), "solon-tesseract"),
   });
