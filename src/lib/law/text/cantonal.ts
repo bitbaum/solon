@@ -192,6 +192,14 @@ export function parseCantonalProvisions(raw: string, title = ""): Provision[] {
       ? { end: prevStart, note: prev }
       : { end: Math.max(lineStart, floor), note: "" };
   });
+  // An act begins at its first article. When the first heading found is a later one
+  // ("3. Art. 3" after sections numbered "1." and "2."), what comes before it is law
+  // the cutter did not recognise: it is kept as one provision, never dropped.
+  const firstNumber = /\d+/.exec(headings[0]!.label)?.[0];
+  const before = text.slice(0, ends[0]!.end).trim();
+  if (firstNumber && firstNumber !== "1" && before.length > 200) {
+    out.push({ path: "before_first", heading: title, text: before });
+  }
   headings.forEach((heading, i) => {
     const path = `${heading.sign}_${heading.label
       .replace(/^\S+\s*/, "")
