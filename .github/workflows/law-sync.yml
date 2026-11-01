@@ -1,9 +1,12 @@
 name: Law sync
 
-# Every day, Solon reads the law again so that what it holds is what is in
+# Run by hand only, when the owner asks for it: nothing here starts on a clock.
+# (It calls no model; it uses the box and the publishers' servers.)
+#
+# Solon reads the law again so that what it holds is what is in
 # force (design: law-as-data, "Staying current"): the registers (new and
 # repealed acts), each publisher's new versions (Fedlex, Lilex, the cantons,
-# ZH-Lex, the communes, Legilux), and the documents it holds read again, oldest
+# ZH-Lex, the communes), and the documents it holds read again, oldest
 # first, so a text a publisher changed becomes a new version. What changed is
 # served at /api/v1/law/changes and by the MCP tool law_changes.
 #
@@ -11,8 +14,6 @@ name: Law sync
 # Runs on the box from a fresh checkout of main with the box's own DATABASE_URL.
 
 on:
-  schedule:
-    - cron: "23 1 * * *"
   workflow_dispatch: {}
 
 concurrency:
@@ -65,7 +66,6 @@ jobs:
           step "cantons (new acts)"     $PNPM run law:text cantons --limit 2000
           step "zhlex"                  $PNPM run law:text zhlex --limit 500
           step "communes"               $PNPM run law:text municipal --publisher all --limit 500
-          step "legilux"                $PNPM run law:text legilux --limit 2000
           step "refresh held documents" $PNPM run law:text refresh --limit 3000
           step "recut"                  $PNPM run law:text recut --limit 50000
           echo "failed steps:${failed:- none}"
