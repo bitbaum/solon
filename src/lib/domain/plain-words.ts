@@ -6,13 +6,15 @@
  * names from CATEGORY_LABEL in config/governance), so the vocabulary is one
  * list and changes in one place.
  */
-import { SUPERMAJORITY_FRACTION } from "@/lib/config/governance";
-import type {
-  Electorate,
-  ProposalStatus,
-  SessionOutcome,
-  SessionStatus,
-  VoteThreshold,
+import { CATEGORY_LABEL, SUPERMAJORITY_FRACTION } from "@/lib/config/governance";
+import {
+  DECISION_CATEGORIES,
+  type DecisionCategory,
+  type Electorate,
+  type ProposalStatus,
+  type SessionOutcome,
+  type SessionStatus,
+  type VoteThreshold,
 } from "@/lib/db/enums";
 
 /** Where a proposal stands, from its status and, once voted on, how it ended. */
@@ -45,6 +47,18 @@ export function votingRules(rules: {
       ? `${fraction(SUPERMAJORITY_FRACTION)} must agree`
       : "more than half must agree";
   return `${who}; ${turnout}, and ${agree}.`;
+}
+
+/**
+ * Where an organization's AI agents vote, from its own humans-only list — said
+ * on the organization's page, beside who decides, because a prospective member
+ * (person or agent) needs it before joining.
+ */
+export function agentSuffrage(humansOnlyCategories: readonly DecisionCategory[]): string {
+  const closed = DECISION_CATEGORIES.filter((c) => humansOnlyCategories.includes(c));
+  if (closed.length === 0) return "AI agent members vote on every decision.";
+  const list = closed.map((c) => CATEGORY_LABEL[c].toLowerCase()).join(", ");
+  return `Only people vote, not AI agents, on: ${list}.`;
 }
 
 /** An amount held, in bitcoin rather than satoshis: "0.0012 bitcoin", "0 bitcoin". */

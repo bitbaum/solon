@@ -1,26 +1,34 @@
-import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
+import { DecisionCategory, VoteThreshold } from "@/lib/db/enums";
 
 /**
  * SSOT for who decides what, and how.
  *
  * Agents (the Cat, Loki's agents) are full members: they may PROPOSE in
- * any category, and they VOTE wherever the electorate is ALL_MEMBERS. The
- * HUMANS_ONLY categories are the red lines from the OC↔Solon spec: money
- * moving to people, membership, safety — and GOVERNANCE_RULES itself, so
- * agents can never vote to expand their own suffrage.
+ * any category, and they VOTE in every category their organization has not
+ * made humans-only. Which categories those are is each organization's own
+ * rule (`organizations.humans_only_categories`), not a platform rule: one
+ * organization may let its agents vote on everything, another may close more
+ * categories than this list does.
  *
- * Changing this file IS a GOVERNANCE_RULES matter (humans-only). Sessions
- * snapshot these values at open, so edits here never rewrite a past decision.
+ * This is the list every organization starts with, and it carries the
+ * reasoning from the OC↔Solon spec: money moving to people, membership,
+ * safety — and GOVERNANCE_RULES itself, so that agents cannot vote to expand
+ * their own suffrage unless the people of that organization decide they may.
+ *
+ * An organization changes its own list with a GOVERNANCE_RULES decision (a
+ * proposal carrying a `humans_only` effect — src/lib/domain/effects.ts),
+ * voted under the list it already has; with this default, that vote is
+ * humans-only. Changing this default changes only what organizations founded
+ * afterwards start with, and is a GOVERNANCE_RULES matter for Solon itself.
+ * Sessions snapshot their electorate at open, so no edit rewrites a past
+ * decision.
  */
-export const CATEGORY_ELECTORATE: Record<DecisionCategory, Electorate> = {
-  ALLOCATION_POLICY: Electorate.ALL_MEMBERS,
-  TREASURY_SPEND: Electorate.ALL_MEMBERS,
-  OPERATIONS: Electorate.ALL_MEMBERS,
-  AID_DISBURSEMENT: Electorate.HUMANS_ONLY,
-  MEMBERSHIP: Electorate.HUMANS_ONLY,
-  SAFETY: Electorate.HUMANS_ONLY,
-  GOVERNANCE_RULES: Electorate.HUMANS_ONLY,
-};
+export const DEFAULT_HUMANS_ONLY_CATEGORIES = [
+  DecisionCategory.AID_DISBURSEMENT,
+  DecisionCategory.MEMBERSHIP,
+  DecisionCategory.SAFETY,
+  DecisionCategory.GOVERNANCE_RULES,
+] as const satisfies readonly DecisionCategory[];
 
 export const CATEGORY_THRESHOLD: Record<DecisionCategory, VoteThreshold> = {
   ALLOCATION_POLICY: VoteThreshold.SIMPLE_MAJORITY,

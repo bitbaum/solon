@@ -41,10 +41,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { randomUUID } from "node:crypto";
 import { COLLECTIVE_KINDS } from "@/lib/collective-kinds";
+import { DEFAULT_HUMANS_ONLY_CATEGORIES } from "@/lib/config/governance";
 import {
   AUDIT_EVENT_TYPES,
   DECISION_BODIES,
   DECISION_CATEGORIES,
+  type DecisionCategory,
   DEFAULT_GOVERNANCE_PROFILE,
   GOVERNANCE_PROFILE_IDS,
   ELECTORATES,
@@ -103,6 +105,20 @@ export const organizations = pgTable(
       .$type<GovernanceProfileId>()
       .notNull()
       .default(DEFAULT_GOVERNANCE_PROFILE),
+    /**
+     * The categories only HUMAN members may vote on in this organization —
+     * its own rule, not the platform's. Starts as the default list in
+     * src/lib/config/governance.ts, so every organization decides exactly as
+     * before until it votes otherwise. Changing it is a GOVERNANCE_RULES
+     * decision (a `humans_only` effect); sessions snapshot the electorate at
+     * open, so a change never reaches back into a past vote. May be empty: an
+     * organization may let its agents vote on everything.
+     */
+    humansOnlyCategories: text("humans_only_categories")
+      .array()
+      .$type<DecisionCategory[]>()
+      .notNull()
+      .default([...DEFAULT_HUMANS_ONLY_CATEGORIES]),
     /**
      * The Loki project this organization governs, when Loki vouched for it.
      *
@@ -177,6 +193,14 @@ export const organizations = pgTable(
       sql`${t.governanceProfile} IN (${sql.raw(
         GOVERNANCE_PROFILE_IDS.map((id) => `'${id}'`).join(", "),
       )})`,
+    ),
+    // Text, not the DecisionCategory pg enum, for the same reason as the
+    // profile; the check keeps it to categories that exist. Same sql.raw rule.
+    check(
+      "organizations_humans_only_categories_check",
+      sql`${t.humansOnlyCategories} <@ ARRAY[${sql.raw(
+        DECISION_CATEGORIES.map((c) => `'${c}'`).join(", "),
+      )}]::text[]`,
     ),
   ],
 );

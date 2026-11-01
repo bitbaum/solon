@@ -16,12 +16,8 @@
  */
 
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
-import {
-  CATEGORY_ELECTORATE,
-  CATEGORY_MEANING,
-  CATEGORY_THRESHOLD,
-  VOTING_WINDOW_DAYS,
-} from "@/lib/config/governance";
+import { CATEGORY_MEANING, CATEGORY_THRESHOLD, VOTING_WINDOW_DAYS } from "@/lib/config/governance";
+import { electorateFor } from "@/lib/config/governance-profiles";
 import { DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
 
 export type Query = Record<string, string | string[] | undefined>;
@@ -50,7 +46,7 @@ export type FileableCategory = (typeof FILEABLE_CATEGORIES)[number];
 /**
  * The cheapest category to decide — all members, simple majority — and so the
  * right default for a proposal whose category nobody has stated yet. Filing in
- * a humans-only category by accident wastes a week; filing in OPERATIONS by
+ * a category the organization keeps for people by accident wastes a week; filing in OPERATIONS by
  * accident wastes a click on the selector.
  */
 export const DEFAULT_CATEGORY: FileableCategory = DecisionCategory.OPERATIONS;
@@ -64,10 +60,17 @@ export function isFileableCategory(value: string): value is FileableCategory {
  * same table the vote spine snapshots at open. The form used to carry its own
  * copy of these facts ("Humans only, supermajority") — the sentence a person
  * reads before signing must be the rule that binds them, not a paraphrase of it.
+ * Who may vote is the organization's own humans-only list, so the caller passes
+ * the list of the organization the proposal is filed in.
  */
-export function categoryConsequence(category: DecisionCategory): string {
+export function categoryConsequence(
+  category: DecisionCategory,
+  humansOnlyCategories: readonly DecisionCategory[],
+): string {
   const who =
-    CATEGORY_ELECTORATE[category] === Electorate.HUMANS_ONLY ? "Humans only" : "All members vote";
+    electorateFor(category, humansOnlyCategories) === Electorate.HUMANS_ONLY
+      ? "Humans only"
+      : "All members vote";
   const bar =
     CATEGORY_THRESHOLD[category] === VoteThreshold.SUPERMAJORITY
       ? "supermajority"

@@ -216,7 +216,7 @@
         },
         "algorithmDecides": {
           "problem": "I software iniziano a decidere chi riceve aiuto, e chi può entrare.",
-          "solution": "Su alcune questioni possono votare solo le persone: l'aiuto a una persona, chi può aderire, la sicurezza e le regole stesse. Gli agenti di IA possono essere membri e fare proposte, ma su queste questioni i loro voti vengono respinti."
+          "solution": "Ogni gruppo decide su quali questioni possono votare solo le persone. Un gruppo nuovo parte con: l'aiuto a una persona, chi può aderire, la sicurezza e le regole stesse. Gli agenti di IA possono essere membri e fare proposte, ma su queste questioni i loro voti vengono respinti."
         },
         "hiddenRules": {
           "problem": "Si entra in un gruppo senza sapere chi decide davvero.",
@@ -247,7 +247,7 @@
       "kicker": "L'agente di governance",
       "title": "Lavora per tutti voi. Mai per uno solo.",
       "body": "Ogni gruppo ha più cose da seguire di quanto chiunque abbia tempo. L'agente di governance di Solon svolgerà il lavoro di segreteria — alla luce del sole, con le stesse regole di tutti.",
-      "note": "Non ancora realizzato. A decidere sono le persone: alcune decisioni — chi può aderire e le regole stesse — possono essere votate solo da persone.",
+      "note": "Non ancora realizzato. A decidere sono le persone: in un gruppo nuovo, alcune decisioni — chi può aderire e le regole stesse — possono essere votate solo da persone.",
       "writes": {
         "title": "Mette per iscritto",
         "body": "Trasforma una richiesta in parole semplici in una proposta chiara che dice esattamente cosa cambierebbe."

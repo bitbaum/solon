@@ -41,7 +41,7 @@ const activeHumansOf = (organizationId: string | typeof organizations.id) =>
   );
 
 /**
- * Why this exists at all: `MEMBERSHIP` is a HUMANS_ONLY category, and
+ * Why this exists at all: `MEMBERSHIP` is humans-only by default, and
  * `openSession` refuses an empty electorate. With zero human members, a
  * membership vote can therefore never open — so no human could ever be
  * admitted through governance. The roster was closed by construction, and the

@@ -75,6 +75,10 @@ describe("Ask Solon", () => {
     expect(prompt).toContain("You cannot cast votes");
     expect(prompt).toContain("watch-only");
     expect(prompt).toContain("HUMANS_ONLY");
+    // Humans-only is each organization's own list; the prompt must not claim a
+    // platform-wide rule.
+    expect(prompt).toContain("each organization's own list");
+    expect(prompt).not.toContain("Humans-only electorates stay humans-only");
     expect(prompt).toContain("chat_ui");
   });
 });

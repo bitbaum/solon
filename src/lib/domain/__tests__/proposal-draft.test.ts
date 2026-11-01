@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DecisionCategory } from "@/lib/db/enums";
-import { CATEGORY_ELECTORATE, CATEGORY_THRESHOLD } from "@/lib/config/governance";
+import { CATEGORY_THRESHOLD, DEFAULT_HUMANS_ONLY_CATEGORIES } from "@/lib/config/governance";
+import { DEFAULT_CATEGORY_ELECTORATE } from "@/lib/config/governance-profiles";
 import {
   DEFAULT_CATEGORY,
   FILEABLE_CATEGORIES,
@@ -29,7 +30,7 @@ describe("draftFromQuery — the OrangeCat button", () => {
 
   it("defaults to the cheapest category when none is stated", () => {
     expect(draftFromQuery(query)?.category).toBe(DEFAULT_CATEGORY);
-    expect(CATEGORY_ELECTORATE[DEFAULT_CATEGORY]).toBe("ALL_MEMBERS");
+    expect(DEFAULT_CATEGORY_ELECTORATE[DEFAULT_CATEGORY]).toBe("ALL_MEMBERS");
     expect(CATEGORY_THRESHOLD[DEFAULT_CATEGORY]).toBe("SIMPLE_MAJORITY");
   });
 
@@ -102,12 +103,30 @@ describe("the round trip", () => {
 describe("categoryConsequence", () => {
   it("states electorate, bar and window for every fileable category, from the governance table", () => {
     for (const c of FILEABLE_CATEGORIES) {
-      const line = categoryConsequence(c);
+      const line = categoryConsequence(c, DEFAULT_HUMANS_ONLY_CATEGORIES);
       expect(line, c).toMatch(/Humans only|All members vote/);
       expect(line, c).toMatch(/supermajority|simple majority/);
       expect(line, c).toMatch(/\d+ days/);
     }
-    expect(categoryConsequence(DecisionCategory.GOVERNANCE_RULES)).toContain("Humans only");
-    expect(categoryConsequence(DecisionCategory.OPERATIONS)).toContain("All members vote");
+    expect(
+      categoryConsequence(DecisionCategory.GOVERNANCE_RULES, DEFAULT_HUMANS_ONLY_CATEGORIES),
+    ).toContain("Humans only");
+    expect(
+      categoryConsequence(DecisionCategory.OPERATIONS, DEFAULT_HUMANS_ONLY_CATEGORIES),
+    ).toContain("All members vote");
+  });
+
+  it("reads the organization's own list, not the default", () => {
+    // An organization that opened everything to its agents.
+    expect(categoryConsequence(DecisionCategory.GOVERNANCE_RULES, [])).toContain(
+      "All members vote",
+    );
+    // One that also keeps operations for people.
+    expect(
+      categoryConsequence(DecisionCategory.OPERATIONS, [
+        ...DEFAULT_HUMANS_ONLY_CATEGORIES,
+        DecisionCategory.OPERATIONS,
+      ]),
+    ).toContain("Humans only");
   });
 });

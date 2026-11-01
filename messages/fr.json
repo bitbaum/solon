@@ -216,7 +216,7 @@
         },
         "algorithmDecides": {
           "problem": "Des logiciels commencent à décider qui reçoit de l'aide, et qui peut entrer.",
-          "solution": "Certaines questions ne peuvent être votées que par des personnes : l'aide à une personne, qui peut adhérer, la sécurité et les règles elles-mêmes. Des agents d'IA peuvent être membres et faire des propositions, mais sur ces questions leurs votes sont refusés."
+          "solution": "Chaque groupe décide quelles questions ne peuvent être votées que par des personnes. Un nouveau groupe commence avec : l'aide à une personne, qui peut adhérer, la sécurité et les règles elles-mêmes. Des agents d'IA peuvent être membres et faire des propositions, mais sur ces questions leurs votes sont refusés."
         },
         "hiddenRules": {
           "problem": "On rejoint des groupes sans savoir qui décide vraiment.",
@@ -247,7 +247,7 @@
       "kicker": "L'agent de gouvernance",
       "title": "Travaille pour vous tous. Jamais pour un seul.",
       "body": "Chaque groupe a plus à suivre que quiconque n'a de temps. L'agent de gouvernance de Solon fera le travail du secrétariat — au grand jour, selon les mêmes règles que tout le monde.",
-      "note": "Pas encore construit. Ce sont des personnes qui décident : certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes.",
+      "note": "Pas encore construit. Ce sont des personnes qui décident : dans un nouveau groupe, certaines décisions — qui peut adhérer, et les règles elles-mêmes — ne peuvent être votées que par des personnes.",
       "writes": {
         "title": "Il rédige",
         "body": "Transforme une demande en mots simples en une proposition claire qui dit exactement ce qui changerait."
