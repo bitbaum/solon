@@ -10,6 +10,7 @@
  * states no dates (`dateBasis: retrieved`) is checked by its document instead:
  * the same bytes as the version in force are not stored again.
  */
+import { ocrPdfText } from "@/lib/law/text/ocr";
 import { and, asc, eq, isNull } from "drizzle-orm";
 import { sources } from "@/lib/db/places-schema";
 import { sha256Hex } from "@/lib/places/importer/snapshots";
@@ -165,7 +166,14 @@ export async function loadPublisher(
             );
           if (open?.sha === sha256Hex(bytes)) continue;
         }
-        const provisions = parseCantonalProvisions(cleanPdfText(await documentText(bytes, "pdf")));
+        let text = cleanPdfText(await documentText(bytes, "pdf"));
+        // A scanned page has no text layer: read it by OCR, and say so on the version's source.
+        const scanned = text.replace(/\s+/g, "").length < 200;
+        if (scanned) {
+          say(`${document.url}: no text layer, reading by OCR`);
+          text = cleanPdfText(await ocrPdfText(bytes, adapter.locale));
+        }
+        const provisions = parseCantonalProvisions(text);
         if (provisions.length === 0) {
           report.failures.push({ page: document.url, reason: "no text in the PDF" });
           continue;
@@ -188,7 +196,9 @@ export async function loadPublisher(
             source: {
               key: adapter.key,
               licenceSpdx: adapter.licenceSpdx,
-              importerVersion: PUBLISHER_IMPORTER_VERSION,
+              importerVersion: scanned
+                ? `${PUBLISHER_IMPORTER_VERSION}+ocr`
+                : PUBLISHER_IMPORTER_VERSION,
             },
           },
           false,

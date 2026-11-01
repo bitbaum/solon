@@ -20,6 +20,24 @@ describe("cleanPdfText", () => {
 });
 
 describe("parseCantonalProvisions", () => {
+  it("keeps what comes before a first heading that is not article 1, rather than drop it", () => {
+    const sections =
+      "1. Zweck\nDer Gemeindesaal kann an Vereine vermietet werden, zum Zwecke der Durchführung von Veranstaltungen.\n" +
+      "2. Verwaltung\nDie Verwaltung obliegt der Gemeindeverwaltung im Rahmen der in diesem Reglement festgelegten Bestimmungen.\n";
+    const provisions = parseCantonalProvisions(
+      `${sections}3. Art. 3 Verpflichtung\nMit der Bewilligung untersteht der Inhaber diesem Reglement.`,
+    );
+    expect(provisions.map((p) => p.path)).toEqual(["before_first", "art_3"]);
+    expect(provisions[0]!.text).toContain("2. Verwaltung");
+  });
+
+  it("drops only a title before article 1", () => {
+    const provisions = parseCantonalProvisions(
+      "Reglement über den Gemeindesaal\nArt. 1 Zweck\nDer Saal wird vermietet.\nArt. 2 Verwaltung\nDie Gemeinde verwaltet ihn.",
+    );
+    expect(provisions.map((p) => p.path)).toEqual(["art_1", "art_2"]);
+  });
+
   // As a two-column PDF gives it: margin notes before, or glued to, the heading.
   const text = [
     "1. Kapitel: Grundlagen",

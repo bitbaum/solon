@@ -5,11 +5,13 @@
 #   tests/puppeteer/*.mjs smokes need it.
 # Denied: pulled in by next-intl for its optional message-extraction tooling,
 # which Solon does not use — so their install scripts need not run.
+# tesseract.js's only install script is a funding message.
 allowBuilds:
   "@parcel/watcher": false
   "@swc/core": false
   esbuild: true
   puppeteer: true
+  tesseract.js: false
   unrs-resolver: true
 
 # Own packages published to npm <24h ago; exempt from the minimum-release-age

@@ -359,6 +359,19 @@ question about Vaduz is asked of Liechtenstein's law too).
 - Swiss communes that publish this way are configs of the same adapter; the
   loader, the store, the tools and the chat do not change.
 
+### Scanned documents as built (2026-11-01)
+
+Some communes publish an act as a scan: a PDF whose pages are pictures of
+paper, with no text layer. The commune loader (`publishers/load.ts`) then reads
+it by OCR (`text/ocr.ts`: each page drawn with `unpdf` and read by
+`tesseract.js` in the act's language, in process; no model is called). Such a
+version's source carries the importer version `law-text-publisher-1+ocr`, so a
+reader knows a letter may be misread where the publisher's own text would not.
+
+When the first article the cutter finds is not article 1 (a commune that
+numbers sections "1.", "2." before an "Art. 3"), the text before it is kept as
+one provision (`before_first`) instead of being dropped.
+
 ### Luxembourg as built (2026-11-01): the first country beyond the two
 
 Legilux, the Grand Duchy's official legal database (Ministry of State,
