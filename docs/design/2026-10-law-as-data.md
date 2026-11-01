@@ -368,6 +368,11 @@ it by OCR (`text/ocr.ts`: each page drawn with `unpdf` and read by
 version's source carries the importer version `law-text-publisher-1+ocr`, so a
 reader knows a letter may be misread where the publisher's own text would not.
 
+The cantonal documents fall back to OCR the same way (`text/pdf-provisions.ts`,
+shared with the commune loader), reading German, French and Italian together
+because the file's own language is not known; such a version's source carries
+`law-text-cantonal-2+ocr`.
+
 When the first article the cutter finds is not article 1 (a commune that
 numbers sections "1.", "2." before an "Art. 3"), the text before it is kept as
 one provision (`before_first`) instead of being dropped.
