@@ -20,6 +20,8 @@ export interface FedlexVersion {
   date: string;
   /** Where the HTML is. */
   url: string;
+  /** The act's title in this language, when Fedlex gives one. */
+  title?: string;
 }
 
 export interface Provision {
@@ -45,7 +47,7 @@ export async function listVersionsOn(
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error(`day must be an ISO date: ${day}`);
   const query = `PREFIX jolux: <http://data.legilux.public.lu/resource/ontology/jolux#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT ?cc ?n ?date ?url WHERE {
+SELECT ?cc ?n ?date ?url ?title WHERE {
   ?cc jolux:classifiedByTaxonomyEntry/skos:notation ?n .
   FILTER(STRSTARTS(STR(?cc), "https://fedlex.data.admin.ch/eli/cc/"))
   ?cons jolux:isMemberOf ?cc ; jolux:dateApplicability ?date ; jolux:isRealizedBy ?expr .
@@ -55,6 +57,7 @@ SELECT ?cc ?n ?date ?url WHERE {
   ?expr jolux:language <http://publications.europa.eu/resource/authority/language/${code}> ;
         jolux:isEmbodiedBy ?m .
   ?m jolux:userFormat <https://fedlex.data.admin.ch/vocabulary/user-format/html> ; jolux:isExemplifiedBy ?url .
+  OPTIONAL { ?cc jolux:isRealizedBy ?actExpr . ?actExpr jolux:language <http://publications.europa.eu/resource/authority/language/${code}> ; jolux:title ?title }
 }`;
   const response = await doFetch(SPARQL, {
     method: "POST",
@@ -77,6 +80,7 @@ SELECT ?cc ?n ?date ?url WHERE {
       sr: row.n!.value,
       date: row.date!.value,
       url: row.url!.value,
+      title: row.title?.value,
     };
     const key = `${version.eli}|${version.sr}`;
     const kept = latest.get(key);

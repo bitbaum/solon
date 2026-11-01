@@ -191,6 +191,71 @@ describe.skipIf(!RUN)("fedlex text import", () => {
     ).toBeNull();
   });
 
+  it("tells two acts that share a number by the address of their own page", async () => {
+    // The register's act for the shared number now has its page: s1's address, not s2's.
+    await importOfficialLinks(db, {
+      bytes: new TextEncoder().encode(
+        JSON.stringify({
+          fetchedAt: "2026-10-23T00:00:00.000Z",
+          authorities: [
+            {
+              code: "CH",
+              links: [{ id: base + 3, url: `https://www.fedlex.admin.ch/eli/cc/${N}/s1/de` }],
+            },
+          ],
+        }),
+      ),
+      url: "test",
+      retrievedAt: new Date(),
+      snapshots,
+    });
+    const report = await run({ day: "2026-10-23" });
+    // s1 is the register's act: its text is stored. s2 is another act of the number the register lacked:
+    // it is registered from Fedlex's list, with its own page, and read.
+    expect(report.ambiguous).not.toContain(SR.shared);
+    expect(report.registered).toContain(SR.shared);
+    expect(report.notInRegister).not.toContain(`${SR.shared} (eli/cc/${N}/s2)`);
+    const both = await searchActs(db, { authority: "ch", number: SR.shared });
+    expect(both).toHaveLength(2);
+    const texts: string[] = [];
+    for (const act of both) {
+      const provision = await readProvision(db, {
+        actId: act.id,
+        path: "art_1",
+        lang: "de",
+        on: "2026-10-23",
+      });
+      if (provision) texts.push(`${provision.text}@${provision.sourceUrl}`);
+    }
+    expect(texts.sort()).toEqual([`x@https://x/${N}/s1`, `y@https://x/${N}/s2`]);
+  });
+
+  it("registers from Fedlex's list two acts of a number the register does not hold at all", async () => {
+    const twin = `${N}.7`;
+    store.versions.push(
+      { eli: `https://x/eli/cc/${N}/t1`, sr: twin, date: "2015-01-01", url: `https://x/${N}/t1` },
+      { eli: `https://x/eli/cc/${N}/t2`, sr: twin, date: "2024-01-01", url: `https://x/${N}/t2` },
+    );
+    store.pages.set(`https://x/${N}/t1`, act(article("art_1", "Art. 1", "eins")));
+    store.pages.set(`https://x/${N}/t2`, act(article("art_1", "Art. 1", "zwei")));
+    const report = await run({ day: "2026-10-23" });
+    expect(report.registered.filter((sr) => sr === twin)).toHaveLength(2);
+    expect(report.ambiguous).not.toContain(twin);
+    const both = await searchActs(db, { authority: "ch", number: twin });
+    expect(both).toHaveLength(2);
+    const texts: string[] = [];
+    for (const a of both) {
+      const provision = await readProvision(db, {
+        actId: a.id,
+        path: "art_1",
+        lang: "de",
+        on: "2026-10-23",
+      });
+      if (provision) texts.push(provision.text);
+    }
+    expect(texts.sort()).toEqual(["eins", "zwei"]);
+  });
+
   it("a rerun on the same day fetches nothing it already holds", async () => {
     store.fetched.length = 0;
     const report = await run({ day: "2026-10-23" });

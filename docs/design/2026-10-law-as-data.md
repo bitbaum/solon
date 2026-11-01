@@ -410,6 +410,17 @@ never stops the ones after it. A version the publisher holds with no text at all
 (a blank page, as in four acts of Cham and Hünenberg) is reported as empty at the
 publisher and left without text: not a failure of the run, and nothing invented.
 
+### Federal acts the register lacks, and numbers two acts share (2026-11-01)
+
+The register of federal acts comes from LexFind; Fedlex is the authority on what is
+in force. The Fedlex text load (`text/import.ts`) therefore compares its own list
+with the register: an act it lists that the register lacks (LexFind lags by days) is
+registered from Fedlex's list, with Fedlex's title, its `ch_eli` and its page, and then
+read. Two acts that carry one systematic number (SR 0.424.21 is the 2005 framework
+agreement on nuclear-energy research and its 2025 renewal) are told apart by the address
+of their own Fedlex page, never guessed; when the register cannot tell them apart the
+number is still reported as ambiguous and left alone.
+
 ### Luxembourg as built (2026-11-01): the first country beyond the two
 
 Legilux, the Grand Duchy's official legal database (Ministry of State,
