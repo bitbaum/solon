@@ -27,6 +27,11 @@ export interface VersionRef {
   inForceTo: string | null;
   /** The page that holds this version's document. */
   pageUrl: string;
+  /**
+   * `publisher` (the default) when the publisher states `inForceFrom`;
+   * `retrieved` when it states no day and the day it was read stands in.
+   */
+  dateBasis?: "publisher" | "retrieved";
 }
 
 export interface DocumentRef {

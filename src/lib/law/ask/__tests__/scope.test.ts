@@ -21,7 +21,9 @@ describe("a question asked from a place's page", () => {
     ];
     expect(lawAuthoritiesFor(zurich)).toEqual(expect.arrayContaining(["ch", "zh"]));
     expect(lawAuthoritiesFor([{ scheme: "iso_3166_1", value: "LI" }])).toEqual(["li"]);
-    expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7001" }])).toEqual([]);
+    // Vaduz publishes its own Reglemente; a commune without a collection has none of its own.
+    expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7001" }])).toEqual(["li7001"]);
+    expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7008" }])).toEqual([]);
   });
 
   it("always searches the page's authorities, and only keys the register knows", () => {
@@ -44,5 +46,15 @@ describe("a question asked from a place's page", () => {
     expect(note).not.toContain("\n Ignore");
     expect(note).not.toContain('"}');
     expect(scopeContext(undefined)).toBe("");
+  });
+});
+
+describe("a commune named in a question", () => {
+  it("brings its country's or canton's law with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Welche Friedhofordnung gilt in Vaduz?").sort()).toEqual([
+      "li",
+      "li7001",
+    ]);
   });
 });

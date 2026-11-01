@@ -41,5 +41,11 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   ge: ["geneve", "geneva", "genf", "ginevra"],
   ju: ["jura"],
   li: ["liechtenstein"],
+  li7001: ["vaduz", "gemeinde vaduz"],
+  li7005: ["schaan", "gemeinde schaan"],
+  li7006: ["planken", "gemeinde planken"],
+  li7007: ["eschen", "nendeln", "eschen-nendeln", "gemeinde eschen"],
+  li7010: ["ruggell", "gemeinde ruggell"],
+  li7009: ["gamprin", "gamprin-bendern", "gemeinde gamprin"],
   bfs261: ["city of zurich", "stadt zurich", "stadt zuerich", "ville de zurich", "citta di zurigo"],
 };

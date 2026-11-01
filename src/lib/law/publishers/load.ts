@@ -6,9 +6,13 @@
  *   text      each act's versions, current first; history only when asked for
  *
  * Resumable: a version already held (same act, language, first day) is skipped,
- * so a run limited to N continues where the last stopped.
+ * so a run limited to N continues where the last stopped. A collection that
+ * states no dates (`dateBasis: retrieved`) is checked by its document instead:
+ * the same bytes as the version in force are not stored again.
  */
 import { and, asc, eq, isNull } from "drizzle-orm";
+import { sources } from "@/lib/db/places-schema";
+import { sha256Hex } from "@/lib/places/importer/snapshots";
 import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
@@ -135,7 +139,8 @@ export async function loadPublisher(
           : [];
       // Oldest first: each later version closes the one before it.
       for (const version of wanted) {
-        if (held.has(version.inForceFrom)) continue;
+        const retrieved = version.dateBasis === "retrieved";
+        if (!retrieved && held.has(version.inForceFrom)) continue;
         const next = all.find((v) => v.inForceFrom > version.inForceFrom);
         const isLatest = !next || next.inForceFrom > options.today;
         const document = await adapter.document(version, doFetch);
@@ -145,6 +150,21 @@ export async function loadPublisher(
           continue;
         }
         const bytes = await getBytes(document.url, doFetch, [new URL(document.url).hostname]);
+        // A version dated by the day it was read is new only if its document is.
+        if (retrieved) {
+          const [open] = await db
+            .select({ sha: sources.contentSha256 })
+            .from(legalActVersions)
+            .innerJoin(sources, eq(sources.id, legalActVersions.sourceId))
+            .where(
+              and(
+                eq(legalActVersions.actId, act.actId),
+                eq(legalActVersions.lang, adapter.locale),
+                isNull(legalActVersions.inForceTo),
+              ),
+            );
+          if (open?.sha === sha256Hex(bytes)) continue;
+        }
         const provisions = parseCantonalProvisions(cleanPdfText(await documentText(bytes, "pdf")));
         if (provisions.length === 0) {
           report.failures.push({ page: document.url, reason: "no text in the PDF" });
@@ -159,7 +179,7 @@ export async function loadPublisher(
             inForceFrom: version.inForceFrom,
             // An earlier version ends the day before the next one begins; the latest ends only when the publisher says.
             inForceTo: isLatest ? undefined : dayBefore(next!.inForceFrom),
-            dateBasis: "publisher",
+            dateBasis: version.dateBasis ?? "publisher",
             status: adapter.textStatus,
             format: "pdf",
             bytes,

@@ -334,6 +334,31 @@ versions, back to the 1970s for the Gemeindeordnung. The tables are JSON in an
 HTML attribute; that is read in one place (`zurich-city.ts`). The city's oldest
 versions repeat and overlap first days; one is kept per day, the longest-running.
 
+### Communes that link their acts as built (2026-11-01): Liechtenstein first
+
+Most communes publish their acts as documents linked from their own pages
+("Reglemente & Formulare"), with no collection behind them. One adapter reads
+them all (`publishers/linked-documents.ts`); a commune is config: the pages
+that list its acts, how a document link looks, folders to open, and which
+titles are acts rather than forms. Six of Liechtenstein's eleven communes are
+in: Vaduz, Schaan, Planken and Gamprin (one CMS), Ruggell (a media archive in
+folders) and Eschen-Nendeln (WordPress), about 185 acts (authorities `li7001`,
+`li7005`, `li7006`, `li7007`, `li7009`, `li7010`, each `within: "li"`, so a
+question about Vaduz is asked of Liechtenstein's law too).
+
+- Such a page states no day an act began, so a version is dated by the day it
+  was read (`dateBasis: retrieved`), and the loader stores a document only if
+  its bytes differ from the version in force; a title's own "gültig ab
+  01.01.2027" dates the version as the publisher's, and it waits until then.
+- Not yet: Triesenberg answers an automated reader with a bot check, which is
+  not worked around; Triesen's folder pages did not load; Balzers, Mauren and
+  Schellenberg list no acts on a page found so far. An empty list fails the
+  run loudly rather than reading as "no acts".
+- Acts numbered by section ("1.1 Eigentum") rather than by article are held
+  whole until a section cutter exists; their text is searchable either way.
+- Swiss communes that publish this way are configs of the same adapter; the
+  loader, the store, the tools and the chat do not change.
+
 ### Asking the law as built (2026-10-24)
 
 `/law/ask` and `POST /api/law/ask` (design: the retrieval layer). Three steps,
