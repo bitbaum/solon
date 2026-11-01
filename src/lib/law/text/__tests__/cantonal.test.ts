@@ -3,6 +3,12 @@ import { WHOLE_ACT } from "../fedlex";
 import { cleanPdfText, documentUrl, fetchDocument, parseCantonalProvisions } from "../cantonal";
 
 describe("cleanPdfText", () => {
+  it("replaces a NUL, which a PDF holds for a glyph with no character and Postgres cannot store", () => {
+    expect(cleanPdfText("weiterzuentwickeln \u0000 dies in Kooperation")).toBe(
+      "weiterzuentwickeln dies in Kooperation",
+    );
+  });
+
   it("drops page numbers and lines repeated on every page, and joins words broken at a line end", () => {
     const page = (n: number) =>
       `Kantonsverfassung 101\nArt. ${n} Steuer-\npflichtige zahlen ${n}.\n${n}`;

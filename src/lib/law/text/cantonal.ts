@@ -45,7 +45,11 @@ export async function documentText(bytes: Uint8Array, kind: "pdf" | "html"): Pro
 
 /** The text without the header and footer lines a PDF repeats on every page, and with broken words made whole. */
 export function cleanPdfText(raw: string): string {
-  const lines = raw.split("\n").map((line) => line.replace(/\s+/g, " ").trim());
+  // A PDF can hold a NUL where a glyph has no character (a dash between two words); Postgres cannot store one.
+  const lines = raw
+    .replace(/\u0000/g, " ")
+    .split("\n")
+    .map((line) => line.replace(/\s+/g, " ").trim());
   const counts = new Map<string, number>();
   for (const line of lines) if (line) counts.set(line, (counts.get(line) ?? 0) + 1);
   return (

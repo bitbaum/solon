@@ -10,7 +10,7 @@
  * states no dates (`dateBasis: retrieved`) is checked by its document instead:
  * the same bytes as the version in force are not stored again.
  */
-import { ocrPdfText } from "@/lib/law/text/ocr";
+import { provisionsOfPdf } from "@/lib/law/text/pdf-provisions";
 import { and, asc, eq, isNull } from "drizzle-orm";
 import { sources } from "@/lib/db/places-schema";
 import { sha256Hex } from "@/lib/places/importer/snapshots";
@@ -18,7 +18,6 @@ import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow } from "../register/import";
-import { cleanPdfText, documentText, parseCantonalProvisions } from "../text/cantonal";
 import { storeVersion, dayBefore } from "../text/store";
 import { getBytes } from "./http";
 import type { PublisherAdapter, VersionRef } from "./types";
@@ -166,14 +165,9 @@ export async function loadPublisher(
             );
           if (open?.sha === sha256Hex(bytes)) continue;
         }
-        let text = cleanPdfText(await documentText(bytes, "pdf"));
-        // A scanned page has no text layer: read it by OCR, and say so on the version's source.
-        const scanned = text.replace(/\s+/g, "").length < 200;
-        if (scanned) {
-          say(`${document.url}: no text layer, reading by OCR`);
-          text = cleanPdfText(await ocrPdfText(bytes, adapter.locale));
-        }
-        const provisions = parseCantonalProvisions(text);
+        const { provisions, scanned } = await provisionsOfPdf(bytes, adapter.locale, () =>
+          say(`${document.url}: no text layer, reading by OCR`),
+        );
         if (provisions.length === 0) {
           report.failures.push({ page: document.url, reason: "no text in the PDF" });
           continue;

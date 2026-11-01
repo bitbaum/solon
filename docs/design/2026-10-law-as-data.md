@@ -372,6 +372,21 @@ When the first article the cutter finds is not article 1 (a commune that
 numbers sections "1.", "2." before an "Art. 3"), the text before it is kept as
 one provision (`before_first`) instead of being dropped.
 
+### Lilex pages that the issue number does not give as built (2026-11-01)
+
+Lilex builds an act's page address from its Landesgesetzblatt issue. That left
+59 acts without a page (Austrian-era decrees with no issue, issues like
+"60/1") and wrongly addressed a few more (the EEA agreement's page is `…001`).
+The importer now asks the publisher's own Gebietssystematik
+(`/konso/gebietssystematik?lrstart=`, the act's own listing then each parent)
+where an act is, once per listing. For an act with no consolidated page (a
+Bekanntmachung, a decision published only in the gazette) it reads the PDF the
+gazette entry links. gesetze.li answers an address it does not know with a
+maintenance notice that carries the proof-of-work script; that is "no page
+there", not a challenge. A NUL character that a PDF holds for a glyph with no
+character is replaced by a space before text is stored: Postgres cannot store
+one, and it made a 47-page intercantonal annex fail to insert.
+
 ### Luxembourg as built (2026-11-01): the first country beyond the two
 
 Legilux, the Grand Duchy's official legal database (Ministry of State,

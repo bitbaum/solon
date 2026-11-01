@@ -18,7 +18,7 @@ import { cleanPdfText, documentText, parseCantonalProvisions } from "./cantonal"
 import type { Provision } from "./fedlex";
 import { CANTONAL_IMPORTER_VERSION } from "./import-cantonal";
 import { LILEX_IMPORTER_VERSION } from "./import-lilex";
-import { ChallengeError, fetchLilexPage, parseLilexProvisions } from "./lilex";
+import { ChallengeError, fetchLilexDocument, parseLilexProvisions } from "./lilex";
 import { storeVersion } from "./store";
 
 const USER_AGENT = "solon-law-text (cato@orangecat.ch)";
@@ -60,12 +60,12 @@ export const REFRESHABLE: Readonly<Record<string, Reader>> = {
     licenceSpdx: LILEX.licenceSpdx,
     status: LILEX.textStatus,
     async fetch(url, doFetch) {
-      const id = url.slice(LILEX.page.length);
-      const bytes = await fetchLilexPage(id, doFetch);
-      return bytes ? { bytes, format: "html" } : null;
+      return fetchLilexDocument(url.slice(LILEX.page.length), doFetch);
     },
-    async parse(bytes) {
-      return parseLilexProvisions(new TextDecoder().decode(bytes));
+    async parse(bytes, format) {
+      return format === "pdf"
+        ? parseCantonalProvisions(cleanPdfText(await documentText(bytes, "pdf")))
+        : parseLilexProvisions(new TextDecoder().decode(bytes));
     },
   },
 };
