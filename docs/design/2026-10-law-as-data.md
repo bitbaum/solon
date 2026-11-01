@@ -392,6 +392,21 @@ there", not a challenge. A NUL character that a PDF holds for a glyph with no
 character is replaced by a space before text is stored: Postgres cannot store
 one, and it made a 47-page intercantonal annex fail to insert.
 
+### LexWork as built (2026-11-01): communes that keep their law in a Sitrox collection
+
+Many communes keep their law in a LexWork collection at `<commune>.tlex.ch` (the
+product that also runs the cantonal collections). Its own interface is open and
+read as data (`text/lexwork.ts`, `text/import-lexwork.ts`; config `LEXWORK`):
+the list of acts, each act by systematic number, the day each version took
+effect (so versions are dated by the publisher, not by the day read) and the
+article tree of the version asked for. Versions older than the structured text
+are held as a PDF and read like any PDF (with the OCR fallback). A correction
+of a version that took effect on the same day replaces the earlier reading; a
+version that has not yet begun is left until its day. Only the hosts in config
+are read. `pnpm run law:text lexwork [--host zug.tlex.ch]` (and the Law text
+load workflow, source `lexwork`) loads them; rerunning stores only what is new.
+First instances: the 11 communes of Zug and the 3 of Glarus (1,164 acts).
+
 ### Luxembourg as built (2026-11-01): the first country beyond the two
 
 Legilux, the Grand Duchy's official legal database (Ministry of State,
