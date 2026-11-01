@@ -45,7 +45,11 @@ export function LawChat({
         place && authorities !== undefined
           ? { place, authorities: authorities ? authorities.split(",") : [], topic }
           : undefined,
-        { step: (step) => t(`steps.${step}`), failed: t("failed") },
+        {
+          step: (step) => t(`steps.${step}`),
+          activity: (kind, detail) => t(`activity.${kind}`, { detail }),
+          failed: t("failed"),
+        },
       ),
     [place, authorities, topic, t],
   );

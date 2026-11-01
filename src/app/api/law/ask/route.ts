@@ -9,10 +9,11 @@ import { db } from "@/lib/db/client";
 import { answerMessages, sourcesOf } from "@/lib/law/ask/answer";
 import { planResearch, type Completer } from "@/lib/law/ask/plan";
 import { refine } from "@/lib/law/ask/refine";
+import { research, type ToolCaller } from "@/lib/law/ask/research";
 import { retrieve } from "@/lib/law/ask/retrieve";
 import { applyScope, scopeContext } from "@/lib/law/ask/scope";
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const Body = z.object({
   messages: z
@@ -68,14 +69,27 @@ export async function POST(req: Request) {
       emit({ type: "step", step: "search" });
       const found = await retrieve(db, plan);
       emit({ type: "step", step: "check" });
-      const hits = await refine(db, ask, plan, found);
-      emit({ type: "sources", sources: sourcesOf(hits) });
+      const refined = await refine(db, ask, plan, found);
+      emit({ type: "step", step: "research" });
+      // The same tools /api/mcp offers, and the web when a search backend is set.
+      const callTools: ToolCaller = (options) =>
+        complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
+      const { hits, web } = await research({
+        db,
+        turns,
+        plan,
+        hits: refined,
+        call: callTools,
+        env: process.env,
+        onActivity: (label) => emit({ type: "activity", label }),
+      });
+      emit({ type: "sources", sources: sourcesOf(hits, web) });
       emit({ type: "step", step: "write" });
       let finished = false;
       for await (const delta of completeStream({
         chain,
         env: process.env,
-        messages: answerMessages(turns, plan, hits),
+        messages: answerMessages(turns, plan, hits, web),
         maxTokens: 2400,
         timeoutMs: 40000,
         signal,

@@ -95,3 +95,19 @@ export async function pageOfProvision(
   const before = (rows.rows[0] as { before: number } | undefined)?.before;
   return before === undefined ? null : Math.floor(before / PROVISIONS_PER_PAGE) + 1;
 }
+
+/** Every provision of an act's version in force, by anchor and heading only: its table of contents. */
+export async function loadActContents(
+  db: Database,
+  input: { id: string; lang: string; limit?: number },
+): Promise<{ path: string; heading: string }[]> {
+  const rows = await db.execute(sql`
+    SELECT p.path, p.heading
+    FROM legal_provisions p
+    JOIN legal_act_versions v ON v.id = p.version_id
+    WHERE v.act_id = ${input.id} AND v.lang = ${input.lang} AND v.in_force_to IS NULL
+    ORDER BY p.ord
+    LIMIT ${input.limit ?? 2000}
+  `);
+  return rows.rows as unknown as { path: string; heading: string }[];
+}
