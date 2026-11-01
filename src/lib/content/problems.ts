@@ -49,7 +49,8 @@ export const PROBLEM_SCALES: readonly ProblemScale[] = [
     items: [
       { key: "closedDoors", link: "record", capability: "publicRecord" },
       { key: "trustTheCount", link: "security", capability: "signedVotes" },
-      // The humans-only red lines: src/lib/config/governance.ts.
+      // Humans-only categories: each organization's own list, starting with
+      // DEFAULT_HUMANS_ONLY_CATEGORIES in src/lib/config/governance.ts.
       { key: "algorithmDecides", link: "whoDecides" },
       { key: "hiddenRules", link: "profiles", capability: "ruleTemplates" },
       // OrangeCat's allocation_policy and originator_share, live on /ecosystem.

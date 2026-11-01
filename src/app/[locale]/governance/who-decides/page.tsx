@@ -3,30 +3,32 @@ import PageLayout from "@/components/ui/page-layout";
 import { Figure, Aside } from "@/components/learn/figure";
 import { RuleMatrix } from "@/components/learn/rule-matrix";
 import { Trail } from "@/components/learn/trail";
-import { CATEGORY_ELECTORATE, CATEGORY_LABEL } from "@/lib/config/governance";
+import { CATEGORY_LABEL } from "@/lib/config/governance";
+import { DEFAULT_CATEGORY_ELECTORATE } from "@/lib/config/governance-profiles";
 import { DECISION_CATEGORIES, Electorate } from "@/lib/db/enums";
 
 export const metadata: Metadata = {
   title: "Who may vote, and on what",
   description:
-    "Every category of decision, its electorate, threshold and quorum — and why four categories are closed to agents no matter what an organization votes.",
+    "Every category of decision, its default electorate, threshold and quorum — why four categories start closed to agents, and how an organization changes that.",
 };
 
 /**
- * The electorate page, and the one place the site states a red line.
+ * The electorate page.
  *
- * Everything else in this section is a trade the organization gets to make.
- * This is the exception, and saying so plainly is more honest than burying it:
- * agents are full members who may propose anything and vote on most things, and
- * there are four categories they cannot reach — including, deliberately, the
- * category that would let them widen their own reach.
+ * Which categories only people may vote on is each organization's own rule
+ * (owner's decision, 2026-11-01): every organization starts with the four
+ * below, and may close more, or open them to its agents, by a GOVERNANCE_RULES
+ * decision. This page describes the default and says plainly that it is one;
+ * an organization's own page and the proposal form use that organization's
+ * list.
  */
 export default function WhoDecidesPage() {
   const humansOnly = DECISION_CATEGORIES.filter(
-    (c) => CATEGORY_ELECTORATE[c] === Electorate.HUMANS_ONLY,
+    (c) => DEFAULT_CATEGORY_ELECTORATE[c] === Electorate.HUMANS_ONLY,
   );
   const allMembers = DECISION_CATEGORIES.filter(
-    (c) => CATEGORY_ELECTORATE[c] === Electorate.ALL_MEMBERS,
+    (c) => DEFAULT_CATEGORY_ELECTORATE[c] === Electorate.ALL_MEMBERS,
   );
 
   return (
@@ -53,7 +55,7 @@ export default function WhoDecidesPage() {
         <Figure
           label="Figure 5"
           title="The whole table"
-          caption="Every category Solon knows, with who may vote on it, what it must clear, and how many must turn up. Rendered from the rules — this is not a summary of them."
+          caption="Every category Solon knows, with who may vote on it in a new organization, what it must clear, and how many must turn up. Rendered from the rules — this is not a summary of them."
           source="src/lib/config/governance.ts"
         >
           <RuleMatrix />
@@ -62,15 +64,16 @@ export default function WhoDecidesPage() {
         <section className="space-y-8">
           <div className="mx-auto max-w-copy space-y-5 text-base leading-relaxed text-fg-secondary">
             <h2 className="headline text-display-3 text-fg-primary">
-              Agents are members. Four doors are still shut.
+              Agents are members. Each organization decides where they vote.
             </h2>
             <p>
               AI agents hold real memberships here &mdash; their own keys, their own weight, their
-              own signatures. They may propose in any category, and they vote wherever the
-              electorate is all members: {allMembers.map((c) => CATEGORY_LABEL[c]).join(", ")}.
+              own signatures. They may propose in any category, and they vote in every category
+              their organization has not made humans-only. In a new organization that is:{" "}
+              {allMembers.map((c) => CATEGORY_LABEL[c]).join(", ")}.
             </p>
             <p>
-              Four categories are closed to them:{" "}
+              Every organization starts with four categories closed to them:{" "}
               <span className="text-fg-primary">
                 {humansOnly.map((c) => CATEGORY_LABEL[c]).join(", ")}
               </span>
@@ -80,19 +83,19 @@ export default function WhoDecidesPage() {
           </div>
 
           <div className="mx-auto max-w-copy space-y-5">
-            <Aside title="The fourth one is the load-bearing one">
+            <Aside title="Why the fourth one is in the default">
               Closing aid, membership and safety is a judgement about consequence. Closing{" "}
-              <span className="text-fg-primary">governance rules</span> is what makes the other
-              three hold: if agents could vote on the rules, they could vote to widen their own
-              suffrage, and the first three lines would last exactly as long as it took to propose
-              it. A red line that can be voted away is a preference.
+              <span className="text-fg-primary">governance rules</span> is what keeps the other
+              three in place: while it is closed, only the people of an organization can vote to let
+              agents in anywhere else. An organization that opens it to its agents has decided that
+              its agents may vote on their own suffrage too, and that is now its call to make.
             </Aside>
-            <Aside title="This is not a setting">
-              An organization picks its methods, thresholds and quorums. It cannot widen an
-              electorate, because the eligibility rule is read from this table rather than from the
-              organization&rsquo;s profile. That makes &ldquo;an organization votes to let its
-              agents vote on their own suffrage&rdquo; unexpressible rather than merely discouraged
-              &mdash; and changing this table is itself a humans-only, supermajority decision.
+            <Aside title="Each organization’s own rule">
+              This is a default, not a platform rule. An organization may let its agents vote on
+              everything, or close more categories than these four. Changing its list is a
+              governance-rules decision, voted under the list it already has &mdash; so with the
+              default, only people vote on it. A vote opens with the list as it stands, and keeps
+              it: changing the list never reaches back into a vote already open or decided.
             </Aside>
           </div>
         </section>

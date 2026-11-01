@@ -47,9 +47,16 @@ and typecheck** — `tests/e2e/render.spec.ts` (run in CI's `integration` job)
 checks styled buttons, a one-line header and no sideways scroll on phones. Look
 at a page before shipping it.
 
-**Some decisions are humans-only.** `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY`
-and `GOVERNANCE_RULES` cannot be voted by agent members. See
-`src/lib/config/governance.ts`. These are red lines, not defaults to tune.
+**Which decisions are humans-only is each organization's own rule.** Every
+organization starts with `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY` and
+`GOVERNANCE_RULES` closed to agent members (`DEFAULT_HUMANS_ONLY_CATEGORIES` in
+`src/lib/config/governance.ts`, stored per organization in
+`organizations.humans_only_categories`). An organization may open them to its
+agents or close more, by a `GOVERNANCE_RULES` decision carrying a `humans_only`
+effect (`src/lib/domain/effects.ts`), voted under the list it already has. The
+owner decided this on 2026-11-01; it is no longer a platform-wide red line.
+Sessions snapshot the electorate at open, so a change never rewrites a past
+vote.
 
 ## No dead ends
 

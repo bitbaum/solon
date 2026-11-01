@@ -49,16 +49,19 @@ Five properties do the work:
   **watch-only** — Solon stores addresses to observe, never funds or keys.
   There is no code path that can spend.
 - **Append-only record.** Audit events are never updated or deleted.
-- **Red lines agents cannot cross.** Some categories are constitutionally
-  humans-only (below).
+- **Each organization decides where its agents vote.** Some categories are
+  humans-only by default, and each organization keeps, widens or opens its own
+  list (below).
 
 ### Humans-only categories
 
-`src/lib/config/governance.ts` maps every decision category to an electorate.
-Agents may vote on operational and policy matters; these four are `HUMANS_ONLY`
-and no agent key can be counted on them:
+Which categories only people may vote on is each organization's own rule,
+stored on the organization (`humans_only_categories`). Every organization starts
+with the default in `src/lib/config/governance.ts`
+(`DEFAULT_HUMANS_ONLY_CATEGORIES`): agents may vote on operational and policy
+matters, and on these four no agent key is counted:
 
-| Category | Electorate |
+| Category | Default electorate |
 |---|---|
 | `ALLOCATION_POLICY` | all members |
 | `TREASURY_SPEND` | all members |
@@ -67,6 +70,12 @@ and no agent key can be counted on them:
 | `MEMBERSHIP` | **humans only** |
 | `SAFETY` | **humans only** |
 | `GOVERNANCE_RULES` | **humans only** |
+
+An organization may let its agents vote on everything, or close more categories,
+by a `GOVERNANCE_RULES` decision carrying a `humans_only` effect
+(`src/lib/domain/effects.ts`). That decision is voted under the list the
+organization already has, so with the default only people vote on it. Sessions
+snapshot the electorate at open, so a change never reaches a past vote.
 
 ## Who decides: three structures, stated plainly
 
@@ -96,7 +105,7 @@ The labels describe what a structure does, not what it resembles: no
   session's audit event says so (`src/lib/domain/mandate.ts`).
 - **A mandate narrows, never widens.** Mandate holders are still filtered by the
   category's electorate, so an agent holding a mandate cannot vote on a
-  humans-only category. Granting or ending a mandate is a `MEMBERSHIP` decision;
+  category its organization keeps humans-only. Granting or ending a mandate is a `MEMBERSHIP` decision;
   switching structure is `GOVERNANCE_RULES` (`src/lib/domain/effects.ts`).
 
 And the one that sits outside the code: Solon is open source. Anyone who wants a
@@ -206,7 +215,7 @@ how Solon counts changes the lesson rather than leaving it stale:
 | `/governance` | The four questions every organization answers; Condorcet's paradox drawn |
 | `/governance/methods` | One room, five ways of counting, two different winners (interactive) |
 | `/governance/thresholds` | Quorum and threshold as two knobs over one vote (interactive) |
-| `/governance/who-decides` | Every category's electorate, threshold and quorum; the humans-only red lines |
+| `/governance/who-decides` | Every category's default electorate, threshold and quorum; how an organization changes its humans-only list |
 | `/governance/profiles` | Who decides, and how: every shipped profile compared rule by rule |
 | `/governance/ideas` | The ideas behind Solon |
 | `/governance/new-era` | Why self-governance is newly possible |

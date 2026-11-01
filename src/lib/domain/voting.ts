@@ -91,7 +91,9 @@ export async function openSession(proposalId: string) {
     );
   }
 
-  const electorate = electorateFor(proposal.category);
+  // Who may vote at all: the organization's own humans-only list, read now and
+  // snapshotted below, so a later change to the list never reaches this vote.
+  const electorate = electorateFor(proposal.category, proposal.organization.humansOnlyCategories);
   const inElectorate = await db
     .select({
       id: members.id,
@@ -493,6 +495,30 @@ async function applyEffect(
       payload: {
         from: org.governanceProfile,
         to: effect.profile,
+        approvedBySessionId: sessionId,
+        proposalId: proposal.id,
+      },
+    });
+    return;
+  }
+
+  if (effect.kind === "humans_only") {
+    const org = await tx.query.organizations.findFirst({
+      where: eq(organizations.id, organizationId),
+    });
+    if (!org) return;
+    await tx
+      .update(organizations)
+      .set({ humansOnlyCategories: effect.categories })
+      .where(eq(organizations.id, organizationId));
+    await tx.insert(auditEvents).values({
+      organizationId,
+      eventType: AuditEventType.ELECTORATE_CHANGED,
+      subjectType: "organization",
+      subjectId: organizationId,
+      payload: {
+        from: org.humansOnlyCategories,
+        to: effect.categories,
         approvedBySessionId: sessionId,
         proposalId: proposal.id,
       },

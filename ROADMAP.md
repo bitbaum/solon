@@ -50,7 +50,7 @@ to in one place.
 
 An AI clerk in a bounded office: it drafts proposals, keeps members informed,
 writes the minutes and checks spending against decisions. It never votes where
-humans-only rules apply, and its office is defined by the group's own rules.
+its group's humans-only rules apply, and its office is defined by the group's own rules.
 
 - [x] Sibling agents (the Cat, Loki) hold seats and cast signed votes
 - [ ] Draft a proposal from a plain-words request
@@ -226,8 +226,8 @@ sign.
 
 An organization chooses at founding whether the founder decides, everyone
 decides, or elected delegates decide for a term. Mandates narrow the electorate
-and never widen it; the humans-only categories stay humans-only under every
-structure.
+and never widen it; a category the organization keeps humans-only stays
+humans-only under every structure.
 
 ### Six ways to count
 

@@ -158,9 +158,13 @@ that can hold value is the thing a vote is about.
   (see "Language" below) — never hard-code a sentence on a page that is in
   `TRANSLATED_ROUTES`.
 - Domain logic belongs in `src/lib/domain/` and stays free of HTTP and UI.
-- Some decision categories are **humans-only** (`AID_DISBURSEMENT`, `MEMBERSHIP`,
-  `SAFETY`, `GOVERNANCE_RULES`). See `src/lib/config/governance.ts`; these are
-  red lines, not defaults to tune.
+- Which decision categories are **humans-only** is each organization's own
+  list (`organizations.humans_only_categories`). Every organization starts with
+  `AID_DISBURSEMENT`, `MEMBERSHIP`, `SAFETY` and `GOVERNANCE_RULES`
+  (`DEFAULT_HUMANS_ONLY_CATEGORIES` in `src/lib/config/governance.ts`) and
+  changes it only by a `GOVERNANCE_RULES` decision with a `humans_only` effect.
+  Generic pages describe the default; anything about one organization reads
+  its list.
 
 ## Language
 

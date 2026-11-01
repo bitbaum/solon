@@ -21,6 +21,26 @@ describe("parseEffect", () => {
     expect(parseEffect({ kind: "profile", profile: "MONARCHY" }).ok).toBe(false);
   });
 
+  it("accepts a humans-only list of known categories, including an empty one", () => {
+    expect(parseEffect({ kind: "humans_only", categories: [] })).toEqual({
+      ok: true,
+      effect: { kind: "humans_only", categories: [] },
+    });
+    expect(
+      parseEffect({
+        kind: "humans_only",
+        categories: ["AID_DISBURSEMENT", "MEMBERSHIP", "SAFETY", "GOVERNANCE_RULES", "OPERATIONS"],
+      }).ok,
+    ).toBe(true);
+  });
+
+  it("refuses a humans-only list with an unknown or repeated category, or none at all", () => {
+    expect(parseEffect({ kind: "humans_only", categories: ["ROBOT_RIGHTS"] }).ok).toBe(false);
+    expect(parseEffect({ kind: "humans_only", categories: ["SAFETY", "SAFETY"] }).ok).toBe(false);
+    expect(parseEffect({ kind: "humans_only" }).ok).toBe(false);
+    expect(parseEffect({ kind: "humans_only", categories: "SAFETY" }).ok).toBe(false);
+  });
+
   it("refuses shapes it does not know", () => {
     expect(parseEffect({ kind: "spend", amount: 1 }).ok).toBe(false);
     expect(parseEffect({ kind: "mandate", memberId: "m1" }).ok).toBe(false);
@@ -28,9 +48,19 @@ describe("parseEffect", () => {
 });
 
 describe("effectPairingProblem", () => {
-  it("ties a mandate change to MEMBERSHIP and a profile switch to GOVERNANCE_RULES", () => {
+  it("ties a mandate change to MEMBERSHIP, a profile switch and a humans-only list to GOVERNANCE_RULES", () => {
     expect(EFFECT_CATEGORY.mandate).toBe(DecisionCategory.MEMBERSHIP);
     expect(EFFECT_CATEGORY.profile).toBe(DecisionCategory.GOVERNANCE_RULES);
+    expect(EFFECT_CATEGORY.humans_only).toBe(DecisionCategory.GOVERNANCE_RULES);
+  });
+
+  it("refuses a humans-only change filed anywhere but GOVERNANCE_RULES", () => {
+    const opening = { kind: "humans_only" as const, categories: [] };
+    for (const category of Object.values(DecisionCategory)) {
+      const problem = effectPairingProblem(opening, category);
+      if (category === DecisionCategory.GOVERNANCE_RULES) expect(problem).toBeNull();
+      else expect(problem, category).toMatch(/GOVERNANCE_RULES/);
+    }
   });
 
   it("refuses an effect smuggled into a cheaper category", () => {

@@ -216,7 +216,7 @@
         },
         "algorithmDecides": {
           "problem": "Software is starting to decide who gets help, and who gets in.",
-          "solution": "Some questions only people may vote on: help for a person, who may join, safety, and the rules themselves. AI agents can be members and make suggestions, but on those questions their votes are refused."
+          "solution": "Each group decides which questions only people may vote on. A new one starts with help for a person, who may join, safety, and the rules themselves. AI agents can be members and make suggestions, but on those questions their votes are refused."
         },
         "hiddenRules": {
           "problem": "People join groups without knowing who really decides.",
@@ -247,7 +247,7 @@
       "kicker": "The governance agent",
       "title": "Works for all of you. Never for one of you.",
       "body": "Every group has more to keep track of than anyone has time for. Solon's governance agent will do the clerk's work — in the open, under the same rules as everyone else.",
-      "note": "Not built yet. People decide: some decisions — who may join, and the rules themselves — only people can vote on.",
+      "note": "Not built yet. People decide: in a new group, some decisions — who may join, and the rules themselves — only people can vote on.",
       "writes": {
         "title": "Writes it up",
         "body": "Turns a request in plain words into a clear proposal that says exactly what would change."

@@ -64,7 +64,12 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
 
   return (
     <Shell>
-      <FileProposal orgSlug={org.slug} memberAddress={member.bitcoinAddress} initial={draft} />
+      <FileProposal
+        orgSlug={org.slug}
+        humansOnlyCategories={org.humansOnlyCategories}
+        memberAddress={member.bitcoinAddress}
+        initial={draft}
+      />
     </Shell>
   );
 }

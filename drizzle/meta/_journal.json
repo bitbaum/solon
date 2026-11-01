@@ -134,6 +134,13 @@
       "when": 1792771154530,
       "tag": "0018_the_law_search",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793523467607,
+      "tag": "0019_each_organization_decides_who_votes",
+      "breakpoints": true
     }
   ]
 }

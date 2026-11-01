@@ -10,7 +10,11 @@ import {
   type GovernanceProfileId,
 } from "@/lib/db/enums";
 import type { MethodId } from "@/lib/domain/methods/types";
-import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "./governance";
+import {
+  CATEGORY_QUORUM_PERCENT,
+  CATEGORY_THRESHOLD,
+  DEFAULT_HUMANS_ONLY_CATEGORIES,
+} from "./governance";
 
 /**
  * SSOT for how different kinds of organization decide things.
@@ -18,7 +22,7 @@ import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from
  * A profile answers, for each category of decision: WHO within the electorate
  * decides it (every member, or the members holding a mandate), by what method,
  * at what threshold, with what quorum. It deliberately does NOT answer who is
- * in the electorate at all — see HUMANS_ONLY below.
+ * in the electorate at all — see electorateFor below.
  *
  * The WHO axis is what lets Solon hold every structure people actually run,
  * named for what it does rather than borrowed from political history:
@@ -300,16 +304,29 @@ export function profileFor(id: string | null | undefined): GovernanceProfile {
  * Who may vote is NOT a profile's decision.
  *
  * A profile picks methods, thresholds, and whether the mandate holders or all
- * members decide — a narrowing inside the electorate. It cannot widen one,
- * because the four HUMANS_ONLY categories — aid to people, membership, safety,
- * and the governance rules themselves — are the product's red lines. Reading
- * eligibility from `CATEGORY_ELECTORATE` here rather than from the profile is
- * what makes "an organization votes to let its agents vote on their own
- * suffrage" unexpressible rather than merely discouraged.
+ * members decide — a narrowing inside the electorate. It cannot widen one.
+ * Eligibility is the organization's own humans-only list
+ * (`organizations.humans_only_categories`, which starts as
+ * DEFAULT_HUMANS_ONLY_CATEGORIES), kept apart from the profile on purpose:
+ * switching structure never quietly changes whether agents vote, and changing
+ * the list is its own GOVERNANCE_RULES decision (a `humans_only` effect),
+ * voted under the list the organization already has.
  */
-export function electorateFor(category: DecisionCategory): Electorate {
-  return CATEGORY_ELECTORATE[category];
+export function electorateFor(
+  category: DecisionCategory,
+  humansOnlyCategories: readonly DecisionCategory[],
+): Electorate {
+  return humansOnlyCategories.includes(category) ? Electorate.HUMANS_ONLY : Electorate.ALL_MEMBERS;
 }
+
+/**
+ * The electorate per category under the default list — what generic pages,
+ * the assistant and the proposal form describe before an organization is
+ * known. Derived from the one list, never typed twice.
+ */
+export const DEFAULT_CATEGORY_ELECTORATE = Object.fromEntries(
+  DECISION_CATEGORIES.map((c) => [c, electorateFor(c, DEFAULT_HUMANS_ONLY_CATEGORIES)]),
+) as Record<DecisionCategory, Electorate>;
 
 export function ruleFor(
   profileId: string | null | undefined,

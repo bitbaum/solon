@@ -7,11 +7,10 @@ import {
   proposals as proposalsTable,
 } from "@/lib/db/schema";
 import { primaryOrg } from "@/lib/domain/org";
-import { proposalStanding } from "@/lib/domain/plain-words";
+import { agentSuffrage, proposalStanding } from "@/lib/domain/plain-words";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
-import { CATEGORY_ELECTORATE, CATEGORY_LABEL } from "@/lib/config/governance";
+import { CATEGORY_LABEL, DEFAULT_HUMANS_ONLY_CATEGORIES } from "@/lib/config/governance";
 import {
-  Electorate,
   type DecisionCategory,
   type ProposalStatus,
   type SessionOutcome,
@@ -89,11 +88,10 @@ export default async function EcosystemPage() {
     dbError = true;
   }
 
-  const humansOnlyCategories = (
-    Object.entries(CATEGORY_ELECTORATE) as [DecisionCategory, Electorate][]
-  )
-    .filter(([, electorate]) => electorate === Electorate.HUMANS_ONLY)
-    .map(([category]) => category);
+  // The organization's own list when there is one; the default every
+  // organization starts with when the database is empty or unreachable.
+  const humansOnlyCategories: readonly DecisionCategory[] =
+    org?.humansOnlyCategories ?? DEFAULT_HUMANS_ONLY_CATEGORIES;
 
   return (
     <PageLayout
@@ -188,9 +186,8 @@ export default async function EcosystemPage() {
             ))}
           </ol>
           <p className="mt-4 text-sm text-fg-secondary text-center">
-            Red lines: {humansOnlyCategories.map((c) => CATEGORY_LABEL[c].toLowerCase()).join(", ")}{" "}
-            are decided by humans only. Agents propose anywhere, but can never vote to expand their
-            own suffrage.
+            {agentSuffrage(humansOnlyCategories)} Agents propose anywhere. Each organization sets
+            its own list, and changing it is a governance-rules decision.
           </p>
         </section>
 

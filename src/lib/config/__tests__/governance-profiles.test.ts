@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { DecisionBody, DecisionCategory, Electorate, VoteThreshold } from "@/lib/db/enums";
-import { CATEGORY_ELECTORATE, CATEGORY_QUORUM_PERCENT, CATEGORY_THRESHOLD } from "../governance";
 import {
+  CATEGORY_QUORUM_PERCENT,
+  CATEGORY_THRESHOLD,
+  DEFAULT_HUMANS_ONLY_CATEGORIES,
+} from "../governance";
+import {
+  DEFAULT_CATEGORY_ELECTORATE,
   DEFAULT_PROFILE,
   GOVERNANCE_PROFILES,
   GOVERNANCE_PROFILE_IDS,
@@ -20,23 +25,35 @@ const ALL_PROFILES = Object.values(GOVERNANCE_PROFILES);
 const ALL_CATEGORIES = Object.values(DecisionCategory);
 
 /**
- * The red lines are the product's promise, not a default to tune. These tests
- * are the enforcement: a future profile that tries to loosen them fails here
- * rather than shipping and being noticed after a vote it should never have
- * allowed.
+ * Which categories are humans-only is each organization's own rule (owner's
+ * decision, 2026-11-01). These tests pin the two halves of that: the list an
+ * organization holds is what decides eligibility, and no profile can change
+ * it on the side.
  */
-describe("humans-only red lines", () => {
-  const RED_LINES: DecisionCategory[] = [
-    DecisionCategory.AID_DISBURSEMENT,
-    DecisionCategory.MEMBERSHIP,
-    DecisionCategory.SAFETY,
-    DecisionCategory.GOVERNANCE_RULES,
-  ];
-
-  it("are humans-only no matter which profile an organization picks", () => {
-    for (const category of RED_LINES) {
-      expect(electorateFor(category)).toBe(Electorate.HUMANS_ONLY);
+describe("humans-only categories", () => {
+  it("are, by default, aid, membership, safety and the rules themselves", () => {
+    for (const category of DEFAULT_HUMANS_ONLY_CATEGORIES) {
+      expect(electorateFor(category, DEFAULT_HUMANS_ONLY_CATEGORIES)).toBe(Electorate.HUMANS_ONLY);
     }
+    expect(electorateFor(DecisionCategory.GOVERNANCE_RULES, DEFAULT_HUMANS_ONLY_CATEGORIES)).toBe(
+      Electorate.HUMANS_ONLY,
+    );
+  });
+
+  it("open every category to agents when an organization's list is empty", () => {
+    for (const category of ALL_CATEGORIES) {
+      expect(electorateFor(category, [])).toBe(Electorate.ALL_MEMBERS);
+    }
+    expect(electorateFor(DecisionCategory.GOVERNANCE_RULES, [])).toBe(Electorate.ALL_MEMBERS);
+  });
+
+  it("close an added category when an organization's list is larger than the default", () => {
+    const larger = [...DEFAULT_HUMANS_ONLY_CATEGORIES, DecisionCategory.TREASURY_SPEND];
+    expect(electorateFor(DecisionCategory.TREASURY_SPEND, larger)).toBe(Electorate.HUMANS_ONLY);
+    expect(electorateFor(DecisionCategory.TREASURY_SPEND, DEFAULT_HUMANS_ONLY_CATEGORIES)).toBe(
+      Electorate.ALL_MEMBERS,
+    );
+    expect(electorateFor(DecisionCategory.OPERATIONS, larger)).toBe(Electorate.ALL_MEMBERS);
   });
 
   it("cannot be widened by a profile, because profiles do not carry an electorate", () => {
@@ -44,8 +61,9 @@ describe("humans-only red lines", () => {
       for (const category of ALL_CATEGORIES) {
         const rule = profile.rules[category];
         // If a profile ever gains an `electorate` key this fails — which is the
-        // point. Eligibility has exactly one source. `decidedBy` only narrows
-        // inside that electorate (mandate holders are still filtered by it).
+        // point. Eligibility has exactly one source: the organization's list.
+        // `decidedBy` only narrows inside that electorate (mandate holders are
+        // still filtered by it).
         expect(Object.keys(rule).sort()).toEqual([
           "decidedBy",
           "method",
@@ -54,10 +72,6 @@ describe("humans-only red lines", () => {
         ]);
       }
     }
-  });
-
-  it("keeps agents out of their own suffrage question", () => {
-    expect(electorateFor(DecisionCategory.GOVERNANCE_RULES)).toBe(Electorate.HUMANS_ONLY);
   });
 });
 
@@ -138,9 +152,11 @@ describe("the default profile preserves pre-existing behaviour", () => {
     expect(profileFor("NOT_A_REAL_PROFILE").id).toBe("TOWN");
   });
 
-  it("still sources electorate from the one config that owns it", () => {
+  it("derives the default electorate from the one default list", () => {
     for (const category of ALL_CATEGORIES) {
-      expect(electorateFor(category)).toBe(CATEGORY_ELECTORATE[category]);
+      expect(DEFAULT_CATEGORY_ELECTORATE[category]).toBe(
+        electorateFor(category, DEFAULT_HUMANS_ONLY_CATEGORIES),
+      );
     }
   });
 });

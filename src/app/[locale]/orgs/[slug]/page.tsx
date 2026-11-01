@@ -10,6 +10,7 @@ import { profileFor, usesMandates } from "@/lib/config/governance-profiles";
 import { COLLECTIVE_KINDS, LEGAL_STATUS_LABEL, formatPlace } from "@/lib/collective-kinds";
 import { ECOSYSTEM_PILLARS } from "@/lib/config/ecosystem";
 import { isMandateLive } from "@/lib/domain/mandate";
+import { agentSuffrage } from "@/lib/domain/plain-words";
 import { MemberFace } from "@/components/ui/member-face";
 import TechnicalDetails from "@/components/ui/technical-details";
 
@@ -131,7 +132,9 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         {/* Said before the members, in the profile's own words, because it is
             what someone deciding whether to join most needs to know — and the
             one thing an organization should never leave to be inferred. */}
-        <p className="text-sm leading-relaxed text-fg-secondary">{profile.whoDecides}</p>
+        <p className="text-sm leading-relaxed text-fg-secondary">
+          {profile.whoDecides} {agentSuffrage(org.humansOnlyCategories)}
+        </p>
 
         {/* Written only for an organization that is not #1, because only there is
             it true: the proposal and voting screens on this site are built for

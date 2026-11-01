@@ -1,17 +1,19 @@
 import {
-  CATEGORY_ELECTORATE,
   CATEGORY_THRESHOLD,
   CATEGORY_QUORUM_PERCENT,
   CATEGORY_LABEL,
   CATEGORY_MEANING,
 } from "@/lib/config/governance";
+import { DEFAULT_CATEGORY_ELECTORATE } from "@/lib/config/governance-profiles";
 import { DECISION_CATEGORIES, Electorate, VoteThreshold } from "@/lib/db/enums";
 
 /**
  * Who decides what, rendered from the rules themselves.
  *
  * Every value in this table is read from `src/lib/config/governance.ts` at
- * build time. There is no copy of these numbers in the page, which matters more
+ * build time. The "Who votes" column is the default every organization starts
+ * with; each organization may change its own humans-only list, and the page
+ * around the table says so. There is no copy of these numbers in the page, which matters more
  * here than anywhere else on the site: this is the table a reader would cite
  * when deciding whether to trust the thing, and a stale published constitution
  * is worse than none.
@@ -21,8 +23,8 @@ export function RuleMatrix() {
     <div className="overflow-x-auto">
       <table className="w-full min-w-[42rem] border-collapse text-sm">
         <caption className="sr-only">
-          Each category of decision, with who may vote on it, the threshold it must clear, and the
-          quorum it needs
+          Each category of decision, with who may vote on it by default, the threshold it must
+          clear, and the quorum it needs
         </caption>
         <thead>
           <tr className="border-b border-default">
@@ -33,7 +35,7 @@ export function RuleMatrix() {
               scope="col"
               className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-caps text-fg-secondary"
             >
-              Who votes
+              Who votes, by default
             </th>
             <th
               scope="col"
@@ -51,7 +53,7 @@ export function RuleMatrix() {
         </thead>
         <tbody>
           {DECISION_CATEGORIES.map((category) => {
-            const humansOnly = CATEGORY_ELECTORATE[category] === Electorate.HUMANS_ONLY;
+            const humansOnly = DEFAULT_CATEGORY_ELECTORATE[category] === Electorate.HUMANS_ONLY;
             const superMajority = CATEGORY_THRESHOLD[category] === VoteThreshold.SUPERMAJORITY;
             return (
               <tr key={category} className="border-b border-subtle align-top">
