@@ -45,6 +45,8 @@ export interface LexworkReport {
   versionsStored: number;
   provisions: number;
   remaining: boolean;
+  /** Versions the publisher holds with no text (a blank page): reported, never invented, not a failure. */
+  emptyAtPublisher: string[];
   failures: { act: string; reason: string }[];
 }
 
@@ -62,6 +64,7 @@ export async function importLexwork(db: Database, options: LexworkOptions): Prom
     versionsStored: 0,
     provisions: 0,
     remaining: false,
+    emptyAtPublisher: [],
     failures: [],
   };
 
@@ -152,58 +155,72 @@ export async function importLexwork(db: Database, options: LexworkOptions): Prom
         const currentId = current.act.text_of_law.current_version.id;
         for (const [i, version] of wanted.entries()) {
           if (have.has(version.inForceFrom!)) continue;
-          let source: { act: LexworkAct; bytes: Uint8Array } | null = current;
-          if (version.id !== currentId) {
-            source = await fetchLexworkAct(host, listedAct.systematicNumber, version.id, doFetch);
-            await sleep(pauseMs);
-          }
-          if (!source) throw new Error(`version ${version.id} not served`);
-          let provisions = parseLexworkProvisions(source.act);
-          let format: "json" | "pdf" = "json";
-          let bytes = source.bytes;
-          if (provisions.length === 0) {
-            // Older versions are held only as a PDF.
-            const pdf = await fetchLexworkPdf(host, source.act, doFetch);
-            await sleep(pauseMs);
-            if (pdf) {
-              provisions = (await provisionsOfPdf(pdf, LEXWORK.locale)).provisions;
-              format = "pdf";
-              bytes = pdf;
+          // One version that cannot be read never stops the ones after it, the current one above all.
+          try {
+            let source: { act: LexworkAct; bytes: Uint8Array } | null = current;
+            if (version.id !== currentId) {
+              source = await fetchLexworkAct(host, listedAct.systematicNumber, version.id, doFetch);
+              await sleep(pauseMs);
             }
-          }
-          if (provisions.length === 0) throw new Error(`version ${version.id}: no text`);
-          const next = wanted[i + 1];
-          await storeVersion(
-            db,
-            snapshots,
-            {
-              actId,
-              lang: LEXWORK.locale,
-              inForceFrom: version.inForceFrom!,
-              // An earlier version ends the day before the next begins; the latest ends only when the collection says.
-              inForceTo: next ? dayBefore(next.inForceFrom!) : undefined,
-              dateBasis: "publisher",
-              status: LEXWORK.textStatus,
-              format,
-              bytes,
-              url: current.act.text_of_law.canonical_link,
-              provisions,
-              source: {
-                key: LEXWORK.key,
-                licenceSpdx: LEXWORK.licenceSpdx,
-                importerVersion: LEXWORK_IMPORTER_VERSION,
+            if (!source) throw new Error(`version ${version.id} not served`);
+            let provisions = parseLexworkProvisions(source.act);
+            let format: "json" | "pdf" = "json";
+            let bytes = source.bytes;
+            if (provisions.length === 0) {
+              // Older versions are held only as a PDF.
+              const pdf = await fetchLexworkPdf(host, source.act, doFetch);
+              await sleep(pauseMs);
+              if (pdf) {
+                provisions = (await provisionsOfPdf(pdf, LEXWORK.locale)).provisions;
+                format = "pdf";
+                bytes = pdf;
+              }
+            }
+            if (provisions.length === 0) {
+              // The publisher holds this version with no text (a blank page): said so, nothing invented.
+              report.emptyAtPublisher.push(
+                `${host} ${listedAct.systematicNumber} version ${version.id}`,
+              );
+              continue;
+            }
+            const next = wanted[i + 1];
+            await storeVersion(
+              db,
+              snapshots,
+              {
+                actId,
+                lang: LEXWORK.locale,
+                inForceFrom: version.inForceFrom!,
+                // An earlier version ends the day before the next begins; the latest ends only when the collection says.
+                inForceTo: next ? dayBefore(next.inForceFrom!) : undefined,
+                dateBasis: "publisher",
+                status: LEXWORK.textStatus,
+                format,
+                bytes,
+                url: current.act.text_of_law.canonical_link,
+                provisions,
+                source: {
+                  key: LEXWORK.key,
+                  licenceSpdx: LEXWORK.licenceSpdx,
+                  importerVersion: LEXWORK_IMPORTER_VERSION,
+                },
               },
-            },
-            false,
-          );
-          have.add(version.inForceFrom!);
-          held.set(actId, have);
-          commune.stored++;
-          report.versionsStored++;
-          report.provisions += provisions.length;
-          say(
-            `${host} ${listedAct.systematicNumber} ${version.inForceFrom}: ${provisions.length} provisions`,
-          );
+              false,
+            );
+            have.add(version.inForceFrom!);
+            held.set(actId, have);
+            commune.stored++;
+            report.versionsStored++;
+            report.provisions += provisions.length;
+            say(
+              `${host} ${listedAct.systematicNumber} ${version.inForceFrom}: ${provisions.length} provisions`,
+            );
+          } catch (error) {
+            report.failures.push({
+              act: `${host} ${listedAct.systematicNumber} version ${version.id}`,
+              reason: error instanceof Error ? error.message : String(error),
+            });
+          }
         }
       } catch (error) {
         report.failures.push({
