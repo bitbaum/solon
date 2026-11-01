@@ -16,7 +16,13 @@ import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-s
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow } from "../register/import";
 import { storeVersion } from "./store";
-import { fetchHtml, listVersionsOn, parseProvisions, type FedlexVersion } from "./fedlex";
+import {
+  fetchHtml,
+  fetchTitles,
+  listVersionsOn,
+  parseProvisions,
+  type FedlexVersion,
+} from "./fedlex";
 
 export const TEXT_IMPORTER_VERSION = "law-text-fedlex-1";
 
@@ -171,11 +177,16 @@ export async function importFedlexText(db: Database, options: TextOptions): Prom
   }
   // An act Fedlex lists and the register lacks is registered from Fedlex's own list, then read.
   if (missing.length > 0 && !dryRun) {
+    const titles = await fetchTitles(
+      missing.map((v) => v.eli),
+      lang,
+      doFetch,
+    );
     const rows: ActRow[] = missing.map((v) => ({
       authority: FEDLEX.authority,
       kind: v.sr.startsWith("0.") ? "treaty" : "other",
       inForce: true,
-      title: v.title ?? `SR ${v.sr}`,
+      title: titles.get(v.eli) ?? `SR ${v.sr}`,
       locale: lang,
       identity: { scheme: "ch_eli", value: v.eli },
       systematicNumber: v.sr,

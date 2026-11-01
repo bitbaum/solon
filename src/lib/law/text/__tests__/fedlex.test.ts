@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listVersionsOn, parseProvisions, WHOLE_ACT } from "../fedlex";
+import { fetchTitles, listVersionsOn, parseProvisions, WHOLE_ACT } from "../fedlex";
 
 const page = (body: string) =>
   `<html><body><div id="lawcontent"><div id="preface"><h1 class="erlasstitel">Ein Gesetz</h1></div>${body}</div></body></html>`;
@@ -76,5 +76,40 @@ describe("listVersionsOn", () => {
   it("refuses a language the publisher does not serve and a day that is not a date", async () => {
     await expect(listVersionsOn("2026-10-23", "en")).rejects.toThrow("does not serve language en");
     await expect(listVersionsOn("tomorrow", "de")).rejects.toThrow("ISO date");
+  });
+});
+
+describe("fetchTitles", () => {
+  const answer = (bindings: unknown[]) =>
+    (async () =>
+      new Response(JSON.stringify({ results: { bindings } }))) as unknown as typeof fetch;
+
+  it("maps each act's address to its title and leaves out an act with none", async () => {
+    const titles = await fetchTitles(
+      [
+        "https://fedlex.data.admin.ch/eli/cc/2025/162",
+        "https://fedlex.data.admin.ch/eli/cc/2006/71",
+      ],
+      "de",
+      answer([
+        {
+          cc: { value: "https://fedlex.data.admin.ch/eli/cc/2025/162" },
+          title: { value: "Rahmenübereinkommen 2025" },
+        },
+        { cc: { value: "https://fedlex.data.admin.ch/eli/cc/2006/71" } },
+      ]),
+    );
+    expect([...titles]).toEqual([
+      ["https://fedlex.data.admin.ch/eli/cc/2025/162", "Rahmenübereinkommen 2025"],
+    ]);
+  });
+  it("does not put an address it does not recognise into a query", async () => {
+    let asked = false;
+    const spy = (async () => {
+      asked = true;
+      return new Response(JSON.stringify({ results: { bindings: [] } }));
+    }) as unknown as typeof fetch;
+    await fetchTitles(["https://evil.example/eli/cc/1> } # "], "de", spy);
+    expect(asked).toBe(false);
   });
 });

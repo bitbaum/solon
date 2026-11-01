@@ -20,8 +20,6 @@ export interface FedlexVersion {
   date: string;
   /** Where the HTML is. */
   url: string;
-  /** The act's title in this language, when Fedlex gives one. */
-  title?: string;
 }
 
 export interface Provision {
@@ -47,7 +45,7 @@ export async function listVersionsOn(
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error(`day must be an ISO date: ${day}`);
   const query = `PREFIX jolux: <http://data.legilux.public.lu/resource/ontology/jolux#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT ?cc ?n ?date ?url ?title WHERE {
+SELECT ?cc ?n ?date ?url WHERE {
   ?cc jolux:classifiedByTaxonomyEntry/skos:notation ?n .
   FILTER(STRSTARTS(STR(?cc), "https://fedlex.data.admin.ch/eli/cc/"))
   ?cons jolux:isMemberOf ?cc ; jolux:dateApplicability ?date ; jolux:isRealizedBy ?expr .
@@ -57,7 +55,6 @@ SELECT ?cc ?n ?date ?url ?title WHERE {
   ?expr jolux:language <http://publications.europa.eu/resource/authority/language/${code}> ;
         jolux:isEmbodiedBy ?m .
   ?m jolux:userFormat <https://fedlex.data.admin.ch/vocabulary/user-format/html> ; jolux:isExemplifiedBy ?url .
-  OPTIONAL { ?cc jolux:isRealizedBy ?actExpr . ?actExpr jolux:language <http://publications.europa.eu/resource/authority/language/${code}> ; jolux:title ?title }
 }`;
   const response = await doFetch(SPARQL, {
     method: "POST",
@@ -80,7 +77,6 @@ SELECT ?cc ?n ?date ?url ?title WHERE {
       sr: row.n!.value,
       date: row.date!.value,
       url: row.url!.value,
-      title: row.title?.value,
     };
     const key = `${version.eli}|${version.sr}`;
     const kept = latest.get(key);
@@ -155,6 +151,51 @@ export function parseProvisions(html: string): Provision[] {
       const text = plain(body, true);
       if (text) out.push({ path: WHOLE_ACT, heading: plain(title), text });
     }
+  }
+  return out;
+}
+
+/**
+ * The titles of some acts, by their address, in one language. Asked apart from the
+ * list on purpose: a title joined into the list query made Fedlex return five fewer
+ * acts. An act whose title is not given is left out of the answer.
+ */
+export async function fetchTitles(
+  elis: readonly string[],
+  lang: string,
+  doFetch: Fetch = fetch,
+): Promise<Map<string, string>> {
+  const code = FEDLEX.languages[lang];
+  if (!code) throw new Error(`fedlex does not serve language ${lang}`);
+  const out = new Map<string, string>();
+  for (let i = 0; i < elis.length; i += 100) {
+    const values = elis
+      .slice(i, i + 100)
+      .filter((eli) => /^https:\/\/fedlex\.data\.admin\.ch\/eli\/cc\/[\w./-]+$/.test(eli))
+      .map((eli) => `<${eli}>`)
+      .join(" ");
+    if (!values) continue;
+    const query = `PREFIX jolux: <http://data.legilux.public.lu/resource/ontology/jolux#>
+SELECT ?cc ?title WHERE {
+  VALUES ?cc { ${values} }
+  ?cc jolux:isRealizedBy ?e . ?e jolux:language <http://publications.europa.eu/resource/authority/language/${code}> ; jolux:title ?title .
+}`;
+    const response = await doFetch(SPARQL, {
+      method: "POST",
+      headers: {
+        accept: "application/sparql-results+json",
+        "content-type": "application/x-www-form-urlencoded",
+        "user-agent": USER_AGENT,
+      },
+      body: new URLSearchParams({ query }).toString(),
+      signal: AbortSignal.timeout(120_000),
+    });
+    if (!response.ok) throw new Error(`fedlex sparql (titles): HTTP ${response.status}`);
+    const rows =
+      ((await response.json()) as { results?: { bindings?: Record<string, { value: string }>[] } })
+        .results?.bindings ?? [];
+    for (const row of rows)
+      if (row.cc && row.title && !out.has(row.cc.value)) out.set(row.cc.value, row.title.value);
   }
   return out;
 }
