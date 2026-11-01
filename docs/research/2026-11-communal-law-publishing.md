@@ -32,9 +32,12 @@ they are not repeated here; use the BFS file when a count matters.
      found so far (a lower bound): Zug, Baar, Cham and the other Zug communes (11 of 11),
      Glarus, Glarus Nord and Glarus Süd (3 of 3), Stadt Luzern, Neuenkirch, Biel, Delémont,
      Stadt Solothurn, Winterthur, Kloten, Frauenfeld, Bischofszell, Sirnach, St. Gallen,
-     Rapperswil-Jona, Uznach, Weesen. A JSON interface sits behind the Angular app; its
-     routes were not found at the addresses tried, and whether it is open to read is not yet
-     known. No customer list is published; Sitrox would have to supply one.
+     Rapperswil-Jona, Uznach, Weesen. The app's own JSON interface is open
+     and needs no login (checked 2026-11-01): /api/de/texts_of_law/lightweight_index lists a
+     commune's acts, /api/de/texts_of_law/<systematic number>/show_as_json serves an act with
+     the day each version took effect and its article tree, and older versions have a PDF.
+     The reader is built (docs/design, "LexWork as built"). No customer list is published;
+     Sitrox would have to supply one.
    - **i-web.ch Gemeinde CMS** (Innovative Web AG): communes on their own domains with the
      same /reglemente-style page and filter form (Stichwort, Gültig am, Nummer, Art), where
      the list is rendered by JavaScript. Estimated from homepages, not verified: about 50 of
@@ -55,8 +58,10 @@ they are not repeated here; use the BFS file when a count matters.
 
 ## What to build, in this order
 
-1. A LexWork (tlex) reader: one adapter, dated versions, around thirty communes at once and
-   more once Sitrox says who its customers are.
+1. A LexWork (tlex) reader: built, for the 14 Zug and Glarus communes verified live; the other
+   instances found (Luzern, Neuenkirch, Biel, Delémont, Solothurn, Winterthur, Kloten,
+   Frauenfeld, Bischofszell, Sirnach, St. Gallen, Rapperswil-Jona, Uznach, Weesen) join once
+   each answers from the server, and more once Sitrox says who its customers are.
 2. An i-web reader, after tracing the JavaScript list endpoint of one commune.
 3. Readers for the largest single lists (Lausanne, Genève, Bellinzona, Lugano, Chur, Thun,
    Bern's stadtrecht).
@@ -67,6 +72,5 @@ they are not repeated here; use the BFS file when a count matters.
 
 ## Not verified
 
-The exact number of communes per canton; the i-web commune counts; whether the tlex JSON
-interface is open; whether LexFind lists communal law (inferred only); every figure marked
+The exact number of communes per canton; the i-web commune counts; whether LexFind lists communal law (inferred only); every figure marked
 "estimated" above.

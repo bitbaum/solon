@@ -5,6 +5,7 @@
  *   pnpm run law:text lilex [--limit 200] [--lr 210.0] [--dry-run]
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
+ *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
@@ -15,6 +16,7 @@
  */
 import { recutCantonalText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
+import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
@@ -90,6 +92,24 @@ async function main(): Promise<number> {
       ),
     );
     return report.failures.length > report.checked / 2 ? 1 : 0;
+  }
+  if (sourceKey === "lexwork") {
+    const report = await importLexwork(db, {
+      today: new Date().toISOString().slice(0, 10),
+      host: flag("host"),
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 30), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
+    return report.failures.length > 0 ? 1 : 0;
   }
   if (sourceKey === "legilux") {
     const report = await importLegilux(db, {

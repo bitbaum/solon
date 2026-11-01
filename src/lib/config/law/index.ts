@@ -50,7 +50,7 @@ export const ACT_VERSION_DATE_BASES = ["publisher", "retrieved"] as const;
 export type ActVersionDateBasis = (typeof ACT_VERSION_DATE_BASES)[number];
 
 /** What a version's snapshot holds. */
-export const ACT_TEXT_FORMATS = ["html", "pdf"] as const;
+export const ACT_TEXT_FORMATS = ["html", "pdf", "json"] as const;
 export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
 
 export const ACT_NAME_KINDS = ["title"] as const;
@@ -108,6 +108,92 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     name: "Zürich (city)",
     place: { scheme: "bfs_municipality", value: "261" },
     within: "zh",
+  },
+  // Communes whose law sits in a LexWork collection (see LEXWORK): `bfs<number>`, the commune's number in the
+  // Federal Statistical Office's directory.
+  {
+    key: "bfs1701",
+    name: "Baar",
+    place: { scheme: "bfs_municipality", value: "1701" },
+    within: "zg",
+  },
+  {
+    key: "bfs1702",
+    name: "Cham",
+    place: { scheme: "bfs_municipality", value: "1702" },
+    within: "zg",
+  },
+  {
+    key: "bfs1703",
+    name: "Hünenberg",
+    place: { scheme: "bfs_municipality", value: "1703" },
+    within: "zg",
+  },
+  {
+    key: "bfs1704",
+    name: "Menzingen",
+    place: { scheme: "bfs_municipality", value: "1704" },
+    within: "zg",
+  },
+  {
+    key: "bfs1705",
+    name: "Neuheim",
+    place: { scheme: "bfs_municipality", value: "1705" },
+    within: "zg",
+  },
+  {
+    key: "bfs1706",
+    name: "Oberägeri",
+    place: { scheme: "bfs_municipality", value: "1706" },
+    within: "zg",
+  },
+  {
+    key: "bfs1707",
+    name: "Risch",
+    place: { scheme: "bfs_municipality", value: "1707" },
+    within: "zg",
+  },
+  {
+    key: "bfs1708",
+    name: "Steinhausen",
+    place: { scheme: "bfs_municipality", value: "1708" },
+    within: "zg",
+  },
+  {
+    key: "bfs1709",
+    name: "Unterägeri",
+    place: { scheme: "bfs_municipality", value: "1709" },
+    within: "zg",
+  },
+  {
+    key: "bfs1710",
+    name: "Walchwil",
+    place: { scheme: "bfs_municipality", value: "1710" },
+    within: "zg",
+  },
+  {
+    key: "bfs1711",
+    name: "Zug",
+    place: { scheme: "bfs_municipality", value: "1711" },
+    within: "zg",
+  },
+  {
+    key: "bfs1630",
+    name: "Glarus Nord",
+    place: { scheme: "bfs_municipality", value: "1630" },
+    within: "gl",
+  },
+  {
+    key: "bfs1631",
+    name: "Glarus Süd",
+    place: { scheme: "bfs_municipality", value: "1631" },
+    within: "gl",
+  },
+  {
+    key: "bfs1632",
+    name: "Glarus",
+    place: { scheme: "bfs_municipality", value: "1632" },
+    within: "gl",
   },
   // Liechtenstein's communes: `li<number>`, the place the commune's number in the Liechtenstein register.
   {
@@ -362,6 +448,37 @@ export const ZHLEX = {
   locale: "de",
   licenceSpdx: "LicenseRef-ch-official-act",
   textStatus: "consolidated" as ActTextStatus,
+} as const;
+
+/**
+ * Communes that keep their law in a LexWork collection (Sitrox), one address per commune.
+ * The collection answers an open JSON interface under /api/<lang>/ (the app's own), so it is
+ * read as data: the list of acts, each act by systematic number, its dated versions and the
+ * article tree of each. Only these hosts are read. Surveyed 2026-11-01, docs/research.
+ */
+export const LEXWORK = {
+  key: "lexwork",
+  publisher: "LexWork collections kept by the communes (Sitrox)",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "de",
+  textStatus: "consolidated" as ActTextStatus,
+  /** A commune's collection and the authority that is the commune. */
+  instances: [
+    { host: "zug.tlex.ch", authority: "bfs1711" },
+    { host: "baar.tlex.ch", authority: "bfs1701" },
+    { host: "cham.tlex.ch", authority: "bfs1702" },
+    { host: "huenenberg.tlex.ch", authority: "bfs1703" },
+    { host: "menzingen.tlex.ch", authority: "bfs1704" },
+    { host: "neuheim.tlex.ch", authority: "bfs1705" },
+    { host: "oberaegeri.tlex.ch", authority: "bfs1706" },
+    { host: "risch.tlex.ch", authority: "bfs1707" },
+    { host: "steinhausen.tlex.ch", authority: "bfs1708" },
+    { host: "unteraegeri.tlex.ch", authority: "bfs1709" },
+    { host: "walchwil.tlex.ch", authority: "bfs1710" },
+    { host: "glarus.tlex.ch", authority: "bfs1632" },
+    { host: "glarus-nord.tlex.ch", authority: "bfs1630" },
+    { host: "glarus-sued.tlex.ch", authority: "bfs1631" },
+  ] as readonly { host: string; authority: string }[],
 } as const;
 
 /**
