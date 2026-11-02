@@ -4,7 +4,9 @@ import { toLocale } from "@/i18n/routing";
 import LawIndex from "@/components/law/law-index";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
-import { searchActs } from "@/lib/law/register/coverage";
+import { placeTree } from "@/lib/law/places";
+import { loadLawCoverage, searchActs } from "@/lib/law/register/coverage";
+import { searchProvisions } from "@/lib/law/search";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,7 @@ export async function generateMetadata({ params }: { params: Params }) {
   return { title: t("index.metaTitle"), description: t("index.metaDescription") };
 }
 
-/** Find an act by its title or its number (design: docs/design/2026-10-law-as-data.md). */
+/** Find the law: by a word of its title, a word of its text, its number, or the place it applies (design: docs/design/2026-11-law-navigation.md). */
 export default async function LawPage({
   params,
   searchParams,
@@ -31,14 +33,26 @@ export default async function LawPage({
   const query = q.trim().slice(0, 100);
   const known = LAW_AUTHORITIES.some((a) => a.key === authority) ? authority : "";
   const byNumber = /^\d[\d.]*$/.test(query);
-  const hits =
-    query || known
-      ? await searchActs(db, {
-          authority: known || undefined,
-          number: byNumber ? query : undefined,
-          title: !byNumber && query ? query : undefined,
-        })
-      : null;
+  const searched = Boolean(query || known);
+  const [hits, textHits, coverage] = await Promise.all([
+    searched
+      ? searchActs(
+          db,
+          {
+            authority: known || undefined,
+            number: byNumber ? query : undefined,
+            title: !byNumber && query ? query : undefined,
+            inForceOnly: true,
+          },
+          20,
+        )
+      : null,
+    // Words of the law itself: what someone types who does not know the act's name.
+    query && !byNumber
+      ? searchProvisions(db, { q: query, authority: known || undefined, limit: 10 })
+      : [],
+    loadLawCoverage(db),
+  ]);
   const t = await getTranslations({ locale, namespace: "Law" });
   return (
     <LawIndex
@@ -46,6 +60,8 @@ export default async function LawPage({
       authority={known}
       searchAction={getPathname({ href: "/law", locale })}
       hits={hits}
+      textHits={textHits}
+      places={placeTree(coverage.authorities)}
       t={t}
     />
   );

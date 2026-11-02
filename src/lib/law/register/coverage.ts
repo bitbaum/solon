@@ -92,6 +92,7 @@ export async function searchActs(
   db: Database,
   filter: { authority?: string; number?: string; title?: string; inForceOnly?: boolean },
   limit = 50,
+  offset = 0,
 ): Promise<ActSearchHit[]> {
   const rows = await db.execute(sql`
     SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
@@ -112,7 +113,7 @@ export async function searchActs(
            OR n.text ILIKE '%' || replace(replace(${filter.title ?? null}, '%', '\\%'), '_', '\\_') || '%')
       AND (${filter.inForceOnly ? true : null}::boolean IS NULL OR a.in_force)
     ORDER BY a.authority, num.value NULLS LAST, n.text
-    LIMIT ${limit}
+    LIMIT ${limit} OFFSET ${offset}
   `);
   return rows.rows as unknown as ActSearchHit[];
 }

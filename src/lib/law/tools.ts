@@ -11,12 +11,13 @@
 import { z } from "zod";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
+import { SITE } from "./site";
+import { chainOf, levelOf } from "./places";
 import { loadLawChanges } from "./register/changes";
 import { loadLawCoverage, readProvision, searchActs } from "./register/coverage";
 import { SEARCH_LIMIT_MAX, searchProvisions } from "./search";
 import { loadActContents, loadActView } from "./view";
 
-const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://solon.orangecat.ch").replace(/\/$/, "");
 const today = () => new Date().toISOString().slice(0, 10);
 const authorityName = (key: string) => LAW_AUTHORITIES.find((a) => a.key === key)?.name ?? key;
 const actUrl = (id: string, path?: string) =>
@@ -55,6 +56,12 @@ export const LAW_TOOLS = [
             key: a.key,
             name: a.name,
             place: a.place,
+            level: levelOf(a),
+            // The authorities whose law also applies where this one's does, nearest first.
+            appliesAlsoFrom: chainOf(a.key)
+              .slice(1)
+              .map((x) => x.key),
+            solonUrl: `${SITE}/law/place/${a.key}`,
             actsInForce: c?.inForce ?? 0,
             actsWithText: c?.withText ?? 0,
           };
@@ -118,13 +125,14 @@ export const LAW_TOOLS = [
     name: "law_find_acts",
     title: "Find an act",
     description:
-      "Finds acts by a word of their title ('Obligationenrecht', 'Steuergesetz', 'Personen- und Gesellschaftsrecht'), by their exact number in the authority's collection ('220', '642.11', '216.0') and/or by authority key. Returns each act's id (for law_read_act and law_read_provision), title, number, kind, whether it is in force, and the publisher's own page.",
+      "Finds acts by a word of their title ('Obligationenrecht', 'Steuergesetz', 'Personen- und Gesellschaftsrecht'), by their exact number in the authority's collection ('220', '642.11', '216.0') and/or by authority key. Returns each act's id (for law_read_act and law_read_provision), title, number, kind, whether it is in force, and the publisher's own page. To list a whole place, give only `authority` and page with `offset`.",
     input: {
       title: z.string().max(100).optional(),
       number: z.string().max(40).optional(),
       authority: authority.optional(),
       includeRepealed: z.boolean().optional(),
       limit: z.number().int().min(1).max(100).optional(),
+      offset: z.number().int().min(0).max(100000).optional(),
     },
     async run(args, { db }) {
       if (!args.title && !args.number && !args.authority)
@@ -138,6 +146,7 @@ export const LAW_TOOLS = [
           inForceOnly: !args.includeRepealed,
         },
         args.limit ?? 25,
+        args.offset ?? 0,
       );
       return {
         acts: acts.map((a) => ({

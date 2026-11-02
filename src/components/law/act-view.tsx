@@ -1,17 +1,20 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
-import { LAW_AUTHORITIES, type ActKind } from "@/lib/config/law";
+import type { ActKind } from "@/lib/config/law";
+import { authorityOf } from "@/lib/law/places";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
+import PlaceTrail from "./place-trail";
 
 interface ActViewProps {
   act: ActView;
   page: number;
+  /** Every provision's anchor and heading, so a reader can jump anywhere in the act. */
+  contents: { path: string; heading: string }[];
   t: LawTranslator;
 }
 
-const authorityName = (key: string): string =>
-  LAW_AUTHORITIES.find((a) => a.key === key)?.name ?? key;
+const authorityName = (key: string): string => authorityOf(key)?.name ?? key;
 
 const cardClass = "rounded-surface border border-default bg-surface-base p-6";
 
@@ -21,7 +24,7 @@ const cardClass = "rounded-surface border border-default bg-surface-base p-6";
  * and the hash that proves the copy. A version dated only by the day it was
  * read says so, rather than claiming a day it took effect.
  */
-export default function ActViewPage({ act, page, t }: ActViewProps) {
+export default function ActViewPage({ act, page, contents, t }: ActViewProps) {
   const { version } = act;
   const pages = version ? Math.max(1, Math.ceil(version.provisionCount / PROVISIONS_PER_PAGE)) : 1;
   const meta = [
@@ -35,7 +38,19 @@ export default function ActViewPage({ act, page, t }: ActViewProps) {
   return (
     <PageLayout title={act.title ?? act.systematicNumber ?? act.id} kicker={t("act.kicker")}>
       <div className="max-w-3xl space-y-8">
+        <PlaceTrail authority={act.authority} t={t} />
         <p className="text-fg-secondary">{meta}</p>
+        <p className="space-x-4 text-sm">
+          <Link href="/law/ask" className="font-medium text-fg-primary underline">
+            {t("act.askAbout")}
+          </Link>
+          <Link href={`/law/place/${act.authority}`} className="text-fg-secondary underline">
+            {t("act.morePlace", { place: authorityName(act.authority) })}
+          </Link>
+          <a href={`/api/v1/law/acts/${act.id}?format=md`} className="text-fg-secondary underline">
+            {t("act.asMarkdown")}
+          </a>
+        </p>
 
         <div className={`${cardClass} space-y-2 text-sm`}>
           {act.officialUrl && (
@@ -72,6 +87,26 @@ export default function ActViewPage({ act, page, t }: ActViewProps) {
             <p className="text-fg-secondary">{t("act.noText")}</p>
           )}
         </div>
+
+        {contents.length > 1 && (
+          <details className={cardClass}>
+            <summary className="cursor-pointer font-medium text-fg-primary">
+              {t("act.contents", { count: contents.length })}
+            </summary>
+            <ol className="mt-4 space-y-2 text-sm">
+              {contents.map((entry) => (
+                <li key={entry.path}>
+                  <Link
+                    href={`/law/${act.id}?at=${encodeURIComponent(entry.path)}#${entry.path}`}
+                    className="text-fg-secondary underline"
+                  >
+                    {entry.heading || entry.path}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
 
         {version && (
           <section className="space-y-6" aria-label={t("act.provisions")}>
