@@ -8,15 +8,15 @@ export const dynamic = "force-dynamic";
 
 const PER_SITEMAP = 5000;
 
-const countActs = async (): Promise<number> => {
-  const rows = await db.execute(sql`SELECT count(*)::int AS n FROM legal_acts WHERE in_force`);
-  return (rows.rows[0] as { n: number } | undefined)?.n ?? 0;
-};
+/**
+ * Room for 100,000 acts. The list is fixed, not counted: counting would need the database
+ * while the site is built, where there is none. A file past the last act is an empty list.
+ */
+const SITEMAP_COUNT = 21;
 
 /** Sitemap 0 lists the law's entry pages and every place; the others list the acts, 5,000 to a file. */
 export async function generateSitemaps() {
-  const acts = await countActs();
-  return Array.from({ length: 1 + Math.ceil(acts / PER_SITEMAP) }, (_, id) => ({ id }));
+  return Array.from({ length: SITEMAP_COUNT }, (_, id) => ({ id }));
 }
 
 export default async function sitemap(props: {

@@ -35,7 +35,7 @@ authority cannot be placed in the tree.
 ## Machine readers
 
 - `/llms.txt`: what Solon holds, the MCP endpoint, the plain URLs, how to cite; generated from the configuration.
-- `/robots.txt` and `/sitemap/{n}.xml`: entry pages and places in sitemap 0, acts 5,000 to a file.
+- `/robots.txt` and `/sitemap/{n}.xml`: entry pages and places in sitemap 0, acts 5,000 to a file (21 files, room for 100,000 acts; the list is fixed because the build has no database).
 - `/api/v1/law/acts/{id}`: the whole act as JSON; `?format=md` (or `Accept: text/markdown`) gives Markdown with the provenance (publisher URL, date and its basis, sha256, places that also apply) in the front matter and an anchor on every heading.
 - MCP: `law_authorities` now returns `level`, `appliesAlsoFrom` and a Solon link per place; `law_find_acts` takes `offset`, so one call pattern lists a whole place.
 
