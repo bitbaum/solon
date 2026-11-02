@@ -7,6 +7,8 @@
  * searchkit's (`@bitbaum/searchkit`), which folds the same way on its own.
  */
 
+import { sql, type AnyColumn, type SQL } from "drizzle-orm";
+
 const DECOMPOSING = "àáâãäåāăąçćčďèéêëēėęěìíîïīįñńňòóôõöōőŕřśšşťùúûüūůűýÿźżž";
 const OTHERS: [string, string][] = [
   ["ł", "l"],
@@ -34,4 +36,9 @@ export function foldName(text: string): string {
     .join("")
     .toLowerCase()
     .replace(UMLAUTS_SPELLED, (pair) => pair[0]!);
+}
+
+/** `column`, folded in SQL exactly as `foldName` folds text. */
+export function foldedSql(column: AnyColumn | SQL): SQL<string> {
+  return sql<string>`replace(replace(replace(lower(translate(${column}, ${FOLD_FROM}, ${FOLD_TO})), 'ae', 'a'), 'oe', 'o'), 'ue', 'u')`;
 }

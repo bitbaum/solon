@@ -690,7 +690,8 @@
       "browseTitle": "Oppure parta da un luogo",
       "browseHint": "Cominci dal luogo in cui abita. Vi si applicano anche il diritto del suo cantone e quello della Confederazione.",
       "placeActs": "{count, plural, one {# atto} other {# atti}}",
-      "communes": "{count, plural, one {# comune} other {# comuni}}"
+      "communes": "{count, plural, one {# comune} other {# comuni}}",
+      "didYouMean": "Intendeva:"
     },
     "act": {
       "kicker": "Diritto",

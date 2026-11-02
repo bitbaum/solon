@@ -690,7 +690,8 @@
       "browseTitle": "Ou partez d’un lieu",
       "browseHint": "Commencez par votre lieu de domicile. Le droit de votre canton et celui de la Confédération s’y appliquent aussi.",
       "placeActs": "{count, plural, one {# acte} other {# actes}}",
-      "communes": "{count, plural, one {# commune} other {# communes}}"
+      "communes": "{count, plural, one {# commune} other {# communes}}",
+      "didYouMean": "Vouliez-vous dire :"
     },
     "act": {
       "kicker": "Droit",
