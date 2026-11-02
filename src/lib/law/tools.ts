@@ -11,6 +11,7 @@
 import { z } from "zod";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
+import { findActs, queryGroups } from "./find";
 import { SITE } from "./site";
 import { chainOf, levelOf } from "./places";
 import { loadLawChanges } from "./register/changes";
@@ -89,7 +90,10 @@ export const LAW_TOOLS = [
       limit: z.number().int().min(1).max(SEARCH_LIMIT_MAX).optional(),
     },
     async run(args, { db }) {
-      const groups = args.ideas?.map((g) => g.filter(Boolean)).filter((g) => g.length);
+      let groups = args.ideas?.map((g) => g.filter(Boolean)).filter((g) => g.length);
+      // A plain phrase goes through searchkit: a slipped letter still finds the word.
+      if (!groups?.length && !args.terms?.filter(Boolean).length && args.query?.trim())
+        groups = await queryGroups(db, args.query);
       const terms = args.terms?.filter(Boolean);
       if (!args.query?.trim() && !terms?.length && !groups?.length)
         throw new Error("Give `query`, `terms` or `ideas`.");
@@ -137,17 +141,25 @@ export const LAW_TOOLS = [
     async run(args, { db }) {
       if (!args.title && !args.number && !args.authority)
         throw new Error("Give `title`, `number` or `authority`.");
-      const acts = await searchActs(
-        db,
-        {
-          title: args.title,
-          number: args.number,
-          authority: args.authority,
-          inForceOnly: !args.includeRepealed,
-        },
-        args.limit ?? 25,
-        args.offset ?? 0,
-      );
+      // Words of a title go through searchkit (typos forgiven, ranked); a number or a whole place is listed exactly.
+      const acts =
+        args.title && !args.number && !args.includeRepealed && !args.offset
+          ? await findActs(db, {
+              query: args.title,
+              authority: args.authority,
+              limit: args.limit ?? 25,
+            })
+          : await searchActs(
+              db,
+              {
+                title: args.title,
+                number: args.number,
+                authority: args.authority,
+                inForceOnly: !args.includeRepealed,
+              },
+              args.limit ?? 25,
+              args.offset ?? 0,
+            );
       return {
         acts: acts.map((a) => ({
           act: a.id,

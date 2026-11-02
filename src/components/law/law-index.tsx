@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
+import type { Range } from "@bitbaum/searchkit";
 import type { ProvisionHit } from "@/lib/law/search";
 import { authorityOf, type PlaceNode } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
@@ -13,9 +14,11 @@ interface LawIndexProps {
   /** Where the search form submits, in the reader's language. */
   searchAction: string;
   /** Acts whose title matches; null before anything is searched. */
-  hits: ActSearchHit[] | null;
+  hits: (ActSearchHit & { marks?: Range[] })[] | null;
   /** Provisions whose text matches. */
   textHits: ProvisionHit[];
+  /** What was probably meant, when nothing matched. */
+  suggestion: string | null;
   places: PlaceNode[];
   t: LawTranslator;
 }
@@ -47,6 +50,7 @@ export default function LawIndex({
   searchAction,
   hits,
   textHits,
+  suggestion,
   places,
   t,
 }: LawIndexProps) {
@@ -110,6 +114,17 @@ export default function LawIndex({
             {nothing && (
               <div className="space-y-2">
                 <h2 className="font-semibold text-fg-primary">{t("index.noHits")}</h2>
+                {suggestion && (
+                  <p className="text-fg-secondary">
+                    {t("index.didYouMean")}{" "}
+                    <Link
+                      href={`/law?q=${encodeURIComponent(suggestion)}${authority ? `&authority=${authority}` : ""}`}
+                      className="font-medium text-fg-primary underline"
+                    >
+                      {suggestion}
+                    </Link>
+                  </p>
+                )}
                 <p className="text-fg-secondary">
                   <Link href="/law/ask" className="underline">
                     {t("index.askLink")}

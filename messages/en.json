@@ -1256,7 +1256,8 @@
       "browseTitle": "Or start from a place",
       "browseHint": "Begin with where you live. The law of your canton and of the Confederation applies there too.",
       "placeActs": "{count, plural, one {# act} other {# acts}}",
-      "communes": "{count, plural, one {# commune} other {# communes}}"
+      "communes": "{count, plural, one {# commune} other {# communes}}",
+      "didYouMean": "Did you mean:"
     },
     "act": {
       "kicker": "Law",

@@ -690,7 +690,8 @@
       "browseTitle": "Oder beginnen Sie bei einem Ort",
       "browseHint": "Beginnen Sie bei Ihrem Wohnort. Dort gilt auch das Recht Ihres Kantons und des Bundes.",
       "placeActs": "{count, plural, one {# Erlass} other {# Erlasse}}",
-      "communes": "{count, plural, one {# Gemeinde} other {# Gemeinden}}"
+      "communes": "{count, plural, one {# Gemeinde} other {# Gemeinden}}",
+      "didYouMean": "Meinten Sie:"
     },
     "act": {
       "kicker": "Recht",

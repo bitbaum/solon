@@ -32,6 +32,19 @@ The landing, place pages, sitemap, `llms.txt`, `law_authorities` and its
 `appliesAlsoFrom` follow with no code change. `places.test.ts` fails if an
 authority cannot be placed in the tree.
 
+## Search goes through searchkit
+
+`src/lib/law/find.ts`, as OrangeCat's ⌘K and Solon's places do: the vocabulary of
+act-title words (cached five minutes) expands what was typed into the words it
+could mean within searchkit's typo budget; the database returns candidates
+(titles folded alike in SQL, so "zurich" finds Zürich; provisions through the
+full-text index, with the corrected spellings as alternatives of each idea);
+searchkit ranks the titles and returns the ranges to mark; "Did you mean" shows
+when nothing matches. The MCP tools `law_find_acts` (title) and `law_search`
+(`query`), and `/api/v1/law/search?q=`, use the same path, so a model's typo is
+forgiven as a person's is. Provisions keep `searchProvisions`' order, which puts
+the fundamental act before an ordinance.
+
 ## Machine readers
 
 - `/llms.txt`: what Solon holds, the MCP endpoint, the plain URLs, how to cite; generated from the configuration.
@@ -41,6 +54,6 @@ authority cannot be placed in the tree.
 
 ## Not done
 
-- Search ranks by title match only for acts, and by full-text rank for provisions; typo tolerance (`@bitbaum/searchkit`) is not wired into the law search yet.
+- Typo correction draws on the words of act titles. A misspelt word that appears only in the body of a provision, never in a title, is not corrected.
 - Act text is read in German; French and Italian federal text is deferred.
 - No version history page for an act; the database holds the versions.
