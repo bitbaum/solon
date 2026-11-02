@@ -31,10 +31,10 @@ export interface ActView {
   provisions: { path: string; heading: string; text: string }[];
 }
 
-/** The act, and one page of the provisions of its current version in `lang`. */
+/** The act, and one page (or with `all`, up to 5,000) of the provisions of its current version in `lang`. */
 export async function loadActView(
   db: Database,
-  input: { id: string; lang: string; page: number },
+  input: { id: string; lang: string; page: number; all?: boolean },
 ): Promise<ActView | null> {
   const acts = await db.execute(sql`
     SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
@@ -73,7 +73,7 @@ export async function loadActView(
     SELECT path, heading, text FROM legal_provisions
     WHERE version_id = ${versionId}
     ORDER BY ord
-    LIMIT ${PROVISIONS_PER_PAGE} OFFSET ${offset}
+    LIMIT ${input.all ? 5000 : PROVISIONS_PER_PAGE} OFFSET ${input.all ? 0 : offset}
   `);
   return { ...act, version, provisions: provisions.rows as unknown as ActView["provisions"] };
 }

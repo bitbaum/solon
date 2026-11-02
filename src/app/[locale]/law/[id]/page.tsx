@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
 import ActViewPage from "@/components/law/act-view";
 import { db } from "@/lib/db/client";
-import { loadActView, pageOfProvision } from "@/lib/law/view";
+import { loadActContents, loadActView, pageOfProvision } from "@/lib/law/view";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +42,7 @@ export default async function ActPage({
   // Every text is held in German so far; a version in the reader's own language is read when there is one.
   const act = await loadActView(db, { id, lang: "de", page });
   if (!act) notFound();
+  const contents = await loadActContents(db, { id, lang: "de" });
   const t = await getTranslations({ locale, namespace: "Law" });
-  return <ActViewPage act={act} page={page} t={t} />;
+  return <ActViewPage act={act} page={page} contents={contents} t={t} />;
 }

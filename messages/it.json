@@ -667,17 +667,30 @@
       "metaDescription": "Trovare un atto della Svizzera o del Liechtenstein per titolo o numero e leggerlo come lo ha scritto il suo editore.",
       "kicker": "Diritto",
       "title": "Trovare un atto",
-      "intro": "Ogni atto che Solon elenca, per titolo o per numero nella raccolta che lo numera. Il testo è quello dell'editore, con la pagina da cui è stato letto e un hash che prova la copia.",
-      "searchLabel": "Titolo o numero",
-      "searchPlaceholder": "Un titolo, o un numero come 220",
+      "intro": "Cerchi in tutte le leggi che Solon conserva: Confederazione, cantoni e comuni. Scriva con parole semplici ciò che cerca, oppure parta dal luogo in cui abita.",
+      "searchPlaceholder": "Per esempio: aumento della pigione, tassa sui cani, licenza edilizia",
       "authorityLabel": "Il diritto di chi",
-      "anyAuthority": "Tutti",
+      "anyAuthority": "Cerca ovunque",
       "searchButton": "Cerca",
-      "noHits": "Niente trovato.",
+      "noHits": "Nessun risultato.",
       "hits": "{count, plural, one {# atto trovato} other {# atti trovati}}",
       "notInForce": "non in vigore",
       "coverageLink": "Che cosa elenca il registro, contato dai dati →",
-      "askLink": "Fare una domanda al diritto →"
+      "askLink": "Fare una domanda al diritto →",
+      "searchLabel": "Che cosa cerca?",
+      "onlyIn": "Ricerca limitata a {place}.",
+      "examplesTitle": "Per esempio:",
+      "examples": {
+        "one": "aumento della pigione",
+        "two": "tassa sui cani",
+        "three": "licenza edilizia"
+      },
+      "titleHits": "{count, plural, one {# atto con questo nome} other {# atti con questo nome}}",
+      "textHits": "Che cosa dice il testo della legge",
+      "browseTitle": "Oppure parta da un luogo",
+      "browseHint": "Cominci dal luogo in cui abita. Vi si applicano anche il diritto del suo cantone e quello della Confederazione.",
+      "placeActs": "{count, plural, one {# atto} other {# atti}}",
+      "communes": "{count, plural, one {# comune} other {# comuni}}"
     },
     "act": {
       "kicker": "Diritto",
@@ -693,7 +706,12 @@
       "previous": "← Precedente",
       "next": "Avanti →",
       "pageOf": "Pagina {page} di {pages}",
-      "back": "← Trovare un altro atto"
+      "back": "← Trovare un altro atto",
+      "trail": "Lei è qui",
+      "askAbout": "Chiedere al diritto su questo punto",
+      "morePlace": "Altre leggi di {place}",
+      "asMarkdown": "Per le macchine: Markdown",
+      "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}"
     },
     "kinds": {
       "constitution": "costituzione",
@@ -736,6 +754,15 @@
         "law": "Letto: {detail}",
         "search": "Cercato di nuovo nel diritto: {detail}"
       }
+    },
+    "place": {
+      "metaTitle": "Leggi di {place}",
+      "metaDescription": "Tutti gli atti in vigore di {place} che Solon conserva, con i luoghi il cui diritto vi si applica.",
+      "title": "Leggi di {place}",
+      "alsoApplies": "Qui si applica anche il diritto di questi luoghi:",
+      "filterLabel": "Cerca una parola nel titolo",
+      "filterPlaceholder": "Per esempio: cani, costruzione, imposta",
+      "empty": "Nessun atto corrisponde."
     }
   },
   "LostPassword": {

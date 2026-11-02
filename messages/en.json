@@ -1233,17 +1233,30 @@
       "metaDescription": "Find an act of Switzerland or Liechtenstein by its title or number, and read it as its publisher wrote it.",
       "kicker": "Law",
       "title": "Find a law",
-      "intro": "Every act Solon lists, by its title or by its number in the collection that numbers it. The text is the publisher's, with the page it came from and a hash that proves the copy.",
-      "searchLabel": "Title or number",
-      "searchPlaceholder": "A title, or a number such as 220",
+      "intro": "Search every law Solon holds, from the Confederation, the cantons and the communes. Type what you are looking for in plain words, or start from the place you live.",
+      "searchPlaceholder": "For example: rent increase, dog tax, building permit",
       "authorityLabel": "Whose law",
-      "anyAuthority": "Any",
+      "anyAuthority": "Search everywhere",
       "searchButton": "Search",
       "noHits": "Nothing found.",
       "hits": "{count, plural, one {# act} other {# acts}} found",
       "notInForce": "not in force",
       "coverageLink": "What the register lists, counted from the data →",
-      "askLink": "Ask the law a question →"
+      "askLink": "Ask the law a question →",
+      "searchLabel": "What are you looking for?",
+      "onlyIn": "Searching only in {place}.",
+      "examplesTitle": "Try:",
+      "examples": {
+        "one": "rent increase",
+        "two": "dog tax",
+        "three": "building permit"
+      },
+      "titleHits": "{count, plural, one {# law with this name} other {# laws with this name}}",
+      "textHits": "Where the text of the law says it",
+      "browseTitle": "Or start from a place",
+      "browseHint": "Begin with where you live. The law of your canton and of the Confederation applies there too.",
+      "placeActs": "{count, plural, one {# act} other {# acts}}",
+      "communes": "{count, plural, one {# commune} other {# communes}}"
     },
     "act": {
       "kicker": "Law",
@@ -1259,7 +1272,12 @@
       "previous": "← Previous",
       "next": "Next →",
       "pageOf": "Page {page} of {pages}",
-      "back": "← Find another law"
+      "back": "← Find another law",
+      "trail": "You are here",
+      "askAbout": "Ask the law about this",
+      "morePlace": "More laws of {place}",
+      "asMarkdown": "For machines: Markdown",
+      "contents": "{count, plural, one {Contents: # provision} other {Contents: # provisions}}"
     },
     "kinds": {
       "constitution": "constitution",
@@ -1302,6 +1320,15 @@
         "law": "Read {detail}",
         "search": "Searched the law again: {detail}"
       }
+    },
+    "place": {
+      "metaTitle": "Laws of {place}",
+      "metaDescription": "Every act of {place} in force that Solon holds, with the places whose law applies there too.",
+      "title": "Laws of {place}",
+      "alsoApplies": "The law of these places applies here too:",
+      "filterLabel": "Look for a word in the title",
+      "filterPlaceholder": "For example: dogs, building, tax",
+      "empty": "No act matches."
     }
   },
   "LostPassword": {
