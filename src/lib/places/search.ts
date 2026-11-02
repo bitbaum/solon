@@ -16,19 +16,7 @@ import {
   words,
   type Vocabulary,
 } from "@bitbaum/searchkit";
-import {
-  and,
-  count,
-  eq,
-  gt,
-  inArray,
-  isNull,
-  like,
-  lte,
-  or,
-  sql,
-  type SQL,
-} from "drizzle-orm";
+import { and, count, eq, gt, inArray, isNull, like, lte, or, sql, type SQL } from "drizzle-orm";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictionNames, jurisdictionRelations, jurisdictions } from "@/lib/db/places-schema";
