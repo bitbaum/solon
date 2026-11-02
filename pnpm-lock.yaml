@@ -33,8 +33,8 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3(react@19.3.1)
       '@fleet/design-tokens':
-        specifier: github:bitbaum/design-tokens#2b440563754018ba4e9d5273ca56cf1f9d0bde11
-        version: '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/2b440563754018ba4e9d5273ca56cf1f9d0bde11'
+        specifier: npm:@bitbaum/design-tokens@^1.3.0
+        version: '@bitbaum/design-tokens@1.3.0'
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
         version: 1.32.2(zod@4.6.7)
@@ -391,9 +391,8 @@ packages:
     peerDependencies:
       react: '>=18'
 
-  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/2b440563754018ba4e9d5273ca56cf1f9d0bde11':
-    resolution: {gitHosted: true, integrity: sha512-gpRSiKv53UjyPHTmvECkkUWShx8gBebS6YSZyxmsoSLYXM19ORLpG0VrVu/fN29XRXrDKpHCbSc00QAKLw7LJA==, tarball: https://codeload.github.com/bitbaum/design-tokens/tar.gz/2b440563754018ba4e9d5273ca56cf1f9d0bde11}
-    version: 1.3.0
+  '@bitbaum/design-tokens@1.3.0':
+    resolution: {integrity: sha512-9TVZGx+lilXdQf1aWjm3IcqxejTHjU0J4+fVLHBcJ0nKLQ41isEc9+QGFXekUWZlPO9NMIGZNKE4a58cg4jgKQ==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -4652,7 +4651,7 @@ snapshots:
       pdfjs-dist: 6.4.299
       react: 19.3.1
 
-  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/2b440563754018ba4e9d5273ca56cf1f9d0bde11': {}
+  '@bitbaum/design-tokens@1.3.0': {}
 
   '@bitbaum/geo-kit@0.3.0(d3-geo@3.1.1)(topojson-client@3.1.0)':
     optionalDependencies:
