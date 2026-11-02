@@ -15,8 +15,8 @@ importers:
         specifier: ^1.7.14
         version: 1.7.14(@better-auth/core@1.7.14(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-call@1.4.4(zod@4.6.7))(jose@6.2.8)(kysely@0.29.6)(nanostores@1.5.5))(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(better-auth@1.7.14(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.13)(@types/pg@8.23.1)(kysely@0.29.6)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7)(@playwright/test@1.64.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))))(better-call@1.4.4(zod@4.6.7))(nanostores@1.5.5)
       '@bitbaum/accountkit':
-        specifier: ^0.23.1
-        version: 0.23.1(254e3b83b8d9b45a0aa955116048f513)
+        specifier: ^0.25.0
+        version: 0.25.0(254e3b83b8d9b45a0aa955116048f513)
       '@bitbaum/ai-kit':
         specifier: ^1.24.0
         version: 1.24.0(react@19.3.1)
@@ -33,8 +33,8 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3(react@19.3.1)
       '@fleet/design-tokens':
-        specifier: npm:@bitbaum/design-tokens@^1.3.0
-        version: '@bitbaum/design-tokens@1.3.0'
+        specifier: github:bitbaum/design-tokens#8b82accab3775f3e18ed2fc61de41ba2127afae7
+        version: '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/8b82accab3775f3e18ed2fc61de41ba2127afae7'
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
         version: 1.32.2(zod@4.6.7)
@@ -352,8 +352,8 @@ packages:
   '@better-fetch/fetch@1.3.3':
     resolution: {integrity: sha512-U6SlDt/GUWtK2JAxS/NhdoYTEim+EL1G5byz2TUj83KjLZBUpYzb5SmX0aXaCnbGkAjFKnV/o/0+cyXMbEcqqg==}
 
-  '@bitbaum/accountkit@0.23.1':
-    resolution: {integrity: sha512-wElIAimG0u5mTtS54/04VAXJ81lvMhbuNxwxhl5NNVJIIkESJYlPcdew7UKVhTRvRM8wImJIyXMz7VxfeGKkxQ==}
+  '@bitbaum/accountkit@0.25.0':
+    resolution: {integrity: sha512-0w5eDtU1xv8FiiqwlzVWYrTTEnbrRkVCqCgmP7LncuuRtZk8tY5QRbbr6Zq7myHux84ExXr6EpHOMRaUeZPDdg==}
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
@@ -391,8 +391,9 @@ packages:
     peerDependencies:
       react: '>=18'
 
-  '@bitbaum/design-tokens@1.3.0':
-    resolution: {integrity: sha512-9TVZGx+lilXdQf1aWjm3IcqxejTHjU0J4+fVLHBcJ0nKLQ41isEc9+QGFXekUWZlPO9NMIGZNKE4a58cg4jgKQ==}
+  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/8b82accab3775f3e18ed2fc61de41ba2127afae7':
+    resolution: {gitHosted: true, integrity: sha512-PtcwqCUsylzp1GYwJdmKg8xKaNd0aHuLOR8Cjw6RW9/2JycUNfU9+CsUOE3MP0T2HMKzT8Nz3jyS8lf/9dlkOw==, tarball: https://codeload.github.com/bitbaum/design-tokens/tar.gz/8b82accab3775f3e18ed2fc61de41ba2127afae7}
+    version: 1.4.0
     engines: {node: '>=20'}
     hasBin: true
 
@@ -4624,7 +4625,7 @@ snapshots:
 
   '@better-fetch/fetch@1.3.3': {}
 
-  '@bitbaum/accountkit@0.23.1(254e3b83b8d9b45a0aa955116048f513)':
+  '@bitbaum/accountkit@0.25.0(254e3b83b8d9b45a0aa955116048f513)':
     dependencies:
       limitkit: 0.2.1
       react: 19.3.1
@@ -4651,7 +4652,7 @@ snapshots:
       pdfjs-dist: 6.4.299
       react: 19.3.1
 
-  '@bitbaum/design-tokens@1.3.0': {}
+  '@bitbaum/design-tokens@https://codeload.github.com/bitbaum/design-tokens/tar.gz/8b82accab3775f3e18ed2fc61de41ba2127afae7': {}
 
   '@bitbaum/geo-kit@0.3.0(d3-geo@3.1.1)(topojson-client@3.1.0)':
     optionalDependencies:
