@@ -16,32 +16,14 @@ import {
   words,
   type Vocabulary,
 } from "@bitbaum/searchkit";
-import {
-  and,
-  count,
-  eq,
-  gt,
-  inArray,
-  isNull,
-  like,
-  lte,
-  or,
-  sql,
-  type AnyColumn,
-  type SQL,
-} from "drizzle-orm";
+import { and, count, eq, gt, inArray, isNull, like, lte, or, sql, type SQL } from "drizzle-orm";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { jurisdictionNames, jurisdictionRelations, jurisdictions } from "@/lib/db/places-schema";
 import type { ChainName } from "./chain";
-import { FOLD_FROM, FOLD_TO, foldName } from "./fold";
+import { foldName, foldedSql } from "./fold";
 import { displayName, localized } from "./place-view";
 import { resolvePostcode, type PostcodeLocality } from "./postcodes";
-
-/** `column`, folded in SQL exactly as `foldName` folds text. */
-function foldedColumn(column: AnyColumn): SQL<string> {
-  return sql<string>`replace(replace(replace(lower(translate(${column}, ${FOLD_FROM}, ${FOLD_TO})), 'ae', 'a'), 'oe', 'o'), 'ue', 'u')`;
-}
 
 export interface PlaceHit {
   slugPath: string;
@@ -89,7 +71,7 @@ const current = (on: string) =>
 /** `text` anywhere in a name, both folded alike; `%` and `_` typed are matched literally. */
 const nameHolds = (text: string) =>
   like(
-    foldedColumn(jurisdictionNames.name),
+    foldedSql(jurisdictionNames.name),
     `%${foldName(text).replace(/[\\%_]/g, (c) => `\\${c}`)}%`,
   );
 

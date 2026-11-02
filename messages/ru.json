@@ -690,7 +690,8 @@
       "browseTitle": "Или начните с места",
       "browseHint": "Начните с места, где вы живёте. Там действуют также право вашего кантона и право Конфедерации.",
       "placeActs": "{count, plural, one {# акт} few {# акта} many {# актов} other {# акта}}",
-      "communes": "{count, plural, one {# община} few {# общины} many {# общин} other {# общины}}"
+      "communes": "{count, plural, one {# община} few {# общины} many {# общин} other {# общины}}",
+      "didYouMean": "Возможно, вы имели в виду:"
     },
     "act": {
       "kicker": "Право",

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
+import { queryGroups } from "@/lib/law/find";
 import { searchProvisions } from "@/lib/law/search";
 
 export const dynamic = "force-dynamic";
@@ -52,11 +53,13 @@ export async function GET(request: Request) {
     const value = Number.parseFloat(params.get(name) ?? "");
     return Number.isFinite(value) ? value : undefined;
   };
+  // A plain phrase goes through searchkit: a slipped letter still finds the word.
+  const typed = !terms.length && !groups.length && q.trim() ? await queryGroups(db, q) : [];
   const hits = await searchProvisions(db, {
     ranking: { depth: number("w_depth"), ordinance: number("w_ordinance") },
-    q: terms.length || groups.length ? undefined : q,
+    q: terms.length || groups.length || typed.length ? undefined : q,
     terms: terms.length && !groups.length ? terms : undefined,
-    groups: groups.length ? groups : undefined,
+    groups: groups.length ? groups : typed.length ? typed : undefined,
     authorities,
     lang,
     limit,
