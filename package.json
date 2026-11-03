@@ -41,7 +41,7 @@
     "@bitbaum/geo-kit": "^0.3.0",
     "@bitbaum/mail-kit": "0.2.0",
     "@bitbaum/searchkit": "^0.2.3",
-    "@fleet/design-tokens": "github:bitbaum/design-tokens#443d27875a8c4719029fff085053f2735d881366",
+    "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.5.2",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "@napi-rs/canvas": "^1.1.0",
     "@noble/hashes": "2.4.0",
