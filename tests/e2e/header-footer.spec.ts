@@ -38,13 +38,13 @@ test.describe("Header & Footer", () => {
   test("a link in a panel navigates and closes the panel", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     const nav = page.getByRole("navigation", { name: en.Nav.main });
-    await nav.getByRole("button", { name: en.Site.sections.useCases }).click();
+    await nav.getByRole("button", { name: en.Site.sections.governance }).click();
     await page
-      .locator("#panel-useCases")
-      .getByRole("link", { name: new RegExp(`^${en.Site.links.forNetworkStates}`) })
+      .locator("#panel-governance")
+      .getByRole("link", { name: new RegExp(`^${en.Site.links.ideas}`) })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/for\/network-states$/);
-    await expect(page.locator("#panel-useCases")).toHaveCount(0);
+    await expect(page).toHaveURL(/\/governance\/ideas$/);
+    await expect(page.locator("#panel-governance")).toHaveCount(0);
   });
 });
