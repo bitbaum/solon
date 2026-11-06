@@ -65,7 +65,8 @@
       "structures": "Structures",
       "law": "Find a law",
       "lawAsk": "Ask the law",
-      "lawCoverage": "What Solon holds"
+      "lawCoverage": "What Solon holds",
+      "lawAmendments": "Proposed changes"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -110,7 +111,8 @@
       "structures": "Legal forms side by side, in the words of the law",
       "law": "Search every act by a word, its number or the place it applies",
       "lawAsk": "A question in plain words, answered from the law, every provision cited",
-      "lawCoverage": "Which laws Solon holds, counted from the data"
+      "lawCoverage": "Which laws Solon holds, counted from the data",
+      "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support"
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -1495,6 +1497,101 @@
         "save": "That was not saved. Check the connection and try again.",
         "open": "That chat did not open. Try again."
       }
+    }
+  },
+  "Amend": {
+    "metaTitle": "Propose a change",
+    "kicker": "Propose a change",
+    "intro": "Write the words of this act the way you think they should read. Solon shows your change as a redline against the published text and pins it to that exact text, so it can never be applied to wording you did not see.",
+    "notLaw": "A proposal here is not law. Support on Solon is evidence that people want the change; the official route says what it takes to make it law.",
+    "signInFirst": "Sign in to file your proposal. What you have written stays on this page.",
+    "signIn": "Sign in to file it",
+    "forkOf": "You are starting from someone else's proposal. Yours is filed as an alternative to it, and both stay on the record.",
+    "changeLabel": "Change {n}",
+    "chooseProvision": "Article",
+    "pickOne": "Choose an article",
+    "operation": "What to do with it",
+    "ops": {
+      "replace": "Reword it",
+      "repeal": "Repeal it",
+      "insert": "Add a new article after it"
+    },
+    "asPublished": "As published",
+    "yourWording": "Your wording",
+    "newHeading": "Heading of the new article",
+    "newText": "Text of the new article",
+    "redline": "Your change, as a redline",
+    "loading": "Reading the article…",
+    "loadFailed": "The article could not be read. Choose it again.",
+    "addChange": "Change another article",
+    "removeChange": "Drop this change",
+    "title": "Title",
+    "titleHint": "One line that says what changes, such as \"Halve the dog tax\".",
+    "rationale": "Why",
+    "rationaleHint": "Who it helps, what it costs, what it fixes. It is what persuades people to support it.",
+    "dictate": "Speak instead of typing",
+    "stopDictating": "Done speaking",
+    "dictationProblems": {
+      "mic": "No microphone can be used here.",
+      "silence": "Nothing was heard.",
+      "unavailable": "Speech is not available right now.",
+      "fileTooLarge": "The recording is too long."
+    },
+    "submit": "File this proposal",
+    "submitting": "Filing…",
+    "problems": {
+      "stale_base": "The published text of {path} changed while you were writing. Choose the article again to write against the current text.",
+      "unknown_path": "{path} is no longer in this act.",
+      "duplicate_path": "{path} is changed twice; keep one change for it.",
+      "no_effect": "Your wording of {path} is the same as the published text.",
+      "unknown_anchor": "The article to add after is no longer in this act."
+    },
+    "failed": "The proposal could not be filed: {reason}",
+    "amendment": {
+      "kicker": "Proposed change",
+      "to": "To {act}",
+      "filed": "Revision {revision}, filed {date}",
+      "current": "Written against the text in force today.",
+      "outdated": "The law has changed since this was written. The redline shows the change against the text it was written for.",
+      "support": "{total, plural, =0 {No one supports it yet} one {# person supports it} other {# people support it}}",
+      "supportSplit": "{account} signed in · {signed} signed with their own key",
+      "supportButton": "Support this proposal",
+      "withdrawButton": "Withdraw my support",
+      "youSupport": "You support this revision.",
+      "signInToSupport": "Sign in to support it",
+      "supportFailed": "Your support could not be recorded: {reason}",
+      "notLaw": "A proposal here is not law. Support on Solon is evidence that people want the change; the official route says what it takes to make it law.",
+      "changes": "What it changes",
+      "replaced": "Reworded",
+      "repealed": "Repealed",
+      "inserted": "New article",
+      "rationale": "Why",
+      "routes": "How this law is officially changed",
+      "noRoute": "Solon does not know this law's official route yet. The proposal is recorded all the same, and the route appears here once its source is added.",
+      "routeBar": "{count} signatures from {who}",
+      "routeWindowMonths": "within {months} months",
+      "routeWindowDays": "within {days} days",
+      "routeNoBar": "{who}; no number of signatures is required",
+      "routeSource": "Source: {provision}, {title}",
+      "fork": "Write an alternative",
+      "revisions": "Every revision",
+      "revisionRow": "Revision {revision} · {date} · {support}",
+      "chain": "Every proposal and every support is an entry in one hash chain that anyone can check.",
+      "chainLink": "Read the chain"
+    },
+    "list": {
+      "metaTitle": "Proposed changes to the law",
+      "title": "Proposed changes",
+      "intro": "Changes people have proposed to the law Solon holds, newest first.",
+      "empty": "No one has proposed a change here yet.",
+      "howTo": "To propose one, open an act and press \"Propose a change\" beside any article.",
+      "row": "Revision {revision} · {support}",
+      "supporters": "{total, plural, =0 {no supporters yet} one {# supporter} other {# supporters}}"
+    },
+    "act": {
+      "propose": "Propose a change",
+      "proposals": "Proposed changes to this act",
+      "noProposals": "No one has proposed a change to this act yet."
     }
   }
 }

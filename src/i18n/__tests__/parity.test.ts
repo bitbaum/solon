@@ -36,7 +36,15 @@ const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1
  * of their terms of art (AGENTS.md, "Language"). Removing a name here is how
  * a translation becomes required.
  */
-const PENDING_TRANSLATION = ["Status", "Capabilities", "UseCases", "Ideas", "NewEra", "Platform"];
+const PENDING_TRANSLATION = [
+  "Status",
+  "Capabilities",
+  "UseCases",
+  "Ideas",
+  "NewEra",
+  "Platform",
+  "Amend",
+];
 
 const pending = (key: string) => PENDING_TRANSLATION.some((ns) => key.startsWith(`${ns}.`));
 

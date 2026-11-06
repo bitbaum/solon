@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
 import ActViewPage from "@/components/law/act-view";
 import { db } from "@/lib/db/client";
+import { listAmendments } from "@/lib/law/amend/store";
 import { loadActContents, loadActView, pageOfProvision } from "@/lib/law/view";
 
 export const dynamic = "force-dynamic";
@@ -44,5 +45,20 @@ export default async function ActPage({
   if (!act) notFound();
   const contents = await loadActContents(db, { id, lang: "de" });
   const t = await getTranslations({ locale, namespace: "Law" });
-  return <ActViewPage act={act} page={page} contents={contents} t={t} />;
+  const amend = await getTranslations({ locale, namespace: "Amend.act" });
+  const amendments = await listAmendments(db, { actId: id, limit: 20 }).catch(() => []);
+  return (
+    <ActViewPage
+      act={act}
+      page={page}
+      contents={contents}
+      t={t}
+      amendments={amendments}
+      amendLabels={{
+        propose: amend("propose"),
+        proposals: amend("proposals"),
+        noProposals: amend("noProposals"),
+      }}
+    />
+  );
 }

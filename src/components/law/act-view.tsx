@@ -4,6 +4,8 @@ import type { ActKind } from "@/lib/config/law";
 import { authorityOf } from "@/lib/law/places";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
+import type { AmendmentSummary } from "@/lib/law/amend/store";
+import AmendmentList from "./amendment-list";
 import PlaceTrail from "./place-trail";
 
 interface ActViewProps {
@@ -12,6 +14,10 @@ interface ActViewProps {
   /** Every provision's anchor and heading, so a reader can jump anywhere in the act. */
   contents: { path: string; heading: string }[];
   t: LawTranslator;
+  /** Proposed changes to this act, newest first. */
+  amendments: AmendmentSummary[];
+  /** The words for proposing a change (messages `Amend.act`). */
+  amendLabels: { propose: string; proposals: string; noProposals: string };
 }
 
 const authorityName = (key: string): string => authorityOf(key)?.name ?? key;
@@ -24,7 +30,14 @@ const cardClass = "rounded-surface border border-default bg-surface-base p-6";
  * and the hash that proves the copy. A version dated only by the day it was
  * read says so, rather than claiming a day it took effect.
  */
-export default function ActViewPage({ act, page, contents, t }: ActViewProps) {
+export default function ActViewPage({
+  act,
+  page,
+  contents,
+  t,
+  amendments,
+  amendLabels,
+}: ActViewProps) {
   const { version } = act;
   const pages = version ? Math.max(1, Math.ceil(version.provisionCount / PROVISIONS_PER_PAGE)) : 1;
   const meta = [
@@ -109,6 +122,19 @@ export default function ActViewPage({ act, page, contents, t }: ActViewProps) {
         )}
 
         {version && (
+          <section className="space-y-4" aria-labelledby="proposals">
+            <h2 id="proposals" className="font-semibold text-fg-primary">
+              {amendLabels.proposals}
+            </h2>
+            <AmendmentList
+              amendments={amendments}
+              showAct={false}
+              empty={amendLabels.noProposals}
+            />
+          </section>
+        )}
+
+        {version && (
           <section className="space-y-6" aria-label={t("act.provisions")}>
             <h2 className="font-semibold text-fg-primary">
               {t("act.provisionCount", { count: version.provisionCount })}
@@ -117,6 +143,12 @@ export default function ActViewPage({ act, page, contents, t }: ActViewProps) {
               <article key={provision.path} id={provision.path} className="space-y-2">
                 <h3 className="font-medium text-fg-primary">{provision.heading}</h3>
                 <p className="whitespace-pre-line text-fg-secondary">{provision.text}</p>
+                <Link
+                  href={`/law/${act.id}/amend?at=${encodeURIComponent(provision.path)}`}
+                  className="inline-flex min-h-11 items-center text-sm text-fg-secondary underline"
+                >
+                  {amendLabels.propose}
+                </Link>
               </article>
             ))}
             {pages > 1 && (

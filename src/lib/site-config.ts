@@ -49,6 +49,7 @@ export const MENU: MenuSection[] = [
     href: "/law",
     children: [
       { key: "law", href: "/law" },
+      { key: "lawAmendments", href: "/law/amendments" },
       { key: "lawAsk", href: "/law/ask" },
       { key: "lawCoverage", href: "/law/coverage" },
     ],

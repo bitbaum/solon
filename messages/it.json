@@ -65,7 +65,8 @@
       "structures": "Strutture",
       "law": "Trovare una legge",
       "lawAsk": "Interrogare il diritto",
-      "lawCoverage": "Che cosa conserva Solon"
+      "lawCoverage": "Che cosa conserva Solon",
+      "lawAmendments": "Modifiche proposte"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -110,7 +111,8 @@
       "structures": "Forme giuridiche a confronto, con le parole della legge",
       "law": "Cercare ogni atto per parola, numero o luogo in cui si applica",
       "lawAsk": "Una domanda in parole semplici, risposta tratta dal diritto, ogni disposizione citata",
-      "lawCoverage": "Quali atti conserva Solon, contati dai dati"
+      "lawCoverage": "Quali atti conserva Solon, contati dai dati",
+      "lawAmendments": "Le modifiche proposte al diritto, con la redline e i sostegni"
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },

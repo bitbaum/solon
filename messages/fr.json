@@ -65,7 +65,8 @@
       "structures": "Structures",
       "law": "Trouver une loi",
       "lawAsk": "Interroger le droit",
-      "lawCoverage": "Ce que Solon détient"
+      "lawCoverage": "Ce que Solon détient",
+      "lawAmendments": "Modifications proposées"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -110,7 +111,8 @@
       "structures": "Formes juridiques comparées, dans les mots de la loi",
       "law": "Chercher chaque acte par un mot, son numéro ou le lieu où il s'applique",
       "lawAsk": "Une question en mots simples, réponse tirée du droit, chaque disposition citée",
-      "lawCoverage": "Quels actes Solon détient, comptés à partir des données"
+      "lawCoverage": "Quels actes Solon détient, comptés à partir des données",
+      "lawAmendments": "Les modifications proposées au droit, avec leur redline et leurs soutiens"
     },
     "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
