@@ -131,12 +131,18 @@ export default async function AmendmentPage({ params }: { params: Params }) {
                 <li key={route.key} className={`${card} space-y-2`}>
                   <h3 className="font-medium text-fg-primary">{route.name}</h3>
                   <p className="text-sm text-fg-secondary">
-                    {route.signatures
-                      ? t("routeBar", {
-                          count: format.number(route.signatures.count),
-                          who: route.whoMaySign,
-                        })
-                      : t("routeNoBar", { who: route.whoMaySign })}
+                    {route.signatures === null
+                      ? t("routeNoBar", { who: route.whoMaySign })
+                      : "count" in route.signatures
+                        ? t("routeBar", {
+                            count: format.number(route.signatures.count),
+                            who: route.whoMaySign,
+                          })
+                        : t("routeShare", {
+                            percent: route.signatures.percent,
+                            of: route.signatures.of,
+                            who: route.whoMaySign,
+                          })}
                     {route.window &&
                       ` ${
                         "months" in route.window
@@ -144,7 +150,17 @@ export default async function AmendmentPage({ params }: { params: Params }) {
                           : t("routeWindowDays", { days: route.window.days })
                       }`}
                   </p>
+                  {route.alsoRequired && route.alsoRequired.length > 0 && (
+                    <ul className="list-disc space-y-1 pl-5 text-sm text-fg-secondary">
+                      {route.alsoRequired.map((requirement) => (
+                        <li key={requirement}>{requirement}</li>
+                      ))}
+                    </ul>
+                  )}
                   <p className="text-sm text-fg-secondary">{route.outcome}</p>
+                  {route.cannotChange && (
+                    <p className="text-sm text-fg-tertiary">{route.cannotChange}</p>
+                  )}
                   <p className="text-xs text-fg-tertiary">
                     <a href={route.source.url} className="underline" rel="noopener">
                       {t("routeSource", {

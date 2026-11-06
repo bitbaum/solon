@@ -101,6 +101,9 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
+  // The United States and its states: a state's key is `us-<postal code>`, its place ISO 3166-2.
+  { key: "us", name: "United States", place: { scheme: "iso_3166_1", value: "US" } },
+  { key: "us-wy", name: "Wyoming", place: { scheme: "iso_3166_2", value: "US-WY" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
   // whose collection a reader in src/lib/law/publishers covers.
   {
@@ -518,6 +521,75 @@ export const LEGILUX = {
 } as const;
 
 /**
+ * Wyoming's statutes and Constitution, from the Legislative Service Office's
+ * "Wyoming Statutes - Files in Download Format": one PDF per title, Title 97
+ * the Constitution. Law a US legislature enacts is not under copyright
+ * (Georgia v. Public.Resource.Org, 590 U.S. 255 (2020)), so the text is
+ * public domain. The download page states the day the files reflect only in
+ * its rendered page, so each version is dated by the day it was read.
+ */
+export const WYOLEG = {
+  key: "wyoleg",
+  authority: "us-wy",
+  publisher: "Wyoming Legislature, Legislative Service Office",
+  homepage: "https://wyoleg.gov/stateStatutes/StatutesDownload",
+  /** One file per title: `{title}` is the file's own number (01 … 42, 34.1, 97, 99). */
+  fileUrl: "https://wyoleg.gov/statutes/compress/Title{title}.pdf",
+  hosts: ["wyoleg.gov"],
+  licenceSpdx: "LicenseRef-public-domain-edicts",
+  locale: "en",
+  textStatus: "consolidated" as ActTextStatus,
+  /** Every file the page offers, by number, with the name it gives. Title 97 is the Constitution. */
+  titles: [
+    ["97", "The Wyoming Constitution"],
+    ["01", "Title 1 Civil Procedure"],
+    ["02", "Title 2 Wills, Decedents' Estates and Probate Code"],
+    ["03", "Title 3 Guardian and Ward"],
+    ["04", "Title 4 Fiduciaries"],
+    ["05", "Title 5 Courts"],
+    ["06", "Title 6 Crimes and Offenses"],
+    ["07", "Title 7 Criminal Procedure"],
+    ["08", "Title 8 General Provisions"],
+    ["09", "Title 9 Administration of the Government"],
+    ["10", "Title 10 Aeronautics"],
+    ["11", "Title 11 Agriculture, Livestock and Other Animals"],
+    ["12", "Title 12 Alcoholic Beverages"],
+    ["13", "Title 13 Banks, Banking and Finance"],
+    ["14", "Title 14 Children"],
+    ["15", "Title 15 Cities and Towns"],
+    ["16", "Title 16 City, County, State and Local Powers"],
+    ["17", "Title 17 Corporations, Partnerships and Associations"],
+    ["18", "Title 18 Counties"],
+    ["19", "Title 19 Defense Forces and Affairs"],
+    ["20", "Title 20 Domestic Relations"],
+    ["21", "Title 21 Education"],
+    ["22", "Title 22 Elections"],
+    ["23", "Title 23 Game and Fish"],
+    ["24", "Title 24 Highways"],
+    ["25", "Title 25 Institutions of the State"],
+    ["26", "Title 26 Insurance Code"],
+    ["27", "Title 27 Labor and Employment"],
+    ["28", "Title 28 Legislature"],
+    ["29", "Title 29 Liens"],
+    ["30", "Title 30 Mines and Minerals"],
+    ["31", "Title 31 Motor Vehicles"],
+    ["32", "Title 32 Notaries"],
+    ["33", "Title 33 Professions and Occupations"],
+    ["34", "Title 34 Property, Conveyances and Security Transactions"],
+    ["34.1", "Title 34.1 Uniform Commercial Code"],
+    ["35", "Title 35 Public Health and Safety"],
+    ["36", "Title 36 Public Land"],
+    ["37", "Title 37 Public Utilities"],
+    ["38", "Title 38 Sureties"],
+    ["39", "Title 39 Taxation and Revenue"],
+    ["40", "Title 40 Trade and Commerce"],
+    ["41", "Title 41 Water"],
+    ["42", "Title 42 Welfare"],
+    ["99", "Title 99 Water Projects"],
+  ] as const,
+} as const;
+
+/**
  * The country whose law an authority's law sits within, as ISO 3166-1: a
  * canton, an intercantonal body and a Swiss commune are CH; Liechtenstein and
  * its communes LI; Luxembourg LU. Read from config, never typed per authority.
@@ -528,6 +600,8 @@ export function countryOf(key: string): string | null {
   while (authority && !seen.has(authority.key)) {
     seen.add(authority.key);
     if (authority.place?.scheme === "iso_3166_1") return authority.place.value;
+    // A subdivision's code starts with its country's: US-WY is in US.
+    if (authority.place?.scheme === "iso_3166_2") return authority.place.value.slice(0, 2);
     if (authority.place?.scheme === "bfs_canton" || authority.key === "intercantonal") return "CH";
     authority = authority.within
       ? LAW_AUTHORITIES.find((a) => a.key === authority!.within)

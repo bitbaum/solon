@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Wyoming's law.** Wyoming's statutes and Constitution are read from the
+  Legislature's own downloads, about 21,000 sections in 45 files, each with the
+  publisher's link and hash, and found under Law › United States › Wyoming once
+  loaded. A proposed change to a Wyoming statute shows the citizen initiative as
+  its official route: who signs, the 15% bar and its spread across counties, what
+  the initiative cannot do, and Article 3, Section 52 of the Constitution as the
+  source. {#law-wy-statutes} {#law-wy-route}
 - **Propose a change to any article.** Every article of every act Solon holds has a
   "Propose a change" link: reword it, repeal it or add an article after it, and see
   the redline against the published text as you write; speak instead of typing if

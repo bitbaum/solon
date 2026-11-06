@@ -1,7 +1,8 @@
 name: Law text load
 
 # By hand: read the text of the Confederation's laws from Fedlex, or
-# Liechtenstein's from Lilex (gesetze.li), and store it in the production
+# Liechtenstein's from Lilex (gesetze.li), or Wyoming's from the Legislature's
+# downloads (wyoleg), and store it in the production
 # database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
 # two seconds per Fedlex act and three per Lilex act, politely paced; a full load
@@ -15,7 +16,8 @@ on:
       source:
         description: "Whose laws"
         type: choice
-        options: [fedlex, lilex, cantons, zhlex, municipal, lexwork, recut, legilux, refresh]
+        options:
+          [fedlex, lilex, cantons, zhlex, municipal, lexwork, recut, legilux, wyoleg, refresh]
         default: fedlex
       authority:
         description: "Cantons only: one canton's key (zh, be, ...), or empty for all"

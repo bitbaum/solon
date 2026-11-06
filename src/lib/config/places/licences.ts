@@ -27,4 +27,7 @@ export const LICENCES = [
   // Liechtenstein's laws and official acts are not protected either: URG Art. 5
   // (LR 231.1). The same class as the Swiss ones above, under its own name.
   { spdx: "LicenseRef-li-official-act", requiresAttribution: false, shareAlike: false },
+  // Law a US legislature enacts is public domain under the government edicts doctrine:
+  // Georgia v. Public.Resource.Org, Inc., 590 U.S. 255 (2020).
+  { spdx: "LicenseRef-public-domain-edicts", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

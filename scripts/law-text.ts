@@ -5,6 +5,7 @@
  *   pnpm run law:text lilex [--limit 200] [--lr 210.0] [--dry-run]
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
+ *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
@@ -16,6 +17,7 @@
  */
 import { recutCantonalText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
+import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
@@ -125,6 +127,18 @@ async function main(): Promise<number> {
         2,
       ),
     );
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "wyoleg") {
+    const report = await importWyoleg(db, {
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      again: args.includes("--again"),
+      only: flag("title") ? [flag("title")!] : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(JSON.stringify({ ...report, failureCount: report.failures.length }, null, 2));
     return report.failures.length > 0 ? 1 : 0;
   }
   if (sourceKey === "recut") {
