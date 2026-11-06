@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Propose a change to any article.** Every article of every act Solon holds has a
+  "Propose a change" link: reword it, repeal it or add an article after it, and see
+  the redline against the published text as you write; speak instead of typing if
+  you like. A draft survives signing in on the way. Each proposal has its own page
+  with the redline, why, who supports it, the official route its law can take, and
+  every revision with its hash; one click supports it or withdraws that support, and
+  anyone can write an alternative. Proposed changes are listed under Law in the menu
+  and on each act. {#law-redline} {#law-support}
 - **The engine for amending the law.** Anyone can propose a change to an act Solon
   holds: replace, insert or repeal provisions, each change pinned to the hash of the
   exact text it amends, so a proposal never silently applies to wording it was not

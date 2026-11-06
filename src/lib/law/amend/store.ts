@@ -16,7 +16,7 @@ import {
   lawAmendmentSupports,
   lawAmendments,
 } from "@/lib/db/amendments-schema";
-import { legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schema";
+import { legalActNames, legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schema";
 import type { Actor } from "@/lib/domain/proof";
 import {
   ChangesSchema,
@@ -528,6 +528,8 @@ export interface AmendmentSummary {
   id: string;
   authority: string;
   actId: string;
+  /** The act's title as its register states it, when it has one. */
+  actTitle: string | null;
   title: string;
   revision: number;
   recordedAt: string;
@@ -568,12 +570,27 @@ export async function listAmendments(
     db,
     [...latest.values()].map((r) => r.id),
   );
+  const names = new Map(
+    (
+      await db
+        .select({ actId: legalActNames.actId, text: legalActNames.text })
+        .from(legalActNames)
+        .where(
+          and(
+            inArray(legalActNames.actId, [...new Set(amendments.map((a) => a.actId))]),
+            eq(legalActNames.kind, "title"),
+            isNull(legalActNames.supersededAt),
+          ),
+        )
+    ).map((n) => [n.actId, n.text]),
+  );
   return amendments.map((a) => {
     const r = latest.get(a.id)!;
     return {
       id: a.id,
       authority: a.authority,
       actId: a.actId,
+      actTitle: names.get(a.actId) ?? null,
       title: r.title,
       revision: r.revision,
       recordedAt: a.recordedAt.toISOString(),
@@ -591,4 +608,50 @@ export async function readLog(db: Reader, after: number, limit = 500) {
     .orderBy(asc(lawAmendmentEvents.seq))
     .limit(Math.min(limit, 1000));
   return rows.map((r) => ({ ...r, recordedAt: r.recordedAt.toISOString() }));
+}
+
+/** One revision by its id, with the act it amends: what a fork starts from. */
+export async function loadRevision(db: Reader, revisionId: string) {
+  const [row] = await db
+    .select({
+      id: lawAmendmentRevisions.id,
+      amendmentId: lawAmendmentRevisions.amendmentId,
+      revision: lawAmendmentRevisions.revision,
+      title: lawAmendmentRevisions.title,
+      rationale: lawAmendmentRevisions.rationale,
+      lang: lawAmendmentRevisions.lang,
+      changes: lawAmendmentRevisions.changes,
+      actId: lawAmendments.actId,
+    })
+    .from(lawAmendmentRevisions)
+    .innerJoin(lawAmendments, eq(lawAmendments.id, lawAmendmentRevisions.amendmentId))
+    .where(eq(lawAmendmentRevisions.id, revisionId))
+    .limit(1);
+  return row ? { ...row, changes: row.changes as Change[] } : null;
+}
+
+/** The provisions of the act's version in force in a language, in order; empty when none is held. */
+export async function provisionsInForce(db: Reader, actId: string, lang: string) {
+  const version = await versionInForce(db, actId, lang);
+  return version ? provisionsOf(db, version.id) : [];
+}
+
+/** Whether this supporter stands behind this revision now: their latest row decides. */
+export async function supportsNow(
+  db: Reader,
+  revisionId: string,
+  supporter: string,
+): Promise<boolean> {
+  const [latest] = await db
+    .select({ kind: lawAmendmentSupports.kind })
+    .from(lawAmendmentSupports)
+    .where(
+      and(
+        eq(lawAmendmentSupports.revisionId, revisionId),
+        eq(lawAmendmentSupports.supporter, supporter),
+      ),
+    )
+    .orderBy(desc(lawAmendmentSupports.recordedAt))
+    .limit(1);
+  return latest?.kind === "support";
 }
