@@ -10,7 +10,8 @@
       "platform": "Platform",
       "decisions": "Decisions",
       "more": "More",
-      "places": "Places"
+      "places": "Places",
+      "law": "Law"
     },
     "sectionDesc": {
       "useCases": "Every kind of group decides. Find yours.",
@@ -18,7 +19,8 @@
       "platform": "Solon decides, OrangeCat pays, Loki does the work.",
       "decisions": "The public record — and your part in it.",
       "more": "Everything else.",
-      "places": "Every jurisdiction, with the source behind every fact."
+      "places": "Every jurisdiction, with the source behind every fact.",
+      "law": "Every law Solon holds, word for word, with its source."
     },
     "links": {
       "whatYouCanDo": "What you can do",
@@ -60,7 +62,10 @@
       "placesCompare": "Compare",
       "placesCoverage": "Coverage",
       "askSolon": "Ask Solon",
-      "structures": "Structures"
+      "structures": "Structures",
+      "law": "Find a law",
+      "lawAsk": "Ask the law",
+      "lawCoverage": "What Solon holds"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -102,7 +107,10 @@
       "placesCompare": "Places side by side: what tax costs you in each",
       "placesCoverage": "What Places covers, counted from the data",
       "askSolon": "Understand the rules and draft a proposal.",
-      "structures": "Legal forms side by side, in the words of the law"
+      "structures": "Legal forms side by side, in the words of the law",
+      "law": "Search every act by a word, its number or the place it applies",
+      "lawAsk": "A question in plain words, answered from the law, every provision cited",
+      "lawCoverage": "Which laws Solon holds, counted from the data"
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -141,15 +149,9 @@
       "kicker": "Solon · Beta",
       "line1": "Decide together.",
       "line2": "In the open.",
-      "lede": "Solon runs governance for companies, towns, associations and communities — proposals, votes and the books, where every member can see them.",
+      "lede": "Read the law that applies where you are, and ask it questions. Run your group under the rules it chooses — proposals, votes and the books, in the open, from anywhere.",
       "hire": "Hire Solon",
-      "how": "How it works"
-    },
-    "glarus": {
-      "kicker": "Glarus, Switzerland",
-      "title": "The whole town. One square. Every hand counted.",
-      "body": "Since at least 1387 the citizens of Glarus have met in their town square to make their own laws. Anyone may speak; anyone may propose a change. In 2006 one citizen's amendment from the floor merged twenty-five municipalities into three. Solon brings that to any group — at any size, from anywhere.",
-      "cta": "The art and science of governance"
+      "law": "Find a law"
     },
     "how": {
       "kicker": "How it works",
@@ -314,6 +316,20 @@
       "body": "Tell us about your group. We set up your rules together, run your first decisions, and keep the record. Free for pilot groups while Solon is in beta.",
       "talk": "Talk to us",
       "own": "Start on your own"
+    },
+    "law": {
+      "kicker": "The law, open",
+      "title": "Every word of the law, open to everyone.",
+      "body": "Solon holds the text of every federal and cantonal act in force in Switzerland, every act of Liechtenstein and of Luxembourg, and a growing number of communes' rules — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or start from where you live.",
+      "next": "Next: propose a change to any article and see what it takes to make it law there — and the law of more places, starting with Wyoming.",
+      "find": "Find a law",
+      "ask": "Ask the law"
+    },
+    "roots": {
+      "kicker": "Where the ideas come from",
+      "title": "An open square. A public ledger. Rules anyone can fork.",
+      "body": "The citizens of Glarus have made their laws in the open since at least 1387: anyone may speak, anyone may propose a change. In 2009 Bitcoin showed that a public record can be checked by anyone without trusting whoever keeps it. Open-source software showed that a set of rules can be copied, changed and offered back. Solon brings the open assembly and the recountable record to any group, anywhere — and is building the third: rules you can fork, and leave with.",
+      "cta": "Where Solon's ideas come from"
     }
   },
   "Hire": {
@@ -848,7 +864,7 @@
     "metaDescription": "Solon stands on old ideas: public law, open assemblies, fair counting, the commons, exit and voice, and new ones like the network state.",
     "kicker": "The art and science of governance",
     "title": "The ideas behind Solon",
-    "lede": "Nothing here is new, and that is the point. People have been working out how to decide together for thousands of years. Solon is built on what they learned.",
+    "lede": "Nothing here is new, and that is the point. People have been working out how to decide together for thousands of years — in town squares, in markets, and lately in public ledgers and open code. Solon is built on what they learned.",
     "meaning": "What Solon takes from it",
     "source": "Source",
     "solon": {
@@ -873,6 +889,19 @@
       "meaning": "How you count is a choice, and it changes the result. Solon offers six methods, shows what each one does, and records which one each decision used.",
       "note": "Arrow's theorem concerns ranked methods; score methods fall outside its conditions. It does not mean no vote can be fair."
     },
+    "ledger": {
+      "era": "2008",
+      "title": "A public ledger: verify, don't trust",
+      "story": "On 31 October 2008 someone writing as Satoshi Nakamoto published a nine-page paper describing electronic cash with no trusted third party. Every transaction goes into one public record that only grows; each block carries the hash of the block before it, so rewriting the past means redoing all the work done since. The network started on 3 January 2009. Nobody has to trust whoever keeps the record: anyone can check it.",
+      "meaning": "A vote signed with a Bitcoin key is published with its signature, so anyone can recount a decision without trusting Solon, and every copy of a law Solon holds carries the hash of the publisher's text. Next: chain the whole record and anchor it to Bitcoin, so that nothing can be quietly left out.",
+      "note": "Solon uses Bitcoin's way of signing a message; it holds no coins and no keys."
+    },
+    "openSource": {
+      "era": "1983 and 2005",
+      "title": "Rules as open source",
+      "story": "In 1983 Richard Stallman announced the GNU project, and with it the idea that anyone may read, copy, change and share the rules a program follows. In 2005 git made every change to a text a recorded step that can be compared and undone, and every copy a full fork that can go its own way or be merged back. Millions of people now write rules together this way, most of whom have never met.",
+      "meaning": "A law in Solon is text with a history, not a PDF: each version, what changed and the hash that proves it. Next: propose a change to any article as a redline anyone can read, and fork a group's whole rulebook into a new group."
+    },
     "ostrom": {
       "era": "Nobel Prize, 2009",
       "title": "Elinor Ostrom: communities can govern their commons",
@@ -893,6 +922,13 @@
       "story": "In 1860 the Belgian botanist Paul-Émile de Puydt proposed that people should be able to choose their government the way they choose an insurer — without moving house. A century later the philosopher Robert Nozick described the minimal state as \"a framework for utopias\": a place where people form and leave communities of their own design.",
       "meaning": "Solon takes no side on which rules are best. It is infrastructure for any rules a group chooses — consensus or majority, assembly or board."
     },
+    "polycentric": {
+      "era": "930 to today",
+      "title": "Polycentric law: more than one legal order at once",
+      "story": "For centuries, merchants across Europe settled their disputes under the law merchant, rules they made and enforced among themselves alongside the law of kings and towns. Medieval Iceland, from 930 to 1262, had courts and laws but no king and no executive, and a free man could choose which chieftain represented him and change his mind. In the 1970s Murray Rothbard and David Friedman argued that law itself could be supplied by competing providers among whom people choose.",
+      "meaning": "Solon does not decide how much government is right. A group may choose heavy coordination or almost none, a commune or a company; what Solon holds to is that the rules are public and members can leave.",
+      "note": "Historians dispute how independent the law merchant was of royal courts, and Friedman's reading of Iceland is contested too."
+    },
     "charterCities": {
       "era": "2009",
       "title": "Charter cities: new rules need trust",
@@ -908,7 +944,7 @@
     },
     "closing": {
       "title": "What Solon takes from all of it",
-      "t1": "Rules anyone can read, and change by vote.",
+      "t1": "Rules anyone can read, fork, and change by vote.",
       "t2": "A count the group chose, applied the same way every time.",
       "t3": "A record that only grows, and anyone can check.",
       "t4": "Membership decided by people, never by default.",
@@ -1217,15 +1253,15 @@
   "Law": {
     "coverage": {
       "metaTitle": "Law coverage",
-      "metaDescription": "Which laws of Switzerland and Liechtenstein Solon's register lists, per authority, counted from the data.",
+      "metaDescription": "Which laws of Switzerland, Liechtenstein and Luxembourg Solon holds, per authority, counted from the data.",
       "kicker": "Law",
-      "title": "What the register lists",
-      "intro": "Counted from the data, read from the publisher on {date}. Names and numbers only: the text of the law is not held yet.",
+      "title": "What Solon holds",
+      "intro": "Counted from the data, read from the publisher on {date}: each authority's acts, and for how many Solon holds the text.",
       "neverRetrieved": "The register has not been read yet.",
       "totals": "acts in force. {notInForce} listed as no longer in force. Text held for {withText}.",
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
-      "note": "The communes are not listed yet.",
+      "note": "Communes are added one collection at a time; those held so far are in the list above.",
       "readLink": "Find and read an act →"
     },
     "index": {

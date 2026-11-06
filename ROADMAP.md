@@ -18,18 +18,58 @@ here; until then it reads the publishers directly. The design, the measured
 size (21,728 federal and cantonal texts in force, as LexFind counts them on
 2026-10-22) and the sources are in `docs/design/2026-10-law-as-data.md`.
 
-- [x] The register of what exists for the Confederation, the 26 cantons and the intercantonal agreements: 33,441 acts (22,047 in force) with title and number, read from LexFind's list, and a coverage page counted from the data. No text yet {#law-register}
+- [x] The register of what exists for the Confederation, the 26 cantons and the intercantonal agreements: 33,441 acts (22,047 in force) with title and number, read from LexFind's list, and a coverage page counted from the data {#law-register}
 - [x] The register for Liechtenstein: the 3,407 acts of the Government's Systematic Register, named by LR number with the Landesgesetzblatt issue that published each {#law-register-li}
 - [ ] Each act's own page at the authority that publishes it, for the Swiss acts (built and tested; the production load is not done), and the communes in the register {#law-register-links}
-- [ ] Federal text from Fedlex, every act in force, checked against the publisher every day. The reader and the store are built and tested; the production load and the daily check are not done {#law-federal}
-- [ ] Liechtenstein text from gesetze.li. The reader is built and tested on the real pages, and dates each version by the day it was read, because Lilex does not state when one took effect; the production load is not done {#law-li}
-- [ ] Cantonal text. A first pass reads each act's document, cut into articles, dated by the day it was read. Zürich now has a reader on the canton's own publication with the canton's in-force date; the other 25 cantons need theirs. The production loads are not done {#law-cantons}
+- [x] Federal text from Fedlex, every act in force, loaded in production; read again by the law sync {#law-federal}
+- [x] Liechtenstein text from gesetze.li, every act, loaded in production. Each version is dated by the day it was read, because Lilex does not state when one took effect {#law-li}
+- [x] Cantonal text for all 26 cantons and the intercantonal agreements, loaded in production. Zürich is read from the canton's own publication with the canton's in-force date; the other 25 from each act's document, cut into articles and dated by the day it was read, until each has a reader of its own {#law-cantons}
+- [ ] The law sync on a clock: today it runs by hand, so what Solon holds is as current as its last run (`/law/coverage` shows the date) {#law-sync-clock}
 - [x] Acts can be found and read on Solon itself, with the publisher's link, the page each copy was read from and its hash {#law-reading}
 - [x] Search over the text of the provisions in force, ranked, each hit citing its act, anchor, publisher's page and hash; the first piece of the retrieval layer for the assistants {#law-search}
 - [x] Ask the law: a chat that plans which places and law words a question needs, searches those provisions and answers from them only, citing each one; public, in any language {#law-ask}
 - [ ] Earlier versions of every act, and what changed between them {#law-history}
-- [ ] Municipal regulations, commune by commune. The City of Zürich's collection has a reader (one adapter per commune, a shared loader), current versions and history; the production load and the other communes are not done {#law-communes}
+- [ ] Municipal regulations, commune by commune (one adapter per collection, a shared loader). Loaded: the City of Zürich, the eleven communes of Zug, the three of Glarus and seven of Liechtenstein's eleven. The other Swiss communes, about 2,100, are not; the most populous go first {#law-communes}
 - [ ] A public API, and Causius reading the law from here with the publisher as its fallback {#law-api}
+- [x] Law in the site's main menu, beside Places and Decisions {#law-menu}
+
+### Law you can act on {#law-act}
+
+A law that can only be read is half open. Anyone should be able to point at an
+article, write the change they want, and gather support for it — and see, for
+that place, what it would take to make the change real. Solon does not claim
+to make law: a proposal here is evidence of support, carried to the
+authority that decides, and the record says so.
+
+- [ ] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
+- [ ] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
+- [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}
+- [ ] A proposal that reaches the place's bar is handed on in the form the authority accepts, with its supporters counted and the record linked {#law-handoff}
+- [ ] What applies here: pick a point and see every layer of law in force there — federal, state or canton, commune — each with "propose a change" {#law-here}
+
+### One globe for every place and its law {#globe}
+
+The map is the front door to the law. One globe, from the whole Earth down to a
+commune, showing every place Solon holds and how much of its law it holds.
+
+- [ ] The globe on the home page and on `/places`: the Earth, then a country, then its states or cantons, then its communes or counties, each coloured by what Solon holds there {#globe-home}
+- [ ] Every place's page links to its law, and every act's page to its place on the globe {#globe-law-links}
+- [ ] The renderer stays the fleet's one map package (`@bitbaum/geo-kit`); what the globe needs that it lacks is added there {#globe-package}
+
+### Beyond Switzerland: Wyoming first {#law-world}
+
+The goal is the law of every place, readable and actionable by anyone. Each new
+place is a publisher to read, a register of what exists, its map, and its
+official route. Wyoming goes first: its statutes are published free online, the
+text a US legislature enacts is not copyrightable, and its DAO LLC and DUNA
+statutes are the legal wrappers groups governed on Solon are most likely to
+use.
+
+- [ ] Wyoming's statutes, read from the Legislature's publication, cut into sections, with the publisher's link and hash {#law-wy-statutes}
+- [ ] Wyoming's administrative rules {#law-wy-rules}
+- [ ] Wyoming and its 23 counties on the globe {#law-wy-places}
+- [ ] Wyoming's official route: the citizen initiative and the referendum, with their thresholds and their limits {#law-wy-route}
+- [ ] The places' and the law's data model without Swiss assumptions: a new country is configuration and an adapter, not a change to the schema {#law-world-model}
 
 ### Every organization on its own pages
 
@@ -79,6 +119,29 @@ with what threshold and quorum.
 - [ ] A versioned `charters` table; the shipped profiles become templates
 - [ ] A proposal that amends the charter, applied when the vote closes
 - [ ] One source for thresholds: the ratification check watches the profiles too
+
+### Exit: fork a group, leave with your record {#fork}
+
+Many small rule sets beat one big one only if people can move between them.
+Any group may choose heavy coordination or almost none; what Solon holds to is
+that its rules are public and its members can leave. Forking needs the charter
+above, because a group's rules must be data before they can be copied.
+
+- [ ] Fork an organization: a new one with a copy of its charter and policies, its origin recorded, founded by whoever forks it; no one's permission needed {#fork-org}
+- [ ] Every rule set shows its forks and where it came from, so rules can be compared side by side {#fork-lineage}
+- [ ] A member leaves with their own record: every act they signed, exportable and checkable elsewhere {#fork-leave}
+- [ ] Nested groups: a part of an organization adopts rules of its own for what is its own, and stays linked for what is shared {#fork-nested}
+- [ ] A rule-set template for groups that want almost no collective decisions, beside the five shipped ones; a template, never a default {#fork-minimal}
+
+### A record anyone can prove complete {#proof}
+
+Signed votes let anyone recount a decision. The next step is proving that
+nothing was left out: the record as one chain, its head anchored where no
+one, Solon included, can rewrite it.
+
+- [ ] Each audit event carries the hash of the one before it {#proof-chain}
+- [ ] The chain's head anchored to Bitcoin with OpenTimestamps, regularly, and the proofs published {#proof-anchor}
+- [ ] Every movement of a watched treasury shown beside the decision and the rule text that allowed it {#proof-money}
 
 ### Admission by vote
 

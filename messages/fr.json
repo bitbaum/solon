@@ -10,7 +10,8 @@
       "platform": "Plateforme",
       "decisions": "Décisions",
       "more": "Plus",
-      "places": "Lieux"
+      "places": "Lieux",
+      "law": "Droit"
     },
     "sectionDesc": {
       "useCases": "Tout groupe décide. Trouvez le vôtre.",
@@ -18,7 +19,8 @@
       "platform": "Solon décide, OrangeCat paie, Loki fait le travail.",
       "decisions": "Le registre public — et votre rôle.",
       "more": "Tout le reste.",
-      "places": "Chaque collectivité, avec la source de chaque donnée."
+      "places": "Chaque collectivité, avec la source de chaque donnée.",
+      "law": "Chaque acte que Solon détient, mot pour mot, avec sa source."
     },
     "links": {
       "whatYouCanDo": "Ce que vous pouvez faire ici",
@@ -60,7 +62,10 @@
       "placesCompare": "Comparer",
       "placesCoverage": "Couverture",
       "askSolon": "Demander à Solon",
-      "structures": "Structures"
+      "structures": "Structures",
+      "law": "Trouver une loi",
+      "lawAsk": "Interroger le droit",
+      "lawCoverage": "Ce que Solon détient"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -102,7 +107,10 @@
       "placesCompare": "Des lieux côte à côte : ce que l’impôt vous coûte dans chacun",
       "placesCoverage": "Ce que couvrent les lieux, compté à partir des données",
       "askSolon": "Comprendre les règles et préparer une proposition.",
-      "structures": "Formes juridiques comparées, dans les mots de la loi"
+      "structures": "Formes juridiques comparées, dans les mots de la loi",
+      "law": "Chercher chaque acte par un mot, son numéro ou le lieu où il s'applique",
+      "lawAsk": "Une question en mots simples, réponse tirée du droit, chaque disposition citée",
+      "lawCoverage": "Quels actes Solon détient, comptés à partir des données"
     },
     "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
@@ -141,15 +149,9 @@
       "kicker": "Solon · Bêta",
       "line1": "Décider ensemble.",
       "line2": "Au grand jour.",
-      "lede": "Solon mène la gouvernance des entreprises, des communes, des associations et des communautés — propositions, votes et comptes, visibles par chaque membre.",
+      "lede": "Lisez le droit qui s'applique là où vous êtes et posez-lui vos questions. Menez votre groupe selon les règles qu'il choisit — propositions, votes et comptes, au grand jour, depuis n'importe où.",
       "hire": "Engager Solon",
-      "how": "Comment ça marche"
-    },
-    "glarus": {
-      "kicker": "Glaris, Suisse",
-      "title": "Toute la commune. Une place. Chaque main comptée.",
-      "body": "Depuis au moins 1387, les citoyens de Glaris se réunissent sur leur place pour se donner leurs propres lois. Chacun peut prendre la parole, chacun peut proposer une modification. En 2006, un seul amendement venu de l'assemblée a fusionné vingt-cinq communes en trois. Solon apporte cela à tout groupe — de toute taille, depuis n'importe où.",
-      "cta": "L'art et la science de la gouvernance"
+      "law": "Trouver une loi"
     },
     "how": {
       "kicker": "Comment ça marche",
@@ -314,6 +316,20 @@
       "body": "Parlez-nous de votre groupe. Nous définissons vos règles ensemble, menons vos premières décisions et tenons le registre. Gratuit pour les groupes pilotes tant que Solon est en bêta.",
       "talk": "Nous écrire",
       "own": "Commencer seul"
+    },
+    "law": {
+      "kicker": "Le droit, ouvert",
+      "title": "Chaque mot du droit, ouvert à tous.",
+      "body": "Solon détient le texte de chaque acte fédéral et cantonal en vigueur en Suisse, de chaque acte du Liechtenstein et du Luxembourg, et les règles d'un nombre croissant de communes — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou partez de votre lieu de vie.",
+      "next": "Ensuite : proposer une modification de n'importe quel article et voir ce qu'il faut pour qu'elle y devienne loi — et le droit d'autres lieux, à commencer par le Wyoming.",
+      "find": "Trouver une loi",
+      "ask": "Interroger le droit"
+    },
+    "roots": {
+      "kicker": "D'où viennent les idées",
+      "title": "Une place ouverte. Un registre public. Des règles que chacun peut dériver.",
+      "body": "Les citoyens de Glaris se donnent leurs lois en plein air depuis au moins 1387 : chacun peut prendre la parole, chacun peut proposer une modification. En 2009, Bitcoin a montré qu'un registre public peut être vérifié par n'importe qui sans faire confiance à celui qui le tient. Le logiciel libre a montré qu'un ensemble de règles peut être copié, modifié et rendu. Solon apporte l'assemblée ouverte et le registre recomptable à tout groupe, partout — et construit le troisième : des règles que l'on peut dériver, et emporter en partant.",
+      "cta": "D'où viennent les idées de Solon"
     }
   },
   "Hire": {
@@ -651,15 +667,15 @@
   "Law": {
     "coverage": {
       "metaTitle": "Couverture du droit",
-      "metaDescription": "Quels actes de la Suisse et du Liechtenstein le registre de Solon liste, par autorité, comptés à partir des données.",
+      "metaDescription": "Quels actes de la Suisse, du Liechtenstein et du Luxembourg Solon détient, par autorité, comptés à partir des données.",
       "kicker": "Droit",
-      "title": "Ce que le registre liste",
-      "intro": "Compté à partir des données, lu chez l'éditeur le {date}. Titres et numéros seulement : le texte des actes n'est pas encore conservé.",
+      "title": "Ce que Solon détient",
+      "intro": "Compté à partir des données, lu chez l'éditeur le {date} : les actes de chaque autorité, et pour combien Solon détient le texte.",
       "neverRetrieved": "Le registre n'a pas encore été lu.",
       "totals": "actes en vigueur. {notInForce} listés comme n'étant plus en vigueur. Texte conservé pour {withText}.",
       "authorities": "Autorités",
       "row": "{inForce} en vigueur · {notInForce} non",
-      "note": "Les communes ne sont pas encore listées.",
+      "note": "Les communes s'ajoutent un recueil à la fois ; celles détenues jusqu'ici figurent dans la liste ci-dessus.",
       "readLink": "Trouver et lire un acte →"
     },
     "index": {
