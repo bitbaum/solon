@@ -10,7 +10,8 @@
       "platform": "Plattform",
       "decisions": "Entscheide",
       "more": "Mehr",
-      "places": "Orte"
+      "places": "Orte",
+      "law": "Recht"
     },
     "sectionDesc": {
       "useCases": "Jede Art von Gruppe entscheidet. Finden Sie Ihre.",
@@ -18,7 +19,8 @@
       "platform": "Solon entscheidet, OrangeCat zahlt, Loki erledigt die Arbeit.",
       "decisions": "Das öffentliche Protokoll — und Ihr Teil darin.",
       "more": "Alles Weitere.",
-      "places": "Jede Gebietskörperschaft, mit der Quelle hinter jeder Angabe."
+      "places": "Jede Gebietskörperschaft, mit der Quelle hinter jeder Angabe.",
+      "law": "Jeder Erlass, den Solon führt, Wort für Wort, mit seiner Quelle."
     },
     "links": {
       "whatYouCanDo": "Was Sie hier tun können",
@@ -60,7 +62,10 @@
       "placesCompare": "Vergleichen",
       "placesCoverage": "Abdeckung",
       "askSolon": "Solon fragen",
-      "structures": "Strukturen"
+      "structures": "Strukturen",
+      "law": "Einen Erlass finden",
+      "lawAsk": "Das Recht fragen",
+      "lawCoverage": "Was Solon führt"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -102,7 +107,10 @@
       "placesCompare": "Orte nebeneinander: was Sie die Steuern an jedem kosten",
       "placesCoverage": "Was Orte abdeckt, aus den Daten gezählt",
       "askSolon": "Die Regeln verstehen und einen Vorschlag entwerfen.",
-      "structures": "Rechtsformen im Vergleich, in den Worten des Gesetzes"
+      "structures": "Rechtsformen im Vergleich, in den Worten des Gesetzes",
+      "law": "Jeden Erlass suchen: nach einem Wort, seiner Nummer oder dem Ort, wo er gilt",
+      "lawAsk": "Eine Frage in einfachen Worten, beantwortet aus dem Recht, jede Bestimmung zitiert",
+      "lawCoverage": "Welche Erlasse Solon führt, aus den Daten gezählt"
     },
     "accountIntro": "Mit einem Solon-Konto treten Sie einer Organisation bei, stellen Anträge und stimmen ab. Eine E-Mail-Adresse und ein Passwort oder ein Passkey genügen; mit OrangeCat meldet Sie ein Klick an."
   },
@@ -141,15 +149,9 @@
       "kicker": "Solon · Beta",
       "line1": "Gemeinsam entscheiden.",
       "line2": "Offen.",
-      "lede": "Solon führt die Governance für Unternehmen, Gemeinden, Vereine und Gemeinschaften — Anträge, Abstimmungen und die Finanzen, für alle Mitglieder einsehbar.",
+      "lede": "Lesen Sie das Recht, das dort gilt, wo Sie sind, und stellen Sie ihm Fragen. Führen Sie Ihre Gruppe nach den Regeln, die sie selbst wählt — Anträge, Abstimmungen und Finanzen, offen, von überall.",
       "hire": "Solon beauftragen",
-      "how": "So funktioniert es"
-    },
-    "glarus": {
-      "kicker": "Glarus, Schweiz",
-      "title": "Die ganze Gemeinde. Ein Platz. Jede Hand gezählt.",
-      "body": "Seit mindestens 1387 versammeln sich die Glarnerinnen und Glarner auf ihrem Platz, um sich ihre Gesetze selbst zu geben. Alle dürfen sprechen, alle dürfen eine Änderung beantragen. 2006 vereinte ein einziger Antrag aus dem Ring fünfundzwanzig Gemeinden zu drei. Solon bringt das zu jeder Gruppe — in jeder Grösse, von überall.",
-      "cta": "Kunst und Wissenschaft der Governance"
+      "law": "Einen Erlass finden"
     },
     "how": {
       "kicker": "So funktioniert es",
@@ -314,6 +316,20 @@
       "body": "Erzählen Sie uns von Ihrer Gruppe. Wir legen Ihre Regeln gemeinsam fest, begleiten Ihre ersten Entscheide und führen das Protokoll. Kostenlos für Pilotgruppen, solange Solon in der Beta ist.",
       "talk": "Mit uns sprechen",
       "own": "Selbst beginnen"
+    },
+    "law": {
+      "kicker": "Das Recht, offen",
+      "title": "Jedes Wort des Rechts, offen für alle.",
+      "body": "Solon führt den Wortlaut jedes geltenden Erlasses des Bundes und der Kantone, jedes Erlasses Liechtensteins und Luxemburgs und die Regeln von immer mehr Gemeinden — jeweils so, wie der Herausgeber sie veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder beginnen Sie bei Ihrem Wohnort.",
+      "next": "Als Nächstes: zu jedem Artikel eine Änderung vorschlagen und sehen, was es braucht, damit sie dort Recht wird — und das Recht weiterer Orte, beginnend mit Wyoming.",
+      "find": "Einen Erlass finden",
+      "ask": "Das Recht fragen"
+    },
+    "roots": {
+      "kicker": "Woher die Ideen kommen",
+      "title": "Ein offener Platz. Ein öffentliches Register. Regeln, die jeder abzweigen kann.",
+      "body": "Die Glarnerinnen und Glarner geben sich ihre Gesetze seit mindestens 1387 unter freiem Himmel: Alle dürfen sprechen, alle dürfen eine Änderung beantragen. 2009 zeigte Bitcoin, dass jede und jeder ein öffentliches Register prüfen kann, ohne dem zu vertrauen, der es führt. Open-Source-Software zeigte, dass sich ein Regelwerk kopieren, ändern und zurückgeben lässt. Solon bringt die offene Versammlung und das nachzählbare Register zu jeder Gruppe, überall — und baut am Dritten: Regeln, die man abzweigen und mitnehmen kann.",
+      "cta": "Woher Solons Ideen kommen"
     }
   },
   "Hire": {
@@ -651,15 +667,15 @@
   "Law": {
     "coverage": {
       "metaTitle": "Abdeckung des Rechts",
-      "metaDescription": "Welche Erlasse der Schweiz und Liechtensteins das Register von Solon führt, je Behörde, aus den Daten gezählt.",
+      "metaDescription": "Welche Erlasse der Schweiz, Liechtensteins und Luxemburgs Solon führt, je Behörde, aus den Daten gezählt.",
       "kicker": "Recht",
-      "title": "Was das Register führt",
-      "intro": "Aus den Daten gezählt, am {date} beim Herausgeber gelesen. Nur Titel und Nummern: der Wortlaut der Erlasse ist noch nicht gespeichert.",
+      "title": "Was Solon führt",
+      "intro": "Aus den Daten gezählt, am {date} beim Herausgeber gelesen: die Erlasse jeder Behörde und für wie viele Solon den Wortlaut führt.",
       "neverRetrieved": "Das Register wurde noch nicht gelesen.",
       "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
-      "note": "Die Gemeinden sind noch nicht aufgeführt.",
+      "note": "Gemeinden kommen Sammlung für Sammlung dazu; die bisher geführten stehen in der Liste oben.",
       "readLink": "Einen Erlass finden und lesen →"
     },
     "index": {

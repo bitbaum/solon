@@ -10,7 +10,8 @@
       "platform": "Piattaforma",
       "decisions": "Decisioni",
       "more": "Altro",
-      "places": "Luoghi"
+      "places": "Luoghi",
+      "law": "Diritto"
     },
     "sectionDesc": {
       "useCases": "Ogni gruppo decide. Trovate il vostro.",
@@ -18,7 +19,8 @@
       "platform": "Solon decide, OrangeCat paga, Loki svolge il lavoro.",
       "decisions": "Il registro pubblico — e la vostra parte.",
       "more": "Tutto il resto.",
-      "places": "Ogni ente territoriale, con la fonte di ogni dato."
+      "places": "Ogni ente territoriale, con la fonte di ogni dato.",
+      "law": "Ogni atto che Solon conserva, parola per parola, con la sua fonte."
     },
     "links": {
       "whatYouCanDo": "Cosa puoi fare qui",
@@ -60,7 +62,10 @@
       "placesCompare": "Confronta",
       "placesCoverage": "Copertura",
       "askSolon": "Chiedi a Solon",
-      "structures": "Strutture"
+      "structures": "Strutture",
+      "law": "Trovare una legge",
+      "lawAsk": "Interrogare il diritto",
+      "lawCoverage": "Che cosa conserva Solon"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -102,7 +107,10 @@
       "placesCompare": "Luoghi a confronto: quanto ti costano le imposte in ciascuno",
       "placesCoverage": "Cosa coprono i luoghi, contato dai dati",
       "askSolon": "Comprendi le regole e prepara una proposta.",
-      "structures": "Forme giuridiche a confronto, con le parole della legge"
+      "structures": "Forme giuridiche a confronto, con le parole della legge",
+      "law": "Cercare ogni atto per parola, numero o luogo in cui si applica",
+      "lawAsk": "Una domanda in parole semplici, risposta tratta dal diritto, ogni disposizione citata",
+      "lawCoverage": "Quali atti conserva Solon, contati dai dati"
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },
@@ -141,15 +149,9 @@
       "kicker": "Solon · Beta",
       "line1": "Decidere insieme.",
       "line2": "Alla luce del sole.",
-      "lede": "Solon gestisce la governance di aziende, comuni, associazioni e comunità — proposte, votazioni e conti, visibili a ogni membro.",
+      "lede": "Leggete il diritto che vale dove vi trovate e fategli domande. Guidate il vostro gruppo con le regole che sceglie — proposte, votazioni e conti, alla luce del sole, da qualsiasi luogo.",
       "hire": "Incaricare Solon",
-      "how": "Come funziona"
-    },
-    "glarus": {
-      "kicker": "Glarona, Svizzera",
-      "title": "Tutto il comune. Una piazza. Ogni mano contata.",
-      "body": "Almeno dal 1387 i cittadini di Glarona si riuniscono nella loro piazza per darsi le proprie leggi. Chiunque può prendere la parola, chiunque può proporre una modifica. Nel 2006 un solo emendamento dall'assemblea ha fuso venticinque comuni in tre. Solon porta tutto questo a ogni gruppo — di qualsiasi dimensione, da qualsiasi luogo.",
-      "cta": "L'arte e la scienza della governance"
+      "law": "Trovare una legge"
     },
     "how": {
       "kicker": "Come funziona",
@@ -314,6 +316,20 @@
       "body": "Raccontateci del vostro gruppo. Definiamo insieme le vostre regole, accompagniamo le prime decisioni e teniamo il registro. Gratuito per i gruppi pilota finché Solon è in beta.",
       "talk": "Scriveteci",
       "own": "Iniziare da soli"
+    },
+    "law": {
+      "kicker": "Il diritto, aperto",
+      "title": "Ogni parola del diritto, aperta a tutti.",
+      "body": "Solon conserva il testo di ogni atto federale e cantonale in vigore in Svizzera, di ogni atto del Liechtenstein e del Lussemburgo e le regole di un numero crescente di comuni — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o partite dal luogo in cui vivete.",
+      "next": "Prossimo passo: proporre una modifica a qualsiasi articolo e vedere che cosa serve perché diventi legge in quel luogo — e il diritto di altri luoghi, a cominciare dal Wyoming.",
+      "find": "Trovare una legge",
+      "ask": "Interrogare il diritto"
+    },
+    "roots": {
+      "kicker": "Da dove vengono le idee",
+      "title": "Una piazza aperta. Un registro pubblico. Regole che chiunque può derivare.",
+      "body": "I cittadini di Glarona si danno le proprie leggi all'aperto almeno dal 1387: chiunque può prendere la parola, chiunque può proporre una modifica. Nel 2009 Bitcoin ha mostrato che un registro pubblico può essere verificato da chiunque senza fidarsi di chi lo tiene. Il software libero ha mostrato che un insieme di regole si può copiare, modificare e restituire. Solon porta l'assemblea aperta e il registro ricontabile a ogni gruppo, ovunque — e sta costruendo il terzo: regole che si possono derivare e portare con sé.",
+      "cta": "Da dove vengono le idee di Solon"
     }
   },
   "Hire": {
@@ -651,15 +667,15 @@
   "Law": {
     "coverage": {
       "metaTitle": "Copertura del diritto",
-      "metaDescription": "Quali atti della Svizzera e del Liechtenstein elenca il registro di Solon, per autorità, contati dai dati.",
+      "metaDescription": "Quali atti della Svizzera, del Liechtenstein e del Lussemburgo conserva Solon, per autorità, contati dai dati.",
       "kicker": "Diritto",
-      "title": "Che cosa elenca il registro",
-      "intro": "Contato dai dati, letto presso l'editore il {date}. Solo titoli e numeri: il testo degli atti non è ancora conservato.",
+      "title": "Che cosa conserva Solon",
+      "intro": "Contato dai dati, letto presso l'editore il {date}: gli atti di ogni autorità e per quanti Solon conserva il testo.",
       "neverRetrieved": "Il registro non è ancora stato letto.",
       "totals": "atti in vigore. {notInForce} elencati come non più in vigore. Testo conservato per {withText}.",
       "authorities": "Autorità",
       "row": "{inForce} in vigore · {notInForce} no",
-      "note": "I comuni non sono ancora elencati.",
+      "note": "I comuni si aggiungono una raccolta alla volta; quelli conservati finora sono nell'elenco qui sopra.",
       "readLink": "Trovare e leggere un atto →"
     },
     "index": {

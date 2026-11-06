@@ -37,6 +37,21 @@ A legislature for an economy that AI agents help run. It exists because
 is abused" are legitimacy questions, not engineering ones — and if an agent
 silently decides who eats, that is rule-by-algorithm.
 
+It is also where the law of a place can be read, questioned and, next, acted
+on. Solon holds the text of the law as its publishers published it — every
+federal and cantonal act in force in Switzerland, every act of Liechtenstein
+and of Luxembourg, and a growing number of communes' (`/law/coverage` counts
+it) — each with a hash that proves the copy. The aim is the law of every
+place, for anyone anywhere: point at an article, propose a change, gather
+support, and see what it takes to make the change real there (`ROADMAP.md`,
+"Law you can act on" and "Beyond Switzerland").
+
+Solon takes no side on which rules are best. A group may choose heavy
+coordination or almost none; what Solon holds to is that the rules are public,
+the record can be checked by anyone, and members can leave. It does not claim
+to make law or to be a government: a decision here is evidence, carried to
+whoever acts on it.
+
 Five properties do the work:
 
 - **Easy by default.** A member signs in (email and password, a passkey, or OrangeCat) and votes with one
@@ -202,7 +217,9 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 `/proposals/{id}`, `/governance/voting`, `/governance/audit`,
 `/treasury/bitcoin`, `/orgs/{slug}` (an organization's roster and record),
 `/orgs/{slug}/members/{id}` (a member's page), `/orgs/new` (found one),
-`/places`, `/places/{...path}`, `/places/coverage`, `/compare`, `/faq`,
+`/places`, `/places/{...path}`, `/places/coverage`, `/compare`, `/law` (find
+an act), `/law/{id}` (read one), `/law/place/{key}` (an authority's acts),
+`/law/ask`, `/law/coverage`, `/faq`,
 `/whitepaper`, `/blog`, `/roadmap`, `/changelog`, `/credits`, `/sign-in`,
 `/sign-up`
 

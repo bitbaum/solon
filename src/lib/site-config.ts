@@ -27,19 +27,41 @@ export interface MenuSection {
   feature?: { link: LinkKey; href: string; photo: PhotoId };
 }
 
+/**
+ * The use cases: in the footer and the mobile menu, and on the home page as
+ * tiles. Law took their header slot (2026-11-06, docs/design/2026-11-global-law-and-exit.md).
+ */
+const USE_CASE_SECTION: { key: SectionKey; children: NavLink[] } = {
+  key: "useCases",
+  children: [
+    { key: "forCompanies", href: "/for/companies" },
+    { key: "forTowns", href: "/for/towns" },
+    { key: "forAssociations", href: "/for/associations" },
+    { key: "forCommunities", href: "/for/communities" },
+    { key: "forNetworkStates", href: "/for/network-states" },
+  ],
+};
+
 /** The header's four panels, in reading order. */
 export const MENU: MenuSection[] = [
   {
-    key: "useCases",
-    href: "/for",
+    key: "law",
+    href: "/law",
     children: [
-      { key: "forCompanies", href: "/for/companies" },
-      { key: "forTowns", href: "/for/towns" },
-      { key: "forAssociations", href: "/for/associations" },
-      { key: "forCommunities", href: "/for/communities" },
-      { key: "forNetworkStates", href: "/for/network-states" },
+      { key: "law", href: "/law" },
+      { key: "lawAsk", href: "/law/ask" },
+      { key: "lawCoverage", href: "/law/coverage" },
     ],
-    feature: { link: "forNetworkStates", href: "/for/network-states", photo: "earthAtNight" },
+  },
+  {
+    key: "places",
+    href: "/places",
+    children: [
+      { key: "places", href: "/places" },
+      { key: "placesCompare", href: "/compare" },
+      { key: "placesCoverage", href: "/places/coverage" },
+      { key: "structures", href: "/structures" },
+    ],
   },
   {
     key: "governance",
@@ -55,16 +77,6 @@ export const MENU: MenuSection[] = [
       { key: "voting", href: "/governance/voting" },
     ],
     feature: { link: "ideas", href: "/governance/ideas", photo: "landsgemeindePainting" },
-  },
-  {
-    key: "places",
-    href: "/places",
-    children: [
-      { key: "places", href: "/places" },
-      { key: "placesCompare", href: "/compare" },
-      { key: "placesCoverage", href: "/places/coverage" },
-      { key: "structures", href: "/structures" },
-    ],
   },
   {
     key: "decisions",
@@ -89,6 +101,7 @@ export const MENU: MenuSection[] = [
  */
 export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
   ...MENU.map(({ key, children }) => ({ key, children })),
+  USE_CASE_SECTION,
   // Places took Platform's header slot (design 2026-09-places §9.3); Platform
   // lives on in the footer and the mobile menu.
   {

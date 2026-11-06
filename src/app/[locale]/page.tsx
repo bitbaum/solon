@@ -12,8 +12,9 @@ import { USE_CASES, type UseCase } from "@/lib/content/use-cases";
 import { HIRE_HREF } from "@/lib/site-config";
 
 /**
- * The front door. A visitor should leave knowing three things: Solon runs how a
- * group decides, it keeps that in the open, and they can have it run for them.
+ * The front door. A visitor should leave knowing four things: the law is open
+ * here to read and question, Solon runs how a group decides, it keeps that in
+ * the open, and they can have it run for them.
  * Right after "how it works" comes what it solves, in concrete cases.
  * Each section makes one of those points and offers one way forward. Every
  * sentence lives in messages/<locale>.json under `Home`.
@@ -37,23 +38,40 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
             <Link href={HIRE_HREF} className="btn-frame-accent">
               {t("hero.hire")}
             </Link>
-            <a href="#how" className="btn-frame">
-              {t("hero.how")}
-            </a>
+            <Link href="/law" className="btn-frame">
+              {t("hero.law")}
+            </Link>
           </div>
         </div>
       </FullBleed>
 
+      <section className="section-shell py-section">
+        <div className="max-w-3xl">
+          <div className="kicker">{t("law.kicker")}</div>
+          <h2 className="headline-caps mt-5 text-4xl sm:text-5xl">{t("law.title")}</h2>
+          <p className="mt-6 text-lg text-fg-secondary">{t("law.body")}</p>
+          <p className="mt-6 text-sm text-fg-tertiary">{t("law.next")}</p>
+          <div className="mt-9 grid gap-3 sm:max-w-md sm:grid-cols-2">
+            <Link href="/law" className="btn-frame">
+              {t("law.find")}
+            </Link>
+            <Link href="/law/ask" className="btn-frame">
+              {t("law.ask")}
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <FullBleed photo={PHOTOS.landsgemeinde} position="center 65%" daylight>
         <div className="max-w-3xl">
-          <div className="kicker">{t("glarus.kicker")}</div>
+          <div className="kicker">{t("roots.kicker")}</div>
           <h2 className="headline-caps mt-5 text-4xl sm:text-5xl lg:text-6xl">
-            {t("glarus.title")}
+            {t("roots.title")}
           </h2>
-          <p className="mt-6 max-w-xl text-lg text-fg-primary">{t("glarus.body")}</p>
+          <p className="mt-6 max-w-xl text-lg text-fg-primary">{t("roots.body")}</p>
           <div className="mt-9">
-            <Link href="/governance" className="btn-frame">
-              {t("glarus.cta")}
+            <Link href="/governance/ideas" className="btn-frame">
+              {t("roots.cta")}
             </Link>
           </div>
         </div>

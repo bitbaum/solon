@@ -16,7 +16,8 @@ export async function generateMetadata({ params }: Params) {
 /**
  * The ideas Solon is built on, each told as a story with its date, what Solon
  * takes from it, and a source — so a curious reader can check every claim.
- * Every fact here was checked against the sources linked (2026-09-25); the
+ * Every fact here was checked against the sources linked (2026-09-25; the
+ * ledger, open-source and polycentric-law entries added 2026-11-06); the
  * notes carry the nuance the sources insist on.
  */
 const IDEAS = [
@@ -33,9 +34,12 @@ const IDEAS = [
     note: true,
     link: { href: "/governance/methods", label: "methods" },
   },
+  { key: "ledger", source: "https://bitcoin.org/bitcoin.pdf", note: true },
+  { key: "openSource", source: "https://en.wikipedia.org/wiki/GNU_Project" },
   { key: "ostrom", source: "https://en.wikipedia.org/wiki/Elinor_Ostrom", note: true },
   { key: "exit", source: "https://en.wikipedia.org/wiki/Exit,_Voice,_and_Loyalty", note: true },
   { key: "panarchy", source: "https://en.wikipedia.org/wiki/Panarchy_(political_philosophy)" },
+  { key: "polycentric", source: "https://en.wikipedia.org/wiki/Polycentric_law", note: true },
   {
     key: "charterCities",
     source: "https://en.wikipedia.org/wiki/Charter_city_(economic_development)",
@@ -67,7 +71,9 @@ export default function IdeasPage({ params }: Params) {
             className="grid gap-8 border-t border-strong py-14 lg:grid-cols-[14rem_1fr] lg:gap-16"
           >
             <div>
-              <div className="font-mono text-sm text-fg-tertiary">0{i + 1}</div>
+              <div className="font-mono text-sm text-fg-tertiary">
+                {String(i + 1).padStart(2, "0")}
+              </div>
               <div className="kicker mt-3">{t(`${idea.key}.era`)}</div>
             </div>
             <div className="max-w-copy">

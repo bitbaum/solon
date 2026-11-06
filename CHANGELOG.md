@@ -4,6 +4,24 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-06
+
+### Added
+
+- **Law is in the main menu.** Find a law, ask the law and what Solon holds are one
+  click from every page; before, `/law` could only be reached by its address. Use
+  cases moved to the footer to keep the header on one line. {#law-menu}
+- **The home page leads with the open law**, and the Glarus section now stands
+  beside the public ledger and open-source rules as one of Solon's roots.
+- **Three more ideas behind Solon**: the public ledger (Bitcoin, 2008), rules as open
+  source (GNU and git), and polycentric law.
+
+### Fixed
+
+- **The law coverage page said the text of the law was not held.** It has been held
+  since 2026-11-01 for every federal, cantonal and Liechtenstein act in force; the
+  page and the roadmap now say so. {#law-federal} {#law-li} {#law-cantons}
+
 ## 2026-10-23
 
 ### Added
