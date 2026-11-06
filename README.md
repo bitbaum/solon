@@ -201,6 +201,12 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 | `POST` | `/api/sessions/{id}/close` | Close and record the decision |
 | `GET` | `/api/v1/decisions/{sessionId}` | **Self-verifying** signed record |
 | `POST` | `/api/members/register` | Claim a member seat (signed-in session; Bitcoin key optional) |
+| `GET` | `/api/v1/law/amendments` | Amendments to the law, by `authority` or `act` |
+| `POST` | `/api/v1/law/amendments` | File an amendment or a fork (signed-in session, or Bitcoin signature) |
+| `GET` | `/api/v1/law/amendments/{id}` | One amendment: revisions, redline, standing, official routes |
+| `POST` | `/api/v1/law/amendments/{id}/revisions` | Its author files the next revision |
+| `POST` | `/api/v1/law/amendments/{id}/support` | Support or withdraw support for a revision |
+| `GET` | `/api/v1/law/amendments/log` | The hash-chained log of every act on every amendment |
 | `GET` | `/api/v1/places` | Places by postcode or name |
 | `GET` | `/api/v1/places/{...path}` | One official place, as its page shows it |
 | `GET` | `/api/v1/places/compare` | The facts and tax model `/compare` reads, for any place |

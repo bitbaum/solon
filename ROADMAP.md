@@ -41,6 +41,7 @@ that place, what it would take to make the change real. Solon does not claim
 to make law: a proposal here is evidence of support, carried to the
 authority that decides, and the record says so.
 
+- [x] The amendment engine: changes pinned to the hash of the text they amend, immutable revisions, forks, support signed or by account, a hash-chained log anyone can verify, and the official routes as sourced data; served at `/api/v1/law/amendments` (design: `docs/design/2026-11-amending-the-law.md`) {#law-amend-engine}
 - [ ] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
 - [ ] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
 - [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}

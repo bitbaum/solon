@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The engine for amending the law.** Anyone can propose a change to an act Solon
+  holds: replace, insert or repeal provisions, each change pinned to the hash of the
+  exact text it amends, so a proposal never silently applies to wording it was not
+  written for. Revisions never change once filed; support binds to one revision and
+  can be signed with a Bitcoin key; anyone may fork. Every act lands in a
+  hash-chained log anyone can verify, and the database refuses to change or delete a
+  row. Each amendment shows the official route its place offers, with the provision
+  that creates it. The API is at `/api/v1/law/amendments`; the screens come next.
+  {#law-amend-engine}
 - **Law is in the main menu.** Find a law, ask the law and what Solon holds are one
   click from every page; before, `/law` could only be reached by its address. Use
   cases moved to the footer to keep the header on one line. {#law-menu}
