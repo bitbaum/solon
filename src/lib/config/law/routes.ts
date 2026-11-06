@@ -23,8 +23,16 @@ export interface OfficialRoute {
   venue: RouteVenue;
   /** Who may sign, in the source's own terms. */
   whoMaySign: string;
-  /** How many must sign; null when the route has no bar. */
-  signatures: { count: number } | null;
+  /**
+   * How many must sign: a number, or a share of a stated base (Wyoming's 15%
+   * of those who voted in the last general election); null when the route has
+   * no bar.
+   */
+  signatures: { count: number } | { percent: number; of: string } | null;
+  /** What else the route requires, in the source's own terms (a spread across counties, sponsors). */
+  alsoRequired?: readonly string[];
+  /** What the route cannot be used for, in the source's own terms. */
+  cannotChange?: string;
   /** How long the signatures may take, from the day the route says it starts; null when unbounded. */
   window: { months: number } | { days: number } | null;
   /** What the route obliges the authority to do once it is taken. */
@@ -65,6 +73,30 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       title: "Federal Constitution of the Swiss Confederation (SR 101)",
       provision: "Art. 33",
       url: "https://www.fedlex.admin.ch/eli/cc/1999/404/en#art_33",
+      readOn: "2026-11-06",
+    },
+  },
+  {
+    key: "us-wy-initiative",
+    authority: "us-wy",
+    name: "Citizen initiative",
+    appliesTo: ["statute"],
+    venue: "voters",
+    whoMaySign: "qualified voters",
+    signatures: { percent: 15, of: "those who voted in the preceding general election" },
+    alsoRequired: [
+      "An application signed by at least 100 qualified voters as sponsors, certified by the Secretary of State before the petition circulates",
+      "Signatures from 15% of the voters in at least two-thirds of the counties, as counted in each county's preceding general election",
+    ],
+    cannotChange:
+      "The initiative cannot dedicate revenues, make or repeal appropriations, create courts or set their jurisdiction or rules, enact local or special legislation, or enact what the Constitution forbids the legislature to enact.",
+    window: null,
+    outcome:
+      "The measure goes on the ballot of the first statewide election held more than 120 days after the next legislative session adjourns; it is enacted if more than half of those voting in that general election vote for it.",
+    source: {
+      title: "Constitution of the State of Wyoming",
+      provision: "Article 3, Section 52",
+      url: "https://wyoleg.gov/statutes/compress/Title97.pdf",
       readOn: "2026-11-06",
     },
   },

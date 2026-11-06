@@ -1577,7 +1577,8 @@
       "revisions": "Every revision",
       "revisionRow": "Revision {revision} · {date} · {support}",
       "chain": "Every proposal and every support is an entry in one hash chain that anyone can check.",
-      "chainLink": "Read the chain"
+      "chainLink": "Read the chain",
+      "routeShare": "Signatures from {who} equal to {percent}% of {of}"
     },
     "list": {
       "metaTitle": "Proposed changes to the law",

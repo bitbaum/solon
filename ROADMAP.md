@@ -68,10 +68,12 @@ text a US legislature enacts is not copyrightable, and its DAO LLC and DUNA
 statutes are the legal wrappers groups governed on Solon are most likely to
 use.
 
-- [ ] Wyoming's statutes, read from the Legislature's publication, cut into sections, with the publisher's link and hash {#law-wy-statutes}
+- [x] Wyoming's statutes and Constitution, read from the Legislature's downloads (45 files, about 21,000 sections), cut into sections, with the publisher's link and hash; the production load is by hand, like every other publisher's (`law-text.yml`, source `wyoleg`) {#law-wy-statutes}
 - [ ] Wyoming's administrative rules {#law-wy-rules}
 - [ ] Wyoming and its 23 counties on the globe {#law-wy-places}
-- [ ] Wyoming's official route: the citizen initiative and the referendum, with their thresholds and their limits {#law-wy-route}
+- [x] Wyoming's official route: the citizen initiative, with its thresholds and its limits, from Article 3, Section 52 of its Constitution {#law-wy-route}
+- [ ] Wyoming's referendum, the route for undoing an act the legislature passed (the same section) {#law-wy-referendum}
+- [ ] New Hampshire's statutes (the RSAs), Grafton's ordinances and the warrant-article route a town's voters can take (RSA 39:3). The General Court's site refuses Solon's readers: its firewall answers "Web Page Blocked" (2026-11-06). The way through is the publisher's permission, or a load from a network it allows; not an unofficial copy {#law-nh}
 - [ ] The places' and the law's data model without Swiss assumptions: a new country is configuration and an adapter, not a change to the schema {#law-world-model}
 
 ### Every organization on its own pages
