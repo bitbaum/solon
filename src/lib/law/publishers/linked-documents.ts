@@ -65,8 +65,8 @@ export function titleFromFile(href: string): string {
 
 /**
  * The links of a page, each with the words that name it: the link's text, or
- * when that is only a button's ("Dokument herunterladen"), its title, or else
- * its file's name.
+ * when that is only a button's ("Dokument herunterladen"), its title or its
+ * label for screen readers, or else its file's name.
  */
 export function anchorsOf(html: string, base: string): { href: string; text: string }[] {
   const out: { href: string; text: string }[] = [];
@@ -98,9 +98,15 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
     } catch {
       continue; // not an address
     }
-    const title = /\btitle=(["'])(.*?)\1/i.exec(`${m[1]} ${m[4]}`)?.[2] ?? "";
+    const attrs = `${m[1]} ${m[4]}`;
+    const title = /\btitle=(["'])(.*?)\1/i.exec(attrs)?.[2] ?? "";
+    // An empty link over a whole row names itself to screen readers (Triesen):
+    // "Friedhofordnung herunterladen (öffnet neues Fenster)".
+    const label = (/\baria-label=(["'])(.*?)\1/i.exec(attrs)?.[2] ?? "")
+      .replace(/\s*\([^)]*\)\s*$/, "")
+      .replace(/\s+(?:herunterladen|downloaden|öffnen|anzeigen)$/i, "");
     const fromFile = titleFromFile(href);
-    const named = [clean(m[5]!), clean(title)].find((t) => t && !BUTTON.test(t));
+    const named = [clean(m[5]!), clean(title), clean(label)].find((t) => t && !BUTTON.test(t));
     // A bare kind ("Reglement") says less than the file's name ("Reglement Sport und Freizeitanlage").
     const bare =
       named &&
@@ -225,6 +231,10 @@ const CONCRETE_FILE = /\/download_file\/(?:view\/|force\/)?([0-9a-f-]{1,40})(?:[
 const WORDPRESS_FILE = /\/wp-content\/uploads\/((?:\d{4}\/\d{2}\/)?[^/?#]+\.pdf)(?:[?#]|$)/i;
 /** A file in a media archive (Ruggell, Schellenberg), named by its file name. */
 const MEDIA_ARCHIVE_FILE = /\/files\/(?:medienarchiv|attachments)\/([^/?#]+\.pdf)(?:[?#]|$)/i;
+/** A file at the top of a site's file store (Triesen), named by its file name. */
+const FILES_ROOT_FILE = /\/files\/([^/?#]+\.pdf)(?:[?#]|$)/i;
+/** A file in a portal's service folder (Balzers), named by its file name. */
+const PORTAL_FILE = /\/Portal\/UserFiles\/files\/Service\/([^/?#]+\.pdf)(?:[?#]|$)/i;
 
 const liCommune = (
   key: string,
@@ -293,10 +303,37 @@ export const eschen = liCommune(
 );
 export const schellenberg = liCommune(
   "schellenberg",
-  "li7008",
+  "li7011",
   "Gemeinde Schellenberg",
   "https://www.schellenberg.li/",
   ["https://www.schellenberg.li/service/reglemente"],
+  undefined,
+  MEDIA_ARCHIVE_FILE,
+);
+export const balzers = liCommune(
+  "balzers",
+  "li7003",
+  "Gemeinde Balzers",
+  "https://www.balzers.li/",
+  ["https://www.balzers.li/de/service/tblid/34/filter1/reglemente"],
+  undefined,
+  PORTAL_FILE,
+);
+export const triesen = liCommune(
+  "triesen",
+  "li7002",
+  "Gemeinde Triesen",
+  "https://www.triesen.li/",
+  ["https://www.triesen.li/service-portal/online-schalter?serviceportalfilter=Reglemente"],
+  undefined,
+  FILES_ROOT_FILE,
+);
+export const mauren = liCommune(
+  "mauren",
+  "li7008",
+  "Gemeinde Mauren",
+  "https://www.mauren.li/",
+  ["https://www.mauren.li/online-schalter/3/Reglemente"],
   undefined,
   MEDIA_ARCHIVE_FILE,
 );
