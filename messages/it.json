@@ -322,8 +322,8 @@
     "law": {
       "kicker": "Il diritto, aperto",
       "title": "Ogni parola del diritto, aperta a tutti.",
-      "body": "Solon conserva il testo di ogni atto federale e cantonale in vigore in Svizzera, di ogni atto del Liechtenstein e del Lussemburgo e le regole di un numero crescente di comuni — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o partite dal luogo in cui vivete.",
-      "next": "Prossimo passo: proporre una modifica a qualsiasi articolo e vedere che cosa serve perché diventi legge in quel luogo — e il diritto di altri luoghi, a cominciare dal Wyoming.",
+      "body": "Solon conserva il testo di ogni atto federale e cantonale in vigore in Svizzera, di ogni atto del Liechtenstein, del Lussemburgo e dell'Estonia, le leggi del Wyoming e le regole di un numero crescente di comuni — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o proponete una modifica a qualsiasi articolo.",
+      "next": "Sul globo ogni luogo è ombreggiato secondo quanto del suo diritto conserva Solon. Si aggiungono altri luoghi: il sistema è costruito una volta, ogni nuovo paese sono i suoi dati.",
       "find": "Trovare una legge",
       "ask": "Interrogare il diritto"
     },
@@ -782,6 +782,17 @@
       "filterLabel": "Cerca una parola nel titolo",
       "filterPlaceholder": "Per esempio: cani, costruzione, imposta",
       "empty": "Nessun atto corrisponde."
+    },
+    "globe": {
+      "label": "Il globo: ogni luogo di cui Solon conserva il diritto, ombreggiato secondo la quantità",
+      "held": "{name}: {count, number} atti in vigore",
+      "none": "{name}: qui ancora nessun diritto",
+      "zoomIn": "Ingrandire",
+      "zoomOut": "Ridurre",
+      "home": "Tornare alla Terra intera",
+      "credit": "Contorni: Natural Earth e US Census Bureau, pubblico dominio. Toccate un luogo ombreggiato per leggerne il diritto.",
+      "title": "Ogni luogo, il suo diritto",
+      "body": "I luoghi ombreggiati sono quelli di cui Solon conserva il diritto, più scuri quando ce n'è di più. Girate il globo, toccate un luogo e leggetene il diritto articolo per articolo."
     }
   },
   "LostPassword": {

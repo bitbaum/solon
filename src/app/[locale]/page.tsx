@@ -5,6 +5,7 @@ import { use } from "react";
 import { Link } from "@/i18n/navigation";
 import FullBleed from "@/components/site/full-bleed";
 import { MethodLab } from "@/components/learn/method-lab";
+import LawGlobe from "@/components/law/law-globe";
 import { PHOTOS } from "@/lib/content/photos";
 import AudienceTile from "@/components/site/audience-tile";
 import Problems from "@/components/site/problems";
@@ -46,18 +47,23 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
       </FullBleed>
 
       <section className="section-shell py-section">
-        <div className="max-w-3xl">
-          <div className="kicker">{t("law.kicker")}</div>
-          <h2 className="headline-caps mt-5 text-4xl sm:text-5xl">{t("law.title")}</h2>
-          <p className="mt-6 text-lg text-fg-secondary">{t("law.body")}</p>
-          <p className="mt-6 text-sm text-fg-tertiary">{t("law.next")}</p>
-          <div className="mt-9 grid gap-3 sm:max-w-md sm:grid-cols-2">
-            <Link href="/law" className="btn-frame">
-              {t("law.find")}
-            </Link>
-            <Link href="/law/ask" className="btn-frame">
-              {t("law.ask")}
-            </Link>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="min-w-0">
+            <div className="kicker">{t("law.kicker")}</div>
+            <h2 className="headline-caps mt-5 text-4xl sm:text-5xl">{t("law.title")}</h2>
+            <p className="mt-6 text-lg text-fg-secondary">{t("law.body")}</p>
+            <p className="mt-6 text-sm text-fg-tertiary">{t("law.next")}</p>
+            <div className="mt-9 grid gap-3 sm:max-w-md sm:grid-cols-2">
+              <Link href="/law" className="btn-frame">
+                {t("law.find")}
+              </Link>
+              <Link href="/law/ask" className="btn-frame">
+                {t("law.ask")}
+              </Link>
+            </div>
+          </div>
+          <div className="mx-auto w-full max-w-xl min-w-0">
+            <LawGlobe />
           </div>
         </div>
       </section>

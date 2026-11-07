@@ -56,7 +56,9 @@ authority that decides, and the record says so.
 The map is the front door to the law. One globe, from the whole Earth down to a
 commune, showing every place Solon holds and how much of its law it holds.
 
-- [ ] The globe on the home page and on `/places`: the Earth, then a country, then its states or cantons, then its communes or counties, each coloured by what Solon holds there {#globe-home}
+- [x] The globe on the home page: the Earth, every country and state Solon holds law for shaded by how much and marked with a dot (so Liechtenstein can be tapped), a tap opening its law; the site's own colours, in every language {#globe-home}
+- [ ] The globe zooming down past a country to its cantons or states, then its communes or counties, and the same globe on `/places` and `/law` {#globe-deep}
+- [ ] The world outlines published in Solon's own geography manifest, so Substrata and every other app draw the same files through geo-kit's loader {#globe-shared}
 - [ ] Every place's page links to its law, and every act's page to its place on the globe {#globe-law-links}
 - [ ] The renderer stays the fleet's one map package (`@bitbaum/geo-kit`); what the globe needs that it lacks is added there {#globe-package}
 

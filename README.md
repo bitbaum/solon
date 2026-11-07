@@ -201,6 +201,7 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 | `POST` | `/api/sessions/{id}/close` | Close and record the decision |
 | `GET` | `/api/v1/decisions/{sessionId}` | **Self-verifying** signed record |
 | `POST` | `/api/members/register` | Claim a member seat (signed-in session; Bitcoin key optional) |
+| `GET` | `/api/v1/law/globe` | Every place on the law globe, with the acts in force Solon holds there |
 | `GET` | `/api/v1/law/amendments` | Amendments to the law, by `authority` or `act` |
 | `POST` | `/api/v1/law/amendments` | File an amendment or a fork (signed-in session, or Bitcoin signature) |
 | `GET` | `/api/v1/law/amendments/{id}` | One amendment: revisions, redline, standing, official routes |
