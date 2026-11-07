@@ -4,6 +4,22 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-07
+
+### Fixed
+
+- **Comparing Swiss places gave no tax at all.** Every comparison said "Not recorded
+  yet (Canton)" because each canton's fixed per-head tax, measured and committed on
+  2026-10-30, had never been loaded into the site; the estimate rightly refuses to
+  treat a missing tax as zero. It is loaded, and Geneva against Zürich gives CHF
+  22,351 against CHF 15,912 at a taxable income of CHF 100,000. Liechtenstein's
+  income tax, communal surcharges and the cantonal and communal tax steps held in the
+  repository were loaded the same day.
+- **Data no longer waits for someone to load it.** Places files kept in the
+  repository are imported after every deploy when they changed, and the law is read
+  again from every publisher every Sunday, so nothing merged or published stays off
+  the site. {#law-sync-clock} {#places-data-auto}
+
 ## 2026-11-06
 
 ### Added

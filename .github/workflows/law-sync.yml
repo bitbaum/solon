@@ -1,7 +1,9 @@
 name: Law sync
 
-# Run by hand only, when the owner asks for it: nothing here starts on a clock.
-# (It calls no model; it uses the box and the publishers' servers.)
+# Weekly, and by hand. The owner decided on 2026-11-07 that loading data must
+# not wait on anyone: what is merged and what the publishers publish reaches
+# the site by itself. (It calls no model; it uses the box and the publishers'
+# servers, politely paced, on a quiet hour.)
 #
 # Solon reads the law again so that what it holds is what is in
 # force (design: law-as-data, "Staying current"): the registers (new and
@@ -14,6 +16,8 @@ name: Law sync
 # Runs on the box from a fresh checkout of main with the box's own DATABASE_URL.
 
 on:
+  schedule:
+    - cron: "17 2 * * 0"
   workflow_dispatch: {}
 
 concurrency:

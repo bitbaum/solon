@@ -24,7 +24,8 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 - [x] Federal text from Fedlex, every act in force, loaded in production; read again by the law sync {#law-federal}
 - [x] Liechtenstein text from gesetze.li, every act, loaded in production. Each version is dated by the day it was read, because Lilex does not state when one took effect {#law-li}
 - [x] Cantonal text for all 26 cantons and the intercantonal agreements, loaded in production. Zürich is read from the canton's own publication with the canton's in-force date; the other 25 from each act's document, cut into articles and dated by the day it was read, until each has a reader of its own {#law-cantons}
-- [ ] The law sync on a clock: today it runs by hand, so what Solon holds is as current as its last run (`/law/coverage` shows the date) {#law-sync-clock}
+- [x] The law sync on a clock: every Sunday it reads every publisher again, Wyoming included, so what Solon holds stays current without anyone running it (`/law/coverage` shows the date) {#law-sync-clock}
+- [x] Places data kept in the repository imported after every deploy, when its bytes changed: an edited tariff reaches the site by itself {#places-data-auto}
 - [x] Acts can be found and read on Solon itself, with the publisher's link, the page each copy was read from and its hash {#law-reading}
 - [x] Search over the text of the provisions in force, ranked, each hit citing its act, anchor, publisher's page and hash; the first piece of the retrieval layer for the assistants {#law-search}
 - [x] Ask the law: a chat that plans which places and law words a question needs, searches those provisions and answers from them only, citing each one; public, in any language {#law-ask}
