@@ -5,6 +5,7 @@
  *   pnpm run law:text lilex [--limit 200] [--lr 210.0] [--dry-run]
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
+ *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
@@ -18,6 +19,7 @@
 import { recutCantonalText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
+import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
@@ -115,6 +117,22 @@ async function main(): Promise<number> {
   }
   if (sourceKey === "legilux") {
     const report = await importLegilux(db, {
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 30), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "riigiteataja") {
+    const report = await importRiigiTeataja(db, {
       limit: flag("limit") ? Number(flag("limit")) : undefined,
       snapshots: defaultSnapshotStore(),
       dryRun: args.includes("--dry-run"),

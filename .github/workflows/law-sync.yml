@@ -70,6 +70,7 @@ jobs:
           step "cantons (new acts)"     $PNPM run law:text cantons --limit 2000
           step "zhlex"                  $PNPM run law:text zhlex --limit 500
           step "wyoming"                $PNPM run law:text wyoleg --again
+          step "estonia"                $PNPM run law:text riigiteataja --limit 3000
           step "communes"               $PNPM run law:text municipal --publisher all --limit 500
           step "refresh held documents" $PNPM run law:text refresh --limit 3000
           step "recut"                  $PNPM run law:text recut --limit 50000

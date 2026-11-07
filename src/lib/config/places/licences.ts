@@ -30,4 +30,7 @@ export const LICENCES = [
   // Law a US legislature enacts is public domain under the government edicts doctrine:
   // Georgia v. Public.Resource.Org, Inc., 590 U.S. 255 (2020).
   { spdx: "LicenseRef-public-domain-edicts", requiresAttribution: false, shareAlike: false },
+  // Estonian legislation and other legal acts are not protected: Autoriõiguse
+  // seadus (Copyright Act) § 5 p 1. The same class as the Swiss and Liechtenstein ones.
+  { spdx: "LicenseRef-ee-official-act", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];
