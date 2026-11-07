@@ -106,3 +106,42 @@ describe("a page that declares its own base", () => {
     );
   });
 });
+
+describe("an empty link laid over a whole row", () => {
+  it("is named by its label for screen readers, without the button's words", () => {
+    const [a] = anchorsOf(
+      '<a class="serviceportalrow__overlay" href="/files/07_Friedhofordnung_2017_03_28.pdf" target="_blank" aria-label="Friedhofordnung herunterladen (&#xF6;ffnet neues Fenster)"></a>',
+      "https://www.triesen.li/service-portal/online-schalter",
+    );
+    expect(a).toEqual({
+      href: "https://www.triesen.li/files/07_Friedhofordnung_2017_03_28.pdf",
+      text: "Friedhofordnung",
+    });
+  });
+});
+
+describe("Liechtenstein's communes", () => {
+  it("each read into the commune its number names in the register", async () => {
+    const { PUBLISHERS } = await import("../index");
+    const { LAW_AUTHORITIES } = await import("@/lib/config/law");
+    const communes = await import("../linked-documents");
+    for (const [key, number, name] of [
+      ["vaduz", "7001", "Vaduz"],
+      ["triesen", "7002", "Triesen"],
+      ["balzers", "7003", "Balzers"],
+      ["schaan", "7005", "Schaan"],
+      ["planken", "7006", "Planken"],
+      ["eschen", "7007", "Eschen"],
+      ["mauren", "7008", "Mauren"],
+      ["gamprin", "7009", "Gamprin"],
+      ["ruggell", "7010", "Ruggell"],
+      ["schellenberg", "7011", "Schellenberg"],
+    ] as const) {
+      const publisher = communes[key];
+      expect(PUBLISHERS[key]).toBe(publisher);
+      const authority = LAW_AUTHORITIES.find((a) => a.key === publisher.authority)!;
+      expect(authority.place).toEqual({ scheme: "li_municipality", value: number });
+      expect(authority.name).toContain(name);
+    }
+  });
+});

@@ -19,7 +19,15 @@ one to read for the detail. Fixes get the same weight as features.
   cut into its sections (§) with their subsections and points, dated by the day the
   publisher says it took effect, and read again every week. {#law-ee}
 
+- **Three more of Liechtenstein's communes.** Balzers, Triesen and Mauren: each
+  regulation linked from the commune's own page, about ninety in all, with forms left
+  out. Ten of the eleven communes are read now. {#law-communes}
+
 ### Fixed
+
+- **Schellenberg's regulations were placed on Mauren.** They were filed under commune
+  7008, which is Mauren's number in the register; Schellenberg's is 7011. They are on
+  Schellenberg now, and Mauren holds its own.
 
 - **Liechtenstein beside Switzerland gave no tax for Liechtenstein.** A comparison
   used one tax year for every column, so Liechtenstein, whose 2026 communal rates are

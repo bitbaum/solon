@@ -207,6 +207,18 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     within: "li",
   },
   {
+    key: "li7002",
+    name: "Triesen",
+    place: { scheme: "li_municipality", value: "7002" },
+    within: "li",
+  },
+  {
+    key: "li7003",
+    name: "Balzers",
+    place: { scheme: "li_municipality", value: "7003" },
+    within: "li",
+  },
+  {
     key: "li7005",
     name: "Schaan",
     place: { scheme: "li_municipality", value: "7005" },
@@ -226,7 +238,7 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   },
   {
     key: "li7008",
-    name: "Schellenberg",
+    name: "Mauren",
     place: { scheme: "li_municipality", value: "7008" },
     within: "li",
   },
@@ -240,6 +252,12 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     key: "li7010",
     name: "Ruggell",
     place: { scheme: "li_municipality", value: "7010" },
+    within: "li",
+  },
+  {
+    key: "li7011",
+    name: "Schellenberg",
+    place: { scheme: "li_municipality", value: "7011" },
     within: "li",
   },
 ];
