@@ -165,4 +165,26 @@ describe.skipIf(!RUN)("Estonian law import", () => {
       ["2027-01-01", null],
     ]);
   });
+
+  it("stops after twenty refusals in a row instead of asking thousands more times, and says why", async () => {
+    const many: Listed[] = Array.from({ length: 30 }, (_, i) => ({
+      id: G + 200 + i,
+      groupId: G + 300 + i,
+      title: `Seadus ${i}`,
+      from: "2026-01-01",
+    }));
+    const refusing: typeof fetch = async (input, init) => {
+      if (String(input).endsWith("/otsing/tervik-tekst")) return gazette(many, {})(input, init);
+      return new Response("", { status: 403 });
+    };
+    const report = await importRiigiTeataja(db, {
+      snapshots,
+      today: "2031-03-01",
+      fetchImpl: refusing,
+      pauseMs: 0,
+    });
+    expect(report.failures).toHaveLength(20);
+    expect(report.stoppedBecause).toBe("the act answered 403");
+    expect(report.failureReasons).toEqual({ "the act answered N": 20 });
+  });
 });
