@@ -17,7 +17,19 @@ on:
         description: "Whose laws"
         type: choice
         options:
-          [fedlex, lilex, cantons, zhlex, municipal, lexwork, recut, legilux, wyoleg, refresh]
+          [
+            fedlex,
+            lilex,
+            cantons,
+            zhlex,
+            municipal,
+            lexwork,
+            recut,
+            legilux,
+            riigiteataja,
+            wyoleg,
+            refresh,
+          ]
         default: fedlex
       authority:
         description: "Cantons only: one canton's key (zh, be, ...), or empty for all"

@@ -6,6 +6,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ## 2026-11-07
 
+### Added
+
+- **Estonia's law.** Every national act in force in Estonia, read from Riigi Teataja,
+  the State Gazette: its register, and each act's text from the gazette's own XML,
+  cut into its sections (§) with their subsections and points, dated by the day the
+  publisher says it took effect, and read again every week. {#law-ee}
+
 ### Fixed
 
 - **Liechtenstein beside Switzerland gave no tax for Liechtenstein.** A comparison

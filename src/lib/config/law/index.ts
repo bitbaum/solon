@@ -50,7 +50,7 @@ export const ACT_VERSION_DATE_BASES = ["publisher", "retrieved"] as const;
 export type ActVersionDateBasis = (typeof ACT_VERSION_DATE_BASES)[number];
 
 /** What a version's snapshot holds. */
-export const ACT_TEXT_FORMATS = ["html", "pdf", "json"] as const;
+export const ACT_TEXT_FORMATS = ["html", "pdf", "json", "xml"] as const;
 export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
 
 export const ACT_NAME_KINDS = ["title"] as const;
@@ -101,6 +101,7 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "li", name: "Liechtenstein", place: { scheme: "iso_3166_1", value: "LI" } },
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
+  { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
   // The United States and its states: a state's key is `us-<postal code>`, its place ISO 3166-2.
   { key: "us", name: "United States", place: { scheme: "iso_3166_1", value: "US" } },
   { key: "us-wy", name: "Wyoming", place: { scheme: "iso_3166_2", value: "US-WY" } },
@@ -517,6 +518,40 @@ export const LEGILUX = {
     AMIN: "decree",
     PA: "decree",
     ORD: "decree",
+  } as Readonly<Record<string, ActKind>>,
+} as const;
+
+/**
+ * Estonia's law from Riigi Teataja, the State Gazette, published by the
+ * Ministry of Justice and Digital Affairs: the register of consolidated texts
+ * in force through its public search, and each text as the gazette's own
+ * structured XML. Legislation and other legal acts are not protected by
+ * copyright in Estonia (Autoriõiguse seadus § 5 p 1). National acts first;
+ * the municipalities' own regulations, which the same register lists, follow
+ * once each municipality is a place.
+ */
+export const RIIGITEATAJA = {
+  key: "riigiteataja",
+  authority: "ee",
+  publisher: "Riigi Teataja (State Gazette), Ministry of Justice and Digital Affairs",
+  homepage: "https://www.riigiteataja.ee",
+  searchUrl: "https://www.riigiteataja.ee/public-api/api/v1/otsing/tervik-tekst",
+  /** `{id}` is a consolidated version's id. */
+  xmlUrl: "https://www.riigiteataja.ee/public-api/api/v1/akt/{id}/blob-xml",
+  pageUrl: "https://www.riigiteataja.ee/akt/{id}",
+  hosts: ["www.riigiteataja.ee"],
+  userAgent: "Solon law reader (solon.orangecat.ch)",
+  licenceSpdx: "LicenseRef-ee-official-act",
+  locale: "et",
+  textStatus: "consolidated" as ActTextStatus,
+  /** The register's document types, as act kinds. */
+  kinds: {
+    seadus: "statute",
+    määrus: "regulation",
+    otsus: "decree",
+    korraldus: "decree",
+    käskkiri: "decree",
+    "rahvusvaheline leping": "treaty",
   } as Readonly<Record<string, ActKind>>,
 } as const;
 
