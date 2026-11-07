@@ -1,0 +1,69 @@
+name: Places data
+
+# After every successful deploy of main: import each Places file kept in this
+# repository whose bytes changed since its source was last applied
+# (src/lib/config/places/repo-files.ts, `pnpm run places:import-files`). An
+# edited tariff or commune list reaches the site by itself; nobody has to
+# remember a load. Unchanged files are skipped, so a deploy that touched no
+# data changes nothing.
+#
+# Runs on the box from a checkout of the commit that was deployed, with the
+# box's own DATABASE_URL read into this process alone. "Run workflow" runs it
+# by hand, with a dry run if wanted.
+on:
+  workflow_run:
+    workflows: [Deploy]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only report what would change"
+        type: boolean
+        default: false
+
+concurrency:
+  group: places-data
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Import what changed, on the box
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          DRY: ${{ inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "not a commit: $SHA"; exit 1; }
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/id -o BatchMode=yes "ubuntu@$IP" \
+            "SHA=$SHA DRY=$DRY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+          set -euo pipefail
+          WD=$(mktemp -d /tmp/solon-places-data.XXXXXX)
+          trap 'rm -rf "$WD"' EXIT
+          git clone -q https://github.com/bitbaum/solon "$WD/repo"
+          cd "$WD/repo" && git checkout -q "$SHA"
+          PNPM="corepack pnpm"; $PNPM --version >/dev/null 2>&1 || PNPM="npx --yes pnpm@11"
+          $PNPM install --frozen-lockfile >install.log 2>&1 || { echo "install failed:"; tail -n 20 install.log; exit 1; }
+          envf=/opt/solon/shared/.env; [ -f "$envf" ] || envf=/opt/solon/app/.env
+          set -a
+          eval "$(grep -E '^(DATABASE_URL|PLACES_SNAPSHOT_DIR)=' "$envf")"
+          set +a
+          export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
+          flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
+          $PNPM run places:import-files $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+          REMOTE
+          rm -f ~/.ssh/id
+          while IFS= read -r line; do echo "::notice::$line"; done < out.txt
+          exit "${status:-0}"
