@@ -37,6 +37,8 @@ export interface ComparedPlace {
   instruments?: ChainInstrument[];
   /** The places inside it that refine its figures. */
   refinements?: ChainPlace[];
+  /** The day its figures are for: its country's latest period with all of them published. */
+  period?: string;
 }
 
 /** How many fiscal years back a comparison looks for figures not yet published for this one. */
@@ -60,30 +62,21 @@ export async function loadComparison(
   const found = wanted.flatMap((path) => rows.filter((r) => r.slugPath === path));
   const chains = await Promise.all(found.map(({ id }) => loadChain(db, id, on)));
 
-  // The latest period whose figures are all published: every column is
-  // estimated for the same one, never a mix of years.
-  let places: ComparedPlace[] = [];
-  let period = on;
-  for (let back = 0; back <= YEARS_BACK; back++) {
-    const day = yearsBefore(on, back);
-    const candidate = await Promise.all(
-      chains.map(async (chain) => ({
-        chain,
-        facts: await loadFacts(
-          db,
-          chain.map((p) => p.id),
-          day,
-        ),
-      })),
-    );
-    if (back === 0 || candidate.every((place) => figuresPublished(config, place))) {
-      places = candidate;
-      period = day;
-    }
-    if (places.every((place) => figuresPublished(config, place))) {
-      break;
-    }
-  }
+  // For each country, the latest period whose figures are all published (periodsByCountry).
+  let places: ComparedPlace[] = await periodsByCountry<ComparedPlace>({
+    countries: chains.map((chain) => chain.find((p) => p.depth === 0)?.countryPack ?? ""),
+    days: Array.from({ length: YEARS_BACK + 1 }, (_, back) => yearsBefore(on, back)),
+    load: async (i, day) => ({
+      chain: chains[i]!,
+      facts: await loadFacts(
+        db,
+        chains[i]!.map((p) => p.id),
+        day,
+      ),
+      period: day,
+    }),
+    complete: (place) => figuresPublished(config, place),
+  });
 
   const refining = config.packs.flatMap((pack) =>
     pack.levels.flatMap((level) => (level.standsFor ? [level.key] : [])),
@@ -110,16 +103,46 @@ export async function loadComparison(
     ...places.flatMap((place) => modelFacts(config, place).map((f) => f.sourceId)),
     ...places.flatMap((place) => (place.instruments ?? []).map((i) => i.sourceId)),
   ]);
-  const view = comparisonView({ config, places, on: period, locale });
+  const view = comparisonView({ config, places, on, locale });
   return {
     ...view,
     sources: placeSources(config, retrievals, locale),
-    earlierYear: period !== on,
+    earlierYear: places.some((place) => place.period !== undefined && place.period !== on),
     notFound: [
       ...wanted.filter((path) => !found.some((r) => r.slugPath === path)),
       ...view.notFound,
     ],
   };
+}
+
+/**
+ * Which period each place is compared for: per country, the latest of `days`
+ * (newest first) for which every place of that country has all its figures
+ * published, or the first day when no period has them all. The columns of one
+ * country are estimated for the same period, never a mix of years; countries
+ * publish on their own calendars, so each finds its own, and a country whose
+ * new year is not out does not hold another back or leave its own columns on
+ * a year it has no figures for. Returned in the order of `countries`.
+ */
+export async function periodsByCountry<T>(input: {
+  countries: readonly string[];
+  days: readonly string[];
+  load: (index: number, day: string) => Promise<T>;
+  complete: (place: T) => boolean;
+}): Promise<T[]> {
+  const groups = new Map<string, number[]>();
+  input.countries.forEach((country, i) => groups.set(country, [...(groups.get(country) ?? []), i]));
+  const out: T[] = new Array(input.countries.length);
+  for (const indexes of groups.values()) {
+    let chosen: T[] = [];
+    for (const [back, day] of input.days.entries()) {
+      const candidate = await Promise.all(indexes.map((i) => input.load(i, day)));
+      if (back === 0 || candidate.every(input.complete)) chosen = candidate;
+      if (chosen.every(input.complete)) break;
+    }
+    indexes.forEach((i, j) => (out[i] = chosen[j]!));
+  }
+  return out;
 }
 
 /** The chain facts its pack's tax model reads. */
@@ -217,7 +240,7 @@ export function comparisonView(input: {
 
     let taxPack = taxPacks.get(pack.key);
     if (!taxPack) {
-      taxPack = taxPackView(config, pack, on, locale) ?? undefined;
+      taxPack = taxPackView(config, pack, compared.period ?? on, locale) ?? undefined;
       if (taxPack) {
         taxPacks.set(pack.key, taxPack);
       }
