@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The globe.** The home page shows the Earth with every place whose law Solon holds
+  shaded by how much, and a dot on each so the smallest can be found; hover names it
+  and counts its acts, a tap opens its law. Drawn by the fleet's map package in the
+  site's own colours, from public-domain outlines (Natural Earth, the US Census
+  Bureau); the counts come from `/api/v1/law/globe`. {#globe-home}
+
 - **Estonia's law.** Every national act in force in Estonia, read from Riigi Teataja,
   the State Gazette: its register, and each act's text from the gazette's own XML,
   cut into its sections (§) with their subsections and points, dated by the day the

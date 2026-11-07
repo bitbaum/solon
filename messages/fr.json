@@ -322,8 +322,8 @@
     "law": {
       "kicker": "Le droit, ouvert",
       "title": "Chaque mot du droit, ouvert à tous.",
-      "body": "Solon détient le texte de chaque acte fédéral et cantonal en vigueur en Suisse, de chaque acte du Liechtenstein et du Luxembourg, et les règles d'un nombre croissant de communes — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou partez de votre lieu de vie.",
-      "next": "Ensuite : proposer une modification de n'importe quel article et voir ce qu'il faut pour qu'elle y devienne loi — et le droit d'autres lieux, à commencer par le Wyoming.",
+      "body": "Solon détient le texte de chaque acte fédéral et cantonal en vigueur en Suisse, de chaque acte du Liechtenstein, du Luxembourg et de l'Estonie, les lois du Wyoming et les règles d'un nombre croissant de communes — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou proposez une modification de n'importe quel article.",
+      "next": "Sur le globe, chaque lieu est ombré selon la part de son droit que Solon détient. D'autres lieux s'ajoutent : le système est construit une fois, chaque nouveau pays n'est que ses données.",
       "find": "Trouver une loi",
       "ask": "Interroger le droit"
     },
@@ -782,6 +782,17 @@
       "filterLabel": "Chercher un mot dans le titre",
       "filterPlaceholder": "Par exemple : chiens, construction, impôt",
       "empty": "Aucun acte ne correspond."
+    },
+    "globe": {
+      "label": "Le globe : chaque lieu dont Solon détient le droit, ombré selon l'étendue",
+      "held": "{name} : {count, number} actes en vigueur",
+      "none": "{name} : pas encore de droit ici",
+      "zoomIn": "Agrandir",
+      "zoomOut": "Réduire",
+      "home": "Revenir à la Terre entière",
+      "credit": "Contours : Natural Earth et US Census Bureau, domaine public. Touchez un lieu ombré pour lire son droit.",
+      "title": "Chaque lieu, son droit",
+      "body": "Les lieux ombrés sont ceux dont Solon détient le droit, plus foncés quand il y en a davantage. Tournez le globe, touchez un lieu et lisez son droit article par article."
     }
   },
   "LostPassword": {

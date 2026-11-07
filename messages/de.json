@@ -322,8 +322,8 @@
     "law": {
       "kicker": "Das Recht, offen",
       "title": "Jedes Wort des Rechts, offen für alle.",
-      "body": "Solon führt den Wortlaut jedes geltenden Erlasses des Bundes und der Kantone, jedes Erlasses Liechtensteins und Luxemburgs und die Regeln von immer mehr Gemeinden — jeweils so, wie der Herausgeber sie veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder beginnen Sie bei Ihrem Wohnort.",
-      "next": "Als Nächstes: zu jedem Artikel eine Änderung vorschlagen und sehen, was es braucht, damit sie dort Recht wird — und das Recht weiterer Orte, beginnend mit Wyoming.",
+      "body": "Solon führt den Wortlaut jedes geltenden Erlasses des Bundes und der Kantone, jedes Erlasses Liechtensteins, Luxemburgs und Estlands, die Gesetze Wyomings und die Regeln von immer mehr Gemeinden — jeweils so, wie der Herausgeber sie veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder schlagen Sie zu jedem Artikel eine Änderung vor.",
+      "next": "Auf dem Globus ist jeder Ort danach schattiert, wie viel seines Rechts Solon führt. Weitere Orte kommen dazu: Das System ist einmal gebaut, jedes neue Land sind seine Daten.",
       "find": "Einen Erlass finden",
       "ask": "Das Recht fragen"
     },
@@ -782,6 +782,17 @@
       "filterLabel": "Ein Wort im Titel suchen",
       "filterPlaceholder": "Zum Beispiel: Hunde, Bau, Steuer",
       "empty": "Kein Erlass passt."
+    },
+    "globe": {
+      "label": "Der Globus: jeder Ort, dessen Recht Solon führt, je nach Umfang schattiert",
+      "held": "{name}: {count, number} geltende Erlasse",
+      "none": "{name}: hier noch kein Recht",
+      "zoomIn": "Vergrössern",
+      "zoomOut": "Verkleinern",
+      "home": "Zurück zur ganzen Erde",
+      "credit": "Umrisse: Natural Earth und US Census Bureau, gemeinfrei. Tippen Sie auf einen schattierten Ort, um sein Recht zu lesen.",
+      "title": "Jeder Ort, sein Recht",
+      "body": "Schattiert sind die Orte, deren Recht Solon führt, dunkler bei mehr. Drehen Sie den Globus, tippen Sie auf einen Ort und lesen Sie sein Recht Artikel für Artikel."
     }
   },
   "LostPassword": {

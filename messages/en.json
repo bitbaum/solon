@@ -322,8 +322,8 @@
     "law": {
       "kicker": "The law, open",
       "title": "Every word of the law, open to everyone.",
-      "body": "Solon holds the text of every federal and cantonal act in force in Switzerland, every act of Liechtenstein and of Luxembourg, and a growing number of communes' rules — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or start from where you live.",
-      "next": "Next: propose a change to any article and see what it takes to make it law there — and the law of more places, starting with Wyoming.",
+      "body": "Solon holds the text of every federal and cantonal act in force in Switzerland, every act of Liechtenstein, Luxembourg and Estonia, Wyoming's statutes, and a growing number of communes' rules — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or propose a change to any article.",
+      "next": "Every place is shaded on the globe by how much of its law Solon holds. More places are being added: the system is built once, and each new country is its data.",
       "find": "Find a law",
       "ask": "Ask the law"
     },
@@ -1368,6 +1368,17 @@
       "filterLabel": "Look for a word in the title",
       "filterPlaceholder": "For example: dogs, building, tax",
       "empty": "No act matches."
+    },
+    "globe": {
+      "label": "The globe: every place whose law Solon holds, shaded by how much",
+      "held": "{name}: {count, number} acts in force",
+      "none": "{name}: no law here yet",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "home": "Back to the whole Earth",
+      "credit": "Outlines: Natural Earth and the US Census Bureau, public domain. Tap a shaded place to read its law.",
+      "title": "Every place, its law",
+      "body": "Shaded places are those whose law Solon holds, darker for more. Turn the globe, tap a place, and read its law article by article."
     }
   },
   "LostPassword": {
