@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Liechtenstein beside Switzerland gave no tax for Liechtenstein.** A comparison
+  used one tax year for every column, so Liechtenstein, whose 2026 communal rates are
+  not out yet, was held to 2026 when compared with a Swiss place. Each country now
+  uses its own latest complete year; the places of one country still share one.
+
 - **Comparing Swiss places gave no tax at all.** Every comparison said "Not recorded
   yet (Canton)" because each canton's fixed per-head tax, measured and committed on
   2026-10-30, had never been loaded into the site; the estimate rightly refuses to
