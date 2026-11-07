@@ -48,7 +48,11 @@ const UNICODE_SUPERSCRIPT: Record<string, string> = {
 function plain(fragment: string): string {
   return decodeEntities(
     fragment
+      // A cross-reference's target is the gazette's link, not words of the law.
+      .replace(/<viideURID[^>]*>[\s\S]*?<\/viideURID>/g, "")
       .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
+      // Embedded HTML (tables, line breaks) keeps its cells apart.
+      .replace(/<\/(?:td|th)>/gi, " ")
       .replace(/<sup>(\d+)<\/sup>/g, (_, n: string) =>
         [...n].map((d) => UNICODE_SUPERSCRIPT[d] ?? d).join(""),
       )
@@ -96,8 +100,67 @@ function line(fragment: string): string {
   return [number, text].filter(Boolean).join(" ");
 }
 
-/** The sections of one act's XML, in order. */
+/** Lines of embedded HTML or text, one per row, paragraph or break, as the reader sees them. */
+function blockLines(fragment: string): string[] {
+  return fragment
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
+    .split(/<\/tr>|<\/p>|<br\s*\/?>|<\/sisuTekst>/i)
+    .map(plain)
+    .filter(Boolean);
+}
+
+/**
+ * An act laid out without sections (§): a government regulation of a
+ * preamble and numbered points, parts headed "I osa", tables. Its preamble is
+ * one provision and the rest another, in the order printed; nothing the
+ * gazette publishes is left out.
+ */
+function unsectioned(xml: string): Provision[] {
+  const start = xml.search(/<sisu[\s>]/);
+  const end = xml.lastIndexOf("</sisu>");
+  if (start < 0 || end < 0) return [];
+  let body = xml.slice(xml.indexOf(">", start) + 1, end);
+  const out: Provision[] = [];
+  const preamble = /<preambul[^>]*>([\s\S]*?)<\/preambul>/.exec(body);
+  if (preamble) {
+    const text = plain(preamble[1]!.replace(/<muutmismarge>[\s\S]*?<\/muutmismarge>/g, ""));
+    if (text) out.push({ path: "preambul", heading: "Preambul", text });
+    body = body.replace(preamble[0], "");
+  }
+  const lines = body
+    .replace(/<muutmismarge>[\s\S]*?<\/muutmismarge>/g, "")
+    // A part's heading on a line of its own: "I osa ÜLDSÄTTED".
+    .replace(
+      /<osa\b[^>]*>([\s\S]*?)<\/osa>/g,
+      (_, inner: string) =>
+        `<p>${[first(inner, "kuvatavNr"), first(inner, "osaPealkiri")].filter(Boolean).join(" ")}</p>`,
+    );
+  const text = blockLines(lines).join("\n");
+  if (text) out.push({ path: "tekst", heading: "Tekst", text });
+  return out;
+}
+
+/** The sections of one act's XML, in order; an act with none, as its preamble and its text. */
 export function parseRiigiTeatajaXml(xml: string): Provision[] {
+  const sectioned = sections(xml);
+  return unique(sectioned.length > 0 ? sectioned : unsectioned(xml));
+}
+
+/**
+ * Every path once: the gazette occasionally gives two sections one id (an
+ * act that quotes another's § 1 in a part of its own). The second keeps its
+ * text and heading and is found as `para1-2`.
+ */
+function unique(provisions: Provision[]): Provision[] {
+  const seen = new Map<string, number>();
+  return provisions.map((p) => {
+    const n = (seen.get(p.path) ?? 0) + 1;
+    seen.set(p.path, n);
+    return n === 1 ? p : { ...p, path: `${p.path}-${n}` };
+  });
+}
+
+function sections(xml: string): Provision[] {
   const provisions: Provision[] = [];
   const open = /<paragrahv\s+id="([^"]+)"[^>]*>/g;
   let m: RegExpExecArray | null;

@@ -140,7 +140,7 @@ async function main(): Promise<number> {
     });
     console.log(
       JSON.stringify(
-        { ...report, failures: report.failures.slice(0, 30), failureCount: report.failures.length },
+        { ...report, failures: report.failures.slice(0, 5), failureCount: report.failures.length },
         null,
         2,
       ),

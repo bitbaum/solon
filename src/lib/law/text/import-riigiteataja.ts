@@ -36,6 +36,25 @@ export interface RiigiTeatajaReport {
   provisions: number;
   remaining: number;
   failures: { act: string; reason: string }[];
+  /** How many acts failed for each reason, numbers left out, so a long run says why at a glance. */
+  failureReasons: Record<string, number>;
+  /** Set when the run stopped early because the publisher kept refusing: its last answer. */
+  stoppedBecause?: string;
+}
+
+/** After this many refusals in a row the publisher is not answering; stop rather than ask thousands more times. */
+const REFUSALS_BEFORE_STOP = 20;
+
+/**
+ * Why an act failed, in a line: the database's own words when it refused a
+ * row (a query error wraps them in `cause`, after the whole statement), never
+ * the statement and its parameters.
+ */
+export function reasonOf(error: unknown): string {
+  if (!(error instanceof Error)) return String(error);
+  const cause = (error as { cause?: unknown }).cause;
+  if (cause instanceof Error) return cause.message.slice(0, 300);
+  return error.message.split("\n")[0]!.slice(0, 300);
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -46,7 +65,7 @@ export async function importRiigiTeataja(
   db: Database,
   options: RiigiTeatajaOptions,
 ): Promise<RiigiTeatajaReport> {
-  const { snapshots, dryRun = false, limit = Infinity, pauseMs = 700 } = options;
+  const { snapshots, dryRun = false, limit = Infinity, pauseMs = 1500 } = options;
   const doFetch = options.fetchImpl ?? fetch;
   const say = options.onProgress ?? (() => undefined);
   const today = options.today ?? new Date().toISOString().slice(0, 10);
@@ -58,6 +77,7 @@ export async function importRiigiTeataja(
     provisions: 0,
     remaining: 0,
     failures: [],
+    failureReasons: {},
   };
 
   const acts = await listInForce(today, doFetch, {
@@ -135,8 +155,13 @@ export async function importRiigiTeataja(
     return Boolean(actId);
   });
   let attempted = 0;
+  let refusedInARow = 0;
   for (const act of todo) {
     if (report.stored >= limit) break;
+    if (refusedInARow >= REFUSALS_BEFORE_STOP) {
+      report.stoppedBecause = report.failures.at(-1)?.reason;
+      break;
+    }
     attempted++;
     try {
       const xmlUrl = url(RIIGITEATAJA.xmlUrl, act.id);
@@ -173,12 +198,16 @@ export async function importRiigiTeataja(
       );
       report.stored++;
       report.provisions += provisions.length;
+      refusedInARow = 0;
       say(`${act.title.slice(0, 70)}: ${provisions.length} sections`);
     } catch (error) {
-      report.failures.push({
-        act: act.id,
-        reason: error instanceof Error ? error.message : String(error),
-      });
+      const reason = reasonOf(error);
+      report.failures.push({ act: act.id, reason });
+      const kind = reason.replace(/\d+/g, "N").slice(0, 120);
+      report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
+      refusedInARow = /answered \d+|fetch failed|not the gazette's XML/.test(reason)
+        ? refusedInARow + 1
+        : 0;
     }
     await sleep(pauseMs);
   }
