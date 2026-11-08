@@ -12,6 +12,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/ui/navigation";
 import Footer from "@/components/ui/footer";
 import TranslationNotice from "@/components/site/translation-notice";
+import ThemeScript from "@/components/theme/theme-script";
 import { authEnabled } from "@/lib/auth";
 import { routing, toLocale } from "@/i18n/routing";
 
@@ -58,9 +59,16 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  // `dark` is pinned, not toggled: Solon is a public ledger with one theme.
+  // Light or dark follows the device unless the reader chose one in the
+  // header (src/components/theme/). The head script sets the `dark` class,
+  // `data-theme` and `color-scheme` before paint; the server's HTML has none
+  // of them, hence suppressHydrationWarning — which covers this element's own
+  // attributes only, not its children.
   return (
-    <html lang={locale} className="dark">
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-screen flex-col antialiased font-sans">
         <NextIntlClientProvider>
           <Navigation authEnabled={authEnabled} />

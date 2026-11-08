@@ -18,6 +18,12 @@ one to read for the detail. Fixes get the same weight as features.
   whose site answers with a bot check, is the first commune read this way, the eleventh
   of Liechtenstein's eleven. {#law-communes}
 
+- **A light theme.** Solon follows your device: light when it is light, dark when
+  it is dark. The new button in the header lets you pick Light, Dark or Device, and
+  your browser remembers it; nothing is sent to us. Photographs, and the header over
+  them, stay dark so the words on them can be read. The law globe and the Places map
+  redraw in the theme you pick. {#theme-light}
+
 ### Fixed
 
 - **A site whose newest archived copy is its own bot check is read from the copy before.**
