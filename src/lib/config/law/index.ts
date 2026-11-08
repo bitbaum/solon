@@ -39,6 +39,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "lu_eli",
   /** The European Union's CELEX number: `32016R0679` (sector 3, year, R regulation or L directive, number). */
   "celex",
+  /** The United Kingdom's legislation.gov.uk address without the host: `ukpga/2018/12` (type, year, number). */
+  "uk_leg_id",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
@@ -80,6 +82,10 @@ export interface LawAuthority {
   attribution?: string;
 }
 
+/** The notice the Open Government Licence v3.0 asks a reuser to show (its "Attribution" condition). */
+const UKLEG_ATTRIBUTION =
+  "Contains public sector information licensed under the Open Government Licence v3.0. Source: legislation.gov.uk, The National Archives.";
+
 export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ch", name: "Confederation", place: { scheme: "iso_3166_1", value: "CH" } },
   { key: "intercantonal", name: "Intercantonal", place: null },
@@ -113,6 +119,12 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  {
+    key: "uk",
+    name: "United Kingdom",
+    place: { scheme: "iso_3166_1", value: "GB" },
+    attribution: UKLEG_ATTRIBUTION,
+  },
   // A union of countries: no single place; its law applies in each member, above the member's
   // own. The 27 members since 1 February 2020, the day the United Kingdom left.
   {
@@ -742,6 +754,50 @@ export const EURLEX = {
   kinds: { R: "regulation", L: "directive" } as Readonly<Record<string, ActKind>>,
   /** The first year of the Official Journal's acts; the register is read a year at a time from it. */
   firstYear: 1952,
+} as const;
+
+/**
+ * The United Kingdom's legislation from legislation.gov.uk, The National
+ * Archives' official service: each type's items as Atom feeds, and each item's
+ * current ("revised") version as Crown Legislation Markup Language (CLML) XML
+ * at `<address>/data.xml`. An item's address is its type, year and number
+ * (`ukpga/2018/12`); older acts are numbered by regnal year
+ * (`ukpga/Geo5/15-16/20`), which the same pattern holds.
+ *
+ * Licence: Open Government Licence v3.0, which asks for attribution and is not
+ * share-alike (https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+ * Fair use (https://www.legislation.gov.uk/fair-use-policy): at most 1,500
+ * requests in any 5 minutes, per user and not per address; follow robots.txt
+ * and its crawl-delay; without one, about 10 requests per 5 to 10 seconds. The
+ * reader pauses `pauseMs` between requests (60 a minute) and honours a larger
+ * crawl-delay when robots.txt gives one.
+ */
+export const UKLEG = {
+  key: "ukleg",
+  authority: "uk",
+  publisher: "legislation.gov.uk, The National Archives",
+  homepage: "https://www.legislation.gov.uk",
+  /** `{type}` is a type (`ukpga`), `{year}` a year, `{page}` a feed page from 1. */
+  listUrl: "https://www.legislation.gov.uk/{type}/{year}/data.feed?page={page}",
+  /** `{path}` is an item's address (`ukpga/2018/12`). */
+  xmlUrl: "https://www.legislation.gov.uk/{path}/data.xml",
+  pageUrl: "https://www.legislation.gov.uk/{path}",
+  robotsUrl: "https://www.legislation.gov.uk/robots.txt",
+  /** Only this host is read. */
+  hosts: ["www.legislation.gov.uk"],
+  licenceSpdx: "OGL-UK-3.0",
+  locale: "en",
+  textStatus: "consolidated" as ActTextStatus,
+  /**
+   * The types read: UK Public General Acts and UK Statutory Instruments. The
+   * devolved legislatures' (asp, anaw, asc, nia, ssi, wsi, nisr) are the same
+   * reader with one line more here, and wait for their own authorities.
+   */
+  kinds: { ukpga: "statute", uksi: "regulation" } as Readonly<Record<string, ActKind>>,
+  /** The first year listed for each type (the first statutory instruments are of 1948). */
+  firstYear: { ukpga: 1801, uksi: 1948 } as Readonly<Record<string, number>>,
+  /** Between requests, milliseconds. */
+  pauseMs: 1000,
 } as const;
 
 /**

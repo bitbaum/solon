@@ -7,7 +7,7 @@
  * snapshot its version cites.
  */
 import { and, eq, inArray, isNull, notInArray, sql } from "drizzle-orm";
-import { CANTONAL_DOCUMENTS, EURLEX } from "@/lib/config/law";
+import { CANTONAL_DOCUMENTS, EURLEX, UKLEG } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActs, legalActVersions, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
@@ -17,6 +17,8 @@ import { parseEurLexHtml } from "./eurlex";
 import type { Provision } from "./fedlex";
 import { CANTONAL_IMPORTER_VERSION, cantonalAuthorities } from "./import-cantonal";
 import { EURLEX_IMPORTER_VERSION } from "./import-eurlex";
+import { UKLEG_IMPORTER_VERSION } from "./import-ukleg";
+import { parseClml } from "./ukleg";
 
 export interface RecutReport {
   status: "applied" | "dry_run";
@@ -63,6 +65,17 @@ export async function recutEurLexText(db: Database, options: RecutOptions): Prom
     importerVersion: EURLEX_IMPORTER_VERSION,
     authorities: [EURLEX.authority],
     cut: async (bytes) => parseEurLexHtml(new TextDecoder().decode(bytes)),
+  });
+}
+
+/** The UK acts held, cut again from the CLML they were read from (ukleg.ts). */
+export async function recutUkLegText(db: Database, options: RecutOptions): Promise<RecutReport> {
+  return recutTexts(db, options, {
+    sourceKey: UKLEG.key,
+    importerVersion: UKLEG_IMPORTER_VERSION,
+    authorities: [UKLEG.authority],
+    cut: async (bytes) =>
+      parseClml(new TextDecoder().decode(bytes), new Date().toISOString().slice(0, 10)).provisions,
   });
 }
 

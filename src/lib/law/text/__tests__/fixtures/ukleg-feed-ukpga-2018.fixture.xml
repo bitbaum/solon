@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A hand-written approximation of one page of the Atom feed legislation.gov.uk serves for
+     /ukpga/2018/data.feed: the Atom and OpenSearch elements and the leg: paging elements its developer
+     documentation names (openSearch:totalResults, startIndex, itemsPerPage, leg:page, leg:morePages),
+     each entry's id as http://www.legislation.gov.uk/id/<address>. The titles and addresses are real
+     acts of 2018; the update times are invented, and the last two entries are made up to show what
+     is left out. Not a capture. -->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:leg="http://www.legislation.gov.uk/namespaces/legislation" xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+  <id>http://www.legislation.gov.uk/ukpga/2018/data.feed</id>
+  <title>UK Public General Acts 2018</title>
+  <updated>2025-06-19T10:00:00Z</updated>
+  <link rel="self" href="http://www.legislation.gov.uk/ukpga/2018/data.feed"/>
+  <link rel="next" href="http://www.legislation.gov.uk/ukpga/2018/data.feed?page=2"/>
+  <openSearch:totalResults>26</openSearch:totalResults>
+  <openSearch:startIndex>1</openSearch:startIndex>
+  <openSearch:itemsPerPage>20</openSearch:itemsPerPage>
+  <leg:page>1</leg:page>
+  <leg:morePages>1</leg:morePages>
+  <entry>
+    <id>http://www.legislation.gov.uk/id/ukpga/2018/12</id>
+    <title>Data Protection Act 2018</title>
+    <updated>2025-06-19T09:30:00Z</updated>
+    <link rel="self" href="http://www.legislation.gov.uk/ukpga/2018/12"/>
+    <link rel="alternate" type="application/xml" href="http://www.legislation.gov.uk/ukpga/2018/12/data.xml"/>
+    <ukm:Year Value="2018"/>
+    <ukm:Number Value="12"/>
+  </entry>
+  <entry>
+    <id>http://www.legislation.gov.uk/id/ukpga/2018/16</id>
+    <title>Finance Act 2018</title>
+    <updated>2024-03-01T08:00:00Z</updated>
+    <link rel="self" href="http://www.legislation.gov.uk/ukpga/2018/16"/>
+  </entry>
+  <entry>
+    <id>http://www.legislation.gov.uk/id/asp/2018/5</id>
+    <title>A Scottish act that this list does not read</title>
+    <updated>2024-03-01T08:00:00Z</updated>
+  </entry>
+  <entry>
+    <id>http://www.legislation.gov.uk/id/ukpga/2018/99</id>
+    <title></title>
+    <updated>2024-03-01T08:00:00Z</updated>
+  </entry>
+</feed>

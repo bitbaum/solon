@@ -46,4 +46,9 @@ export const LICENCES = [
   // https://eur-lex.europa.eu"), under Commission Decision 2011/833/EU of 12 December 2011 on
   // the reuse of Commission documents (OJ L 330, 14.12.2011, p. 39). CC BY's obligation.
   { spdx: "LicenseRef-eu-reuse-2011-833", requiresAttribution: true, shareAlike: false },
+  // legislation.gov.uk: the Open Government Licence v3.0 (SPDX OGL-UK-3.0) lets the information be
+  // copied, published, adapted and used commercially, provided the source is acknowledged with the
+  // notice the licence gives. Not share-alike.
+  // https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  { spdx: "OGL-UK-3.0", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];

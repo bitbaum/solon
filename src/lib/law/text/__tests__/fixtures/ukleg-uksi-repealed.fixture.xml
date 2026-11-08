@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hand-written: an instrument whose every regulation is revoked, in the shape CLML gives a revised
+     statutory instrument. Not a capture. -->
+<Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/" IdURI="http://www.legislation.gov.uk/id/uksi/1999/1" RestrictExtent="E+W" SchemaVersion="1.0">
+  <ukm:Metadata>
+    <dc:title>The Example Regulations 1999</dc:title>
+    <ukm:SecondaryMetadata>
+      <ukm:DocumentClassification><ukm:DocumentMainType Value="UnitedKingdomStatutoryInstrument"/></ukm:DocumentClassification>
+      <ukm:Made Date="1999-01-04"/>
+    </ukm:SecondaryMetadata>
+  </ukm:Metadata>
+  <Secondary>
+    <SecondaryPrelims><Title>The Example Regulations 1999</Title><Number Category="UnitedKingdomStatutoryInstrument" Value="1">1999 No. 1</Number></SecondaryPrelims>
+    <Body>
+      <P1group Status="Repealed"><Title>Citation</Title>
+        <P1 id="regulation-1" Status="Repealed"><Pnumber>1</Pnumber><P1para><Text>…</Text></P1para></P1>
+      </P1group>
+      <P1group Status="Repealed"><Title>Revocation</Title>
+        <P1 id="regulation-2" Status="Repealed"><Pnumber>2</Pnumber><P1para><Text>…</Text></P1para></P1>
+      </P1group>
+    </Body>
+  </Secondary>
+</Legislation>

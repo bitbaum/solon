@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A hand-written approximation of the CLML legislation.gov.uk serves for /ukpga/2018/12/data.xml, cut
+     down: element names and nesting as the CLML reference describes them, the words of the Data
+     Protection Act 2018 as remembered for section 1 and the long title, the rest invented to cover each
+     case the reader handles (a repealed section, a prospective one, a commentary, a list, a table, a
+     schedule). Not a capture: the server dry run is the check against the live site. -->
+<Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" DocumentURI="http://www.legislation.gov.uk/ukpga/2018/12/contents" IdURI="http://www.legislation.gov.uk/id/ukpga/2018/12" NumberOfProvisions="6" RestrictExtent="E+W+S+N.I." RestrictStartDate="2025-06-19" SchemaVersion="1.0" Status="Revised">
+  <ukm:Metadata>
+    <dc:identifier>http://www.legislation.gov.uk/ukpga/2018/12/contents</dc:identifier>
+    <dc:title>Data Protection Act 2018</dc:title>
+    <dc:language>en</dc:language>
+    <dc:publisher>Statute Law Database</dc:publisher>
+    <dc:modified>2025-06-19</dc:modified>
+    <dct:valid>2025-06-19</dct:valid>
+    <ukm:PrimaryMetadata>
+      <ukm:DocumentClassification>
+        <ukm:DocumentCategory Value="primary"/>
+        <ukm:DocumentMainType Value="UnitedKingdomPublicGeneralAct"/>
+        <ukm:DocumentStatus Value="revised"/>
+      </ukm:DocumentClassification>
+      <ukm:Year Value="2018"/>
+      <ukm:Number Value="12"/>
+      <ukm:EnactmentDate Date="2018-05-23"/>
+    </ukm:PrimaryMetadata>
+  </ukm:Metadata>
+  <Primary>
+    <PrimaryPrelims>
+      <Title>Data Protection Act 2018</Title>
+      <Number Category="primary" Value="12">2018 CHAPTER 12</Number>
+      <LongTitle>An Act to make provision for the regulation of the processing of information relating to individuals.</LongTitle>
+      <DateOfEnactment><DateText>[23rd May 2018]</DateText></DateOfEnactment>
+      <IntroductoryText><P><Text>Be it enacted by the Queen’s most Excellent Majesty, by and with the advice and consent of the Lords Spiritual and Temporal, and Commons, in this present Parliament assembled, and by the authority of the same, as follows:—</Text></P></IntroductoryText>
+    </PrimaryPrelims>
+    <Body>
+      <Part id="part-1">
+        <Number>Part 1</Number>
+        <Title>Preliminary</Title>
+        <P1group>
+          <Title>Overview</Title>
+          <P1 id="section-1">
+            <Pnumber>1</Pnumber>
+            <P1para>
+              <P2 id="section-1-1">
+                <Pnumber PuncBefore="(" PuncAfter=")">1</Pnumber>
+                <P2para><Text>This Act makes provision about the processing of personal data<CommentaryRef Ref="key-1a"/>.</Text></P2para>
+              </P2>
+              <P2 id="section-1-2">
+                <Pnumber PuncBefore="(" PuncAfter=")">2</Pnumber>
+                <P2para><Text>Most processing of personal data is subject to the <Addition CommentaryRef="c1">UK GDPR</Addition>.</Text></P2para>
+              </P2>
+            </P1para>
+          </P1>
+        </P1group>
+        <P1group>
+          <Title>Terms relating to the processing of personal data</Title>
+          <P1 id="section-3">
+            <Pnumber>3</Pnumber>
+            <P1para>
+              <P2 id="section-3-1">
+                <Pnumber PuncBefore="(" PuncAfter=")">1</Pnumber>
+                <P2para><Text>“Personal data” means any information relating to an identified or identifiable living individual.</Text></P2para>
+              </P2>
+              <P2 id="section-3-2">
+                <Pnumber PuncBefore="(" PuncAfter=")">2</Pnumber>
+                <P2para><Text>Each of the following is an “identifier”:</Text></P2para>
+                <UnorderedList Class="Definition" Decoration="none">
+                  <ListItem><Para><Text>(a) a name;</Text></Para></ListItem>
+                  <ListItem><Para><Text>(b) an identification number.</Text></Para></ListItem>
+                </UnorderedList>
+              </P2>
+            </P1para>
+          </P1>
+        </P1group>
+        <P1group Status="Repealed">
+          <Title>Repealed</Title>
+          <P1 id="section-4" Status="Repealed">
+            <Pnumber>4</Pnumber>
+            <P1para><Text><Repeal CommentaryRef="c2">…</Repeal></Text></P1para>
+          </P1>
+        </P1group>
+        <Pblock>
+          <Title>Not yet in force</Title>
+          <P1group>
+            <Title>A section not yet commenced</Title>
+            <P1 id="section-5" Status="Prospective" RestrictStartDate="2999-01-01">
+              <Pnumber>5</Pnumber>
+              <P1para><Text>Words that apply from a later day.</Text></P1para>
+            </P1>
+          </P1group>
+        </Pblock>
+        <P1group>
+          <Title>Units</Title>
+          <P1 id="section-6">
+            <Pnumber>6</Pnumber>
+            <P1para>
+              <Text>The charge is in m<Superior>2</Superior> units, as the table shows.</Text>
+              <Tabular Orientation="portrait">
+                <table>
+                  <tbody>
+                    <tr><td><Para><Text>Band</Text></Para></td><td><Para><Text>Fee</Text></Para></td></tr>
+                    <tr><td><Para><Text>Small</Text></Para></td><td><Para><Text>£40</Text></Para></td></tr>
+                  </tbody>
+                </table>
+              </Tabular>
+            </P1para>
+          </P1>
+        </P1group>
+      </Part>
+    </Body>
+    <Schedules>
+      <Schedule id="schedule-1">
+        <Number>SCHEDULE 1</Number>
+        <TitleBlock><Title>Special categories of personal data</Title></TitleBlock>
+        <Reference>Section 10</Reference>
+        <ScheduleBody>
+          <Part id="schedule-1-part-1">
+            <Number>PART 1</Number>
+            <Title>Conditions</Title>
+            <P1group>
+              <Title>Employment</Title>
+              <P1 id="schedule-1-paragraph-1">
+                <Pnumber>1</Pnumber>
+                <P1para><Text>This condition is met if the processing is necessary for employment law.</Text></P1para>
+              </P1>
+            </P1group>
+          </Part>
+        </ScheduleBody>
+      </Schedule>
+    </Schedules>
+  </Primary>
+  <Commentaries>
+    <Commentary id="key-1a" Type="F"><Para><Text>Words in s. 1 substituted by S.I. 2019/419, reg. 1.</Text></Para></Commentary>
+  </Commentaries>
+</Legislation>
