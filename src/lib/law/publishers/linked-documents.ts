@@ -34,6 +34,17 @@ export interface LinkedDocumentsConfig {
   exclude: RegExp;
   /** A document address that is not an act in force, whatever its title (a draft, a repealed act). */
   excludeHref?: RegExp;
+  /**
+   * The act's link is a page of its own, not the file: the document is the first link on
+   * that page, on the same host, whose address matches this (Genève, Fribourg).
+   */
+  file?: RegExp;
+  /**
+   * A download button names no act, and its act's title is in a link before it
+   * (Lausanne's accordion): the document takes the words of the nearest earlier link
+   * that matches this.
+   */
+  titledBy?: RegExp;
   kind?: ActKind;
   /** The language of the commune's acts; German unless said. */
   locale?: string;
@@ -58,7 +69,7 @@ const decode = (s: string) =>
 
 /** A button's own words ("Dokument herunterladen"), which name no act. */
 const BUTTON =
-  /^(?:dokument |datei |le document |il documento )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen|télécharger|consulter|ouvrir|scarica(?:re)?|apri)$/i;
+  /^(?:dokument |datei |le document |il documento |le fichier |il file )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen|télécharger(?: le (?:fichier|document))?|consulter|ouvrir|scarica(?:re)?(?: il (?:file|documento))?|apri)$|^\[(?:pdf|docx?|xlsx?)\b[^\]]*\]$/i;
 
 /** A file's name as words: "3-1-abwasserreglement.pdf" → "Abwasserreglement". */
 export function titleFromFile(href: string): string {
@@ -180,6 +191,18 @@ export function versionOf(title: string, pageUrl: string, today: string): Versio
   return { inForceFrom: today, inForceTo: null, pageUrl, dateBasis: "retrieved" };
 }
 
+/** Each document link takes the words of the nearest earlier link that matches `config.titledBy`. */
+function titledByEarlier(
+  anchors: readonly { href: string; text: string }[],
+  config: Pick<LinkedDocumentsConfig, "link" | "titledBy">,
+): { href: string; text: string }[] {
+  let title: string | null = null;
+  return anchors.map((a) => {
+    if (config.titledBy!.test(a.text)) title = a.text;
+    return config.link.test(a.href) && title ? { ...a, text: title } : a;
+  });
+}
+
 export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter {
   const host = new URL(config.homepage).hostname;
   const titles = new Map<string, string>();
@@ -221,12 +244,24 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
           for (const a of found)
             if (config.follow.test(a.href) && new URL(a.href).hostname === host) queue.push(a.href);
       }
-      const acts = actsOf(anchors, config);
+      const named = config.titledBy ? titledByEarlier(anchors, config) : anchors;
+      const acts = actsOf(named, config);
       // A page that lists nothing is a changed page or a challenge, never "no acts": fail loudly.
-      if (acts.length === 0)
+      if (acts.length === 0) {
+        // Say what the pages did hold, so the next reader is fixed from evidence, not guesses.
+        const documents = anchors.filter((a) => config.link.test(a.href));
+        const titled = documents.filter((a) => config.include.test(a.text));
+        const sample = (list: { href: string; text: string }[]) =>
+          list
+            .slice(0, 12)
+            .map((a) => `${a.text.slice(0, 60)} <${a.href.slice(0, 140)}>`)
+            .join(" | ");
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}; ` +
+            `${pages.length} page(s), ${anchors.length} links, ${documents.length} matching the document pattern, ` +
+            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}`,
         );
+      }
       for (const act of acts) titles.set(act.pageUrl, act.title);
       return {
         bytes: new TextEncoder().encode(pages.join("\n")),
@@ -244,8 +279,24 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       };
       return [version];
     },
-    async document(version) {
-      return { url: version.pageUrl, format: "pdf" };
+    async document(version, doFetch) {
+      if (!config.file) return { url: version.pageUrl, format: "pdf" };
+      // The act's link is a page: its file is the first matching link on it.
+      const page = await read(version.pageUrl, doFetch, [host]);
+      const links = anchorsOf(new TextDecoder().decode(page.bytes), version.pageUrl);
+      const file = links.find(
+        (a) => config.file!.test(a.href) && new URL(a.href).hostname === host,
+      );
+      if (!file) {
+        throw new Error(
+          `no document on ${version.pageUrl}; its links: ${links
+            .map((a) => a.href)
+            .filter((h) => new URL(h).hostname === host)
+            .slice(0, 15)
+            .join(" ")}`,
+        );
+      }
+      return { url: file.href, format: "pdf" };
     },
   };
 }
@@ -414,7 +465,10 @@ export const koeniz = linkedDocuments({
   excludeHref: /haengig|h%C3%A4ngig|aufgehoben|erlaeuterung/i,
 });
 
-/** Fribourg: "Règlements et tarifs", files in the site's monthly upload folders, named by the collection's number. */
+/**
+ * Fribourg: "Règlements et tarifs"; each act is a page of its own,
+ * `/reglements-tarifs/<number>` ("100-1"), that links its file.
+ */
 export const fribourgCity = linkedDocuments({
   key: "fribourg-city",
   authority: "bfs2196",
@@ -423,7 +477,8 @@ export const fribourgCity = linkedDocuments({
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "fr",
   pages: ["https://www.ville-fribourg.ch/reglements-tarifs"],
-  link: /\/sites\/default\/files\/(\d{4}-\d{2}\/[^/?#]+\.pdf)(?:[?#]|$)/i,
+  link: /\/reglements-tarifs\/(\d+(?:-\d+)*[a-z]?)(?:[?#]|$)/i,
+  file: /\.pdf(?:[?#]|$)/i,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
@@ -463,9 +518,10 @@ export const geneveCity = linkedDocuments({
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "fr",
   pages: [GENEVE_LIST, ...Array.from({ length: 27 }, (_, i) => `${GENEVE_LIST}?page=${i + 1}`)],
-  follow: /\/administration-municipale\/reglements-municipaux\/lc\d/i,
-  maxPages: 340,
-  link: /\/(?:sites\/default\/files\/|media\/)(\d{4}-\d{2}\/[^/?#]+\.pdf|\d+)(?:[?#]|$)/i,
+  maxPages: 30,
+  // Each act is a page of its own, /administration-municipale/reglements-municipaux/lc<number>-<title>.
+  link: /\/administration-municipale\/reglements-municipaux\/(lc[0-9a-z-]+)(?:[?#]|$)/i,
+  file: /\.pdf(?:[?#]|$)/i,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
@@ -483,9 +539,10 @@ export const lausanneCity = linkedDocuments({
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "fr",
   pages: ["https://www.lausanne.ch/apps/actualites/index_recueil.php"],
-  follow: /\/index_recueil\.php\?id_recueil=\d+/,
-  maxPages: 260,
   link: /\/Next\/serve\.php\?id=(\d+)(?:&|$)/i,
+  // One index page: an act's title ("100.1 – Règlement du Conseil communal de Lausanne") is
+  // a link before its "Télécharger le fichier" button.
+  titledBy: /^\d+(?:\.\d+)*\s*[–-]\s*\S/,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
@@ -512,8 +569,8 @@ export const luganoCity = linkedDocuments({
 });
 
 /**
- * Bellinzona: "Legislazione comunale", grouped by subject, each act a file the
- * site serves by its document id (`downdoc.php?id_doc=`).
+ * Bellinzona: "Legislazione comunale", grouped by subject, each act a page of
+ * the site's own (`<Title>-<8 hex digits>?i=1&MasterId=<group>`).
  */
 export const bellinzonaCity = linkedDocuments({
   key: "bellinzona-city",
@@ -523,7 +580,9 @@ export const bellinzonaCity = linkedDocuments({
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "it",
   pages: ["https://www.bellinzona.ch/1d212c00"],
-  link: /\/downdoc\.php\?id_doc=(\d+)(?:&|$)/i,
+  link: /bellinzona\.ch\/([A-Za-z0-9-]+-[0-9a-f]{8})\?i=1&MasterId=/i,
+  // The file on the act's page; when none matches, the failure lists the page's links.
+  file: /\.pdf(?:[?#]|$)|downdoc|\/(?:docs?|documenti|files?)\//i,
   include: CH_IT_ACT,
   exclude: CH_IT_FORM,
 });

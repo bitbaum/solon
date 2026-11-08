@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { actsOf, anchorsOf, versionOf } from "../linked-documents";
+import {
+  actsOf,
+  anchorsOf,
+  bellinzonaCity,
+  fribourgCity,
+  geneveCity,
+  koeniz,
+  lausanneCity,
+  linkedDocuments,
+  versionOf,
+} from "../linked-documents";
 
 const config = {
   link: /\/download_file\/(?:view\/|force\/)?([0-9a-f-]{1,40})(?:[/?#]|$)/i,
@@ -178,18 +188,16 @@ describe("Swiss communes that link their acts from one page", () => {
     ]);
   });
 
-  it("Fribourg: its acts in the monthly upload folders, in French, without the council's messages", async () => {
+  it("Fribourg: each act a page of its own, in French, without the theme filters or the council's messages", async () => {
     const acts = await page(
       "fribourgCity",
-      `<a href="/sites/default/files/2020-10/600.1_reglement_des_dechets_1998_2011.pdf">600.1 Règlement relatif à la gestion des déchets</a>
-       <a href="/sites/default/files/2026-07/101.2_reglement_new.pdf">101.2 Règlement d'application</a>
+      `<a href="/reglements-tarifs/100-1">Règlement du Conseil général de la Ville de Fribourg</a>
+       <a href="/reglements-tarifs?theme%5B0%5D=1035">Police</a>
+       <a href="/reglements-tarifs/600-1">Règlement relatif à la gestion des déchets</a>
        <a href="/sites/default/files/inline-files/Message51_Rdesfinances.pdf">Message n° 51 : règlement des finances</a>`,
       "https://www.ville-fribourg.ch/reglements-tarifs",
     );
-    expect(acts.map((a) => a.ref)).toEqual([
-      "2020-10/600.1_reglement_des_dechets_1998_2011.pdf",
-      "2026-07/101.2_reglement_new.pdf",
-    ]);
+    expect(acts.map((a) => a.ref)).toEqual(["100-1", "600-1"]);
     const { fribourgCity } = await import("../linked-documents");
     expect(fribourgCity.locale).toBe("fr");
   });
@@ -225,17 +233,17 @@ describe("Swiss communes that link their acts from one page", () => {
     ]);
   });
 
-  it("Bellinzona: each act a file served by its document id", async () => {
+  it("Bellinzona: each act a page of the site's own, the merged communes' regulations included", async () => {
     const acts = await page(
       "bellinzonaCity",
-      `<a href="downdoc.php?id_doc=29818&amp;lng=1&amp;rif=552846a154">Regolamento comunale sull'occupazione di area pubblica</a>
-       <a href="/downdoc.php?id_doc=79595&amp;lng=1&amp;i=1&amp;rif=c1fdc5a2e6">Ordinanza municipale sugli impianti pubblicitari</a>
+      `<a href="https://www.bellinzona.ch/Regolamento-comunale-Citt-di-Bellinzona-4e93e800?i=1&amp;MasterId=g1_35058">Regolamento comunale Città di Bellinzona</a>
+       <a href="https://www.bellinzona.ch/Camorino-Regolamento-sull-uso-dei-beni-comunali-51eb4900?i=1&amp;MasterId=g1_35063">Camorino - Regolamento sull'uso dei beni comunali</a>
        <a href="/Calendario-rifiuti-2026-Camorino-Claro-Gnosca-Gorduno-Moleno-Preonzo-4f523400">Calendario rifiuti 2026</a>`,
       "https://www.bellinzona.ch/1d212c00",
     );
-    expect(acts.map((a) => [a.ref, a.pageUrl])).toEqual([
-      ["29818", "https://www.bellinzona.ch/downdoc.php?id_doc=29818&lng=1&rif=552846a154"],
-      ["79595", "https://www.bellinzona.ch/downdoc.php?id_doc=79595&lng=1&i=1&rif=c1fdc5a2e6"],
+    expect(acts.map((a) => a.ref)).toEqual([
+      "Regolamento-comunale-Citt-di-Bellinzona-4e93e800",
+      "Camorino-Regolamento-sull-uso-dei-beni-comunali-51eb4900",
     ]);
   });
 
@@ -246,43 +254,20 @@ describe("Swiss communes that link their acts from one page", () => {
       return body === undefined ? new Response("", { status: 404 }) : new Response(body);
     }) as unknown as typeof fetch;
 
-  it("Genève: files listed on the pages of its list or on an act's own page, a missing page not stopping the rest", async () => {
+  it("Genève: each act a page of its own, listed across the list's pages, a missing page not stopping the rest", async () => {
     const { geneveCity } = await import("../linked-documents");
     const list =
       "https://www.geneve.ch/autorites-administration/administration-municipale/reglements-municipaux";
-    const act =
-      "https://www.geneve.ch/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail";
     const listed = await geneveCity.list(
       site({
-        [list]: `<a href="/sites/default/files/2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf">Règlement du Conseil municipal de la Ville de Genève (LC 21 111)</a>
-          <a href="/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail">Règlement sur la protection de la santé et la sécurité du travail</a>`,
-        [`${list}?page=1`]: `<a href="/en/media/8320205">Règlement relatif au système de contrôle interne en Ville de Genève (LC 21 133)</a>`,
-        // This one file's address is the test's own; the others are the city's.
-        [act]: `<a href="/sites/default/files/2025-03/LC21152.35-reglement-sante-securite-travail.pdf">Règlement sur la protection de la santé et la sécurité du travail (LC 21 152.35)</a>`,
+        [list]: `<a href="/administration-municipale/reglements-municipaux/lc21111-reglement-conseil-municipal-ville-geneve">PDF 21111 - Règlement du Conseil municipal de la Ville de Genève</a>
+          <a href="/autorites-administration/administration-municipale/reglements-municipaux?f%5B0%5D=categories%3A637">LC 21 100 - Autorités, administration et finances</a>`,
+        [`${list}?page=1`]: `<a href="/administration-municipale/reglements-municipaux/lc21133-reglement-controle-interne">PDF 21133 - Règlement relatif au système de contrôle interne</a>`,
       }),
     );
     expect(listed.acts.map((a) => a.ref)).toEqual([
-      "2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf",
-      "8320205",
-      "2025-03/LC21152.35-reglement-sante-securite-travail.pdf",
-    ]);
-  });
-
-  it("Lausanne: each act's file on its own entry, titled by the link or, for a button, its title", async () => {
-    const { lausanneCity } = await import("../linked-documents");
-    // The entry and file ids are the city's; which act each names here is the test's.
-    const index = "https://www.lausanne.ch/apps/actualites/index_recueil.php";
-    const listed = await lausanneCity.list(
-      site({
-        [index]: `<a href="index_recueil.php?id_recueil=60">Règlement général de police (500.1)</a>
-          <a href="index_recueil.php?id_recueil=61">Règlement sur la distribution de l'eau (730.1)</a>`,
-        [`${index}?id_recueil=60`]: `<a href="Next/serve.php?id=5460">Règlement général de police de la Commune de Lausanne – RGP</a>`,
-        [`${index}?id_recueil=61`]: `<a href="Next/serve.php?id=7105" title="Règlement sur la distribution de l'eau">Télécharger</a>`,
-      }),
-    );
-    expect(listed.acts.map((a) => [a.ref, a.title])).toEqual([
-      ["5460", "Règlement général de police de la Commune de Lausanne – RGP"],
-      ["7105", "Règlement sur la distribution de l'eau"],
+      "lc21111-reglement-conseil-municipal-ville-geneve",
+      "lc21133-reglement-controle-interne",
     ]);
   });
 
@@ -302,5 +287,134 @@ describe("Swiss communes that link their acts from one page", () => {
       expect(authority.place).toEqual({ scheme: "bfs_municipality", value: number });
       expect(authority.within).toBe(canton);
     }
+  });
+});
+
+/** A stand-in for a city's site: every address answers with the same page. */
+const site = (html: string) =>
+  (async () =>
+    new Response(html, { headers: { "content-type": "text/html" } })) as unknown as typeof fetch;
+
+describe("Köniz: files named only by a size label", () => {
+  const html = `
+    <a href="/public/upload/assets/18008/101.1_Gemeindeordnung.pdf?fp=6">[pdf, 216 KB]</a>
+    <a href="/public/upload/assets/14670/121.11_Verordnung_Einbuergerungsverfahren.pdf?fp=3">[pdf, 70 KB]</a>
+    <a href="/public/upload/assets/1/200.1_Antrag_Formular.pdf">[pdf, 12 KB]</a>`;
+
+  it("lists each act by its file's name, forms left out", async () => {
+    const { acts } = await koeniz.list(site(html));
+    expect(acts.map((a) => a.title)).toEqual([
+      "Gemeindeordnung",
+      "Verordnung Einbuergerungsverfahren",
+    ]);
+  });
+});
+
+describe("a download button in French or Italian", () => {
+  it.each(["Télécharger le fichier", "Télécharger", "Scarica il file", "Scaricare"])(
+    "%s names no act",
+    (label) => {
+      const [a] = anchorsOf(
+        `<a href="/files/2024-05/Reglement-des-taxes.pdf">${label}</a>`,
+        "https://www.example.ch/",
+      );
+      expect(a!.text).toBe("Reglement des taxes");
+    },
+  );
+});
+
+describe("Lausanne: a title link, then the act's download button", () => {
+  const html = `
+    <a href="#">100.1 – Règlement du Conseil communal de Lausanne</a>
+    <a href="/apps/actualites/Next/serve.php?id=7&kind=recueil">Télécharger le fichier</a>
+    <a href="#">101.1 – Règlement pour la Municipalité de Lausanne</a>
+    <a href="/apps/actualites/Next/serve.php?id=176&kind=recueil">Télécharger le fichier</a>
+    <a href="#">101.2 – Formulaire de demande de subvention</a>
+    <a href="/apps/actualites/Next/serve.php?id=8&kind=recueil">Télécharger le fichier</a>`;
+
+  it("takes each document's title from the numbered link before it, forms left out", async () => {
+    const { acts } = await lausanneCity.list(site(html));
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([
+      ["7", "100.1 – Règlement du Conseil communal de Lausanne"],
+      ["176", "101.1 – Règlement pour la Municipalité de Lausanne"],
+    ]);
+  });
+});
+
+describe("cities whose acts are pages that link their file", () => {
+  it("lists Fribourg's act pages, not its theme filters", async () => {
+    const { acts } = await fribourgCity.list(
+      site(
+        '<a href="/reglements-tarifs/100-1">Règlement du Conseil général de la Ville de Fribourg</a><a href="/reglements-tarifs?theme%5B0%5D=1035">Police</a><a href="/reglements-tarifs/100-2">Règlement concernant les jetons de présence du Conseil général</a>',
+      ),
+    );
+    expect(acts.map((a) => a.ref)).toEqual(["100-1", "100-2"]);
+  });
+
+  it("lists Genève's act pages", async () => {
+    const { acts } = await geneveCity.list(
+      site(
+        '<a href="/administration-municipale/reglements-municipaux/lc21111-reglement-conseil-municipal-ville-geneve">PDF 21111 - Règlement du Conseil municipal de la Ville de Genève</a><a href="/autorites-administration/administration-municipale/reglements-municipaux?f%5B0%5D=categories%3A637">LC 21 100 - Autorités</a>',
+      ),
+    );
+    expect(acts.map((a) => a.ref)).toEqual(["lc21111-reglement-conseil-municipal-ville-geneve"]);
+  });
+
+  it("lists Bellinzona's act pages, merged communes' regulations included", async () => {
+    const { acts } = await bellinzonaCity.list(
+      site(
+        '<a href="https://www.bellinzona.ch/Regolamento-comunale-Citt-di-Bellinzona-4e93e800?i=1&MasterId=g1_35058">Regolamento comunale Città di Bellinzona</a><a href="https://www.bellinzona.ch/Camorino-Regolamento-sull-uso-dei-beni-comunali-51eb4900?i=1&MasterId=g1_35063">Camorino - Regolamento sull\'uso dei beni comunali</a>',
+      ),
+    );
+    expect(acts.map((a) => a.ref)).toEqual([
+      "Regolamento-comunale-Citt-di-Bellinzona-4e93e800",
+      "Camorino-Regolamento-sull-uso-dei-beni-comunali-51eb4900",
+    ]);
+  });
+
+  it("reads the file from the act's page, on the same host only", async () => {
+    const adapter = linkedDocuments({
+      key: "t",
+      authority: "bfs1",
+      name: "t",
+      homepage: "https://www.geneve.ch/",
+      licenceSpdx: "LicenseRef-ch-official-act",
+      pages: ["https://www.geneve.ch/"],
+      link: /x/,
+      file: /\.pdf(?:[?#]|$)/i,
+      include: /./,
+      exclude: /^$/,
+    });
+    const doc = await adapter.document(
+      { inForceFrom: "2026-11-08", inForceTo: null, pageUrl: "https://www.geneve.ch/a/lc1" },
+      site(
+        '<a href="https://cdn.example.org/x.pdf">other host</a><a href="/sites/default/files/2024-05/lc21111.pdf">Télécharger</a>',
+      ),
+    );
+    expect(doc).toEqual({
+      url: "https://www.geneve.ch/sites/default/files/2024-05/lc21111.pdf",
+      format: "pdf",
+    });
+  });
+
+  it("says which links the page held when it holds no file", async () => {
+    const adapter = linkedDocuments({
+      key: "t",
+      authority: "bfs1",
+      name: "t",
+      homepage: "https://www.bellinzona.ch/",
+      licenceSpdx: "LicenseRef-ch-official-act",
+      pages: ["https://www.bellinzona.ch/"],
+      link: /x/,
+      file: /\.pdf(?:[?#]|$)/i,
+      include: /./,
+      exclude: /^$/,
+    });
+    await expect(
+      adapter.document(
+        { inForceFrom: "2026-11-08", inForceTo: null, pageUrl: "https://www.bellinzona.ch/a" },
+        site('<a href="/Altra-pagina-1234abcd?i=1">x</a>'),
+      ),
+    ).rejects.toThrow(/no document on https:\/\/www\.bellinzona\.ch\/a; its links: .*Altra-pagina/);
   });
 });
