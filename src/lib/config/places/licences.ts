@@ -33,4 +33,9 @@ export const LICENCES = [
   // Estonian legislation and other legal acts are not protected: Autoriõiguse
   // seadus (Copyright Act) § 5 p 1. The same class as the Swiss and Liechtenstein ones.
   { spdx: "LicenseRef-ee-official-act", requiresAttribution: false, shareAlike: false },
+  // Estonia's administrative units (EHAK): "the use of administrative and settlement units
+  // data is not restricted, but the reference to the data source (i.e. Estonian Land Board)
+  // and validity date must be made". CC BY's obligation, in the Land Board's own words.
+  // https://geoportaal.maaamet.ee/eng/spatial-data/administrative-and-settlement-division-p312.html
+  { spdx: "LicenseRef-ee-maaamet-by", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];

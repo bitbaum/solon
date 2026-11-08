@@ -926,4 +926,47 @@ export const SOURCES: readonly SourceInput[] = [
     },
     packs: ["switzerland"],
   },
+  {
+    // Estonia's fifteen counties and its municipalities, by EHAK code, with
+    // the county each lies in: the classification's levels 1 and 2, version
+    // EHAK2026v1, valid from 2026-09-01. Read from Statistics Estonia's
+    // classification server on 2026-11-08 (its CSV export:
+    // https://klassifikaatorid.stat.ee/item/stat.ee/079ed389-81f0-4171-8442-d8cf7412cdb7/5/_classification-csv),
+    // which marks the version "Levitamine on lubatud: Jah" (distribution
+    // allowed). The same units are the Land Board's administrative division,
+    // whose terms ask for the source and the validity date to be named.
+    key: "ee-ehak-units",
+    publisher: "Statistics Estonia; Estonian Land and Spatial Development Board",
+    dataset: "EHAK2026v1, levels 1 (counties) and 2 (municipalities), valid from 2026-09-01",
+    homepage: "https://klassifikaatorid.stat.ee/item/stat.ee/079ed389-81f0-4171-8442-d8cf7412cdb7",
+    licence: "LicenseRef-ee-maaamet-by",
+    attribution: {
+      en: "Classification of Estonian Administrative Units and Settlements (EHAK) 2026v1, valid from 1 September 2026: Statistics Estonia; Estonian Land and Spatial Development Board",
+      et: "Eesti haldus- ja asustusjaotuse klassifikaator (EHAK) 2026v1, kehtiv alates 1. septembrist 2026: Statistikaamet; Maa- ja Ruumiamet",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["estonia"],
+  },
+  {
+    // Estonia's income tax on a resident's income: 22 % (Tulumaksuseadus § 4
+    // lg 1, in force since 2025-01-01) on what is above the tax-free income of
+    // 8,400 euros a year (§ 23 lg 1, since 2026-01-01). Read from the
+    // consolidated text in force from 2026-10-01 on Riigi Teataja
+    // (https://www.riigiteataja.ee/akt/109072026066) on 2026-11-08. The same
+    // everywhere: municipalities levy no rate of their own.
+    key: "ee-income-tax",
+    publisher: "Republic of Estonia",
+    dataset: "Tulumaksuseadus (Income Tax Act) § 4 lg 1 and § 23 lg 1",
+    homepage: "https://www.riigiteataja.ee/akt/109072026066",
+    licence: "LicenseRef-ee-official-act",
+    attribution: {
+      en: "Republic of Estonia, Income Tax Act (Tulumaksuseadus) § 4(1) and § 23(1), Riigi Teataja",
+      et: "Eesti Vabariik, tulumaksuseadus § 4 lg 1 ja § 23 lg 1, Riigi Teataja",
+    },
+    cadence: "0 6 4 1 *",
+    adapter: "fixture",
+    packs: ["estonia"],
+  },
 ];
