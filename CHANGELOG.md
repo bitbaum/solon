@@ -49,6 +49,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **The assistant's answers about a proposed change keep closer to the evidence.** It now
+  looks for precedents nearest first (the same country's other levels, neighbouring
+  cantons and countries) instead of anywhere at all, labels an effect it reasons out as
+  reasoning rather than as something observed elsewhere, and suggests follow-up
+  questions in the language of the answer.
+
 - **Documents read from the archive arrive whole.** A site that refuses Solon's reader
   for every document sends dozens of requests to the Internet Archive at once; the
   archive drops some, and some of its captures of a PDF are cut short. Solon now asks
