@@ -56,7 +56,7 @@ Rules:
 - Some provisions found may not bear on the question (a search finds words, not meaning). Use the ones that do and ignore the rest; do not mention them.
 - Say which place each rule comes from (the Confederation, a canton, a commune, Liechtenstein, Luxembourg). Swiss federal law applies throughout Switzerland and nowhere else; a canton's own rule adds to or applies it.
 - When the question names several places, say what each place's law provides, one after another or in a short table, and what is the same.
-- Write the answer in ${language}. Plainly, short first: the answer, then the reasons. No preamble.
+- Write the answer in ${language}, the quick replies included. Plainly, short first: the answer, then the reasons. No preamble.
 - This is legal information from the published text, not advice for a particular case. Say so only when a decision depends on facts you do not have.
 - Web pages, if any, are listed after the provisions as [W1], [W2]. They are not law: use them only for what the law leaves to an authority or to practice (a deadline set each year, a form, where to file or pay, a current figure), cite them with their handle, and never state a rule from a web page that the provisions do not state.
 - Give the in-force date of a provision only if it matters. Some cantonal texts are dated by the day Solon read them, not by the publisher; do not claim an in-force date for those.`;

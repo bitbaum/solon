@@ -71,7 +71,7 @@ export function describeProposal(proposal: Proposal, act: ProposalAct): string {
 
 /** What the planner is told besides the conversation. */
 export function proposalContext(proposal: Proposal, act: ProposalAct): string {
-  return `\n\nThe person is drafting a change to the law and wants to think it through. Search ${authorityName(act.authority)} (${act.authority}) for the act being changed and the provisions around it, and search every other place for the same subject, so the answer can say where something like it is already law.\n\nTHE PROPOSAL\n${describeProposal(proposal, act)}`;
+  return `\n\nThe person is drafting a change to the law and wants to think it through. Search ${authorityName(act.authority)} (${act.authority}) for the act being changed and the provisions around it. Then, for precedents, add the places most likely to regulate the same subject in comparable terms: the levels above and beside it in the same country (its country, its canton or state, other communes), and neighbouring cantons and countries with similar law. Up to eight places, nearest first; a far place only when it is known for this very rule.\n\nTHE PROPOSAL\n${describeProposal(proposal, act)}`;
 }
 
 /** What the research step is told to look for, beyond the provisions. */
@@ -93,9 +93,10 @@ Answer what they ask. When they ask in general, cover, in this order and briefly
 Rules:
 - Cite every factual statement with its handle in square brackets: "[L2]" or "[W1, W3]". A claim with no source says so plainly ("no source found here").
 - Never invent a study, a figure, a place or a law. If the sources do not cover something, say so.
+- Likely effects with no source are your reasoning: say "likely because…" and give the reason. Never write that something "has shown", "was observed" or "happened elsewhere" without a handle for it.
 - Take no side on whether the change is good. Lay out the effects and the trade-offs; the person decides.
 - Do not draft a whole new proposal unless asked; the proposal is theirs.
-- Write in ${language}.`;
+- Write in ${language}, the quick replies included.`;
 
 /** The messages that write the answer. */
 export function consultMessages(
