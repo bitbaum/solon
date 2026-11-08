@@ -141,9 +141,15 @@ export function dayOf(text: string): string | null {
 export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
   const acts = new Map<string, ListedAct>();
   for (const row of rows) {
-    const cell = String(row.title ?? row.name ?? "");
-    const href = hrefOf(cell);
-    const title = words(cell);
+    // The title is the title or name column; the link is in it, or (Sion's publications) in
+    // another cell, a download button.
+    const named = String(row.title ?? row.name ?? "");
+    const linked =
+      hrefOf(named) !== null
+        ? named
+        : String(Object.values(row).find((v) => typeof v === "string" && /\bhref=/.test(v)) ?? "");
+    const href = hrefOf(linked);
+    const title = words(named) || words(linked);
     if (!href || !title || FORM.test(title)) continue;
     const pageUrl = absolute(href, base);
     // The collection's number names the act across its versions; a row without one is named by its page.
@@ -154,6 +160,37 @@ export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
   }
   return [...acts.values()];
 }
+
+/**
+ * The acts a page links to without a table (Sion's `/reglements` lists them as
+ * links): every link whose address is the page's own followed by an act's id,
+ * `<page>/<id>` or `<page>/sammlung/<id>`, titled by its words.
+ */
+export function actsOfLinks(html: string, base: string): ListedAct[] {
+  const root = new URL(base).pathname.replace(/\/$/, "");
+  const own = new RegExp(`^${root.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/(?:sammlung/)?(\\d+)/?$`);
+  const acts = new Map<string, ListedAct>();
+  for (const m of html.matchAll(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi)) {
+    let pageUrl: string;
+    try {
+      pageUrl = absolute(decodeEntities(m[2]!), base);
+    } catch {
+      continue;
+    }
+    const url = new URL(pageUrl);
+    // i-web also serves a collection's acts as publications: /_rte/publikation/<id>.
+    const id =
+      own.exec(url.pathname)?.[1] ?? /^\/_rte\/publikation\/(\d+)\/?$/.exec(url.pathname)?.[1];
+    const title = words(m[3]!);
+    if (!id || !title || FORM.test(title) || url.hostname !== new URL(base).hostname) continue;
+    if (!acts.has(id))
+      acts.set(id, { ref: id, title, kind: kindOf(title), pageUrl: url.toString() });
+  }
+  return [...acts.values()];
+}
+
+/** i-web's publications module serves the file itself at this address: no act page, no versions. */
+const PUBLICATION = /^\/_rte\/publikation\/\d+\/?$/;
 
 /** An act page's facts: each `<dt>` with its `<dd>`, as words and as the HTML it holds. */
 export function factsOf(html: string): { label: string; text: string; html: string }[] {
@@ -245,7 +282,9 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
         first ??= page.url;
         const html = new TextDecoder().decode(page.bytes);
         pages.push(html);
-        for (const act of actsOfRows(tableRows(html), url))
+        const rows = actsOfRows(tableRows(html), url);
+        // A page with no table may still link its acts (Sion).
+        for (const act of rows.length > 0 ? rows : actsOfLinks(html, url))
           if (!acts.has(act.ref)) acts.set(act.ref, act);
         if (config.follow)
           for (const m of html.matchAll(/\bhref=(["'])(.*?)\1/gi)) {
@@ -260,11 +299,20 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
           }
         await sleep(pauseMs);
       }
-      // A collection that lists nothing is a moved page or a changed module, never "no acts": fail loudly.
-      if (acts.size === 0)
+      // A collection that lists nothing is a moved page or a changed module, never "no acts": fail
+      // loudly, with what the pages did link to, so the next reader is fixed from evidence.
+      if (acts.size === 0) {
+        const seen = [
+          ...new Set(
+            pages.flatMap((html) =>
+              [...html.matchAll(/\bhref=(["'])(\/[^"'#?]*)\1/gi)].map((m) => m[2]!),
+            ),
+          ),
+        ].slice(0, 25);
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, a row: ${JSON.stringify(Object.fromEntries(Object.entries(pages.flatMap((h) => tableRows(h))[0] ?? {}).filter(([k]) => !k.endsWith("-sort")))).slice(0, 1500)}, links: ${seen.join(" ")}`,
         );
+      }
       return {
         bytes: new TextEncoder().encode(pages.join("\n")),
         url: first ?? config.pages[0]!,
@@ -274,6 +322,9 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
 
     async versions(pageUrl, doFetch) {
       const today = new Date().toISOString().slice(0, 10);
+      // A publication is the file itself: one version, dated by the day it is read.
+      if (PUBLICATION.test(new URL(pageUrl).pathname))
+        return [{ inForceFrom: today, inForceTo: null, pageUrl, dateBasis: "retrieved" }];
       const out: VersionRef[] = [];
       const seen = new Set<string>();
       let queue = [pageUrl];
@@ -295,6 +346,8 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
     },
 
     async document(version, doFetch): Promise<DocumentRef | null> {
+      if (PUBLICATION.test(new URL(version.pageUrl).pathname))
+        return { url: version.pageUrl, format: "pdf" };
       const url = documentOf(await text(version.pageUrl, doFetch), version.pageUrl);
       if (!url) return null;
       if (version.inForceTo === null) return { url, format: "pdf" };
@@ -366,12 +419,9 @@ export const thun = iweb({
   name: "Stadt Thun, Reglemente und Verordnungen",
   homepage: "https://www.thun.ch/",
   locale: "de",
-  pages: [
-    "https://www.thun.ch/stadtverwaltung/abteilungenaemter/stadtkanzlei/rechtsdienst/reglementeverordnungen.html",
-    "https://www.thun.ch/gk-gemeindebevoelkerung/kapitel/3514",
-  ],
-  // Thun groups its collection by subject on pages of their own, two levels deep.
-  follow: /\/kapitel\/\d+$|\/rechtsdienst\/reglementeverordnungen\/[^?#]+\.html$/,
+  // The collection's own page: its act pages are /reglementeverordnungen/sammlung/<id>
+  // (as search engines index them, 2026-11-08); the address first configured answered 404.
+  pages: ["https://www.thun.ch/reglementeverordnungen"],
 });
 
 export const chur = iweb({
