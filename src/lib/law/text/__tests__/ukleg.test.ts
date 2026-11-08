@@ -193,7 +193,18 @@ describe("a statutory instrument", () => {
 
   it("says an instrument is out of force when every regulation is revoked", () => {
     const gone = parseClml(fixture("ukleg-uksi-repealed.fixture.xml"), TODAY);
-    expect(gone).toMatchObject({ outOfForce: true, omitted: 2 });
+    expect(gone).toMatchObject({ outOfForce: true, notYetInForce: false, omitted: 2 });
+  });
+});
+
+describe("an act none of whose provisions has begun", () => {
+  it("is not out of force, only not yet in force", () => {
+    const xml = `<Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" RestrictStartDate="2020-01-01"><Primary><Body><P1group><Title>Later</Title><P1 id="section-1" Status="Prospective"><Pnumber>1</Pnumber><P1para><Text>Not yet.</Text></P1para></P1></P1group></Body></Primary></Legislation>`;
+    expect(parseClml(xml, TODAY)).toMatchObject({
+      outOfForce: false,
+      notYetInForce: true,
+      omitted: 1,
+    });
   });
 });
 

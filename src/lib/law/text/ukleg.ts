@@ -297,13 +297,16 @@ const SUPERSCRIPT: Record<string, string> = {
   "9": "⁹",
 };
 
-/** True for an element the revised version marks as no longer, or not yet, law. */
-function outOfForce(node: XNode, today: string): boolean {
+/** Why an element the revised version marks is not law today: repealed (or revoked), or not yet commenced. */
+function whyNot(node: XNode, today: string): "repealed" | "prospective" | null {
   const status = node.attrs.Status;
-  if (status && /^(repealed|revoked|prospective)$/i.test(status)) return true;
+  if (status && /^(repealed|revoked)$/i.test(status)) return "repealed";
+  if (status && /^prospective$/i.test(status)) return "prospective";
   const start = dayOf(node.attrs.RestrictStartDate);
-  return Boolean(start && start > today);
+  return start && start > today ? "prospective" : null;
 }
+
+const outOfForce = (node: XNode, today: string) => whyNot(node, today) !== null;
 
 /** The words of an inline element, on one line. */
 function inlineText(node: XNode, today: string): string {
@@ -389,8 +392,10 @@ interface Cut {
   provisions: Provision[];
   /** Sections and schedules in the document that are in force. */
   live: number;
-  /** Sections and schedules the revised version marks repealed, revoked or not yet in force. */
-  omitted: number;
+  /** Sections and schedules the revised version marks repealed or revoked. */
+  repealed: number;
+  /** Sections and schedules the revised version marks as not yet in force. */
+  prospective: number;
 }
 
 /**
@@ -402,7 +407,7 @@ interface Cut {
 function cut(legislation: XNode, today: string): Cut {
   const provisions: Provision[] = [];
   let live = 0;
-  let omitted = 0;
+  const omitted = { repealed: 0, prospective: 0 };
   const prelims = kids(legislation)
     .flatMap((c) => kids(c))
     .find((c) => /Prelims$/.test(local(c.name)));
@@ -413,8 +418,9 @@ function cut(legislation: XNode, today: string): Cut {
   }
 
   const section = (p1: XNode, groupTitle: string) => {
-    if (outOfForce(p1, today)) {
-      omitted++;
+    const why = whyNot(p1, today);
+    if (why) {
+      omitted[why]++;
       return;
     }
     const number = clean(
@@ -441,8 +447,9 @@ function cut(legislation: XNode, today: string): Cut {
       const name = local(child.name);
       if (name === "P1") section(child, groupTitle);
       else if (name === "P1group") {
-        if (outOfForce(child, today)) {
-          omitted += kids(child, "P1").length;
+        const why = whyNot(child, today);
+        if (why) {
+          omitted[why] += kids(child, "P1").length;
           continue;
         }
         sections(child, clean(inlineText(kids(child, "Title")[0] ?? child, today)));
@@ -455,8 +462,9 @@ function cut(legislation: XNode, today: string): Cut {
   const schedules = find(legislation, "Schedules");
   if (schedules) {
     kids(schedules, "Schedule").forEach((schedule, i) => {
-      if (outOfForce(schedule, today)) {
-        omitted++;
+      const why = whyNot(schedule, today);
+      if (why) {
+        omitted[why]++;
         return;
       }
       const number = clean(inlineText(kids(schedule, "Number")[0] ?? schedule, today));
@@ -476,7 +484,7 @@ function cut(legislation: XNode, today: string): Cut {
       });
     });
   }
-  return { provisions, live, omitted };
+  return { provisions, live, repealed: omitted.repealed, prospective: omitted.prospective };
 }
 
 /** Every path once: a second use of an id is `section-5-2`. */
@@ -519,8 +527,10 @@ export interface ParsedClml {
   /** The title, from the XML's metadata. */
   title: string;
   provisions: Provision[];
-  /** True when the item has provisions and every one is repealed, revoked or not yet in force. */
+  /** True when the item has provisions and every one is repealed or revoked: the item is out of force. */
   outOfForce: boolean;
+  /** True when nothing in the item is law yet: it has provisions, and the ones not repealed are not yet commenced. */
+  notYetInForce: boolean;
   /** Provisions left out because they are repealed, revoked or not yet in force. */
   omitted: number;
   version: { date: string; basis: DateBasis } | null;
@@ -539,18 +549,28 @@ export function parseClml(xml: string, today: string): ParsedClml {
   const root = parseXml(xml);
   const legislation = find(root, "Legislation");
   if (!legislation) throw new Error("not CLML: no Legislation element");
-  const { provisions, live, omitted } = cut(legislation, today);
+  const { provisions, live, repealed, prospective } = cut(legislation, today);
+  const omitted = repealed + prospective;
   const title = text(find(legislation, "title") ?? find(legislation, "Title"));
   const version = versionDateOf(legislation, today);
-  const out = omitted > 0 && live === 0;
-  if (provisions.filter((p) => p.path !== "prelims").length > 0 || out) {
-    return { title, provisions: unique(provisions), outOfForce: out, omitted, version };
+  const out = live === 0 && repealed > 0 && prospective === 0;
+  const notYet = live === 0 && prospective > 0;
+  if (provisions.filter((p) => p.path !== "prelims").length > 0 || out || notYet) {
+    return {
+      title,
+      provisions: unique(provisions),
+      outOfForce: out,
+      notYetInForce: notYet,
+      omitted,
+      version,
+    };
   }
   const whole = clmlText(legislation, today);
   return {
     title,
     provisions: whole ? [{ path: WHOLE_ACT, heading: "", text: whole }] : [],
     outOfForce: false,
+    notYetInForce: false,
     omitted,
     version,
   };

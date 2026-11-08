@@ -73,6 +73,10 @@ export interface UkLegReport {
   fromArchive: number;
   /** Items whose text says every provision is repealed or revoked: marked out of force, no text stored. */
   outOfForce: number;
+  /** Items with nothing in force yet (every provision not yet commenced, or repealed): no text stored, tried again next run. */
+  notYetInForce: number;
+  /** What the stored provisions' paths are, by their prefix (`section`, `schedule`, `regulation`, `prelims`, `text`, …). */
+  pathKinds: Record<string, number>;
   /** Provisions left out of stored texts because they are repealed, revoked or not yet in force. */
   omittedProvisions: number;
   /** How the stored versions' dates were found (see versionDateOf). */
@@ -109,6 +113,8 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
     stored: 0,
     fromArchive: 0,
     outOfForce: 0,
+    notYetInForce: 0,
+    pathKinds: {},
     omittedProvisions: 0,
     dateBasis: {},
     provisions: 0,
@@ -159,6 +165,7 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
     const acts: UkAct[] = [];
     const skipped: { row: string; reason: string }[] = [];
     const seen = new Set<string>();
+    let pageSize = 0;
     for (let page = 1; page <= MAX_PAGES; page++) {
       let feed;
       try {
@@ -183,8 +190,14 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
       for (const act of fresh) seen.add(act.path);
       acts.push(...fresh);
       await sleep(pauseMs);
-      // A page that adds nothing new is the end, whatever the feed says.
-      if (!feed.more || (feed.entries > 0 && fresh.length === 0 && feed.skipped.length === 0))
+      // The last page is the first one that is not full (the live feed's "more" is not exact), or
+      // one that adds nothing new, whatever the feed says.
+      pageSize = Math.max(pageSize, feed.entries);
+      if (
+        !feed.more ||
+        feed.entries < pageSize ||
+        (feed.entries > 0 && fresh.length === 0 && feed.skipped.length === 0)
+      )
         break;
     }
     return { acts, skipped };
@@ -262,13 +275,28 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
         } else if (stored.outOfForce) {
           report.outOfForce++;
           say(`${act.path}: every provision repealed or revoked; out of force`);
+        } else if (stored.notYet) {
+          report.notYetInForce++;
+          say(`${act.path}: nothing in force yet; not stored`);
         } else {
           report.stored++;
           report.provisions += stored.provisions;
           report.omittedProvisions += stored.omitted;
           report.dateBasis[stored.basis] = (report.dateBasis[stored.basis] ?? 0) + 1;
           if (stored.fromArchive) report.fromArchive++;
-          say(`${act.path} ${stored.date}: ${stored.provisions} provisions`);
+          for (const kind of stored.kinds)
+            report.pathKinds[kind] = (report.pathKinds[kind] ?? 0) + 1;
+          const shape = Object.entries(
+            stored.kinds.reduce<Record<string, number>>(
+              (n, k) => ({ ...n, [k]: (n[k] ?? 0) + 1 }),
+              {},
+            ),
+          )
+            .map(([k, n]) => `${n} ${k}`)
+            .join(", ");
+          say(
+            `${act.path} ${stored.date}: ${stored.provisions} provisions (${shape}), ${stored.omitted} left out`,
+          );
         }
       } catch (error) {
         const reason = reasonOf(error);
@@ -362,6 +390,10 @@ async function storeAct(
   basis: string;
   fromArchive: boolean;
   outOfForce: boolean;
+  /** Nothing in the item is law yet. */
+  notYet: boolean;
+  /** The prefix of each provision's path: `section`, `schedule`, `prelims`, `text`. */
+  kinds: string[];
   /** The feed said the item changed, but the version it gives is the one held. */
   unchanged: boolean;
 }> {
@@ -375,8 +407,11 @@ async function storeAct(
     basis: "",
     fromArchive: false,
     outOfForce: false,
+    notYet: false,
+    kinds: [] as string[],
     unchanged: false,
   };
+  if (parsed.notYetInForce) return { ...none, notYet: true };
   if (parsed.outOfForce) {
     // Only a publisher can say an act ended, and this one has: every provision is gone.
     if (!options.dryRun && actId) {
@@ -417,6 +452,8 @@ async function storeAct(
     basis: parsed.version.basis,
     fromArchive: page.copy !== null,
     outOfForce: false,
+    notYet: false,
+    kinds: parsed.provisions.map((p) => p.path.split("-")[0]!),
     unchanged: false,
   };
 }
