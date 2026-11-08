@@ -86,7 +86,13 @@ export interface GiiReport {
   provisions: number;
   remaining: number;
   /** A few acts read, for a dry run to show: abbreviation, kind, title, provisions. */
-  sample: { abbr: string; kind: string; title: string; provisions: number }[];
+  sample: string[];
+  /** Titles the register gave no kind (`other`), a few, so a dry run shows what the title rules miss. */
+  otherTitles: string[];
+  /** Acts whose cut text still holds a tag or an entity, a few: the cutter missed something. */
+  leftoverMarkup: string[];
+  /** Acts asked for by abbreviation that the table of contents does not list. */
+  unknownActs: string[];
   failures: { act: string; reason: string }[];
   failureReasons: Record<string, number>;
   /** Set when the run stopped early because the portal kept refusing: its last answer. */
@@ -127,6 +133,9 @@ export async function importGii(db: Database, options: GiiOptions): Promise<GiiR
     provisions: 0,
     remaining: 0,
     sample: [],
+    otherTitles: [],
+    leftoverMarkup: [],
+    unknownActs: [],
     failures: [],
     failureReasons: {},
   };
@@ -247,14 +256,8 @@ export async function importGii(db: Database, options: GiiOptions): Promise<GiiR
         if (done.first) report.firstVersions++;
         if (done.fromArchive) report.fromArchive++;
       }
-      if (report.sample.length < 8) {
-        report.sample.push({
-          abbr: act.abbr,
-          kind: act.kind,
-          title: act.title.slice(0, 90),
-          provisions: done.provisions,
-        });
-      }
+      if (report.sample.length < 8) report.sample.push(`${act.abbr} [${act.kind}] ${done.glance}`);
+      if (done.markup && report.leftoverMarkup.length < 8) report.leftoverMarkup.push(act.abbr);
       say(
         `${act.abbr}: ${done.provisions} provisions${done.unchanged ? " (unchanged)" : ""} — ${act.title.slice(0, 60)}`,
       );
@@ -273,6 +276,11 @@ export async function importGii(db: Database, options: GiiOptions): Promise<GiiR
     await sleep(pauseMs);
   }
   report.remaining = todo.length - attempted;
+  report.otherTitles = acts
+    .filter((a) => a.kind === "other")
+    .slice(0, 8)
+    .map((a) => `${a.abbr}: ${a.title.slice(0, 80)}`);
+  report.unknownActs = [...(only ?? [])].filter((abbr) => !acts.some((a) => a.abbr === abbr));
   return report;
 }
 
@@ -289,7 +297,15 @@ async function readAct(
   held: ReadonlyMap<string, Held>,
   today: string,
   options: GiiOptions,
-): Promise<{ provisions: number; unchanged: boolean; first: boolean; fromArchive: boolean }> {
+): Promise<{
+  provisions: number;
+  unchanged: boolean;
+  first: boolean;
+  fromArchive: boolean;
+  /** The cut in a line: how many provisions, the first paths, the first words. */
+  glance: string;
+  markup: boolean;
+}> {
   const doFetch = options.fetchImpl ?? fetch;
   const page = await read(zipUrlOf(act.abbr), doFetch, GII.hosts, options.archiveRetryMs);
   if (!isZip(page.bytes)) {
@@ -302,6 +318,14 @@ async function readAct(
   const provisions = parseGiiXml(xml);
   if (provisions.length === 0) throw new Error("no text in the act's XML");
   const fromArchive = page.copy !== null;
+  const glance =
+    `${provisions.length} provisions: ${provisions
+      .slice(0, 5)
+      .map((p) => p.path)
+      .join(" ")}` +
+    `${provisions.length > 5 ? ` … ${provisions.at(-1)!.path}` : ""} | ${provisions[0]!.heading.slice(0, 40)}: ` +
+    provisions[0]!.text.replace(/\s+/g, " ").slice(0, 70);
+  const markup = provisions.some((p) => /<\/?[A-Za-z][^>]*>|&[A-Za-z#0-9]+;/.test(p.text));
 
   const current = actId ? held.get(actId) : undefined;
   if (current && !options.dryRun) {
@@ -320,7 +344,14 @@ async function readAct(
         .update(sources)
         .set({ retrievedAt: new Date() })
         .where(eq(sources.id, current.sourceId));
-      return { provisions: provisions.length, unchanged: true, first: false, fromArchive };
+      return {
+        provisions: provisions.length,
+        unchanged: true,
+        first: false,
+        fromArchive,
+        glance,
+        markup,
+      };
     }
   }
   await storeVersion(
@@ -345,5 +376,12 @@ async function readAct(
     },
     options.dryRun ?? false,
   );
-  return { provisions: provisions.length, unchanged: false, first: !current, fromArchive };
+  return {
+    provisions: provisions.length,
+    unchanged: false,
+    first: !current,
+    fromArchive,
+    glance,
+    markup,
+  };
 }

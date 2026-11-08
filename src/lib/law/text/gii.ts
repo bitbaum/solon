@@ -71,7 +71,10 @@ export function parseToc(xml: string): {
   const seen = new Set<string>();
   for (const m of xml.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
     const item = m[1]!;
-    const title = oneLine(/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(item)?.[1] ?? "");
+    // The portal marks a title that has a note with a trailing "*)".
+    const title = oneLine(/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(item)?.[1] ?? "")
+      .replace(/\s*\*+\)\s*$/, "")
+      .trim();
     const link = oneLine(/<link\b[^>]*>([\s\S]*?)<\/link>/i.exec(item)?.[1] ?? "");
     const abbr = abbrOfLink(link);
     if (!abbr) {

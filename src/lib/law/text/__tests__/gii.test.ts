@@ -46,6 +46,11 @@ describe("the table of contents", () => {
       'Gesetz über die Ausprägung einer 1-DM-Goldmünze und die Errichtung der Stiftung "Geld und Währung"',
     );
     expect(toc.acts[1]!.title).toBe("Bürgerliches Gesetzbuch");
+    expect(
+      parseToc(
+        "<items><item><title>Erste Verordnung zur Durchführung des Beispielgesetzes *)</title><link>http://x/b/xml.zip</link></item></items>",
+      ).acts[0]!.title,
+    ).toBe("Erste Verordnung zur Durchführung des Beispielgesetzes");
   });
 
   it("leaves out an entry with no link, and says why", () => {
