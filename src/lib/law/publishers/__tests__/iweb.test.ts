@@ -254,4 +254,14 @@ describe("a collection page that links its acts without a table", () => {
     );
     expect(acts.map((a) => a.ref)).toEqual(["1818328"]);
   });
+
+  it("reads acts served as publications", () => {
+    const acts = actsOfLinks(
+      '<a href="/_rte/publikation/106216">Règlement du conseil municipal (RCM)</a>',
+      "https://www.sion.ch/reglements",
+    );
+    expect(acts.map((a) => [a.ref, a.pageUrl])).toEqual([
+      ["106216", "https://www.sion.ch/_rte/publikation/106216"],
+    ]);
+  });
 });

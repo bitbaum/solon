@@ -172,7 +172,9 @@ export function actsOfLinks(html: string, base: string): ListedAct[] {
       continue;
     }
     const url = new URL(pageUrl);
-    const id = own.exec(url.pathname)?.[1];
+    // i-web also serves a collection's acts as publications: /_rte/publikation/<id>.
+    const id =
+      own.exec(url.pathname)?.[1] ?? /^\/_rte\/publikation\/(\d+)\/?$/.exec(url.pathname)?.[1];
     const title = words(m[3]!);
     if (!id || !title || FORM.test(title) || url.hostname !== new URL(base).hostname) continue;
     if (!acts.has(id))
@@ -288,11 +290,20 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
           }
         await sleep(pauseMs);
       }
-      // A collection that lists nothing is a moved page or a changed module, never "no acts": fail loudly.
-      if (acts.size === 0)
+      // A collection that lists nothing is a moved page or a changed module, never "no acts": fail
+      // loudly, with what the pages did link to, so the next reader is fixed from evidence.
+      if (acts.size === 0) {
+        const seen = [
+          ...new Set(
+            pages.flatMap((html) =>
+              [...html.matchAll(/\bhref=(["'])(\/[^"'#?]*)\1/gi)].map((m) => m[2]!),
+            ),
+          ),
+        ].slice(0, 25);
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, links: ${seen.join(" ")}`,
         );
+      }
       return {
         bytes: new TextEncoder().encode(pages.join("\n")),
         url: first ?? config.pages[0]!,
