@@ -101,6 +101,10 @@ jobs:
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
             "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
+          # One load at a time on the box: a second waits here for the first to finish,
+          # so two big loads never share its memory (two at once ran it out, 2026-11-08).
+          exec 9>/tmp/solon-law-load.lock
+          flock 9
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
           git clone -q https://github.com/bitbaum/solon "$WD/repo"
