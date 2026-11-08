@@ -7,11 +7,19 @@ import { Link, usePathname } from "@/i18n/navigation";
 import Logo from "./logo";
 import AuthControl from "./auth-control";
 import LanguageSwitcher from "@/components/site/language-switcher";
+import ThemeToggle from "@/components/theme/theme-toggle";
 import { PHOTOS } from "@/lib/content/photos";
-import { HIRE_HREF, MENU, SITE_SECTIONS, type MenuSection } from "@/lib/site-config";
+import {
+  HIRE_HREF,
+  MENU,
+  SITE_SECTIONS,
+  isHeaderOverPhoto,
+  type MenuSection,
+} from "@/lib/site-config";
 
 /**
- * The header: the mark, four panels, language, sign-in, and one call to action.
+ * The header: the mark, four panels, language, theme, sign-in, and one call
+ * to action.
  *
  * Each panel opens a full-width sheet: the section's name and what it is for
  * on the left, every page in it with one line on what you will find, and a
@@ -21,8 +29,10 @@ import { HIRE_HREF, MENU, SITE_SECTIONS, type MenuSection } from "@/lib/site-con
  * aria-expanded that controls its sheet.
  *
  * The header is transparent over a page's photograph and turns solid once
- * the reader scrolls or a panel opens. Small screens get the whole map as a
- * full-screen menu instead.
+ * the reader scrolls or a panel opens. While it is transparent over a
+ * photograph it wears the dark theme whatever the reader chose, because its
+ * type sits on the photograph's dark scrim (HEADER_OVER_PHOTO_ROUTES). Small
+ * screens get the whole map as a full-screen menu instead.
  */
 export default function Navigation({ authEnabled = false }: { authEnabled?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
@@ -74,12 +84,19 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
   }, [mobileOpen]);
 
   const solid = scrolled || open !== null || mobileOpen;
+  const overPhoto = !solid && isHeaderOverPhoto(pathname);
+  const themeLabels = {
+    button: t("theme"),
+    light: t("themeLight"),
+    dark: t("themeDark"),
+    system: t("themeSystem"),
+  };
 
   return (
     <>
       <header
         ref={header}
-        className={`sticky top-0 z-50 transition-colors duration-300 ${solid ? "header-solid" : ""}`}
+        className={`sticky top-0 z-50 transition-colors duration-300 ${solid ? "header-solid" : ""} ${overPhoto ? "dark" : ""}`}
       >
         <nav
           className="section-shell flex h-nav items-center justify-between gap-6"
@@ -119,6 +136,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
 
           <div className="hidden items-center gap-6 lg:flex">
             <LanguageSwitcher />
+            <ThemeToggle labels={themeLabels} className="-mx-3" />
             {authEnabled && <AuthControl />}
             <Link href={HIRE_HREF} className="btn-frame min-h-11 px-5">
               {t("hire")}
@@ -126,12 +144,13 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           </div>
 
           {/* On a phone, Sign in stays beside the menu, as in the fleet's other apps. */}
-          <div className="flex min-w-0 items-center gap-2 lg:hidden">
+          <div className="flex min-w-0 items-center gap-1 lg:hidden">
             {authEnabled && (
               <span className="block min-w-0 max-w-[9rem] truncate">
                 <AuthControl />
               </span>
             )}
+            <ThemeToggle labels={themeLabels} className="shrink-0" />
             <button
               type="button"
               className="flex h-11 w-11 items-center justify-center text-fg-primary lg:hidden"

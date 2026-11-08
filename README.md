@@ -269,7 +269,8 @@ Design system: see [`docs/development/ui-guidelines.md`](docs/development/ui-gui
 Tokens are imported from the shared `@bitbaum/design-tokens` package
 (repo `bitbaum/design-tokens`), which Solon installs under the alias
 `@fleet/design-tokens`; Loki uses the same package. OrangeCat does not depend
-on it. Solon is dark-only today.
+on it. Solon is light and dark, following the device unless the reader picks
+one in the header.
 
 ## Quick start
 

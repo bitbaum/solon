@@ -125,6 +125,10 @@
     "signIn": "Sign in",
     "account": "Account",
     "language": "Language",
+    "theme": "Colour theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "Device",
     "overview": "Overview",
     "featured": "Featured"
   },
