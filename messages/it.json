@@ -940,7 +940,7 @@
     "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
     "lawOpen": "Leggerlo e proporre modifiche",
     "placesTitle": "Luoghi",
-    "placesDrawn": "Ogni unità del livello {level} è sulla carta, colorata secondo quanto vi costerebbe l'imposta. Toccane una o cerca.",
+    "placesDrawn": "Sulla carta: {level}. Ognuna è colorata secondo quanto vi costerebbe l'imposta. Toccane una o cerca.",
     "placesNotDrawn": "I suoi luoghi sono elencati, non ancora disegnati sulla carta.",
     "placesOpen": "Tutti i luoghi di {country}",
     "mapLabelCountry": "Carta di {country} e dei suoi luoghi",

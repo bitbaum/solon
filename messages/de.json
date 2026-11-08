@@ -940,7 +940,7 @@
     "lawNone": "Solon führt das Recht von {country} noch nicht.",
     "lawOpen": "Lesen und Änderungen vorschlagen",
     "placesTitle": "Orte",
-    "placesDrawn": "Jede Einheit der Ebene {level} ist auf der Karte, eingefärbt nach dem, was die Steuer Sie dort kosten würde. Tippen Sie auf eine oder suchen Sie.",
+    "placesDrawn": "Auf der Karte: {level}. Jede ist danach eingefärbt, was die Steuer Sie dort kosten würde. Tippen Sie auf eine oder suchen Sie.",
     "placesNotDrawn": "Seine Orte sind aufgeführt, aber noch nicht auf der Karte gezeichnet.",
     "placesOpen": "Alle Orte von {country}",
     "mapLabelCountry": "Karte von {country} und seinen Orten",

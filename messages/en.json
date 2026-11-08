@@ -1622,7 +1622,7 @@
     "lawNone": "Solon does not hold {country}'s law yet.",
     "lawOpen": "Read it and propose changes",
     "placesTitle": "Places",
-    "placesDrawn": "Each {level} is on the map, coloured by what tax would cost you there. Tap one, or search.",
+    "placesDrawn": "On the map: {level}. Each is coloured by what tax would cost you there. Tap one, or search.",
     "placesNotDrawn": "Its places are listed, not drawn on the map yet.",
     "placesOpen": "All of {country}'s places",
     "mapLabelCountry": "Map of {country} and its places",
