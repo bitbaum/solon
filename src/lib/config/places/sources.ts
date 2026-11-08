@@ -985,6 +985,39 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["estonia"],
   },
   {
+    // Estonia's municipalities drawn: the Land Board's administrative division
+    // (Maa- ja Ruumiamet, "omavalitsus" layer, without the sea), one polygon
+    // record per municipality keyed by its EHAK code (OKOOD), in L-EST97
+    // (EPSG:3301, metres; the .prj says so and proj4 reads it). The file at
+    // this address is replaced at the start of each month, and its members'
+    // names carry the date, so the layer is matched by its prefix. Address as
+    // used since 2017 (github.com/buildig/EHAK, workflow.sh). The Land Board's
+    // terms: use is not restricted; the source and the validity date must be named.
+    key: "ee-maaamet-municipality-boundaries",
+    publisher: "Estonian Land and Spatial Development Board (Maa- ja Ruumiamet)",
+    dataset: "Administrative and settlement division: municipalities (omavalitsus), SHP",
+    homepage:
+      "https://geoportaal.maaamet.ee/eng/spatial-data/administrative-and-settlement-division-p312.html",
+    licence: "LicenseRef-ee-maaamet-by",
+    attribution: {
+      en: "Estonian Land and Spatial Development Board, administrative and settlement division, as of the day read",
+      et: "Maa- ja Ruumiamet, haldus- ja asustusjaotus, lugemise päeva seisuga",
+    },
+    cadence: "50 4 3 * *",
+    adapter: "shapefile_areas",
+    options: {
+      url: "https://geoportaal.maaamet.ee/docs/haldus_asustus/omavalitsus_shp.zip",
+      member: "omavalitsus",
+      memberPrefix: true,
+      place: { scheme: "ee_municipality", column: "OKOOD" },
+      level: "municipality",
+      grid: 25,
+      keep: 0.05,
+      quantization: 30000,
+    },
+    packs: ["estonia"],
+  },
+  {
     // Estonia's income tax on a resident's income: 22 % (Tulumaksuseadus § 4
     // lg 1, in force since 2025-01-01) on what is above the tax-free income of
     // 8,400 euros a year (§ 23 lg 1, since 2026-01-01). Read from the
