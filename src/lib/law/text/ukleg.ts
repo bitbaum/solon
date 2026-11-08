@@ -166,7 +166,7 @@ export function parseFeed(
     if (!path) skipped.push({ row: title || "(no title)", reason: "no address" });
     else if (!title) skipped.push({ row: path, reason: "no title" });
     else if (!kinds.includes(path.split("/")[0]!)) {
-      skipped.push({ row: path, reason: "a type not read" });
+      skipped.push({ row: path, reason: `a type not read: ${path.split("/")[0]}` });
     } else {
       acts.push({
         path,
@@ -534,6 +534,20 @@ export interface ParsedClml {
   /** Provisions left out because they are repealed, revoked or not yet in force. */
   omitted: number;
   version: { date: string; basis: DateBasis } | null;
+  /** The element names at the top of the document, for saying what an item with no text looks like. */
+  structure: string;
+}
+
+/** `Legislation[Metadata,Secondary[SecondaryPrelims,Body]]`: two levels of element names. */
+function structureOf(node: XNode): string {
+  const names = (n: XNode) => kids(n).map((c) => local(c.name));
+  const inner = kids(node)
+    .map((c) => {
+      const below = names(c).slice(0, 8);
+      return below.length > 0 ? `${local(c.name)}[${below.join(",")}]` : local(c.name);
+    })
+    .join(",");
+  return `${local(node.name)}[${inner}]`.slice(0, 240);
 }
 
 /** True when the bytes are an item's CLML, not an error or a page in its place. */
@@ -563,6 +577,7 @@ export function parseClml(xml: string, today: string): ParsedClml {
       notYetInForce: notYet,
       omitted,
       version,
+      structure: structureOf(legislation),
     };
   }
   const whole = clmlText(legislation, today);
@@ -573,5 +588,6 @@ export function parseClml(xml: string, today: string): ParsedClml {
     notYetInForce: false,
     omitted,
     version,
+    structure: structureOf(legislation),
   };
 }

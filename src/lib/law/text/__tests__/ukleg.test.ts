@@ -57,7 +57,7 @@ describe("legislation.gov.uk's feeds", () => {
       { path: "ukpga/2018/16", type: "ukpga", title: "Finance Act 2018", updated: "2024-03-01" },
     ]);
     expect(feed.skipped).toEqual([
-      { row: "asp/2018/5", reason: "a type not read" },
+      { row: "asp/2018/5", reason: "a type not read: asp" },
       { row: "ukpga/2018/99", reason: "no title" },
     ]);
     expect(feed.entries).toBe(4);

@@ -66,6 +66,8 @@ export interface UkLegReport {
   acts: number;
   /** Feed entries left out, with why (no title, a type not read). */
   skipped: number;
+  /** Why those entries were left out, counted. */
+  skippedReasons: Record<string, number>;
   alreadyHeld: number;
   /** Versions stored; in a dry run, texts read and cut without storing. */
   stored: number;
@@ -109,6 +111,7 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
     status: dryRun ? "dry_run" : "applied",
     acts: 0,
     skipped: 0,
+    skippedReasons: {},
     alreadyHeld: 0,
     stored: 0,
     fromArchive: 0,
@@ -150,6 +153,7 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
       .slice(0, 120);
     report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
   };
+  let sampled = 0;
   let refusedInARow = 0;
   const refused = (reason: string) => {
     refusedInARow = REFUSAL.test(reason) ? refusedInARow + 1 : 0;
@@ -215,6 +219,9 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
       report.yearsListed++;
       report.acts += listed.acts.length;
       report.skipped += listed.skipped.length;
+      for (const s of listed.skipped) {
+        report.skippedReasons[s.reason] = (report.skippedReasons[s.reason] ?? 0) + 1;
+      }
       if (listed.acts.length === 0) continue;
       say(`register ${type}/${year}: ${listed.acts.length} items`);
       await readYear(type, year, listed.acts);
@@ -297,6 +304,8 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
           say(
             `${act.path} ${stored.date}: ${stored.provisions} provisions (${shape}), ${stored.omitted} left out`,
           );
+          // A dry run shows the first words of the first few cuts, so the log can be read against the site.
+          if (dryRun && sampled++ < 3) say(`  ${stored.sample}`);
         }
       } catch (error) {
         const reason = reasonOf(error);
@@ -392,6 +401,8 @@ async function storeAct(
   outOfForce: boolean;
   /** Nothing in the item is law yet. */
   notYet: boolean;
+  /** The first words of the first section, to check a cut by eye in a dry run's log. */
+  sample: string;
   /** The prefix of each provision's path: `section`, `schedule`, `prelims`, `text`. */
   kinds: string[];
   /** The feed said the item changed, but the version it gives is the one held. */
@@ -409,6 +420,7 @@ async function storeAct(
     outOfForce: false,
     notYet: false,
     kinds: [] as string[],
+    sample: "",
     unchanged: false,
   };
   if (parsed.notYetInForce) return { ...none, notYet: true };
@@ -419,7 +431,7 @@ async function storeAct(
     }
     return { ...none, outOfForce: true };
   }
-  if (parsed.provisions.length === 0) throw new Error("no text in the page");
+  if (parsed.provisions.length === 0) throw new Error(`no text in the page: ${parsed.structure}`);
   if (!parsed.version) throw new Error("no date in the page");
   // The publisher's date is the version's identity: the same day is the same version.
   if (held?.from && held.from >= parsed.version.date) return { ...none, unchanged: true };
@@ -454,6 +466,10 @@ async function storeAct(
     outOfForce: false,
     notYet: false,
     kinds: parsed.provisions.map((p) => p.path.split("-")[0]!),
+    sample: ((p) =>
+      p ? `${p.path} "${p.heading}": ${p.text.replace(/\s+/g, " ").slice(0, 160)}` : "")(
+      parsed.provisions.find((p) => p.path !== "prelims"),
+    ),
     unchanged: false,
   };
 }
