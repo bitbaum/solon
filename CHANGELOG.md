@@ -25,6 +25,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Scanned regulations could stop a whole commune's load.** Reading a scanned
+  document kept every page's picture in memory until the end; ten pages scanned at
+  600 dpi (a Balzers regulation) used 1.2 GB and the load was killed. Each page is
+  let go once read, and the same document now needs 300 MB.
+
 - **Estonia's register skipped some acts and listed others twice.** The State Gazette
   pages its list in an order that shifts among acts of one title, so a pass listed 77
   acts twice and missed as many; the second copy of each then failed to load. Each act
