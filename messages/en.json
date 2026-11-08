@@ -66,7 +66,8 @@
       "law": "Find a law",
       "lawAsk": "Ask the law",
       "lawCoverage": "What Solon holds",
-      "lawAmendments": "Proposed changes"
+      "lawAmendments": "Proposed changes",
+      "statistics": "Statistics"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -112,7 +113,8 @@
       "law": "Search every act by a word, its number or the place it applies",
       "lawAsk": "A question in plain words, answered from the law, every provision cited",
       "lawCoverage": "Which laws Solon holds, counted from the data",
-      "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support"
+      "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support",
+      "statistics": "The law beside the numbers: series over time, each linked to its source and its law"
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -1642,5 +1644,89 @@
     "sources": "Where this comes from ({count, plural, one {# source} other {# sources}})",
     "situationHint": "Enter your income to colour the map by what tax would cost you.",
     "taxSameEverywhere": "Tax is the same in every place here: {amount} a year at this income. No place levies its own."
+  },
+  "Statistics": {
+    "kicker": "Statistics",
+    "units": {
+      "ratio": "%",
+      "per_100k": "per 100,000"
+    },
+    "index": {
+      "metaTitle": "Statistics: the law beside the numbers",
+      "metaDescription": "Series over time from the World Bank and the OECD, each value linked to its source and each series to the law it is about.",
+      "title": "The law beside the numbers",
+      "intro": "Each series is read from its publisher every month, kept as published with the day it was read, and linked to the law it is about where someone has checked the link. Open one to see it over time, with the law's changes marked.",
+      "latestCaption": "{metric}: the latest value for each place, {unit}. Source: {publisher}.",
+      "latestNote": "{year}",
+      "open": "Open the series",
+      "empty": "No figures for this series are loaded yet. They are read from {publisher} every month; until then, the publisher's own page:",
+      "axesTitle": "Several measures, one direction",
+      "axesIntro": "An axis reads several series together. It is a definition with an author, not a verdict: Solon does not say which end is better, and you set every weight.",
+      "axisAuthor": "Defined by: {author}",
+      "axisCaption": "{axis}: where each place sits among the places shown, from 0 to 100. {direction}",
+      "axisMissing": "No value for: {metrics}",
+      "weightsLegend": "Weights",
+      "weightOf": "Weight of {metric}",
+      "applyWeights": "Show with these weights",
+      "resetWeights": "Equal weights",
+      "proposeWeights": "Propose these weights to your group",
+      "proposeWeightsTitle": "Adopt weights for “{axis}”",
+      "proposeWeightsBody": "Weights for the axis “{axis}” (version {version}), as shown here: {url}\n\nA binding version is filed through the API as the policy “{policy}”, with this content:\n\n{json}\n"
+    },
+    "metric": {
+      "metaTitle": "{metric} · Statistics",
+      "metaDescription": "{metric}: the series over time for each place, its source, and the law it is about.",
+      "sourceSeries": "Show the source series",
+      "publisher": "Published by {publisher}, series {code}.",
+      "placesLegend": "Places",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "apply": "Show",
+      "chartCaption": "{metric}, {unit}, by year. Source: {publisher}.",
+      "noSeries": "No figures for the places chosen.",
+      "timelineCaption": "The law and events over the same years. A mark is the day a version of a linked act took effect, or a recorded event.",
+      "timelineEmpty": "No version of a linked act took effect in these years, and no event is recorded.",
+      "versionInForce": "{act}: a new version in force",
+      "caveat": "A line that moves after a law changed does not show that the law moved it. Compare the places, read the events and the definitions before reading a cause into it.",
+      "lawTitle": "The law it is about",
+      "lawWhy": "Why",
+      "lawArticle": "{act}, {article}",
+      "lawWhole": "{act}",
+      "lawFor": "For {place}",
+      "lawEverywhere": "Wherever the series is read",
+      "readArticle": "Read it",
+      "proposeChange": "Propose a change to it",
+      "notHeld": "Not in Solon's law register yet. The publisher's page:",
+      "checked": "Checked on {date} against {publisher}.",
+      "noLaw": "No law is linked to this series for these places yet.",
+      "suggestLaw": "Suggest a law to link",
+      "suggestLawTitle": "Link a law to the series “{metric}”",
+      "suggestLawBody": "Series: {url}\nPlace: \nAct and article: \nWhy the series is about it: \nWhere this was checked (a page you opened): \n",
+      "enforcementTitle": "How it is enforced",
+      "enforcementNone": "No statement about enforcement is recorded for these places yet. What a statute says and how it is enforced can differ; a record here keeps them apart, with who says so.",
+      "enforcementSuggest": "Suggest a source on enforcement",
+      "enforcementSuggestTitle": "Record how the law behind “{metric}” is enforced",
+      "enforcementSuggestBody": "Series: {url}\nPlace: \nAct and article: \nWhat is enforced and how (a rate or a practice): \nWho says so, and where (a page you opened): \n",
+      "statedBy": "Stated by {source}, {from} to {to}.",
+      "statedSince": "Stated by {source}, since {from}.",
+      "sourcesTitle": "Where each number comes from",
+      "sourceRow": "{place}: read on {date}",
+      "sourceLink": "the publisher's figures",
+      "rawLink": "the retrieved file",
+      "saveTitle": "Keep this view",
+      "saveHint": "A saved view keeps exactly these places and years under one address that never changes, so a proposal can cite it.",
+      "save": "Save this view"
+    },
+    "view": {
+      "metaTitle": "Saved view · {metric}",
+      "kicker": "Saved view",
+      "saved": "Saved on {date}. Its address is the hash of what it shows ({hash}), so it cannot change.",
+      "propose": "Propose a decision with this view as evidence",
+      "proposeTitle": "{metric}: a decision on the evidence",
+      "proposeBody": "Evidence: {url}\n\n",
+      "live": "Open it with today's figures",
+      "notFound": "No view is saved under this address.",
+      "evidenceOf": "Evidence for {count, plural, one {# proposal} other {# proposals}}"
+    }
   }
 }

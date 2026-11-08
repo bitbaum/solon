@@ -96,6 +96,9 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   ["swisstopo-commune-boundaries", "swissboundaries3d_2026-01_cut.shp.zip"],
   // The hand-kept file, cut to the cantons above (adapters.test.ts checks the whole file).
   ["ch-cantonal-tax-steps", "tax-steps-cut.csv"],
+  // One indicator of each statistics source (the adapters' own tests read the rest).
+  ["worldbank-wdi-ch", "../worldbank/ch-ne-con-govt-zs.json"],
+  ["oecd-tax-ch", "../oecd/oecd-che-ts-pit.csv"],
 ];
 
 /**

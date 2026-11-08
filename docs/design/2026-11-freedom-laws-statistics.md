@@ -161,3 +161,43 @@ annotate "this caused that".
 - How a reader's unsaved weights are kept without storing anything about the
   reader (principle 9: privacy by architecture) — the address bar, as the
   atlas does.
+
+## What was built (2026-11-08)
+
+- **Series.** Metrics carry a `statistic` block (definition, publisher, series
+  code, page) in `src/lib/config/places/metrics.ts`; sources are generated from
+  it in `sources.ts`, so a series code is written once. Two adapters:
+  `worldbank_indicators` (World Bank Indicators API v2, JSON) and `oecd_sdmx`
+  (OECD SDMX, CSV with codes). Both licences are CC BY 4.0. A percentage is
+  stored as a ratio. A year with no value is skipped and reported, never stored as
+  zero. A server error from a publisher is retried twice, because the OECD's API
+  answered 500 and then 200 on the same day.
+- **The record.** `statistic_records` (`src/lib/db/statistics-schema.ts`) is one
+  append-only log for law links, events and enforcement: the latest row of a
+  `record_key` is its state, and a trigger refuses updates and deletes. The
+  curated list is `src/lib/config/statistics/records.ts`, written by
+  `pnpm run statistics:sync` and by every run of the daily places cron. Each record
+  names its place and its act by identifiers, so it survives a reload of either.
+  A record whose place is not loaded yet is skipped and tried again on the next run.
+- **Law events** are read from `legal_act_versions` of the linked acts, dated by the
+  publisher, and are never entered twice.
+- **Pages.** `/statistics` shows ranked bars per series and the axes.
+  `/statistics/<metric>` is a line chart of the chosen places, with a timeline of
+  law events over the same years, the linked law, enforcement and per-place
+  sources; the metric's dots become hyphens in the path, because a dotted path skips
+  the locale routing. `/statistics/view/<sha256>` is a saved view. All five
+  languages are covered.
+- **Evidence.** `statistic_views` keeps a view under the sha256 of its canonical
+  spec. `createProposal` attaches every saved view its text links
+  (`proposal_evidence`) in the same transaction, so the hash is inside the signed
+  text.
+- **Axes.** `src/lib/statistics/axes.ts` scores among the places shown (min to
+  max, turned by sign, weighted mean). Reader weights come from the link
+  (`w.<metric>=`). A group's own axes are its active `statistic_axes` policy,
+  read with `?org=`.
+
+Still open, with the reason, on the roadmap: the atlas by metric (it needs
+every country as a place), enforcement statements and events (each needs a
+source someone read), more series (Eurostat, national offices, the tax
+wedge), event markers on the line and scatter plots (both belong in chartkit),
+and claims kept apart from outcomes.

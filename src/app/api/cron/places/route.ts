@@ -6,6 +6,8 @@ import { ADAPTERS } from "@/lib/places/adapters";
 import { fetchAndImport } from "@/lib/places/importer/fetch";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
 import { dueSources } from "@/lib/places/schedule";
+import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
+import { syncStatisticRecords } from "@/lib/statistics/sync";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,10 @@ export const dynamic = "force-dynamic";
  * run answers 500, so the timer's failure alert fires. `?source=<key>` runs
  * one source now, whatever its cadence. No model is called: this only fetches
  * public registers.
+ *
+ * Every run first writes the curated statistics records (links from series to
+ * the law) into their append-only log, so a record merged reaches production
+ * the next morning; a place not loaded yet leaves its record for a later run.
  */
 export async function POST(request: Request) {
   if (!isCronRequest(request.headers.get("authorization"), process.env.CRON_SECRET)) {
@@ -28,6 +34,15 @@ export async function POST(request: Request) {
     : dueSources(placesConfig, today);
   if (only && sources.length === 0) {
     return NextResponse.json({ error: `source "${only}" is not in the registry` }, { status: 404 });
+  }
+
+  let statistics: Awaited<ReturnType<typeof syncStatisticRecords>> | { error: string };
+  try {
+    statistics = await syncStatisticRecords(db, STATISTIC_RECORDS, {
+      gitSha: process.env.GIT_SHA ?? null,
+    });
+  } catch (error) {
+    statistics = { error: error instanceof Error ? error.message : String(error) };
   }
 
   const results = [];
@@ -62,6 +77,7 @@ export async function POST(request: Request) {
       });
     }
   }
-  const failed = results.some((r) => r.runs.some((run) => run.status === "failed"));
-  return NextResponse.json({ today, results }, { status: failed ? 500 : 200 });
+  const failed =
+    "error" in statistics || results.some((r) => r.runs.some((run) => run.status === "failed"));
+  return NextResponse.json({ today, statistics, results }, { status: failed ? 500 : 200 });
 }

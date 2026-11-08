@@ -176,6 +176,26 @@ export const metricSchema = z.object({
   unit: z.enum(METRIC_UNITS),
   /** Values outside this band are quarantined and reported, not published (§8.3). */
   plausible: z.object({ min: z.number(), max: z.number() }).optional(),
+  /**
+   * A statistic a reader can chart (/statistics): what it measures in the
+   * publisher's own terms, and the publisher's series it is read from, so
+   * every chart can show the source series. Absent for figures that only
+   * feed a calculation (a tariff, a multiplier).
+   */
+  statistic: z
+    .object({
+      definition: localizedTextSchema,
+      series: z.object({
+        publisher: z.string().min(1),
+        /** The publisher's own code for the series. */
+        code: z.string().min(1),
+        /** The publisher's page for the series, for people. */
+        url: z.url({ protocol: /^https$/ }),
+        /** Within a dataset of several measures (an SDMX dataflow), the one read. */
+        measure: z.string().min(1).optional(),
+      }),
+    })
+    .optional(),
   retired: z.literal(true).optional(),
 });
 export type Metric = z.infer<typeof metricSchema>;

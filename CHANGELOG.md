@@ -8,6 +8,30 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Statistics beside the law.** A new page, `/statistics`, shows five series over time
+  for Switzerland, Liechtenstein, Estonia and the United States: the top statutory income
+  tax rate (OECD Tax Database); government consumption, government expense and tax
+  revenue as shares of GDP; and intentional homicides per 100,000 (World Bank). They are
+  read from the publishers every month, and each value is kept with the day it was read.
+  Every bar and point opens the publisher's own figures, and every chart can be read as
+  a table. {#stats-series} {#stats-first} {#stats-charts}
+
+- **The law a series is about, and its changes on the same years.** A series links to the
+  articles it is about, each link with why and the page it was checked on: the federal
+  income tax tariff (DBG Art. 36), Estonia's income tax rate (TuMS § 4) and intentional
+  killing in Switzerland (StGB Art. 111). Each link opens the article and a way to propose
+  a change to it. Under the line chart, a timeline marks every day a version of a linked
+  act took effect, with the caveat that a line moving afterwards does not show the law
+  moved it. Links are never edited: a change or a removal is a new row in an append-only
+  record. {#stats-law-links} {#stats-events} {#stats-timeline}
+
+- **Axes with your weights, saved views as evidence.** An axis reads several series along
+  one stated direction. It is a definition with its author, scored only among the places
+  shown, and the reader sets every weight. A group can vote its own axes and weights as
+  its `statistic_axes` policy. Any chart can be saved under the hash of what it shows, and
+  a proposal that links a saved view carries it as evidence. {#stats-axes} {#stats-views}
+  {#stats-governed}
+
 - **Germany's federal law.** Solon is set to read every federal statute and ordinance in
   force from the Federal Ministry of Justice's portal Gesetze im Internet: some 6,100 acts,
   each in German under its long title, cut into its paragraphs, articles and annexes

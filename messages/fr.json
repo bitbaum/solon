@@ -66,7 +66,8 @@
       "law": "Trouver une loi",
       "lawAsk": "Interroger le droit",
       "lawCoverage": "Ce que Solon détient",
-      "lawAmendments": "Modifications proposées"
+      "lawAmendments": "Modifications proposées",
+      "statistics": "Statistiques"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -112,7 +113,8 @@
       "law": "Chercher chaque acte par un mot, son numéro ou le lieu où il s'applique",
       "lawAsk": "Une question en mots simples, réponse tirée du droit, chaque disposition citée",
       "lawCoverage": "Quels actes Solon détient, comptés à partir des données",
-      "lawAmendments": "Les modifications proposées au droit, avec leur redline et leurs soutiens"
+      "lawAmendments": "Les modifications proposées au droit, avec leur redline et leurs soutiens",
+      "statistics": "Le droit à côté des chiffres : des séries dans le temps, chacune avec sa source et sa loi"
     },
     "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
@@ -949,5 +951,89 @@
     "sources": "D'où cela vient ({count, plural, one {# source} other {# sources}})",
     "situationHint": "Saisissez votre revenu pour colorer la carte selon l'impôt que vous paieriez.",
     "taxSameEverywhere": "L'impôt est le même partout ici : {amount} par an pour ce revenu. Aucun lieu ne prélève le sien."
+  },
+  "Statistics": {
+    "kicker": "Statistiques",
+    "units": {
+      "ratio": "%",
+      "per_100k": "pour 100 000"
+    },
+    "index": {
+      "metaTitle": "Statistiques : le droit à côté des chiffres",
+      "metaDescription": "Des séries dans le temps de la Banque mondiale et de l'OCDE, chaque valeur liée à sa source et chaque série à la loi dont elle parle.",
+      "title": "Le droit à côté des chiffres",
+      "intro": "Chaque série est lue chaque mois chez son éditeur, conservée telle que publiée avec le jour où elle a été lue, et liée à la loi dont elle parle là où quelqu'un a vérifié le lien. Ouvrez-en une pour la voir dans le temps, avec les changements du droit marqués.",
+      "latestCaption": "{metric} : la dernière valeur pour chaque lieu, {unit}. Source : {publisher}.",
+      "latestNote": "{year}",
+      "open": "Ouvrir la série",
+      "empty": "Aucun chiffre de cette série n'est encore chargé. Ils sont lus chaque mois chez {publisher} ; d'ici là, la page de l'éditeur :",
+      "axesTitle": "Plusieurs mesures, une direction",
+      "axesIntro": "Un axe lit plusieurs séries ensemble. C'est une définition avec un auteur, non un verdict : Solon ne dit pas quel bout est le meilleur, et vous fixez chaque poids.",
+      "axisAuthor": "Défini par : {author}",
+      "axisCaption": "{axis} : où chaque lieu se situe parmi les lieux affichés, de 0 à 100. {direction}",
+      "axisMissing": "Aucune valeur pour : {metrics}",
+      "weightsLegend": "Poids",
+      "weightOf": "Poids de {metric}",
+      "applyWeights": "Afficher avec ces poids",
+      "resetWeights": "Poids égaux",
+      "proposeWeights": "Proposer ces poids à votre groupe",
+      "proposeWeightsTitle": "Adopter des poids pour « {axis} »",
+      "proposeWeightsBody": "Poids pour l'axe « {axis} » (version {version}), tels qu'affichés ici : {url}\n\nUne version contraignante se dépose par l'API comme règle « {policy} », avec ce contenu :\n\n{json}\n"
+    },
+    "metric": {
+      "metaTitle": "{metric} · Statistiques",
+      "metaDescription": "{metric} : la série dans le temps pour chaque lieu, sa source et la loi dont elle parle.",
+      "sourceSeries": "Voir la série source",
+      "publisher": "Publiée par {publisher}, série {code}.",
+      "placesLegend": "Lieux",
+      "fromLabel": "De",
+      "toLabel": "À",
+      "apply": "Afficher",
+      "chartCaption": "{metric}, {unit}, par année. Source : {publisher}.",
+      "noSeries": "Aucun chiffre pour les lieux choisis.",
+      "timelineCaption": "Le droit et les événements sur les mêmes années. Une marque est le jour où une version d'un acte lié est entrée en vigueur, ou un événement enregistré.",
+      "timelineEmpty": "Aucune version d'un acte lié n'est entrée en vigueur ces années-là, et aucun événement n'est enregistré.",
+      "versionInForce": "{act} : nouvelle version en vigueur",
+      "caveat": "Une courbe qui bouge après un changement de loi ne montre pas que la loi l'a fait bouger. Comparez les lieux, lisez les événements et les définitions avant d'y lire une cause.",
+      "lawTitle": "La loi dont elle parle",
+      "lawWhy": "Pourquoi",
+      "lawArticle": "{act}, {article}",
+      "lawWhole": "{act}",
+      "lawFor": "Pour {place}",
+      "lawEverywhere": "Partout où la série est lue",
+      "readArticle": "Lire",
+      "proposeChange": "Proposer une modification",
+      "notHeld": "Pas encore dans le registre du droit de Solon. La page de l'éditeur :",
+      "checked": "Vérifié le {date} auprès de {publisher}.",
+      "noLaw": "Aucune loi n'est encore liée à cette série pour ces lieux.",
+      "suggestLaw": "Suggérer une loi à lier",
+      "suggestLawTitle": "Lier une loi à la série « {metric} »",
+      "suggestLawBody": "Série : {url}\nLieu : \nActe et article : \nPourquoi la série en parle : \nOù cela a été vérifié (une page que vous avez ouverte) : \n",
+      "enforcementTitle": "Comment elle est appliquée",
+      "enforcementNone": "Aucune déclaration sur l'application n'est encore enregistrée pour ces lieux. Ce que dit une loi et la manière dont elle est appliquée peuvent différer ; un enregistrement ici les garde séparés, avec qui le dit.",
+      "enforcementSuggest": "Suggérer une source sur l'application",
+      "enforcementSuggestTitle": "Enregistrer comment la loi derrière « {metric} » est appliquée",
+      "enforcementSuggestBody": "Série : {url}\nLieu : \nActe et article : \nCe qui est appliqué et comment (un taux ou une pratique) : \nQui le dit, et où (une page que vous avez ouverte) : \n",
+      "statedBy": "Selon {source}, de {from} à {to}.",
+      "statedSince": "Selon {source}, depuis {from}.",
+      "sourcesTitle": "D'où vient chaque chiffre",
+      "sourceRow": "{place} : lu le {date}",
+      "sourceLink": "les chiffres de l'éditeur",
+      "rawLink": "le fichier récupéré",
+      "saveTitle": "Garder cette vue",
+      "saveHint": "Une vue enregistrée garde exactement ces lieux et ces années sous une adresse qui ne change jamais, pour qu'une proposition puisse la citer.",
+      "save": "Enregistrer cette vue"
+    },
+    "view": {
+      "metaTitle": "Vue enregistrée · {metric}",
+      "kicker": "Vue enregistrée",
+      "saved": "Enregistrée le {date}. Son adresse est le hachage de ce qu'elle montre ({hash}) ; elle ne peut pas changer.",
+      "propose": "Proposer une décision avec cette vue comme preuve",
+      "proposeTitle": "{metric} : une décision sur la preuve",
+      "proposeBody": "Preuve : {url}\n\n",
+      "live": "L'ouvrir avec les chiffres d'aujourd'hui",
+      "notFound": "Aucune vue n'est enregistrée à cette adresse.",
+      "evidenceOf": "Preuve pour {count, plural, one {# proposition} other {# propositions}}"
+    }
   }
 }

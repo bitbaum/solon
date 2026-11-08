@@ -61,6 +61,7 @@ export const MENU: MenuSection[] = [
       { key: "places", href: "/places" },
       { key: "placesCompare", href: "/compare" },
       { key: "placesCoverage", href: "/places/coverage" },
+      { key: "statistics", href: "/statistics" },
       { key: "structures", href: "/structures" },
     ],
   },
@@ -155,7 +156,7 @@ export const TRANSLATED_ROUTES = new Set<string>([
 ]);
 
 /** Sections translated as a whole: every page under the prefix. */
-const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures"];
+const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics"];
 
 export const isTranslatedRoute = (pathname: string): boolean =>
   TRANSLATED_ROUTES.has(pathname) ||

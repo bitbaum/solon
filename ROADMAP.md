@@ -180,17 +180,22 @@ weights are its own policy, voted like any other. Statistics are facts in the
 existing places model, not a second store. The reasons, the model and the
 order are in `docs/design/2026-11-freedom-laws-statistics.md`.
 
-- [ ] Statistical series as facts: new metrics in the registry (definition, unit, the publisher's series code), current and historical values with source, method and revisions, from national statistical offices, the OECD, Eurostat and the World Bank {#stats-series}
-- [ ] Every metric, value or enforcement record can link to the provisions it is about; links are added and retracted in the record, never rewritten {#stats-law-links}
-- [ ] Enforcement as an attributed assertion beside the statute, never in it: rates where measured, practice where described, with evidence {#stats-enforcement}
-- [ ] Law events on timelines read from the law itself (a version taking or leaving force, a proposal closing), plus sourced events for changes that are not an act {#stats-events}
-- [ ] First series loaded with sources: top income tax rate, tax wedge, government consumption as a share of GDP, credited components of published freedom indexes, one enforcement proxy {#stats-first}
-- [ ] The atlas coloured by any metric, and a place panel with the value, its source, the linked law, a short series and the enforcement beside it {#stats-map}
-- [ ] Timelines with two series, law events marked, and peer places or the national trend beside them; the chart shows caveats and never draws a cause {#stats-timeline}
-- [ ] Ranked bars, stat tiles, sparklines, law beside enforcement, scatter and parallel coordinates; each mark opens its source and its law; every chart readable as a table; all on `@bitbaum/chartkit`, which Solon adopts (the tally moves onto it) {#stats-charts}
-- [ ] Axes as versioned definitions with their author, weights the reader sets, what a place claims kept apart from what it achieves {#stats-axes}
-- [ ] Saved chart views, stored by hash, shared by link, and attached to a proposal as evidence {#stats-views}
-- [ ] A group's axes and weights as its own policy, amended by vote, every change in the append-only record {#stats-governed}
+- [x] Statistical series as facts: metrics in the registry with their definition and the publisher's series code, every year's value kept with the retrieval it came from, a revision superseding and never overwriting; read every month from the World Bank's World Development Indicators and the OECD Tax Database for Switzerland, Liechtenstein, Estonia and the United States, at `/statistics` {#stats-series}
+- [ ] Eurostat's and the national statistical offices' series, beside the World Bank's and the OECD's {#stats-series-more}
+- [x] Links from a series to the law it is about, each with why and the page it was checked on, written into an append-only record where a change or a removal is a new row: the federal income tax tariff (DBG Art. 36), Estonia's income tax rate (TuMS § 4) and Swiss intentional killing (StGB Art. 111) {#stats-law-links}
+- [ ] Enforcement as an attributed assertion beside the statute, never in it: rates where measured, practice where described, with evidence. The record and the page's section are built; no statement is loaded yet, because each needs a source someone read {#stats-enforcement}
+- [x] Law events on timelines read from the law itself: every day a version of a linked act took effect; sourced events for changes that are not an act have their own record (none loaded yet) {#stats-events}
+- [x] First series loaded with sources: top statutory income tax rate (OECD), government consumption, government expense and tax revenue as shares of GDP, and intentional homicides per 100,000 (World Bank) {#stats-first}
+- [ ] The tax wedge, credited components of published freedom indexes where their licence allows, and a first enforcement proxy {#stats-first-more}
+- [ ] The atlas coloured by any metric, and a place panel with the value, its source, the linked law, a short series and the enforcement beside it. It waits for every country to be a place in Solon (#law-world-model): four coloured countries are not a world map {#stats-map}
+- [x] Places side by side on one line chart, the law's versions and recorded events on a timeline over the same years beneath it, and the caveat that a line moving after a law changed does not show the law moved it. Two measures of different scale are two charts, as chartkit draws them {#stats-timeline}
+- [ ] Law events marked on the line itself, added to `@bitbaum/chartkit` rather than drawn here {#stats-timeline-markers}
+- [x] Ranked bars, a line chart and a timeline on `@bitbaum/chartkit`, which Solon now uses, each mark opening the publisher's figures and each chart readable as a table {#stats-charts}
+- [ ] Scatter and parallel coordinates for several axes at once (added to chartkit first), sparklines in a place's panel, and the voting-methods tally moved onto chartkit {#stats-charts-more}
+- [x] Axes as versioned definitions with their author, scored only among the places shown, with weights the reader sets in the link; the one shipped is an example, credited as one, that says what a higher score means and never which end is better {#stats-axes}
+- [ ] What a place claims (its constitution, its statutes) kept apart from what it achieves, as separate metrics on the same axis {#stats-claims}
+- [x] Saved chart views, stored under the sha256 of what they show, shared by link, and attached to a proposal as evidence when its text links one {#stats-views}
+- [x] A group's own axes and weights, voted as its `statistic_axes` policy and read by `/statistics?org=`; the page pre-fills the proposal with the exact content, and the binding version is filed through the API like every policy {#stats-governed}
 
 ### A record anyone can prove complete {#proof}
 

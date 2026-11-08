@@ -1,0 +1,100 @@
+/**
+ * Yearly national series from the OECD's SDMX data API, as CSV with codes
+ * (`format=csvfile`): one request per series for one country, one row per
+ * year. Format only: which dataflow, which key, which measure and which
+ * metric each becomes are the source's `options`.
+ */
+import { z } from "zod";
+import type { BatchFact } from "../importer/batch";
+import { decodeCsv } from "./csv";
+import type { Adapter } from "./types";
+
+const API = "https://sdmx.oecd.org/public/rest/data";
+
+const rows = z.array(z.record(z.string(), z.string()));
+type Rows = z.infer<typeof rows>;
+
+const oecdOptions = z.object({
+  /** The place the figures are about, by an identifier Places holds. */
+  place: z.object({ scheme: z.string().min(1), value: z.string().min(1) }),
+  /** The first year read. */
+  fromYear: z.number().int().min(1960),
+  series: z
+    .array(
+      z.object({
+        /** `agency,id,version`, as the API names a dataflow. */
+        flow: z.string().regex(/^[A-Z0-9_.]+,[A-Za-z0-9_@]+,\d+(\.\d+)*$/),
+        /** The data key, dimension values separated by dots, the country's code first. */
+        key: z.string().regex(/^[A-Z0-9_+]*(\.[A-Z0-9_+]*)+$/),
+        /** The MEASURE code a row of this series carries. */
+        measure: z.string().min(1),
+        metric: z.string().min(1),
+        /** A series in percent becomes a ratio with 100 here. */
+        divideBy: z.number().positive().default(1),
+      }),
+    )
+    .min(1),
+});
+type OecdOptions = z.infer<typeof oecdOptions>;
+
+/** `OECD.CTP.TPS,DSD_X@DF_Y,1.0` as a row's DATAFLOW column writes it: `OECD.CTP.TPS:DSD_X@DF_Y(1.0)`. */
+export const dataflowColumn = (flow: string): string => {
+  const [agency, id, version] = flow.split(",");
+  return `${agency}:${id}(${version})`;
+};
+
+export const oecdUrl = (flow: string, key: string, fromYear: number) =>
+  `${API}/${flow}/${key}?startPeriod=${fromYear}&format=csvfile`;
+
+export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
+  key: "oecd_sdmx",
+  version: "1",
+  decode: decodeCsv,
+  schema: rows,
+  options: oecdOptions,
+  retrievals: (options) =>
+    options.series.map((series) => ({
+      url: oecdUrl(series.flow, series.key, options.fromYear),
+    })),
+  map: (table, { pack, options, skip }) => {
+    if (!pack) {
+      throw new Error("figures belong to a pack's places; the source names none");
+    }
+    const facts: BatchFact[] = [];
+    for (const [i, row] of table.entries()) {
+      const where = `row ${i + 2}`;
+      const series = options.series.find(
+        (s) => dataflowColumn(s.flow) === row.DATAFLOW && s.measure === row.MEASURE,
+      );
+      if (!series) {
+        throw new Error(`${where}: ${row.DATAFLOW} ${row.MEASURE} is not in the source's options`);
+      }
+      if (row.FREQ !== "A" || !/^\d{4}$/.test(row.TIME_PERIOD ?? "")) {
+        throw new Error(`${where}: not a yearly figure (${row.FREQ} ${row.TIME_PERIOD})`);
+      }
+      const year = Number(row.TIME_PERIOD);
+      const label = `${row.MEASURE} ${row.REF_AREA} ${year}`;
+      if (year < options.fromYear) {
+        continue;
+      }
+      const raw = row.OBS_VALUE ?? "";
+      const value = Number(raw);
+      if (raw.trim() === "" || !Number.isFinite(value)) {
+        skip(label, "the OECD publishes no value for this year");
+        continue;
+      }
+      if (row.UNIT_MULT && row.UNIT_MULT !== "0") {
+        throw new Error(`${where}: unit multiplier ${row.UNIT_MULT} is not read`);
+      }
+      facts.push({
+        jurisdiction: options.place,
+        metricKey: series.metric,
+        variant: null,
+        validFrom: `${year}-01-01`,
+        validTo: `${year + 1}-01-01`,
+        value: value / series.divideBy,
+      });
+    }
+    return { pack: pack.key, jurisdictions: [], facts };
+  },
+};

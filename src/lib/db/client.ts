@@ -18,8 +18,15 @@ import * as governanceSchema from "./schema";
 import * as placesSchema from "./places-schema";
 import * as lawSchema from "./law-schema";
 import * as amendmentsSchema from "./amendments-schema";
+import * as statisticsSchema from "./statistics-schema";
 
-const schema = { ...governanceSchema, ...placesSchema, ...lawSchema, ...amendmentsSchema };
+const schema = {
+  ...governanceSchema,
+  ...placesSchema,
+  ...lawSchema,
+  ...amendmentsSchema,
+  ...statisticsSchema,
+};
 type Db = ReturnType<typeof drizzle<typeof schema>>;
 
 const globalForDb = globalThis as unknown as { solonDb: Db | undefined };

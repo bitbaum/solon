@@ -1,4 +1,5 @@
 import type { Rounding } from "@/lib/tax-model";
+import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
 
 /** The calculator rounds taxable income down to CHF 100 before a tariff applies… */
@@ -151,6 +152,98 @@ const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code
  * the adapter that reads it (§8.2). Each importer's first task is to confirm
  * the access path, format and licence, then record them here.
  */
+/**
+ * The World Bank's indicators for one country: every metric whose statistic
+ * names a World Development Indicators series, so the series code lives once,
+ * on the metric. A percentage becomes a ratio; a rate stays as published.
+ */
+const WDI_INDICATORS = METRICS.flatMap((metric) =>
+  metric.statistic?.series.publisher.startsWith("World Bank")
+    ? [
+        {
+          code: metric.statistic.series.code,
+          metric: metric.key,
+          divideBy: metric.unit === "ratio" ? 100 : 1,
+        },
+      ]
+    : [],
+);
+
+/**
+ * The OECD's series for one country, from every metric whose statistic names
+ * an OECD dataflow and measure. The key puts the country first and leaves
+ * every other dimension open but the measure, which is the fourth in the
+ * Tax Database's personal income tax flows; a flow with another shape needs
+ * its own key here.
+ */
+const OECD_SERIES = METRICS.flatMap((metric) =>
+  metric.statistic?.series.publisher.startsWith("OECD") && metric.statistic.series.measure
+    ? [
+        {
+          flow: metric.statistic.series.code,
+          measure: metric.statistic.series.measure,
+          metric: metric.key,
+          divideBy: metric.unit === "ratio" ? 100 : 1,
+        },
+      ]
+    : [],
+);
+
+const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
+  key: `oecd-tax-${iso2.toLowerCase()}`,
+  publisher: "OECD",
+  dataset: "OECD Tax Database",
+  homepage: "https://www.oecd.org/en/data/datasets/oecd-tax-database.html",
+  licence: "CC-BY-4.0",
+  attribution: {
+    en: "OECD Tax Database (CC BY 4.0)",
+    de: "OECD-Steuerdatenbank (CC BY 4.0)",
+    fr: "Base de données fiscales de l'OCDE (CC BY 4.0)",
+    it: "Banca dati fiscale dell'OCSE (CC BY 4.0)",
+    ru: "Налоговая база данных ОЭСР (CC BY 4.0)",
+  },
+  // Yearly tables, revised through the year.
+  cadence: "0 4 10 * *",
+  adapter: "oecd_sdmx",
+  options: {
+    place: { scheme: "iso_3166_1", value: iso2 },
+    fromYear: 2000,
+    series: OECD_SERIES.map(({ flow, measure, metric, divideBy }) => ({
+      flow,
+      key: `${iso3}.A..${measure}........`,
+      measure,
+      metric,
+      divideBy,
+    })),
+  },
+  packs: [pack],
+});
+
+const worldBankSource = (pack: string, country: string): SourceInput => ({
+  key: `worldbank-wdi-${country.toLowerCase()}`,
+  publisher: "World Bank",
+  dataset: "World Development Indicators",
+  homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",
+  licence: "CC-BY-4.0",
+  attribution: {
+    en: "World Bank, World Development Indicators (CC BY 4.0)",
+    de: "Weltbank, World Development Indicators (CC BY 4.0)",
+    fr: "Banque mondiale, World Development Indicators (CC BY 4.0)",
+    it: "Banca mondiale, World Development Indicators (CC BY 4.0)",
+    ru: "Всемирный банк, World Development Indicators (CC BY 4.0)",
+  },
+  // Monthly: the World Bank revises its indicators several times a year.
+  cadence: "0 4 9 * *",
+  adapter: "worldbank_indicators",
+  options: {
+    place: { scheme: "iso_3166_1", value: country },
+    country,
+    fromYear: 1990,
+    indicators: WDI_INDICATORS,
+  },
+  packs: [pack],
+});
+
 export const SOURCES: readonly SourceInput[] = [
   {
     // Confirmed 2026-09-29: CSV from the register's public API, no key;
@@ -1150,4 +1243,12 @@ export const SOURCES: readonly SourceInput[] = [
     adapter: "fixture",
     packs: ["united_states"],
   },
+  worldBankSource("switzerland", "CH"),
+  worldBankSource("liechtenstein", "LI"),
+  worldBankSource("estonia", "EE"),
+  worldBankSource("united_states", "US"),
+  // Liechtenstein is not an OECD member; the Tax Database has no figures for it.
+  oecdSource("switzerland", "CH", "CHE"),
+  oecdSource("estonia", "EE", "EST"),
+  oecdSource("united_states", "US", "USA"),
 ];

@@ -522,4 +522,144 @@ export const METRICS: readonly MetricInput[] = [
     valueType: "tariff",
     unit: "currency",
   },
+  // --- Statistics a reader can chart (/statistics). Read from the World
+  // Bank's World Development Indicators (CC BY 4.0), one source per country
+  // (sources.ts, "worldbank-wdi-*"). Codes and definitions checked against the
+  // Indicators API on 2026-11-08.
+  {
+    key: "economy.government.consumption",
+    label: {
+      en: "Government consumption (share of GDP)",
+      de: "Staatskonsum (Anteil am BIP)",
+      fr: "Consommation des administrations publiques (part du PIB)",
+      it: "Consumi della pubblica amministrazione (quota del PIL)",
+      ru: "Государственное потребление (доля ВВП)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+    statistic: {
+      definition: {
+        en: "General government final consumption expenditure, as a share of GDP: what all levels of government spend on goods and services, including the pay of their employees.",
+        de: "Konsumausgaben des Staates als Anteil am BIP: was alle Staatsebenen für Güter und Dienstleistungen ausgeben, einschliesslich der Löhne ihres Personals.",
+        fr: "Dépenses de consommation finale des administrations publiques, en part du PIB : ce que tous les niveaux de l'État dépensent en biens et services, salaires de leur personnel compris.",
+        it: "Spesa per consumi finali delle amministrazioni pubbliche, in quota del PIL: quanto spendono tutti i livelli dello Stato in beni e servizi, compresi i salari del personale.",
+        ru: "Расходы органов государственного управления на конечное потребление в доле ВВП: траты всех уровней власти на товары и услуги, включая оплату труда их сотрудников.",
+      },
+      series: {
+        publisher: "World Bank, World Development Indicators",
+        code: "NE.CON.GOVT.ZS",
+        url: "https://data.worldbank.org/indicator/NE.CON.GOVT.ZS",
+      },
+    },
+  },
+  {
+    key: "economy.government.expense",
+    label: {
+      en: "Government expense (share of GDP)",
+      de: "Staatsausgaben (Anteil am BIP)",
+      fr: "Charges des administrations publiques (part du PIB)",
+      it: "Spese della pubblica amministrazione (quota del PIL)",
+      ru: "Государственные расходы (доля ВВП)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+    statistic: {
+      definition: {
+        en: "Expense of the government as a share of GDP: cash payments for its operating activities in providing goods and services, as the IMF's Government Finance Statistics count them.",
+        de: "Aufwand des Staates als Anteil am BIP: Zahlungen für seine laufende Tätigkeit bei der Bereitstellung von Gütern und Dienstleistungen, wie sie die Government Finance Statistics des IWF zählen.",
+        fr: "Charges de l'État en part du PIB : paiements pour ses activités courantes de fourniture de biens et de services, tels que les comptent les Government Finance Statistics du FMI.",
+        it: "Spese dello Stato in quota del PIL: pagamenti per la sua attività corrente di fornitura di beni e servizi, come li contano le Government Finance Statistics del FMI.",
+        ru: "Расходы государства в доле ВВП: платежи на текущую деятельность по предоставлению товаров и услуг, как их учитывает статистика государственных финансов МВФ.",
+      },
+      series: {
+        publisher: "World Bank, World Development Indicators",
+        code: "GC.XPN.TOTL.GD.ZS",
+        url: "https://data.worldbank.org/indicator/GC.XPN.TOTL.GD.ZS",
+      },
+    },
+  },
+  {
+    key: "tax.revenue.total",
+    label: {
+      en: "Tax revenue (share of GDP)",
+      de: "Steuereinnahmen (Anteil am BIP)",
+      fr: "Recettes fiscales (part du PIB)",
+      it: "Entrate fiscali (quota del PIL)",
+      ru: "Налоговые поступления (доля ВВП)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+    statistic: {
+      definition: {
+        en: "Tax revenue of the central government as a share of GDP: compulsory transfers for public purposes, as the IMF's Government Finance Statistics count them. Social contributions are not included.",
+        de: "Steuereinnahmen des Zentralstaats als Anteil am BIP: obligatorische Abgaben für öffentliche Zwecke, wie sie die Government Finance Statistics des IWF zählen. Sozialbeiträge sind nicht enthalten.",
+        fr: "Recettes fiscales de l'administration centrale en part du PIB : transferts obligatoires à des fins publiques, tels que les comptent les Government Finance Statistics du FMI. Les cotisations sociales n'y sont pas comprises.",
+        it: "Entrate fiscali dell'amministrazione centrale in quota del PIL: trasferimenti obbligatori per fini pubblici, come li contano le Government Finance Statistics del FMI. I contributi sociali non sono compresi.",
+        ru: "Налоговые поступления центрального правительства в доле ВВП: обязательные платежи на общественные цели, как их учитывает статистика государственных финансов МВФ. Социальные взносы не включены.",
+      },
+      series: {
+        publisher: "World Bank, World Development Indicators",
+        code: "GC.TAX.TOTL.GD.ZS",
+        url: "https://data.worldbank.org/indicator/GC.TAX.TOTL.GD.ZS",
+      },
+    },
+  },
+  {
+    key: "crime.homicide.rate",
+    label: {
+      en: "Intentional homicides (per 100,000 people)",
+      de: "Vorsätzliche Tötungsdelikte (pro 100 000 Einwohner)",
+      fr: "Homicides volontaires (pour 100 000 habitants)",
+      it: "Omicidi volontari (ogni 100 000 abitanti)",
+      ru: "Умышленные убийства (на 100 000 человек)",
+    },
+    valueType: "number",
+    unit: "per_100k",
+    plausible: { min: 0, max: 200 },
+    statistic: {
+      definition: {
+        en: "Unlawful deaths inflicted on a person with the intent to cause death or serious injury, per 100,000 people, as the UN Office on Drugs and Crime collects them from national police and health records.",
+        de: "Widerrechtliche Tötungen mit dem Vorsatz, den Tod oder eine schwere Verletzung herbeizuführen, pro 100 000 Einwohner, wie sie das UNO-Büro für Drogen- und Verbrechensbekämpfung aus nationalen Polizei- und Gesundheitsdaten erhebt.",
+        fr: "Décès illicites infligés avec l'intention de causer la mort ou des blessures graves, pour 100 000 habitants, tels que l'Office des Nations unies contre la drogue et le crime les recueille auprès des polices et des services de santé nationaux.",
+        it: "Morti illecite inflitte con l'intento di causare la morte o lesioni gravi, ogni 100 000 abitanti, come l'Ufficio delle Nazioni Unite contro la droga e il crimine le raccoglie dai dati nazionali di polizia e sanità.",
+        ru: "Незаконное причинение смерти с намерением убить или причинить тяжкий вред, на 100 000 человек, по данным, которые Управление ООН по наркотикам и преступности собирает у национальной полиции и органов здравоохранения.",
+      },
+      series: {
+        publisher: "World Bank, World Development Indicators (from UNODC)",
+        code: "VC.IHR.PSRC.P5",
+        url: "https://data.worldbank.org/indicator/VC.IHR.PSRC.P5",
+      },
+    },
+  },
+  {
+    key: "tax.income.top_rate",
+    label: {
+      en: "Top statutory income tax rate",
+      de: "Höchster gesetzlicher Einkommenssteuersatz",
+      fr: "Taux légal maximal de l'impôt sur le revenu",
+      it: "Aliquota legale massima dell'imposta sul reddito",
+      ru: "Максимальная установленная ставка подоходного налога",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: 0, max: 1 },
+    statistic: {
+      definition: {
+        en: "The highest statutory rate of personal income tax on earnings, sub-central taxes included, as the OECD Tax Database computes it. Its notes say how each country's sub-central rate is chosen where places differ.",
+        de: "Der höchste gesetzliche Satz der Einkommenssteuer natürlicher Personen auf Erwerbseinkommen, einschliesslich der Steuern unterer Ebenen, wie ihn die Steuerdatenbank der OECD berechnet. Ihre Anmerkungen sagen, welcher Satz einer unteren Ebene gewählt wird, wo sich Orte unterscheiden.",
+        fr: "Le taux légal le plus élevé de l'impôt sur le revenu des personnes physiques sur les revenus du travail, impôts infranationaux compris, tel que le calcule la base de données fiscales de l'OCDE. Ses notes indiquent quel taux infranational est retenu là où les lieux diffèrent.",
+        it: "L'aliquota legale più alta dell'imposta sul reddito delle persone fisiche sui redditi da lavoro, imposte subnazionali comprese, come la calcola la banca dati fiscale dell'OCSE. Le sue note dicono quale aliquota subnazionale è scelta dove i luoghi differiscono.",
+        ru: "Наивысшая установленная законом ставка подоходного налога с физических лиц на трудовые доходы, включая налоги нижестоящих уровней, как её рассчитывает налоговая база данных ОЭСР. В её примечаниях сказано, какая ставка нижестоящего уровня выбрана там, где места различаются.",
+      },
+      series: {
+        publisher: "OECD Tax Database",
+        code: "OECD.CTP.TPS,DSD_TAX_PIT@DF_PIT_TOP_EARN_THRESH,1.0",
+        measure: "TS_PIT",
+        url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_TAX_PIT%40DF_PIT_TOP_EARN_THRESH&df[ag]=OECD.CTP.TPS",
+      },
+    },
+  },
 ];
