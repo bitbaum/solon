@@ -139,6 +139,37 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "261" },
     within: "zh",
   },
+  // Communes whose collection is the i-web CMS's legal module (src/lib/law/publishers/iweb.ts).
+  {
+    key: "bfs1061",
+    name: "Luzern (city)",
+    place: { scheme: "bfs_municipality", value: "1061" },
+    within: "lu",
+  },
+  {
+    key: "bfs942",
+    name: "Thun",
+    place: { scheme: "bfs_municipality", value: "942" },
+    within: "be",
+  },
+  {
+    key: "bfs3901",
+    name: "Chur",
+    place: { scheme: "bfs_municipality", value: "3901" },
+    within: "gr",
+  },
+  {
+    key: "bfs2939",
+    name: "Schaffhausen (city)",
+    place: { scheme: "bfs_municipality", value: "2939" },
+    within: "sh",
+  },
+  {
+    key: "bfs6266",
+    name: "Sion",
+    place: { scheme: "bfs_municipality", value: "6266" },
+    within: "vs",
+  },
   // Communes whose law sits in a LexWork collection (see LEXWORK): `bfs<number>`, the commune's number in the
   // Federal Statistical Office's directory.
   {

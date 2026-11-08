@@ -420,6 +420,30 @@ never stops the ones after it. A version the publisher holds with no text at all
 (a blank page, as in four acts of Cham and Hünenberg) is reported as empty at the
 publisher and left without text: not a failure of the run, and nothing invented.
 
+### i-web as built (2026-11-08): communes whose site runs the i-web CMS
+
+Many Swiss communes run their site on the i-web CMS (Innovative Web AG), whose
+legal module serves the collection under a page name of the commune's choosing
+("Rechtssammlung", "Reglemente und Verordnungen", "Règlements"). One adapter
+reads them all (`publishers/iweb.ts`); a commune is config: the page that holds
+the collection, and which of its links (chapters, subject pages) hold more.
+
+- The list is a table whose rows are JSON in its `data-entities` attribute: an
+  act's link and its number (`_nummer`), which names the act across versions.
+- An act's page is a `<dl>`: the day it took effect ("Inkrafttreten",
+  "Entrée en vigueur"), when it stopped ("Gültig bis"), and its earlier version
+  ("Vorgängerversion"), which is followed back for `--history`. Versions are dated
+  by the publisher; a page that states no day is dated by the day it was read.
+- The document is the first `/_doc/` or `/_docn/` link in one of the page's
+  tables. An earlier version's file may answer first with a notice that it is no
+  longer in force; its `/_rtr/dokument_<id>` link serves the file.
+- The shape was read from two public readers of i-web sites (OneGov Cloud's
+  importer of Horw's Gesetzessammlung, and vigie-vaud's captures of i-web
+  council pages), because none of the cities could be opened from the sandbox the
+  reader was written in. First instances: Luzern, Thun, Chur, Schaffhausen and
+  Sion (`luzern-city`, `thun`, `chur`, `schaffhausen-city`, `sion`); their
+  first live read is their first load on Solon's server, a dry run first.
+
 ### Federal acts the register lacks, and numbers two acts share (2026-11-01)
 
 The register of federal acts comes from LexFind; Fedlex is the authority on what is

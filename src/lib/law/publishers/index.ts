@@ -19,6 +19,7 @@ import {
   triesenberg,
   vaduz,
 } from "./linked-documents";
+import { chur, luzernCity, schaffhausenCity, sion, thun } from "./iweb";
 import { zurichCity } from "./zurich-city";
 
 /** Every municipal collection a reader exists for. A new commune is a new adapter here and a line in LAW_AUTHORITIES. */
@@ -42,4 +43,10 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [bellinzonaCity.key]: bellinzonaCity,
   [geneveCity.key]: geneveCity,
   [lausanneCity.key]: lausanneCity,
+
+  [luzernCity.key]: luzernCity,
+  [thun.key]: thun,
+  [chur.key]: chur,
+  [schaffhausenCity.key]: schaffhausenCity,
+  [sion.key]: sion,
 };
