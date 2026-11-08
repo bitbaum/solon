@@ -30,7 +30,7 @@ export function GET() {
     "",
     "## Which law applies where",
     "",
-    "Federal law applies in every canton and commune of Switzerland. A canton's law applies in its communes. A commune's law applies only there. Each place page and each act's front matter lists the places above it.",
+    "Federal law applies in every canton and commune of Switzerland. A canton's law applies in its communes. A commune's law applies only there. The European Union's law applies in each of its member states, above the state's own (Estonia and Luxembourg among those Solon holds). Each place page and each act's front matter lists the places above it.",
     "",
     "## Places",
     "",

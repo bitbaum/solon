@@ -118,7 +118,13 @@ async function planOnce(turns: readonly Turn[], ask: Completer, prompt: string):
   }
   const named = authoritiesNamed(last);
   const fromModel = strings(planned?.authorities).filter((key) => KEYS.has(key) && key !== "ch");
-  const places = [...new Set([...fromModel, ...named])];
+  const local = [...new Set([...fromModel, ...named])];
+  // A union's law applies in each member: a question about Luxembourg is asked of EU law too.
+  const unions = local.flatMap((key) => {
+    const country = countryOf(key);
+    return LAW_AUTHORITIES.filter((a) => country && a.members?.includes(country)).map((a) => a.key);
+  });
+  const places = [...new Set([...local, ...unions])];
   // Swiss federal law applies in Switzerland: asked whenever a Swiss place is, or no place is named.
   const swiss = places.length === 0 || places.some((key) => countryOf(key) === "CH");
   const authorities = swiss ? ["ch", ...places] : places;

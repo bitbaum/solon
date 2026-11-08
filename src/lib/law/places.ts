@@ -1,7 +1,7 @@
 /**
- * Where a law applies, as a tree: a country, its cantons, their communes
- * (design: docs/design/2026-11-law-navigation.md). The tree is derived from
- * `LAW_AUTHORITIES` (`place` and `within`), never typed here, so a new country,
+ * Where a law applies, as a tree: a union of countries, a country, its cantons,
+ * their communes (design: docs/design/2026-11-law-navigation.md). The tree is
+ * derived from `LAW_AUTHORITIES` (`place`, `within` and `members`), never typed here, so a new country,
  * a territory nobody recognises or an organisation's bylaws is a row of
  * configuration and the pages, the sitemap and the tools follow.
  */
@@ -10,7 +10,7 @@ import { LAW_AUTHORITIES, countryOf, type LawAuthority } from "@/lib/config/law"
 import type { Database } from "@/lib/db/client";
 import type { ActSearchHit, AuthorityCoverage } from "./register/coverage";
 
-export type PlaceLevel = "country" | "region" | "commune" | "shared";
+export type PlaceLevel = "union" | "country" | "region" | "commune" | "shared";
 
 export const authorityOf = (key: string): LawAuthority | undefined =>
   LAW_AUTHORITIES.find((a) => a.key === key);
@@ -19,20 +19,29 @@ export const authorityOf = (key: string): LawAuthority | undefined =>
 const countryAuthority = (country: string): LawAuthority | undefined =>
   LAW_AUTHORITIES.find((a) => a.place?.scheme === "iso_3166_1" && a.place.value === country);
 
+/** The union of countries a country belongs to, whose law applies there above its own: the European Union above Estonia. */
+export const unionOf = (country: string): LawAuthority | undefined =>
+  LAW_AUTHORITIES.find((a) => a.members?.includes(country));
+
 /** What kind of place an authority speaks for. */
 export function levelOf(authority: LawAuthority): PlaceLevel {
+  if (authority.members) return "union";
   if (authority.within) return "commune";
   if (authority.place?.scheme === "iso_3166_1") return "country";
   return authority.place === null ? "shared" : "region";
 }
 
-/** The authority above this one: a commune's canton or country, a canton's country. */
+/**
+ * The authority above this one: a commune's canton or country, a canton's country, a
+ * country's union (the European Union above Luxembourg). A union, and a country in none, is a root.
+ */
 export function parentOf(key: string): LawAuthority | null {
   const authority = authorityOf(key);
   if (!authority) return null;
   if (authority.within) return authorityOf(authority.within) ?? null;
   const level = levelOf(authority);
-  if (level === "country") return null;
+  if (level === "union") return null;
+  if (level === "country") return unionOf(authority.place!.value) ?? null;
   const country = countryOf(key);
   return (country && countryAuthority(country)) || null;
 }
