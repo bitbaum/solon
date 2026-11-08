@@ -42,15 +42,13 @@ async function heldWhole(importerVersion: string) {
     })
     .returning({ id: sources.id });
   const actId = randomUUID();
-  await db
-    .insert(legalActs)
-    .values({
-      id: actId,
-      authority: EURLEX.authority,
-      kind: "regulation",
-      inForce: true,
-      sourceId: source!.id,
-    });
+  await db.insert(legalActs).values({
+    id: actId,
+    authority: EURLEX.authority,
+    kind: "regulation",
+    inForce: true,
+    sourceId: source!.id,
+  });
   const [version] = await db
     .insert(legalActVersions)
     .values({
