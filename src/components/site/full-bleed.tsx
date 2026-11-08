@@ -9,6 +9,12 @@ import type { Photo } from "@/lib/content/photos";
  * The text sits bottom-left, where the scrim is darkest, so it stays readable
  * whatever the photograph does. `under` slides the section beneath the header
  * — only the first section of a page should set it.
+ *
+ * The section wears the dark theme in both themes, on purpose: its type and
+ * its frame button sit on a photograph under a black scrim, where only light
+ * type reads. `dark` here switches the shared tokens for this subtree alone.
+ * A page that passes `under` is listed in HEADER_OVER_PHOTO_ROUTES, so the
+ * header above it is dark too.
  */
 export default function FullBleed({
   photo,
@@ -30,7 +36,7 @@ export default function FullBleed({
   const alt = useTranslations("Photos");
   return (
     <section
-      className={`relative flex min-h-svh items-end overflow-hidden bg-surface-public ${under ? "-mt-nav" : ""}`}
+      className={`dark relative flex min-h-svh items-end overflow-hidden bg-surface-public ${under ? "-mt-nav" : ""}`}
     >
       <Image
         src={photo.image}

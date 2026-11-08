@@ -47,7 +47,8 @@ export default function AudienceTile({
       </div>
     </>
   );
-  const box = "group relative flex min-h-[26rem] items-end overflow-hidden bg-surface-public";
+  // `dark` in both themes: the type sits on a photograph under a black scrim.
+  const box = "dark group relative flex min-h-[26rem] items-end overflow-hidden bg-surface-public";
   return href ? (
     <Link href={href} className={box}>
       {inner}

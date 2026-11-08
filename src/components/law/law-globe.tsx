@@ -202,7 +202,7 @@ export default function LawGlobe({ places: given }: LawGlobeProps) {
     const el = canvas.current;
     const container = box.current;
     if (!features || !el || !container || !el.getContext("2d")) return;
-    const colours = readColours();
+    let colours = readColours();
     scale.current = colours.scale;
     const controller = createMap(el, {
       shapes: shapesFromFeatures(features),
@@ -260,7 +260,14 @@ export default function LawGlobe({ places: given }: LawGlobeProps) {
     resize.observe(container);
     controller.resize(container.clientWidth, container.clientHeight);
     map.current = controller;
+    // The theme lives in <html>'s class: read the tokens again when it changes.
+    const theme = new MutationObserver(() => {
+      colours = readColours();
+      controller.setPalette(colours.palette);
+    });
+    theme.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => {
+      theme.disconnect();
       resize.disconnect();
       controller.destroy();
       map.current = null;

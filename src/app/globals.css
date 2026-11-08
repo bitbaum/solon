@@ -20,6 +20,18 @@ body {
   height: 100%;
 }
 
+/*
+ * Form controls, scrollbars and the canvas default follow the theme in force.
+ * The head script sets `color-scheme` on <html> as well; this covers a
+ * section that wears `.dark` inside a light page (a photograph, a terminal).
+ */
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
 @layer components {
   /*
    * Headlines are the sans, heavy and tight — the voice OrangeCat and Loki
@@ -118,12 +130,14 @@ body {
    * bip-kit (the fleet's building-in-public renderer), whose stylesheet is
    * neutral and reads every colour, face and measure from a `--bp-*` variable.
    * Those are pointed at the shared tokens here, so the pages wear Solon's
-   * clothes without a second palette. `html.dark` outranks the package's own
-   * dark-mode block, and the box sits on the page edge like every other inner
-   * page. `.bp-theme` wraps the pages that render bip-kit inside `PageLayout`.
+   * clothes without a second palette. Set on the element, these outrank the
+   * package's own light and dark blocks (which sit on :root) in either theme,
+   * and since they name tokens they follow the theme by themselves. The box
+   * sits on the page edge like every other inner page. `.bp-theme` wraps the
+   * pages that render bip-kit inside `PageLayout`.
    */
-  html.dark .bp-development,
-  html.dark .bp-theme {
+  .bp-development,
+  .bp-theme {
     --bp-font-sans: var(--font-sans);
     --bp-font-mono: var(--font-mono);
     --bp-radius: var(--radius-surface);
@@ -150,6 +164,21 @@ body {
   }
   .bp-development-check {
     color: hsl(var(--status-positive));
+  }
+
+  /*
+   * A band: a section set off from the page around it. In the dark theme it
+   * is the near-black public surface it always was; in the light theme the
+   * same step the other way, white on the off-white page. Not
+   * `bg-surface-public` alone: that surface is near-black in both themes, and
+   * the band's text follows the theme.
+   */
+  .band {
+    background-color: hsl(var(--surface-base));
+  }
+  .dark .band,
+  .band.dark {
+    background-color: hsl(var(--surface-public));
   }
 
   /* The header, once the page has scrolled past the first screen. */
@@ -186,7 +215,7 @@ body {
   }
 }
 
-/* Shared chat behavior; Solon keeps the fleet's dark governance palette. */
+/* Shared chat behavior; chatkit's --ck-* read the tokens, so it follows the theme. */
 .solon-chat {
   min-width: 0;
   overflow: hidden;

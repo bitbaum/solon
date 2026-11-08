@@ -106,18 +106,12 @@ export default async function EcosystemPage() {
               key={pillar.key}
               className={`rounded-control border p-6 flex flex-col gap-3 ${
                 pillar.key === "solon"
-                  ? "bg-surface-raised border-default text-white"
+                  ? "bg-surface-raised border-default text-fg-primary"
                   : "bg-surface-base border-default"
               }`}
             >
               <div className="flex items-baseline justify-between gap-2">
-                <h2
-                  className={`text-xl font-bold ${
-                    pillar.key === "solon" ? "text-white" : "text-fg-primary"
-                  }`}
-                >
-                  {pillar.name}
-                </h2>
+                <h2 className="text-xl font-bold text-fg-primary">{pillar.name}</h2>
                 <span
                   className={`text-xs font-semibold uppercase tracking-wide ${
                     pillar.key === "solon" ? "text-accent" : "text-fg-secondary"

@@ -27,7 +27,8 @@ export default async function IntegrationPage() {
             the canonical vote message with the wallet that holds your registered member address,
             then POST the signature:
           </p>
-          <div className="bg-surface-public text-green-400 p-4 rounded-surface font-mono text-sm overflow-x-auto">
+          {/* A terminal: dark in both themes, like the shell it stands for. */}
+          <div className="dark bg-surface-public text-status-positive p-4 rounded-surface font-mono text-sm overflow-x-auto">
             <div className="text-fg-secondary"># Message to sign (exact text):</div>
             <div className="text-fg-primary">Solon vote</div>
             <div className="text-fg-primary">session:&lt;sessionId&gt;</div>
