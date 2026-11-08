@@ -52,7 +52,8 @@ describe("a proposal the person is drafting", () => {
   it("tells the planner to search its own place and every other place for precedents", () => {
     const context = proposalContext(PROPOSAL, ACT);
     expect(context).toContain("Liechtenstein (li)");
-    expect(context).toContain("every other place");
+    expect(context).toContain("neighbouring cantons and countries");
+    expect(context).toContain("Up to eight places, nearest first");
     expect(context).toContain("THE PROPOSAL");
   });
 
@@ -110,11 +111,13 @@ describe("the answer to a proposal", () => {
   it("takes no side and invents nothing", () => {
     expect(system).toMatch(/Take no side/);
     expect(system).toMatch(/Never invent a study, a figure, a place or a law/);
+    // An effect with no source is labelled as reasoning, never as something observed elsewhere.
+    expect(system).toMatch(/Never write that something "has shown"/);
   });
 
   it("carries the proposal and the conversation, in the person's language", () => {
     expect(system).toContain("THE PROPOSAL");
-    expect(system).toContain("Write in English.");
+    expect(system).toContain("Write in English, the quick replies included.");
     expect(messages.at(-1)).toEqual({ role: "user", content: "What would this do?" });
   });
 });

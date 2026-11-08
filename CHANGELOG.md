@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
+  from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
+  the Land Board's own file, read again each month, so opening either country on the
+  atlas now draws its places. {#globe-deep}
+
 - **The United States in Places.** The nation, its fifty states and the District of
   Columbia, and Wyoming's 23 counties, by their FIPS codes from the Census Bureau;
   opening the United States on the atlas draws Wyoming's counties from the Bureau's
@@ -53,7 +58,23 @@ one to read for the detail. Fixes get the same weight as features.
   them, stay dark so the words on them can be read. The law globe and the Places map
   redraw in the theme you pick. {#theme-light}
 
+- **A reader for New Hampshire's statutes.** Solon can now read the Revised Statutes
+  Annotated from the General Court's site: every chapter as an act ("RSA 39"), each
+  section with its heading, its text and its source note, repealed sections kept as
+  the site marks them. Where the site's firewall answers "Web Page Blocked", as it did
+  to Solon, the chapter comes from the Internet Archive's dated copy and the act page
+  says so. A firewall's block page is now recognised as a refusal for every publisher,
+  not taken for the law. The first load runs on Solon's server and has not run yet,
+  so New Hampshire's law is not on the site today; the roadmap item stays open until
+  it is.
+
 ### Fixed
+
+- **The assistant's answers about a proposed change keep closer to the evidence.** It now
+  looks for precedents nearest first (the same country's other levels, neighbouring
+  cantons and countries) instead of anywhere at all, labels an effect it reasons out as
+  reasoning rather than as something observed elsewhere, and suggests follow-up
+  questions in the language of the answer.
 
 - **Documents read from the archive arrive whole.** A site that refuses Solon's reader
   for every document sends dozens of requests to the Internet Archive at once; the

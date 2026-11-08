@@ -23,10 +23,15 @@ export interface Read {
 /** Statuses that mean "not to you", not "not here": the page exists and a copy may stand in. */
 const REFUSAL_STATUSES = new Set([403, 429, 503]);
 
-/** A page that is a challenge for robots, not the publisher's content. */
+/**
+ * A page that is a challenge for robots, or a firewall's refusal served in the
+ * page's place ("Web Page Blocked", as New Hampshire's General Court answers),
+ * not the publisher's content.
+ */
 const CHALLENGE_TITLE =
-  /bot verification|just a moment|attention required|are you a (?:robot|human)|captcha|ddos-guard|security check|access denied/i;
-const CHALLENGE_MARK = /lsrecaptcha|cf_chl_|challenge-platform|cf-challenge/i;
+  /bot verification|just a moment|attention required|are you a (?:robot|human)|captcha|ddos-guard|security check|access denied|web page blocked|web filter violation|request rejected/i;
+const CHALLENGE_MARK =
+  /lsrecaptcha|cf_chl_|challenge-platform|cf-challenge|>\s*web page blocked!?\s*</i;
 
 /** The page's words when it is a bot check ("Bot Verification"), else null. Only HTML can be one. */
 export function botCheckOf(bytes: Uint8Array, contentType: string | null): string | null {

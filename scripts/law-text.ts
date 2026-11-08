@@ -7,6 +7,7 @@
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
+ *   pnpm run law:text gcnh [--limit 1000] [--again] [--title III] [--chapter 39] [--dry-run]   (New Hampshire: each chapter of the RSA, about 11 seconds apart)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
@@ -19,6 +20,7 @@
 import { recutCantonalText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
+import { importGcnh } from "@/lib/law/text/import-gcnh";
 import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
@@ -157,6 +159,25 @@ async function main(): Promise<number> {
       onProgress: (message) => console.error(message),
     });
     console.log(JSON.stringify({ ...report, failureCount: report.failures.length }, null, 2));
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "gcnh") {
+    const report = await importGcnh(db, {
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      again: args.includes("--again"),
+      titles: flag("title") ? [flag("title")!] : undefined,
+      chapters: flag("chapter") ? [flag("chapter")!] : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 30), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
     return report.failures.length > 0 ? 1 : 0;
   }
   if (sourceKey === "recut") {

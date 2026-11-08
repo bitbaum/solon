@@ -158,6 +158,13 @@ describe("a bot check", () => {
       null,
     );
     expect(botCheckOf(bytes("%PDF-1.7 Bot Verification"), "application/pdf")).toBe(null);
+    // A firewall's refusal in the page's place, as New Hampshire's General Court answers.
+    expect(
+      botCheckOf(bytes("<html><title>Web Page Blocked</title><body>Blocked</body></html>"), null),
+    ).toBe("Web Page Blocked");
+    expect(
+      botCheckOf(bytes("<html><title>Notice</title><h1>Web Page Blocked!</h1></html>"), null),
+    ).toBe("Notice");
   });
 });
 
