@@ -195,3 +195,26 @@ describe("an EU act's text from EUR-Lex", () => {
     ).toBe(false);
   });
 });
+
+describe("an act published before EUR-Lex marked anything", () => {
+  // The layout of acts before 2004: plain paragraphs, each article number alone in one.
+  const html = `<html><body><div id="TexteOnly"><p>COMMISSION REGULATION (EC) No 903/95</p>
+<p>THE COMMISSION OF THE EUROPEAN COMMUNITIES,</p><p>Having regard to the Treaty,</p><p>HAS ADOPTED THIS REGULATION:</p>
+<p>Article 1</p><p>The amounts are fixed in the Annex.</p>
+<p>Article 2</p><p>This Regulation shall enter into force on the day of its publication.</p><p>It refers to Article 1 of Regulation (EEC) No 1766/92.</p>
+<p>ANNEX</p><p>Amounts in ECU per tonne.</p></div></body></html>`;
+
+  it("is cut on its article numbers, with the preamble before them and the annex after", () => {
+    expect(parseEurLexHtml(html).map((p) => [p.path, p.heading])).toEqual([
+      ["pbl_1", "Preamble"],
+      ["art_1", "Article 1"],
+      ["art_2", "Article 2"],
+      ["anx_1", "ANNEX"],
+    ]);
+  });
+
+  it("keeps a sentence that only mentions an article inside the article it belongs to", () => {
+    const art2 = parseEurLexHtml(html).find((p) => p.path === "art_2")!;
+    expect(art2.text).toContain("It refers to Article 1 of Regulation (EEC) No 1766/92.");
+  });
+});

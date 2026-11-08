@@ -377,6 +377,34 @@ function byHeadings(html: string): Provision[] {
   });
 }
 
+/** A paragraph that is a heading on its own: "Article 3", "Article 12a", "ANNEX", "ANNEX II". */
+const PLAIN_HEADING = /^(?:Article\s+[0-9]+[a-z]*|ANNEX(?:\s+[0-9A-Z]+)?)$/i;
+
+/**
+ * An act published before EUR-Lex marked anything: plain paragraphs, the
+ * article numbers each in a paragraph of its own (most acts before 2004). Cut
+ * on those, under the anchors newer acts carry; what comes before the first
+ * article is the preamble.
+ */
+function byPlainParagraphs(html: string): Provision[] {
+  const marks = [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].flatMap((m) => {
+    const heading = eurlexText(m[1]!).replace(/\s+/g, " ").trim();
+    if (!PLAIN_HEADING.test(heading)) return [];
+    const path = anchorOf(heading);
+    return path ? [{ path, heading, at: m.index!, after: m.index! + m[0].length }] : [];
+  });
+  if (!marks.some((m) => m.path.startsWith("art_"))) return [];
+  const preamble = eurlexText(html.slice(0, marks[0]!.at));
+  return [
+    ...(preamble ? [{ path: "pbl_1", heading: "Preamble", text: preamble }] : []),
+    ...marks.map((mark, i) => ({
+      path: mark.path,
+      heading: mark.heading,
+      text: eurlexText(html.slice(mark.after, marks[i + 1]?.at ?? html.length)),
+    })),
+  ];
+}
+
 /**
  * Every path once: a consolidated text can carry an article twice (one
  * replaced and its replacement, both marked). The second is `art_5-2`.
@@ -402,6 +430,8 @@ export function parseEurLexHtml(html: string): Provision[] {
   if (found.some((p) => p.path.startsWith("art_"))) return unique(found);
   const older = byHeadings(body);
   if (older.length > 0) return unique(older);
+  const plain = byPlainParagraphs(body);
+  if (plain.length > 0) return unique(plain);
   const text = eurlexText(body);
   return text ? [{ path: WHOLE_ACT, heading: "", text }] : [];
 }
