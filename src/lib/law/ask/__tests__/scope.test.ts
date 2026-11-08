@@ -65,6 +65,13 @@ describe("a commune named in a question", () => {
     expect(authoritiesNamed("Parkieren in Winterthur").sort()).toEqual(["bfs230", "zh"]);
     expect(authoritiesNamed("Hundeverordnung St. Gallen").sort()).toEqual(["bfs3203", "sg"]);
   });
+
+  it("names a city by its name in another language, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Le règlement de police de Coire").sort()).toEqual(["bfs3901", "gr"]);
+    expect(authoritiesNamed("Was gilt in Sitten?").sort()).toEqual(["bfs6266", "vs"]);
+    expect(authoritiesNamed("Parkieren in Luzern").sort()).toEqual(["bfs1061", "lu"]);
+  });
 });
 
 describe("Swiss federal law in a plan", () => {
