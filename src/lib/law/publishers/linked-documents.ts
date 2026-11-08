@@ -283,13 +283,21 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       if (!config.file) return { url: version.pageUrl, format: "pdf" };
       // The act's link is a page: its file is the first matching link on it.
       const page = await read(version.pageUrl, doFetch, [host]);
-      const links = anchorsOf(new TextDecoder().decode(page.bytes), version.pageUrl);
+      const html = new TextDecoder().decode(page.bytes);
+      const links = anchorsOf(html, version.pageUrl);
       const file = links.find(
         (a) => config.file!.test(a.href) && new URL(a.href).hostname === host,
       );
       if (!file) {
+        // What the page was, so a page that is a shell, a refusal or the act itself is told from one with no file.
+        const title = /<title[^>]*>([^<]*)/i.exec(html)?.[1]?.trim().slice(0, 80) ?? "";
+        const text = html
+          .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
         throw new Error(
-          `no document on ${version.pageUrl}; its links: ${links
+          `no document on ${version.pageUrl}; page: ${page.bytes.length} bytes, title "${title}", ${links.length} links, text "${text.slice(0, 160)}"; same-host links: ${links
             .map((a) => a.href)
             .filter((h) => new URL(h).hostname === host)
             .slice(0, 15)
