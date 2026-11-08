@@ -12,6 +12,7 @@ import {
   type ThinkingStep,
 } from "@bitbaum/chatkit/react";
 import type { LawChatEvent } from "@/lib/chat/events";
+import type { Proposal } from "@/lib/law/ask/consult";
 import type { AskScope } from "@/lib/law/ask/scope";
 
 type Citations = NonNullable<ChatMessageData["citations"]>;
@@ -31,7 +32,12 @@ const hostOf = (url: string) => {
   }
 };
 
-export function lawTransport(scope: AskScope | undefined, words: LawTransportWords): ChatTransport {
+export function lawTransport(
+  scope: AskScope | undefined,
+  words: LawTransportWords,
+  /** While drafting a change: the draft as it stands when the turn is sent. */
+  proposal?: () => Proposal | null,
+): ChatTransport {
   return async (turn) => {
     const messages = [
       ...turn.history
@@ -42,7 +48,7 @@ export function lawTransport(scope: AskScope | undefined, words: LawTransportWor
     const response = await fetch("/api/law/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, scope }),
+      body: JSON.stringify({ messages, scope, proposal: proposal?.() ?? undefined }),
       signal: turn.signal,
     });
     if (!response.ok) {

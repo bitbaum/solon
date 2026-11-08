@@ -7,11 +7,19 @@ import type { LawChatEvent } from "@/lib/chat/events";
 import { allowAssistantRequest } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { answerMessages, sourcesOf } from "@/lib/law/ask/answer";
+import {
+  CONSULT_RESEARCH,
+  consultMessages,
+  proposalContext,
+  proposalSchema,
+  type ProposalAct,
+} from "@/lib/law/ask/consult";
 import { planResearch, type Completer } from "@/lib/law/ask/plan";
 import { refine } from "@/lib/law/ask/refine";
 import { research, type ToolCaller } from "@/lib/law/ask/research";
 import { retrieve } from "@/lib/law/ask/retrieve";
 import { applyScope, scopeContext } from "@/lib/law/ask/scope";
+import { loadActView } from "@/lib/law/view";
 
 export const maxDuration = 120;
 
@@ -28,6 +36,8 @@ const Body = z.object({
       topic: z.enum(["tax"]).optional(),
     })
     .optional(),
+  /** Asked while drafting a change: think it through (consult.ts). */
+  proposal: proposalSchema.optional(),
 });
 
 /** Public: the law is public. Bounded by origin, size and a per-address rate. */
@@ -49,7 +59,19 @@ export async function POST(req: Request) {
       { error: "Please wait a few minutes before asking again." },
       { status: 429, headers: { "Retry-After": "600" } },
     );
-  const { messages: turns, scope } = parsed.data;
+  const { messages: turns, proposal } = parsed.data;
+  let { scope } = parsed.data;
+  // The act being changed, as the database knows it; its place is always searched.
+  let act: ProposalAct | null = null;
+  if (proposal) {
+    const view = await loadActView(db, { id: proposal.act, lang: "de", page: 1 });
+    if (!view) return Response.json({ error: "That act is not known." }, { status: 404 });
+    act = { title: view.title ?? view.systematicNumber ?? view.id, authority: view.authority };
+    scope = {
+      place: scope?.place ?? act.title.slice(0, 120),
+      authorities: [...new Set([...(scope?.authorities ?? []), act.authority])].slice(0, 8),
+    };
+  }
   return sseResponse<LawChatEvent>(
     async (emit, signal) => {
       emit({ type: "step", step: "plan" });
@@ -64,7 +86,8 @@ export async function POST(req: Request) {
           timeoutMs: 20000,
           signal,
         });
-      const plan = applyScope(await planResearch(turns, ask, askAgain, scopeContext(scope)), scope);
+      const context = proposal && act ? proposalContext(proposal, act) : scopeContext(scope);
+      const plan = applyScope(await planResearch(turns, ask, askAgain, context), scope);
       emit({ type: "plan", authorities: plan.authorities, acts: plan.acts, groups: plan.groups });
       emit({ type: "step", step: "search" });
       const found = await retrieve(db, plan);
@@ -82,6 +105,7 @@ export async function POST(req: Request) {
         call: callTools,
         env: process.env,
         onActivity: (label) => emit({ type: "activity", label }),
+        ...(proposal ? { purpose: CONSULT_RESEARCH } : {}),
       });
       emit({ type: "sources", sources: sourcesOf(hits, web) });
       emit({ type: "step", step: "write" });
@@ -89,7 +113,10 @@ export async function POST(req: Request) {
       for await (const delta of completeStream({
         chain,
         env: process.env,
-        messages: answerMessages(turns, plan, hits, web),
+        messages:
+          proposal && act
+            ? consultMessages(turns, plan, hits, web, proposal, act)
+            : answerMessages(turns, plan, hits, web),
         maxTokens: 2400,
         timeoutMs: 40000,
         signal,

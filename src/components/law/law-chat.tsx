@@ -6,6 +6,7 @@ import { localConversationStore } from "@bitbaum/chatkit";
 import { ChatApp } from "@bitbaum/chatkit/react";
 import { useChatLabels } from "@/components/chat/use-chat-labels";
 import { Link } from "@/i18n/navigation";
+import type { Proposal } from "@/lib/law/ask/consult";
 import type { AskScope } from "@/lib/law/ask/scope";
 import { lawTransport } from "./law-transport";
 
@@ -20,16 +21,22 @@ export function LawChat({
   scope,
   title,
   starters,
+  startersTitle,
   placeholder,
   storeKey = "solon-law",
+  proposal,
 }: {
   /** Asked from a place's page: its law is always searched, and "here" means it. */
   scope?: AskScope;
   title?: string;
   starters?: string[];
+  /** The line above the starters; "What does the law say?" by default. */
+  startersTitle?: string;
   placeholder?: string;
   /** Where this chat's conversations are kept on the device. */
   storeKey?: string;
+  /** While drafting a change: the draft, sent with each question so the answer weighs it. */
+  proposal?: Proposal | null;
 } = {}) {
   const t = useTranslations("Law.ask");
   const locale = useLocale();
@@ -39,6 +46,8 @@ export function LawChat({
   const place = scope?.place;
   const authorities = scope?.authorities.join(",");
   const topic = scope?.topic;
+  // The draft, as text: the transport is rebuilt when it changes, so each turn sends the latest.
+  const draft = proposal === undefined ? undefined : JSON.stringify(proposal);
   const transport = useMemo(
     () =>
       lawTransport(
@@ -50,8 +59,9 @@ export function LawChat({
           activity: (kind, detail) => t(`activity.${kind}`, { detail }),
           failed: t("failed"),
         },
+        draft === undefined ? undefined : () => JSON.parse(draft) as Proposal | null,
       ),
-    [place, authorities, topic, t],
+    [place, authorities, topic, t, draft],
   );
   const name = title ?? t("title");
   return (
@@ -66,7 +76,7 @@ export function LawChat({
         railQuery="not all"
         temporaryChats={false}
         starters={starters ?? [t("starters.one"), t("starters.two"), t("starters.three")]}
-        startersTitle={t("startersTitle")}
+        startersTitle={startersTitle ?? t("startersTitle")}
         placeholder={placeholder ?? t("placeholder")}
         composer={{
           voice: { transcribeUrl: "/api/transcribe" },

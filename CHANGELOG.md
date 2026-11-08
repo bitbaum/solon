@@ -15,6 +15,17 @@ one to read for the detail. Fixes get the same weight as features.
   sources under the map are gone: a place is found by tapping it or searching. A view
   can be shared: `/places?in=ch`. {#atlas}
 
+- **Think a change through before you file it.** Under the form for proposing a change
+  to a law, the assistant now reads your draft as it stands and answers what you ask
+  about it: what it would change, what would likely follow, who would gain and who
+  would bear a cost, and where something like it is already law, from the law Solon
+  holds and from studies and the experience of other places on the web. Every claim
+  cites its source; it takes no side, and the proposal stays yours. {#law-consult}
+
+- **The assistant knows every place Solon holds.** Questions about Estonia's and
+  Wyoming's law are now searched in Estonian and English, as their law is written,
+  not in German.
+
 - **When a publisher refuses Solon's reader, the law comes from a dated public copy.**
   If a commune's site answers with a refusal (HTTP 403, 429 or 503, or a bot check in
   place of the page), Solon reads the newest copy the Internet Archive's Wayback Machine

@@ -48,7 +48,7 @@ export function sourcesOf(hits: readonly ProvisionHit[], web: readonly WebSource
 
 const instructions = (
   language: string,
-): string => `You answer questions about the law of Switzerland, Liechtenstein and Luxembourg. You are given the provisions found for this question, each with a handle like [L1].
+): string => `You answer questions about the law Solon holds: Switzerland, Liechtenstein, Luxembourg, Estonia and the US state of Wyoming. You are given the provisions found for this question, each with a handle like [L1].
 
 Rules:
 - Answer only from the provisions below. Never add law from memory. If they do not settle the question, say what they do cover and what is missing, and what the person could look for next.

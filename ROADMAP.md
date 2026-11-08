@@ -45,6 +45,7 @@ authority that decides, and the record says so.
 - [x] The amendment engine: changes pinned to the hash of the text they amend, immutable revisions, forks, support signed or by account, a hash-chained log anyone can verify, and the official routes as sourced data; served at `/api/v1/law/amendments` (design: `docs/design/2026-11-amending-the-law.md`) {#law-amend-engine}
 - [x] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
 - [x] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
+- [x] Thinking a change through with the assistant while drafting it: what it would do, who would gain and who would bear a cost, where something like it is already law (in the law Solon holds, and studies and experience on the web), each claim cited, no side taken {#law-consult}
 - [ ] Signing a proposal or a support with one's own Bitcoin key from the page (the API takes signatures today; the page offers one click) {#law-sign-on-page}
 - [ ] A conversation under each proposal, the fleet's shared comment thread {#law-discuss}
 - [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}
