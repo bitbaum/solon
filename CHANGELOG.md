@@ -38,6 +38,11 @@ one to read for the detail. Fixes get the same weight as features.
   too, Solon now walks back through the earlier captures, newest first, and reads the
   newest one that is the page itself. The act page still names the copy and its date.
 
+- **Scanned regulations read blank.** Most communes scan their regulations as fax- or
+  JBIG2-compressed images, and the PDF reader drew those pages blank, so Solon reported
+  "no text in the PDF" and three of Balzers' regulations were missing. The reader now
+  has the decoders it needs, and those pages are read by OCR like any other scan.
+
 ## 2026-11-07
 
 ### Added
