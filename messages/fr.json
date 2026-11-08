@@ -596,7 +596,7 @@
       "searchLabel": "Chercher une adresse, un lieu ou un code postal",
       "searchLabelNoAddress": "Chercher un lieu ou un code postal",
       "searchPlaceholder": "p. ex. Rue du Marché 1, Genève · Berne · 1204",
-      "searchPlaceholderNoAddress": "p. ex. Berne ou 3011",
+      "searchPlaceholderNoAddress": "p. ex. {example}",
       "searchNote": "Une adresse part directement de votre navigateur vers {provider} pour être trouvée sur la carte. Solon ne la voit jamais.",
       "searchResults": "Suggestions",
       "searchNothing": "Aucun résultat",
@@ -946,6 +946,7 @@
     "mapLabelCountry": "Carte de {country} et de ses lieux",
     "unavailable": "La carte ne peut pas être dessinée dans ce navigateur.",
     "sources": "D'où cela vient ({count, plural, one {# source} other {# sources}})",
-    "situationHint": "Saisissez votre revenu pour colorer la carte selon l'impôt que vous paieriez."
+    "situationHint": "Saisissez votre revenu pour colorer la carte selon l'impôt que vous paieriez.",
+    "taxSameEverywhere": "L'impôt est le même partout ici : {amount} par an pour ce revenu. Aucun lieu ne prélève le sien."
   }
 }

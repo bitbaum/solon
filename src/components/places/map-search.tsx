@@ -192,7 +192,11 @@ export default function MapSearch({ data, onPlace, onAddress }: MapSearchProps) 
         aria-describedby={data.addressSearch ? `${id}-note` : undefined}
         autoComplete="off"
         value={text}
-        placeholder={t(data.addressSearch ? "searchPlaceholder" : "searchPlaceholderNoAddress")}
+        placeholder={
+          data.addressSearch
+            ? t("searchPlaceholder")
+            : t("searchPlaceholderNoAddress", { example: data.places[0]?.name ?? "" })
+        }
         onChange={(e) => {
           setText(e.target.value);
           setPending(true);

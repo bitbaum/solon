@@ -596,7 +596,7 @@
       "searchLabel": "Найти адрес, место или индекс",
       "searchLabelNoAddress": "Найти место или индекс",
       "searchPlaceholder": "напр. Bahnhofstrasse 1, Zürich · Bern · 8001",
-      "searchPlaceholderNoAddress": "напр. Bern или 3011",
+      "searchPlaceholderNoAddress": "например, {example}",
       "searchNote": "Адрес отправляется из вашего браузера напрямую в {provider}, чтобы найти его на карте. Solon его никогда не видит.",
       "searchResults": "Подсказки",
       "searchNothing": "Ничего не найдено",
@@ -946,6 +946,7 @@
     "mapLabelCountry": "Карта: {country} и её места",
     "unavailable": "Карту нельзя нарисовать в этом браузере.",
     "sources": "Откуда это ({count, plural, one {# источник} few {# источника} many {# источников} other {# источника}})",
-    "situationHint": "Введите доход, чтобы окрасить карту по тому, сколько налога вы заплатили бы."
+    "situationHint": "Введите доход, чтобы окрасить карту по тому, сколько налога вы заплатили бы.",
+    "taxSameEverywhere": "Налог здесь везде одинаков: {amount} в год при этом доходе. Ни одно место не взимает свой."
   }
 }

@@ -596,7 +596,7 @@
       "searchLabel": "Adresse, Ort oder Postleitzahl suchen",
       "searchLabelNoAddress": "Ort oder Postleitzahl suchen",
       "searchPlaceholder": "z. B. Bahnhofstrasse 1, Zürich · Bern · 8001",
-      "searchPlaceholderNoAddress": "z. B. Bern oder 3011",
+      "searchPlaceholderNoAddress": "z. B. {example}",
       "searchNote": "Eine Adresse geht direkt von Ihrem Browser an {provider}, damit sie auf der Karte gefunden wird. Solon sieht sie nie.",
       "searchResults": "Vorschläge",
       "searchNothing": "Nichts gefunden",
@@ -942,10 +942,11 @@
     "placesTitle": "Orte",
     "placesDrawn": "Auf der Karte: {level}. Jede ist danach eingefärbt, was die Steuer Sie dort kosten würde. Tippen Sie auf eine oder suchen Sie.",
     "placesNotDrawn": "Seine Orte sind aufgeführt, aber noch nicht auf der Karte gezeichnet.",
-    "placesOpen": "Alle Orte von {country}",
+    "placesOpen": "Alle Orte in {country}",
     "mapLabelCountry": "Karte von {country} und seinen Orten",
     "unavailable": "Die Karte kann in diesem Browser nicht gezeichnet werden.",
     "sources": "Woher das kommt ({count, plural, one {# Quelle} other {# Quellen}})",
-    "situationHint": "Geben Sie Ihr Einkommen ein, um die Karte nach Ihrer Steuer einzufärben."
+    "situationHint": "Geben Sie Ihr Einkommen ein, um die Karte nach Ihrer Steuer einzufärben.",
+    "taxSameEverywhere": "Die Steuer ist hier überall gleich: {amount} im Jahr bei diesem Einkommen. Kein Ort erhebt eine eigene."
   }
 }
