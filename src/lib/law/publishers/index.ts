@@ -1,10 +1,12 @@
 import type { PublisherAdapter } from "./types";
 import {
   balzers,
+  bellinzonaCity,
   eschen,
   fribourgCity,
   gamprin,
   koeniz,
+  luganoCity,
   mauren,
   neuchatelCity,
   planken,
@@ -34,4 +36,6 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [koeniz.key]: koeniz,
   [fribourgCity.key]: fribourgCity,
   [neuchatelCity.key]: neuchatelCity,
+  [luganoCity.key]: luganoCity,
+  [bellinzonaCity.key]: bellinzonaCity,
 };

@@ -60,6 +60,8 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   // A city named like its canton is named with it, as Zürich is: its rules apply there too.
   bfs2196: ["fribourg", "freiburg", "friburgo", "ville de fribourg"],
   bfs6458: ["neuchatel", "neuenburg", "ville de neuchatel"],
+  bfs5192: ["lugano", "lauis", "citta di lugano"],
+  bfs5002: ["bellinzona", "bellenz", "citta di bellinzona"],
   li7005: ["schaan", "gemeinde schaan"],
   li7006: ["planken", "gemeinde planken"],
   li7007: ["eschen", "nendeln", "eschen-nendeln", "gemeinde eschen"],

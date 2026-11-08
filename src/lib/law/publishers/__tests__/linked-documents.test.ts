@@ -150,7 +150,7 @@ describe("Liechtenstein's communes", () => {
 describe("Swiss communes that link their acts from one page", () => {
   // The documents' addresses are the communes' own, as search engines index them (2026-11-08).
   const page = async (
-    key: "koeniz" | "fribourgCity" | "neuchatelCity",
+    key: "koeniz" | "fribourgCity" | "neuchatelCity" | "luganoCity" | "bellinzonaCity",
     html: string,
     base: string,
   ) => {
@@ -211,6 +211,34 @@ describe("Swiss communes that link their acts from one page", () => {
     ]);
   });
 
+  it("Lugano: each act a page of the city's that serves its PDF, read in Italian", async () => {
+    const acts = await page(
+      "luganoCity",
+      `<a href="https://www.lugano.ch/law/16371942/1-1-1-Regolamento-comunale-della-Citta-di-Lugano-del-14-marzo-1989">1.1.1 Regolamento comunale della Città di Lugano</a>
+       <a href="/law/16174908/7-1-1-Regolamento-edilizio-della-Citta-di-Lugano-del-16-dicembre-1963">7.1.1 Regolamento edilizio della Città di Lugano</a>
+       <a href="/dam/jcr:3c48f197-33fc-4265-89aa-0e96f104cf4c/MMN_11423.pdf">Messaggio municipale no. 11423</a>`,
+      "https://www.lugano.ch/la-mia-citta/amministrazione/legislazione/",
+    );
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([
+      ["16371942", "1.1.1 Regolamento comunale della Città di Lugano"],
+      ["16174908", "7.1.1 Regolamento edilizio della Città di Lugano"],
+    ]);
+  });
+
+  it("Bellinzona: each act a file served by its document id", async () => {
+    const acts = await page(
+      "bellinzonaCity",
+      `<a href="downdoc.php?id_doc=29818&amp;lng=1&amp;rif=552846a154">Regolamento comunale sull'occupazione di area pubblica</a>
+       <a href="/downdoc.php?id_doc=79595&amp;lng=1&amp;i=1&amp;rif=c1fdc5a2e6">Ordinanza municipale sugli impianti pubblicitari</a>
+       <a href="/Calendario-rifiuti-2026-Camorino-Claro-Gnosca-Gorduno-Moleno-Preonzo-4f523400">Calendario rifiuti 2026</a>`,
+      "https://www.bellinzona.ch/1d212c00",
+    );
+    expect(acts.map((a) => [a.ref, a.pageUrl])).toEqual([
+      ["29818", "https://www.bellinzona.ch/downdoc.php?id_doc=29818&lng=1&rif=552846a154"],
+      ["79595", "https://www.bellinzona.ch/downdoc.php?id_doc=79595&lng=1&i=1&rif=c1fdc5a2e6"],
+    ]);
+  });
+
   it("each read into the commune its BFS number names, within its canton", async () => {
     const { PUBLISHERS } = await import("../index");
     const { LAW_AUTHORITIES } = await import("@/lib/config/law");
@@ -218,6 +246,8 @@ describe("Swiss communes that link their acts from one page", () => {
       ["koeniz", "355", "be"],
       ["fribourg-city", "2196", "fr"],
       ["neuchatel-city", "6458", "ne"],
+      ["lugano-city", "5192", "ti"],
+      ["bellinzona-city", "5002", "ti"],
     ] as const) {
       const authority = LAW_AUTHORITIES.find((a) => a.key === PUBLISHERS[key]!.authority)!;
       expect(authority.place).toEqual({ scheme: "bfs_municipality", value: number });

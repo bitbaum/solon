@@ -431,3 +431,41 @@ export const neuchatelCity = linkedDocuments({
   exclude: CH_FR_FORM,
   excludeHref: /\/imported\/|tabmat|table_chronologique/i,
 });
+
+const CH_IT_ACT = /regolamento|ordinanza|statuto|tariffa|direttiv|norme d/i;
+const CH_IT_FORM =
+  /formulario|modulo|domanda|richiesta|istanza|messaggio|rapporto|calendario|opuscolo|guida|indice/i;
+
+/**
+ * Lugano: "Legislazione", each act a page of the city's own (`/law/<id>/<title>`)
+ * that serves the act's PDF, numbered by the city's collection ("1.1.1").
+ */
+export const luganoCity = linkedDocuments({
+  key: "lugano-city",
+  authority: "bfs5192",
+  name: "Città di Lugano, Legislazione",
+  homepage: "https://www.lugano.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "it",
+  pages: ["https://www.lugano.ch/la-mia-citta/amministrazione/legislazione/"],
+  link: /\/law\/(\d+)\/[^/?#]+(?:[?#]|$)/i,
+  include: CH_IT_ACT,
+  exclude: CH_IT_FORM,
+});
+
+/**
+ * Bellinzona: "Legislazione comunale", grouped by subject, each act a file the
+ * site serves by its document id (`downdoc.php?id_doc=`).
+ */
+export const bellinzonaCity = linkedDocuments({
+  key: "bellinzona-city",
+  authority: "bfs5002",
+  name: "Città di Bellinzona, Legislazione comunale",
+  homepage: "https://www.bellinzona.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "it",
+  pages: ["https://www.bellinzona.ch/1d212c00"],
+  link: /\/downdoc\.php\?id_doc=(\d+)(?:&|$)/i,
+  include: CH_IT_ACT,
+  exclude: CH_IT_FORM,
+});
