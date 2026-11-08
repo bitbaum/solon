@@ -85,7 +85,7 @@ export function cleanPdfText(raw: string): string {
  * "Articolo", É, À).
  */
 const CANDIDATE =
-  /(?<!\d)(Art\.|Artikel|Article|Articolo|§)\s*(\d+)(?:\s*(bis|ter|quater|quinquies|sexies|septies|octies|novies|decies)|([a-z]?))(?![\p{L}\d])(?:\s*\d{0,3}\))?\*?\.?(?:\s+|(?=\p{Lu}))(?=(?:\d{1,3}\s*)?(?:\d{1,2}\.\s+)?(?:\d{1,2}\s*)?(?:[a-z]\)\s+)?[\p{Lu}«"(…])(?!Abs\.|Absatz|al\.|alinéa|lit\.|let\.|cpv\.|capoverso|Ziff\.|ch\.)/gu;
+  /(?<!\d)(Art\.|Artikel|Article|Articolo|§)\s*(\d+)(?:\s*(bis|ter|quater|quinquies|sexies|septies|octies|novies|decies)|([a-z]?))(?![\p{L}\d])(?:\s*\d{0,3}\))?\*?\.?(?:\s+(?:[–—-]\s+)?|(?=\p{Lu}))(?=(?:\d{1,3}\s*)?(?:\d{1,2}\.\s+)?(?:\d{1,2}\s*)?(?:[a-z]\)\s+)?[\p{Lu}«"(…])(?!Abs\.|Absatz|al\.|alinéa|lit\.|let\.|cpv\.|capoverso|Ziff\.|ch\.)/gu;
 
 /**
  * How many article numbers ahead the next heading may be. Repealed articles

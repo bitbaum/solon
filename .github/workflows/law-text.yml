@@ -34,6 +34,7 @@ on:
             recut,
             recut-eurlex,
             recut-gii,
+            recut-municipal,
             legilux,
             riigiteataja,
             eurlex,

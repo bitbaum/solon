@@ -209,8 +209,8 @@ describe("a copy's provenance", () => {
     expect(originalOf(`https://web.archive.org/web/${STAMP}/https:/www.triesenberg.li/a.pdf`)).toBe(
       "https://www.triesenberg.li/a.pdf",
     );
-    expect(importerVersion(false, true)).toBe("law-text-publisher-1+archive");
-    expect(importerVersion(true, false)).toBe("law-text-publisher-1+ocr");
+    expect(importerVersion(false, true)).toBe("law-text-publisher-2+archive");
+    expect(importerVersion(true, false)).toBe("law-text-publisher-2+ocr");
   });
 
   it("is named in the act's Markdown, never as the publisher's own", () => {

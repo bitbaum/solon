@@ -375,7 +375,7 @@ Some communes publish an act as a scan: a PDF whose pages are pictures of
 paper, with no text layer. The commune loader (`publishers/load.ts`) then reads
 it by OCR (`text/ocr.ts`: each page drawn with `unpdf` and read by
 `tesseract.js` in the act's language, in process; no model is called). Such a
-version's source carries the importer version `law-text-publisher-1+ocr`, so a
+version's source carries the importer version `law-text-publisher-2+ocr`, so a
 reader knows a letter may be misread where the publisher's own text would not.
 
 The cantonal documents fall back to OCR the same way (`text/pdf-provisions.ts`,

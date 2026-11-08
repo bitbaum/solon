@@ -14,6 +14,7 @@
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text recut-eurlex [--limit 5000] [--dry-run]   (the same for the EU acts held)
+ *   pnpm run law:text recut-municipal [--authority ch-ne-neuchatel] [--limit 5000] [--dry-run]   (the same for the communes' PDFs held)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
@@ -21,7 +22,12 @@
  * Resumable: acts whose version is already held are skipped, so a run limited to
  * N continues where the last stopped. Exit 1 when an act failed, so a runner alerts.
  */
-import { recutCantonalText, recutEurLexText, recutGiiText } from "@/lib/law/text/recut";
+import {
+  recutCantonalText,
+  recutEurLexText,
+  recutGiiText,
+  recutPublisherText,
+} from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importGcnh } from "@/lib/law/text/import-gcnh";
@@ -229,13 +235,20 @@ async function main(): Promise<number> {
     );
     return report.failures.length > 0 ? 1 : 0;
   }
-  if (sourceKey === "recut" || sourceKey === "recut-eurlex" || sourceKey === "recut-gii") {
+  if (
+    sourceKey === "recut" ||
+    sourceKey === "recut-eurlex" ||
+    sourceKey === "recut-gii" ||
+    sourceKey === "recut-municipal"
+  ) {
     const recut =
       sourceKey === "recut"
         ? recutCantonalText
         : sourceKey === "recut-gii"
           ? recutGiiText
-          : recutEurLexText;
+          : sourceKey === "recut-municipal"
+            ? recutPublisherText
+            : recutEurLexText;
     const report = await recut(db, {
       authority: flag("authority"),
       limit: flag("limit") ? Number(flag("limit")) : undefined,

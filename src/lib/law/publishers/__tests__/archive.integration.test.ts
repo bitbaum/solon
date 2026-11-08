@@ -95,7 +95,7 @@ describe.skipIf(!RUN)("a refusing publisher, read from the archive", () => {
       .where(eq(legalActVersions.actId, identity!.actId));
     expect(stored).toEqual({
       url: `https://web.archive.org/web/${STAMP}id_/${pdf}`,
-      importer: "law-text-publisher-1+archive",
+      importer: "law-text-publisher-2+archive",
     });
 
     const view = await loadActView(db, { id: identity!.actId, lang: "de", page: 1 });

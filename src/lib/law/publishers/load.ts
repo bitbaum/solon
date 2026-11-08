@@ -28,7 +28,7 @@ import { archiveCopyOf } from "../archive-copy";
 import { read } from "./http";
 import type { PublisherAdapter, VersionRef } from "./types";
 
-export const PUBLISHER_IMPORTER_VERSION = "law-text-publisher-1";
+export const PUBLISHER_IMPORTER_VERSION = "law-text-publisher-2";
 
 /** The reader's version, marked when the text was read by OCR or from an archive's copy. */
 export const importerVersion = (scanned: boolean, fromCopy: boolean): string =>

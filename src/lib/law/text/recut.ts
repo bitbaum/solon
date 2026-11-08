@@ -17,6 +17,9 @@ import { parseEurLexHtml } from "./eurlex";
 import type { Provision } from "./fedlex";
 import { CANTONAL_IMPORTER_VERSION, cantonalAuthorities } from "./import-cantonal";
 import { EURLEX_IMPORTER_VERSION } from "./import-eurlex";
+import { PUBLISHERS } from "@/lib/law/publishers";
+import { PUBLISHER_IMPORTER_VERSION } from "@/lib/law/publishers/load";
+import { provisionsOfPdf } from "./pdf-provisions";
 import { GII_IMPORTER_VERSION } from "./import-gii";
 import { parseGiiXml } from "./gii";
 
@@ -43,6 +46,8 @@ interface Reader {
   sourceKey: string;
   importerVersion: string;
   authorities: string[];
+  /** Other importer versions that need no cut: marks of a text read another way (OCR). */
+  alsoCurrent?: string[];
   cut: (bytes: Uint8Array, format: string) => Promise<Provision[]>;
 }
 
@@ -78,6 +83,51 @@ export async function recutGiiText(db: Database, options: RecutOptions): Promise
   });
 }
 
+/**
+ * The municipal and other publishers' PDFs held, cut again from their snapshots.
+ * A text read by OCR is left as it was: cutting it again would read the scan again.
+ */
+export async function recutPublisherText(
+  db: Database,
+  options: RecutOptions,
+): Promise<RecutReport> {
+  const total: RecutReport = {
+    status: options.dryRun ? "dry_run" : "applied",
+    examined: 0,
+    improved: 0,
+    provisionsBefore: 0,
+    provisionsAfter: 0,
+    remaining: 0,
+    failures: [],
+  };
+  for (const adapter of Object.values(PUBLISHERS)) {
+    if (options.authority && adapter.authority !== options.authority) continue;
+    const left = (options.limit ?? Infinity) - total.examined;
+    if (left <= 0) break;
+    const report = await recutTexts(
+      db,
+      { ...options, limit: left },
+      {
+        sourceKey: adapter.key,
+        importerVersion: PUBLISHER_IMPORTER_VERSION,
+        authorities: [adapter.authority],
+        alsoCurrent: [
+          `${PUBLISHER_IMPORTER_VERSION}+ocr`,
+          `${PUBLISHER_IMPORTER_VERSION}+ocr+archive`,
+        ],
+        cut: async (bytes) => (await provisionsOfPdf(bytes, adapter.locale)).provisions,
+      },
+    );
+    total.examined += report.examined;
+    total.improved += report.improved;
+    total.provisionsBefore += report.provisionsBefore;
+    total.provisionsAfter += report.provisionsAfter;
+    total.remaining += report.remaining;
+    total.failures.push(...report.failures);
+  }
+  return total;
+}
+
 async function recutTexts(
   db: Database,
   options: RecutOptions,
@@ -96,7 +146,11 @@ async function recutTexts(
   };
   const authorities = reader.authorities;
   // A version read from an archive copy keeps that mark (importerVersion "…+archive").
-  const current = [reader.importerVersion, `${reader.importerVersion}+archive`];
+  const current = [
+    reader.importerVersion,
+    `${reader.importerVersion}+archive`,
+    ...(reader.alsoCurrent ?? []),
+  ];
   const todo = await db
     .select({
       versionId: legalActVersions.id,
