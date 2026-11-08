@@ -202,8 +202,9 @@ function provisionOf(norm: string): Provision | null {
   const text = giiText(content);
   if (!text) return null;
   const heading = [enbez, titel].filter(Boolean).join(" ");
-  const path = anchorOf(enbez) ?? anchorOf(titel);
-  return { path: path ?? "", heading, text };
+  // The act's first norm, which states the act itself, may carry a note of its own (on the title).
+  const path = anchorOf(enbez) ?? anchorOf(titel) ?? (/<langue\b/.test(meta) ? "vorspann" : "");
+  return { path, heading, text };
 }
 
 /** Every path once: a part repeated under one number (a second "Anlage") is `anlage-2`; one with none is `norm_<n>`. */

@@ -82,7 +82,10 @@ describe("the kind of an act", () => {
     ["Abkommen zwischen der Bundesrepublik Deutschland und Beispielland", "treaty"],
     ["Straßenverkehrs-Zulassungs-Verordnung", "ordinance"],
     ["Erste Verordnung zur Durchführung des Beispielgesetzes", "ordinance"],
-    ["Insolvenzordnung", "regulation"],
+    // A "-ordnung" is a statute (Insolvenzordnung) or an ordinance (Straßenverkehrs-Ordnung): the title alone does not say.
+    ["Insolvenzordnung", "other"],
+    ["Organisationserlaß des Bundeskanzlers", "decree"],
+    ["Geschäftsordnung der Bundesregierung", "regulation"],
     ["Anordnung über die Beispielfrage", "decree"],
     ["Beispielwesen im Bund", "other"],
   ])("%s is %s", (title, kind) => {
@@ -201,6 +204,15 @@ describe("an act's text", () => {
   it("knows an act's XML from an error page", () => {
     expect(isGiiXml(xml)).toBe(true);
     expect(isGiiXml("<html><body>Not found</body></html>")).toBe(false);
+  });
+
+  it("keeps a note the act's first norm carries, as `vorspann`", () => {
+    const note = parseGiiXml(
+      '<dokumente><norm><metadaten><jurabk>X</jurabk><langue>Gesetz</langue></metadaten><textdaten><text format="XML"><Content><P>Dieses Gesetz dient der Umsetzung der Richtlinie.</P></Content></text></textdaten></norm></dokumente>',
+    );
+    expect(note).toEqual([
+      { path: "vorspann", heading: "", text: "Dieses Gesetz dient der Umsetzung der Richtlinie." },
+    ]);
   });
 
   it("reads nothing from an act whose norms have no words", () => {

@@ -787,9 +787,9 @@ export const GII = {
     [/grundgesetz(?![\p{L}])/iu, "constitution"],
     [/(?:vertrag|abkommen|übereinkommen|konkordat)(?![\p{L}])/iu, "treaty"],
     [/(?:bekanntmachung|mitteilung|verkündung)(?![\p{L}])/iu, "notice"],
-    [/(?:anordnung|erlass|beschluss|verwaltungsvorschrift)(?![\p{L}])/iu, "decree"],
+    [/(?:anordnung|erla(?:ß|ss)|beschlu(?:ß|ss)|verwaltungsvorschrift)(?![\p{L}])/iu, "decree"],
     [/verordnung(?![\p{L}])/iu, "ordinance"],
-    [/(?:(?<!ver)ordnung|satzung|richtlinie)(?![\p{L}])/iu, "regulation"],
+    [/(?:satzung|richtlinie|geschäftsordnung)(?![\p{L}])/iu, "regulation"],
     [/gesetz(?:e|es|buch|buches)?(?![\p{L}])/iu, "statute"],
   ] as readonly (readonly [RegExp, ActKind])[],
 } as const;
