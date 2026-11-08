@@ -7,10 +7,12 @@ name: Law text load
 # some 1,700 chapters is two runs at limit 1000), or the European Union's
 # regulations and directives in force from Cellar and EUR-Lex (eurlex: tens of
 # thousands of acts, so a full load is many runs at limit 1500; `year` reads only
-# those CELEX years, e.g. 2016 for a quick check), or Austria's consolidated federal
-# acts in force from the RIS of the Federal Chancellery (ris: some thousands of acts,
-# two requests and about three seconds an act, so a full load is a few runs at limit
-# 1500), and store it in the production
+# those CELEX years, e.g. 2016 for a quick check), or Germany's federal acts from
+# Gesetze im Internet (gii: some 6,500 acts a request a second, so a full load is
+# several runs at limit 1500; `acts` reads only those, e.g. bgb,gg), or Austria's
+# consolidated federal acts in force from the RIS of the Federal Chancellery (ris:
+# some thousands of acts, two requests and about three seconds an act, so a full load
+# is a few runs at limit 1500), and store it in the production
 # database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
 # two seconds per Fedlex act and three per Lilex act, politely paced; a full load
@@ -34,10 +36,12 @@ on:
             lexwork,
             recut,
             recut-eurlex,
+            recut-gii,
             legilux,
             riigiteataja,
             eurlex,
             ris,
+            gii,
             wyoleg,
             gcnh,
             refresh,
@@ -66,6 +70,10 @@ on:
         default: ""
       act:
         description: "Austria (ris) only: Gesetzesnummern to read, comma-separated (10001622,10000138), or empty for all"
+        type: string
+        default: ""
+      acts:
+        description: "Germany (gii) only: acts to read, by the portal's abbreviation, comma-separated (bgb,gg), or empty for all"
         type: string
         default: ""
       limit:
@@ -98,6 +106,7 @@ jobs:
           HISTORY: ${{ inputs.history }}
           YEAR: ${{ inputs.year }}
           ACT: ${{ inputs.act }}
+          ACTS: ${{ inputs.acts }}
         run: |
           set -euo pipefail
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
@@ -105,12 +114,13 @@ jobs:
           [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
           [[ "$YEAR" =~ ^[0-9,]{0,60}$ ]] || { echo "year must be years like 2016,2024"; exit 1; }
           [[ "$ACT" =~ ^[0-9,]{0,120}$ ]] || { echo "act must be numbers like 10001622,10000138"; exit 1; }
+          [[ "$ACTS" =~ ^[A-Za-z0-9_.,-]{0,300}$ ]] || { echo "acts must be abbreviations like bgb,gg"; exit 1; }
           IP=167.233.22.31
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           # One load at a time on the box: a second waits here for the first to finish,
           # so two big loads never share its memory (two at once ran it out, 2026-11-08).
@@ -133,6 +143,7 @@ jobs:
           [ "$HISTORY" = "true" ] && auth="$auth --history"
           [ "$SOURCE" = "eurlex" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
           [ "$SOURCE" = "ris" ] && [ -n "$ACT" ] && auth="$auth --act $ACT"
+          [ "$SOURCE" = "gii" ] && [ -n "$ACTS" ] && auth="$auth --act $ACTS"
           $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
           REMOTE
           rm -f ~/.ssh/id

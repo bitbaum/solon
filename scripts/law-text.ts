@@ -8,25 +8,28 @@
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text ris [--limit 500] [--act 10001622,10000138] [--dry-run]   (Austria: the consolidated federal acts in force from the RIS, in German; a dry run reads and cuts `limit` texts and stores nothing)
+ *   pnpm run law:text gii [--limit 1500] [--again] [--act bgb,gg] [--dry-run]   (Germany: the federal acts in force, each act's XML cut into paragraphs, articles and annexes; about a request a second; an act read this week is skipped unless --again, and a new version is stored only when the text changed)
  *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
  *   pnpm run law:text gcnh [--limit 1000] [--again] [--title III] [--chapter 39] [--dry-run]   (New Hampshire: each chapter of the RSA, about 11 seconds apart)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
  *   pnpm run law:text refresh [--limit 500] [--dry-run]   (read held cantonal and Lilex documents again, oldest first; a changed one becomes a new version)
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text recut-eurlex [--limit 5000] [--dry-run]   (the same for the EU acts held)
+ *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
  * Resumable: acts whose version is already held are skipped, so a run limited to
  * N continues where the last stopped. Exit 1 when an act failed, so a runner alerts.
  */
-import { recutCantonalText, recutEurLexText } from "@/lib/law/text/recut";
+import { recutCantonalText, recutEurLexText, recutGiiText } from "@/lib/law/text/recut";
 import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importGcnh } from "@/lib/law/text/import-gcnh";
 import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
 import { importEurLex } from "@/lib/law/text/import-eurlex";
 import { importRis } from "@/lib/law/text/import-ris";
+import { importGii } from "@/lib/law/text/import-gii";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
@@ -194,6 +197,28 @@ async function main(): Promise<number> {
     );
     return report.failures.length > 0 ? 1 : 0;
   }
+  if (sourceKey === "gii") {
+    const only = flag("act")
+      ?.split(",")
+      .map((a) => a.trim())
+      .filter(Boolean);
+    const report = await importGii(db, {
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      only: only?.length ? only : undefined,
+      again: args.includes("--again"),
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 10), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
+    return report.failures.length > 0 ? 1 : 0;
+  }
   if (sourceKey === "wyoleg") {
     const report = await importWyoleg(db, {
       limit: flag("limit") ? Number(flag("limit")) : undefined,
@@ -225,8 +250,13 @@ async function main(): Promise<number> {
     );
     return report.failures.length > 0 ? 1 : 0;
   }
-  if (sourceKey === "recut" || sourceKey === "recut-eurlex") {
-    const recut = sourceKey === "recut" ? recutCantonalText : recutEurLexText;
+  if (sourceKey === "recut" || sourceKey === "recut-eurlex" || sourceKey === "recut-gii") {
+    const recut =
+      sourceKey === "recut"
+        ? recutCantonalText
+        : sourceKey === "recut-gii"
+          ? recutGiiText
+          : recutEurLexText;
     const report = await recut(db, {
       authority: flag("authority"),
       limit: flag("limit") ? Number(flag("limit")) : undefined,

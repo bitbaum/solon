@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Germany's federal law.** Solon is set to read every federal statute and ordinance in
+  force from the Federal Ministry of Justice's portal Gesetze im Internet: some 6,100 acts,
+  each in German under its long title, cut into its paragraphs, articles and annexes
+  (`§ 12a` is `par_12a`, `Art 3` is `art_3`), not protected by copyright. The text is
+  read again every week and a new version is kept only when the words changed. A question
+  that names Germany or Deutschland asks German federal law as well as the European
+  Union's. The first load runs on Solon's server; the states' own law is not read yet.
+  {#law-de}
+
 - **Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona.** Seven more of
   Switzerland's largest communes link their regulations from pages of their own, and
   Solon now reads them there, in German, French or Italian, leaving out forms, reports,
