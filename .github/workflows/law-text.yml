@@ -86,8 +86,12 @@ on:
         description: "UK (ukleg) only: types to read, comma-separated (ukpga,uksi), or empty for both"
         type: string
         default: ""
+      batches:
+        description: "Run this many batches of `limit` one after another, stopping early when nothing remains or a batch makes no progress (1 = one batch)"
+        type: string
+        default: "1"
       limit:
-        description: "Store at most this many versions in this run"
+        description: "Store at most this many versions in each batch"
         type: string
         default: "1500"
       dry_run:
@@ -118,8 +122,10 @@ jobs:
           ACT: ${{ inputs.act }}
           ACTS: ${{ inputs.acts }}
           TYPES: ${{ inputs.types }}
+          BATCHES: ${{ inputs.batches }}
         run: |
           set -euo pipefail
+          [[ "$BATCHES" =~ ^[0-9]{1,2}$ ]] || { echo "batches must be a number"; exit 1; }
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
           [[ "$AUTHORITY" =~ ^[a-z]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
           [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
@@ -132,11 +138,17 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS TYPES=$TYPES bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS TYPES=$TYPES BATCHES=$BATCHES bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
-          # One load at a time on the box: a second waits here for the first to finish,
-          # so two big loads never share its memory (two at once ran it out, 2026-11-08).
-          exec 9>/tmp/solon-law-load.lock
+          # The box's memory is the limit, not its patience. Loads that read PDFs, scans or the EU's
+          # large pages take one shared turn (two at once ran it out, 2026-11-08); loads that fetch
+          # small pages and wait on a slow publisher (the UK's five seconds a request) take a turn
+          # of their own per source, so one of them never holds up the rest.
+          case "$SOURCE" in
+            ris|ukleg|gii|gcnh|wyoleg|legilux|riigiteataja) LOCK="$SOURCE" ;;
+            *) LOCK="heavy" ;;
+          esac
+          exec 9>"/tmp/solon-law-load-$LOCK.lock"
           flock 9
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -158,7 +170,21 @@ jobs:
           [ "$SOURCE" = "gii" ] && [ -n "$ACTS" ] && auth="$auth --act $ACTS"
           [ "$SOURCE" = "ukleg" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
           [ "$SOURCE" = "ukleg" ] && [ -n "$TYPES" ] && auth="$auth --type $TYPES"
-          $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+          rc=0; last=-1
+          for batch in $(seq 1 "$BATCHES"); do
+            rc=0
+            $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' > batch.log || rc=$?
+            tail -n 80 batch.log
+            # A dry run stores nothing, so a second batch would read the same; a batch that left
+            # as much as the one before it made no progress.
+            [ "$DRY" = "true" ] && break
+            left=$(grep -oE '"remaining(Acts)?": [0-9]+' batch.log | tail -1 | grep -oE '[0-9]+' || true)
+            [ "${left:-0}" -gt 0 ] || break
+            [ "$left" != "$last" ] || { echo "no progress: $left still remain"; break; }
+            last=$left
+            echo "batch $batch done, $left remain"
+          done
+          exit "$rc"
           REMOTE
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt
