@@ -25,6 +25,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Estonia's register skipped some acts and listed others twice.** The State Gazette
+  pages its list in an order that shifts among acts of one title, so a pass listed 77
+  acts twice and missed as many; the second copy of each then failed to load. Each act
+  is now listed once, and the list is read again until every act the gazette counts has
+  been seen.
+
 - **Schellenberg's regulations were placed on Mauren.** They were filed under commune
   7008, which is Mauren's number in the register; Schellenberg's is 7011. They are on
   Schellenberg now, and Mauren holds its own.
