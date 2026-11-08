@@ -7,7 +7,10 @@ name: Law text load
 # some 1,700 chapters is two runs at limit 1000), or the European Union's
 # regulations and directives in force from Cellar and EUR-Lex (eurlex: tens of
 # thousands of acts, so a full load is many runs at limit 1500; `year` reads only
-# those CELEX years, e.g. 2016 for a quick check), and store it in the production
+# those CELEX years, e.g. 2016 for a quick check), or Austria's consolidated federal
+# acts in force from the RIS of the Federal Chancellery (ris: some thousands of acts,
+# two requests and about three seconds an act, so a full load is a few runs at limit
+# 1500), and store it in the production
 # database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
 # two seconds per Fedlex act and three per Lilex act, politely paced; a full load
@@ -34,6 +37,7 @@ on:
             legilux,
             riigiteataja,
             eurlex,
+            ris,
             wyoleg,
             gcnh,
             refresh,

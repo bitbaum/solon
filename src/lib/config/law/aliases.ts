@@ -50,6 +50,16 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
     "grand-duche",
     "grossherzogtum",
   ],
+  at: [
+    "austria",
+    "osterreich",
+    "oesterreich",
+    "autriche",
+    "austrian",
+    "republik osterreich",
+    "republic of austria",
+    "osterreichisch",
+  ],
   // Not the bare "EU": in French it is a word ("j'ai eu").
   eu: [
     "european union",
