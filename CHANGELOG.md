@@ -31,6 +31,13 @@ one to read for the detail. Fixes get the same weight as features.
   them, stay dark so the words on them can be read. The law globe and the Places map
   redraw in the theme you pick. {#theme-light}
 
+### Fixed
+
+- **A site whose newest archived copy is its own bot check is read from the copy before.**
+  When the Internet Archive's latest capture of a refusing site is the challenge page
+  too, Solon now walks back through the earlier captures, newest first, and reads the
+  newest one that is the page itself. The act page still names the copy and its date.
+
 ## 2026-11-07
 
 ### Added
