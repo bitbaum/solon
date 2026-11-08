@@ -141,7 +141,13 @@ export function dayOf(text: string): string | null {
 export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
   const acts = new Map<string, ListedAct>();
   for (const row of rows) {
-    const cell = String(row.title ?? row.name ?? "");
+    // German sites name the column title or name; others (Sion) another: the cell holding the act's link.
+    const cell = String(
+      row.title ??
+        row.name ??
+        Object.values(row).find((v) => typeof v === "string" && /\bhref=/.test(v)) ??
+        "",
+    );
     const href = hrefOf(cell);
     const title = words(cell);
     if (!href || !title || FORM.test(title)) continue;
@@ -301,7 +307,7 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
           ),
         ].slice(0, 25);
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, links: ${seen.join(" ")}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, a row: ${JSON.stringify(pages.flatMap((h) => tableRows(h))[0] ?? null).slice(0, 600)}, links: ${seen.join(" ")}`,
         );
       }
       return {

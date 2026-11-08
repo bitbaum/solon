@@ -265,3 +265,13 @@ describe("a collection page that links its acts without a table", () => {
     ]);
   });
 });
+
+describe("a table whose act column has another name", () => {
+  it("is read from the cell that holds the act's link", () => {
+    const acts = actsOfRows(
+      [{ titre: '<a href="/reglements/136996">Règlement du Conseil général</a>', date: "2023" }],
+      "https://www.sion.ch/reglements",
+    );
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([["136996", "Règlement du Conseil général"]]);
+  });
+});
