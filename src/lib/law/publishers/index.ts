@@ -2,8 +2,11 @@ import type { PublisherAdapter } from "./types";
 import {
   balzers,
   eschen,
+  fribourgCity,
   gamprin,
+  koeniz,
   mauren,
+  neuchatelCity,
   planken,
   ruggell,
   schaan,
@@ -28,4 +31,7 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [ruggell.key]: ruggell,
   [eschen.key]: eschen,
   [schellenberg.key]: schellenberg,
+  [koeniz.key]: koeniz,
+  [fribourgCity.key]: fribourgCity,
+  [neuchatelCity.key]: neuchatelCity,
 };

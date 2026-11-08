@@ -58,6 +58,12 @@ describe("a commune named in a question", () => {
       "li7001",
     ]);
   });
+
+  it("names a commune without its accents, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Abfallreglement Koniz").sort()).toEqual(["be", "bfs355"]);
+    expect(authoritiesNamed("Règlement de police de Neuchâtel").sort()).toEqual(["bfs6458", "ne"]);
+  });
 });
 
 describe("Swiss federal law in a plan", () => {

@@ -30,7 +30,11 @@ export interface LinkedDocumentsConfig {
   include: RegExp;
   /** A title that names a form or a notice, even if it says "Reglement". */
   exclude: RegExp;
+  /** A document address that is not an act in force, whatever its title (a draft, a repealed act). */
+  excludeHref?: RegExp;
   kind?: ActKind;
+  /** The language of the commune's acts; German unless said. */
+  locale?: string;
 }
 
 const decode = (s: string) =>
@@ -124,7 +128,7 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
 /** The acts among a page's links: one per document id, titled by its link, forms left out. */
 export function actsOf(
   anchors: readonly { href: string; text: string }[],
-  config: Pick<LinkedDocumentsConfig, "link" | "include" | "exclude" | "kind">,
+  config: Pick<LinkedDocumentsConfig, "link" | "include" | "exclude" | "excludeHref" | "kind">,
 ): ListedAct[] {
   const seen = new Set<string>();
   const titles = new Set<string>();
@@ -133,6 +137,7 @@ export function actsOf(
     const id = config.link.exec(a.href)?.[1];
     if (!id || seen.has(id) || !a.text) continue;
     if (!config.include.test(a.text) || config.exclude.test(a.text)) continue;
+    if (config.excludeHref?.test(a.href)) continue;
     // One act per title: a page that offers the same act twice, under two file names, lists it once.
     const key = a.text
       .toLowerCase()
@@ -182,7 +187,7 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
     homepage: config.homepage,
     licenceSpdx: config.licenceSpdx,
     textStatus: "authentic",
-    locale: "de",
+    locale: config.locale ?? "de",
     async list(doFetch) {
       const pages: string[] = [];
       const anchors: { href: string; text: string }[] = [];
@@ -361,3 +366,68 @@ export const triesenberg = liCommune(
   undefined,
   WORDPRESS_FILE,
 );
+
+/**
+ * Swiss communes among the twenty most populous that link their acts from one
+ * page (surveyed 2026-11-08 from the addresses search engines index for the
+ * page and its documents). What each calls an act, and what a form or a
+ * report, is said in the commune's language.
+ */
+const CH_DE_ACT =
+  /reglement|verordnung|ordnung|statut|tarif|gebühren|richtlinie|beschluss|gesetz|vorschrift/i;
+const CH_DE_FORM =
+  /antrag|formular|anmeld|gesuch|merkblatt|checkliste|botschaft|erläuterung|bericht|entwurf/i;
+const CH_FR_ACT = /r[èe]glement|arr[êe]t[ée]|ordonnance|tarif|directive|statuts|prescriptions/i;
+const CH_FR_FORM =
+  /formulaire|demande|inscription|message|rapport|table des mati[èe]res|table chronologique|tabmat|pr[ée]face|guide|brochure|avis de|plan d.affectation|annexe/i;
+
+/**
+ * Köniz: "Reglemente und Verordnungen", files in its asset store named by
+ * number. Acts adopted but not yet in force ("hängig") and repealed ones
+ * ("aufgehoben") say so in the file's name.
+ */
+export const koeniz = linkedDocuments({
+  key: "koeniz",
+  authority: "bfs355",
+  name: "Gemeinde Köniz, Reglemente und Verordnungen",
+  homepage: "https://www.koeniz.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  pages: ["https://www.koeniz.ch/verwaltung/reglementeverordnungen.page/952"],
+  link: /\/public\/upload\/assets\/(\d+)\/[^/?#]+\.pdf(?:[?#]|$)/i,
+  include: CH_DE_ACT,
+  exclude: CH_DE_FORM,
+  excludeHref: /haengig|h%C3%A4ngig|aufgehoben|erlaeuterung/i,
+});
+
+/** Fribourg: "Règlements et tarifs", files in the site's monthly upload folders, named by the collection's number. */
+export const fribourgCity = linkedDocuments({
+  key: "fribourg-city",
+  authority: "bfs2196",
+  name: "Ville de Fribourg, Règlements et tarifs",
+  homepage: "https://www.ville-fribourg.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.ville-fribourg.ch/reglements-tarifs"],
+  link: /\/sites\/default\/files\/(\d{4}-\d{2}\/[^/?#]+\.pdf)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * Neuchâtel: "Réglementation", the collection of the commune merged in 2021,
+ * which the city says it is still compiling. Its tables of contents and the
+ * former collection's imported copies are not acts.
+ */
+export const neuchatelCity = linkedDocuments({
+  key: "neuchatel-city",
+  authority: "bfs6458",
+  name: "Ville de Neuchâtel, Réglementation",
+  homepage: "https://www.neuchatelville.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.neuchatelville.ch/votre-commune/reglementation"],
+  link: /\/fileadmin\/sites\/ne_ville\/fichiers\/votre_commune\/reglementation\/((?:[^/?#]+\/)?[^/?#]+\.pdf)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+  excludeHref: /\/imported\/|tabmat|table_chronologique/i,
+});

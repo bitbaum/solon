@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Köniz, Fribourg and Neuchâtel.** Three more of Switzerland's largest communes link
+  their regulations from one page of their own, and Solon now reads them there, in
+  German or French, leaving out forms, reports, tables of contents, and acts adopted but
+  not yet in force or repealed. Their first load runs on Solon's server. A question that
+  names Köniz, Fribourg or Freiburg, or Neuchâtel or Neuenburg, asks the commune's own
+  law as well as the canton's.
+
 - **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
   from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
   the Land Board's own file, read again each month, so opening either country on the
