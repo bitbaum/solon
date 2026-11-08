@@ -141,15 +141,15 @@ export function dayOf(text: string): string | null {
 export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
   const acts = new Map<string, ListedAct>();
   for (const row of rows) {
-    // German sites name the column title or name; others (Sion) another: the cell holding the act's link.
-    const cell = String(
-      row.title ??
-        row.name ??
-        Object.values(row).find((v) => typeof v === "string" && /\bhref=/.test(v)) ??
-        "",
-    );
-    const href = hrefOf(cell);
-    const title = words(cell);
+    // The title is the title or name column; the link is in it, or (Sion's publications) in
+    // another cell, a download button.
+    const named = String(row.title ?? row.name ?? "");
+    const linked =
+      hrefOf(named) !== null
+        ? named
+        : String(Object.values(row).find((v) => typeof v === "string" && /\bhref=/.test(v)) ?? "");
+    const href = hrefOf(linked);
+    const title = words(named) || words(linked);
     if (!href || !title || FORM.test(title)) continue;
     const pageUrl = absolute(href, base);
     // The collection's number names the act across its versions; a row without one is named by its page.
@@ -188,6 +188,9 @@ export function actsOfLinks(html: string, base: string): ListedAct[] {
   }
   return [...acts.values()];
 }
+
+/** i-web's publications module serves the file itself at this address: no act page, no versions. */
+const PUBLICATION = /^\/_rte\/publikation\/\d+\/?$/;
 
 /** An act page's facts: each `<dt>` with its `<dd>`, as words and as the HTML it holds. */
 export function factsOf(html: string): { label: string; text: string; html: string }[] {
@@ -319,6 +322,9 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
 
     async versions(pageUrl, doFetch) {
       const today = new Date().toISOString().slice(0, 10);
+      // A publication is the file itself: one version, dated by the day it is read.
+      if (PUBLICATION.test(new URL(pageUrl).pathname))
+        return [{ inForceFrom: today, inForceTo: null, pageUrl, dateBasis: "retrieved" }];
       const out: VersionRef[] = [];
       const seen = new Set<string>();
       let queue = [pageUrl];
@@ -340,6 +346,8 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
     },
 
     async document(version, doFetch): Promise<DocumentRef | null> {
+      if (PUBLICATION.test(new URL(version.pageUrl).pathname))
+        return { url: version.pageUrl, format: "pdf" };
       const url = documentOf(await text(version.pageUrl, doFetch), version.pageUrl);
       if (!url) return null;
       if (version.inForceTo === null) return { url, format: "pdf" };

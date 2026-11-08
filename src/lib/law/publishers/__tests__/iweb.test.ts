@@ -5,6 +5,7 @@ import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { PUBLISHERS } from "..";
 import {
   actsOfLinks,
+  sion,
   actsOfRows,
   dayOf,
   documentOf,
@@ -273,5 +274,39 @@ describe("a table whose act column has another name", () => {
       "https://www.sion.ch/reglements",
     );
     expect(acts.map((a) => [a.ref, a.title])).toEqual([["136996", "Règlement du Conseil général"]]);
+  });
+});
+
+describe("a publications table (Sion)", () => {
+  it("is read with its title from the name and its link from the download button", () => {
+    const acts = actsOfRows(
+      [
+        {
+          name: "Règlement communal sur la perception d'un impôt pour le culte",
+          datum: "28.03.2017",
+          _downloadBtn:
+            '<a title="Règlement" href="/_rte/publikation/104201" class="cms-download"><span class="sr-only">Règlement</span>Téléchargement</a>',
+        },
+      ],
+      "https://www.sion.ch/reglements",
+    );
+    expect(acts.map((a) => [a.ref, a.title, a.pageUrl])).toEqual([
+      [
+        "104201",
+        "Règlement communal sur la perception d'un impôt pour le culte",
+        "https://www.sion.ch/_rte/publikation/104201",
+      ],
+    ]);
+  });
+
+  it("serves each publication as its own document, read on the day", async () => {
+    const versions = await sion.versions("https://www.sion.ch/_rte/publikation/104201", fetch);
+    expect(versions).toEqual([
+      expect.objectContaining({ inForceTo: null, dateBasis: "retrieved" }),
+    ]);
+    expect(await sion.document(versions[0]!, fetch)).toEqual({
+      url: "https://www.sion.ch/_rte/publikation/104201",
+      format: "pdf",
+    });
   });
 });
