@@ -16,6 +16,7 @@ export const GLOBE_FEATURES: Readonly<Record<string, { layer: GlobeLayer; id: st
   ee: { layer: "countries", id: "233" },
   us: { layer: "countries", id: "840" },
   "us-wy": { layer: "states", id: "56" },
+  "us-nh": { layer: "states", id: "33" },
 };
 
 /** The id a feature is drawn under on the globe: its layer, then its code. */

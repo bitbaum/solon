@@ -2,7 +2,9 @@ name: Law text load
 
 # By hand: read the text of the Confederation's laws from Fedlex, or
 # Liechtenstein's from Lilex (gesetze.li), or Wyoming's from the Legislature's
-# downloads (wyoleg), and store it in the production
+# downloads (wyoleg), or New Hampshire's RSA from the General Court's site
+# (gcnh: about 11 seconds a chapter, as its robots.txt asks, so a full load of
+# some 1,700 chapters is two runs at limit 1000), and store it in the production
 # database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
 # two seconds per Fedlex act and three per Lilex act, politely paced; a full load
@@ -28,6 +30,7 @@ on:
             legilux,
             riigiteataja,
             wyoleg,
+            gcnh,
             refresh,
           ]
         default: fedlex
