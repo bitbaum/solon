@@ -53,6 +53,15 @@ const availability = (original: string, stamp: string | null): Route => {
   };
 };
 
+/** The capture index: these timestamps, oldest first, as the archive lists them. */
+const index =
+  (original: string, stamps: string[]): Route =>
+  (url) => {
+    if (!url.startsWith("https://web.archive.org/cdx/search/cdx?")) return undefined;
+    if (new URL(url).searchParams.get("url") !== original) return undefined;
+    return Response.json([["timestamp"], ...stamps.map((stamp) => [stamp])]);
+  };
+
 const capture =
   (original: string, stamp: string, body: BodyInit, type = "text/html"): Route =>
   (url) =>
@@ -82,6 +91,7 @@ describe("a publisher that refuses Solon's reader", () => {
       // Official first, then the archive; Solon says who it is to both, never a browser's name.
       expect(asked.map((a) => a.url)).toEqual([
         PDF,
+        expect.stringMatching(/^https:\/\/web\.archive\.org\/cdx\/search\/cdx\?/),
         `https://archive.org/wayback/available?url=${encodeURIComponent(PDF)}`,
         got.url,
       ]);
@@ -220,5 +230,38 @@ describe("a copy's provenance", () => {
     expect(md).toContain(`source_url: ${url}`);
     expect(md).toContain("copied_from: internet_archive");
     expect(md).toContain("copy_captured_on: 2025-03-14");
+  });
+});
+
+describe("an archive whose newest copy is the bot check", () => {
+  it("reads the newest capture before the site put the check up", async () => {
+    const OLDER = "20240102030405";
+    const html = `<html><head><title>Reglemente</title></head><body>
+      <a href="/wp-content/uploads/2022-01-01_Wasserreglement-1.pdf">Wasserreglement</a></body></html>`;
+    const { doFetch, asked } = standIn(
+      official(PAGE, () => new Response(BOT_CHECK, { status: 200 })),
+      index(PAGE, [OLDER, STAMP]),
+      capture(PAGE, STAMP, BOT_CHECK),
+      capture(PAGE, OLDER, html),
+    );
+    const got = await read(PAGE, doFetch, ["www.triesenberg.li"]);
+    expect(new TextDecoder().decode(got.bytes)).toContain("Wasserreglement");
+    expect(got.copy).toMatchObject({ original: PAGE, capturedOn: "2024-01-02" });
+    // The newest first, then the one before it.
+    expect(asked.map((a) => a.url).slice(-2)).toEqual([
+      `https://web.archive.org/web/${STAMP}id_/${PAGE}`,
+      `https://web.archive.org/web/${OLDER}id_/${PAGE}`,
+    ]);
+  });
+
+  it("says so when every copy is the bot check", async () => {
+    const { doFetch } = standIn(
+      official(PAGE, () => new Response(BOT_CHECK, { status: 200 })),
+      index(PAGE, [STAMP]),
+      capture(PAGE, STAMP, BOT_CHECK),
+    );
+    await expect(read(PAGE, doFetch, ["www.triesenberg.li"])).rejects.toThrow(
+      "the Internet Archive's copy is a bot check too",
+    );
   });
 });
