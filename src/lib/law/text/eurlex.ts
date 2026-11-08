@@ -289,7 +289,7 @@ export function eurlexText(fragment: string): string {
 }
 
 /** Where the `<div>` opening at `start` closes: the index just past its `</div>`. */
-function closeOf(html: string, start: number): number {
+export function closeOf(html: string, start: number): number {
   const tag = /<div\b|<\/div>/gi;
   tag.lastIndex = start + 1;
   let depth = 1;

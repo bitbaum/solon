@@ -51,4 +51,8 @@ export const LICENCES = [
   // notice the licence gives. Not share-alike.
   // https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
   { spdx: "OGL-UK-3.0", requiresAttribution: true, shareAlike: false },
+  // German statutes, ordinances, official notices and other official works ("amtliche Werke")
+  // are not protected by copyright: § 5 Urheberrechtsgesetz. The portal's own notice asks
+  // only that the source be named; the same class as the Swiss, Liechtenstein and Estonian ones.
+  { spdx: "LicenseRef-de-official-work", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

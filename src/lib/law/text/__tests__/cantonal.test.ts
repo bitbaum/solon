@@ -186,3 +186,20 @@ describe("the first article by its name", () => {
     expect(out[0]!.text).toBe("Le département est compétent.");
   });
 });
+
+describe("parseCantonalProvisions, a dash between the number and the title", () => {
+  const body = (n: number) =>
+    `Les dispositions du présent règlement s'appliquent à toute la commune, article ${n}.`;
+  it("cuts 'Article 1  – Buts' style headings into articles", () => {
+    const raw = [
+      "Article 1  – Buts",
+      body(1),
+      "Article 2 – Champ d'application",
+      body(2),
+      "Article 3 – Autorité",
+      `${body(3)} Voir les articles 1 – 2 du présent règlement.`,
+    ].join("\n");
+    const provisions = parseCantonalProvisions(raw);
+    expect(provisions.map((p) => p.path)).toEqual(["art_1", "art_2", "art_3"]);
+  });
+});

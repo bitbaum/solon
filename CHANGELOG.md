@@ -19,6 +19,15 @@ one to read for the detail. Fixes get the same weight as features.
   with no failures; the full load is still to run on Solon's server, and Scotland, Wales
   and Northern Ireland follow. {#law-uk}
 
+- **Germany's federal law.** Solon is set to read every federal statute and ordinance in
+  force from the Federal Ministry of Justice's portal Gesetze im Internet: some 6,100 acts,
+  each in German under its long title, cut into its paragraphs, articles and annexes
+  (`§ 12a` is `par_12a`, `Art 3` is `art_3`), not protected by copyright. The text is
+  read again every week and a new version is kept only when the words changed. A question
+  that names Germany or Deutschland asks German federal law as well as the European
+  Union's. The first load runs on Solon's server; the states' own law is not read yet.
+  {#law-de}
+
 - **Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona.** Seven more of
   Switzerland's largest communes link their regulations from pages of their own, and
   Solon now reads them there, in German, French or Italian, leaving out forms, reports,
@@ -113,6 +122,19 @@ one to read for the detail. Fixes get the same weight as features.
   EUR-Lex's terms ask for. The first load runs on Solon's server and has not run yet,
   so the EU's acts are not on the site today; their roadmap item stays open until they
   are. {#law-eu-layer}
+
+- **Austria's federal law.** Austria is now an authority among Solon's countries, under the
+  European Union as one of its members, and a reader for its consolidated federal law
+  comes with it: the 10,681 acts in force that the Federal Chancellery's legal
+  information system (RIS) lists, each by its Gesetzesnummer with its short title in
+  German, and each act's whole text, cut into its sections, articles and annexes under
+  the RIS's own markers (§ 4, Art. 7, Anlage 1) and dated by the day the latest of them
+  took effect. The texts are the RIS's consolidated reading, not the authentic Federal
+  Law Gazette, which each act's page says; they are shared under CC BY 4.0 with the RIS's
+  notice shown beside them. A question that names Austria (Österreich too) asks its law
+  and the European Union's. Checked against the live RIS by dry runs on Solon's server;
+  the first load there has not run yet, so Austria's acts are not on the site today.
+  {#law-at}
 
 ### Fixed
 

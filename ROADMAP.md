@@ -87,6 +87,11 @@ use.
 - [ ] Estonia's municipalities' own regulations, which the same register lists {#law-ee-local}
 - [x] The European Union as the layer above its members: an authority whose law applies in each of its 27 member states, so Estonia's and Luxembourg's pages and questions include it, the way a canton's include the Confederation. The atlas draws no shape for it (a union is not a country in Natural Earth); its law is reached from each member it holds {#law-eu-layer}
 - [ ] The European Union's regulations and directives in force (tens of thousands of acts): the register from the Publications Office's Cellar SPARQL endpoint a year at a time, named by CELEX number and titled in English; each act's English text from EUR-Lex as HTML, the latest consolidated version that has begun or else the act as the Official Journal published it, dated by the day the publisher states, cut into its preamble, articles and annexes under EUR-Lex's anchors (`art_1`, `anx_I`); reuse under Commission Decision 2011/833/EU with its notice; safe to stop and rerun in batches, read again every week. Built and tested against excerpts in the publishers' shapes, because neither host answered the sandbox it was written in; the server's dry run against the live hosts and the production load are not done (`law-text.yml`, source `eurlex`) {#law-eu}
+- [x] Austria's federal law in force, read from the Federal Chancellery's RIS (Rechtsinformationssystem des Bundes) through its Open Government Data API (v2.6, application `BrKons`): the register of 10,681 consolidated acts (statutes, constitutional laws, ordinances, notices, treaties), each once by its Gesetzesnummer with its Kurztitel, listed in a hundred-document pages; each act's whole consolidated German text from the RIS's page, cut into its sections (`§ 4`), articles (`Art. 7`, `Art. 2 § 4`) and annexes (`Anlage 1`) under the RIS's own markers, dated by the latest day a section took effect; CC BY 4.0 with the RIS's notice on the act page; safe to stop and rerun in batches (`law-text.yml`, source `ris`). The reader is verified against the live API by dry runs on Solon's server (2026-11-08: the whole register listed, and no failure in a sample of 60 acts nor in the ABGB, ASVG, B-VG, DSG, EStG, StGB, MRG and UStG, the ABGB cut into 1,380 provisions and the B-VG into 223 with its annex); the production load is the next item {#law-at}
+- [ ] Austria's production load: the first full run of `ris` on Solon's server (about three seconds an act, so a few runs at limit 1500), the weekly law sync then reading it again, and the RIS told of the mass download as its FAQ asks (ris.it@bka.gv.at) {#law-at-load}
+- [ ] Austria's Länder: the RIS also holds each state's consolidated law (`LrKons`), its Bundesgesetzblatt and its court decisions, none read yet; and Austria in Places, which has no pack {#law-at-more}
+- [x] Germany's federal law: every act in the Federal Ministry of Justice's portal Gesetze im Internet (6,143 statutes and ordinances in force on 2026-11-08), named by the portal's abbreviation (`bgb`, `gg`) and titled by its German long title, kind from the title; each act's XML cut into its paragraphs, articles and annexes under anchors from their numbers (`par_12a`, `art_3`, `anlage_1`); not protected by copyright (§ 5 UrhG); dated by the day read, read again every week and stored anew only when the text changed; paced at about a request a second. Unit tests run on hand-written excerpts in the portal's shape, because the portal did not answer the sandbox it was written in; the server's dry runs against the live portal listed all 6,143 acts and cut 68 of them (the Bürgerliches Gesetzbuch, Grundgesetz, Strafgesetzbuch, Handelsgesetzbuch, Abgabenordnung, Einkommensteuergesetz and Gewerbeordnung among them) with no failures; the production load is by hand, then the weekly sync (`law-text.yml`, source `gii`) {#law-de}
+- [ ] Germany's Länder: each state publishes its own law (not read yet; federal law only) {#law-de-laender}
 - [ ] The European Union's law in its other official languages, its decisions and treaties, and the atlas showing EU law in each member's panel {#law-eu-more}
 - [x] The United Kingdom's legislation, from legislation.gov.uk (The National Archives): UK Public General Acts and UK Statutory Instruments, the register from the Atom feeds a type and a year at a time (newest first), named by address (`ukpga/2018/12`) and titled in English; each item's current (revised) CLML text cut into its introductory text, sections and schedules under the XML's own ids (`section-3`, `regulation-2`, `schedule-1`), subsection numbers in brackets, a repealed or not-yet-commenced provision left out, an item repealed whole marked out of force and one with nothing commenced left for the next run, dated by the publisher's own date; Open Government Licence v3.0 with its notice; paced by the site's robots.txt crawl-delay (5 seconds when checked, 2026-11-08), within its fair use limit of 1,500 requests in 5 minutes; safe to stop and rerun. Verified live by the server's dry runs of 2026-11-08 (1,152 items listed and 45 cut with no failures); the production load is not done, and the weekly sync does not carry it (a full pass lists every year and asks 5 seconds a page; see law-uk-sync below) (`law-text.yml`, source `ukleg`) {#law-uk}
 - [ ] The devolved legislatures' acts and instruments (`asp`, `ssi`, `anaw`, `asc`, `wsi`, `nia`, `nisr`) as authorities of their own, and the United Kingdom's pre-1948 instruments {#law-uk-devolved}
@@ -165,6 +170,30 @@ above, because a group's rules must be data before they can be copied.
 - [ ] A member leaves with their own record: every act they signed, exportable and checkable elsewhere {#fork-leave}
 - [ ] Nested groups: a part of an organization adopts rules of its own for what is its own, and stays linked for what is shared {#fork-nested}
 - [ ] A rule-set template for groups that want almost no collective decisions, beside the five shipped ones; a template, never a default {#fork-minimal}
+
+### The law beside the numbers {#stats}
+
+A law says one thing; how it is enforced and what happened after it changed
+are other things. Solon should show all three on one record: the text, the
+enforcement, and the statistics over time with every amendment marked, each
+traceable to its source and its articles, so a person can see the gap and
+propose a change on the same page. Several axes of freedom, never one score:
+each axis is a published, versioned definition with its author, and a group's
+weights are its own policy, voted like any other. Statistics are facts in the
+existing places model, not a second store. The reasons, the model and the
+order are in `docs/design/2026-11-freedom-laws-statistics.md`.
+
+- [ ] Statistical series as facts: new metrics in the registry (definition, unit, the publisher's series code), current and historical values with source, method and revisions, from national statistical offices, the OECD, Eurostat and the World Bank {#stats-series}
+- [ ] Every metric, value or enforcement record can link to the provisions it is about; links are added and retracted in the record, never rewritten {#stats-law-links}
+- [ ] Enforcement as an attributed assertion beside the statute, never in it: rates where measured, practice where described, with evidence {#stats-enforcement}
+- [ ] Law events on timelines read from the law itself (a version taking or leaving force, a proposal closing), plus sourced events for changes that are not an act {#stats-events}
+- [ ] First series loaded with sources: top income tax rate, tax wedge, government consumption as a share of GDP, credited components of published freedom indexes, one enforcement proxy {#stats-first}
+- [ ] The atlas coloured by any metric, and a place panel with the value, its source, the linked law, a short series and the enforcement beside it {#stats-map}
+- [ ] Timelines with two series, law events marked, and peer places or the national trend beside them; the chart shows caveats and never draws a cause {#stats-timeline}
+- [ ] Ranked bars, stat tiles, sparklines, law beside enforcement, scatter and parallel coordinates; each mark opens its source and its law; every chart readable as a table; all on `@bitbaum/chartkit`, which Solon adopts (the tally moves onto it) {#stats-charts}
+- [ ] Axes as versioned definitions with their author, weights the reader sets, what a place claims kept apart from what it achieves {#stats-axes}
+- [ ] Saved chart views, stored by hash, shared by link, and attached to a proposal as evidence {#stats-views}
+- [ ] A group's axes and weights as its own policy, amended by vote, every change in the append-only record {#stats-governed}
 
 ### A record anyone can prove complete {#proof}
 
@@ -287,6 +316,12 @@ governance retires, so there is one place a decision is made.
 
 A rule template written for the Swiss association (Art. 60 ZGB), with the
 Protokoll a general meeting must produce, and a pilot group running on it.
+
+### Explainers from the record {#stats-explainers}
+
+Short narrated summaries generated from a saved chart view and its law
+timeline, every claim linked to its series and its articles. Not soon; the
+saved-view format is kept free of anything that would block it.
 
 ### Groups of groups, and leaving with your record
 

@@ -8,7 +8,7 @@ name: Law sync
 # Solon reads the law again so that what it holds is what is in
 # force (design: law-as-data, "Staying current"): the registers (new and
 # repealed acts), each publisher's new versions (Fedlex, Lilex, the cantons,
-# ZH-Lex, the communes, Estonia, the European Union), and the documents it holds read again, oldest
+# ZH-Lex, the communes, Estonia, the European Union, Germany), and the documents it holds read again, oldest
 # first, so a text a publisher changed becomes a new version. What changed is
 # served at /api/v1/law/changes and by the MCP tool law_changes.
 #
@@ -76,6 +76,7 @@ jobs:
           step "wyoming"                $PNPM run law:text wyoleg --again
           step "estonia"                $PNPM run law:text riigiteataja --limit 3000
           step "european union"         $PNPM run law:text eurlex --limit 1500
+          step "germany"                $PNPM run law:text gii --limit 3000
           step "communes"               $PNPM run law:text municipal --publisher all --limit 500
           step "refresh held documents" $PNPM run law:text refresh --limit 3000
           step "recut"                  $PNPM run law:text recut --limit 50000
