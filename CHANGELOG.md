@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Winterthur, St. Gallen and Biel/Bienne.** Three of Switzerland's largest cities keep
+  their regulations in the same kind of collection as Zug's and Glarus's communes, and
+  Solon is now set to read them the same way: every act with the day each version took
+  effect, cut into articles, from the first load on Solon's server. A question that names
+  Winterthur, Biel or Bienne, or St. Gallen asks the city's own law as well as the
+  canton's.
+
 - **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
   from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
   the Land Board's own file, read again each month, so opening either country on the

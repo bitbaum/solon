@@ -64,4 +64,8 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   li7008: ["mauren", "schaanwald", "gemeinde mauren"],
   li7009: ["gamprin", "gamprin-bendern", "gemeinde gamprin"],
   bfs261: ["city of zurich", "stadt zurich", "stadt zuerich", "ville de zurich", "citta di zurigo"],
+  bfs230: ["winterthur", "stadt winterthur", "winti"],
+  // "St. Gallen" names the canton and the city, as "Zürich" does: the city's rules apply there too.
+  bfs3203: ["st. gallen", "st gallen", "sankt gallen", "saint-gall", "san gallo"],
+  bfs371: ["biel", "bienne", "biel/bienne", "stadt biel", "ville de bienne"],
 };

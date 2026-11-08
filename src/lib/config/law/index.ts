@@ -200,6 +200,24 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "1632" },
     within: "gl",
   },
+  {
+    key: "bfs230",
+    name: "Winterthur",
+    place: { scheme: "bfs_municipality", value: "230" },
+    within: "zh",
+  },
+  {
+    key: "bfs3203",
+    name: "St. Gallen (city)",
+    place: { scheme: "bfs_municipality", value: "3203" },
+    within: "sg",
+  },
+  {
+    key: "bfs371",
+    name: "Biel/Bienne",
+    place: { scheme: "bfs_municipality", value: "371" },
+    within: "be",
+  },
   // Liechtenstein's communes: `li<number>`, the place the commune's number in the Liechtenstein register.
   {
     key: "li7001",
@@ -507,6 +525,11 @@ export const LEXWORK = {
     { host: "glarus.tlex.ch", authority: "bfs1632" },
     { host: "glarus-nord.tlex.ch", authority: "bfs1630" },
     { host: "glarus-sued.tlex.ch", authority: "bfs1631" },
+    // Three of Switzerland's twenty most populous communes (2026-11-08): each city's own
+    // systematic collection, as it links it from its site and search engines index it.
+    { host: "winterthur.tlex.ch", authority: "bfs230" },
+    { host: "st.gallen.tlex.ch", authority: "bfs3203" },
+    { host: "biel-bienne.tlex.ch", authority: "bfs371" },
   ] as readonly { host: string; authority: string }[],
 } as const;
 
