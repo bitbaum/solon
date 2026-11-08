@@ -341,6 +341,49 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "li_municipality", value: "7011" },
     within: "li",
   },
+  // Swiss communes that link their acts from one page of their own (publishers/linked-documents.ts).
+  {
+    key: "bfs355",
+    name: "Köniz",
+    place: { scheme: "bfs_municipality", value: "355" },
+    within: "be",
+  },
+  {
+    key: "bfs2196",
+    name: "Fribourg (city)",
+    place: { scheme: "bfs_municipality", value: "2196" },
+    within: "fr",
+  },
+  {
+    key: "bfs6458",
+    name: "Neuchâtel (city)",
+    place: { scheme: "bfs_municipality", value: "6458" },
+    within: "ne",
+  },
+  {
+    key: "bfs5192",
+    name: "Lugano",
+    place: { scheme: "bfs_municipality", value: "5192" },
+    within: "ti",
+  },
+  {
+    key: "bfs5002",
+    name: "Bellinzona",
+    place: { scheme: "bfs_municipality", value: "5002" },
+    within: "ti",
+  },
+  {
+    key: "bfs6621",
+    name: "Genève (city)",
+    place: { scheme: "bfs_municipality", value: "6621" },
+    within: "ge",
+  },
+  {
+    key: "bfs5586",
+    name: "Lausanne",
+    place: { scheme: "bfs_municipality", value: "5586" },
+    within: "vd",
+  },
 ];
 
 /**

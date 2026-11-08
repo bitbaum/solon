@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona.** Seven more of
+  Switzerland's largest communes link their regulations from pages of their own, and
+  Solon now reads them there, in German, French or Italian, leaving out forms, reports,
+  tables of contents, and acts adopted but not yet in force or repealed. Their first load
+  runs on Solon's server. A question that names one of them (Genf, Freiburg, Neuenburg,
+  Lauis and Bellenz too) asks the commune's own law as well as the canton's. A page of a
+  commune's list that cannot be read no longer stops the rest of the list from being
+  read.
+
 - **Winterthur, St. Gallen and Biel/Bienne.** Three of Switzerland's largest cities keep
   their regulations in the same kind of collection as Zug's and Glarus's communes, and
   Solon is now set to read them the same way: every act with the day each version took

@@ -146,3 +146,161 @@ describe("Liechtenstein's communes", () => {
     }
   });
 });
+
+describe("Swiss communes that link their acts from one page", () => {
+  // The documents' addresses are the communes' own, as search engines index them (2026-11-08).
+  const page = async (
+    key: "koeniz" | "fribourgCity" | "neuchatelCity" | "luganoCity" | "bellinzonaCity",
+    html: string,
+    base: string,
+  ) => {
+    const communes = await import("../linked-documents");
+    const listed = await communes[key].list(
+      (async () => new Response(html)) as unknown as typeof fetch,
+    );
+    expect(listed.url).toBe(base);
+    return listed.acts;
+  };
+
+  it("Köniz: its acts by asset number, without the ones not yet in force or repealed", async () => {
+    const acts = await page(
+      "koeniz",
+      `<a href="/public/upload/assets/13982/152.04_datenschutzreglement.pdf?fp=2">152.04 Datenschutzreglement</a>
+       <a href="/public/upload/assets/12119/725.11_reglement_ausfuehrungs_gebuehrenbestimmungen_baureglement.pdf?fp=3">725.11 Reglement über Ausführungs- und Gebührenbestimmungen zum Baureglement</a>
+       <a href="/public/upload/assets/23719/153.01_Personalreglement_haengig.pdf?fp=2">153.01 Personalreglement</a>
+       <a href="/public/upload/assets/18127/721.0_baureglement_besondere_vorschriften_nutzungsplan_schutzplan_AUFGEHOBEN.pdf?fp=2">721.0 Baureglement</a>
+       <a href="/public/upload/assets/14177/180413_opr_erlaeuterungsversion_baureglement.pdf?fp=1">Baureglement, Erläuterungsversion</a>`,
+      "https://www.koeniz.ch/verwaltung/reglementeverordnungen.page/952",
+    );
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([
+      ["13982", "152.04 Datenschutzreglement"],
+      ["12119", "725.11 Reglement über Ausführungs- und Gebührenbestimmungen zum Baureglement"],
+    ]);
+  });
+
+  it("Fribourg: its acts in the monthly upload folders, in French, without the council's messages", async () => {
+    const acts = await page(
+      "fribourgCity",
+      `<a href="/sites/default/files/2020-10/600.1_reglement_des_dechets_1998_2011.pdf">600.1 Règlement relatif à la gestion des déchets</a>
+       <a href="/sites/default/files/2026-07/101.2_reglement_new.pdf">101.2 Règlement d'application</a>
+       <a href="/sites/default/files/inline-files/Message51_Rdesfinances.pdf">Message n° 51 : règlement des finances</a>`,
+      "https://www.ville-fribourg.ch/reglements-tarifs",
+    );
+    expect(acts.map((a) => a.ref)).toEqual([
+      "2020-10/600.1_reglement_des_dechets_1998_2011.pdf",
+      "2026-07/101.2_reglement_new.pdf",
+    ]);
+    const { fribourgCity } = await import("../linked-documents");
+    expect(fribourgCity.locale).toBe("fr");
+  });
+
+  it("Neuchâtel: its acts, without the tables of contents or the former collection's copies", async () => {
+    const dir = "/fileadmin/sites/ne_ville/fichiers/votre_commune/reglementation";
+    const acts = await page(
+      "neuchatelCity",
+      `<a href="${dir}/Reglementation_2021/100_CG_Reglement_general_de_la_Ville_de_Neuchatel_Juin_2022.pdf">100.1 Règlement général de la Ville de Neuchâtel</a>
+       <a href="${dir}/12_2_R_police.pdf">12.2 Règlement de police</a>
+       <a href="${dir}/Reglementation_2021/VdN_Table_chronologique_Mai_2026.pdf">Table chronologique</a>
+       <a href="${dir}/Tabmat_1_8_novembre_2020.pdf">Recueil systématique, table des matières</a>
+       <a href="${dir}/imported/Preface.pdf">Préface</a>`,
+      "https://www.neuchatelville.ch/votre-commune/reglementation",
+    );
+    expect(acts.map((a) => a.title)).toEqual([
+      "100.1 Règlement général de la Ville de Neuchâtel",
+      "12.2 Règlement de police",
+    ]);
+  });
+
+  it("Lugano: each act a page of the city's that serves its PDF, read in Italian", async () => {
+    const acts = await page(
+      "luganoCity",
+      `<a href="https://www.lugano.ch/law/16371942/1-1-1-Regolamento-comunale-della-Citta-di-Lugano-del-14-marzo-1989">1.1.1 Regolamento comunale della Città di Lugano</a>
+       <a href="/law/16174908/7-1-1-Regolamento-edilizio-della-Citta-di-Lugano-del-16-dicembre-1963">7.1.1 Regolamento edilizio della Città di Lugano</a>
+       <a href="/dam/jcr:3c48f197-33fc-4265-89aa-0e96f104cf4c/MMN_11423.pdf">Messaggio municipale no. 11423</a>`,
+      "https://www.lugano.ch/la-mia-citta/amministrazione/legislazione/",
+    );
+    expect(acts.map((a) => [a.ref, a.title])).toEqual([
+      ["16371942", "1.1.1 Regolamento comunale della Città di Lugano"],
+      ["16174908", "7.1.1 Regolamento edilizio della Città di Lugano"],
+    ]);
+  });
+
+  it("Bellinzona: each act a file served by its document id", async () => {
+    const acts = await page(
+      "bellinzonaCity",
+      `<a href="downdoc.php?id_doc=29818&amp;lng=1&amp;rif=552846a154">Regolamento comunale sull'occupazione di area pubblica</a>
+       <a href="/downdoc.php?id_doc=79595&amp;lng=1&amp;i=1&amp;rif=c1fdc5a2e6">Ordinanza municipale sugli impianti pubblicitari</a>
+       <a href="/Calendario-rifiuti-2026-Camorino-Claro-Gnosca-Gorduno-Moleno-Preonzo-4f523400">Calendario rifiuti 2026</a>`,
+      "https://www.bellinzona.ch/1d212c00",
+    );
+    expect(acts.map((a) => [a.ref, a.pageUrl])).toEqual([
+      ["29818", "https://www.bellinzona.ch/downdoc.php?id_doc=29818&lng=1&rif=552846a154"],
+      ["79595", "https://www.bellinzona.ch/downdoc.php?id_doc=79595&lng=1&i=1&rif=c1fdc5a2e6"],
+    ]);
+  });
+
+  /** A site that answers from a map of addresses; anything else is not there. */
+  const site = (pages: Record<string, string>) =>
+    (async (input: string | URL) => {
+      const body = pages[String(input)];
+      return body === undefined ? new Response("", { status: 404 }) : new Response(body);
+    }) as unknown as typeof fetch;
+
+  it("Genève: files listed on the pages of its list or on an act's own page, a missing page not stopping the rest", async () => {
+    const { geneveCity } = await import("../linked-documents");
+    const list =
+      "https://www.geneve.ch/autorites-administration/administration-municipale/reglements-municipaux";
+    const act =
+      "https://www.geneve.ch/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail";
+    const listed = await geneveCity.list(
+      site({
+        [list]: `<a href="/sites/default/files/2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf">Règlement du Conseil municipal de la Ville de Genève (LC 21 111)</a>
+          <a href="/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail">Règlement sur la protection de la santé et la sécurité du travail</a>`,
+        [`${list}?page=1`]: `<a href="/en/media/8320205">Règlement relatif au système de contrôle interne en Ville de Genève (LC 21 133)</a>`,
+        // This one file's address is the test's own; the others are the city's.
+        [act]: `<a href="/sites/default/files/2025-03/LC21152.35-reglement-sante-securite-travail.pdf">Règlement sur la protection de la santé et la sécurité du travail (LC 21 152.35)</a>`,
+      }),
+    );
+    expect(listed.acts.map((a) => a.ref)).toEqual([
+      "2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf",
+      "8320205",
+      "2025-03/LC21152.35-reglement-sante-securite-travail.pdf",
+    ]);
+  });
+
+  it("Lausanne: each act's file on its own entry, titled by the link or, for a button, its title", async () => {
+    const { lausanneCity } = await import("../linked-documents");
+    // The entry and file ids are the city's; which act each names here is the test's.
+    const index = "https://www.lausanne.ch/apps/actualites/index_recueil.php";
+    const listed = await lausanneCity.list(
+      site({
+        [index]: `<a href="index_recueil.php?id_recueil=60">Règlement général de police (500.1)</a>
+          <a href="index_recueil.php?id_recueil=61">Règlement sur la distribution de l'eau (730.1)</a>`,
+        [`${index}?id_recueil=60`]: `<a href="Next/serve.php?id=5460">Règlement général de police de la Commune de Lausanne – RGP</a>`,
+        [`${index}?id_recueil=61`]: `<a href="Next/serve.php?id=7105" title="Règlement sur la distribution de l'eau">Télécharger</a>`,
+      }),
+    );
+    expect(listed.acts.map((a) => [a.ref, a.title])).toEqual([
+      ["5460", "Règlement général de police de la Commune de Lausanne – RGP"],
+      ["7105", "Règlement sur la distribution de l'eau"],
+    ]);
+  });
+
+  it("each read into the commune its BFS number names, within its canton", async () => {
+    const { PUBLISHERS } = await import("../index");
+    const { LAW_AUTHORITIES } = await import("@/lib/config/law");
+    for (const [key, number, canton] of [
+      ["koeniz", "355", "be"],
+      ["fribourg-city", "2196", "fr"],
+      ["neuchatel-city", "6458", "ne"],
+      ["lugano-city", "5192", "ti"],
+      ["bellinzona-city", "5002", "ti"],
+      ["geneve-city", "6621", "ge"],
+      ["lausanne-city", "5586", "vd"],
+    ] as const) {
+      const authority = LAW_AUTHORITIES.find((a) => a.key === PUBLISHERS[key]!.authority)!;
+      expect(authority.place).toEqual({ scheme: "bfs_municipality", value: number });
+      expect(authority.within).toBe(canton);
+    }
+  });
+});

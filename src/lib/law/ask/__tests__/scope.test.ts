@@ -59,6 +59,12 @@ describe("a commune named in a question", () => {
     ]);
   });
 
+  it("names a commune without its accents, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Abfallreglement Koniz").sort()).toEqual(["be", "bfs355"]);
+    expect(authoritiesNamed("Règlement de police de Neuchâtel").sort()).toEqual(["bfs6458", "ne"]);
+  });
+
   it("names a city in either language, and a city that shares its canton's name with the canton", async () => {
     const { authoritiesNamed } = await import("../places");
     expect(authoritiesNamed("Le règlement de police de Bienne").sort()).toEqual(["be", "bfs371"]);
