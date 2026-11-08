@@ -223,10 +223,21 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       }
       const acts = actsOf(anchors, config);
       // A page that lists nothing is a changed page or a challenge, never "no acts": fail loudly.
-      if (acts.length === 0)
+      if (acts.length === 0) {
+        // Say what the pages did hold, so the next reader is fixed from evidence, not guesses.
+        const documents = anchors.filter((a) => config.link.test(a.href));
+        const titled = documents.filter((a) => config.include.test(a.text));
+        const sample = (list: { href: string; text: string }[]) =>
+          list
+            .slice(0, 12)
+            .map((a) => `${a.text.slice(0, 60)} <${a.href.slice(0, 140)}>`)
+            .join(" | ");
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}; ` +
+            `${pages.length} page(s), ${anchors.length} links, ${documents.length} matching the document pattern, ` +
+            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}`,
         );
+      }
       for (const act of acts) titles.set(act.pageUrl, act.title);
       return {
         bytes: new TextEncoder().encode(pages.join("\n")),
