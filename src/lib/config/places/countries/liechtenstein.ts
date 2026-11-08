@@ -177,6 +177,7 @@ export const liechtenstein: CountryPackInput = {
   sources: [
     "li-constitution-communes",
     "swisstopo-postcode-localities-li",
+    "swisstopo-li-commune-boundaries",
     "li-income-tax",
     "li-communal-surcharges",
     "li-communal-tax-steps",

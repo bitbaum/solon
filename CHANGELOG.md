@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **One atlas.** The globe on the home page and the map on Places are one now. Tap a
+  country and the Earth turns to it and draws its places, coloured by what tax would
+  cost you there; beside it, how much of its law Solon holds with a link to read it and
+  propose changes, and where every figure comes from. The long lists of levels and
+  sources under the map are gone: a place is found by tapping it or searching. A view
+  can be shared: `/places?in=ch`. {#atlas}
+
 - **When a publisher refuses Solon's reader, the law comes from a dated public copy.**
   If a commune's site answers with a refusal (HTTP 403, 429 or 503, or a bot check in
   place of the page), Solon reads the newest copy the Internet Archive's Wayback Machine

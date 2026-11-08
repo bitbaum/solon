@@ -5,7 +5,7 @@ import { use } from "react";
 import { Link } from "@/i18n/navigation";
 import FullBleed from "@/components/site/full-bleed";
 import { MethodLab } from "@/components/learn/method-lab";
-import LawGlobe from "@/components/law/law-globe";
+import Atlas from "@/components/atlas/atlas";
 import { PHOTOS } from "@/lib/content/photos";
 import AudienceTile from "@/components/site/audience-tile";
 import Problems from "@/components/site/problems";
@@ -63,7 +63,7 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
             </div>
           </div>
           <div className="mx-auto w-full max-w-xl min-w-0">
-            <LawGlobe />
+            <Atlas mode="preview" />
           </div>
         </div>
       </section>
