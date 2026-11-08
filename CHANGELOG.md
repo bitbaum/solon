@@ -4,6 +4,20 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-08
+
+### Added
+
+- **When a publisher refuses Solon's reader, the law comes from a dated public copy.**
+  If a commune's site answers with a refusal (HTTP 403, 429 or 503, or a bot check in
+  place of the page), Solon reads the newest copy the Internet Archive's Wayback Machine
+  holds of that page or document, and keeps the publisher's own address as the act's.
+  The act page says so in plain words: "Copy read on {date} from the Internet Archive's
+  copy of {date}", with a link to that copy, in all five languages; the Markdown for
+  machines names it too. Solon still says who it is and solves no challenge. Triesenberg,
+  whose site answers with a bot check, is the first commune read this way, the eleventh
+  of Liechtenstein's eleven. {#law-communes}
+
 ## 2026-11-07
 
 ### Added

@@ -11,6 +11,7 @@
 import { z } from "zod";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
+import { archiveCopyOf } from "./archive-copy";
 import { findActs, queryGroups } from "./find";
 import { SITE } from "./site";
 import { chainOf, levelOf } from "./places";
@@ -30,6 +31,12 @@ const actId = z.string().regex(/^[0-9a-f-]{36}$/, "an act id from law_search or 
 const anchor = z.string().regex(/^[A-Za-z0-9_.-]{1,80}$/, "an anchor such as art_270_b or par_19");
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const lang = z.string().regex(/^[a-z]{2}$/);
+
+/** Where a text read from the Internet Archive's copy was copied from, and when the copy was captured. */
+const archiveFields = (sourceUrl: string | null) => {
+  const copy = archiveCopyOf(sourceUrl);
+  return copy ? { archiveCopyUrl: copy.url, archiveCapturedOn: copy.capturedOn } : {};
+};
 
 export interface LawTool<Shape extends z.ZodRawShape = z.ZodRawShape> {
   name: string;
@@ -118,7 +125,9 @@ export const LAW_TOOLS = [
           excerpt: h.excerpt,
           inForceFrom: h.inForceFrom,
           dateBasis: h.dateBasis,
-          publisherUrl: h.sourceUrl,
+          // A text read from the Internet Archive's copy names the publisher's page and the copy apart.
+          publisherUrl: archiveCopyOf(h.sourceUrl)?.original ?? h.sourceUrl,
+          ...archiveFields(h.sourceUrl),
           sha256: h.contentSha256,
           solonUrl: actUrl(h.actId, h.path),
         })),

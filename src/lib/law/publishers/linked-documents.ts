@@ -10,7 +10,8 @@
  * for byte, is not stored again (load.ts).
  */
 import type { ActKind } from "@/lib/config/law";
-import { getText } from "./http";
+import { originalOf } from "../archive-copy";
+import { read } from "./http";
 import type { ListedAct, PublisherAdapter, VersionRef } from "./types";
 
 export interface LinkedDocumentsConfig {
@@ -74,7 +75,7 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
   const declared = /<base\b[^>]*\bhref=(["'])(.*?)\1/i.exec(html)?.[2];
   if (declared) {
     try {
-      base = new URL(decode(declared), base).toString();
+      base = originalOf(new URL(decode(declared), base).toString());
     } catch {
       // keep the page's address
     }
@@ -94,7 +95,8 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
         .trim();
     let href: string;
     try {
-      href = new URL(decode(m[3]!), base).toString();
+      // A link in the archive's copy of a page names the publisher's own address.
+      href = originalOf(new URL(decode(m[3]!), base).toString());
     } catch {
       continue; // not an address
     }
@@ -186,11 +188,15 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       const anchors: { href: string; text: string }[] = [];
       const queue = [...config.pages];
       const opened = new Set<string>();
+      let first: string | null = null;
       while (queue.length && opened.size < 40) {
         const url = queue.shift()!;
         if (opened.has(url)) continue;
         opened.add(url);
-        const html = await getText(url, doFetch, [host]);
+        // The publisher's page, or the archive's dated copy of it when the publisher refuses (http.ts).
+        const page = await read(url, doFetch, [host]);
+        first ??= page.url;
+        const html = new TextDecoder().decode(page.bytes);
         pages.push(html);
         const found = anchorsOf(html, url);
         anchors.push(...found);
@@ -202,7 +208,11 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       // A page that lists nothing is a changed page or a challenge, never "no acts": fail loudly.
       if (acts.length === 0) throw new Error(`${config.key}: the pages listed no acts`);
       for (const act of acts) titles.set(act.pageUrl, act.title);
-      return { bytes: new TextEncoder().encode(pages.join("\n")), url: config.pages[0]!, acts };
+      return {
+        bytes: new TextEncoder().encode(pages.join("\n")),
+        url: first ?? config.pages[0]!,
+        acts,
+      };
     },
     async versions(pageUrl) {
       const today = new Date().toISOString().slice(0, 10);
@@ -336,4 +346,18 @@ export const mauren = liCommune(
   ["https://www.mauren.li/online-schalter/3/Reglemente"],
   undefined,
   MEDIA_ARCHIVE_FILE,
+);
+/**
+ * Triesenberg's site answers automated readers with a bot check (LiteSpeed's
+ * "Bot Verification", 2026-11-07), so its page and documents are read from the
+ * Internet Archive's newest copies (http.ts), each recorded as such.
+ */
+export const triesenberg = liCommune(
+  "triesenberg",
+  "li7004",
+  "Gemeinde Triesenberg",
+  "https://www.triesenberg.li/",
+  ["https://www.triesenberg.li/service/downloads/formulare-und-reglemente/"],
+  undefined,
+  WORDPRESS_FILE,
 );
