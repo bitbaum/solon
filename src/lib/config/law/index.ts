@@ -39,6 +39,10 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "lu_eli",
   /** The European Union's CELEX number: `32016R0679` (sector 3, year, R regulation or L directive, number). */
   "celex",
+  /** Austria's Gesetzesnummer: the number the RIS gives an act, shared by every document of it (`10001622` is the ABGB). */
+  "at_gesetzesnummer",
+  /** The RIS's NOR number of an act's own document (`NOR40198929`), the one that carries its Langtitel. */
+  "at_nor",
   /** Germany's federal portal's abbreviation for an act, the folder it is served from: `bgb`, `gg`, `1-dm-goldm_nzg`. */
   "gii_abbr",
 ] as const;
@@ -115,6 +119,15 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  {
+    key: "at",
+    name: "Austria",
+    place: { scheme: "iso_3166_1", value: "AT" },
+    // The RIS's terms for its open data: Creative Commons Namensnennung 4.0 (CC BY 4.0), with
+    // attribution. The wording is Solon's, built from the form the RIS's FAQ asks for.
+    attribution:
+      "Quelle: RIS – Rechtsinformationssystem des Bundes, Bundeskanzleramt, https://www.ris.bka.gv.at (CC BY 4.0)",
+  },
   // Germany's federal law; the Länder's own law is a follow-up (each publishes its own).
   { key: "de", name: "Germany", place: { scheme: "iso_3166_1", value: "DE" } },
   // A union of countries: no single place; its law applies in each member, above the member's
@@ -746,6 +759,77 @@ export const EURLEX = {
   kinds: { R: "regulation", L: "directive" } as Readonly<Record<string, ActKind>>,
   /** The first year of the Official Journal's acts; the register is read a year at a time from it. */
   firstYear: 1952,
+} as const;
+
+/**
+ * Austria's federal law from the Rechtsinformationssystem des Bundes (RIS) of the
+ * Federal Chancellery, through its Open Government Data interface ("OGD-RIS API",
+ * v2.6, https://data.bka.gv.at/ris/api/v2.6/). The application `BrKons` is the
+ * consolidated federal law: a search answers one JSON document per section (§),
+ * article or annex, all carrying their act's Gesetzesnummer; the act's own
+ * document (Dokumenttyp "Norm", section "§ 0") carries the Kurztitel, the
+ * Langtitel and the day of the act's first entry into force. The whole consolidated
+ * text of an act is one HTML page, the `GesamteRechtsvorschriftUrl` each document
+ * names; its sections are `<div class="documentContent">` blocks headed by the
+ * RIS's own marker ("§ 4", "Art. 2 § 4", "Anl. 1").
+ *
+ * Reuse: the RIS FAQ puts the use of its data through the OGD interfaces under
+ * Creative Commons Namensnennung 4.0 International (CC BY 4.0), asks for attribution,
+ * needs no registration, and asks that a mass download be announced to
+ * ris.it@bka.gv.at. The consolidated text is not authentic (only the Bundesgesetzblatt
+ * is), so the text status is "consolidated". The notice to show is the authority's
+ * `attribution`.
+ */
+export const RIS = {
+  key: "ris",
+  authority: "at",
+  publisher: "Rechtsinformationssystem des Bundes (RIS), Bundeskanzleramt",
+  homepage: "https://www.ris.bka.gv.at",
+  /** The OGD-RIS API's Bundesrecht query; `Applikation=BrKons` asks for the consolidated law. */
+  api: "https://data.bka.gv.at/ris/api/v2.6/Bundesrecht",
+  /** `{gesetzesnummer}`: the whole consolidated act in force today, as one HTML page. */
+  textUrl:
+    "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer={gesetzesnummer}",
+  /** Only these hosts are read. */
+  hosts: ["data.bka.gv.at", "www.ris.bka.gv.at", "ris.bka.gv.at"],
+  application: "BrKons",
+  /** The API's page size, "OneHundred": the largest it offers (10, 20, 50 or 100). */
+  pageSize: 100,
+  licenceSpdx: "CC-BY-4.0",
+  locale: "de",
+  textStatus: "consolidated" as ActTextStatus,
+  /**
+   * The RIS's act types (`Typ`) as act kinds, by the type's first word. Seen in the live register
+   * (dry runs, 2026-11-08): BG, V, K (Geltungsbereich), Bekanntmachung, Geschäftsordnung,
+   * Verfügung, "Entschl. d. BPräs", Vertrag – <partner> (some hundred spellings), and
+   * Vereinbarung gem. Art. 15a B-VG (between the Bund and the Länder: not a kind of its own
+   * here, so "other"). BVG and StV are the types the RIS's search help names. Matched without
+   * regard to case.
+   */
+  kindByTyp: {
+    BG: "statute",
+    BVG: "constitution",
+    V: "ordinance",
+    K: "notice",
+    StV: "treaty",
+    Vertrag: "treaty",
+    Bekanntmachung: "notice",
+    Geschäftsordnung: "regulation",
+    Verfügung: "decree",
+    "Entschl.": "decree",
+  } as Readonly<Record<string, ActKind>>,
+  /** The kind of a title's first word, when the type is not one listed above. */
+  kindByLeadingWord: {
+    Bundesgesetz: "statute",
+    Bundesverfassungsgesetz: "constitution",
+    "Bundes-Verfassungsgesetz": "constitution",
+    Verordnung: "ordinance",
+    Kundmachung: "notice",
+    Staatsvertrag: "treaty",
+    Vertrag: "treaty",
+    Bekanntmachung: "notice",
+    Geschäftsordnung: "regulation",
+  } as Readonly<Record<string, ActKind>>,
 } as const;
 
 /**

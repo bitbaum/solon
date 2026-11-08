@@ -112,6 +112,19 @@ one to read for the detail. Fixes get the same weight as features.
   so the EU's acts are not on the site today; their roadmap item stays open until they
   are. {#law-eu-layer}
 
+- **Austria's federal law.** Austria is now an authority among Solon's countries, under the
+  European Union as one of its members, and a reader for its consolidated federal law
+  comes with it: the 10,681 acts in force that the Federal Chancellery's legal
+  information system (RIS) lists, each by its Gesetzesnummer with its short title in
+  German, and each act's whole text, cut into its sections, articles and annexes under
+  the RIS's own markers (§ 4, Art. 7, Anlage 1) and dated by the day the latest of them
+  took effect. The texts are the RIS's consolidated reading, not the authentic Federal
+  Law Gazette, which each act's page says; they are shared under CC BY 4.0 with the RIS's
+  notice shown beside them. A question that names Austria (Österreich too) asks its law
+  and the European Union's. Checked against the live RIS by dry runs on Solon's server;
+  the first load there has not run yet, so Austria's acts are not on the site today.
+  {#law-at}
+
 ### Fixed
 
 - **A law read from an old archived copy is read again from a fresh one.** When the

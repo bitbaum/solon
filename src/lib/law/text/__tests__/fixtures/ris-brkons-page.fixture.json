@@ -1,0 +1,307 @@
+{
+  "_note": "Documents 1-3 are the real answer of the OGD-RIS API (Bundesrecht, BrKons) for the ABGB as captured 2026-08 in the MIT-licensed philrox/ris-mcp-ts test fixtures (documents unwrapped from its search envelope); Aenderung, Anmerkung and Schlagworte of the first are cut. The envelope (OgdSearchResult/OgdDocumentResults/Hits) follows the handbook's response paths and is a hand-written approximation, as are documents 4 and 5 (a Verordnung; an act that ended).",
+  "OgdSearchResult": {
+    "OgdDocumentResults": {
+      "Hits": {
+        "@pageNumber": "1",
+        "@pageSize": "100",
+        "#text": "5"
+      },
+      "OgdDocumentReference": [
+        {
+          "Data": {
+            "Metadaten": {
+              "Technisch": {
+                "ID": "NOR40198929",
+                "Applikation": "BrKons",
+                "Organ": "BKA (Bundeskanzleramt)",
+                "ImportTimestamp": {
+                  "@xsi:nil": "true",
+                  "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+                }
+              },
+              "Allgemein": {
+                "Veroeffentlicht": "2017-11-16",
+                "Geaendert": "2026-07-30",
+                "DokumentUrl": "https://www.ris.bka.gv.at/eli/jgs/1811/946/P0/NOR40198929"
+              },
+              "Bundesrecht": {
+                "Kurztitel": "Allgemeines bürgerliches Gesetzbuch",
+                "Titel": "Allgemeines bürgerliches Gesetzbuch für die gesammten deutschen Erbländer der Oesterreichischen Monarchie<br/>StF: JGS Nr. 946/1811",
+                "Eli": "https://ris.bka.gv.at/eli/jgs/1811/946/P0/NOR40198929",
+                "BrKons": {
+                  "Kundmachungsorgan": "JGS Nr. 946/1811",
+                  "Typ": "BG",
+                  "Dokumenttyp": "Norm",
+                  "ArtikelParagraphAnlage": "§ 0",
+                  "Paragraphnummer": "0",
+                  "StammnormPublikationsorgan": "JGS Nr.",
+                  "StammnormBgblnummer": "946/1811",
+                  "Inkrafttretensdatum": "1812-01-01",
+                  "Abkuerzung": "ABGB",
+                  "Indizes": {
+                    "item": "20/01 Allgemeines bürgerliches Gesetzbuch (ABGB)"
+                  },
+                  "Aenderung": "JGS Nr. 970/1846\r\nRGBl. Nr. 185/1856\r\n[... 160 further lines of amendments cut from this fixture ...]\r\nBGBl. I Nr. 62/2026 (NR: GP XXVIII RV 523 AB 561 S. 89. BR: 11838 AB 11839 S. 994.)",
+                  "Anmerkung": "[cut from this fixture]",
+                  "Schlagworte": "[cut from this fixture]",
+                  "Gesetzesnummer": "10001622",
+                  "GesamteRechtsvorschriftUrl": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10001622"
+                }
+              }
+            },
+            "Dokumentliste": {
+              "ContentReference": {
+                "ContentType": "MainDocument",
+                "Name": "Hauptdokument",
+                "Urls": {
+                  "ContentUrl": [
+                    {
+                      "DataType": "Xml",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR40198929/NOR40198929.xml"
+                    },
+                    {
+                      "DataType": "Html",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR40198929/NOR40198929.html"
+                    },
+                    {
+                      "DataType": "Rtf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR40198929/NOR40198929.rtf"
+                    },
+                    {
+                      "DataType": "Pdf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR40198929/NOR40198929.pdf"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "Data": {
+            "Metadaten": {
+              "Technisch": {
+                "ID": "NOR12017691",
+                "Applikation": "BrKons",
+                "Organ": "BKA (Bundeskanzleramt)",
+                "ImportTimestamp": {
+                  "@xsi:nil": "true",
+                  "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+                }
+              },
+              "Allgemein": {
+                "Geaendert": "2015-04-08",
+                "DokumentUrl": "https://www.ris.bka.gv.at/eli/jgs/1811/946/P1/NOR12017691"
+              },
+              "Bundesrecht": {
+                "Kurztitel": "Allgemeines bürgerliches Gesetzbuch",
+                "Eli": "https://www.ris.bka.gv.at/eli/jgs/1811/946/P1/NOR12017691",
+                "BrKons": {
+                  "Kundmachungsorgan": "JGS Nr. 946/1811",
+                  "Typ": "BG",
+                  "Dokumenttyp": "Paragraph",
+                  "ArtikelParagraphAnlage": "§ 1",
+                  "Paragraphnummer": "1",
+                  "StammnormPublikationsorgan": "JGS Nr.",
+                  "StammnormBgblnummer": "946/1811",
+                  "Inkrafttretensdatum": "1812-01-01",
+                  "Abkuerzung": "ABGB",
+                  "Indizes": {
+                    "item": "20/01 Allgemeines bürgerliches Gesetzbuch (ABGB)"
+                  },
+                  "Aenderung": "",
+                  "Schlagworte": "Privatrecht",
+                  "Gesetzesnummer": "10001622",
+                  "AlteDokumentnummer": "N2181110171Z",
+                  "GesamteRechtsvorschriftUrl": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10001622"
+                }
+              }
+            },
+            "Dokumentliste": {
+              "ContentReference": {
+                "ContentType": "MainDocument",
+                "Name": "Hauptdokument",
+                "Urls": {
+                  "ContentUrl": [
+                    {
+                      "DataType": "Xml",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017691/NOR12017691.xml"
+                    },
+                    {
+                      "DataType": "Html",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017691/NOR12017691.html"
+                    },
+                    {
+                      "DataType": "Rtf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017691/NOR12017691.rtf"
+                    },
+                    {
+                      "DataType": "Pdf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017691/NOR12017691.pdf"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "Data": {
+            "Metadaten": {
+              "Technisch": {
+                "ID": "NOR12017692",
+                "Applikation": "BrKons",
+                "Organ": "BKA (Bundeskanzleramt)",
+                "ImportTimestamp": {
+                  "@xsi:nil": "true",
+                  "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+                }
+              },
+              "Allgemein": {
+                "Geaendert": "2015-04-08",
+                "DokumentUrl": "https://www.ris.bka.gv.at/eli/jgs/1811/946/P2/NOR12017692"
+              },
+              "Bundesrecht": {
+                "Kurztitel": "Allgemeines bürgerliches Gesetzbuch",
+                "Eli": "https://www.ris.bka.gv.at/eli/jgs/1811/946/P2/NOR12017692",
+                "BrKons": {
+                  "Kundmachungsorgan": "JGS Nr. 946/1811",
+                  "Typ": "BG",
+                  "Dokumenttyp": "Paragraph",
+                  "ArtikelParagraphAnlage": "§ 2",
+                  "Paragraphnummer": "2",
+                  "StammnormPublikationsorgan": "JGS Nr.",
+                  "StammnormBgblnummer": "946/1811",
+                  "Inkrafttretensdatum": "1812-01-01",
+                  "Abkuerzung": "ABGB",
+                  "Indizes": {
+                    "item": "20/01 Allgemeines bürgerliches Gesetzbuch (ABGB)"
+                  },
+                  "Aenderung": "",
+                  "Schlagworte": "Rechtskenntnis, Rechtsirrtum",
+                  "Gesetzesnummer": "10001622",
+                  "AlteDokumentnummer": "N2181110172Z",
+                  "GesamteRechtsvorschriftUrl": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10001622"
+                }
+              }
+            },
+            "Dokumentliste": {
+              "ContentReference": {
+                "ContentType": "MainDocument",
+                "Name": "Hauptdokument",
+                "Urls": {
+                  "ContentUrl": [
+                    {
+                      "DataType": "Xml",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017692/NOR12017692.xml"
+                    },
+                    {
+                      "DataType": "Html",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017692/NOR12017692.html"
+                    },
+                    {
+                      "DataType": "Rtf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017692/NOR12017692.rtf"
+                    },
+                    {
+                      "DataType": "Pdf",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12017692/NOR12017692.pdf"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "Data": {
+            "Metadaten": {
+              "Technisch": {
+                "ID": "NOR99000001",
+                "Applikation": "BrKons",
+                "Organ": "BKA (Bundeskanzleramt)"
+              },
+              "Allgemein": {
+                "Geaendert": "2024-03-01",
+                "DokumentUrl": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR99000001/NOR99000001.html"
+              },
+              "Bundesrecht": {
+                "Kurztitel": "Beispielverordnung",
+                "Titel": "Verordnung des Bundesministers über ein Beispiel (Beispielverordnung)<br/>StF: BGBl. II Nr. 1/2020",
+                "BrKons": {
+                  "Kundmachungsorgan": "BGBl. II Nr. 1/2020",
+                  "Typ": "V",
+                  "Dokumenttyp": "Norm",
+                  "ArtikelParagraphAnlage": "§ 0",
+                  "Paragraphnummer": "0",
+                  "Inkrafttretensdatum": "2020-02-01",
+                  "Gesetzesnummer": "99000001",
+                  "GesamteRechtsvorschriftUrl": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=99000001"
+                }
+              }
+            },
+            "Dokumentliste": {
+              "ContentReference": {
+                "ContentType": "MainDocument",
+                "Name": "Hauptdokument",
+                "Urls": {
+                  "ContentUrl": [
+                    {
+                      "DataType": "Html",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR99000001/NOR99000001.html"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "Data": {
+            "Metadaten": {
+              "Technisch": {
+                "ID": "NOR99000002",
+                "Applikation": "BrKons",
+                "Organ": "BKA (Bundeskanzleramt)"
+              },
+              "Allgemein": {
+                "Geaendert": "2019-01-01",
+                "DokumentUrl": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR99000002/NOR99000002.html"
+              },
+              "Bundesrecht": {
+                "Kurztitel": "Altes Beispielgesetz",
+                "Titel": "Bundesgesetz über ein außer Kraft getretenes Beispiel<br/>StF: BGBl. Nr. 2/1990",
+                "BrKons": {
+                  "Kundmachungsorgan": "BGBl. Nr. 2/1990",
+                  "Typ": "BG",
+                  "Dokumenttyp": "Norm",
+                  "ArtikelParagraphAnlage": "§ 0",
+                  "Paragraphnummer": "0",
+                  "Inkrafttretensdatum": "1990-01-01",
+                  "Ausserkrafttretensdatum": "2019-12-31",
+                  "Gesetzesnummer": "99000002",
+                  "GesamteRechtsvorschriftUrl": "https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=99000002"
+                }
+              }
+            },
+            "Dokumentliste": {
+              "ContentReference": {
+                "ContentType": "MainDocument",
+                "Name": "Hauptdokument",
+                "Urls": {
+                  "ContentUrl": [
+                    {
+                      "DataType": "Html",
+                      "Url": "https://www.ris.bka.gv.at/Dokumente/Bundesnormen/NOR99000002/NOR99000002.html"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
