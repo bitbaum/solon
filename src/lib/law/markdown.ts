@@ -4,12 +4,14 @@
  * then one heading per provision, its anchor on the heading's line so a citation
  * (`#art_64`) is never guessed.
  */
+import { archiveCopyOf } from "./archive-copy";
 import { authorityOf, chainOf } from "./places";
 import type { ActView } from "./view";
 
 export function actToMarkdown(act: ActView, site: string): string {
   const { version } = act;
   const place = authorityOf(act.authority)?.name ?? act.authority;
+  const copy = archiveCopyOf(version?.sourceUrl);
   const front = [
     "---",
     `title: ${JSON.stringify(act.title ?? act.systematicNumber ?? act.id)}`,
@@ -32,6 +34,10 @@ export function actToMarkdown(act: ActView, site: string): string {
           `date_basis: ${version.dateBasis}`,
           `status: ${version.status}`,
           ...(version.sourceUrl ? [`source_url: ${version.sourceUrl}`] : []),
+          // A copy from the Internet Archive is named as one, never as the publisher's own.
+          ...(copy
+            ? ["copied_from: internet_archive", `copy_captured_on: ${copy.capturedOn}`]
+            : []),
           `read_on: ${version.retrievedOn}`,
           `sha256: ${version.contentSha256}`,
           `provisions: ${version.provisionCount}`,

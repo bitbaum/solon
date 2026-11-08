@@ -9,6 +9,7 @@ import {
   schaan,
   schellenberg,
   triesen,
+  triesenberg,
   vaduz,
 } from "./linked-documents";
 import { zurichCity } from "./zurich-city";
@@ -18,6 +19,7 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [zurichCity.key]: zurichCity,
   [vaduz.key]: vaduz,
   [triesen.key]: triesen,
+  [triesenberg.key]: triesenberg,
   [balzers.key]: balzers,
   [mauren.key]: mauren,
   [schaan.key]: schaan,

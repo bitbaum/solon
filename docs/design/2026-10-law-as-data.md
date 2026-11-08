@@ -350,8 +350,10 @@ question about Vaduz is asked of Liechtenstein's law too).
   was read (`dateBasis: retrieved`), and the loader stores a document only if
   its bytes differ from the version in force; a title's own "gültig ab
   01.01.2027" dates the version as the publisher's, and it waits until then.
-- Not yet: Triesenberg answers an automated reader with a bot check, which is
-  not worked around; Triesen's folder pages did not load; Balzers, Mauren and
+- Triesenberg answers an automated reader with a bot check, which is not
+  worked around; since 2026-11-08 its page and documents are read from the
+  Internet Archive's newest copies, named as such (`publishers/http.ts`).
+  Not yet: Triesen's folder pages did not load; Balzers, Mauren and
   Schellenberg list no acts on a page found so far. An empty list fails the
   run loudly rather than reading as "no acts".
 - Acts numbered by section ("1.1 Eigentum") rather than by article are held

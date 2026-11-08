@@ -219,6 +219,12 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     within: "li",
   },
   {
+    key: "li7004",
+    name: "Triesenberg",
+    place: { scheme: "li_municipality", value: "7004" },
+    within: "li",
+  },
+  {
     key: "li7005",
     name: "Schaan",
     place: { scheme: "li_municipality", value: "7005" },

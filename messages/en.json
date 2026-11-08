@@ -1304,6 +1304,8 @@
       "readOn": "The publisher does not state since when this version applies. Read on {date}.",
       "copy": "Copy read on {date}.",
       "copyFrom": "The page it was read from",
+      "copyArchived": "Copy read on {date} from the Internet Archive's copy of {captured}, because the publisher's site refused Solon's reader. It is not the publisher's own copy.",
+      "copyArchivedFrom": "The archived copy it was read from",
       "noText": "The text of this act is not held yet.",
       "provisions": "Provisions",
       "provisionCount": "{count, plural, one {# provision} other {# provisions}}",
