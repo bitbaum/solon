@@ -208,6 +208,13 @@ describe("an act none of whose provisions has begun", () => {
   });
 });
 
+describe("an item the site holds only as a PDF", () => {
+  it("has XML that is its metadata alone, and no text to read", () => {
+    const xml = `<?xml version="1.0"?><Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" xmlns:dc="http://purl.org/dc/elements/1.1/"><ukm:Metadata xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata"><dc:title>The Example Order 2024</dc:title></ukm:Metadata></Legislation>`;
+    expect(parseClml(xml, TODAY)).toMatchObject({ noText: true, provisions: [] });
+  });
+});
+
 describe("what is not an item's XML", () => {
   it("is reported with its first words", () => {
     expect(isClml("<html><body>Not Found</body></html>")).toBe(false);

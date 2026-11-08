@@ -534,6 +534,8 @@ export interface ParsedClml {
   /** Provisions left out because they are repealed, revoked or not yet in force. */
   omitted: number;
   version: { date: string; basis: DateBasis } | null;
+  /** True when the document is only its metadata: the site holds this item as a PDF, with no XML text yet. */
+  noText: boolean;
   /** The element names at the top of the document, for saying what an item with no text looks like. */
   structure: string;
 }
@@ -564,6 +566,7 @@ export function parseClml(xml: string, today: string): ParsedClml {
   const legislation = find(root, "Legislation");
   if (!legislation) throw new Error("not CLML: no Legislation element");
   const { provisions, live, repealed, prospective } = cut(legislation, today);
+  const noText = !kids(legislation).some((c) => local(c.name) !== "Metadata");
   const omitted = repealed + prospective;
   const title = text(find(legislation, "title") ?? find(legislation, "Title"));
   const version = versionDateOf(legislation, today);
@@ -575,6 +578,7 @@ export function parseClml(xml: string, today: string): ParsedClml {
       provisions: unique(provisions),
       outOfForce: out,
       notYetInForce: notYet,
+      noText: false,
       omitted,
       version,
       structure: structureOf(legislation),
@@ -586,6 +590,7 @@ export function parseClml(xml: string, today: string): ParsedClml {
     provisions: whole ? [{ path: WHOLE_ACT, heading: "", text: whole }] : [],
     outOfForce: false,
     notYetInForce: false,
+    noText,
     omitted,
     version,
     structure: structureOf(legislation),

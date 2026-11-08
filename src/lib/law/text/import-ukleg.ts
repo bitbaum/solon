@@ -75,6 +75,10 @@ export interface UkLegReport {
   fromArchive: number;
   /** Items whose text says every provision is repealed or revoked: marked out of force, no text stored. */
   outOfForce: number;
+  /** Items the site holds only as a PDF so far (their XML is metadata alone): not read, tried again next run. */
+  noXml: number;
+  /** The first words of the first sections cut, a dry run's check of the cut against the site. */
+  samples: string[];
   /** Items with nothing in force yet (every provision not yet commenced, or repealed): no text stored, tried again next run. */
   notYetInForce: number;
   /** What the stored provisions' paths are, by their prefix (`section`, `schedule`, `regulation`, `prelims`, `text`, …). */
@@ -117,6 +121,8 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
     fromArchive: 0,
     outOfForce: 0,
     notYetInForce: 0,
+    noXml: 0,
+    samples: [],
     pathKinds: {},
     omittedProvisions: 0,
     dateBasis: {},
@@ -153,7 +159,6 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
       .slice(0, 120);
     report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
   };
-  let sampled = 0;
   let refusedInARow = 0;
   const refused = (reason: string) => {
     refusedInARow = REFUSAL.test(reason) ? refusedInARow + 1 : 0;
@@ -282,6 +287,9 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
         } else if (stored.outOfForce) {
           report.outOfForce++;
           say(`${act.path}: every provision repealed or revoked; out of force`);
+        } else if (stored.noXml) {
+          report.noXml++;
+          say(`${act.path}: the site holds it as a PDF only so far; no XML text`);
         } else if (stored.notYet) {
           report.notYetInForce++;
           say(`${act.path}: nothing in force yet; not stored`);
@@ -305,7 +313,8 @@ export async function importUkLeg(db: Database, options: UkLegOptions): Promise<
             `${act.path} ${stored.date}: ${stored.provisions} provisions (${shape}), ${stored.omitted} left out`,
           );
           // A dry run shows the first words of the first few cuts, so the log can be read against the site.
-          if (dryRun && sampled++ < 3) say(`  ${stored.sample}`);
+          if (dryRun && report.samples.length < 3)
+            report.samples.push(`${act.path} ${stored.sample}`);
         }
       } catch (error) {
         const reason = reasonOf(error);
@@ -401,6 +410,8 @@ async function storeAct(
   outOfForce: boolean;
   /** Nothing in the item is law yet. */
   notYet: boolean;
+  /** The item has no XML text. */
+  noXml: boolean;
   /** The first words of the first section, to check a cut by eye in a dry run's log. */
   sample: string;
   /** The prefix of each provision's path: `section`, `schedule`, `prelims`, `text`. */
@@ -419,10 +430,12 @@ async function storeAct(
     fromArchive: false,
     outOfForce: false,
     notYet: false,
+    noXml: false,
     kinds: [] as string[],
     sample: "",
     unchanged: false,
   };
+  if (parsed.noText) return { ...none, noXml: true };
   if (parsed.notYetInForce) return { ...none, notYet: true };
   if (parsed.outOfForce) {
     // Only a publisher can say an act ended, and this one has: every provision is gone.
@@ -465,6 +478,7 @@ async function storeAct(
     fromArchive: page.copy !== null,
     outOfForce: false,
     notYet: false,
+    noXml: false,
     kinds: parsed.provisions.map((p) => p.path.split("-")[0]!),
     sample: ((p) =>
       p ? `${p.path} "${p.heading}": ${p.text.replace(/\s+/g, " ").slice(0, 160)}` : "")(
