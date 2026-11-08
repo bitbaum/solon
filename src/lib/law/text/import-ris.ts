@@ -25,7 +25,14 @@ import { read } from "../publishers/http";
 import { importRegister, type ActRow } from "../register/import";
 import { reasonOf } from "./import-riigiteataja";
 import { storeVersion } from "./store";
-import { inForceFromOf, isActPage, listInForce, parseRisHtml, type RisAct } from "./ris";
+import {
+  inForceFromOf,
+  isActPage,
+  listInForce,
+  parseRisHtml,
+  typeWordOf,
+  type RisAct,
+} from "./ris";
 
 export const RIS_IMPORTER_VERSION = "law-text-ris-1";
 
@@ -62,8 +69,10 @@ export interface RisReport {
   fromArchive: number;
   provisions: number;
   remaining: number;
-  /** The RIS's own types of the acts listed (`Typ`), counted: what the live register holds. */
+  /** The RIS's own types of the acts listed (`Typ`, by first word), counted: what the live register holds. */
   typeCounts: Record<string, number>;
+  /** Of those, the types that gave no kind but "other", by first word: what the config does not yet know. */
+  unmappedTypes: Record<string, number>;
   failures: { act: string; reason: string }[];
   failureReasons: Record<string, number>;
   /** Set when the run stopped early because the publisher kept refusing: its last answer. */
@@ -93,6 +102,7 @@ export async function importRis(db: Database, options: RisOptions): Promise<RisR
     provisions: 0,
     remaining: 0,
     typeCounts: {},
+    unmappedTypes: {},
     failures: [],
     failureReasons: {},
   };
@@ -111,8 +121,9 @@ export async function importRis(db: Database, options: RisOptions): Promise<RisR
   report.hits = listed.hits;
   report.skipped = listed.skipped.length;
   for (const act of acts) {
-    const typ = act.typ ?? "none";
+    const typ = act.typ ? typeWordOf(act.typ) : "none";
     report.typeCounts[typ] = (report.typeCounts[typ] ?? 0) + 1;
+    if (act.kind === "other") report.unmappedTypes[typ] = (report.unmappedTypes[typ] ?? 0) + 1;
   }
   const rows: ActRow[] = acts.map((act) => ({
     authority: RIS.authority,

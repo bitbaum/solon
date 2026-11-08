@@ -213,7 +213,8 @@ describe.skipIf(!RUN)("Austrian federal law import", () => {
       provisions: 2,
       datedByReading: 0,
       failures: [],
-      typeCounts: { BG: 1, V: 1 },
+      typeCounts: { bg: 1, v: 1 },
+      unmappedTypes: {},
     });
 
     const law = await held(LAW);

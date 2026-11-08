@@ -78,12 +78,22 @@ const titleLines = (title: string): string[] =>
 
 /** The act's kind: from the RIS's type, else from the first word of its title. */
 export function kindOf(typ: string | null, title: string): ActKind {
-  // "K (Geltungsbereich)" is a K; "Vertrag – UNO" a Vertrag.
-  const byType = typ ? (RIS.kindByTyp[typ] ?? RIS.kindByTyp[typ.split(/[\s(]/)[0]!]) : undefined;
+  const byType = typ ? KIND_BY_TYP.get(typeWordOf(typ)) : undefined;
   if (byType) return byType;
   const first = /^[\p{L}-]+/u.exec(title)?.[0];
-  return (first && RIS.kindByLeadingWord[first]) || "other";
+  return (first && KIND_BY_WORD.get(first.toLowerCase())) || "other";
 }
+
+const lowered = (kinds: Readonly<Record<string, ActKind>>) =>
+  new Map(Object.entries(kinds).map(([word, kind]) => [word.toLowerCase(), kind]));
+const KIND_BY_TYP = lowered(RIS.kindByTyp);
+const KIND_BY_WORD = lowered(RIS.kindByLeadingWord);
+
+/**
+ * The first word of the RIS's type, lowercased: "K (Geltungsbereich)" is `k`, "Vertrag – UNO" is
+ * `vertrag`. The RIS spells one type several ways (K and k, "Vertrag  – BRD", "Vertrag - Polen").
+ */
+export const typeWordOf = (typ: string): string => typ.split(/[\s(]/)[0]!.toLowerCase();
 
 export const textUrlOf = (gesetzesnummer: string) =>
   RIS.textUrl.replace("{gesetzesnummer}", encodeURIComponent(gesetzesnummer));

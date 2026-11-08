@@ -17,6 +17,7 @@ import {
   registerQuery,
   risText,
   textUrlOf,
+  typeWordOf,
 } from "../ris";
 
 /**
@@ -127,6 +128,10 @@ describe("the register", () => {
     // The types the live register holds (a server dry run, 2026-11-08).
     expect(kindOf("K (Geltungsbereich)", "Geltungsbereich des Abkommens")).toBe("notice");
     expect(kindOf("Vertrag – UNO", "Übereinkommen")).toBe("treaty");
+    expect(kindOf("Vertrag  – BRD", "Abkommen")).toBe("treaty");
+    expect(kindOf("k", "Geltungsbereich")).toBe("notice");
+    expect(kindOf("Geschäftsordnung", "Geschäftsordnung des Nationalrates")).toBe("regulation");
+    expect(typeWordOf("K (Geltungsbereich)")).toBe("k");
     expect(
       kindOf("Vereinbarung gem. Art. 15a B-VG", "Vereinbarung zwischen Bund und Ländern"),
     ).toBe("other");

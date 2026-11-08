@@ -796,9 +796,11 @@ export const RIS = {
   textStatus: "consolidated" as ActTextStatus,
   /**
    * The RIS's act types (`Typ`) as act kinds, by the type's first word. Seen in the live register
-   * (a dry run, 2026-11-08): BG, V, K (Geltungsbereich), Vertrag – Schweiz | Multilateral | UNO |
-   * WHO, Vereinbarung gem. Art. 15a B-VG (between the Bund and the Länder: not a kind of its own
-   * here, so "other"). BVG and StV are the types the RIS's search help names.
+   * (dry runs, 2026-11-08): BG, V, K (Geltungsbereich), Bekanntmachung, Geschäftsordnung,
+   * Verfügung, "Entschl. d. BPräs", Vertrag – <partner> (some hundred spellings), and
+   * Vereinbarung gem. Art. 15a B-VG (between the Bund and the Länder: not a kind of its own
+   * here, so "other"). BVG and StV are the types the RIS's search help names. Matched without
+   * regard to case.
    */
   kindByTyp: {
     BG: "statute",
@@ -807,6 +809,10 @@ export const RIS = {
     K: "notice",
     StV: "treaty",
     Vertrag: "treaty",
+    Bekanntmachung: "notice",
+    Geschäftsordnung: "regulation",
+    Verfügung: "decree",
+    "Entschl.": "decree",
   } as Readonly<Record<string, ActKind>>,
   /** The kind of a title's first word, when the type is not one listed above. */
   kindByLeadingWord: {
@@ -817,6 +823,8 @@ export const RIS = {
     Kundmachung: "notice",
     Staatsvertrag: "treaty",
     Vertrag: "treaty",
+    Bekanntmachung: "notice",
+    Geschäftsordnung: "regulation",
   } as Readonly<Record<string, ActKind>>,
 } as const;
 
