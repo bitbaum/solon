@@ -94,4 +94,20 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     pattern: "70(0[1-9]|1[01])",
     reserved: true,
   },
+  {
+    // Estonia's counties by their code in EHAK, the classification of Estonian
+    // administrative units and settlements: 0037 Harju … 0087 Võru.
+    key: "ee_county",
+    label: { en: "Estonian county code (EHAK)", et: "Maakonna kood (EHAK)" },
+    pattern: "00[0-9]{2}",
+    reserved: true,
+  },
+  {
+    // Estonia's municipalities (rural municipalities and cities) by their EHAK
+    // code: 0784 Tallinn, 0793 Tartu linn.
+    key: "ee_municipality",
+    label: { en: "Estonian municipality code (EHAK)", et: "Omavalitsuse kood (EHAK)" },
+    pattern: "0[1-9][0-9]{2}",
+    reserved: true,
+  },
 ];

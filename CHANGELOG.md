@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Estonia in Places.** Its fifteen counties and 78 municipalities, by their codes in
+  EHAK, the official classification (Statistics Estonia and the Land Board, version
+  2026v1), each with its Estonian, English and Russian names; and its income tax, 22 %
+  of what is above the tax-free income of 8,400 euros (Income Tax Act § 4 and § 23),
+  the same in every municipality. Estonian places can be compared with each other in
+  euros; a place in another currency asks for its own amount. {#places-ee} {#places-ee-tax}
+
 - **The globe.** The home page shows the Earth with every place whose law Solon holds
   shaded by how much, and a dot on each so the smallest can be found; hover names it
   and counts its acts, a tap opens its law. Drawn by the fleet's map package in the

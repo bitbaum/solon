@@ -1,0 +1,28 @@
+{
+  "pack": "estonia",
+  "jurisdictions": [],
+  "relations": [],
+  "facts": [
+    {
+      "jurisdiction": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "metricKey": "tax.income.tariff",
+      "variant": "single",
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": {
+        "kind": "stepped",
+        "currency": "EUR",
+        "steps": [
+          {
+            "from": 8400,
+            "base": 0,
+            "rate": 0.22
+          }
+        ]
+      }
+    }
+  ]
+}

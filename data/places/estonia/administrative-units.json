@@ -1,0 +1,3301 @@
+{
+  "pack": "estonia",
+  "jurisdictions": [
+    {
+      "ref": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Eesti",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Estonia",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Estland",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Estonie",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Estonia",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Эстония",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Harju maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Harju county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Харьюский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0039"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Hiiu maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Hiiu county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Хийуский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Ida-Viru maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Ida-Viru county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Ида-Вируский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0050"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Jõgeva maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Jõgeva county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Йыгеваский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0052"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Järva maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Järva county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Ярваский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0056"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lääne maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lääne county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Ляэнеский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lääne-Viru maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lääne-Viru county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Ляэне-Вируский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0064"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Põlva maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Põlva county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Пылваский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Pärnu maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Pärnu county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Пярнуский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rapla maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rapla county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Раплаский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0074"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Saare maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Saare county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Саареский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tartu maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tartu county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Тартуский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0081"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Valga maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Valga county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Валгаский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Viljandi maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Viljandi county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Вильяндиский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Võru maakond",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Võru county",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Выруский уезд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0141"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Anija vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Anija rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ания",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0198"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Harku vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Harku rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Харку",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0245"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Jõelähtme vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Jõelähtme rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Йыэляхтме",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0296"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Keila linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Keila city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Кейла",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0305"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kiili vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kiili rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кийли",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0338"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kose vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kose rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Козе",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0353"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kuusalu vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kuusalu rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Куусалу",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0424"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Loksa linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Loksa city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Локса",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0431"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lääne-Harju vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lääne-Harju rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ляэне-Харью",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0446"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Maardu linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Maardu city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Маарду",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0651"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Raasiku vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Raasiku rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Раазику",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0653"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rae vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rae rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Раэ",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0719"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Saku vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Saku rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Саку",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0725"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Saue vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Saue rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Сауэ",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0784"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tallinn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tallinn city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Таллинн",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0890"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Viimsi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Viimsi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Виймси",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0205"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Hiiumaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Hiiumaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Хийумаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0130"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Alutaguse vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Alutaguse rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Алутагузе",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0250"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Jõhvi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Jõhvi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Йыхви",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0321"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kohtla-Järve linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kohtla-Järve city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Кохтла-Ярве",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0442"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lüganuse vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lüganuse rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Люганузе",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0511"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Narva linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Narva city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Нарва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0515"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Narva-Jõesuu linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Narva-Jõesuu city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Нарва-Йыэсуу",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0736"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Sillamäe linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Sillamäe city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Силламяэ",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0247"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Jõgeva vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Jõgeva rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Йыгева",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0486"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Mustvee vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Mustvee rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Муствеэ",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0618"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Põltsamaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Põltsamaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Пылтсамаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0255"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Järva vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Järva rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ярва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0567"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Paide linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Paide city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Пайде",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0834"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Türi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Türi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Тюри",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0184"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Haapsalu linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Haapsalu city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Хаапсалу",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0441"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lääne-Nigula vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lääne-Nigula rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ляэне-Нигула",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0907"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Vormsi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Vormsi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Вормси",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0191"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Haljala vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Haljala rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Хальяла",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0272"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kadrina vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kadrina rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кадрина",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0661"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rakvere vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rakvere rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Раквере",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0663"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rakvere linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rakvere city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Раквере",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0792"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tapa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tapa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Тапа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0901"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Vinni vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Vinni rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Винни",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0903"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Viru-Nigula vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Viru-Nigula rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Виру-Нигула",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0928"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Väike-Maarja vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Väike-Maarja rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Вяйке-Маарья",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0284"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kanepi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kanepi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Канепи",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0622"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Põlva vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Põlva rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Пылва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0708"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Räpina vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Räpina rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ряпина",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0214"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Häädemeeste vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Häädemeeste rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Хяэдемеэсте",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0303"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kihnu vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kihnu rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кихну",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0430"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Lääneranna vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Lääneranna rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ляэнеранна",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0624"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Pärnu linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Pärnu city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Пярну",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0637"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Põhja-Pärnumaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Põhja-Pärnumaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Пыхья-Пярнумаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0712"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Saarde vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Saarde rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Саарде",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0806"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tori vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tori rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Тори",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0293"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kehtna vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kehtna rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кехтна",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0317"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kohila vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kohila rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кохила",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0502"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Märjamaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Märjamaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Мярьямаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0668"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rapla vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rapla rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Рапла",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0478"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Muhu vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Muhu rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Муху",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0689"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Ruhnu vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Ruhnu rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Рухну",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0714"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Saaremaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Saaremaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Сааремаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0171"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Elva vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Elva rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Элва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0283"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kambja vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kambja rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Камбья",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0291"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Kastre vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Kastre rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Кастре",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0432"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Luunja vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Luunja rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Луунья",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0528"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Nõo vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Nõo rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Ныо",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0586"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Peipsiääre vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Peipsiääre rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Пейпсияэре",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0793"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tartu linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tartu city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Тарту",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0796"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tartu vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tartu rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Тарту",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0557"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Otepää vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Otepää rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Отепяэ",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0824"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Tõrva vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Tõrva rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Тырва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0857"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Valga vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Valga rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Валга",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0480"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Mulgi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Mulgi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Мулги",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0615"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Põhja-Sakala vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Põhja-Sakala rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Пыхья-Сакала",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0897"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Viljandi linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Viljandi city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Вильянди",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0899"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Viljandi vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Viljandi rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Вильянди",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0145"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Antsla vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Antsla rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Антсла",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0698"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Rõuge vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Rõuge rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Рыуге",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0732"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Setomaa vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Setomaa rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Сетомаа",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0917"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Võru vald",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Võru rural municipality",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Волость Выру",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "ee_municipality",
+        "value": "0919"
+      },
+      "levelKey": "municipality",
+      "names": [
+        {
+          "locale": "et",
+          "name": "Võru linn",
+          "nameType": "self"
+        },
+        {
+          "locale": "en",
+          "name": "Võru city",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Город Выру",
+          "nameType": "common"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0039"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0050"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0052"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0056"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0064"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0074"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0081"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "EE"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0141"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0198"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0245"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0296"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0305"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0338"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0353"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0424"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0431"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0446"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0651"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0653"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0719"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0725"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0784"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0890"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0037"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0205"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0039"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0130"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0250"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0321"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0442"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0511"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0515"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0736"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0045"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0247"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0050"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0486"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0050"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0618"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0050"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0255"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0052"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0567"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0052"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0834"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0052"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0184"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0056"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0441"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0056"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0907"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0056"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0191"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0272"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0661"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0663"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0792"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0901"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0903"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0928"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0060"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0284"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0064"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0622"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0064"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0708"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0064"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0214"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0303"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0430"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0624"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0637"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0712"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0806"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0068"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0293"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0317"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0502"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0668"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0071"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0478"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0074"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0689"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0074"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0714"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0074"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0171"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0283"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0291"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0432"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0528"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0586"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0793"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0796"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0079"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0557"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0081"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0824"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0081"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0857"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0081"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0480"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0615"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0897"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0899"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0084"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0145"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0698"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0732"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0917"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "ee_municipality",
+        "value": "0919"
+      },
+      "to": {
+        "scheme": "ee_county",
+        "value": "0087"
+      },
+      "relation": "part_of"
+    }
+  ]
+}
