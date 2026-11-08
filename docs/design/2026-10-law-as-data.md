@@ -359,9 +359,12 @@ question about Vaduz is asked of Liechtenstein's law too).
 - Acts numbered by section ("1.1 Eigentum") rather than by article are held
   whole until a section cutter exists; their text is searchable either way.
 - Swiss communes that publish this way are configs of the same adapter; the
-  loader, the store, the tools and the chat do not change. The first five
-  (2026-11-08): Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona (`koeniz`,
-  `fribourg-city`, `neuchatel-city`, `lugano-city`, `bellinzona-city`). A commune's config says its language (`locale`, German
+  loader, the store, the tools and the chat do not change. The first seven
+  (2026-11-08): Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and
+  Bellinzona (`geneve-city`, `lausanne-city`, `koeniz`, `fribourg-city`,
+  `neuchatel-city`, `lugano-city`, `bellinzona-city`). A list longer than 40
+  pages says so (`maxPages`); after the first page, one that cannot be read is
+  skipped, not fatal. A commune's config says its language (`locale`, German
   unless said) and may leave out documents by their address (`excludeHref`):
   Köniz marks an act adopted but not yet in force, or repealed, only in the
   file's name.

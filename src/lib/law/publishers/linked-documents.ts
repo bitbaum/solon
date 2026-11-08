@@ -24,6 +24,8 @@ export interface LinkedDocumentsConfig {
   pages: readonly string[];
   /** A document link; its first group is the collection's own id for the document. */
   link: RegExp;
+  /** How many pages are opened at most, the listed ones and those followed; 40 unless said. */
+  maxPages?: number;
   /** Folder links to open once, on the same host. */
   follow?: RegExp;
   /** A title that names an act (Reglement, Verordnung, Ordnung, Statuten, Tarif). */
@@ -55,7 +57,8 @@ const decode = (s: string) =>
     .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)));
 
 /** A button's own words ("Dokument herunterladen"), which name no act. */
-const BUTTON = /^(?:dokument |datei )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen)$/i;
+const BUTTON =
+  /^(?:dokument |datei |le document |il documento )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen|télécharger|consulter|ouvrir|scarica(?:re)?|apri)$/i;
 
 /** A file's name as words: "3-1-abwasserreglement.pdf" → "Abwasserreglement". */
 export function titleFromFile(href: string): string {
@@ -194,12 +197,21 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       const queue = [...config.pages];
       const opened = new Set<string>();
       let first: string | null = null;
-      while (queue.length && opened.size < 40) {
+      const missed: string[] = [];
+      while (queue.length && opened.size < (config.maxPages ?? 40)) {
         const url = queue.shift()!;
         if (opened.has(url)) continue;
         opened.add(url);
         // The publisher's page, or the archive's dated copy of it when the publisher refuses (http.ts).
-        const page = await read(url, doFetch, [host]);
+        let page;
+        try {
+          page = await read(url, doFetch, [host]);
+        } catch (error) {
+          // The first page is the collection; one page after it that cannot be read does not stop the rest.
+          if (opened.size === 1) throw error;
+          missed.push(`${url}: ${error instanceof Error ? error.message : String(error)}`);
+          continue;
+        }
         first ??= page.url;
         const html = new TextDecoder().decode(page.bytes);
         pages.push(html);
@@ -211,7 +223,10 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       }
       const acts = actsOf(anchors, config);
       // A page that lists nothing is a changed page or a challenge, never "no acts": fail loudly.
-      if (acts.length === 0) throw new Error(`${config.key}: the pages listed no acts`);
+      if (acts.length === 0)
+        throw new Error(
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}`,
+        );
       for (const act of acts) titles.set(act.pageUrl, act.title);
       return {
         bytes: new TextEncoder().encode(pages.join("\n")),
@@ -430,6 +445,49 @@ export const neuchatelCity = linkedDocuments({
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
   excludeHref: /\/imported\/|tabmat|table_chronologique/i,
+});
+
+/**
+ * Genève: "Règlements municipaux", about 250 acts numbered "LC 21 …", ten to a
+ * page (`?page=1`, `?page=2` …). An act's file is on the city's own host, in
+ * its monthly upload folders or its media store; when the list names only the
+ * act's own page, that page is opened for the file.
+ */
+const GENEVE_LIST =
+  "https://www.geneve.ch/autorites-administration/administration-municipale/reglements-municipaux";
+export const geneveCity = linkedDocuments({
+  key: "geneve-city",
+  authority: "bfs6621",
+  name: "Ville de Genève, Règlements municipaux",
+  homepage: "https://www.geneve.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: [GENEVE_LIST, ...Array.from({ length: 27 }, (_, i) => `${GENEVE_LIST}?page=${i + 1}`)],
+  follow: /\/administration-municipale\/reglements-municipaux\/lc\d/i,
+  maxPages: 340,
+  link: /\/(?:sites\/default\/files\/|media\/)(\d{4}-\d{2}\/[^/?#]+\.pdf|\d+)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * Lausanne: the "Recueil systématique du droit communal", about 190 acts by
+ * subject, each with its own entry (`index_recueil.php?id_recueil=`) and its
+ * file served by id (`Next/serve.php?id=`).
+ */
+export const lausanneCity = linkedDocuments({
+  key: "lausanne-city",
+  authority: "bfs5586",
+  name: "Ville de Lausanne, Recueil systématique du droit communal",
+  homepage: "https://www.lausanne.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.lausanne.ch/apps/actualites/index_recueil.php"],
+  follow: /\/index_recueil\.php\?id_recueil=\d+/,
+  maxPages: 260,
+  link: /\/Next\/serve\.php\?id=(\d+)(?:&|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
 });
 
 const CH_IT_ACT = /regolamento|ordinanza|statuto|tariffa|direttiv|norme d/i;

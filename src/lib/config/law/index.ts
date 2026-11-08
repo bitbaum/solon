@@ -298,6 +298,18 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "5002" },
     within: "ti",
   },
+  {
+    key: "bfs6621",
+    name: "Genève (city)",
+    place: { scheme: "bfs_municipality", value: "6621" },
+    within: "ge",
+  },
+  {
+    key: "bfs5586",
+    name: "Lausanne",
+    place: { scheme: "bfs_municipality", value: "5586" },
+    within: "vd",
+  },
 ];
 
 /**

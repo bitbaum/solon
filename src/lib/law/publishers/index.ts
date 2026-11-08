@@ -5,7 +5,9 @@ import {
   eschen,
   fribourgCity,
   gamprin,
+  geneveCity,
   koeniz,
+  lausanneCity,
   luganoCity,
   mauren,
   neuchatelCity,
@@ -38,4 +40,6 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [neuchatelCity.key]: neuchatelCity,
   [luganoCity.key]: luganoCity,
   [bellinzonaCity.key]: bellinzonaCity,
+  [geneveCity.key]: geneveCity,
+  [lausanneCity.key]: lausanneCity,
 };

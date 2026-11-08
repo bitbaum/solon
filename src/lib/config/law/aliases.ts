@@ -62,6 +62,8 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   bfs6458: ["neuchatel", "neuenburg", "ville de neuchatel"],
   bfs5192: ["lugano", "lauis", "citta di lugano"],
   bfs5002: ["bellinzona", "bellenz", "citta di bellinzona"],
+  bfs6621: ["geneve", "geneva", "genf", "ginevra", "ville de geneve"],
+  bfs5586: ["lausanne", "losanna", "ville de lausanne"],
   li7005: ["schaan", "gemeinde schaan"],
   li7006: ["planken", "gemeinde planken"],
   li7007: ["eschen", "nendeln", "eschen-nendeln", "gemeinde eschen"],

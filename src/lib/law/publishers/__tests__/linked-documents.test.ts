@@ -239,6 +239,53 @@ describe("Swiss communes that link their acts from one page", () => {
     ]);
   });
 
+  /** A site that answers from a map of addresses; anything else is not there. */
+  const site = (pages: Record<string, string>) =>
+    (async (input: string | URL) => {
+      const body = pages[String(input)];
+      return body === undefined ? new Response("", { status: 404 }) : new Response(body);
+    }) as unknown as typeof fetch;
+
+  it("Genève: files listed on the pages of its list or on an act's own page, a missing page not stopping the rest", async () => {
+    const { geneveCity } = await import("../linked-documents");
+    const list =
+      "https://www.geneve.ch/autorites-administration/administration-municipale/reglements-municipaux";
+    const act =
+      "https://www.geneve.ch/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail";
+    const listed = await geneveCity.list(
+      site({
+        [list]: `<a href="/sites/default/files/2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf">Règlement du Conseil municipal de la Ville de Genève (LC 21 111)</a>
+          <a href="/administration-municipale/reglements-municipaux/lc21152-reglement-protection-sante-securite-travail">Règlement sur la protection de la santé et la sécurité du travail</a>`,
+        [`${list}?page=1`]: `<a href="/en/media/8320205">Règlement relatif au système de contrôle interne en Ville de Genève (LC 21 133)</a>`,
+        // This one file's address is the test's own; the others are the city's.
+        [act]: `<a href="/sites/default/files/2025-03/LC21152.35-reglement-sante-securite-travail.pdf">Règlement sur la protection de la santé et la sécurité du travail (LC 21 152.35)</a>`,
+      }),
+    );
+    expect(listed.acts.map((a) => a.ref)).toEqual([
+      "2021-06/LC21111-reglement-conseil-municipal-ville-geneve.pdf",
+      "8320205",
+      "2025-03/LC21152.35-reglement-sante-securite-travail.pdf",
+    ]);
+  });
+
+  it("Lausanne: each act's file on its own entry, titled by the link or, for a button, its title", async () => {
+    const { lausanneCity } = await import("../linked-documents");
+    // The entry and file ids are the city's; which act each names here is the test's.
+    const index = "https://www.lausanne.ch/apps/actualites/index_recueil.php";
+    const listed = await lausanneCity.list(
+      site({
+        [index]: `<a href="index_recueil.php?id_recueil=60">Règlement général de police (500.1)</a>
+          <a href="index_recueil.php?id_recueil=61">Règlement sur la distribution de l'eau (730.1)</a>`,
+        [`${index}?id_recueil=60`]: `<a href="Next/serve.php?id=5460">Règlement général de police de la Commune de Lausanne – RGP</a>`,
+        [`${index}?id_recueil=61`]: `<a href="Next/serve.php?id=7105" title="Règlement sur la distribution de l'eau">Télécharger</a>`,
+      }),
+    );
+    expect(listed.acts.map((a) => [a.ref, a.title])).toEqual([
+      ["5460", "Règlement général de police de la Commune de Lausanne – RGP"],
+      ["7105", "Règlement sur la distribution de l'eau"],
+    ]);
+  });
+
   it("each read into the commune its BFS number names, within its canton", async () => {
     const { PUBLISHERS } = await import("../index");
     const { LAW_AUTHORITIES } = await import("@/lib/config/law");
@@ -248,6 +295,8 @@ describe("Swiss communes that link their acts from one page", () => {
       ["neuchatel-city", "6458", "ne"],
       ["lugano-city", "5192", "ti"],
       ["bellinzona-city", "5002", "ti"],
+      ["geneve-city", "6621", "ge"],
+      ["lausanne-city", "5586", "vd"],
     ] as const) {
       const authority = LAW_AUTHORITIES.find((a) => a.key === PUBLISHERS[key]!.authority)!;
       expect(authority.place).toEqual({ scheme: "bfs_municipality", value: number });
