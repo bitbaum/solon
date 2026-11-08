@@ -7,7 +7,7 @@
  * snapshot its version cites.
  */
 import { and, eq, inArray, isNull, notInArray, sql } from "drizzle-orm";
-import { CANTONAL_DOCUMENTS, EURLEX } from "@/lib/config/law";
+import { CANTONAL_DOCUMENTS, EURLEX, GII } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActs, legalActVersions, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
@@ -17,6 +17,8 @@ import { parseEurLexHtml } from "./eurlex";
 import type { Provision } from "./fedlex";
 import { CANTONAL_IMPORTER_VERSION, cantonalAuthorities } from "./import-cantonal";
 import { EURLEX_IMPORTER_VERSION } from "./import-eurlex";
+import { GII_IMPORTER_VERSION } from "./import-gii";
+import { parseGiiXml } from "./gii";
 
 export interface RecutReport {
   status: "applied" | "dry_run";
@@ -63,6 +65,16 @@ export async function recutEurLexText(db: Database, options: RecutOptions): Prom
     importerVersion: EURLEX_IMPORTER_VERSION,
     authorities: [EURLEX.authority],
     cut: async (bytes) => parseEurLexHtml(new TextDecoder().decode(bytes)),
+  });
+}
+
+/** The German federal acts held, cut again from the portal's XML they were read from (gii.ts). */
+export async function recutGiiText(db: Database, options: RecutOptions): Promise<RecutReport> {
+  return recutTexts(db, options, {
+    sourceKey: GII.key,
+    importerVersion: GII_IMPORTER_VERSION,
+    authorities: [GII.authority],
+    cut: async (bytes) => parseGiiXml(new TextDecoder().decode(bytes)),
   });
 }
 

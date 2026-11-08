@@ -46,4 +46,8 @@ export const LICENCES = [
   // https://eur-lex.europa.eu"), under Commission Decision 2011/833/EU of 12 December 2011 on
   // the reuse of Commission documents (OJ L 330, 14.12.2011, p. 39). CC BY's obligation.
   { spdx: "LicenseRef-eu-reuse-2011-833", requiresAttribution: true, shareAlike: false },
+  // German statutes, ordinances, official notices and other official works ("amtliche Werke")
+  // are not protected by copyright: § 5 Urheberrechtsgesetz. The portal's own notice asks
+  // only that the source be named; the same class as the Swiss, Liechtenstein and Estonian ones.
+  { spdx: "LicenseRef-de-official-work", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

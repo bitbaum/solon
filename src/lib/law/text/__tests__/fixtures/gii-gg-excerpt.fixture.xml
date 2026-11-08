@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dokumente SYSTEM "http://www.gesetze-im-internet.de/dtd/1.0/gii-norm.dtd">
+<!-- HAND-WRITTEN APPROXIMATION of an act's XML in gii-norm.dtd's shape (the portal could not be reached
+     from the sandbox this was written in). The words of Art 1 and Art 12a (1) are the Grundgesetz's;
+     the markup is from memory of the DTD: metadaten with jurabk, enbez, titel and
+     gliederungseinheit; textdaten with text/Content, P paragraphs, DL lists, a CALS table, a
+     self-closed empty text and fussnoten. Art 7a, the Anlagen and the TOC are made up. -->
+<dokumente builddate="20261101120000" doknr="BJNR000010949">
+<norm builddate="20261101120000" doknr="BJNR000010949">
+<metadaten>
+<jurabk>GG</jurabk>
+<amtabk>GG</amtabk>
+<ausfertigung-datum manuell="ja">1949-05-23</ausfertigung-datum>
+<kurzue>GG</kurzue>
+<langue>Grundgesetz für die Bundesrepublik Deutschland</langue>
+<standangabe checked="ja"><standtyp>Stand</standtyp><standkommentar>Zuletzt geändert durch Art. 1 G v. 1.1.2000 I 1</standkommentar></standangabe>
+</metadaten>
+<textdaten><text format="XML"/></textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000100000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Inhaltsübersicht</enbez>
+</metadaten>
+<textdaten><text format="XML"><Content><TOC><P>I. Die Grundrechte</P></TOC></Content></text></textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000200000">
+<metadaten>
+<jurabk>GG</jurabk>
+<titel format="parat">Eingangsformel</titel>
+</metadaten>
+<textdaten><text format="XML"><Content><P>Im Bewußtsein seiner Verantwortung vor Gott und den Menschen hat sich das Deutsche Volk kraft seiner verfassunggebenden Gewalt dieses Grundgesetz gegeben.</P></Content></text></textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000300000">
+<metadaten>
+<jurabk>GG</jurabk>
+<gliederungseinheit><gliederungskennzahl>010</gliederungskennzahl><gliederungsbez>I.</gliederungsbez><gliederungstitel>Die Grundrechte</gliederungstitel></gliederungseinheit>
+<enbez>Art 1</enbez>
+<titel format="parat">Menschenwürde &#8211; Grundrechtsbindung</titel>
+</metadaten>
+<textdaten>
+<text format="XML"><Content>
+<P>(1) Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt.</P>
+<P>(2) Das Deutsche Volk bekennt sich darum zu unverletzlichen und unveräußerlichen Menschenrechten als Grundlage jeder menschlichen Gemeinschaft, des Friedens und der Gerechtigkeit in der Welt.</P>
+<P>(3) Die nachfolgenden Grundrechte binden Gesetzgebung, vollziehende Gewalt und Rechtsprechung als unmittelbar geltendes Recht.</P>
+</Content></text>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000400000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Art 7a</enbez>
+<titel format="parat">Beispiel mit Aufzählung</titel>
+</metadaten>
+<textdaten>
+<text format="XML"><Content>
+<P>Es gelten folgende Fälle<FnR ID="FN1">1</FnR>:</P>
+<DL Type="arabic" Font="normal">
+<DT>1.</DT><DD Font="normal"><LA Size="normal">der erste Fall;</LA></DD>
+<DT>2.</DT><DD Font="normal"><LA Size="normal">der zweite Fall, wenn</LA>
+<DL Type="alpha" Font="normal">
+<DT>a)</DT><DD Font="normal"><LA Size="normal">die Fläche 20<SUP>2</SUP> m<SUP>2</SUP> überschreitet und</LA></DD>
+<DT>b)</DT><DD Font="normal"><LA Size="normal">die Frist &amp; die Form gewahrt sind.</LA></DD>
+</DL></DD>
+</DL>
+</Content></text>
+<fussnoten><Content><P>(+++ Art 7a: Zur Anwendung vgl. Beispielbekanntmachung +++)</P><Footnote ID="FN1"><P>Fußnote, die nicht zum Text gehört.</P></Footnote></Content></fussnoten>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000500000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Art 12a</enbez>
+</metadaten>
+<textdaten>
+<text format="XML"><Content>
+<P>(1) Männer können vom vollendeten achtzehnten Lebensjahr an zum Dienst in den Streitkräften, im Bundesgrenzschutz oder in einem Zivilschutzverband verpflichtet werden.</P>
+</Content></text>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNE000600000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Art 143</enbez>
+<titel format="parat"/>
+</metadaten>
+<textdaten>
+<text format="XML"><Content><P>(weggefallen)</P></Content></text>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNA000100000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Anlage 1 (zu Art 7a)</enbez>
+<titel format="parat">Beispieltabelle</titel>
+</metadaten>
+<textdaten>
+<text format="XML"><Content>
+<P>Die Beträge ergeben sich aus der Tabelle:</P>
+<table frame="all"><tgroup cols="2"><thead><row><entry>Stufe</entry><entry>Betrag in Euro</entry></row></thead>
+<tbody><row><entry>1</entry><entry>100</entry></row><row><entry>2</entry><entry>250</entry></row></tbody></tgroup></table>
+</Content></text>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNA000200000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Anlage</enbez>
+<titel format="parat">Zweite Anlage</titel>
+</metadaten>
+<textdaten>
+<text format="XML"><Content><P>Eine zweite Anlage ohne Nummer.</P></Content></text>
+</textdaten>
+</norm>
+<norm builddate="20261101120000" doknr="BJNR000010949BJNA000300000">
+<metadaten>
+<jurabk>GG</jurabk>
+<enbez>Anlage</enbez>
+<titel format="parat">Dritte Anlage</titel>
+</metadaten>
+<textdaten>
+<text format="XML"><![CDATA[<Content><P>Eine Anlage im CDATA-Abschnitt.</P><pre>Zeile 1
+Zeile 2</pre></Content>]]></text>
+</textdaten>
+</norm>
+</dokumente>

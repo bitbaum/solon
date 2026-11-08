@@ -25,6 +25,7 @@ describe("the place tree", () => {
   it("puts a member state under the European Union, and a country outside it under nothing", () => {
     expect(chainOf("ee").map((a) => a.key)).toEqual(["ee", "eu"]);
     expect(chainOf("lux").map((a) => a.key)).toEqual(["lux", "eu"]);
+    expect(chainOf("de").map((a) => a.key)).toEqual(["de", "eu"]);
     expect(chainOf("eu").map((a) => a.key)).toEqual(["eu"]);
     expect(chainOf("ch").map((a) => a.key)).toEqual(["ch"]);
     expect(chainOf("li").map((a) => a.key)).toEqual(["li"]);
@@ -44,7 +45,7 @@ describe("the place tree", () => {
 
   it("nests the members Solon holds under the union in the tree", () => {
     const eu = placeTree(counts).find((n) => n.key === "eu")!;
-    expect(eu.children.map((c) => c.key).sort()).toEqual(["ee", "lux"]);
+    expect(eu.children.map((c) => c.key).sort()).toEqual(["de", "ee", "lux"]);
   });
 
   it("lists every authority once, under exactly one root", () => {
