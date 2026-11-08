@@ -74,6 +74,18 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
     "unione europea",
     "diritto dell'unione",
   ],
+  uk: [
+    "united kingdom",
+    "uk law",
+    "britain",
+    "great britain",
+    "england",
+    "england and wales",
+    "royaume-uni",
+    "grossbritannien",
+    "vereinigtes konigreich",
+    "regno unito",
+  ],
   de: [
     "germany",
     "deutschland",
