@@ -9,7 +9,8 @@
  * is that challenge instead of the page is reported, never solved or avoided:
  * the run stops and fetches less.
  */
-import { extractText, getDocumentProxy } from "unpdf";
+import { extractText } from "unpdf";
+import { openPdf } from "../text/pdf";
 import { LI_SYSTEMATIC_REGISTER as LI } from "@/lib/config/law";
 import type { ActRow, RegisterRead } from "./import";
 
@@ -132,7 +133,7 @@ export function liRows(acts: readonly ParsedLiAct[]): RegisterRead {
 
 /** The text of each page of the register's PDF. */
 export async function pdfPages(bytes: Uint8Array): Promise<string[]> {
-  const pdf = await getDocumentProxy(new Uint8Array(bytes));
+  const pdf = await openPdf(new Uint8Array(bytes));
   const { text } = await extractText(pdf, { mergePages: false });
   return text;
 }

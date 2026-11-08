@@ -24,6 +24,13 @@ one to read for the detail. Fixes get the same weight as features.
   them, stay dark so the words on them can be read. The law globe and the Places map
   redraw in the theme you pick. {#theme-light}
 
+### Fixed
+
+- **Scanned regulations read blank.** Most communes scan their regulations as fax- or
+  JBIG2-compressed images, and the PDF reader drew those pages blank, so Solon reported
+  "no text in the PDF" and three of Balzers' regulations were missing. The reader now
+  has the decoders it needs, and those pages are read by OCR like any other scan.
+
 ## 2026-11-07
 
 ### Added

@@ -7,7 +7,8 @@
  */
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { getDocumentProxy, renderPageAsImage } from "unpdf";
+import { renderPageAsImage } from "unpdf";
+import { openPdf } from "./pdf";
 
 /** Tesseract's names for the languages acts are published in; "de+fr+it" reads a page in any of them. */
 const TESSERACT_LANG: Record<string, string> = { de: "deu", fr: "fra", it: "ita", en: "eng" };
@@ -22,7 +23,7 @@ export async function ocrPdfText(
   options: { maxPages?: number; cachePath?: string } = {},
 ): Promise<string> {
   const { createWorker } = await import("tesseract.js");
-  const pdf = await getDocumentProxy(new Uint8Array(bytes));
+  const pdf = await openPdf(new Uint8Array(bytes));
   const pages = Math.min(pdf.numPages, options.maxPages ?? 200);
   const named = lang.split("+").map((l) => TESSERACT_LANG[l] ?? "deu");
   const worker = await createWorker(named.join("+"), 1, {
