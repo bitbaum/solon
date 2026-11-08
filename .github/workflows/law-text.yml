@@ -141,11 +141,11 @@ jobs:
             "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS TYPES=$TYPES BATCHES=$BATCHES bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
           # The box's memory is the limit, not its patience. Loads that read PDFs, scans or the EU's
-          # large pages take one shared turn (two at once ran it out, 2026-11-08); loads that fetch
-          # small pages and wait on a slow publisher (the UK's five seconds a request) take a turn
-          # of their own per source, so one of them never holds up the rest.
+          # large pages take one shared turn (two at once ran it out, 2026-11-08, and so did an install
+          # beside three loads); loads that mostly wait on a slow publisher (the UK's five seconds a
+          # request) share a second turn, so at most two run at once and a slow one never holds up the rest.
           case "$SOURCE" in
-            ris|ukleg|gii|gcnh|wyoleg|legilux|riigiteataja) LOCK="$SOURCE" ;;
+            ukleg|gcnh|wyoleg|legilux|riigiteataja) LOCK="paced" ;;
             *) LOCK="heavy" ;;
           esac
           exec 9>"/tmp/solon-law-load-$LOCK.lock"

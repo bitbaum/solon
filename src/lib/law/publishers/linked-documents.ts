@@ -577,8 +577,8 @@ export const luganoCity = linkedDocuments({
 });
 
 /**
- * Bellinzona: "Legislazione comunale", grouped by subject, each act a page of
- * the site's own (`<Title>-<8 hex digits>?i=1&MasterId=<group>`).
+ * Bellinzona: "Legislazione comunale", grouped by subject, each act the PDF
+ * itself at the site's own address (`<Title>-<8 hex digits>?i=1&MasterId=<group>`).
  */
 export const bellinzonaCity = linkedDocuments({
   key: "bellinzona-city",
@@ -589,8 +589,8 @@ export const bellinzonaCity = linkedDocuments({
   locale: "it",
   pages: ["https://www.bellinzona.ch/1d212c00"],
   link: /bellinzona\.ch\/([A-Za-z0-9-]+-[0-9a-f]{8})\?i=1&MasterId=/i,
-  // The file on the act's page; when none matches, the failure lists the page's links.
-  file: /\.pdf(?:[?#]|$)|downdoc|\/(?:docs?|documenti|files?)\//i,
+  // The act's address serves its PDF itself (no extension in it): the server's first run
+  // read 88 acts as "%PDF-1.7 …", each one a document, none a page with a link to a file.
   include: CH_IT_ACT,
   exclude: CH_IT_FORM,
 });
