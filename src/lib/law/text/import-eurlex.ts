@@ -190,10 +190,10 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
       );
       report.stored++;
       report.provisions += stored.provisions;
-      if (act.text.consolidated) report.consolidated++;
+      if (stored.consolidated) report.consolidated++;
       if (stored.fromArchive) report.fromArchive++;
       refusedInARow = 0;
-      say(`${act.celex} ${act.text.date}: ${stored.provisions} provisions`);
+      say(`${act.celex} ${stored.date}: ${stored.provisions} provisions`);
     } catch (error) {
       const reason = reasonOf(error);
       report.failures.push({ act: act.celex, reason });
@@ -219,8 +219,28 @@ async function storeAct(
   actId: string,
   doFetch: typeof fetch,
   options: EurLexOptions,
-): Promise<{ provisions: number; fromArchive: boolean }> {
-  const page = await read(htmlUrlOf(act.text.celex), doFetch, EURLEX.hosts, options.archiveRetryMs);
+): Promise<{ provisions: number; fromArchive: boolean; consolidated: boolean; date: string }> {
+  try {
+    return await storeText(db, snapshots, act.text, actId, doFetch, options);
+  } catch (error) {
+    // EUR-Lex lists a consolidated version dated the act's own first day but serves no page
+    // for it (02016L0681-20160504 answers 404): the act as published is the same text.
+    const missing = error instanceof Error && /^404 for/.test(error.message);
+    if (!act.text.consolidated || !missing) throw error;
+    const published = { celex: act.celex, date: act.inForceFrom, consolidated: false };
+    return await storeText(db, snapshots, published, actId, doFetch, options);
+  }
+}
+
+async function storeText(
+  db: Database,
+  snapshots: SnapshotStore,
+  text: EuAct["text"],
+  actId: string,
+  doFetch: typeof fetch,
+  options: EurLexOptions,
+): Promise<{ provisions: number; fromArchive: boolean; consolidated: boolean; date: string }> {
+  const page = await read(htmlUrlOf(text.celex), doFetch, EURLEX.hosts, options.archiveRetryMs);
   const html = new TextDecoder().decode(page.bytes);
   if (!isActPage(html) || /The requested document does not exist/i.test(html)) {
     throw new Error("not an act's page");
@@ -233,7 +253,7 @@ async function storeAct(
     {
       actId,
       lang: EURLEX.locale,
-      inForceFrom: act.text.date,
+      inForceFrom: text.date,
       dateBasis: "publisher",
       // Only the electronic Official Journal is authentic; EUR-Lex's HTML, of a consolidated
       // version or of the act as published, is a reading of it.
@@ -250,5 +270,10 @@ async function storeAct(
     },
     options.dryRun ?? false,
   );
-  return { provisions: provisions.length, fromArchive: page.copy !== null };
+  return {
+    provisions: provisions.length,
+    fromArchive: page.copy !== null,
+    consolidated: text.consolidated,
+    date: text.date,
+  };
 }

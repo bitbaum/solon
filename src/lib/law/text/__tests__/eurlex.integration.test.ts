@@ -42,6 +42,7 @@ const celex = (type: "R" | "L", n: number) => `3${YEAR}${type}${String(n).padSta
 const REG = celex("R", N);
 const DIR = celex("L", N + 1);
 const REFUSED = celex("R", N + 2);
+const UNSERVED = celex("L", N + 3);
 
 interface Listed {
   celex: string;
@@ -242,5 +243,28 @@ describe.skipIf(!RUN)("EU law import", () => {
     expect(act!.versions[0]!.url).toMatch(
       /^https:\/\/web\.archive\.org\/web\/\d{14}id_\/https:\/\/eur-lex/,
     );
+  });
+
+  it("reads the act as published when EUR-Lex serves no page for its consolidated version", async () => {
+    // As 02016L0681-20160504: listed, dated the act's own first day, answering 404.
+    const listed: Listed[] = [
+      { celex: UNSERVED, title: `Directive (EU) ${YEAR}/${N + 3} on gaps`, force: `${YEAR}-05-24` },
+    ];
+    const unserved = `0${UNSERVED.slice(1)}-${YEAR}0504`;
+    const report = await importEurLex(db, {
+      snapshots,
+      today: `${YEAR}-12-31`,
+      years: [YEAR],
+      fetchImpl: publisher(listed, [unserved], {
+        [unserved]: 404,
+        [UNSERVED]: page("Read as published."),
+      }),
+      pauseMs: 0,
+      archiveRetryMs: [],
+    });
+    expect(report).toMatchObject({ stored: 1, consolidated: 0, failures: [] });
+    const act = await held(UNSERVED);
+    expect(act!.provisions[0]!.text).toBe("Read as published.");
+    expect(act!.versions[0]!.inForceFrom).toBe(`${YEAR}-05-24`);
   });
 });
