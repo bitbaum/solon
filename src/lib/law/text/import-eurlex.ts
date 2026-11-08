@@ -205,9 +205,7 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
         .slice(0, 120);
       report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
       // A page that is not an act's (the oldest acts have no HTML text) is an answer, not a refusal.
-      refusedInARow = /^\d{3} for|no answer|Internet Archive/.test(reason)
-        ? refusedInARow + 1
-        : 0;
+      refusedInARow = /^\d{3} for|no answer|Internet Archive/.test(reason) ? refusedInARow + 1 : 0;
     }
     await sleep(pauseMs);
   }
