@@ -525,7 +525,7 @@
       "kicker": "Chaque collectivité, officielle ou fondée",
       "metaTitle": "Lieux · trouver un lieu",
       "metaDescription": "Trouver un lieu par son nom ou son code postal : de quoi il fait partie, s’il prélève l’impôt, et la source de chaque donnée.",
-      "intro": "Chaque lieu que Solon recense, tel que ses sources officielles le publient. Cherchez par nom ou par code postal, ou parcourez les niveaux d’un pays.",
+      "intro": "Chaque lieu que Solon tient, tel que ses sources officielles le publient. Ouvrez un pays sur le globe : son droit, ses lieux et ce que l'impôt y coûte.",
       "searchLabel": "Nom ou code postal",
       "searchPlaceholder": "Un nom ou un code postal",
       "searchButton": "Chercher",
@@ -923,5 +923,23 @@
         "open": "Cette conversation ne s’est pas ouverte. Réessayez."
       }
     }
+  },
+  "Atlas": {
+    "world": "Le monde",
+    "worldTitle": "Le droit du monde, pièce par pièce",
+    "worldIntro": "Chaque pays que Solon tient est coloré selon la part de son droit présente ici. Choisissez-en un sur le globe ou ci-dessous : son droit, ses lieux et ce que l'impôt y coûte.",
+    "lawCount": "{count, plural, =0 {Lieux seulement} one {# acte} other {# actes}}",
+    "lawTitle": "Droit",
+    "lawHeld": "{count, plural, one {# acte en vigueur} other {# actes en vigueur}}, mot pour mot, tirés des sources officielles.",
+    "lawNone": "Solon ne tient pas encore le droit de {country}.",
+    "lawOpen": "Le lire et proposer des modifications",
+    "placesTitle": "Lieux",
+    "placesDrawn": "Chaque unité du niveau {level} est sur la carte, colorée selon ce que l'impôt vous y coûterait. Touchez-en une ou cherchez.",
+    "placesNotDrawn": "Ses lieux sont listés, pas encore dessinés sur la carte.",
+    "placesOpen": "Tous les lieux de {country}",
+    "mapLabelCountry": "Carte de {country} et de ses lieux",
+    "unavailable": "La carte ne peut pas être dessinée dans ce navigateur.",
+    "sources": "D'où cela vient ({count, plural, one {# source} other {# sources}})",
+    "situationHint": "Saisissez votre revenu pour colorer la carte selon l'impôt que vous paieriez."
   }
 }

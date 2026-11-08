@@ -1111,7 +1111,7 @@
       "kicker": "Every jurisdiction, official and founded",
       "metaTitle": "Places · find a place",
       "metaDescription": "Find a place by name or postcode: what it is part of, whether it levies tax, and the source behind every fact.",
-      "intro": "Every place Solon records, as its official sources publish it. Search by name or postcode, or browse a country's levels.",
+      "intro": "Every place Solon records, as its official sources publish it. Open a country on the globe to see its law, its places and what tax costs there.",
       "searchLabel": "Name or postcode",
       "searchPlaceholder": "A name or a postcode",
       "searchButton": "Search",
@@ -1605,5 +1605,23 @@
       "proposals": "Proposed changes to this act",
       "noProposals": "No one has proposed a change to this act yet."
     }
+  },
+  "Atlas": {
+    "world": "The world",
+    "worldTitle": "The world's law, piece by piece",
+    "worldIntro": "Every country Solon holds is shaded by how much of its law is here. Pick one on the globe or below to open it: its law, its places and what tax costs there.",
+    "lawCount": "{count, plural, =0 {Places only} one {# law} other {# laws}}",
+    "lawTitle": "Law",
+    "lawHeld": "{count, plural, one {# law in force} other {# laws in force}}, word for word, from the official sources.",
+    "lawNone": "Solon does not hold {country}'s law yet.",
+    "lawOpen": "Read it and propose changes",
+    "placesTitle": "Places",
+    "placesDrawn": "Each {level} is on the map, coloured by what tax would cost you there. Tap one, or search.",
+    "placesNotDrawn": "Its places are listed, not drawn on the map yet.",
+    "placesOpen": "All of {country}'s places",
+    "mapLabelCountry": "Map of {country} and its places",
+    "unavailable": "The map cannot be drawn in this browser.",
+    "sources": "Where this comes from ({count, plural, one {# source} other {# sources}})",
+    "situationHint": "Enter your income to colour the map by what tax would cost you."
   }
 }

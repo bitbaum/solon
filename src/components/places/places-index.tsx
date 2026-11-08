@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { PackIndex, PlaceHit, PlaceSearch } from "@/lib/places/search";
-import PlacesMap from "./places-map";
+import Atlas from "@/components/atlas/atlas";
 import type { PlacesTranslator } from "./place-profile";
 
 interface PlacesIndexProps {
@@ -12,8 +12,8 @@ interface PlacesIndexProps {
   /** A level being browsed, with its places. */
   browse: { pack: string; level: string; levelName: string; places: PlaceHit[] } | null;
   packs: PackIndex[];
-  /** The pack the map draws; null when none has boundaries. */
-  mapPack: string | null;
+  /** The country the atlas opens at first (`?in=`, a law key), or the world. */
+  open: string | null;
   t: PlacesTranslator;
 }
 
@@ -63,7 +63,7 @@ export default function PlacesIndex({
   search,
   browse,
   packs,
-  mapPack,
+  open,
   t,
 }: PlacesIndexProps) {
   const form = (
@@ -89,13 +89,11 @@ export default function PlacesIndex({
   return (
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
       <p className="mb-10 max-w-3xl text-fg-secondary">{t("index.intro")}</p>
-      {mapPack && (
-        <div className="mb-16">
-          <PlacesMap packKey={mapPack} />
-        </div>
-      )}
+      <div className="mb-16">
+        <Atlas mode="full" initial={open} />
+      </div>
       <div className="max-w-3xl space-y-10">
-        {mapPack && !search ? <noscript>{form}</noscript> : form}
+        {search || browse ? form : <noscript>{form}</noscript>}
 
         {search && (
           <section aria-live="polite" className="space-y-3">
@@ -121,25 +119,20 @@ export default function PlacesIndex({
           </section>
         )}
 
-        {packs.map((pack) => (
-          <section key={pack.key} className="space-y-3">
-            <h2 className="font-semibold text-fg-primary">{pack.name}</h2>
-            <ul className="flex flex-wrap gap-2 text-sm">
+        <noscript>
+          {packs.map((pack) => (
+            <p key={pack.key} className="text-sm text-fg-secondary">
+              <Link href={`/places/${pack.key}`} className="text-fg-primary hover:underline">
+                {pack.name}
+              </Link>
+              {": "}
               {pack.levels
                 .filter((level) => level.count > 0)
-                .map((level) => (
-                  <li key={level.key}>
-                    <Link
-                      href={`/places?pack=${pack.key}&level=${level.key}`}
-                      className="inline-block rounded-pill border border-default px-3 py-1 text-fg-primary hover:bg-surface-raised"
-                    >
-                      {t("index.levelLink", { level: level.name, count: level.count })}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          </section>
-        ))}
+                .map((level) => t("index.levelLink", { level: level.name, count: level.count }))
+                .join(" · ")}
+            </p>
+          ))}
+        </noscript>
 
         <p className="text-sm text-fg-secondary">
           <Link href="/places/coverage" className="text-fg-primary hover:underline">

@@ -4,6 +4,17 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-08
+
+### Added
+
+- **One atlas.** The globe on the home page and the map on Places are one now. Tap a
+  country and the Earth turns to it and draws its places, coloured by what tax would
+  cost you there; beside it, how much of its law Solon holds with a link to read it and
+  propose changes, and where every figure comes from. The long lists of levels and
+  sources under the map are gone: a place is found by tapping it or searching. A view
+  can be shared: `/places?in=ch`. {#atlas}
+
 ## 2026-11-07
 
 ### Added

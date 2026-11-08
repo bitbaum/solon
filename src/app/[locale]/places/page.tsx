@@ -4,14 +4,13 @@ import { toLocale } from "@/i18n/routing";
 import PlacesIndex from "@/components/places/places-index";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
-import { mapPackKey } from "@/lib/places/map-data";
 import { loadPackIndex, placesAtLevel, searchPlaces } from "@/lib/places/search";
 import { localized } from "@/lib/places/place-view";
 
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string }>;
-type SearchParams = Promise<{ q?: string; pack?: string; level?: string }>;
+type SearchParams = Promise<{ q?: string; pack?: string; level?: string; in?: string }>;
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -31,17 +30,16 @@ export default async function PlacesPage({
 }) {
   const locale = toLocale((await params).locale);
   setRequestLocale(locale);
-  const { q = "", pack: packKey, level: levelKey } = await searchParams;
+  const { q = "", pack: packKey, level: levelKey, in: open } = await searchParams;
   const on = today();
   const query = q.trim().slice(0, 100);
 
   const pack = placesConfig.packs.find((p) => p.key === packKey);
   const level = pack?.levels.find((l) => l.key === levelKey);
-  const [search, browsed, packs, mapPack] = await Promise.all([
+  const [search, browsed, packs] = await Promise.all([
     query ? searchPlaces(db, placesConfig, query, on, locale) : null,
     pack && level ? placesAtLevel(db, placesConfig, pack.key, level.key, on, locale) : null,
     loadPackIndex(db, placesConfig, on, locale),
-    mapPackKey(db, placesConfig, on),
   ]);
   const t = await getTranslations({ locale, namespace: "Places" });
   return (
@@ -60,7 +58,7 @@ export default async function PlacesPage({
           : null
       }
       packs={packs}
-      mapPack={mapPack}
+      open={open && /^[a-z0-9-]{1,40}$/.test(open) ? open : null}
       t={t}
     />
   );

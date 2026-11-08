@@ -525,7 +525,7 @@
       "kicker": "Ogni ente territoriale, ufficiale o fondato",
       "metaTitle": "Luoghi · trovare un luogo",
       "metaDescription": "Trovare un luogo per nome o numero postale: di cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
-      "intro": "Ogni luogo che Solon registra, così come lo pubblicano le sue fonti ufficiali. Cerca per nome o numero postale, oppure sfoglia i livelli di un paese.",
+      "intro": "Ogni luogo che Solon raccoglie, come lo pubblicano le fonti ufficiali. Apri un paese sul globo: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
       "searchLabel": "Nome o numero postale",
       "searchPlaceholder": "Un nome o un numero postale",
       "searchButton": "Cerca",
@@ -923,5 +923,23 @@
         "open": "Questa conversazione non si è aperta. Riprova."
       }
     }
+  },
+  "Atlas": {
+    "world": "Il mondo",
+    "worldTitle": "Il diritto del mondo, pezzo per pezzo",
+    "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Sceglierne uno sul globo o qui sotto: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
+    "lawCount": "{count, plural, =0 {Solo luoghi} one {# atto} other {# atti}}",
+    "lawTitle": "Diritto",
+    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
+    "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
+    "lawOpen": "Leggerlo e proporre modifiche",
+    "placesTitle": "Luoghi",
+    "placesDrawn": "Ogni unità del livello {level} è sulla carta, colorata secondo quanto vi costerebbe l'imposta. Toccane una o cerca.",
+    "placesNotDrawn": "I suoi luoghi sono elencati, non ancora disegnati sulla carta.",
+    "placesOpen": "Tutti i luoghi di {country}",
+    "mapLabelCountry": "Carta di {country} e dei suoi luoghi",
+    "unavailable": "La carta non può essere disegnata in questo browser.",
+    "sources": "Da dove viene ({count, plural, one {# fonte} other {# fonti}})",
+    "situationHint": "Inserisci il tuo reddito per colorare la carta secondo l'imposta che pagheresti."
   }
 }
