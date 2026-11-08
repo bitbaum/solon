@@ -58,6 +58,13 @@ describe("a commune named in a question", () => {
       "li7001",
     ]);
   });
+
+  it("names a city by its name in another language, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Le règlement de police de Coire").sort()).toEqual(["bfs3901", "gr"]);
+    expect(authoritiesNamed("Was gilt in Sitten?").sort()).toEqual(["bfs6266", "vs"]);
+    expect(authoritiesNamed("Parkieren in Luzern").sort()).toEqual(["bfs1061", "lu"]);
+  });
 });
 
 describe("Swiss federal law in a plan", () => {

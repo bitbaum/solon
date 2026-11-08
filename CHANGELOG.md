@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Luzern, Thun, Chur, Schaffhausen and Sion.** Five of Switzerland's largest cities
+  publish their regulations through the same website system, and Solon now has one
+  reader for all of them: each act with the day each version took effect, its earlier
+  versions, and the city's own PDF, from the first load on Solon's server. A question
+  that names one of these cities, in German or French (Lucerne, Thoune, Coire, Sitten),
+  asks the city's own law as well as the canton's.
+
 - **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
   from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
   the Land Board's own file, read again each month, so opening either country on the

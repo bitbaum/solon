@@ -63,5 +63,11 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   li7011: ["schellenberg", "gemeinde schellenberg"],
   li7008: ["mauren", "schaanwald", "gemeinde mauren"],
   li7009: ["gamprin", "gamprin-bendern", "gemeinde gamprin"],
+  // A city that shares its canton's name is named with it, as Zürich is: its rules apply there too.
+  bfs1061: ["luzern", "lucerne", "lucerna", "stadt luzern"],
+  bfs942: ["thun", "thoune", "stadt thun"],
+  bfs3901: ["chur", "coire", "cuira", "coira", "stadt chur"],
+  bfs2939: ["schaffhausen", "schaffhouse", "stadt schaffhausen"],
+  bfs6266: ["sion", "sitten", "ville de sion"],
   bfs261: ["city of zurich", "stadt zurich", "stadt zuerich", "ville de zurich", "citta di zurigo"],
 };
