@@ -36,6 +36,9 @@ export async function ocrPdfText(
         canvasImport: () => import("@napi-rs/canvas"),
         scale: SCALE,
       });
+      // A page keeps its decoded pictures until told to let go: a 600 dpi scan is
+      // ~140 MB each, so ten pages held at once (Balzers) outgrow the runner.
+      (await pdf.getPage(n)).cleanup();
       const { data } = await worker.recognize(Buffer.from(png));
       out.push(data.text);
     }
