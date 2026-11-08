@@ -17,6 +17,13 @@ one to read for the detail. Fixes get the same weight as features.
   commune's list that cannot be read no longer stops the rest of the list from being
   read.
 
+- **Winterthur, St. Gallen and Biel/Bienne.** Three of Switzerland's largest cities keep
+  their regulations in the same kind of collection as Zug's and Glarus's communes, and
+  Solon is now set to read them the same way: every act with the day each version took
+  effect, cut into articles, from the first load on Solon's server. A question that names
+  Winterthur, Biel or Bienne, or St. Gallen asks the city's own law as well as the
+  canton's.
+
 - **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
   from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
   the Land Board's own file, read again each month, so opening either country on the
@@ -76,6 +83,18 @@ one to read for the detail. Fixes get the same weight as features.
   not taken for the law. The first load runs on Solon's server and has not run yet,
   so New Hampshire's law is not on the site today; the roadmap item stays open until
   it is.
+
+- **The European Union, the layer above its members.** EU law applies in every member
+  state, above the state's own, and Solon now places it there: the pages of Estonia and
+  Luxembourg name the European Union among the law that also applies, the way a canton's
+  page names the Confederation, and a question about either is asked of EU law too.
+  A reader for the EU's regulations and directives in force comes with it: the list
+  from the Publications Office's open data, titled in English and named by CELEX number,
+  and each act's text from EUR-Lex, in its latest consolidated version where there is
+  one, cut into articles and annexes under EUR-Lex's own anchors, with the notice
+  EUR-Lex's terms ask for. The first load runs on Solon's server and has not run yet,
+  so the EU's acts are not on the site today; their roadmap item stays open until they
+  are. {#law-eu-layer}
 
 ### Fixed
 

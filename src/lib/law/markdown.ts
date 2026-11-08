@@ -26,6 +26,10 @@ export function actToMarkdown(act: ActView, site: string): string {
     `in_force: ${act.inForce}`,
     ...(act.systematicNumber ? [`number: ${JSON.stringify(act.systematicNumber)}`] : []),
     ...(act.officialUrl ? [`publisher_url: ${act.officialUrl}`] : []),
+    // The notice the publisher's terms of reuse ask for, carried with every copy.
+    ...(authorityOf(act.authority)?.attribution
+      ? [`attribution: ${JSON.stringify(authorityOf(act.authority)!.attribution)}`]
+      : []),
     `solon_url: ${site}/law/${act.id}`,
     ...(version
       ? [

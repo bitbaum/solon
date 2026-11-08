@@ -415,7 +415,7 @@ of a version that took effect on the same day replaces the earlier reading; a
 version that has not yet begun is left until its day. Only the hosts in config
 are read. `pnpm run law:text lexwork [--host zug.tlex.ch]` (and the Law text
 load workflow, source `lexwork`) loads them; rerunning stores only what is new.
-First instances: the 11 communes of Zug and the 3 of Glarus (1,164 acts). One version that cannot be read
+First instances: the 11 communes of Zug and the 3 of Glarus (1,164 acts); Winterthur, St. Gallen and Biel/Bienne followed (2026-11-08). One version that cannot be read
 never stops the ones after it. A version the publisher holds with no text at all
 (a blank page, as in four acts of Cham and Hünenberg) is reported as empty at the
 publisher and left without text: not a failure of the run, and nothing invented.

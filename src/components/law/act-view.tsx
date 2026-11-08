@@ -107,6 +107,10 @@ export default function ActViewPage({
                   )}
                 </p>
               )}
+              {/* The notice the publisher's terms of reuse ask for, as they word it. */}
+              {authorityOf(act.authority)?.attribution && (
+                <p className="text-fg-secondary">{authorityOf(act.authority)!.attribution}</p>
+              )}
               <p className="break-all font-mono text-xs text-fg-tertiary">
                 sha256 {version.contentSha256}
               </p>

@@ -22,12 +22,29 @@ describe("the place tree", () => {
     expect(chainOf("li7001").map((a) => a.key)).toEqual(["li7001", "li"]);
   });
 
-  it("names a level for every authority and a parent for every non-country", () => {
+  it("puts a member state under the European Union, and a country outside it under nothing", () => {
+    expect(chainOf("ee").map((a) => a.key)).toEqual(["ee", "eu"]);
+    expect(chainOf("lux").map((a) => a.key)).toEqual(["lux", "eu"]);
+    expect(chainOf("eu").map((a) => a.key)).toEqual(["eu"]);
+    expect(chainOf("ch").map((a) => a.key)).toEqual(["ch"]);
+    expect(chainOf("li").map((a) => a.key)).toEqual(["li"]);
+    expect(levelOf(LAW_AUTHORITIES.find((a) => a.key === "eu")!)).toBe("union");
+  });
+
+  it("names a level for every authority and a parent for every place below a country", () => {
     for (const a of LAW_AUTHORITIES) {
       const level = levelOf(a);
-      if (level === "country") expect(parentOf(a.key)).toBeNull();
-      else expect(parentOf(a.key), a.key).not.toBeNull();
+      if (level === "union") expect(parentOf(a.key)).toBeNull();
+      else if (level === "country") {
+        const parent = parentOf(a.key);
+        expect(parent === null || levelOf(parent) === "union", a.key).toBe(true);
+      } else expect(parentOf(a.key), a.key).not.toBeNull();
     }
+  });
+
+  it("nests the members Solon holds under the union in the tree", () => {
+    const eu = placeTree(counts).find((n) => n.key === "eu")!;
+    expect(eu.children.map((c) => c.key).sort()).toEqual(["ee", "lux"]);
   });
 
   it("lists every authority once, under exactly one root", () => {

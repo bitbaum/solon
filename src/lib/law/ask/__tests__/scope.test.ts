@@ -64,6 +64,13 @@ describe("a commune named in a question", () => {
     expect(authoritiesNamed("Abfallreglement Koniz").sort()).toEqual(["be", "bfs355"]);
     expect(authoritiesNamed("Règlement de police de Neuchâtel").sort()).toEqual(["bfs6458", "ne"]);
   });
+
+  it("names a city in either language, and a city that shares its canton's name with the canton", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Le règlement de police de Bienne").sort()).toEqual(["be", "bfs371"]);
+    expect(authoritiesNamed("Parkieren in Winterthur").sort()).toEqual(["bfs230", "zh"]);
+    expect(authoritiesNamed("Hundeverordnung St. Gallen").sort()).toEqual(["bfs3203", "sg"]);
+  });
 });
 
 describe("Swiss federal law in a plan", () => {
@@ -79,7 +86,7 @@ describe("Swiss federal law in a plan", () => {
           language: "French",
         }),
       }));
-    expect((await plan(["lux"])).authorities).toEqual(["lux"]);
+    expect((await plan(["lux"])).authorities).toEqual(["lux", "eu"]);
     expect((await plan(["li7001", "li"])).authorities.sort()).toEqual(["li", "li7001"]);
     expect((await plan(["zh"])).authorities).toEqual(["ch", "zh"]);
     expect((await plan([])).authorities).toEqual(["ch"]);
