@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { archiveCopyOf, originalOf } from "../../archive-copy";
 import { actToMarkdown } from "../../markdown";
 import type { ActView } from "../../view";
-import { botCheckOf, read, USER_AGENT, wholePdf } from "../http";
+import { botCheckOf, freshCapture, read, USER_AGENT, wholePdf } from "../http";
 import { importerVersion } from "../load";
 import { triesenberg } from "../linked-documents";
 
@@ -93,6 +93,8 @@ describe("a publisher that refuses Solon's reader", () => {
         PDF,
         expect.stringMatching(/^https:\/\/web\.archive\.org\/cdx\/search\/cdx\?/),
         `https://archive.org/wayback/available?url=${encodeURIComponent(PDF)}`,
+        // The only copy is over a year old, so a fresh one is asked for first; there is none.
+        `https://web.archive.org/save/${PDF}`,
         got.url,
       ]);
       expect(asked.every((a) => a.agent === USER_AGENT)).toBe(true);
@@ -327,5 +329,47 @@ describe("a connection that drops", () => {
     const got = await read(PDF, doFetch, ["www.triesenberg.li"], [0]);
     expect(got.copy?.capturedOn).toBe("2025-03-14");
     expect(asked.filter((a) => a.url.includes("id_/"))).toHaveLength(2);
+  });
+});
+
+describe("an archive whose newest copy is old", () => {
+  const WHOLE = new TextEncoder().encode("%PDF-1.7\nthe regulation as it is now\n%%EOF\n");
+  const OLD = new TextEncoder().encode("%PDF-1.7\nthe regulation of 2007\n%%EOF\n");
+  const FRESH = "20261108090000";
+  const save: Route = (url) =>
+    url === `https://web.archive.org/save/${PDF}`
+      ? Object.defineProperty(new Response("saved", { status: 200 }), "url", {
+          value: `https://web.archive.org/web/${FRESH}/${PDF}`,
+        })
+      : undefined;
+
+  it("asks for a capture made today and reads it before the old one", async () => {
+    const { doFetch } = standIn(
+      official(PDF, () => new Response("Forbidden", { status: 403 })),
+      index(PDF, ["20070815170621"]),
+      save,
+      capture(PDF, FRESH, WHOLE, "application/pdf"),
+      capture(PDF, "20070815170621", OLD, "application/pdf"),
+    );
+    const got = await read(PDF, doFetch, ["www.triesenberg.li"], []);
+    expect(new TextDecoder().decode(got.bytes)).toContain("as it is now");
+    expect(got.copy?.capturedOn).toBe("2026-11-08");
+  });
+
+  it("reads the old copy when the fresh capture is the site's block page", async () => {
+    const { doFetch } = standIn(
+      official(PDF, () => new Response("Forbidden", { status: 403 })),
+      index(PDF, ["20070815170621"]),
+      save,
+      capture(PDF, FRESH, BOT_CHECK),
+      capture(PDF, "20070815170621", OLD, "application/pdf"),
+    );
+    const got = await read(PDF, doFetch, ["www.triesenberg.li"], []);
+    expect(got.copy?.capturedOn).toBe("2007-08-15");
+  });
+
+  it("finds no timestamp when the archive would not save", async () => {
+    const { doFetch } = standIn();
+    expect(await freshCapture(PDF, doFetch, [])).toBeNull();
   });
 });

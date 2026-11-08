@@ -97,6 +97,33 @@ export async function newestCapture(url: string, doFetch: typeof fetch): Promise
   return closest.timestamp;
 }
 
+/** A capture older than this may no longer be the law in force: a fresh one is asked for first. */
+export const STALE_AFTER_DAYS = 365;
+
+const daysSince = (stamp: string, now: number) =>
+  (now - Date.UTC(+stamp.slice(0, 4), +stamp.slice(4, 6) - 1, +stamp.slice(6, 8))) / 86_400_000;
+
+/**
+ * Asks the Internet Archive to capture `url` now (Save Page Now), from its
+ * own network, which a site that refuses Solon may still answer. The new
+ * capture's timestamp, or null when the archive would not or could not.
+ */
+export async function freshCapture(
+  url: string,
+  doFetch: typeof fetch,
+  retryWaits: readonly number[] = ARCHIVE_RETRY_MS,
+): Promise<string | null> {
+  try {
+    const response = await patiently(`https://web.archive.org/save/${url}`, doFetch, retryWaits);
+    if (!response.ok) return null;
+    // The archive answers from the new capture; its address names the timestamp.
+    const where = `${response.url} ${response.headers.get("content-location") ?? ""}`;
+    return /\/web\/(\d{14})/.exec(where)?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /** How many distinct captures are tried, newest first, before giving up. */
 const CAPTURES_TRIED = 8;
 
@@ -156,6 +183,11 @@ async function readCopy(
   } catch (error) {
     const why = error instanceof Error ? error.message : String(error);
     throw new Error(`${refusal} for ${url}; the Internet Archive could not be asked (${why})`);
+  }
+  // No copy, or only an old one: ask for one made today, and read it first when it comes.
+  if (stamps.length === 0 || daysSince(stamps[0]!, Date.now()) > STALE_AFTER_DAYS) {
+    const fresh = await freshCapture(url, doFetch, retryWaits);
+    if (fresh) stamps = [fresh, ...stamps.filter((s) => s !== fresh)];
   }
   if (stamps.length === 0) {
     throw new Error(`${refusal} for ${url}; the Internet Archive holds no copy of it`);

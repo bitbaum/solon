@@ -59,6 +59,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **A law read from an old archived copy is read again from a fresh one.** When the
+  newest copy the Internet Archive holds of a refusing site's page is more than a year
+  old (one New Hampshire chapter's was from 2007), Solon first asks the archive to save
+  the page today, from its own network, and reads that; the old copy is read only when
+  no fresh one can be had, and its date is shown as before.
+
 - **The assistant's answers about a proposed change keep closer to the evidence.** It now
   looks for precedents nearest first (the same country's other levels, neighbouring
   cantons and countries) instead of anywhere at all, labels an effect it reasons out as
