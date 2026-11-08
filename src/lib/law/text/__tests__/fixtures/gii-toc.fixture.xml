@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HAND-WRITTEN APPROXIMATION of gesetze-im-internet.de/gii-toc.xml (the portal could not be reached
+     from the sandbox this was written in). The titles of 1-dm-goldm_nzg, bgb, gg and urv are the ones
+     the portal prints; the shape (items, title, link to /<abbr>/xml.zip) is from third-party
+     descriptions of the file. The other entries and the one without a link are made up to
+     exercise the reader. -->
+<items>
+<item>
+<title>Gesetz über die Ausprägung einer 1-DM-Goldmünze und die Errichtung der Stiftung "Geld und Währung"</title>
+<link>http://www.gesetze-im-internet.de/1-dm-goldm_nzg/xml.zip</link>
+</item>
+<item>
+<title>Bürgerliches Gesetzbuch</title>
+<link>http://www.gesetze-im-internet.de/bgb/xml.zip</link>
+</item>
+<item>
+<title>Grundgesetz für die Bundesrepublik Deutschland</title>
+<link>http://www.gesetze-im-internet.de/gg/xml.zip</link>
+</item>
+<item>
+<title>Verordnung über das Unternehmensregister</title>
+<link>http://www.gesetze-im-internet.de/urv/xml.zip</link>
+</item>
+<item>
+<title>Bekanntmachung der Neufassung der Beispielordnung</title>
+<link>http://www.gesetze-im-internet.de/beispo/xml.zip</link>
+</item>
+<item>
+<title>Zweite Verordnung zur Änderung des Beispielgesetzes</title>
+<link>http://www.gesetze-im-internet.de/beispg_2v/xml.zip</link>
+</item>
+<item>
+<title>Geschäftsordnung des Beispielausschusses</title>
+<link>http://www.gesetze-im-internet.de/beispausschgo/xml.zip</link>
+</item>
+<item>
+<title>Entry with no link</title>
+<link></link>
+</item>
+<item>
+<title>Bürgerliches Gesetzbuch</title>
+<link>http://www.gesetze-im-internet.de/bgb/xml.zip</link>
+</item>
+</items>

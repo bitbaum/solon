@@ -39,6 +39,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "lu_eli",
   /** The European Union's CELEX number: `32016R0679` (sector 3, year, R regulation or L directive, number). */
   "celex",
+  /** Germany's federal portal's abbreviation for an act, the folder it is served from: `bgb`, `gg`, `1-dm-goldm_nzg`. */
+  "gii_abbr",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
@@ -113,6 +115,8 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  // Germany's federal law; the Länder's own law is a follow-up (each publishes its own).
+  { key: "de", name: "Germany", place: { scheme: "iso_3166_1", value: "DE" } },
   // A union of countries: no single place; its law applies in each member, above the member's
   // own. The 27 members since 1 February 2020, the day the United Kingdom left.
   {
@@ -742,6 +746,52 @@ export const EURLEX = {
   kinds: { R: "regulation", L: "directive" } as Readonly<Record<string, ActKind>>,
   /** The first year of the Official Journal's acts; the register is read a year at a time from it. */
   firstYear: 1952,
+} as const;
+
+/**
+ * Germany's federal law from Gesetze im Internet, the portal of the Federal
+ * Ministry of Justice (operated with juris): the table of contents of the
+ * statutes and ordinances in force (`gii-toc.xml`, an entry per act with its
+ * title and the address of its download), and each act as a zip of XML at
+ * `/<abbreviation>/xml.zip`, one `<norm>` per paragraph (§), article, annex
+ * and so on, in the portal's DTD (`/dtd/1.0/gii-norm.dtd`). The portal states
+ * no day for a version, so each is dated by the day it was read, and an act is
+ * read again every week and stored anew only when its text changed. German
+ * statutes and other official works are not protected by copyright (§ 5
+ * Urheberrechtsgesetz). Federal law only; the Länder publish their own.
+ */
+export const GII = {
+  key: "gii",
+  authority: "de",
+  publisher: "Bundesministerium der Justiz, Gesetze im Internet",
+  homepage: "https://www.gesetze-im-internet.de",
+  tocUrl: "https://www.gesetze-im-internet.de/gii-toc.xml",
+  /** `{abbr}` is the act's abbreviation as the portal names its folder. */
+  zipUrl: "https://www.gesetze-im-internet.de/{abbr}/xml.zip",
+  pageUrl: "https://www.gesetze-im-internet.de/{abbr}/index.html",
+  hosts: ["www.gesetze-im-internet.de"],
+  licenceSpdx: "LicenseRef-de-official-work",
+  locale: "de",
+  textStatus: "consolidated" as ActTextStatus,
+  /** Between requests: the portal is a federal service, one request a second at most. */
+  pauseMs: 1100,
+  /** An act read within this many days is not read again; the weekly sync reads each once a week. */
+  freshDays: 6,
+  /**
+   * The kind of an act from its German title: the rule whose word occurs first in the title
+   * decides ("Zweite Verordnung zur Änderung des Gesetzes" is an ordinance, "Gesetz zu dem
+   * Abkommen" a statute). A word counts at the end of a compound too (Strafgesetzbuch,
+   * Straßenverkehrs-Zulassungs-Verordnung), not inside a longer word.
+   */
+  kindByTitle: [
+    [/grundgesetz(?![\p{L}])/iu, "constitution"],
+    [/(?:vertrag|abkommen|übereinkommen|konkordat)(?![\p{L}])/iu, "treaty"],
+    [/(?:bekanntmachung|mitteilung|verkündung)(?![\p{L}])/iu, "notice"],
+    [/(?:anordnung|erlass|beschluss|verwaltungsvorschrift)(?![\p{L}])/iu, "decree"],
+    [/verordnung(?![\p{L}])/iu, "ordinance"],
+    [/(?:(?<!ver)ordnung|satzung|richtlinie)(?![\p{L}])/iu, "regulation"],
+    [/gesetz(?:e|es|buch|buches)?(?![\p{L}])/iu, "statute"],
+  ] as readonly (readonly [RegExp, ActKind])[],
 } as const;
 
 /**
