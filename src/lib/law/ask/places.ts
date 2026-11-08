@@ -1,4 +1,4 @@
-import { LAW_AUTHORITIES } from "@/lib/config/law";
+import { LAW_AUTHORITIES, countryOf } from "@/lib/config/law";
 import { AUTHORITY_ALIASES } from "@/lib/config/law/aliases";
 
 const plain = (text: string): string =>
@@ -36,6 +36,12 @@ export function authoritiesNamed(text: string): string[] {
   for (const key of [...found]) {
     const within = LAW_AUTHORITIES.find((a) => a.key === key)?.within;
     if (within && within !== "ch") found.add(within);
+  }
+  // A member state's law sits within its union's: a question about Estonia is asked of EU law too.
+  for (const key of [...found]) {
+    const country = countryOf(key);
+    const union = country && LAW_AUTHORITIES.find((a) => a.members?.includes(country));
+    if (union) found.add(union.key);
   }
   return [...found];
 }

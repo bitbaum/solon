@@ -73,7 +73,7 @@ describe("Swiss federal law in a plan", () => {
           language: "French",
         }),
       }));
-    expect((await plan(["lux"])).authorities).toEqual(["lux"]);
+    expect((await plan(["lux"])).authorities).toEqual(["lux", "eu"]);
     expect((await plan(["li7001", "li"])).authorities.sort()).toEqual(["li", "li7001"]);
     expect((await plan(["zh"])).authorities).toEqual(["ch", "zh"]);
     expect((await plan([])).authorities).toEqual(["ch"]);

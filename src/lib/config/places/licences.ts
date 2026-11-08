@@ -41,4 +41,9 @@ export const LICENCES = [
   // A work of the United States Government (its Census Bureau's codes and boundaries, the
   // IRS's revenue procedures) is not protected by copyright: 17 U.S.C. § 105. Public domain.
   { spdx: "LicenseRef-us-federal-work", requiresAttribution: false, shareAlike: false },
+  // EUR-Lex content (the Official Journal and the consolidated texts): reuse is authorised,
+  // for any purpose, provided the source is acknowledged ("© European Union,
+  // https://eur-lex.europa.eu"), under Commission Decision 2011/833/EU of 12 December 2011 on
+  // the reuse of Commission documents (OJ L 330, 14.12.2011, p. 39). CC BY's obligation.
+  { spdx: "LicenseRef-eu-reuse-2011-833", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];

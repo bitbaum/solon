@@ -68,6 +68,18 @@ one to read for the detail. Fixes get the same weight as features.
   so New Hampshire's law is not on the site today; the roadmap item stays open until
   it is.
 
+- **The European Union, the layer above its members.** EU law applies in every member
+  state, above the state's own, and Solon now places it there: the pages of Estonia and
+  Luxembourg name the European Union among the law that also applies, the way a canton's
+  page names the Confederation, and a question about either is asked of EU law too.
+  A reader for the EU's regulations and directives in force comes with it: the list
+  from the Publications Office's open data, titled in English and named by CELEX number,
+  and each act's text from EUR-Lex, in its latest consolidated version where there is
+  one, cut into articles and annexes under EUR-Lex's own anchors, with the notice
+  EUR-Lex's terms ask for. The first load runs on Solon's server and has not run yet,
+  so the EU's acts are not on the site today; their roadmap item stays open until they
+  are. {#law-eu-layer}
+
 ### Fixed
 
 - **A law read from an old archived copy is read again from a fresh one.** When the
