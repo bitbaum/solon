@@ -596,7 +596,7 @@
       "searchLabel": "Cerca un indirizzo, un luogo o un numero postale",
       "searchLabelNoAddress": "Cerca un luogo o un numero postale",
       "searchPlaceholder": "p. es. Via Nassa 1, Lugano · Berna · 6900",
-      "searchPlaceholderNoAddress": "p. es. Berna o 3011",
+      "searchPlaceholderNoAddress": "p. es. {example}",
       "searchNote": "Un indirizzo va dal tuo browser direttamente a {provider} per essere trovato sulla mappa. Solon non lo vede mai.",
       "searchResults": "Suggerimenti",
       "searchNothing": "Nessun risultato",
@@ -946,6 +946,7 @@
     "mapLabelCountry": "Carta di {country} e dei suoi luoghi",
     "unavailable": "La carta non può essere disegnata in questo browser.",
     "sources": "Da dove viene ({count, plural, one {# fonte} other {# fonti}})",
-    "situationHint": "Inserisci il tuo reddito per colorare la carta secondo l'imposta che pagheresti."
+    "situationHint": "Inserisci il tuo reddito per colorare la carta secondo l'imposta che pagheresti.",
+    "taxSameEverywhere": "L'imposta è la stessa ovunque qui: {amount} all'anno con questo reddito. Nessun luogo ne preleva una propria."
   }
 }

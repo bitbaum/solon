@@ -504,15 +504,28 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                   </div>
                 </details>
               )}
-              {drawn && tax.taxPack && colours && tax.money && tax.totals.length > 0 && (
-                <MapLegend
-                  breaks={tax.breaks}
-                  range={[tax.totals[0]!, tax.totals.at(-1)!]}
-                  colours={colours}
-                  money={tax.money}
-                  caption={caption}
-                />
-              )}
+              {drawn &&
+              tax.money &&
+              tax.totals.length > 0 &&
+              tax.totals[0] === tax.totals.at(-1) ? (
+                <p className="text-sm text-fg-secondary">
+                  {t("taxSameEverywhere", { amount: formatMoney(tax.totals[0]!, tax.money) })}
+                </p>
+              ) : null}
+              {drawn &&
+                tax.taxPack &&
+                colours &&
+                tax.money &&
+                tax.totals.length > 0 &&
+                tax.totals[0] !== tax.totals.at(-1) && (
+                  <MapLegend
+                    breaks={tax.breaks}
+                    range={[tax.totals[0]!, tax.totals.at(-1)!]}
+                    colours={colours}
+                    money={tax.money}
+                    caption={caption}
+                  />
+                )}
               {drawn && tax.taxPack && (
                 <p className="text-xs text-fg-tertiary">
                   {tax.taxPack.excludes} {tc("disclaimer")} {tc("privacy")}

@@ -1182,7 +1182,7 @@
       "searchLabel": "Find an address, a place or a postcode",
       "searchLabelNoAddress": "Find a place or a postcode",
       "searchPlaceholder": "e.g. Bahnhofstrasse 1, Zürich · Bern · 8001",
-      "searchPlaceholderNoAddress": "e.g. Bern or 3011",
+      "searchPlaceholderNoAddress": "e.g. {example}",
       "searchNote": "An address goes from your browser straight to {provider} to be found on the map. Solon never sees it.",
       "searchResults": "Suggestions",
       "searchNothing": "Nothing found",
@@ -1635,10 +1635,11 @@
     "placesTitle": "Places",
     "placesDrawn": "On the map: {level}. Each is coloured by what tax would cost you there. Tap one, or search.",
     "placesNotDrawn": "Its places are listed, not drawn on the map yet.",
-    "placesOpen": "All of {country}'s places",
+    "placesOpen": "Every place in {country}",
     "mapLabelCountry": "Map of {country} and its places",
     "unavailable": "The map cannot be drawn in this browser.",
     "sources": "Where this comes from ({count, plural, one {# source} other {# sources}})",
-    "situationHint": "Enter your income to colour the map by what tax would cost you."
+    "situationHint": "Enter your income to colour the map by what tax would cost you.",
+    "taxSameEverywhere": "Tax is the same in every place here: {amount} a year at this income. No place levies its own."
   }
 }
