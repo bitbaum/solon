@@ -258,9 +258,16 @@ export function actsOfPage(page: SearchPage): RtAct[] {
   }));
 }
 
+/** Passes over the register before giving up on acts its pages skipped. */
+const PASSES = 3;
+
 /**
- * Every consolidated text in force on `day`, page by page, politely paced.
- * `national` leaves out the municipalities' own regulations.
+ * Every consolidated text in force on `day`, page by page, politely paced,
+ * each once. The register pages by offset over an order that is not stable
+ * among acts of one title (dozens are called "Kaitseväe kasutamine …"), so a
+ * pass repeats some acts and skips as many: repeats are dropped by id, and
+ * the register is read again, up to three passes, until every act it counts
+ * has been seen. `national` leaves out the municipalities' own regulations.
  */
 export async function listInForce(
   day: string,
@@ -271,21 +278,24 @@ export async function listInForce(
     onPage?: (seen: number, total: number) => void;
   } = {},
 ): Promise<RtAct[]> {
-  const out: RtAct[] = [];
-  for (let offset = 0; ;) {
-    const res = await doFetch(RIIGITEATAJA.searchUrl, {
-      method: "POST",
-      headers: { "content-type": "application/json", "user-agent": RIIGITEATAJA.userAgent },
-      body: searchBody(day, offset),
-    });
-    if (!res.ok) throw new Error(`the register answered ${res.status} at ${offset}`);
-    const page = (await res.json()) as SearchPage;
-    const acts = actsOfPage(page);
-    out.push(...acts.filter((a) => !options.national || !a.local));
-    offset += page.results.length;
-    options.onPage?.(offset, page.kehtivad);
-    if (page.results.length === 0 || offset >= page.kehtivad) break;
-    await new Promise((resolve) => setTimeout(resolve, options.pauseMs ?? 400));
+  const seen = new Map<string, RtAct>();
+  let total = Infinity;
+  for (let pass = 0; pass < PASSES && seen.size < total; pass++) {
+    for (let offset = 0; ;) {
+      const res = await doFetch(RIIGITEATAJA.searchUrl, {
+        method: "POST",
+        headers: { "content-type": "application/json", "user-agent": RIIGITEATAJA.userAgent },
+        body: searchBody(day, offset),
+      });
+      if (!res.ok) throw new Error(`the register answered ${res.status} at ${offset}`);
+      const page = (await res.json()) as SearchPage;
+      total = page.kehtivad;
+      for (const act of actsOfPage(page)) if (!seen.has(act.id)) seen.set(act.id, act);
+      offset += page.results.length;
+      options.onPage?.(offset, page.kehtivad);
+      if (page.results.length === 0 || offset >= page.kehtivad) break;
+      await new Promise((resolve) => setTimeout(resolve, options.pauseMs ?? 400));
+    }
   }
-  return out;
+  return [...seen.values()].filter((a) => !options.national || !a.local);
 }

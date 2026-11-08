@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { actsOfPage, inForceFromXml, parseRiigiTeatajaXml, searchBody } from "../riigiteataja";
+import {
+  actsOfPage,
+  inForceFromXml,
+  listInForce,
+  parseRiigiTeatajaXml,
+  searchBody,
+} from "../riigiteataja";
 
 /** An excerpt of the Income Tax Act's XML as Riigi Teataja serves it (2026-11-07). */
 const XML = `<?xml version='1.0' encoding='UTF-8'?><oigusakt xmlns="Juurakt">
@@ -163,5 +169,35 @@ describe("two sections with one id", () => {
       ["para1", "Esimene."],
       ["para1-2", "Teine."],
     ]);
+  });
+});
+
+describe("a register whose pages are not stable", () => {
+  it("lists every act once, reading again for the acts a pass skipped", async () => {
+    const result = (id: number) => ({
+      id,
+      groupId: id + 1000,
+      title: "Kaitseväe kasutamine",
+      abbreviation: null,
+      reportType: "otsus",
+      reportIssuer: "Riigikogu",
+      reportDateStart: "2026-01-01T00:00:00+02:00",
+      localGovernment: false,
+    });
+    // The first pass shows act 2 twice and never act 3; the second shows all three.
+    const passes = [
+      [[1, 2], [2]],
+      [[1, 2], [3]],
+    ];
+    let calls = 0;
+    const doFetch: typeof fetch = async (_input, init) => {
+      const offset = JSON.parse(String(init?.body)).general.searchAfter as number;
+      const pass = passes[Math.min(Math.floor(calls++ / 2), 1)]!;
+      const ids = pass[offset === 0 ? 0 : 1]!;
+      return Response.json({ kehtivad: 3, results: ids.map(result) });
+    };
+    const acts = await listInForce("2026-11-08", doFetch, { pauseMs: 0 });
+    expect(acts.map((a) => a.id)).toEqual(["1", "2", "3"]);
+    expect(calls).toBe(4);
   });
 });
