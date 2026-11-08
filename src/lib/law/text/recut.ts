@@ -1,19 +1,22 @@
 /**
- * Cuts the cantonal acts already held again, from the bytes they were read
- * from, when the cutter improves (cantonal.ts): no publisher is asked again.
+ * Cuts the acts already held again, from the bytes they were read from, when a
+ * cutter improves (cantonal.ts, eurlex.ts): no publisher is asked again.
  * A version is re-cut once per reader version; its provisions are replaced
  * only when the new cut finds more of them, so a better reader can only add
  * structure, never lose it. Every provision's text still comes from the
  * snapshot its version cites.
  */
-import { and, eq, inArray, isNull, ne, sql } from "drizzle-orm";
-import { CANTONAL_DOCUMENTS } from "@/lib/config/law";
+import { and, eq, inArray, isNull, notInArray, sql } from "drizzle-orm";
+import { CANTONAL_DOCUMENTS, EURLEX } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActs, legalActVersions, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { cleanPdfText, documentText, parseCantonalProvisions } from "./cantonal";
+import { parseEurLexHtml } from "./eurlex";
+import type { Provision } from "./fedlex";
 import { CANTONAL_IMPORTER_VERSION, cantonalAuthorities } from "./import-cantonal";
+import { EURLEX_IMPORTER_VERSION } from "./import-eurlex";
 
 export interface RecutReport {
   status: "applied" | "dry_run";
@@ -25,15 +28,48 @@ export interface RecutReport {
   failures: { version: string; reason: string }[];
 }
 
-export async function recutCantonalText(
+interface RecutOptions {
+  snapshots: SnapshotStore;
+  authority?: string;
+  limit?: number;
+  dryRun?: boolean;
+  onProgress?: (message: string) => void;
+}
+
+/** What a recut needs to know about one reader: whose texts, its current version, how it cuts. */
+interface Reader {
+  sourceKey: string;
+  importerVersion: string;
+  authorities: string[];
+  cut: (bytes: Uint8Array, format: string) => Promise<Provision[]>;
+}
+
+export async function recutCantonalText(db: Database, options: RecutOptions): Promise<RecutReport> {
+  return recutTexts(db, options, {
+    sourceKey: CANTONAL_DOCUMENTS.key,
+    importerVersion: CANTONAL_IMPORTER_VERSION,
+    authorities: options.authority ? [options.authority] : cantonalAuthorities(),
+    cut: async (bytes, format) =>
+      parseCantonalProvisions(
+        cleanPdfText(await documentText(bytes, format === "pdf" ? "pdf" : "html")),
+      ),
+  });
+}
+
+/** The EU acts held, cut again from the EUR-Lex pages they were read from (eurlex.ts). */
+export async function recutEurLexText(db: Database, options: RecutOptions): Promise<RecutReport> {
+  return recutTexts(db, options, {
+    sourceKey: EURLEX.key,
+    importerVersion: EURLEX_IMPORTER_VERSION,
+    authorities: [EURLEX.authority],
+    cut: async (bytes) => parseEurLexHtml(new TextDecoder().decode(bytes)),
+  });
+}
+
+async function recutTexts(
   db: Database,
-  options: {
-    snapshots: SnapshotStore;
-    authority?: string;
-    limit?: number;
-    dryRun?: boolean;
-    onProgress?: (message: string) => void;
-  },
+  options: RecutOptions,
+  reader: Reader,
 ): Promise<RecutReport> {
   const { snapshots, dryRun = false, limit = Infinity } = options;
   const say = options.onProgress ?? (() => undefined);
@@ -46,13 +82,16 @@ export async function recutCantonalText(
     remaining: 0,
     failures: [],
   };
-  const authorities = options.authority ? [options.authority] : cantonalAuthorities();
+  const authorities = reader.authorities;
+  // A version read from an archive copy keeps that mark (importerVersion "…+archive").
+  const current = [reader.importerVersion, `${reader.importerVersion}+archive`];
   const todo = await db
     .select({
       versionId: legalActVersions.id,
       format: legalActVersions.format,
       sourceId: sources.id,
       snapshotKey: sources.snapshotKey,
+      importerVersion: sources.importerVersion,
       authority: legalActs.authority,
       held: sql<number>`(SELECT count(*)::int FROM legal_provisions p WHERE p.version_id = ${legalActVersions.id})`,
     })
@@ -62,8 +101,8 @@ export async function recutCantonalText(
     .where(
       and(
         isNull(legalActVersions.inForceTo),
-        eq(sources.sourceKey, CANTONAL_DOCUMENTS.key),
-        ne(sources.importerVersion, CANTONAL_IMPORTER_VERSION),
+        eq(sources.sourceKey, reader.sourceKey),
+        notInArray(sources.importerVersion, current),
         inArray(legalActs.authority, authorities),
       ),
     );
@@ -72,8 +111,7 @@ export async function recutCantonalText(
     report.examined++;
     try {
       const bytes = await snapshots.get(row.snapshotKey);
-      const kind = row.format === "pdf" ? "pdf" : "html";
-      const provisions = parseCantonalProvisions(cleanPdfText(await documentText(bytes, kind)));
+      const provisions = await reader.cut(bytes, row.format);
       report.provisionsBefore += row.held;
       const better = provisions.length > row.held;
       report.provisionsAfter += better ? provisions.length : row.held;
@@ -99,7 +137,11 @@ export async function recutCantonalText(
         // Read by this reader now, whether or not it found more.
         await tx
           .update(sources)
-          .set({ importerVersion: CANTONAL_IMPORTER_VERSION })
+          .set({
+            importerVersion: row.importerVersion?.endsWith("+archive")
+              ? `${reader.importerVersion}+archive`
+              : reader.importerVersion,
+          })
           .where(eq(sources.id, row.sourceId));
       });
     } catch (error) {

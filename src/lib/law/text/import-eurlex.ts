@@ -31,7 +31,7 @@ import {
 import { reasonOf } from "./import-riigiteataja";
 import { storeVersion } from "./store";
 
-export const EURLEX_IMPORTER_VERSION = "law-text-eurlex-1";
+export const EURLEX_IMPORTER_VERSION = "law-text-eurlex-2";
 
 export interface EurLexOptions {
   snapshots: SnapshotStore;

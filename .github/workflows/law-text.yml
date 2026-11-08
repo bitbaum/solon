@@ -30,6 +30,7 @@ on:
             municipal,
             lexwork,
             recut,
+            recut-eurlex,
             legilux,
             riigiteataja,
             eurlex,
