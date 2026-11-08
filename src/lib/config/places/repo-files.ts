@@ -16,6 +16,13 @@ export const PLACES_REPO_FILES: readonly { source: string; file: string }[] = [
   { source: "li-communal-tax-steps", file: "data/places/liechtenstein/tax-steps.csv" },
   { source: "ee-ehak-units", file: "data/places/estonia/administrative-units.json" },
   { source: "ee-income-tax", file: "data/places/estonia/income-tax.json" },
+  { source: "us-census-units", file: "data/places/united-states/administrative-units.json" },
+  {
+    source: "us-census-county-boundaries",
+    file: "data/places/united-states/county-boundaries.json",
+  },
+  { source: "us-federal-income-tax", file: "data/places/united-states/federal-income-tax.json" },
+  { source: "wy-income-tax", file: "data/places/united-states/wyoming-income-tax.json" },
   { source: "ch-cantonal-tax-steps", file: "data/places/switzerland/tax-steps.csv" },
   { source: "ch-church-tariffs", file: "data/places/switzerland/church-tariffs.json" },
   { source: "ch-per-head-taxes", file: "data/places/switzerland/per-head-taxes.json" },

@@ -8,6 +8,17 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The United States in Places.** The nation, its fifty states and the District of
+  Columbia, and Wyoming's 23 counties, by their FIPS codes from the Census Bureau;
+  opening the United States on the atlas draws Wyoming's counties from the Bureau's
+  boundary file. Its tax for 2026: the federal income tax for a single person and for a
+  married couple filing jointly, from the IRS's own figures (Rev. Proc. 2025-32: the rate
+  tables of section 4.01 and the standard deduction of 16,100 and 32,200 dollars of
+  section 4.14), and Wyoming's own income tax, which is none (W.S. 39-12-101), recorded as
+  zero. The estimate says what it leaves out: Social Security and Medicare, credits,
+  itemized deductions and the other filing statuses. A question asked on a Wyoming
+  county's page is asked of Wyoming's law. {#places-us} {#places-us-tax} {#law-wy-places}
+
 - **One atlas.** The globe on the home page and the map on Places are one now. Tap a
   country and the Earth turns to it and draws its places, coloured by what tax would
   cost you there; beside it, how much of its law Solon holds with a link to read it and

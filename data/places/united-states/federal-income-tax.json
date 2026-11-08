@@ -1,0 +1,47 @@
+{
+  "pack": "united_states",
+  "jurisdictions": [],
+  "relations": [],
+  "facts": [
+    {
+      "jurisdiction": { "scheme": "iso_3166_1", "value": "US" },
+      "metricKey": "tax.income.tariff",
+      "variant": "single",
+      "validFrom": "2026-01-01",
+      "validTo": "2027-01-01",
+      "value": {
+        "kind": "stepped",
+        "currency": "USD",
+        "steps": [
+          { "from": 16100, "base": 0, "rate": 0.1 },
+          { "from": 28500, "base": 1240, "rate": 0.12 },
+          { "from": 66500, "base": 5800, "rate": 0.22 },
+          { "from": 121800, "base": 17966, "rate": 0.24 },
+          { "from": 217875, "base": 41024, "rate": 0.32 },
+          { "from": 272325, "base": 58448, "rate": 0.35 },
+          { "from": 656700, "base": 192979.25, "rate": 0.37 }
+        ]
+      }
+    },
+    {
+      "jurisdiction": { "scheme": "iso_3166_1", "value": "US" },
+      "metricKey": "tax.income.tariff",
+      "variant": "married",
+      "validFrom": "2026-01-01",
+      "validTo": "2027-01-01",
+      "value": {
+        "kind": "stepped",
+        "currency": "USD",
+        "steps": [
+          { "from": 32200, "base": 0, "rate": 0.1 },
+          { "from": 57000, "base": 2480, "rate": 0.12 },
+          { "from": 133000, "base": 11600, "rate": 0.22 },
+          { "from": 243600, "base": 35932, "rate": 0.24 },
+          { "from": 435750, "base": 82048, "rate": 0.32 },
+          { "from": 544650, "base": 116896, "rate": 0.35 },
+          { "from": 800900, "base": 206583.5, "rate": 0.37 }
+        ]
+      }
+    }
+  ]
+}

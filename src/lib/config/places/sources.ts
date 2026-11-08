@@ -1004,4 +1004,96 @@ export const SOURCES: readonly SourceInput[] = [
     adapter: "fixture",
     packs: ["estonia"],
   },
+  {
+    // The United States' fifty states and the District of Columbia, by state
+    // FIPS code, with each one's ISO 3166-2 code (`US-` and the postal code
+    // the list gives), from the Census Bureau's state code list
+    // (https://www2.census.gov/geo/docs/reference/state.txt, read 2026-11-08;
+    // 60 and above, the outlying areas, are left out). The counties of each
+    // state loaded so far (Wyoming's 23), by five-digit county FIPS code and
+    // the name the Bureau's 2020 county code list gives
+    // (codes2020/cou/st56_wy_cou2020.txt). Written by
+    // `scripts/places-us-census.ts`; a state's counties are added by running
+    // it again. The nation's names in other languages are CLDR's.
+    key: "us-census-units",
+    publisher: "United States Census Bureau",
+    dataset: "State and county FIPS codes (ANSI) and 2020 county code lists",
+    homepage: "https://www.census.gov/library/reference/code-lists/ansi.html",
+    licence: "LicenseRef-us-federal-work",
+    attribution: {
+      en: "U.S. Census Bureau, state and county FIPS code lists (2020)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 5 1 *",
+    adapter: "fixture",
+    packs: ["united_states"],
+  },
+  {
+    // The counties loaded so far, drawn: the Census Bureau's cartographic
+    // boundary file of counties, 2017 edition (GENZ2017,
+    // https://www2.census.gov/geo/tiger/GENZ2017/shp/), as the us-atlas
+    // package (3.0.1, node_modules/us-atlas/counties-10m.json, README)
+    // redistributes it as TopoJSON, simplified and in WGS84, keyed by county
+    // FIPS code. Cut to the counties held and re-quantized by
+    // `scripts/places-us-census.ts`; the edition is the dataset version.
+    key: "us-census-county-boundaries",
+    publisher: "United States Census Bureau",
+    dataset: "Cartographic boundary file, counties, 2017 edition (via us-atlas 3.0.1)",
+    homepage:
+      "https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html",
+    licence: "LicenseRef-us-federal-work",
+    attribution: {
+      en: "U.S. Census Bureau, cartographic boundary files, 2017 edition",
+    },
+    cadence: "0 6 5 1 *",
+    adapter: "fixture",
+    packs: ["united_states"],
+  },
+  {
+    // The federal income tax for taxable years beginning in 2026, from the
+    // IRS's own revenue procedure, Rev. Proc. 2025-32 (read as
+    // https://www.irs.gov/pub/irs-drop/rp-25-32.pdf on 2026-11-08):
+    // section 4.01, Table 1 (married individuals filing joint returns,
+    // § 1(j)(2)(A)) and Table 3 (unmarried individuals, § 1(j)(2)(C)), and
+    // section 4.14(1), the standard deduction under § 63(c)(2): 32,200 and
+    // 16,100 dollars. Each tariff is its table moved up by its status's
+    // standard deduction, with the tax the table states at each step
+    // (single: 1,240 at 12,400 … 192,979.25 at 640,600 of taxable income;
+    // joint: 2,480 at 24,800 … 206,583.50 at 768,700). Valid for 2026 only:
+    // the next procedure brings 2027's.
+    key: "us-federal-income-tax",
+    publisher: "Internal Revenue Service",
+    dataset: "Rev. Proc. 2025-32, sections 4.01 (Tables 1 and 3) and 4.14(1), tax year 2026",
+    homepage: "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+    licence: "LicenseRef-us-federal-work",
+    attribution: {
+      en: "Internal Revenue Service, Rev. Proc. 2025-32, sections 4.01 and 4.14",
+    },
+    cadence: "0 6 5 1 *",
+    adapter: "fixture",
+    packs: ["united_states"],
+  },
+  {
+    // Wyoming levies no income tax: its rate is recorded as zero, not left
+    // out, so a Wyoming place is estimated in full. Title 39 (Taxation and
+    // Revenue), chapter 12 "Income Tax", holds one section, W.S. 39-12-101:
+    // the state "preempt[s] for itself the field of imposing and levying
+    // income taxes" and no county, city or town may levy one; no section
+    // levies a tax. The Legislative Service Office's "Wyoming Statutory Tax
+    // Structure: Title 39" (June 3, 2025), table "Wyoming Tax Rates and
+    // Collections", gives the individual income tax as 0 %, FY24 collections
+    // $0 (https://wyoleg.gov/InterimCommittee/2025/03-202506032-01WyomingtaxstructureratesandcollectionsJune32025.pdf).
+    // Read from the Legislature's Title 39 file on 2026-11-08.
+    key: "wy-income-tax",
+    publisher: "Wyoming Legislature, Legislative Service Office",
+    dataset: "Wyoming Statutes, Title 39, chapter 12 (W.S. 39-12-101)",
+    homepage: "https://wyoleg.gov/statutes/compress/Title39.pdf",
+    licence: "LicenseRef-public-domain-edicts",
+    attribution: {
+      en: "Wyoming Statutes § 39-12-101; Wyoming Legislative Service Office, Wyoming Statutory Tax Structure: Title 39 (3 June 2025)",
+    },
+    cadence: "0 6 5 1 *",
+    adapter: "fixture",
+    packs: ["united_states"],
+  },
 ];
