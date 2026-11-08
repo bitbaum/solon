@@ -165,6 +165,30 @@ above, because a group's rules must be data before they can be copied.
 - [ ] Nested groups: a part of an organization adopts rules of its own for what is its own, and stays linked for what is shared {#fork-nested}
 - [ ] A rule-set template for groups that want almost no collective decisions, beside the five shipped ones; a template, never a default {#fork-minimal}
 
+### The law beside the numbers {#stats}
+
+A law says one thing; how it is enforced and what happened after it changed
+are other things. Solon should show all three on one record: the text, the
+enforcement, and the statistics over time with every amendment marked, each
+traceable to its source and its articles, so a person can see the gap and
+propose a change on the same page. Several axes of freedom, never one score:
+each axis is a published, versioned definition with its author, and a group's
+weights are its own policy, voted like any other. Statistics are facts in the
+existing places model, not a second store. The reasons, the model and the
+order are in `docs/design/2026-11-freedom-laws-statistics.md`.
+
+- [ ] Statistical series as facts: new metrics in the registry (definition, unit, the publisher's series code), current and historical values with source, method and revisions, from national statistical offices, the OECD, Eurostat and the World Bank {#stats-series}
+- [ ] Every metric, value or enforcement record can link to the provisions it is about; links are added and retracted in the record, never rewritten {#stats-law-links}
+- [ ] Enforcement as an attributed assertion beside the statute, never in it: rates where measured, practice where described, with evidence {#stats-enforcement}
+- [ ] Law events on timelines read from the law itself (a version taking or leaving force, a proposal closing), plus sourced events for changes that are not an act {#stats-events}
+- [ ] First series loaded with sources: top income tax rate, tax wedge, government consumption as a share of GDP, credited components of published freedom indexes, one enforcement proxy {#stats-first}
+- [ ] The atlas coloured by any metric, and a place panel with the value, its source, the linked law, a short series and the enforcement beside it {#stats-map}
+- [ ] Timelines with two series, law events marked, and peer places or the national trend beside them; the chart shows caveats and never draws a cause {#stats-timeline}
+- [ ] Ranked bars, stat tiles, sparklines, law beside enforcement, scatter and parallel coordinates; each mark opens its source and its law; every chart readable as a table; all on `@bitbaum/chartkit`, which Solon adopts (the tally moves onto it) {#stats-charts}
+- [ ] Axes as versioned definitions with their author, weights the reader sets, what a place claims kept apart from what it achieves {#stats-axes}
+- [ ] Saved chart views, stored by hash, shared by link, and attached to a proposal as evidence {#stats-views}
+- [ ] A group's axes and weights as its own policy, amended by vote, every change in the append-only record {#stats-governed}
+
 ### A record anyone can prove complete {#proof}
 
 Signed votes let anyone recount a decision. The next step is proving that
@@ -286,6 +310,12 @@ governance retires, so there is one place a decision is made.
 
 A rule template written for the Swiss association (Art. 60 ZGB), with the
 Protokoll a general meeting must produce, and a pilot group running on it.
+
+### Explainers from the record {#stats-explainers}
+
+Short narrated summaries generated from a saved chart view and its law
+timeline, every claim linked to its series and its articles. Not soon; the
+saved-view format is kept free of anything that would block it.
 
 ### Groups of groups, and leaving with your record
 
