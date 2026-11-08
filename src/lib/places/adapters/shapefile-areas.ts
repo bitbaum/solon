@@ -43,6 +43,11 @@ const shapefileAreasOptions = z
     member: z.string().min(1),
     /** The member's name only begins so (a publisher that dates its file names: "omavalitsus_20260501"). */
     memberPrefix: z.boolean().default(false),
+    /**
+     * Codes the file still draws apart that have merged into another place:
+     * the old code's polygons are drawn as part of its successor's.
+     */
+    recode: z.record(z.string(), z.string()).default({}),
     /** Keep only records whose column holds one of the values. */
     where: z.array(z.object({ column, values: z.array(z.string()).min(1) })).default([]),
     place: z.object({ scheme: z.string().min(1), column }),
@@ -163,7 +168,8 @@ export const shapefileAreasAdapter: Adapter<Uint8Array, ShapefileAreasOptions> =
     const { records, prj } = readMember(bytes, options);
     const places = new Map<string, Position[][][]>();
     for (const { polygons, attributes } of records) {
-      const code = attributes[options.place.column];
+      const read = attributes[options.place.column];
+      const code = read ? (options.recode[read] ?? read) : read;
       if (!code) {
         throw new Error(`a record has no code in ${options.place.column}`);
       }

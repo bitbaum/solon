@@ -1448,3 +1448,22 @@ describe("boundaries from one address updated in place (Estonia's Land Board)", 
     ).toBe(false);
   });
 });
+
+describe("a place the file still draws apart after it merged", () => {
+  it("is drawn as part of its successor's area", () => {
+    const source = placesConfig.sources.find((s) => s.key === "swisstopo-commune-boundaries")!;
+    const adapter = ADAPTERS.get(source.adapter)!;
+    // Küsnacht (154) drawn as part of Zürich (261), as Toila is drawn as part of Jõhvi.
+    const options = adapter.options!.parse({ ...source.options, recode: { "154": "261" } });
+    const batch = adapter.map(fixture("swissboundaries3d_2026-01_cut.shp.zip"), {
+      source,
+      pack: placesConfig.packs.find((p) => p.key === "switzerland"),
+      options,
+      retrieval: {
+        url: "https://data.geo.admin.ch/ch.swisstopo.swissboundaries3d/swissboundaries3d_2026-01/swissboundaries3d_2026-01_2056_5728.shp.zip",
+        validFrom: "2026-01-01",
+      },
+    } as never) as ImportBatch;
+    expect(batch.areas?.map((a) => a.feature)).toEqual(["261", "371"]);
+  });
+});
