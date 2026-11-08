@@ -208,6 +208,19 @@ describe("an act none of whose provisions has begun", () => {
   });
 });
 
+describe("a subsection's number", () => {
+  const cutOf = (number: string) =>
+    parseClml(
+      `<Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" RestrictStartDate="2020-01-01"><Primary><Body><P1group><Title>T</Title><P1 id="section-1"><Pnumber>1</Pnumber><P1para><P2><Pnumber${number}>2</Pnumber><P2para><Text>Words.</Text></P2para></P2></P1para></P1></P1group></Body></Primary></Legislation>`,
+      TODAY,
+    ).provisions[0]!.text;
+
+  it("is bracketed when the XML gives it bare, and as the XML gives it when it carries its own", () => {
+    expect(cutOf("")).toBe("(2) Words.");
+    expect(cutOf(' PuncBefore="[" PuncAfter="]"')).toBe("[2] Words.");
+  });
+});
+
 describe("an item the site holds only as a PDF", () => {
   it("has XML that is its metadata alone, and no text to read", () => {
     const xml = `<?xml version="1.0"?><Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" xmlns:dc="http://purl.org/dc/elements/1.1/"><ukm:Metadata xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata"><dc:title>The Example Order 2024</dc:title></ukm:Metadata></Legislation>`;

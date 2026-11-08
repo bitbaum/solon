@@ -350,9 +350,12 @@ function linesOf(node: XNode, today: string): string[] {
     if (APPARATUS.has(name) || outOfForce(child, today)) continue;
     if (name === "Pnumber") {
       flush();
-      // CLML keeps a number's brackets in attributes: <Pnumber PuncBefore="(" PuncAfter=")">1</Pnumber>.
+      // A subsection's number is printed in brackets, "(1)", "(a)", "(i)": the live XML gives the bare
+      // "1" and a stylesheet adds them. Where the XML does carry them (PuncBefore, PuncAfter) they are used.
+      const bare = clean(inlineText(child, today));
+      const bracketed = /^P[2-9]/.test(local(node.name)) && !/^\(/.test(bare);
       prefix = clean(
-        `${child.attrs.PuncBefore ?? ""}${inlineText(child, today)}${child.attrs.PuncAfter ?? ""}`,
+        `${child.attrs.PuncBefore ?? (bracketed ? "(" : "")}${bare}${child.attrs.PuncAfter ?? (bracketed ? ")" : "")}`,
       );
     } else if (
       name === "Number" &&

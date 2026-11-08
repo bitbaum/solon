@@ -41,11 +41,11 @@
             <Pnumber>1</Pnumber>
             <P1para>
               <P2 id="section-1-1">
-                <Pnumber PuncBefore="(" PuncAfter=")">1</Pnumber>
+                <Pnumber>1</Pnumber>
                 <P2para><Text>This Act makes provision about the processing of personal data<CommentaryRef Ref="key-1a"/>.</Text></P2para>
               </P2>
               <P2 id="section-1-2">
-                <Pnumber PuncBefore="(" PuncAfter=")">2</Pnumber>
+                <Pnumber>2</Pnumber>
                 <P2para><Text>Most processing of personal data is subject to the <Addition CommentaryRef="c1">UK GDPR</Addition>.</Text></P2para>
               </P2>
             </P1para>
@@ -57,11 +57,11 @@
             <Pnumber>3</Pnumber>
             <P1para>
               <P2 id="section-3-1">
-                <Pnumber PuncBefore="(" PuncAfter=")">1</Pnumber>
+                <Pnumber>1</Pnumber>
                 <P2para><Text>“Personal data” means any information relating to an identified or identifiable living individual.</Text></P2para>
               </P2>
               <P2 id="section-3-2">
-                <Pnumber PuncBefore="(" PuncAfter=")">2</Pnumber>
+                <Pnumber>2</Pnumber>
                 <P2para><Text>Each of the following is an “identifier”:</Text></P2para>
                 <UnorderedList Class="Definition" Decoration="none">
                   <ListItem><Para><Text>(a) a name;</Text></Para></ListItem>
