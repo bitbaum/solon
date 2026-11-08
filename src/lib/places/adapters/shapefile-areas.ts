@@ -96,7 +96,7 @@ async function latestEdition(
 function readMember(
   bytes: Uint8Array,
   options: ShapefileAreasOptions,
-): { records: ShapeRecord[]; prj: string } {
+): { records: ShapeRecord[]; prj: string; dated: string | null } {
   const { member, memberPrefix } = options;
   const files = unzipSync(bytes, {
     filter: (file) =>
@@ -105,6 +105,9 @@ function readMember(
   const text = (bytes?: Uint8Array) => (bytes ? new TextDecoder().decode(bytes) : undefined);
   const find = (extension: string) =>
     Object.entries(files).find(([name]) => name.toLowerCase().endsWith(`.${extension}`))?.[1];
+  // A layer named with its date ("omavalitsus_20260501") says which edition it is.
+  const stamp = /_(\d{4})(\d{2})(\d{2})\./.exec(Object.keys(files)[0] ?? "");
+  const dated = stamp ? `${stamp[1]}-${stamp[2]}-${stamp[3]}` : null;
   const [shp, dbf, prj] = [find("shp"), find("dbf"), text(find("prj"))];
   if (!shp || !dbf || !prj) {
     throw new Error(`the archive has no ${member}.shp, .dbf and .prj`);
@@ -114,6 +117,7 @@ function readMember(
   return {
     records: readShapefile(shp, dbf, text(find("cpg")), { keep, grid: options.grid }),
     prj,
+    dated,
   };
 }
 
@@ -157,15 +161,15 @@ export const shapefileAreasAdapter: Adapter<Uint8Array, ShapefileAreasOptions> =
       throw new Error("areas belong to a pack's places; the source names none");
     }
     // A catalogue names its editions; a file updated in place is the edition of the day it was read.
+    const { records, prj, dated } = readMember(bytes, options);
     const edition = options.edition
       ? retrieval.url?.match(new RegExp(options.edition))?.[1]
-      : (retrieval.validFrom ?? undefined);
+      : (dated ?? retrieval.validFrom ?? undefined);
     if (!edition) {
       throw new Error(
         `no edition in ${retrieval.url ?? "the retrieval"} (pattern ${options.edition ?? "none"})`,
       );
     }
-    const { records, prj } = readMember(bytes, options);
     const places = new Map<string, Position[][][]>();
     for (const { polygons, attributes } of records) {
       const read = attributes[options.place.column];
