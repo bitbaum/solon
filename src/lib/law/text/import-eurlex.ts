@@ -170,6 +170,8 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
     // A dry run reads and cuts the texts too, so it checks the reader against the live pages; it stores nothing.
     return dryRun || Boolean(actId);
   });
+  // The newest first: a load that stops early has read the law in use now, not the 1960s'.
+  todo.sort((a, b) => b.text.date.localeCompare(a.text.date));
   let attempted = 0;
   let refusedInARow = 0;
   for (const act of todo) {
@@ -202,7 +204,8 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
         .replace(/\d+/g, "N")
         .slice(0, 120);
       report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
-      refusedInARow = /^\d{3} for|no answer|Internet Archive|not an act's page/.test(reason)
+      // A page that is not an act's (the oldest acts have no HTML text) is an answer, not a refusal.
+      refusedInARow = /^\d{3} for|no answer|Internet Archive/.test(reason)
         ? refusedInARow + 1
         : 0;
     }
