@@ -11,7 +11,9 @@ import {
   type ChangeProblem,
   type Provision,
 } from "@/lib/law/amend/changes";
+import type { Proposal } from "@/lib/law/ask/consult";
 import { useDraft } from "./draft-store";
+import { LawChat } from "./law-chat";
 import Redline from "./redline";
 
 type Op = "replace" | "repeal" | "insert";
@@ -91,6 +93,24 @@ export default function AmendForm(props: AmendFormProps) {
   // The draft survives signing in on the way: it is kept for this tab (draft-store.ts).
   const [form, setForm, clearForm] = useDraft(storageKey, first);
   const { drafts, title, rationale } = form;
+  // The draft as the assistant reads it: each change with today's words and the proposed ones.
+  const proposal = useMemo<Proposal>(
+    () => ({
+      act: props.act.id,
+      title: title.slice(0, 300) || undefined,
+      reason: rationale.slice(0, 3000) || undefined,
+      changes: drafts
+        .filter((d) => d.base)
+        .slice(0, 5)
+        .map((d) => ({
+          op: d.op,
+          heading: (d.op === "insert" ? d.heading : d.base!.heading).slice(0, 300),
+          current: d.op === "insert" ? "" : d.base!.text.slice(0, 4000),
+          proposed: d.op === "repeal" ? "" : d.text.slice(0, 4000),
+        })),
+    }),
+    [props.act.id, title, rationale, drafts],
+  );
   const setDrafts = (f: (all: DraftChange[]) => DraftChange[]) =>
     setForm((prev) => ({ ...prev, drafts: f(prev.drafts) }));
   const setTitle = (value: string) => setForm((prev) => ({ ...prev, title: value }));
@@ -424,6 +444,23 @@ export default function AmendForm(props: AmendFormProps) {
           </a>
         </div>
       )}
+
+      <section className="space-y-3 border-t border-default pt-8">
+        <h2 className="headline text-xl text-fg-primary">{t("consult.title")}</h2>
+        <p className="text-sm text-fg-secondary">{t("consult.intro")}</p>
+        <LawChat
+          proposal={proposal}
+          title={t("consult.title")}
+          placeholder={t("consult.placeholder")}
+          startersTitle={t("consult.startersTitle")}
+          storeKey={`solon-consult:${props.act.id}`}
+          starters={[
+            t("consult.starters.one"),
+            t("consult.starters.two"),
+            t("consult.starters.three"),
+          ]}
+        />
+      </section>
     </div>
   );
 }

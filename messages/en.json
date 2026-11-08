@@ -1610,6 +1610,17 @@
       "propose": "Propose a change",
       "proposals": "Proposed changes to this act",
       "noProposals": "No one has proposed a change to this act yet."
+    },
+    "consult": {
+      "title": "Think it through",
+      "intro": "Ask what your change would do, who would gain and who would bear a cost, and where something like it is already law. The assistant reads your draft as it stands, cites the law and the studies it finds, and takes no side. What you file stays yours.",
+      "placeholder": "What would this change do?",
+      "starters": {
+        "one": "What would this change do, and to whom?",
+        "two": "Where is something like this already law, and how did it go?",
+        "three": "How could the wording be clearer?"
+      },
+      "startersTitle": "Questions to start with"
     }
   }
 }
