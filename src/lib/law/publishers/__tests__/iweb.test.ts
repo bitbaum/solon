@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { PUBLISHERS } from "..";
 import {
+  actsOfLinks,
   actsOfRows,
   dayOf,
   documentOf,
@@ -220,5 +221,37 @@ describe("the configured cities", () => {
         key,
       ).toBe(true);
     }
+  });
+});
+
+describe("a collection page that links its acts without a table", () => {
+  // As Sion's /reglements: act pages /reglements/<id>, among the site's other links.
+  const html = `<nav><a href="/reglements">Règlements</a><a href="/actualites/5">Actualités</a></nav>
+<ul>
+  <li><a href="/reglements/106218">Règlement du personnel de la Ville de Sion</a></li>
+  <li><a href="https://www.sion.ch/reglements/136996">Règlement du Conseil général</a></li>
+  <li><a href="/reglements/106218">Règlement du personnel (doublon)</a></li>
+  <li><a href="/reglements/200001">Formulaire de demande d'autorisation</a></li>
+  <li><a href="https://example.org/reglements/1">Ailleurs</a></li>
+</ul>`;
+
+  it("lists each act page under the collection once, forms and other sites left out", () => {
+    const acts = actsOfLinks(html, "https://www.sion.ch/reglements");
+    expect(acts.map((a) => [a.ref, a.title, a.pageUrl])).toEqual([
+      [
+        "106218",
+        "Règlement du personnel de la Ville de Sion",
+        "https://www.sion.ch/reglements/106218",
+      ],
+      ["136996", "Règlement du Conseil général", "https://www.sion.ch/reglements/136996"],
+    ]);
+  });
+
+  it("reads Thun's act pages under /sammlung/ too", () => {
+    const acts = actsOfLinks(
+      '<a href="/reglementeverordnungen/sammlung/1818328">Mobilitätsreglement</a>',
+      "https://www.thun.ch/reglementeverordnungen",
+    );
+    expect(acts.map((a) => a.ref)).toEqual(["1818328"]);
   });
 });

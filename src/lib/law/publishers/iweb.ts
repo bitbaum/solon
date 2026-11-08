@@ -155,6 +155,32 @@ export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
   return [...acts.values()];
 }
 
+/**
+ * The acts a page links to without a table (Sion's `/reglements` lists them as
+ * links): every link whose address is the page's own followed by an act's id,
+ * `<page>/<id>` or `<page>/sammlung/<id>`, titled by its words.
+ */
+export function actsOfLinks(html: string, base: string): ListedAct[] {
+  const root = new URL(base).pathname.replace(/\/$/, "");
+  const own = new RegExp(`^${root.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/(?:sammlung/)?(\\d+)/?$`);
+  const acts = new Map<string, ListedAct>();
+  for (const m of html.matchAll(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi)) {
+    let pageUrl: string;
+    try {
+      pageUrl = absolute(decodeEntities(m[2]!), base);
+    } catch {
+      continue;
+    }
+    const url = new URL(pageUrl);
+    const id = own.exec(url.pathname)?.[1];
+    const title = words(m[3]!);
+    if (!id || !title || FORM.test(title) || url.hostname !== new URL(base).hostname) continue;
+    if (!acts.has(id))
+      acts.set(id, { ref: id, title, kind: kindOf(title), pageUrl: url.toString() });
+  }
+  return [...acts.values()];
+}
+
 /** An act page's facts: each `<dt>` with its `<dd>`, as words and as the HTML it holds. */
 export function factsOf(html: string): { label: string; text: string; html: string }[] {
   return [...html.matchAll(/<dt\b[^>]*>([\s\S]*?)<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/gi)].map(
@@ -245,7 +271,9 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
         first ??= page.url;
         const html = new TextDecoder().decode(page.bytes);
         pages.push(html);
-        for (const act of actsOfRows(tableRows(html), url))
+        const rows = actsOfRows(tableRows(html), url);
+        // A page with no table may still link its acts (Sion).
+        for (const act of rows.length > 0 ? rows : actsOfLinks(html, url))
           if (!acts.has(act.ref)) acts.set(act.ref, act);
         if (config.follow)
           for (const m of html.matchAll(/\bhref=(["'])(.*?)\1/gi)) {
@@ -366,12 +394,9 @@ export const thun = iweb({
   name: "Stadt Thun, Reglemente und Verordnungen",
   homepage: "https://www.thun.ch/",
   locale: "de",
-  pages: [
-    "https://www.thun.ch/stadtverwaltung/abteilungenaemter/stadtkanzlei/rechtsdienst/reglementeverordnungen.html",
-    "https://www.thun.ch/gk-gemeindebevoelkerung/kapitel/3514",
-  ],
-  // Thun groups its collection by subject on pages of their own, two levels deep.
-  follow: /\/kapitel\/\d+$|\/rechtsdienst\/reglementeverordnungen\/[^?#]+\.html$/,
+  // The collection's own page: its act pages are /reglementeverordnungen/sammlung/<id>
+  // (as search engines index them, 2026-11-08); the address first configured answered 404.
+  pages: ["https://www.thun.ch/reglementeverordnungen"],
 });
 
 export const chur = iweb({
