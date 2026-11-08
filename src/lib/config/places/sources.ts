@@ -761,6 +761,41 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["switzerland"],
   },
   {
+    // Liechtenstein's eleven communes, from the same swissBOUNDARIES3D layer
+    // as the Swiss ones: swisstopo maps the Principality too (ICC "LI"), each
+    // commune under the number the official directory of localities gives it
+    // (BFS_NUMMER 7001–7011). Same edition, same terms, same simplification.
+    key: "swisstopo-li-commune-boundaries",
+    publisher: "Federal Office of Topography (swisstopo)",
+    dataset: "swissBOUNDARIES3D, Liechtenstein",
+    homepage: "https://www.swisstopo.admin.ch/en/landscape-model-swissboundaries3d",
+    licence: "LicenseRef-opendata-swiss-by",
+    attribution: {
+      en: "Federal Office of Topography swisstopo, swissBOUNDARIES3D",
+      de: "Bundesamt für Landestopografie swisstopo, swissBOUNDARIES3D",
+    },
+    cadence: "40 4 3 * *",
+    adapter: "shapefile_areas",
+    options: {
+      catalogue: {
+        url: "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissboundaries3d/items?limit=100",
+        asset: "_2056_5728.shp.zip",
+      },
+      edition: "swissboundaries3d_(\\d{4}-\\d{2})_",
+      member: "swissBOUNDARIES3D_1_5_TLM_HOHEITSGEBIET",
+      where: [
+        { column: "ICC", values: ["LI"] },
+        { column: "OBJEKTART", values: ["Gemeindegebiet"] },
+      ],
+      place: { scheme: "li_municipality", column: "BFS_NUMMER" },
+      level: "municipality",
+      grid: 25,
+      keep: 0.05,
+      quantization: 30000,
+    },
+    packs: ["liechtenstein"],
+  },
+  {
     // Kept by hand: Liechtenstein's two Landschaften and eleven communes, and
     // which commune lies in which. The Constitution lists them (Verfassung des
     // Fürstentums Liechtenstein, LR 101, Art. 1, read 2026-10-22 at

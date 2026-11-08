@@ -6,7 +6,9 @@
  */
 import { GLOBE_FEATURES, globeId } from "@/lib/config/law/globe";
 import { countryOf } from "@/lib/config/law";
+import { placesConfig } from "@/lib/config/places";
 import type { Database } from "@/lib/db/client";
+import { drawnPacks } from "@/lib/places/map-data";
 import { authorityOf } from "./places";
 import { loadLawCoverage } from "./register/coverage";
 
@@ -20,10 +22,17 @@ export interface GlobePlace {
   region?: string;
   /** Acts in force whose text Solon holds, within this place. */
   acts: number;
+  /** The Places country it is, when Solon holds its places. */
+  pack?: string;
+  /** Its places have boundaries, so the atlas draws them. */
+  drawn?: boolean;
 }
 
 export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
-  const coverage = await loadLawCoverage(db);
+  const [coverage, drawn] = await Promise.all([
+    loadLawCoverage(db),
+    drawnPacks(db, new Date().toISOString().slice(0, 10)),
+  ]);
   const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
   return Object.entries(GLOBE_FEATURES).map(([key, feature]) => {
     const authority = authorityOf(key);
@@ -34,12 +43,16 @@ export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
           0,
         )
       : (held.get(key) ?? 0);
+    const pack = isCountry
+      ? placesConfig.packs.find((p) => p.region === authority!.place!.value)?.key
+      : undefined;
     return {
       feature: globeId(feature),
       key,
       name: authority?.name ?? key,
       ...(isCountry ? { region: authority!.place!.value } : {}),
       acts,
+      ...(pack ? { pack, drawn: drawn.has(pack) } : {}),
     };
   });
 }

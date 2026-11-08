@@ -2,7 +2,7 @@
  * Polite reading shared by every publisher adapter: who we are, a deadline, only
  * the publisher's own hosts. Law is public, so when the publisher's site refuses
  * an automated reader (403, 429, 503, or a bot check in place of the page), the
- * text is read from the newest public copy the Internet Archive holds, and the
+ * text is read from the newest good public copy the Internet Archive holds, and the
  * copy's own address is what the text records as its source (`archive-copy.ts`).
  * Solon never disguises itself to get past a refusal: it says who it is, and
  * takes the honest route around.
@@ -63,30 +63,75 @@ export async function newestCapture(url: string, doFetch: typeof fetch): Promise
   return closest.timestamp;
 }
 
-/** The archive's copy of a page the publisher refused, or an error that says why there is none. */
+/** How many distinct captures are tried, newest first, before giving up. */
+const CAPTURES_TRIED = 8;
+
+/**
+ * The timestamps of the Wayback Machine's captures of `url` that answered
+ * 200, newest first, one per distinct content (`collapse=digest`), so a run of
+ * identical bot-check captures counts once. Empty when it holds none.
+ */
+export async function captures(url: string, doFetch: typeof fetch): Promise<string[]> {
+  const query = new URLSearchParams({
+    url,
+    output: "json",
+    fl: "timestamp",
+    filter: "statuscode:200",
+    collapse: "digest",
+    limit: `-${CAPTURES_TRIED}`,
+  });
+  const response = await doFetch(`https://web.archive.org/cdx/search/cdx?${query}`, fetchOptions());
+  if (!response.ok) throw new Error(`the Internet Archive answered ${response.status}`);
+  const rows = (await response.json()) as string[][];
+  // The first row names the fields.
+  return rows
+    .slice(1)
+    .map((row) => row[0] ?? "")
+    .filter((stamp) => /^\d{14}$/.test(stamp))
+    .reverse();
+}
+
+/**
+ * The archive's copy of a page the publisher refused, or an error that says
+ * why there is none. The newest capture first; when it is a bot check too (the
+ * site put one up and the archive saved it), the captures before it, newest
+ * first, until one is the page itself.
+ */
 async function readCopy(url: string, refusal: string, doFetch: typeof fetch): Promise<Read> {
-  let stamp: string | null;
+  let stamps: string[];
   try {
-    stamp = await newestCapture(url, doFetch);
+    // The capture index first; when it cannot be read, the newest capture alone.
+    stamps = await captures(url, doFetch).catch(() => []);
+    if (stamps.length === 0) {
+      const newest = await newestCapture(url, doFetch);
+      stamps = newest ? [newest] : [];
+    }
   } catch (error) {
     const why = error instanceof Error ? error.message : String(error);
     throw new Error(`${refusal} for ${url}; the Internet Archive could not be asked (${why})`);
   }
-  if (!stamp) throw new Error(`${refusal} for ${url}; the Internet Archive holds no copy of it`);
-  const raw = rawCaptureUrl(stamp, url);
-  const response = await doFetch(raw, fetchOptions());
-  if (!response.ok) {
-    throw new Error(
-      `${refusal} for ${url}; the Internet Archive's copy answered ${response.status}`,
-    );
+  if (stamps.length === 0) {
+    throw new Error(`${refusal} for ${url}; the Internet Archive holds no copy of it`);
   }
-  const bytes = new Uint8Array(await response.arrayBuffer());
-  if (botCheckOf(bytes, response.headers.get("content-type"))) {
-    throw new Error(`${refusal} for ${url}; the Internet Archive's copy is a bot check too`);
+  let checks = 0;
+  for (const stamp of stamps) {
+    const raw = rawCaptureUrl(stamp, url);
+    const response = await doFetch(raw, fetchOptions());
+    if (!response.ok) continue;
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (botCheckOf(bytes, response.headers.get("content-type"))) {
+      checks++;
+      continue;
+    }
+    // The archive may answer from a capture a moment apart; the address it ends on is the one read.
+    const copy = archiveCopyOf(response.url) ?? archiveCopyOf(raw)!;
+    return { bytes, url: copy.url, copy: { ...copy, original: url } };
   }
-  // The archive may answer from a capture a moment apart; the address it ends on is the one read.
-  const copy = archiveCopyOf(response.url) ?? archiveCopyOf(raw)!;
-  return { bytes, url: copy.url, copy: { ...copy, original: url } };
+  throw new Error(
+    checks === stamps.length
+      ? `${refusal} for ${url}; the Internet Archive's copy is a bot check too`
+      : `${refusal} for ${url}; none of the Internet Archive's ${stamps.length} copies could be read`,
+  );
 }
 
 /** The bytes at `url`, from the publisher; from the archive's newest copy when the publisher refuses. */

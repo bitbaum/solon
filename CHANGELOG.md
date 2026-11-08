@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **One atlas.** The globe on the home page and the map on Places are one now. Tap a
+  country and the Earth turns to it and draws its places, coloured by what tax would
+  cost you there; beside it, how much of its law Solon holds with a link to read it and
+  propose changes, and where every figure comes from. The long lists of levels and
+  sources under the map are gone: a place is found by tapping it or searching. A view
+  can be shared: `/places?in=ch`. {#atlas}
+
 - **Think a change through before you file it.** Under the form for proposing a change
   to a law, the assistant now reads your draft as it stands and answers what you ask
   about it: what it would change, what would likely follow, who would gain and who
@@ -34,6 +41,18 @@ one to read for the detail. Fixes get the same weight as features.
   your browser remembers it; nothing is sent to us. Photographs, and the header over
   them, stay dark so the words on them can be read. The law globe and the Places map
   redraw in the theme you pick. {#theme-light}
+
+### Fixed
+
+- **A site whose newest archived copy is its own bot check is read from the copy before.**
+  When the Internet Archive's latest capture of a refusing site is the challenge page
+  too, Solon now walks back through the earlier captures, newest first, and reads the
+  newest one that is the page itself. The act page still names the copy and its date.
+
+- **Scanned regulations read blank.** Most communes scan their regulations as fax- or
+  JBIG2-compressed images, and the PDF reader drew those pages blank, so Solon reported
+  "no text in the PDF" and three of Balzers' regulations were missing. The reader now
+  has the decoders it needs, and those pages are read by OCR like any other scan.
 
 ## 2026-11-07
 
