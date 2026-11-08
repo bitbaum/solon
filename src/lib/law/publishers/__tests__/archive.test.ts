@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { archiveCopyOf, originalOf } from "../../archive-copy";
 import { actToMarkdown } from "../../markdown";
 import type { ActView } from "../../view";
-import { botCheckOf, read, USER_AGENT } from "../http";
+import { botCheckOf, read, USER_AGENT, wholePdf } from "../http";
 import { importerVersion } from "../load";
 import { triesenberg } from "../linked-documents";
 
@@ -78,14 +78,14 @@ describe("a publisher that refuses Solon's reader", () => {
   it.each([403, 429, 503])(
     "answers %i: the archive's newest copy is read instead",
     async (status) => {
-      const bytes = new TextEncoder().encode("%PDF-1.4 the regulation");
+      const bytes = new TextEncoder().encode("%PDF-1.4 the regulation\n%%EOF");
       const { doFetch, asked } = standIn(
         official(PDF, () => new Response("Forbidden", { status })),
         availability(PDF, STAMP),
         capture(PDF, STAMP, bytes, "application/pdf"),
       );
       const got = await read(PDF, doFetch, ["www.triesenberg.li"]);
-      expect(new TextDecoder().decode(got.bytes)).toBe("%PDF-1.4 the regulation");
+      expect(new TextDecoder().decode(got.bytes)).toBe("%PDF-1.4 the regulation\n%%EOF");
       expect(got.url).toBe(`https://web.archive.org/web/${STAMP}id_/${PDF}`);
       expect(got.copy).toEqual({ url: got.url, original: PDF, capturedOn: "2025-03-14" });
       // Official first, then the archive; Solon says who it is to both, never a browser's name.
@@ -263,5 +263,62 @@ describe("an archive whose newest copy is the bot check", () => {
     await expect(read(PAGE, doFetch, ["www.triesenberg.li"])).rejects.toThrow(
       "the Internet Archive's copy is a bot check too",
     );
+  });
+});
+
+describe("an archive copy that is not the whole document", () => {
+  const WHOLE = new TextEncoder().encode("%PDF-1.7\nthe regulation\n%%EOF\n");
+  const CUT = new TextEncoder().encode("%PDF-1.7\nthe regu");
+
+  it("knows a PDF that arrived whole from one cut short", () => {
+    expect(wholePdf(WHOLE)).toBe(true);
+    expect(wholePdf(CUT)).toBe(false);
+    expect(wholePdf(new TextEncoder().encode("<html>not a pdf</html>"))).toBe(false);
+  });
+
+  it("passes over a capture cut short and reads the one before it", async () => {
+    const OLDER = "20240102030405";
+    const { doFetch } = standIn(
+      official(PDF, () => new Response(BOT_CHECK, { status: 200 })),
+      index(PDF, [OLDER, STAMP]),
+      capture(PDF, STAMP, CUT, "application/pdf"),
+      capture(PDF, OLDER, WHOLE, "application/pdf"),
+    );
+    const got = await read(PDF, doFetch, ["www.triesenberg.li"], []);
+    expect(got.copy?.capturedOn).toBe("2024-01-02");
+    expect(wholePdf(got.bytes)).toBe(true);
+  });
+});
+
+describe("a connection that drops", () => {
+  const WHOLE = new TextEncoder().encode("%PDF-1.7\nthe regulation\n%%EOF\n");
+
+  it("at the publisher: the archive's copy stands in", async () => {
+    const { doFetch } = standIn(
+      (url) => {
+        if (url === PDF) throw new TypeError("fetch failed");
+        return undefined;
+      },
+      index(PDF, [STAMP]),
+      capture(PDF, STAMP, WHOLE, "application/pdf"),
+    );
+    const got = await read(PDF, doFetch, ["www.triesenberg.li"], []);
+    expect(got.copy?.original).toBe(PDF);
+  });
+
+  it("at the archive: it is asked again, and a second try that answers is read", async () => {
+    let drops = 1;
+    const { doFetch, asked } = standIn(
+      official(PDF, () => new Response("Forbidden", { status: 403 })),
+      index(PDF, [STAMP]),
+      (url) => {
+        if (url.includes("id_/") && drops-- > 0) throw new TypeError("fetch failed");
+        return undefined;
+      },
+      capture(PDF, STAMP, WHOLE, "application/pdf"),
+    );
+    const got = await read(PDF, doFetch, ["www.triesenberg.li"], [0]);
+    expect(got.copy?.capturedOn).toBe("2025-03-14");
+    expect(asked.filter((a) => a.url.includes("id_/"))).toHaveLength(2);
   });
 });

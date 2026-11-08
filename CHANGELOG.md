@@ -33,6 +33,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Documents read from the archive arrive whole.** A site that refuses Solon's reader
+  for every document sends dozens of requests to the Internet Archive at once; the
+  archive drops some, and some of its captures of a PDF are cut short. Solon now asks
+  again after a dropped connection, passes over a PDF that did not arrive whole for the
+  capture before it, and turns to the archive when the site does not answer at all.
+
 - **A site whose newest archived copy is its own bot check is read from the copy before.**
   When the Internet Archive's latest capture of a refusing site is the challenge page
   too, Solon now walks back through the earlier captures, newest first, and reads the
