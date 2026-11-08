@@ -105,6 +105,7 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // The United States and its states: a state's key is `us-<postal code>`, its place ISO 3166-2.
   { key: "us", name: "United States", place: { scheme: "iso_3166_1", value: "US" } },
   { key: "us-wy", name: "Wyoming", place: { scheme: "iso_3166_2", value: "US-WY" } },
+  { key: "us-nh", name: "New Hampshire", place: { scheme: "iso_3166_2", value: "US-NH" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
   // whose collection a reader in src/lib/law/publishers covers.
   {
@@ -646,6 +647,43 @@ export const WYOLEG = {
     ["42", "Title 42 Welfare"],
     ["99", "Title 99 Water Projects"],
   ] as const,
+} as const;
+
+/**
+ * New Hampshire's statutes, the Revised Statutes Annotated (RSA), as the
+ * General Court publishes them in HTML under `/rsa/html/`: a table of the
+ * titles (`nhtoc.htm`), each title's chapters (`NHTOC/NHTOC-<title>.htm`), and
+ * each chapter merged into one page with every section
+ * (`<title>/<chapter>/<chapter>-mrg.htm`). Each chapter is an act, cited as
+ * "RSA 39"; its sections ("39:3", "5:6-a") are its provisions. The General
+ * Court moved from www.gencourt.state.nh.us to gc.nh.gov, and the old host
+ * answers every address with a permanent redirect to the same path on the new
+ * one (checked 2026-11-08), so the new host is the official address and the
+ * old one is asked only for the Internet Archive's copies made under it. Law a
+ * US legislature enacts is not under copyright (Georgia v. Public.Resource.Org,
+ * 590 U.S. 255 (2020)). The pages state no date, so each version is dated by
+ * the day it was read, or the day the archive captured the copy read.
+ */
+export const GCNH = {
+  key: "gcnh",
+  authority: "us-nh",
+  publisher: "New Hampshire General Court",
+  base: "https://gc.nh.gov/rsa/html/",
+  /** Where the same pages were before the move; the archive holds most of its copies there. */
+  formerBase: "https://www.gencourt.state.nh.us/rsa/html/",
+  homepage: "https://gc.nh.gov/rsa/html/nhtoc.htm",
+  /** The table of titles, relative to `base`. */
+  titlesPage: "nhtoc.htm",
+  hosts: ["gc.nh.gov", "www.gencourt.state.nh.us"],
+  licenceSpdx: "LicenseRef-public-domain-edicts",
+  locale: "en",
+  textStatus: "consolidated" as ActTextStatus,
+  /**
+   * Between requests: 11 seconds, the Crawl-delay another public reader of the
+   * RSAs records from the site's robots.txt (worldwidelaw/legal-sources); the
+   * site refused the sandbox this reader was written in, so it was not read here.
+   */
+  pauseMs: 11_000,
 } as const;
 
 /**

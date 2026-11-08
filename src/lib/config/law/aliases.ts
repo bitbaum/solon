@@ -50,6 +50,8 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
     "grand-duche",
     "grossherzogtum",
   ],
+  "us-wy": ["wyoming", "wyo."],
+  "us-nh": ["new hampshire", "n.h.", "granite state"],
   li7001: ["vaduz", "gemeinde vaduz"],
   li7002: ["triesen", "gemeinde triesen"],
   li7003: ["balzers", "mäls", "gemeinde balzers"],
