@@ -1009,6 +1009,11 @@ export const SOURCES: readonly SourceInput[] = [
       url: "https://geoportaal.maaamet.ee/docs/haldus_asustus/omavalitsus_shp.zip",
       member: "omavalitsus",
       memberPrefix: true,
+      // Toila vald (0803) has merged into Jõhvi vald (0250): EHAK2026v1 lists no 0803
+      // and puts Toila's settlements in Jõhvi (Toila alevik 8275, Voka alevik 9455, both
+      // parent 0250). The Land Board's file of 2026-11 still draws Toila apart, so its
+      // polygon is drawn as part of Jõhvi's. Remove this line once the file catches up.
+      recode: { "0803": "0250" },
       place: { scheme: "ee_municipality", column: "OKOOD" },
       level: "municipality",
       grid: 25,
