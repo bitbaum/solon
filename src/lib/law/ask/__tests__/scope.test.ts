@@ -23,7 +23,8 @@ describe("a question asked from a place's page", () => {
     expect(lawAuthoritiesFor([{ scheme: "iso_3166_1", value: "LI" }])).toEqual(["li"]);
     // Vaduz publishes its own Reglemente; a commune without a collection has none of its own.
     expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7001" }])).toEqual(["li7001"]);
-    expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7004" }])).toEqual([]);
+    // Every commune of Liechtenstein has one now; Bern (BFS 351) does not yet.
+    expect(lawAuthoritiesFor([{ scheme: "bfs_municipality", value: "351" }])).toEqual([]);
   });
 
   it("always searches the page's authorities, and only keys the register knows", () => {

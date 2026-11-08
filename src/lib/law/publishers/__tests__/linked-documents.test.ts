@@ -129,6 +129,7 @@ describe("Liechtenstein's communes", () => {
       ["vaduz", "7001", "Vaduz"],
       ["triesen", "7002", "Triesen"],
       ["balzers", "7003", "Balzers"],
+      ["triesenberg", "7004", "Triesenberg"],
       ["schaan", "7005", "Schaan"],
       ["planken", "7006", "Planken"],
       ["eschen", "7007", "Eschen"],

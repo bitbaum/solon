@@ -53,6 +53,7 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   li7001: ["vaduz", "gemeinde vaduz"],
   li7002: ["triesen", "gemeinde triesen"],
   li7003: ["balzers", "mäls", "gemeinde balzers"],
+  li7004: ["triesenberg", "malbun", "steg", "gemeinde triesenberg"],
   li7005: ["schaan", "gemeinde schaan"],
   li7006: ["planken", "gemeinde planken"],
   li7007: ["eschen", "nendeln", "eschen-nendeln", "gemeinde eschen"],

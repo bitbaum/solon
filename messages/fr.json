@@ -718,6 +718,8 @@
       "readOn": "L'éditeur n'indique pas depuis quand cette version s'applique. Lue le {date}.",
       "copy": "Copie lue le {date}.",
       "copyFrom": "La page d'où elle a été lue",
+      "copyArchived": "Copie lue le {date} à partir de la copie de l'Internet Archive du {captured}, car le site de l'éditeur a refusé le lecteur de Solon. Ce n'est pas la copie de l'éditeur lui-même.",
+      "copyArchivedFrom": "La copie archivée d'où elle a été lue",
       "noText": "Le texte de cet acte n'est pas encore conservé.",
       "provisions": "Dispositions",
       "provisionCount": "{count, plural, one {# disposition} other {# dispositions}}",

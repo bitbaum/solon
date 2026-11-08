@@ -85,6 +85,13 @@ complete"); this file carries the reasons and the order.
   watch-only, decisions stay evidence, executors re-verify.
 - Every fact on the site has a source, and every count is read from the data,
   not typed into copy.
+- **Sources.** Law is read from its publisher's official site first. When that
+  site refuses an automated reader (403, 429, 503 or a bot check), the text is
+  read from a dated public copy instead, the Internet Archive's newest capture
+  (`src/lib/law/publishers/http.ts`); the act keeps the publisher's address, the
+  version records the copy's address, and the act page names it as the archive's
+  copy of that day, never as the publisher's own. Solon does not disguise its
+  reader or solve challenges.
 
 ## Ideas worth keeping in view
 
