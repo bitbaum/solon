@@ -34,6 +34,8 @@ export interface RisOptions {
   limit?: number;
   dryRun?: boolean;
   today?: string;
+  /** Read only these acts' texts, by Gesetzesnummer (a check of the reader on chosen acts). */
+  only?: readonly string[];
   fetchImpl?: typeof fetch;
   pauseMs?: number;
   /** How long the shared reader waits before asking the archive again; tests pass none. */
@@ -99,7 +101,7 @@ export async function importRis(db: Database, options: RisOptions): Promise<RisR
     today,
     pauseMs: Math.min(pauseMs, 1000),
     // A trial run reads `limit` texts: it needs a few more acts than that, not the whole register.
-    stopAfter: dryRun && Number.isFinite(limit) ? limit * 2 : undefined,
+    stopAfter: dryRun && Number.isFinite(limit) && !options.only ? limit * 2 : undefined,
     onPage: (page, acts, hits) => {
       if (page % 10 === 1) say(`register page ${page}: ${acts} acts listed of ${hits} documents`);
     },
@@ -182,6 +184,7 @@ export async function importRis(db: Database, options: RisOptions): Promise<RisR
   );
 
   const todo = acts.filter((act) => {
+    if (options.only && !options.only.includes(act.gesetzesnummer)) return false;
     const actId = known.get(act.gesetzesnummer);
     const current = actId ? held.get(actId) : undefined;
     // Read after the RIS last changed the act's document: nothing new to read.

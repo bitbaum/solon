@@ -78,7 +78,8 @@ const titleLines = (title: string): string[] =>
 
 /** The act's kind: from the RIS's type, else from the first word of its title. */
 export function kindOf(typ: string | null, title: string): ActKind {
-  const byType = typ ? RIS.kindByTyp[typ] : undefined;
+  // "K (Geltungsbereich)" is a K; "Vertrag – UNO" a Vertrag.
+  const byType = typ ? (RIS.kindByTyp[typ] ?? RIS.kindByTyp[typ.split(/[\s(]/)[0]!]) : undefined;
   if (byType) return byType;
   const first = /^[\p{L}-]+/u.exec(title)?.[0];
   return (first && RIS.kindByLeadingWord[first]) || "other";

@@ -124,6 +124,12 @@ describe("the register", () => {
     expect(kindOf(null, "Kundmachung der Bundesregierung")).toBe("notice");
     expect(kindOf("ZZ", "Verordnung über etwas")).toBe("ordinance");
     expect(kindOf("ZZ", "Etwas anderes")).toBe("other");
+    // The types the live register holds (a server dry run, 2026-11-08).
+    expect(kindOf("K (Geltungsbereich)", "Geltungsbereich des Abkommens")).toBe("notice");
+    expect(kindOf("Vertrag – UNO", "Übereinkommen")).toBe("treaty");
+    expect(
+      kindOf("Vereinbarung gem. Art. 15a B-VG", "Vereinbarung zwischen Bund und Ländern"),
+    ).toBe("other");
   });
 
   it("falls back on the Langtitel's first line when there is no Kurztitel", () => {

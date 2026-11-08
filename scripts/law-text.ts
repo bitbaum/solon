@@ -7,7 +7,7 @@
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
- *   pnpm run law:text ris [--limit 500] [--dry-run]   (Austria: the consolidated federal acts in force from the RIS, in German; a dry run reads and cuts `limit` texts and stores nothing)
+ *   pnpm run law:text ris [--limit 500] [--act 10001622,10000138] [--dry-run]   (Austria: the consolidated federal acts in force from the RIS, in German; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
  *   pnpm run law:text gcnh [--limit 1000] [--again] [--title III] [--chapter 39] [--dry-run]   (New Hampshire: each chapter of the RSA, about 11 seconds apart)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
@@ -178,6 +178,9 @@ async function main(): Promise<number> {
   if (sourceKey === "ris") {
     const report = await importRis(db, {
       limit: flag("limit") ? Number(flag("limit")) : undefined,
+      only: flag("act")
+        ?.split(",")
+        .filter((n) => /^\d+$/.test(n)),
       snapshots: defaultSnapshotStore(),
       dryRun: args.includes("--dry-run"),
       onProgress: (message) => console.error(message),
