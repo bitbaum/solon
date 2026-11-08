@@ -1,6 +1,6 @@
 # Law as data: every law on the books, in Solon
 
-_Design, 2026-10-22. Status: proposal. Nothing here is built unless it says so.
+_Design, 2026-10-22. Last modified: 2026-11-08 (scanned pages are drawn with unpdf 2, which needs Node 24). Status: proposal. Nothing here is built unless it says so.
 Companion to `2026-09-places-and-jurisdictions.md` (which this builds on: its
 `jurisdictions`, `sources`, importer framework and licence policy are reused,
 not repeated) and to `2026-10-direction-notes.md` (why). Written because the
@@ -369,12 +369,14 @@ question about Vaduz is asked of Liechtenstein's law too).
   Köniz marks an act adopted but not yet in force, or repealed, only in the
   file's name.
 
-### Scanned documents as built (2026-11-01)
+### Scanned documents as built (2026-11-08)
 
 Some communes publish an act as a scan: a PDF whose pages are pictures of
 paper, with no text layer. The commune loader (`publishers/load.ts`) then reads
-it by OCR (`text/ocr.ts`: each page drawn with `unpdf` and read by
-`tesseract.js` in the act's language, in process; no model is called). Such a
+it by OCR (`text/ocr.ts`: each page drawn with `unpdf` 2 and read by
+`tesseract.js` in the act's language, in process; no model is called). unpdf 2
+is ESM-only and needs Node 24, the version in `.nvmrc` that CI and the deploy
+already use. Such a
 version's source carries the importer version `law-text-publisher-1+ocr`, so a
 reader knows a letter may be misread where the publisher's own text would not.
 
