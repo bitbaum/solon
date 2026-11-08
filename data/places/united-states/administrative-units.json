@@ -1,0 +1,2192 @@
+{
+  "pack": "united_states",
+  "jurisdictions": [
+    {
+      "ref": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "United States",
+          "nameType": "self"
+        },
+        {
+          "locale": "de",
+          "name": "Vereinigte Staaten",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "États-Unis",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Stati Uniti",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "01"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-AL"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Alabama",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "02"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-AK"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Alaska",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "04"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-AZ"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Arizona",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "05"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-AR"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Arkansas",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "06"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-CA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "California",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "08"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-CO"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Colorado",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "09"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-CT"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Connecticut",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "10"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-DE"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Delaware",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "11"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-DC"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "District of Columbia",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "12"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-FL"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Florida",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "13"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-GA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Georgia",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "15"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-HI"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Hawaii",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "16"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-ID"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Idaho",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "17"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-IL"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Illinois",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "18"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-IN"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Indiana",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "19"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-IA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Iowa",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "20"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-KS"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Kansas",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "21"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-KY"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Kentucky",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "22"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-LA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Louisiana",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "23"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-ME"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Maine",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "24"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MD"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Maryland",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "25"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Massachusetts",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "26"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MI"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Michigan",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "27"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MN"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Minnesota",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "28"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MS"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Mississippi",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "29"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MO"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Missouri",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "30"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-MT"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Montana",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "31"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NE"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Nebraska",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "32"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NV"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Nevada",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "33"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NH"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "New Hampshire",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "34"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NJ"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "New Jersey",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "35"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NM"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "New Mexico",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "36"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NY"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "New York",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "37"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-NC"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "North Carolina",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "38"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-ND"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "North Dakota",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "39"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-OH"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Ohio",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "40"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-OK"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Oklahoma",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "41"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-OR"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Oregon",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "42"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-PA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Pennsylvania",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "44"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-RI"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Rhode Island",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "45"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-SC"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "South Carolina",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "46"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-SD"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "South Dakota",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "47"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-TN"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Tennessee",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "48"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-TX"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Texas",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "49"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-UT"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Utah",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "50"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-VT"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Vermont",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "51"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-VA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Virginia",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "53"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-WA"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Washington",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "54"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-WV"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "West Virginia",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "55"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-WI"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Wisconsin",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "levelKey": "state",
+      "identifiers": [
+        {
+          "scheme": "iso_3166_2",
+          "value": "US-WY"
+        }
+      ],
+      "names": [
+        {
+          "locale": "en",
+          "name": "Wyoming",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56001"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Albany County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56003"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Big Horn County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56005"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Campbell County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56007"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Carbon County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56009"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Converse County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56011"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Crook County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56013"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Fremont County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56015"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Goshen County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56017"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Hot Springs County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56019"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Johnson County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56021"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Laramie County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56023"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Lincoln County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56025"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Natrona County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56027"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Niobrara County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56029"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Park County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56031"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Platte County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56033"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Sheridan County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56035"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Sublette County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56037"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Sweetwater County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56039"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Teton County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56041"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Uinta County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56043"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Washakie County",
+          "nameType": "self"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "us_county_fips",
+        "value": "56045"
+      },
+      "levelKey": "county",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Weston County",
+          "nameType": "self"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "01"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "02"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "04"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "05"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "06"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "08"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "09"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "10"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "11"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "12"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "13"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "15"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "16"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "17"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "18"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "19"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "20"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "21"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "22"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "23"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "24"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "25"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "26"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "27"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "28"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "29"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "30"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "31"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "32"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "33"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "34"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "35"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "36"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "37"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "38"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "39"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "40"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "41"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "42"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "44"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "45"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "46"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "47"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "48"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "49"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "50"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "51"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "53"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "54"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "55"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "to": {
+        "scheme": "iso_3166_1",
+        "value": "US"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56001"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56003"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56005"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56007"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56009"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56011"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56013"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56015"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56017"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56019"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56021"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56023"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56025"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56027"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56029"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56031"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56033"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56035"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56037"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56039"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56041"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56043"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "us_county_fips",
+        "value": "56045"
+      },
+      "to": {
+        "scheme": "us_state_fips",
+        "value": "56"
+      },
+      "relation": "part_of"
+    }
+  ]
+}

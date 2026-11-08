@@ -75,7 +75,7 @@ use.
 
 - [x] Wyoming's statutes and Constitution, read from the Legislature's downloads (45 files, about 21,000 sections), cut into sections, with the publisher's link and hash; the production load is by hand, like every other publisher's (`law-text.yml`, source `wyoleg`) {#law-wy-statutes}
 - [ ] Wyoming's administrative rules {#law-wy-rules}
-- [ ] Wyoming and its 23 counties on the globe {#law-wy-places}
+- [x] Wyoming and its 23 counties on the globe: in Places by their FIPS codes, drawn from the Census Bureau's boundaries when the atlas opens the United States {#law-wy-places}
 - [x] Wyoming's official route: the citizen initiative, with its thresholds and its limits, from Article 3, Section 52 of its Constitution {#law-wy-route}
 - [ ] Wyoming's referendum, the route for undoing an act the legislature passed (the same section) {#law-wy-referendum}
 - [ ] New Hampshire's statutes (the RSAs): every chapter the General Court's tables list as an act, each section a provision with its heading, its text and its source note, a repealed section kept as the site marks it and a chapter repealed whole marked out of force; read from gc.nh.gov 11 seconds apart, safe to stop and rerun. Where the site's firewall refuses Solon's reader (it answered "Web Page Blocked" on 2026-11-06), a chapter is read from the Internet Archive's dated copy, and the act page names the copy. Built and tested against the publisher's own pages as a public 2017 mirror holds them; the server's dry run against the live site and the production load are not done (`law-text.yml`, source `gcnh`) {#law-nh}
@@ -86,6 +86,9 @@ use.
 - [x] Estonia's counties and municipalities as places, by their EHAK codes (Statistics Estonia and the Land Board, EHAK2026v1) {#places-ee}
 - [ ] Estonia's municipalities' own regulations, which the same register lists {#law-ee-local}
 - [x] Estonia's income tax in Places: 22% above a basic allowance of EUR 8,400 (Tulumaksuseadus § 4 and § 23), no municipal rate {#places-ee-tax}
+- [x] The United States in Places: the nation, its fifty states and the District of Columbia, and Wyoming's counties, by their FIPS codes (Census Bureau); another state's counties are data, not code {#places-us}
+- [x] The federal income tax in Places for 2026, single and married filing jointly, with the standard deduction (Rev. Proc. 2025-32), and Wyoming's state income tax recorded as zero (W.S. 39-12-101) {#places-us-tax}
+- [ ] Every state's counties, and each state's own income tax beside the federal one {#places-us-states}
 
 ### Every organization on its own pages
 

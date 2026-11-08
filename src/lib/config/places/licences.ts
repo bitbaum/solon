@@ -38,4 +38,7 @@ export const LICENCES = [
   // and validity date must be made". CC BY's obligation, in the Land Board's own words.
   // https://geoportaal.maaamet.ee/eng/spatial-data/administrative-and-settlement-division-p312.html
   { spdx: "LicenseRef-ee-maaamet-by", requiresAttribution: true, shareAlike: false },
+  // A work of the United States Government (its Census Bureau's codes and boundaries, the
+  // IRS's revenue procedures) is not protected by copyright: 17 U.S.C. § 105. Public domain.
+  { spdx: "LicenseRef-us-federal-work", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];
