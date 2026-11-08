@@ -39,6 +39,35 @@ export function botCheckOf(bytes: Uint8Array, contentType: string | null): strin
   return null;
 }
 
+/** A PDF that arrived whole: its header, and its end-of-file mark near the end. */
+export function wholePdf(bytes: Uint8Array): boolean {
+  const head = new TextDecoder().decode(bytes.subarray(0, 1024));
+  const tail = new TextDecoder().decode(bytes.subarray(Math.max(0, bytes.length - 2048)));
+  return head.includes("%PDF-") && tail.includes("%%EOF");
+}
+
+/** An address that names a PDF, so what comes back must be one. */
+const namesPdf = (url: string) => /\.pdf(?:[?#]|$)/i.test(url);
+
+/** Pauses before asking the archive again after it dropped the connection (it throttles bursts). */
+export const ARCHIVE_RETRY_MS = [5_000, 20_000];
+
+/** `doFetch`, asked again after a dropped connection, never after an answer. */
+async function patiently(
+  url: string,
+  doFetch: typeof fetch,
+  waits: readonly number[] = ARCHIVE_RETRY_MS,
+): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await doFetch(url, fetchOptions());
+    } catch (error) {
+      if (attempt >= waits.length) throw error;
+      await new Promise((resolve) => setTimeout(resolve, waits[attempt]));
+    }
+  }
+}
+
 const fetchOptions = () => ({
   headers: { "user-agent": USER_AGENT },
   signal: AbortSignal.timeout(120_000),
@@ -71,7 +100,11 @@ const CAPTURES_TRIED = 8;
  * 200, newest first, one per distinct content (`collapse=digest`), so a run of
  * identical bot-check captures counts once. Empty when it holds none.
  */
-export async function captures(url: string, doFetch: typeof fetch): Promise<string[]> {
+export async function captures(
+  url: string,
+  doFetch: typeof fetch,
+  retryWaits: readonly number[] = ARCHIVE_RETRY_MS,
+): Promise<string[]> {
   const query = new URLSearchParams({
     url,
     output: "json",
@@ -80,7 +113,11 @@ export async function captures(url: string, doFetch: typeof fetch): Promise<stri
     collapse: "digest",
     limit: `-${CAPTURES_TRIED}`,
   });
-  const response = await doFetch(`https://web.archive.org/cdx/search/cdx?${query}`, fetchOptions());
+  const response = await patiently(
+    `https://web.archive.org/cdx/search/cdx?${query}`,
+    doFetch,
+    retryWaits,
+  );
   if (!response.ok) throw new Error(`the Internet Archive answered ${response.status}`);
   const rows = (await response.json()) as string[][];
   // The first row names the fields.
@@ -97,11 +134,16 @@ export async function captures(url: string, doFetch: typeof fetch): Promise<stri
  * site put one up and the archive saved it), the captures before it, newest
  * first, until one is the page itself.
  */
-async function readCopy(url: string, refusal: string, doFetch: typeof fetch): Promise<Read> {
+async function readCopy(
+  url: string,
+  refusal: string,
+  doFetch: typeof fetch,
+  retryWaits: readonly number[] = ARCHIVE_RETRY_MS,
+): Promise<Read> {
   let stamps: string[];
   try {
     // The capture index first; when it cannot be read, the newest capture alone.
-    stamps = await captures(url, doFetch).catch(() => []);
+    stamps = await captures(url, doFetch, retryWaits).catch(() => []);
     if (stamps.length === 0) {
       const newest = await newestCapture(url, doFetch);
       stamps = newest ? [newest] : [];
@@ -116,13 +158,15 @@ async function readCopy(url: string, refusal: string, doFetch: typeof fetch): Pr
   let checks = 0;
   for (const stamp of stamps) {
     const raw = rawCaptureUrl(stamp, url);
-    const response = await doFetch(raw, fetchOptions());
-    if (!response.ok) continue;
+    const response = await patiently(raw, doFetch, retryWaits).catch(() => null);
+    if (!response?.ok) continue;
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (botCheckOf(bytes, response.headers.get("content-type"))) {
       checks++;
       continue;
     }
+    // A capture of a PDF cut short, or of something else at that address, is not the document.
+    if (namesPdf(url) && !wholePdf(bytes)) continue;
     // The archive may answer from a capture a moment apart; the address it ends on is the one read.
     const copy = archiveCopyOf(response.url) ?? archiveCopyOf(raw)!;
     return { bytes, url: copy.url, copy: { ...copy, original: url } };
@@ -139,19 +183,28 @@ export async function read(
   url: string,
   doFetch: typeof fetch,
   hosts: readonly string[],
+  /** How long to wait before asking the archive again; tests pass none. */
+  retryWaits: readonly number[] = ARCHIVE_RETRY_MS,
 ): Promise<Read> {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || !hosts.includes(parsed.hostname)) {
     throw new Error(`not a publisher address: ${url}`);
   }
-  const response = await doFetch(url, fetchOptions());
+  let response: Response;
+  try {
+    response = await doFetch(url, fetchOptions());
+  } catch (error) {
+    // The site would not even answer (a dropped or refused connection): the copy stands in.
+    const why = error instanceof Error ? error.message : String(error);
+    return readCopy(url, `no answer (${why})`, doFetch, retryWaits);
+  }
   if (REFUSAL_STATUSES.has(response.status)) {
-    return readCopy(url, String(response.status), doFetch);
+    return readCopy(url, String(response.status), doFetch, retryWaits);
   }
   if (!response.ok) throw new Error(`${response.status} for ${url}`);
   const bytes = new Uint8Array(await response.arrayBuffer());
   const check = botCheckOf(bytes, response.headers.get("content-type"));
-  if (check) return readCopy(url, `a bot check ("${check}")`, doFetch);
+  if (check) return readCopy(url, `a bot check ("${check}")`, doFetch, retryWaits);
   return { bytes, url, copy: null };
 }
 
