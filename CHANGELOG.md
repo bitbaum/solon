@@ -8,6 +8,17 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **United Kingdom legislation.** Solon now reads the United Kingdom's Public General Acts
+  and Statutory Instruments from legislation.gov.uk, The National Archives' official
+  service: each item by its address (`ukpga/2018/12`), titled in English, with its current
+  text cut into sections and schedules under the site's own numbers and dated by the day the
+  site says that version began. A provision repealed or not yet in force is left out, and an
+  act repealed whole is marked out of force. The reader asks once every five seconds, as the
+  site's robots.txt requests, and the text is shown under the Open Government Licence v3.0
+  with its notice. The server's dry runs listed 1,152 items of 2024 and cut 45 of them
+  with no failures; the full load is still to run on Solon's server, and Scotland, Wales
+  and Northern Ireland follow. {#law-uk}
+
 - **Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona.** Seven more of
   Switzerland's largest communes link their regulations from pages of their own, and
   Solon now reads them there, in German, French or Italian, leaving out forms, reports,
