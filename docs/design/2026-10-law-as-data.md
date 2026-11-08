@@ -350,14 +350,24 @@ question about Vaduz is asked of Liechtenstein's law too).
   was read (`dateBasis: retrieved`), and the loader stores a document only if
   its bytes differ from the version in force; a title's own "gültig ab
   01.01.2027" dates the version as the publisher's, and it waits until then.
-- Not yet: Triesenberg answers an automated reader with a bot check, which is
-  not worked around; Triesen's folder pages did not load; Balzers, Mauren and
+- Triesenberg answers an automated reader with a bot check, which is not
+  worked around; since 2026-11-08 its page and documents are read from the
+  Internet Archive's newest copies, named as such (`publishers/http.ts`).
+  Not yet: Triesen's folder pages did not load; Balzers, Mauren and
   Schellenberg list no acts on a page found so far. An empty list fails the
   run loudly rather than reading as "no acts".
 - Acts numbered by section ("1.1 Eigentum") rather than by article are held
   whole until a section cutter exists; their text is searchable either way.
 - Swiss communes that publish this way are configs of the same adapter; the
-  loader, the store, the tools and the chat do not change.
+  loader, the store, the tools and the chat do not change. The first seven
+  (2026-11-08): Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and
+  Bellinzona (`geneve-city`, `lausanne-city`, `koeniz`, `fribourg-city`,
+  `neuchatel-city`, `lugano-city`, `bellinzona-city`). A list longer than 40
+  pages says so (`maxPages`); after the first page, one that cannot be read is
+  skipped, not fatal. A commune's config says its language (`locale`, German
+  unless said) and may leave out documents by their address (`excludeHref`):
+  Köniz marks an act adopted but not yet in force, or repealed, only in the
+  file's name.
 
 ### Scanned documents as built (2026-11-01)
 
@@ -405,10 +415,34 @@ of a version that took effect on the same day replaces the earlier reading; a
 version that has not yet begun is left until its day. Only the hosts in config
 are read. `pnpm run law:text lexwork [--host zug.tlex.ch]` (and the Law text
 load workflow, source `lexwork`) loads them; rerunning stores only what is new.
-First instances: the 11 communes of Zug and the 3 of Glarus (1,164 acts). One version that cannot be read
+First instances: the 11 communes of Zug and the 3 of Glarus (1,164 acts); Winterthur, St. Gallen and Biel/Bienne followed (2026-11-08). One version that cannot be read
 never stops the ones after it. A version the publisher holds with no text at all
 (a blank page, as in four acts of Cham and Hünenberg) is reported as empty at the
 publisher and left without text: not a failure of the run, and nothing invented.
+
+### i-web as built (2026-11-08): communes whose site runs the i-web CMS
+
+Many Swiss communes run their site on the i-web CMS (Innovative Web AG), whose
+legal module serves the collection under a page name of the commune's choosing
+("Rechtssammlung", "Reglemente und Verordnungen", "Règlements"). One adapter
+reads them all (`publishers/iweb.ts`); a commune is config: the page that holds
+the collection, and which of its links (chapters, subject pages) hold more.
+
+- The list is a table whose rows are JSON in its `data-entities` attribute: an
+  act's link and its number (`_nummer`), which names the act across versions.
+- An act's page is a `<dl>`: the day it took effect ("Inkrafttreten",
+  "Entrée en vigueur"), when it stopped ("Gültig bis"), and its earlier version
+  ("Vorgängerversion"), which is followed back for `--history`. Versions are dated
+  by the publisher; a page that states no day is dated by the day it was read.
+- The document is the first `/_doc/` or `/_docn/` link in one of the page's
+  tables. An earlier version's file may answer first with a notice that it is no
+  longer in force; its `/_rtr/dokument_<id>` link serves the file.
+- The shape was read from two public readers of i-web sites (OneGov Cloud's
+  importer of Horw's Gesetzessammlung, and vigie-vaud's captures of i-web
+  council pages), because none of the cities could be opened from the sandbox the
+  reader was written in. First instances: Luzern, Thun, Chur, Schaffhausen and
+  Sion (`luzern-city`, `thun`, `chur`, `schaffhausen-city`, `sion`); their
+  first live read is their first load on Solon's server, a dry run first.
 
 ### Federal acts the register lacks, and numbers two acts share (2026-11-01)
 

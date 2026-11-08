@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { ActKind } from "@/lib/config/law";
+import { archiveCopyOf } from "@/lib/law/archive-copy";
 import { authorityOf } from "@/lib/law/places";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
@@ -39,6 +40,8 @@ export default function ActViewPage({
   amendLabels,
 }: ActViewProps) {
   const { version } = act;
+  // A text read from the Internet Archive's copy says so, and when the copy was captured.
+  const archived = archiveCopyOf(version?.sourceUrl);
   const pages = version ? Math.max(1, Math.ceil(version.provisionCount / PROVISIONS_PER_PAGE)) : 1;
   const meta = [
     authorityName(act.authority),
@@ -84,14 +87,30 @@ export default function ActViewPage({
                   ? t("act.inForceSince", { date: version.inForceFrom })
                   : t("act.readOn", { date: version.inForceFrom })}
               </p>
-              <p className="text-fg-secondary">
-                {t("act.copy", { date: version.retrievedOn })}{" "}
-                {version.sourceUrl && (
-                  <a href={version.sourceUrl} className="underline" rel="noopener">
-                    {t("act.copyFrom")}
+              {archived ? (
+                <p className="text-fg-secondary">
+                  {t("act.copyArchived", {
+                    date: version.retrievedOn,
+                    captured: archived.capturedOn,
+                  })}{" "}
+                  <a href={archived.url} className="underline" rel="noopener">
+                    {t("act.copyArchivedFrom")}
                   </a>
-                )}
-              </p>
+                </p>
+              ) : (
+                <p className="text-fg-secondary">
+                  {t("act.copy", { date: version.retrievedOn })}{" "}
+                  {version.sourceUrl && (
+                    <a href={version.sourceUrl} className="underline" rel="noopener">
+                      {t("act.copyFrom")}
+                    </a>
+                  )}
+                </p>
+              )}
+              {/* The notice the publisher's terms of reuse ask for, as they word it. */}
+              {authorityOf(act.authority)?.attribution && (
+                <p className="text-fg-secondary">{authorityOf(act.authority)!.attribution}</p>
+              )}
               <p className="break-all font-mono text-xs text-fg-tertiary">
                 sha256 {version.contentSha256}
               </p>

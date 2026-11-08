@@ -1,6 +1,9 @@
 # UI guidelines
 
-_Created 2026-01-08. Last modified 2026-10-01: the Places map is built and
+_Created 2026-01-08. Last modified 2026-11-08: the light theme is built. The
+device decides unless the reader picks Light, Dark or Device in the header;
+photographs, and the header over them, stay dark on purpose. Earlier,
+2026-10-01: the Places map is built and
 draws only with tokens, read from the page (`map-colours.ts`), so it follows
 whichever theme is on. Earlier the same day: Solon gets a light theme beside
 the dark one (decided 2026-09-30, not built yet), both from the package's
@@ -38,15 +41,48 @@ shared neither. Copies drift; imports cannot.
 To retheme the whole stack, edit the `▼▼▼ THE KNOBS ▼▼▼` block in the package's
 `tokens.css`, tag a release, and bump the dependency in Solon and Loki.
 
-Solon is **dark today and gets a light theme** (decided 2026-09-30, with the
-Places map; the theme itself is not built yet). Both come from the package's
-tokens, including the map's colour scale, so a colour is never written for one
-theme only; until the light theme ships, marketing and dashboard share the
-near-black canvas. The map already follows: `src/components/places/map-colours.ts`
-reads `--map-scale-1…7`, `--map-no-data`, `--map-boundary` and
-`--accent-primary` from the page and reads them again when the `<html>` class
-changes. MapLibre's own stylesheet is unlayered, so the few overrides of it in
-`globals.css` (the hover label) are unlayered too, in tokens.
+## Light and dark
+
+Solon has both themes the package ships (decided 2026-09-30, built
+2026-11-08). The device decides (`prefers-color-scheme`) until the reader picks
+Light, Dark or Device from the icon button in the header; the choice is kept in
+their browser's localStorage, never sent to the server. The module is
+`src/components/theme/`:
+
+- `theme.ts` — the choices, the storage key, and `THEME_SCRIPT`, the few lines
+  `<head>` runs before the first paint, so nothing flashes. It sets the `dark`
+  class the tokens key on, `data-theme` (the attribute bip-kit and the fleet's
+  other packages read) and `color-scheme`. `<html>` carries
+  `suppressHydrationWarning` because the server's HTML has none of them.
+- `theme-toggle.tsx` — the button and its three choices. The words come from
+  `Nav.theme*` in `messages/*.json`; the component holds no language or brand.
+
+Neither file names anything of Solon's: they are shaped to move into
+`@bitbaum/design-tokens` (ROADMAP `{#theme-package}`).
+
+The rules:
+
+- **A colour is never written for one theme.** Use the token roles; they flip.
+  `text-white`, `bg-black` and a hex in a component are bugs in one theme.
+- **Type on a photograph is dark on purpose, in both themes.** `FullBleed` and
+  `AudienceTile` carry `dark`, which switches the tokens for that subtree: their
+  type sits on a black scrim, where only light type reads. The transparent
+  header over a page that opens on a photograph wears `dark` too, decided from
+  the path (`HEADER_OVER_PHOTO_ROUTES` in `src/lib/site-config.ts`, held to the
+  pages by a test) so the server renders it right. The code sample on
+  `/integration` is a terminal and stays dark as well.
+- **A band is `.band`, not `bg-surface-public`.** `--surface-public` is
+  near-black in both themes; a section set off from the page uses `.band`
+  (`globals.css`), the public surface in dark and white on the off-white page
+  in light.
+- **Canvas drawing reads tokens from the page and reads them again when
+  `<html>`'s class changes**: `src/components/places/map-colours.ts` for the
+  Places map (`--map-scale-1…7`, `--map-no-data`, `--map-boundary`,
+  `--accent-primary`), and the law globe the same way. MapLibre's own
+  stylesheet is unlayered, so the few overrides of it in `globals.css` (the
+  hover label) are unlayered too, in tokens.
+- The social card (`opengraph-image.tsx`) and the web manifest are one image
+  and one colour outside any page, and stay on the near-black public surface.
 
 ## Headlines are the sans
 

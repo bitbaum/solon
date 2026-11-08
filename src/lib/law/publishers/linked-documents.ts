@@ -10,7 +10,8 @@
  * for byte, is not stored again (load.ts).
  */
 import type { ActKind } from "@/lib/config/law";
-import { getText } from "./http";
+import { originalOf } from "../archive-copy";
+import { read } from "./http";
 import type { ListedAct, PublisherAdapter, VersionRef } from "./types";
 
 export interface LinkedDocumentsConfig {
@@ -23,13 +24,19 @@ export interface LinkedDocumentsConfig {
   pages: readonly string[];
   /** A document link; its first group is the collection's own id for the document. */
   link: RegExp;
+  /** How many pages are opened at most, the listed ones and those followed; 40 unless said. */
+  maxPages?: number;
   /** Folder links to open once, on the same host. */
   follow?: RegExp;
   /** A title that names an act (Reglement, Verordnung, Ordnung, Statuten, Tarif). */
   include: RegExp;
   /** A title that names a form or a notice, even if it says "Reglement". */
   exclude: RegExp;
+  /** A document address that is not an act in force, whatever its title (a draft, a repealed act). */
+  excludeHref?: RegExp;
   kind?: ActKind;
+  /** The language of the commune's acts; German unless said. */
+  locale?: string;
 }
 
 const decode = (s: string) =>
@@ -50,7 +57,8 @@ const decode = (s: string) =>
     .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)));
 
 /** A button's own words ("Dokument herunterladen"), which name no act. */
-const BUTTON = /^(?:dokument |datei )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen)$/i;
+const BUTTON =
+  /^(?:dokument |datei |le document |il documento )?(?:herunterladen|download(?:en)?|öffnen|pdf|anzeigen|télécharger|consulter|ouvrir|scarica(?:re)?|apri)$/i;
 
 /** A file's name as words: "3-1-abwasserreglement.pdf" → "Abwasserreglement". */
 export function titleFromFile(href: string): string {
@@ -65,8 +73,8 @@ export function titleFromFile(href: string): string {
 
 /**
  * The links of a page, each with the words that name it: the link's text, or
- * when that is only a button's ("Dokument herunterladen"), its title, or else
- * its file's name.
+ * when that is only a button's ("Dokument herunterladen"), its title or its
+ * label for screen readers, or else its file's name.
  */
 export function anchorsOf(html: string, base: string): { href: string; text: string }[] {
   const out: { href: string; text: string }[] = [];
@@ -74,7 +82,7 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
   const declared = /<base\b[^>]*\bhref=(["'])(.*?)\1/i.exec(html)?.[2];
   if (declared) {
     try {
-      base = new URL(decode(declared), base).toString();
+      base = originalOf(new URL(decode(declared), base).toString());
     } catch {
       // keep the page's address
     }
@@ -94,13 +102,20 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
         .trim();
     let href: string;
     try {
-      href = new URL(decode(m[3]!), base).toString();
+      // A link in the archive's copy of a page names the publisher's own address.
+      href = originalOf(new URL(decode(m[3]!), base).toString());
     } catch {
       continue; // not an address
     }
-    const title = /\btitle=(["'])(.*?)\1/i.exec(`${m[1]} ${m[4]}`)?.[2] ?? "";
+    const attrs = `${m[1]} ${m[4]}`;
+    const title = /\btitle=(["'])(.*?)\1/i.exec(attrs)?.[2] ?? "";
+    // An empty link over a whole row names itself to screen readers (Triesen):
+    // "Friedhofordnung herunterladen (öffnet neues Fenster)".
+    const label = (/\baria-label=(["'])(.*?)\1/i.exec(attrs)?.[2] ?? "")
+      .replace(/\s*\([^)]*\)\s*$/, "")
+      .replace(/\s+(?:herunterladen|downloaden|öffnen|anzeigen)$/i, "");
     const fromFile = titleFromFile(href);
-    const named = [clean(m[5]!), clean(title)].find((t) => t && !BUTTON.test(t));
+    const named = [clean(m[5]!), clean(title), clean(label)].find((t) => t && !BUTTON.test(t));
     // A bare kind ("Reglement") says less than the file's name ("Reglement Sport und Freizeitanlage").
     const bare =
       named &&
@@ -116,7 +131,7 @@ export function anchorsOf(html: string, base: string): { href: string; text: str
 /** The acts among a page's links: one per document id, titled by its link, forms left out. */
 export function actsOf(
   anchors: readonly { href: string; text: string }[],
-  config: Pick<LinkedDocumentsConfig, "link" | "include" | "exclude" | "kind">,
+  config: Pick<LinkedDocumentsConfig, "link" | "include" | "exclude" | "excludeHref" | "kind">,
 ): ListedAct[] {
   const seen = new Set<string>();
   const titles = new Set<string>();
@@ -125,6 +140,7 @@ export function actsOf(
     const id = config.link.exec(a.href)?.[1];
     if (!id || seen.has(id) || !a.text) continue;
     if (!config.include.test(a.text) || config.exclude.test(a.text)) continue;
+    if (config.excludeHref?.test(a.href)) continue;
     // One act per title: a page that offers the same act twice, under two file names, lists it once.
     const key = a.text
       .toLowerCase()
@@ -174,17 +190,30 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
     homepage: config.homepage,
     licenceSpdx: config.licenceSpdx,
     textStatus: "authentic",
-    locale: "de",
+    locale: config.locale ?? "de",
     async list(doFetch) {
       const pages: string[] = [];
       const anchors: { href: string; text: string }[] = [];
       const queue = [...config.pages];
       const opened = new Set<string>();
-      while (queue.length && opened.size < 40) {
+      let first: string | null = null;
+      const missed: string[] = [];
+      while (queue.length && opened.size < (config.maxPages ?? 40)) {
         const url = queue.shift()!;
         if (opened.has(url)) continue;
         opened.add(url);
-        const html = await getText(url, doFetch, [host]);
+        // The publisher's page, or the archive's dated copy of it when the publisher refuses (http.ts).
+        let page;
+        try {
+          page = await read(url, doFetch, [host]);
+        } catch (error) {
+          // The first page is the collection; one page after it that cannot be read does not stop the rest.
+          if (opened.size === 1) throw error;
+          missed.push(`${url}: ${error instanceof Error ? error.message : String(error)}`);
+          continue;
+        }
+        first ??= page.url;
+        const html = new TextDecoder().decode(page.bytes);
         pages.push(html);
         const found = anchorsOf(html, url);
         anchors.push(...found);
@@ -194,9 +223,16 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       }
       const acts = actsOf(anchors, config);
       // A page that lists nothing is a changed page or a challenge, never "no acts": fail loudly.
-      if (acts.length === 0) throw new Error(`${config.key}: the pages listed no acts`);
+      if (acts.length === 0)
+        throw new Error(
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}`,
+        );
       for (const act of acts) titles.set(act.pageUrl, act.title);
-      return { bytes: new TextEncoder().encode(pages.join("\n")), url: config.pages[0]!, acts };
+      return {
+        bytes: new TextEncoder().encode(pages.join("\n")),
+        url: first ?? config.pages[0]!,
+        acts,
+      };
     },
     async versions(pageUrl) {
       const today = new Date().toISOString().slice(0, 10);
@@ -225,6 +261,10 @@ const CONCRETE_FILE = /\/download_file\/(?:view\/|force\/)?([0-9a-f-]{1,40})(?:[
 const WORDPRESS_FILE = /\/wp-content\/uploads\/((?:\d{4}\/\d{2}\/)?[^/?#]+\.pdf)(?:[?#]|$)/i;
 /** A file in a media archive (Ruggell, Schellenberg), named by its file name. */
 const MEDIA_ARCHIVE_FILE = /\/files\/(?:medienarchiv|attachments)\/([^/?#]+\.pdf)(?:[?#]|$)/i;
+/** A file at the top of a site's file store (Triesen), named by its file name. */
+const FILES_ROOT_FILE = /\/files\/([^/?#]+\.pdf)(?:[?#]|$)/i;
+/** A file in a portal's service folder (Balzers), named by its file name. */
+const PORTAL_FILE = /\/Portal\/UserFiles\/files\/Service\/([^/?#]+\.pdf)(?:[?#]|$)/i;
 
 const liCommune = (
   key: string,
@@ -293,10 +333,197 @@ export const eschen = liCommune(
 );
 export const schellenberg = liCommune(
   "schellenberg",
-  "li7008",
+  "li7011",
   "Gemeinde Schellenberg",
   "https://www.schellenberg.li/",
   ["https://www.schellenberg.li/service/reglemente"],
   undefined,
   MEDIA_ARCHIVE_FILE,
 );
+export const balzers = liCommune(
+  "balzers",
+  "li7003",
+  "Gemeinde Balzers",
+  "https://www.balzers.li/",
+  ["https://www.balzers.li/de/service/tblid/34/filter1/reglemente"],
+  undefined,
+  PORTAL_FILE,
+);
+export const triesen = liCommune(
+  "triesen",
+  "li7002",
+  "Gemeinde Triesen",
+  "https://www.triesen.li/",
+  ["https://www.triesen.li/service-portal/online-schalter?serviceportalfilter=Reglemente"],
+  undefined,
+  FILES_ROOT_FILE,
+);
+export const mauren = liCommune(
+  "mauren",
+  "li7008",
+  "Gemeinde Mauren",
+  "https://www.mauren.li/",
+  ["https://www.mauren.li/online-schalter/3/Reglemente"],
+  undefined,
+  MEDIA_ARCHIVE_FILE,
+);
+/**
+ * Triesenberg's site answers automated readers with a bot check (LiteSpeed's
+ * "Bot Verification", 2026-11-07), so its page and documents are read from the
+ * Internet Archive's newest copies (http.ts), each recorded as such.
+ */
+export const triesenberg = liCommune(
+  "triesenberg",
+  "li7004",
+  "Gemeinde Triesenberg",
+  "https://www.triesenberg.li/",
+  ["https://www.triesenberg.li/service/downloads/formulare-und-reglemente/"],
+  undefined,
+  WORDPRESS_FILE,
+);
+
+/**
+ * Swiss communes among the twenty most populous that link their acts from one
+ * page (surveyed 2026-11-08 from the addresses search engines index for the
+ * page and its documents). What each calls an act, and what a form or a
+ * report, is said in the commune's language.
+ */
+const CH_DE_ACT =
+  /reglement|verordnung|ordnung|statut|tarif|gebühren|richtlinie|beschluss|gesetz|vorschrift/i;
+const CH_DE_FORM =
+  /antrag|formular|anmeld|gesuch|merkblatt|checkliste|botschaft|erläuterung|bericht|entwurf/i;
+const CH_FR_ACT = /r[èe]glement|arr[êe]t[ée]|ordonnance|tarif|directive|statuts|prescriptions/i;
+const CH_FR_FORM =
+  /formulaire|demande|inscription|message|rapport|table des mati[èe]res|table chronologique|tabmat|pr[ée]face|guide|brochure|avis de|plan d.affectation|annexe/i;
+
+/**
+ * Köniz: "Reglemente und Verordnungen", files in its asset store named by
+ * number. Acts adopted but not yet in force ("hängig") and repealed ones
+ * ("aufgehoben") say so in the file's name.
+ */
+export const koeniz = linkedDocuments({
+  key: "koeniz",
+  authority: "bfs355",
+  name: "Gemeinde Köniz, Reglemente und Verordnungen",
+  homepage: "https://www.koeniz.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  pages: ["https://www.koeniz.ch/verwaltung/reglementeverordnungen.page/952"],
+  link: /\/public\/upload\/assets\/(\d+)\/[^/?#]+\.pdf(?:[?#]|$)/i,
+  include: CH_DE_ACT,
+  exclude: CH_DE_FORM,
+  excludeHref: /haengig|h%C3%A4ngig|aufgehoben|erlaeuterung/i,
+});
+
+/** Fribourg: "Règlements et tarifs", files in the site's monthly upload folders, named by the collection's number. */
+export const fribourgCity = linkedDocuments({
+  key: "fribourg-city",
+  authority: "bfs2196",
+  name: "Ville de Fribourg, Règlements et tarifs",
+  homepage: "https://www.ville-fribourg.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.ville-fribourg.ch/reglements-tarifs"],
+  link: /\/sites\/default\/files\/(\d{4}-\d{2}\/[^/?#]+\.pdf)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * Neuchâtel: "Réglementation", the collection of the commune merged in 2021,
+ * which the city says it is still compiling. Its tables of contents and the
+ * former collection's imported copies are not acts.
+ */
+export const neuchatelCity = linkedDocuments({
+  key: "neuchatel-city",
+  authority: "bfs6458",
+  name: "Ville de Neuchâtel, Réglementation",
+  homepage: "https://www.neuchatelville.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.neuchatelville.ch/votre-commune/reglementation"],
+  link: /\/fileadmin\/sites\/ne_ville\/fichiers\/votre_commune\/reglementation\/((?:[^/?#]+\/)?[^/?#]+\.pdf)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+  excludeHref: /\/imported\/|tabmat|table_chronologique/i,
+});
+
+/**
+ * Genève: "Règlements municipaux", about 250 acts numbered "LC 21 …", ten to a
+ * page (`?page=1`, `?page=2` …). An act's file is on the city's own host, in
+ * its monthly upload folders or its media store; when the list names only the
+ * act's own page, that page is opened for the file.
+ */
+const GENEVE_LIST =
+  "https://www.geneve.ch/autorites-administration/administration-municipale/reglements-municipaux";
+export const geneveCity = linkedDocuments({
+  key: "geneve-city",
+  authority: "bfs6621",
+  name: "Ville de Genève, Règlements municipaux",
+  homepage: "https://www.geneve.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: [GENEVE_LIST, ...Array.from({ length: 27 }, (_, i) => `${GENEVE_LIST}?page=${i + 1}`)],
+  follow: /\/administration-municipale\/reglements-municipaux\/lc\d/i,
+  maxPages: 340,
+  link: /\/(?:sites\/default\/files\/|media\/)(\d{4}-\d{2}\/[^/?#]+\.pdf|\d+)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * Lausanne: the "Recueil systématique du droit communal", about 190 acts by
+ * subject, each with its own entry (`index_recueil.php?id_recueil=`) and its
+ * file served by id (`Next/serve.php?id=`).
+ */
+export const lausanneCity = linkedDocuments({
+  key: "lausanne-city",
+  authority: "bfs5586",
+  name: "Ville de Lausanne, Recueil systématique du droit communal",
+  homepage: "https://www.lausanne.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.lausanne.ch/apps/actualites/index_recueil.php"],
+  follow: /\/index_recueil\.php\?id_recueil=\d+/,
+  maxPages: 260,
+  link: /\/Next\/serve\.php\?id=(\d+)(?:&|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+const CH_IT_ACT = /regolamento|ordinanza|statuto|tariffa|direttiv|norme d/i;
+const CH_IT_FORM =
+  /formulario|modulo|domanda|richiesta|istanza|messaggio|rapporto|calendario|opuscolo|guida|indice/i;
+
+/**
+ * Lugano: "Legislazione", each act a page of the city's own (`/law/<id>/<title>`)
+ * that serves the act's PDF, numbered by the city's collection ("1.1.1").
+ */
+export const luganoCity = linkedDocuments({
+  key: "lugano-city",
+  authority: "bfs5192",
+  name: "Città di Lugano, Legislazione",
+  homepage: "https://www.lugano.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "it",
+  pages: ["https://www.lugano.ch/la-mia-citta/amministrazione/legislazione/"],
+  link: /\/law\/(\d+)\/[^/?#]+(?:[?#]|$)/i,
+  include: CH_IT_ACT,
+  exclude: CH_IT_FORM,
+});
+
+/**
+ * Bellinzona: "Legislazione comunale", grouped by subject, each act a file the
+ * site serves by its document id (`downdoc.php?id_doc=`).
+ */
+export const bellinzonaCity = linkedDocuments({
+  key: "bellinzona-city",
+  authority: "bfs5002",
+  name: "Città di Bellinzona, Legislazione comunale",
+  homepage: "https://www.bellinzona.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "it",
+  pages: ["https://www.bellinzona.ch/1d212c00"],
+  link: /\/downdoc\.php\?id_doc=(\d+)(?:&|$)/i,
+  include: CH_IT_ACT,
+  exclude: CH_IT_FORM,
+});

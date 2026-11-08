@@ -1,0 +1,15 @@
+{
+  "pack": "united_states",
+  "jurisdictions": [],
+  "relations": [],
+  "facts": [
+    {
+      "jurisdiction": { "scheme": "us_state_fips", "value": "56" },
+      "metricKey": "tax.income.tariff",
+      "variant": null,
+      "validFrom": "2026-01-01",
+      "validTo": null,
+      "value": { "kind": "flat", "currency": "USD", "rate": 0 }
+    }
+  ]
+}

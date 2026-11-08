@@ -13,6 +13,8 @@ export const ACT_KINDS = [
   "decree",
   "notice",
   "regulation",
+  /** A European Union directive: it binds the member states as to the result, and each transposes it. */
+  "directive",
   "treaty",
   "intercantonal_agreement",
   "communal_act",
@@ -35,6 +37,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "publisher_ref",
   /** Luxembourg's European Legislation Identifier for the act (its Legilux work). */
   "lu_eli",
+  /** The European Union's CELEX number: `32016R0679` (sector 3, year, R regulation or L directive, number). */
+  "celex",
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
@@ -67,6 +71,13 @@ export interface LawAuthority {
   place: { scheme: string; value: string } | null;
   /** The authority whose law also applies wherever this one's does: a commune's canton or country. */
   within?: string;
+  /**
+   * A union of countries: the ISO 3166-1 codes of its members. Its law applies in each, so it is
+   * the layer above every member's own law (the European Union above Estonia and Luxembourg).
+   */
+  members?: readonly string[];
+  /** The notice the publisher's terms ask a reuser to show beside the text, verbatim. */
+  attribution?: string;
 }
 
 export const LAW_AUTHORITIES: readonly LawAuthority[] = [
@@ -102,9 +113,24 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  // A union of countries: no single place; its law applies in each member, above the member's
+  // own. The 27 members since 1 February 2020, the day the United Kingdom left.
+  {
+    key: "eu",
+    name: "European Union",
+    place: null,
+    members: [
+      ...["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU"],
+      ...["IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK"],
+    ],
+    // EUR-Lex's legal notice: reuse is authorised provided the source is acknowledged
+    // (Commission Decision 2011/833/EU on the reuse of Commission documents).
+    attribution: "© European Union, https://eur-lex.europa.eu",
+  },
   // The United States and its states: a state's key is `us-<postal code>`, its place ISO 3166-2.
   { key: "us", name: "United States", place: { scheme: "iso_3166_1", value: "US" } },
   { key: "us-wy", name: "Wyoming", place: { scheme: "iso_3166_2", value: "US-WY" } },
+  { key: "us-nh", name: "New Hampshire", place: { scheme: "iso_3166_2", value: "US-NH" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
   // whose collection a reader in src/lib/law/publishers covers.
   {
@@ -112,6 +138,37 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     name: "Zürich (city)",
     place: { scheme: "bfs_municipality", value: "261" },
     within: "zh",
+  },
+  // Communes whose collection is the i-web CMS's legal module (src/lib/law/publishers/iweb.ts).
+  {
+    key: "bfs1061",
+    name: "Luzern (city)",
+    place: { scheme: "bfs_municipality", value: "1061" },
+    within: "lu",
+  },
+  {
+    key: "bfs942",
+    name: "Thun",
+    place: { scheme: "bfs_municipality", value: "942" },
+    within: "be",
+  },
+  {
+    key: "bfs3901",
+    name: "Chur",
+    place: { scheme: "bfs_municipality", value: "3901" },
+    within: "gr",
+  },
+  {
+    key: "bfs2939",
+    name: "Schaffhausen (city)",
+    place: { scheme: "bfs_municipality", value: "2939" },
+    within: "sh",
+  },
+  {
+    key: "bfs6266",
+    name: "Sion",
+    place: { scheme: "bfs_municipality", value: "6266" },
+    within: "vs",
   },
   // Communes whose law sits in a LexWork collection (see LEXWORK): `bfs<number>`, the commune's number in the
   // Federal Statistical Office's directory.
@@ -199,11 +256,47 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "1632" },
     within: "gl",
   },
+  {
+    key: "bfs230",
+    name: "Winterthur",
+    place: { scheme: "bfs_municipality", value: "230" },
+    within: "zh",
+  },
+  {
+    key: "bfs3203",
+    name: "St. Gallen (city)",
+    place: { scheme: "bfs_municipality", value: "3203" },
+    within: "sg",
+  },
+  {
+    key: "bfs371",
+    name: "Biel/Bienne",
+    place: { scheme: "bfs_municipality", value: "371" },
+    within: "be",
+  },
   // Liechtenstein's communes: `li<number>`, the place the commune's number in the Liechtenstein register.
   {
     key: "li7001",
     name: "Vaduz",
     place: { scheme: "li_municipality", value: "7001" },
+    within: "li",
+  },
+  {
+    key: "li7002",
+    name: "Triesen",
+    place: { scheme: "li_municipality", value: "7002" },
+    within: "li",
+  },
+  {
+    key: "li7003",
+    name: "Balzers",
+    place: { scheme: "li_municipality", value: "7003" },
+    within: "li",
+  },
+  {
+    key: "li7004",
+    name: "Triesenberg",
+    place: { scheme: "li_municipality", value: "7004" },
     within: "li",
   },
   {
@@ -226,7 +319,7 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   },
   {
     key: "li7008",
-    name: "Schellenberg",
+    name: "Mauren",
     place: { scheme: "li_municipality", value: "7008" },
     within: "li",
   },
@@ -241,6 +334,55 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     name: "Ruggell",
     place: { scheme: "li_municipality", value: "7010" },
     within: "li",
+  },
+  {
+    key: "li7011",
+    name: "Schellenberg",
+    place: { scheme: "li_municipality", value: "7011" },
+    within: "li",
+  },
+  // Swiss communes that link their acts from one page of their own (publishers/linked-documents.ts).
+  {
+    key: "bfs355",
+    name: "Köniz",
+    place: { scheme: "bfs_municipality", value: "355" },
+    within: "be",
+  },
+  {
+    key: "bfs2196",
+    name: "Fribourg (city)",
+    place: { scheme: "bfs_municipality", value: "2196" },
+    within: "fr",
+  },
+  {
+    key: "bfs6458",
+    name: "Neuchâtel (city)",
+    place: { scheme: "bfs_municipality", value: "6458" },
+    within: "ne",
+  },
+  {
+    key: "bfs5192",
+    name: "Lugano",
+    place: { scheme: "bfs_municipality", value: "5192" },
+    within: "ti",
+  },
+  {
+    key: "bfs5002",
+    name: "Bellinzona",
+    place: { scheme: "bfs_municipality", value: "5002" },
+    within: "ti",
+  },
+  {
+    key: "bfs6621",
+    name: "Genève (city)",
+    place: { scheme: "bfs_municipality", value: "6621" },
+    within: "ge",
+  },
+  {
+    key: "bfs5586",
+    name: "Lausanne",
+    place: { scheme: "bfs_municipality", value: "5586" },
+    within: "vd",
   },
 ];
 
@@ -482,6 +624,11 @@ export const LEXWORK = {
     { host: "glarus.tlex.ch", authority: "bfs1632" },
     { host: "glarus-nord.tlex.ch", authority: "bfs1630" },
     { host: "glarus-sued.tlex.ch", authority: "bfs1631" },
+    // Three of Switzerland's twenty most populous communes (2026-11-08): each city's own
+    // systematic collection, as it links it from its site and search engines index it.
+    { host: "winterthur.tlex.ch", authority: "bfs230" },
+    { host: "st.gallen.tlex.ch", authority: "bfs3203" },
+    { host: "biel-bienne.tlex.ch", authority: "bfs371" },
   ] as readonly { host: string; authority: string }[],
 } as const;
 
@@ -556,6 +703,48 @@ export const RIIGITEATAJA = {
 } as const;
 
 /**
+ * The European Union's legislation in force, from the Publications Office: the
+ * register from Cellar, its SPARQL endpoint over the Common Data Model (CDM),
+ * and each act's English text from EUR-Lex as HTML, the latest consolidated
+ * version when there is one (CELEX `02016R0679-20160504`, dated by the day
+ * its CELEX names), else the act as the Official Journal published it.
+ * EUR-Lex marks articles and annexes with the European Legislation
+ * Identifier's anchors (`art_1`, `anx_I`), so a provision's path here is its
+ * anchor there.
+ *
+ * Reuse: EUR-Lex content may be reused with acknowledgement of the source under
+ * Commission Decision 2011/833/EU of 12 December 2011 on the reuse of
+ * Commission documents (OJ L 330, 14.12.2011, p. 39), which the Publications
+ * Office applies to EUR-Lex. The register is the Publications Office's open
+ * data, under CC BY 4.0, the licence the Commission adopted for its documents
+ * under that decision (C(2019) 1655). The notice to show is the authority's
+ * `attribution`.
+ */
+export const EURLEX = {
+  key: "eurlex",
+  authority: "eu",
+  publisher: "Publications Office of the European Union (EUR-Lex, Cellar)",
+  homepage: "https://eur-lex.europa.eu",
+  sparql: "https://publications.europa.eu/webapi/rdf/sparql",
+  /** `{celex}` is a CELEX number, an act's or a consolidated version's. */
+  htmlUrl: "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:{celex}",
+  pageUrl: "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:{celex}",
+  /** Only these hosts are read. */
+  hosts: ["publications.europa.eu", "eur-lex.europa.eu"],
+  registerLicenceSpdx: "CC-BY-4.0",
+  licenceSpdx: "LicenseRef-eu-reuse-2011-833",
+  /** English first; the other official languages are the same reader with another code. */
+  locale: "en",
+  /** The language's code in the EU's authority table, as CDM names it. */
+  cdmLanguage: "ENG",
+  textStatus: "consolidated" as ActTextStatus,
+  /** The CELEX type letter of each kind read: R regulation, L directive. */
+  kinds: { R: "regulation", L: "directive" } as Readonly<Record<string, ActKind>>,
+  /** The first year of the Official Journal's acts; the register is read a year at a time from it. */
+  firstYear: 1952,
+} as const;
+
+/**
  * Wyoming's statutes and Constitution, from the Legislative Service Office's
  * "Wyoming Statutes - Files in Download Format": one PDF per title, Title 97
  * the Constitution. Law a US legislature enacts is not under copyright
@@ -622,6 +811,43 @@ export const WYOLEG = {
     ["42", "Title 42 Welfare"],
     ["99", "Title 99 Water Projects"],
   ] as const,
+} as const;
+
+/**
+ * New Hampshire's statutes, the Revised Statutes Annotated (RSA), as the
+ * General Court publishes them in HTML under `/rsa/html/`: a table of the
+ * titles (`nhtoc.htm`), each title's chapters (`NHTOC/NHTOC-<title>.htm`), and
+ * each chapter merged into one page with every section
+ * (`<title>/<chapter>/<chapter>-mrg.htm`). Each chapter is an act, cited as
+ * "RSA 39"; its sections ("39:3", "5:6-a") are its provisions. The General
+ * Court moved from www.gencourt.state.nh.us to gc.nh.gov, and the old host
+ * answers every address with a permanent redirect to the same path on the new
+ * one (checked 2026-11-08), so the new host is the official address and the
+ * old one is asked only for the Internet Archive's copies made under it. Law a
+ * US legislature enacts is not under copyright (Georgia v. Public.Resource.Org,
+ * 590 U.S. 255 (2020)). The pages state no date, so each version is dated by
+ * the day it was read, or the day the archive captured the copy read.
+ */
+export const GCNH = {
+  key: "gcnh",
+  authority: "us-nh",
+  publisher: "New Hampshire General Court",
+  base: "https://gc.nh.gov/rsa/html/",
+  /** Where the same pages were before the move; the archive holds most of its copies there. */
+  formerBase: "https://www.gencourt.state.nh.us/rsa/html/",
+  homepage: "https://gc.nh.gov/rsa/html/nhtoc.htm",
+  /** The table of titles, relative to `base`. */
+  titlesPage: "nhtoc.htm",
+  hosts: ["gc.nh.gov", "www.gencourt.state.nh.us"],
+  licenceSpdx: "LicenseRef-public-domain-edicts",
+  locale: "en",
+  textStatus: "consolidated" as ActTextStatus,
+  /**
+   * Between requests: 11 seconds, the Crawl-delay another public reader of the
+   * RSAs records from the site's robots.txt (worldwidelaw/legal-sources); the
+   * site refused the sandbox this reader was written in, so it was not read here.
+   */
+  pauseMs: 11_000,
 } as const;
 
 /**

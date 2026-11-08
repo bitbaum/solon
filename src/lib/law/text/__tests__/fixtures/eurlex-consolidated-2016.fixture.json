@@ -1,0 +1,16 @@
+{
+  "head": { "link": [], "vars": ["celex"] },
+  "results": {
+    "distinct": false,
+    "ordered": true,
+    "bindings": [
+      {
+        "celex": {
+          "type": "typed-literal",
+          "datatype": "http://www.w3.org/2001/XMLSchema#string",
+          "value": "02016R0679-20160504"
+        }
+      }
+    ]
+  }
+}

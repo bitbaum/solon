@@ -8,7 +8,8 @@
  * provision, `text`. The snapshot keeps the document itself, so a better reader
  * can be run over the same bytes later.
  */
-import { extractText, getDocumentProxy } from "unpdf";
+import { extractText } from "unpdf";
+import { openPdf } from "./pdf";
 import { CANTONAL_DOCUMENTS } from "@/lib/config/law";
 import { blockText } from "./html-text";
 import { WHOLE_ACT, type Provision } from "./fedlex";
@@ -39,7 +40,7 @@ export async function fetchDocument(
 /** The text of a document, line by line. */
 export async function documentText(bytes: Uint8Array, kind: "pdf" | "html"): Promise<string> {
   if (kind === "html") return blockText(new TextDecoder().decode(bytes));
-  const pdf = await getDocumentProxy(new Uint8Array(bytes));
+  const pdf = await openPdf(new Uint8Array(bytes));
   return String((await extractText(pdf, { mergePages: true })).text);
 }
 

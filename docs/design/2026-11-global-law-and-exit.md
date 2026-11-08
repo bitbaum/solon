@@ -85,6 +85,49 @@ complete"); this file carries the reasons and the order.
   watch-only, decisions stay evidence, executors re-verify.
 - Every fact on the site has a source, and every count is read from the data,
   not typed into copy.
+- **Sources.** Law is read from its publisher's official site first. When that
+  site refuses an automated reader (403, 429, 503 or a bot check), the text is
+  read from a dated public copy instead, the Internet Archive's newest capture
+  (`src/lib/law/publishers/http.ts`); the act keeps the publisher's address, the
+  version records the copy's address, and the act page names it as the archive's
+  copy of that day, never as the publisher's own. Solon does not disguise its
+  reader or solve challenges.
+
+## 2026-11-08: how it should feel and how it is built
+
+The owner's direction on 2026-11-08, after seeing the globe and the Places map
+side by side. These shape the product. They are **not copy**: Solon's own words
+stay neutral (above), and nothing here is quoted on the site.
+
+- **The legal puzzle of the world, layer by layer.** A country opened on the
+  atlas shows what Solon holds for it, then its subdivisions, then theirs, each
+  with its own law and the law above it that applies there. Rules made close to
+  the people they bind are shown first and as fully as national ones: a
+  commune's regulations are not a footnote to a federal code. Which level
+  decides what is visible, so a reader can see where a rule comes from and
+  where to change it.
+- **Exit stays easy.** Leaving, forking or comparing rule sets is a first-class
+  action, never buried. The comparison tools exist so the choice is informed.
+- **One of each thing.** One atlas, not a globe and a map; one search box, not a
+  box and a list of chips; no feature built twice. A screen shows what the
+  reader came for and folds the rest ("Where this comes from"), so nobody
+  scrolls through lists to find a place.
+- **Find the law; never stop at "blocked".** Official sources first. When one
+  refuses, a dated public copy (the Internet Archive, then others), named as a
+  copy on the page with where and when it was taken. A source that cannot be
+  read yet is work to do, not a status to report.
+- **AI helps the citizen act.** Someone proposing a change can ask what it
+  would do, who gains and who loses, and where it is already law, with links to
+  the jurisdictions and the studies. Answers cite their sources and say what
+  they do not know; the proposal stays the person's own.
+- **Built in public.** Every change people would notice gets a changelog entry,
+  a roadmap tick and, when it is worth telling, a blog post.
+- **Packages by default.** What every product needs (themes, maps, search,
+  chat, building in public) comes from the fleet's packages, so a new product
+  starts at the same standard and an improvement reaches all of them.
+- **Fun and useful, and robust underneath.** The surface should invite
+  exploring; the plumbing (data, sources, record, tests) should be boring and
+  correct.
 
 ## Ideas worth keeping in view
 

@@ -7,7 +7,8 @@ import { authoritiesNamed } from "../places";
 describe("places in a question", () => {
   it("finds a canton by any of its names, accents or not", () => {
     expect(authoritiesNamed("Is it legal to keep a fox in Graubünden?")).toEqual(["gr"]);
-    expect(authoritiesNamed("and in Lucerne?")).toEqual(["lu"]);
+    // Lucerne names the canton and the city, whose own collection Solon also reads.
+    expect(authoritiesNamed("and in Lucerne?")).toEqual(["lu", "bfs1061"]);
     expect(authoritiesNamed("a Tessin und im Wallis")).toEqual(
       expect.arrayContaining(["ti", "vs"]),
     );
@@ -76,7 +77,7 @@ describe("planning a search", () => {
       ),
     );
     expect(plan.question).toBe("Is it legal to keep a fox in Lucerne?");
-    expect(plan.authorities).toEqual(["ch", "gr", "lu"]);
+    expect(plan.authorities).toEqual(["ch", "gr", "lu", "bfs1061"]);
     expect(plan.groups).toEqual([["Fuchs", "Wildtier"], ["Bewilligung"]]);
     expect(plan.terms).toEqual(["Fuchs", "Wildtier", "Bewilligung"]);
     expect(plan.language).toBe("English");

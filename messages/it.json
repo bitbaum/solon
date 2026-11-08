@@ -125,6 +125,10 @@
     "signIn": "Accedi",
     "account": "Account",
     "language": "Lingua",
+    "theme": "Tema dei colori",
+    "themeLight": "Chiaro",
+    "themeDark": "Scuro",
+    "themeSystem": "Come il dispositivo",
     "overview": "Panoramica",
     "featured": "In evidenza"
   },
@@ -525,7 +529,7 @@
       "kicker": "Ogni ente territoriale, ufficiale o fondato",
       "metaTitle": "Luoghi · trovare un luogo",
       "metaDescription": "Trovare un luogo per nome o numero postale: di cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
-      "intro": "Ogni luogo che Solon registra, così come lo pubblicano le sue fonti ufficiali. Cerca per nome o numero postale, oppure sfoglia i livelli di un paese.",
+      "intro": "Ogni luogo che Solon raccoglie, come lo pubblicano le fonti ufficiali. Apri un paese sul globo: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
       "searchLabel": "Nome o numero postale",
       "searchPlaceholder": "Un nome o un numero postale",
       "searchButton": "Cerca",
@@ -592,7 +596,7 @@
       "searchLabel": "Cerca un indirizzo, un luogo o un numero postale",
       "searchLabelNoAddress": "Cerca un luogo o un numero postale",
       "searchPlaceholder": "p. es. Via Nassa 1, Lugano · Berna · 6900",
-      "searchPlaceholderNoAddress": "p. es. Berna o 3011",
+      "searchPlaceholderNoAddress": "p. es. {example}",
       "searchNote": "Un indirizzo va dal tuo browser direttamente a {provider} per essere trovato sulla mappa. Solon non lo vede mai.",
       "searchResults": "Suggerimenti",
       "searchNothing": "Nessun risultato",
@@ -718,6 +722,8 @@
       "readOn": "L'editore non indica da quando si applica questa versione. Letta il {date}.",
       "copy": "Copia letta il {date}.",
       "copyFrom": "La pagina da cui è stata letta",
+      "copyArchived": "Copia letta il {date} dalla copia dell'Internet Archive del {captured}, perché il sito dell'editore ha rifiutato il lettore di Solon. Non è la copia dell'editore stesso.",
+      "copyArchivedFrom": "La copia archiviata da cui è stata letta",
       "noText": "Il testo di questo atto non è ancora conservato.",
       "provisions": "Disposizioni",
       "provisionCount": "{count, plural, one {# disposizione} other {# disposizioni}}",
@@ -739,6 +745,7 @@
       "decree": "decreto",
       "notice": "pubblicazione",
       "regulation": "regolamento",
+      "directive": "direttiva",
       "treaty": "trattato",
       "intercantonal_agreement": "convenzione intercantonale",
       "communal_act": "atto comunale",
@@ -923,5 +930,24 @@
         "open": "Questa conversazione non si è aperta. Riprova."
       }
     }
+  },
+  "Atlas": {
+    "world": "Il mondo",
+    "worldTitle": "Il diritto del mondo, pezzo per pezzo",
+    "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Sceglierne uno sul globo o qui sotto: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
+    "lawCount": "{count, plural, =0 {Solo luoghi} one {# atto} other {# atti}}",
+    "lawTitle": "Diritto",
+    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
+    "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
+    "lawOpen": "Leggerlo e proporre modifiche",
+    "placesTitle": "Luoghi",
+    "placesDrawn": "Sulla carta: {level}. Ognuna è colorata secondo quanto vi costerebbe l'imposta. Toccane una o cerca.",
+    "placesNotDrawn": "I suoi luoghi sono elencati, non ancora disegnati sulla carta.",
+    "placesOpen": "Tutti i luoghi di {country}",
+    "mapLabelCountry": "Carta di {country} e dei suoi luoghi",
+    "unavailable": "La carta non può essere disegnata in questo browser.",
+    "sources": "Da dove viene ({count, plural, one {# fonte} other {# fonti}})",
+    "situationHint": "Inserisci il tuo reddito per colorare la carta secondo l'imposta che pagheresti.",
+    "taxSameEverywhere": "L'imposta è la stessa ovunque qui: {amount} all'anno con questo reddito. Nessun luogo ne preleva una propria."
   }
 }

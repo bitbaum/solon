@@ -125,6 +125,10 @@
     "signIn": "Anmelden",
     "account": "Konto",
     "language": "Sprache",
+    "theme": "Farbschema",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "themeSystem": "Wie das Gerät",
     "overview": "Übersicht",
     "featured": "Im Fokus"
   },
@@ -525,7 +529,7 @@
       "kicker": "Jede Gebietskörperschaft, amtlich und gegründet",
       "metaTitle": "Orte · einen Ort finden",
       "metaDescription": "Einen Ort nach Name oder Postleitzahl finden: wozu er gehört, ob er Steuern erhebt und die Quelle hinter jeder Angabe.",
-      "intro": "Jeder Ort, den Solon führt, so wie ihn seine amtlichen Quellen veröffentlichen. Suchen Sie nach Name oder Postleitzahl, oder gehen Sie die Ebenen eines Landes durch.",
+      "intro": "Jeder Ort, den Solon führt, so wie ihn die amtlichen Quellen veröffentlichen. Öffnen Sie ein Land auf dem Globus: sein Recht, seine Orte und was die Steuer dort kostet.",
       "searchLabel": "Name oder Postleitzahl",
       "searchPlaceholder": "Ein Name oder eine Postleitzahl",
       "searchButton": "Suchen",
@@ -592,7 +596,7 @@
       "searchLabel": "Adresse, Ort oder Postleitzahl suchen",
       "searchLabelNoAddress": "Ort oder Postleitzahl suchen",
       "searchPlaceholder": "z. B. Bahnhofstrasse 1, Zürich · Bern · 8001",
-      "searchPlaceholderNoAddress": "z. B. Bern oder 3011",
+      "searchPlaceholderNoAddress": "z. B. {example}",
       "searchNote": "Eine Adresse geht direkt von Ihrem Browser an {provider}, damit sie auf der Karte gefunden wird. Solon sieht sie nie.",
       "searchResults": "Vorschläge",
       "searchNothing": "Nichts gefunden",
@@ -718,6 +722,8 @@
       "readOn": "Der Herausgeber gibt nicht an, seit wann diese Fassung gilt. Gelesen am {date}.",
       "copy": "Kopie gelesen am {date}.",
       "copyFrom": "Die Seite, von der sie gelesen wurde",
+      "copyArchived": "Kopie gelesen am {date} aus der Kopie des Internet Archive vom {captured}, weil die Website des Herausgebers Solons Leser abgewiesen hat. Es ist nicht die Kopie des Herausgebers selbst.",
+      "copyArchivedFrom": "Die archivierte Kopie, aus der sie gelesen wurde",
       "noText": "Der Wortlaut dieses Erlasses ist noch nicht gespeichert.",
       "provisions": "Bestimmungen",
       "provisionCount": "{count, plural, one {# Bestimmung} other {# Bestimmungen}}",
@@ -739,6 +745,7 @@
       "decree": "Beschluss",
       "notice": "Kundmachung",
       "regulation": "Reglement",
+      "directive": "Richtlinie",
       "treaty": "Staatsvertrag",
       "intercantonal_agreement": "interkantonale Vereinbarung",
       "communal_act": "Gemeindeerlass",
@@ -923,5 +930,24 @@
         "open": "Dieses Gespräch liess sich nicht öffnen. Versuche es nochmals."
       }
     }
+  },
+  "Atlas": {
+    "world": "Die Welt",
+    "worldTitle": "Das Recht der Welt, Stück für Stück",
+    "worldIntro": "Jedes Land, das Solon führt, ist danach eingefärbt, wie viel seines Rechts hier ist. Wählen Sie eines auf dem Globus oder unten: sein Recht, seine Orte und was die Steuer dort kostet.",
+    "lawCount": "{count, plural, =0 {Nur Orte} one {# Erlass} other {# Erlasse}}",
+    "lawTitle": "Recht",
+    "lawHeld": "{count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, im Wortlaut, aus den amtlichen Quellen.",
+    "lawNone": "Solon führt das Recht von {country} noch nicht.",
+    "lawOpen": "Lesen und Änderungen vorschlagen",
+    "placesTitle": "Orte",
+    "placesDrawn": "Auf der Karte: {level}. Jede ist danach eingefärbt, was die Steuer Sie dort kosten würde. Tippen Sie auf eine oder suchen Sie.",
+    "placesNotDrawn": "Seine Orte sind aufgeführt, aber noch nicht auf der Karte gezeichnet.",
+    "placesOpen": "Alle Orte in {country}",
+    "mapLabelCountry": "Karte von {country} und seinen Orten",
+    "unavailable": "Die Karte kann in diesem Browser nicht gezeichnet werden.",
+    "sources": "Woher das kommt ({count, plural, one {# Quelle} other {# Quellen}})",
+    "situationHint": "Geben Sie Ihr Einkommen ein, um die Karte nach Ihrer Steuer einzufärben.",
+    "taxSameEverywhere": "Die Steuer ist hier überall gleich: {amount} im Jahr bei diesem Einkommen. Kein Ort erhebt eine eigene."
   }
 }

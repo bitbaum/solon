@@ -33,7 +33,9 @@ under the alias `@fleet/design-tokens`, and Loki depends on it as
 mirrors some of the values. The package owns the tokens *and* the self-hosted
 faces, so changing the display typeface for Solon and Loki is one line in one
 file. `globals.css` holds no tokens and `tailwind.config.js` defines
-no colours; both would fail `design:check` if they did. Solon is dark-only. The
+no colours; both would fail `design:check` if they did. Solon is light and dark,
+following the device unless the reader picks one in the header
+(`src/components/theme/`); a colour is never written for one theme only. The
 `navy` / `solon-*` palette is deleted, not aliased. Never write a hex in a
 component, a raw `rounded-lg`, or a drop shadow (hierarchy is border + type).
 

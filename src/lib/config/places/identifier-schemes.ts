@@ -94,4 +94,47 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     pattern: "70(0[1-9]|1[01])",
     reserved: true,
   },
+  {
+    // Estonia's counties by their code in EHAK, the classification of Estonian
+    // administrative units and settlements: 0037 Harju … 0087 Võru.
+    key: "ee_county",
+    label: { en: "Estonian county code (EHAK)", et: "Maakonna kood (EHAK)" },
+    pattern: "00[0-9]{2}",
+    reserved: true,
+  },
+  {
+    // Estonia's municipalities (rural municipalities and cities) by their EHAK
+    // code: 0784 Tallinn, 0793 Tartu linn.
+    key: "ee_municipality",
+    label: { en: "Estonian municipality code (EHAK)", et: "Omavalitsuse kood (EHAK)" },
+    pattern: "0[1-9][0-9]{2}",
+    reserved: true,
+  },
+  {
+    // A country's subdivision by its ISO 3166-2 code: the country's ISO 3166-1
+    // code, a hyphen and up to three letters or digits. A US state's is `US-`
+    // and its postal code (US-WY), the code the law registry keys a state by.
+    key: "iso_3166_2",
+    label: { en: "ISO 3166-2 subdivision code", de: "Code der Unterteilung ISO 3166-2" },
+    pattern: "[A-Z]{2}-[A-Z0-9]{1,3}",
+    reserved: true,
+  },
+  {
+    // A US state, or the District of Columbia, by its two-digit FIPS code
+    // (ANSI INCITS 38), as the Census Bureau lists it: 01 Alabama … 56 Wyoming.
+    // 60 and above are the outlying areas.
+    key: "us_state_fips",
+    label: { en: "State FIPS code", de: "FIPS-Code des Bundesstaats" },
+    pattern: "0[1-9]|[1-4][0-9]|5[0-6]",
+    reserved: true,
+  },
+  {
+    // A US county or county equivalent by its five-digit FIPS code (ANSI
+    // INCITS 31): the state's two digits, then the county's three, as the
+    // Census Bureau lists it: 56021 Laramie County, Wyoming.
+    key: "us_county_fips",
+    label: { en: "County FIPS code", de: "FIPS-Code des County" },
+    pattern: "(0[1-9]|[1-4][0-9]|5[0-6])[0-9]{3}",
+    reserved: true,
+  },
 ];

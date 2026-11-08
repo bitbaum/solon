@@ -38,19 +38,24 @@ const drawnOn = (on: string) =>
     or(isNull(areaAssertions.validTo), gt(areaAssertions.validTo, on)),
   );
 
-/** The first pack, in the configuration's order, with a place drawn on `on`; null when none has. */
-export async function mapPackKey(
-  db: Database,
-  config: PlacesConfig,
-  on: string,
-): Promise<string | null> {
+/** The packs with a place drawn on `on`. */
+export async function drawnPacks(db: Database, on: string): Promise<Set<string>> {
   const rows = await db
     .selectDistinct({ pack: jurisdictions.countryPack })
     .from(areas)
     .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
     .innerJoin(jurisdictions, eq(jurisdictions.id, areaAssertions.jurisdictionId))
     .where(drawnOn(on));
-  const drawn = new Set(rows.map((row) => row.pack));
+  return new Set(rows.flatMap((row) => (row.pack ? [row.pack] : [])));
+}
+
+/** The first pack, in the configuration's order, with a place drawn on `on`; null when none has. */
+export async function mapPackKey(
+  db: Database,
+  config: PlacesConfig,
+  on: string,
+): Promise<string | null> {
+  const drawn = await drawnPacks(db, on);
   return config.packs.find((pack) => drawn.has(pack.key))?.key ?? null;
 }
 

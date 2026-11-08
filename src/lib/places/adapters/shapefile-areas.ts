@@ -22,28 +22,45 @@ import { readShapefile, type ShapeRecord } from "./shapefile";
 import type { Adapter, Probe, RetrievalRequest } from "./types";
 
 const column = z.string().min(1);
-const shapefileAreasOptions = z.object({
-  /** A STAC collection's items; the latest edition begun by today is fetched. */
-  catalogue: z.object({
-    url: z.url(),
-    /** The end of the asset's file name that is the zipped Shapefile. */
-    asset: z.string().min(1),
-  }),
-  /** A pattern with one group, read from the retrieval's URL: the edition, "2026-01". */
-  edition: z.string().min(1),
-  /** The layer's file name in the archive, without its extension. */
-  member: z.string().min(1),
-  /** Keep only records whose column holds one of the values. */
-  where: z.array(z.object({ column, values: z.array(z.string()).min(1) })).default([]),
-  place: z.object({ scheme: z.string().min(1), column }),
-  level: z.string().min(1),
-  /** Coordinates snap to this grid, in the file's units, as they are read. */
-  grid: z.number().positive(),
-  /** The share of the topology's points a map keeps. */
-  keep: z.number().gt(0).lte(1),
-  /** Positions per axis the file is quantised to. */
-  quantization: z.number().int().min(1000),
-});
+const shapefileAreasOptions = z
+  .object({
+    /** A STAC collection's items; the latest edition begun by today is fetched. */
+    catalogue: z
+      .object({
+        url: z.url(),
+        /** The end of the asset's file name that is the zipped Shapefile. */
+        asset: z.string().min(1),
+      })
+      .optional(),
+    /**
+     * Or one address that always serves the current edition (Estonia's Land
+     * Board updates its file in place each month); it is dated by the day read.
+     */
+    url: z.url().optional(),
+    /** A pattern with one group, read from the retrieval's URL: the edition, "2026-01". Catalogue only. */
+    edition: z.string().min(1).optional(),
+    /** The layer's file name in the archive, without its extension. */
+    member: z.string().min(1),
+    /** The member's name only begins so (a publisher that dates its file names: "omavalitsus_20260501"). */
+    memberPrefix: z.boolean().default(false),
+    /**
+     * Codes the file still draws apart that have merged into another place:
+     * the old code's polygons are drawn as part of its successor's.
+     */
+    recode: z.record(z.string(), z.string()).default({}),
+    /** Keep only records whose column holds one of the values. */
+    where: z.array(z.object({ column, values: z.array(z.string()).min(1) })).default([]),
+    place: z.object({ scheme: z.string().min(1), column }),
+    level: z.string().min(1),
+    /** Coordinates snap to this grid, in the file's units, as they are read. */
+    grid: z.number().positive(),
+    /** The share of the topology's points a map keeps. */
+    keep: z.number().gt(0).lte(1),
+    /** Positions per axis the file is quantised to. */
+    quantization: z.number().int().min(1000),
+  })
+  .refine((o) => Boolean(o.catalogue) !== Boolean(o.url), "a catalogue or a url, not both")
+  .refine((o) => !o.catalogue || Boolean(o.edition), "a catalogue's editions need a pattern");
 type ShapefileAreasOptions = z.infer<typeof shapefileAreasOptions>;
 
 const catalogueItems = z.object({
@@ -61,17 +78,16 @@ async function latestEdition(
   today: string,
   probe: Probe,
 ): Promise<RetrievalRequest> {
-  const items = catalogueItems.parse(await probe({ url: options.catalogue.url })).features;
+  const catalogue = options.catalogue!;
+  const items = catalogueItems.parse(await probe({ url: catalogue.url })).features;
   const editions = items.flatMap((item) => {
     const begins = item.properties.datetime?.slice(0, 10);
-    const href = Object.values(item.assets).find((a) =>
-      a.href.endsWith(options.catalogue.asset),
-    )?.href;
+    const href = Object.values(item.assets).find((a) => a.href.endsWith(catalogue.asset))?.href;
     return begins && href && begins <= today ? [{ url: href, validFrom: begins }] : [];
   });
   const latest = editions.sort((a, b) => a.validFrom.localeCompare(b.validFrom)).at(-1);
   if (!latest) {
-    throw new Error(`the catalogue has no "${options.catalogue.asset}" edition begun by ${today}`);
+    throw new Error(`the catalogue has no "${catalogue.asset}" edition begun by ${today}`);
   }
   return latest;
 }
@@ -80,14 +96,18 @@ async function latestEdition(
 function readMember(
   bytes: Uint8Array,
   options: ShapefileAreasOptions,
-): { records: ShapeRecord[]; prj: string } {
-  const { member } = options;
+): { records: ShapeRecord[]; prj: string; dated: string | null } {
+  const { member, memberPrefix } = options;
   const files = unzipSync(bytes, {
-    filter: (file) => file.name.replace(/^.*\//, "").startsWith(`${member}.`),
+    filter: (file) =>
+      file.name.replace(/^.*\//, "").startsWith(memberPrefix ? member : `${member}.`),
   });
   const text = (bytes?: Uint8Array) => (bytes ? new TextDecoder().decode(bytes) : undefined);
   const find = (extension: string) =>
     Object.entries(files).find(([name]) => name.toLowerCase().endsWith(`.${extension}`))?.[1];
+  // A layer named with its date ("omavalitsus_20260501") says which edition it is.
+  const stamp = /_(\d{4})(\d{2})(\d{2})\./.exec(Object.keys(files)[0] ?? "");
+  const dated = stamp ? `${stamp[1]}-${stamp[2]}-${stamp[3]}` : null;
   const [shp, dbf, prj] = [find("shp"), find("dbf"), text(find("prj"))];
   if (!shp || !dbf || !prj) {
     throw new Error(`the archive has no ${member}.shp, .dbf and .prj`);
@@ -97,6 +117,7 @@ function readMember(
   return {
     records: readShapefile(shp, dbf, text(find("cpg")), { keep, grid: options.grid }),
     prj,
+    dated,
   };
 }
 
@@ -131,21 +152,28 @@ export const shapefileAreasAdapter: Adapter<Uint8Array, ShapefileAreasOptions> =
   decode: (bytes) => bytes,
   schema: z.instanceof(Uint8Array),
   options: shapefileAreasOptions,
-  retrievals: async (options, today, probe) => [await latestEdition(options, today, probe)],
+  retrievals: async (options, today, probe) =>
+    options.url
+      ? [{ url: options.url, validFrom: today }]
+      : [await latestEdition(options, today, probe)],
   map: (bytes, { pack, options, retrieval }) => {
     if (!pack) {
       throw new Error("areas belong to a pack's places; the source names none");
     }
-    const edition = retrieval.url?.match(new RegExp(options.edition))?.[1];
+    // A catalogue names its editions; a file updated in place is the edition of the day it was read.
+    const { records, prj, dated } = readMember(bytes, options);
+    const edition = options.edition
+      ? retrieval.url?.match(new RegExp(options.edition))?.[1]
+      : (dated ?? retrieval.validFrom ?? undefined);
     if (!edition) {
       throw new Error(
-        `no edition in ${retrieval.url ?? "the retrieval"} (pattern ${options.edition})`,
+        `no edition in ${retrieval.url ?? "the retrieval"} (pattern ${options.edition ?? "none"})`,
       );
     }
-    const { records, prj } = readMember(bytes, options);
     const places = new Map<string, Position[][][]>();
     for (const { polygons, attributes } of records) {
-      const code = attributes[options.place.column];
+      const read = attributes[options.place.column];
+      const code = read ? (options.recode[read] ?? read) : read;
       if (!code) {
         throw new Error(`a record has no code in ${options.place.column}`);
       }

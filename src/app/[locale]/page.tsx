@@ -5,7 +5,7 @@ import { use } from "react";
 import { Link } from "@/i18n/navigation";
 import FullBleed from "@/components/site/full-bleed";
 import { MethodLab } from "@/components/learn/method-lab";
-import LawGlobe from "@/components/law/law-globe";
+import Atlas from "@/components/atlas/atlas";
 import { PHOTOS } from "@/lib/content/photos";
 import AudienceTile from "@/components/site/audience-tile";
 import Problems from "@/components/site/problems";
@@ -63,7 +63,7 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
             </div>
           </div>
           <div className="mx-auto w-full max-w-xl min-w-0">
-            <LawGlobe />
+            <Atlas mode="preview" />
           </div>
         </div>
       </section>
@@ -101,7 +101,7 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
 
       <Problems />
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell">
           <div className="grid gap-10 lg:grid-cols-5 lg:gap-16">
             <div className="min-w-0 lg:col-span-2">
@@ -172,7 +172,7 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
         </div>
       </section>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell">
           <div className="kicker">{t("trust.kicker")}</div>
           <h2 className="headline-caps mt-5 max-w-3xl text-4xl sm:text-5xl">{t("trust.title")}</h2>

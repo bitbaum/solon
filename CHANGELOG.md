@@ -4,9 +4,145 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-08
+
+### Added
+
+- **Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona.** Seven more of
+  Switzerland's largest communes link their regulations from pages of their own, and
+  Solon now reads them there, in German, French or Italian, leaving out forms, reports,
+  tables of contents, and acts adopted but not yet in force or repealed. Their first load
+  runs on Solon's server. A question that names one of them (Genf, Freiburg, Neuenburg,
+  Lauis and Bellenz too) asks the commune's own law as well as the canton's. A page of a
+  commune's list that cannot be read no longer stops the rest of the list from being
+  read.
+
+- **Winterthur, St. Gallen and Biel/Bienne.** Three of Switzerland's largest cities keep
+  their regulations in the same kind of collection as Zug's and Glarus's communes, and
+  Solon is now set to read them the same way: every act with the day each version took
+  effect, cut into articles, from the first load on Solon's server. A question that names
+  Winterthur, Biel or Bienne, or St. Gallen asks the city's own law as well as the
+  canton's.
+
+- **Luzern, Thun, Chur, Schaffhausen and Sion.** Five of Switzerland's largest cities
+  publish their regulations through the same website system, and Solon now has one
+  reader for all of them: each act with the day each version took effect, its earlier
+  versions, and the city's own PDF, from the first load on Solon's server. A question
+  that names one of these cities, in German or French (Lucerne, Thoune, Coire, Sitten),
+  asks the city's own law as well as the canton's.
+
+- **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
+  from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
+  the Land Board's own file, read again each month, so opening either country on the
+  atlas now draws its places. {#globe-deep}
+
+- **The United States in Places.** The nation, its fifty states and the District of
+  Columbia, and Wyoming's 23 counties, by their FIPS codes from the Census Bureau;
+  opening the United States on the atlas draws Wyoming's counties from the Bureau's
+  boundary file. Its tax for 2026: the federal income tax for a single person and for a
+  married couple filing jointly, from the IRS's own figures (Rev. Proc. 2025-32: the rate
+  tables of section 4.01 and the standard deduction of 16,100 and 32,200 dollars of
+  section 4.14), and Wyoming's own income tax, which is none (W.S. 39-12-101), recorded as
+  zero. The estimate says what it leaves out: Social Security and Medicare, credits,
+  itemized deductions and the other filing statuses. A question asked on a Wyoming
+  county's page is asked of Wyoming's law. {#places-us} {#places-us-tax} {#law-wy-places}
+
+- **One atlas.** The globe on the home page and the map on Places are one now. Tap a
+  country and the Earth turns to it and draws its places, coloured by what tax would
+  cost you there; beside it, how much of its law Solon holds with a link to read it and
+  propose changes, and where every figure comes from. The long lists of levels and
+  sources under the map are gone: a place is found by tapping it or searching. A view
+  can be shared: `/places?in=ch`. {#atlas}
+
+- **Think a change through before you file it.** Under the form for proposing a change
+  to a law, the assistant now reads your draft as it stands and answers what you ask
+  about it: what it would change, what would likely follow, who would gain and who
+  would bear a cost, and where something like it is already law, from the law Solon
+  holds and from studies and the experience of other places on the web. Every claim
+  cites its source; it takes no side, and the proposal stays yours. {#law-consult}
+
+- **The assistant knows every place Solon holds.** Questions about Estonia's and
+  Wyoming's law are now searched in Estonian and English, as their law is written,
+  not in German.
+
+- **When a publisher refuses Solon's reader, the law comes from a dated public copy.**
+  If a commune's site answers with a refusal (HTTP 403, 429 or 503, or a bot check in
+  place of the page), Solon reads the newest copy the Internet Archive's Wayback Machine
+  holds of that page or document, and keeps the publisher's own address as the act's.
+  The act page says so in plain words: "Copy read on {date} from the Internet Archive's
+  copy of {date}", with a link to that copy, in all five languages; the Markdown for
+  machines names it too. Solon still says who it is and solves no challenge. Triesenberg,
+  whose site answers with a bot check, is the first commune read this way, the eleventh
+  of Liechtenstein's eleven. {#law-communes}
+
+- **A light theme.** Solon follows your device: light when it is light, dark when
+  it is dark. The new button in the header lets you pick Light, Dark or Device, and
+  your browser remembers it; nothing is sent to us. Photographs, and the header over
+  them, stay dark so the words on them can be read. The law globe and the Places map
+  redraw in the theme you pick. {#theme-light}
+
+- **A reader for New Hampshire's statutes.** Solon can now read the Revised Statutes
+  Annotated from the General Court's site: every chapter as an act ("RSA 39"), each
+  section with its heading, its text and its source note, repealed sections kept as
+  the site marks them. Where the site's firewall answers "Web Page Blocked", as it did
+  to Solon, the chapter comes from the Internet Archive's dated copy and the act page
+  says so. A firewall's block page is now recognised as a refusal for every publisher,
+  not taken for the law. The first load runs on Solon's server and has not run yet,
+  so New Hampshire's law is not on the site today; the roadmap item stays open until
+  it is.
+
+- **The European Union, the layer above its members.** EU law applies in every member
+  state, above the state's own, and Solon now places it there: the pages of Estonia and
+  Luxembourg name the European Union among the law that also applies, the way a canton's
+  page names the Confederation, and a question about either is asked of EU law too.
+  A reader for the EU's regulations and directives in force comes with it: the list
+  from the Publications Office's open data, titled in English and named by CELEX number,
+  and each act's text from EUR-Lex, in its latest consolidated version where there is
+  one, cut into articles and annexes under EUR-Lex's own anchors, with the notice
+  EUR-Lex's terms ask for. The first load runs on Solon's server and has not run yet,
+  so the EU's acts are not on the site today; their roadmap item stays open until they
+  are. {#law-eu-layer}
+
+### Fixed
+
+- **A law read from an old archived copy is read again from a fresh one.** When the
+  newest copy the Internet Archive holds of a refusing site's page is more than a year
+  old (one New Hampshire chapter's was from 2007), Solon first asks the archive to save
+  the page today, from its own network, and reads that; the old copy is read only when
+  no fresh one can be had, and its date is shown as before.
+
+- **The assistant's answers about a proposed change keep closer to the evidence.** It now
+  looks for precedents nearest first (the same country's other levels, neighbouring
+  cantons and countries) instead of anywhere at all, labels an effect it reasons out as
+  reasoning rather than as something observed elsewhere, and suggests follow-up
+  questions in the language of the answer.
+
+- **Documents read from the archive arrive whole.** A site that refuses Solon's reader
+  for every document sends dozens of requests to the Internet Archive at once; the
+  archive drops some, and some of its captures of a PDF are cut short. Solon now asks
+  again after a dropped connection, passes over a PDF that did not arrive whole for the
+  capture before it, and turns to the archive when the site does not answer at all.
+
+- **A site whose newest archived copy is its own bot check is read from the copy before.**
+  When the Internet Archive's latest capture of a refusing site is the challenge page
+  too, Solon now walks back through the earlier captures, newest first, and reads the
+  newest one that is the page itself. The act page still names the copy and its date.
+
+- **Scanned regulations read blank.** Most communes scan their regulations as fax- or
+  JBIG2-compressed images, and the PDF reader drew those pages blank, so Solon reported
+  "no text in the PDF" and three of Balzers' regulations were missing. The reader now
+  has the decoders it needs, and those pages are read by OCR like any other scan.
+
 ## 2026-11-07
 
 ### Added
+
+- **Estonia in Places.** Its fifteen counties and 78 municipalities, by their codes in
+  EHAK, the official classification (Statistics Estonia and the Land Board, version
+  2026v1), each with its Estonian, English and Russian names; and its income tax, 22 %
+  of what is above the tax-free income of 8,400 euros (Income Tax Act § 4 and § 23),
+  the same in every municipality. Estonian places can be compared with each other in
+  euros; a place in another currency asks for its own amount. {#places-ee} {#places-ee-tax}
 
 - **The globe.** The home page shows the Earth with every place whose law Solon holds
   shaded by how much, and a dot on each so the smallest can be found; hover names it
@@ -19,7 +155,26 @@ one to read for the detail. Fixes get the same weight as features.
   cut into its sections (§) with their subsections and points, dated by the day the
   publisher says it took effect, and read again every week. {#law-ee}
 
+- **Three more of Liechtenstein's communes.** Balzers, Triesen and Mauren: each
+  regulation linked from the commune's own page, about ninety in all, with forms left
+  out. Ten of the eleven communes are read now. {#law-communes}
+
 ### Fixed
+
+- **Scanned regulations could stop a whole commune's load.** Reading a scanned
+  document kept every page's picture in memory until the end; ten pages scanned at
+  600 dpi (a Balzers regulation) used 1.2 GB and the load was killed. Each page is
+  let go once read, and the same document now needs 300 MB.
+
+- **Estonia's register skipped some acts and listed others twice.** The State Gazette
+  pages its list in an order that shifts among acts of one title, so a pass listed 77
+  acts twice and missed as many; the second copy of each then failed to load. Each act
+  is now listed once, and the list is read again until every act the gazette counts has
+  been seen.
+
+- **Schellenberg's regulations were placed on Mauren.** They were filed under commune
+  7008, which is Mauren's number in the register; Schellenberg's is 7011. They are on
+  Schellenberg now, and Mauren holds its own.
 
 - **Liechtenstein beside Switzerland gave no tax for Liechtenstein.** A comparison
   used one tax year for every column, so Liechtenstein, whose 2026 communal rates are

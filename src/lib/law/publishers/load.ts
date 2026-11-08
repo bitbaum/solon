@@ -9,6 +9,11 @@
  * so a run limited to N continues where the last stopped. A collection that
  * states no dates (`dateBasis: retrieved`) is checked by its document instead:
  * the same bytes as the version in force are not stored again.
+ *
+ * A publisher that refuses Solon's reader is read from the Internet Archive's
+ * newest copy instead (http.ts); the act keeps the publisher's address as its
+ * identity, and the version's source is the copy's address, which names the
+ * archive and the day of the capture (`archive-copy.ts`).
  */
 import { provisionsOfPdf } from "@/lib/law/text/pdf-provisions";
 import { and, asc, eq, isNull } from "drizzle-orm";
@@ -19,10 +24,15 @@ import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-s
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow } from "../register/import";
 import { storeVersion, dayBefore } from "../text/store";
-import { getBytes } from "./http";
+import { archiveCopyOf } from "../archive-copy";
+import { read } from "./http";
 import type { PublisherAdapter, VersionRef } from "./types";
 
 export const PUBLISHER_IMPORTER_VERSION = "law-text-publisher-1";
+
+/** The reader's version, marked when the text was read by OCR or from an archive's copy. */
+export const importerVersion = (scanned: boolean, fromCopy: boolean): string =>
+  `${PUBLISHER_IMPORTER_VERSION}${scanned ? "+ocr" : ""}${fromCopy ? "+archive" : ""}`;
 
 export interface LoadOptions {
   snapshots: SnapshotStore;
@@ -42,6 +52,10 @@ export interface LoadReport {
   versionsStored: number;
   provisions: number;
   remainingActs: number;
+  /** Versions read from the Internet Archive's copy because the publisher refused. */
+  fromArchive: number;
+  /** The archive's copy the collection's index was read from, when the publisher refused it. */
+  listedFrom: string | null;
   failures: { page: string; reason: string }[];
 }
 
@@ -69,10 +83,16 @@ export async function loadPublisher(
     versionsStored: 0,
     provisions: 0,
     remainingActs: 0,
+    fromArchive: 0,
+    listedFrom: null,
     failures: [],
   };
 
   const listed = await adapter.list(doFetch);
+  if (archiveCopyOf(listed.url)) {
+    report.listedFrom = listed.url;
+    say(`the publisher refused its index; read from ${listed.url}`);
+  }
   const rows: ActRow[] = listed.acts.map((act) => ({
     authority: adapter.authority,
     kind: act.kind,
@@ -149,7 +169,10 @@ export async function loadPublisher(
           report.failures.push({ page: version.pageUrl, reason: "no PDF for this version" });
           continue;
         }
-        const bytes = await getBytes(document.url, doFetch, [new URL(document.url).hostname]);
+        // The publisher's document, or the archive's dated copy when the publisher refuses (http.ts).
+        const fetched = await read(document.url, doFetch, [new URL(document.url).hostname]);
+        const { bytes } = fetched;
+        if (fetched.copy) say(`${document.url}: refused, read from ${fetched.url}`);
         // A version dated by the day it was read is new only if its document is.
         if (retrieved) {
           const [open] = await db
@@ -185,19 +208,19 @@ export async function loadPublisher(
             status: adapter.textStatus,
             format: "pdf",
             bytes,
-            url: document.url,
+            // A copy records the copy's address, which names the archive and the day it was captured.
+            url: fetched.url,
             provisions,
             source: {
               key: adapter.key,
               licenceSpdx: adapter.licenceSpdx,
-              importerVersion: scanned
-                ? `${PUBLISHER_IMPORTER_VERSION}+ocr`
-                : PUBLISHER_IMPORTER_VERSION,
+              importerVersion: importerVersion(scanned, fetched.copy !== null),
             },
           },
           false,
         );
         report.versionsStored++;
+        if (fetched.copy) report.fromArchive++;
         report.provisions += provisions.length;
         say(`${act.url.split("/").pop()} ${version.inForceFrom}: ${provisions.length} provisions`);
       }

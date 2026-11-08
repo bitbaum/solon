@@ -23,7 +23,8 @@ describe("a question asked from a place's page", () => {
     expect(lawAuthoritiesFor([{ scheme: "iso_3166_1", value: "LI" }])).toEqual(["li"]);
     // Vaduz publishes its own Reglemente; a commune without a collection has none of its own.
     expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7001" }])).toEqual(["li7001"]);
-    expect(lawAuthoritiesFor([{ scheme: "li_municipality", value: "7002" }])).toEqual([]);
+    // Every commune of Liechtenstein has one now; Bern (BFS 351) does not yet.
+    expect(lawAuthoritiesFor([{ scheme: "bfs_municipality", value: "351" }])).toEqual([]);
   });
 
   it("always searches the page's authorities, and only keys the register knows", () => {
@@ -57,6 +58,26 @@ describe("a commune named in a question", () => {
       "li7001",
     ]);
   });
+
+  it("names a commune without its accents, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Abfallreglement Koniz").sort()).toEqual(["be", "bfs355"]);
+    expect(authoritiesNamed("Règlement de police de Neuchâtel").sort()).toEqual(["bfs6458", "ne"]);
+  });
+
+  it("names a city in either language, and a city that shares its canton's name with the canton", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Le règlement de police de Bienne").sort()).toEqual(["be", "bfs371"]);
+    expect(authoritiesNamed("Parkieren in Winterthur").sort()).toEqual(["bfs230", "zh"]);
+    expect(authoritiesNamed("Hundeverordnung St. Gallen").sort()).toEqual(["bfs3203", "sg"]);
+  });
+
+  it("names a city by its name in another language, and a city named like its canton with it", async () => {
+    const { authoritiesNamed } = await import("../places");
+    expect(authoritiesNamed("Le règlement de police de Coire").sort()).toEqual(["bfs3901", "gr"]);
+    expect(authoritiesNamed("Was gilt in Sitten?").sort()).toEqual(["bfs6266", "vs"]);
+    expect(authoritiesNamed("Parkieren in Luzern").sort()).toEqual(["bfs1061", "lu"]);
+  });
 });
 
 describe("Swiss federal law in a plan", () => {
@@ -72,7 +93,7 @@ describe("Swiss federal law in a plan", () => {
           language: "French",
         }),
       }));
-    expect((await plan(["lux"])).authorities).toEqual(["lux"]);
+    expect((await plan(["lux"])).authorities).toEqual(["lux", "eu"]);
     expect((await plan(["li7001", "li"])).authorities.sort()).toEqual(["li", "li7001"]);
     expect((await plan(["zh"])).authorities).toEqual(["ch", "zh"]);
     expect((await plan([])).authorities).toEqual(["ch"]);

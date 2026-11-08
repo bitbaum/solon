@@ -127,7 +127,7 @@ export default function IdeasPage({ params }: Params) {
         ))}
       </div>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell">
           <h2 className="headline-caps max-w-3xl text-4xl sm:text-5xl">{t("closing.title")}</h2>
           <ol className="mt-12 grid gap-8 md:grid-cols-5">

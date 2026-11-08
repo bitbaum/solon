@@ -30,7 +30,7 @@ size (21,728 federal and cantonal texts in force, as LexFind counts them on
 - [x] Search over the text of the provisions in force, ranked, each hit citing its act, anchor, publisher's page and hash; the first piece of the retrieval layer for the assistants {#law-search}
 - [x] Ask the law: a chat that plans which places and law words a question needs, searches those provisions and answers from them only, citing each one; public, in any language {#law-ask}
 - [ ] Earlier versions of every act, and what changed between them {#law-history}
-- [ ] Municipal regulations, commune by commune (one adapter per collection, a shared loader). Loaded: the City of Zürich, the eleven communes of Zug, the three of Glarus and seven of Liechtenstein's eleven. The other Swiss communes, about 2,100, are not; the most populous go first {#law-communes}
+- [ ] Municipal regulations, commune by commune (one adapter per collection, a shared loader). Loaded: the City of Zürich, the eleven communes of Zug, the three of Glarus and ten of Liechtenstein's eleven. Triesenberg, the eleventh, answers Solon's reader with a bot check (2026-11-07), so its regulations are read from the Internet Archive's newest copies, each act page saying it is the archive's copy and of which day; its first load waits for a run on Solon's server, which can reach the archive. Any publisher that refuses Solon's reader is read the same way. Of Switzerland's twenty most populous communes, fifteen more are configured (2026-11-08): Winterthur, St. Gallen and Biel/Bienne on LexWork; Luzern, Thun, Chur, Schaffhausen and Sion in the i-web CMS's legal module, which Solon now reads; and Genève, Lausanne, Köniz, Fribourg, Neuchâtel, Lugano and Bellinzona, which link their acts from pages of their own and are read the same way as Liechtenstein's communes. Their first load, a dry run first, runs on Solon's server, as the sandbox they were added from could reach neither their sites nor the archive. Basel's communal law is the canton's; Bern, Vernier and La Chaux-de-Fonds are not yet read. The other Swiss communes, about 2,100, are not; the most populous go first {#law-communes}
 - [ ] A public API, and Causius reading the law from here with the publisher as its fallback {#law-api}
 - [x] Law in the site's main menu, beside Places and Decisions {#law-menu}
 
@@ -45,6 +45,7 @@ authority that decides, and the record says so.
 - [x] The amendment engine: changes pinned to the hash of the text they amend, immutable revisions, forks, support signed or by account, a hash-chained log anyone can verify, and the official routes as sourced data; served at `/api/v1/law/amendments` (design: `docs/design/2026-11-amending-the-law.md`) {#law-amend-engine}
 - [x] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
 - [x] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
+- [x] Thinking a change through with the assistant while drafting it: what it would do, who would gain and who would bear a cost, where something like it is already law (in the law Solon holds, and studies and experience on the web), each claim cited, no side taken {#law-consult}
 - [ ] Signing a proposal or a support with one's own Bitcoin key from the page (the API takes signatures today; the page offers one click) {#law-sign-on-page}
 - [ ] A conversation under each proposal, the fleet's shared comment thread {#law-discuss}
 - [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}
@@ -57,7 +58,8 @@ The map is the front door to the law. One globe, from the whole Earth down to a
 commune, showing every place Solon holds and how much of its law it holds.
 
 - [x] The globe on the home page: the Earth, every country and state Solon holds law for shaded by how much and marked with a dot (so Liechtenstein can be tapped), a tap opening its law; the site's own colours, in every language {#globe-home}
-- [ ] The globe zooming down past a country to its cantons or states, then its communes or counties, and the same globe on `/places` and `/law` {#globe-deep}
+- [x] One atlas instead of a globe and a map: the Earth, a tap flying into a country and drawing its places on the same map, coloured by tax at your income; beside it the country's law, its places and their sources; on the home page and `/places`, a view shared by its address {#atlas}
+- [ ] The atlas's steps between a country and its communes (cantons, counties, states), every country's places drawn (Estonia, Liechtenstein, Wyoming's counties), and the atlas on `/law` {#globe-deep}
 - [ ] The world outlines published in Solon's own geography manifest, so Substrata and every other app draw the same files through geo-kit's loader {#globe-shared}
 - [ ] Every place's page links to its law, and every act's page to its place on the globe {#globe-law-links}
 - [ ] The renderer stays the fleet's one map package (`@bitbaum/geo-kit`); what the globe needs that it lacks is added there {#globe-package}
@@ -73,14 +75,23 @@ use.
 
 - [x] Wyoming's statutes and Constitution, read from the Legislature's downloads (45 files, about 21,000 sections), cut into sections, with the publisher's link and hash; the production load is by hand, like every other publisher's (`law-text.yml`, source `wyoleg`) {#law-wy-statutes}
 - [ ] Wyoming's administrative rules {#law-wy-rules}
-- [ ] Wyoming and its 23 counties on the globe {#law-wy-places}
+- [x] Wyoming and its 23 counties on the globe: in Places by their FIPS codes, drawn from the Census Bureau's boundaries when the atlas opens the United States {#law-wy-places}
 - [x] Wyoming's official route: the citizen initiative, with its thresholds and its limits, from Article 3, Section 52 of its Constitution {#law-wy-route}
 - [ ] Wyoming's referendum, the route for undoing an act the legislature passed (the same section) {#law-wy-referendum}
-- [ ] New Hampshire's statutes (the RSAs), Grafton's ordinances and the warrant-article route a town's voters can take (RSA 39:3). The General Court's site refuses Solon's readers: its firewall answers "Web Page Blocked" (2026-11-06). The way through is the publisher's permission, or a load from a network it allows; not an unofficial copy {#law-nh}
+- [ ] New Hampshire's statutes (the RSAs): every chapter the General Court's tables list as an act, each section a provision with its heading, its text and its source note, a repealed section kept as the site marks it and a chapter repealed whole marked out of force; read from gc.nh.gov 11 seconds apart, safe to stop and rerun. Where the site's firewall refuses Solon's reader (it answered "Web Page Blocked" on 2026-11-06), a chapter is read from the Internet Archive's dated copy, and the act page names the copy. Built and tested against the publisher's own pages as a public 2017 mirror holds them; the server's dry run against the live site and the production load are not done (`law-text.yml`, source `gcnh`) {#law-nh}
+- [ ] Grafton's ordinances {#law-nh-grafton}
+- [ ] The warrant-article route a town's voters can take (RSA 39:3: 25 registered voters or 2% of them, whichever is less but never fewer than 10, by the fifth Tuesday before the annual meeting). It changes a town's law, not the state's, so it waits for the first New Hampshire town to be an authority {#law-nh-route}
 - [ ] The places' and the law's data model without Swiss assumptions: a new country is configuration and an adapter, not a change to the schema {#law-world-model}
 - [x] Estonia's national law in force, read from Riigi Teataja (the State Gazette): the register from its public search, each act's text from the gazette's own XML with the day it took effect, read again every week {#law-ee}
-- [ ] Estonia's municipalities as places, and their own regulations, which the same register lists {#law-ee-local}
-- [ ] Estonia's income tax in Places: 22% above a basic allowance of EUR 8,400 (Tulumaksuseadus § 4 and § 23), no municipal rate {#places-ee-tax}
+- [x] Estonia's counties and municipalities as places, by their EHAK codes (Statistics Estonia and the Land Board, EHAK2026v1) {#places-ee}
+- [ ] Estonia's municipalities' own regulations, which the same register lists {#law-ee-local}
+- [x] The European Union as the layer above its members: an authority whose law applies in each of its 27 member states, so Estonia's and Luxembourg's pages and questions include it, the way a canton's include the Confederation. The atlas draws no shape for it (a union is not a country in Natural Earth); its law is reached from each member it holds {#law-eu-layer}
+- [ ] The European Union's regulations and directives in force (tens of thousands of acts): the register from the Publications Office's Cellar SPARQL endpoint a year at a time, named by CELEX number and titled in English; each act's English text from EUR-Lex as HTML, the latest consolidated version that has begun or else the act as the Official Journal published it, dated by the day the publisher states, cut into its preamble, articles and annexes under EUR-Lex's anchors (`art_1`, `anx_I`); reuse under Commission Decision 2011/833/EU with its notice; safe to stop and rerun in batches, read again every week. Built and tested against excerpts in the publishers' shapes, because neither host answered the sandbox it was written in; the server's dry run against the live hosts and the production load are not done (`law-text.yml`, source `eurlex`) {#law-eu}
+- [ ] The European Union's law in its other official languages, its decisions and treaties, and the atlas showing EU law in each member's panel {#law-eu-more}
+- [x] Estonia's income tax in Places: 22% above a basic allowance of EUR 8,400 (Tulumaksuseadus § 4 and § 23), no municipal rate {#places-ee-tax}
+- [x] The United States in Places: the nation, its fifty states and the District of Columbia, and Wyoming's counties, by their FIPS codes (Census Bureau); another state's counties are data, not code {#places-us}
+- [x] The federal income tax in Places for 2026, single and married filing jointly, with the standard deduction (Rev. Proc. 2025-32), and Wyoming's state income tax recorded as zero (W.S. 39-12-101) {#places-us-tax}
+- [ ] Every state's counties, and each state's own income tax beside the federal one {#places-us-states}
 
 ### Every organization on its own pages
 
@@ -117,6 +128,14 @@ repository and served through the fleet map.
 - [x] `/roadmap` and `/changelog` rendered from the fleet map {#records-public}
       without authentication
 - [ ] Link signed-decision and source-code evidence from the development profile
+
+### Light and dark, as the reader chooses {#themes}
+
+Solon was dark only. The shared tokens carry both themes; the reader should get
+the one their device uses, or the one they pick.
+
+- [x] A light theme beside the dark one: the device decides until the reader picks Light, Dark or Device in the header, kept in their browser; photographs stay dark under their type {#theme-light}
+- [ ] The theme script and the toggle moved into `@bitbaum/design-tokens`, so Loki and the fleet's other apps switch the same way {#theme-package}
 
 ## Next
 

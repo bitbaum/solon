@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { actsOfPage, inForceFromXml, parseRiigiTeatajaXml, searchBody } from "../riigiteataja";
+import {
+  actsOfPage,
+  inForceFromXml,
+  listInForce,
+  parseRiigiTeatajaXml,
+  searchBody,
+} from "../riigiteataja";
 
 /** An excerpt of the Income Tax Act's XML as Riigi Teataja serves it (2026-11-07). */
 const XML = `<?xml version='1.0' encoding='UTF-8'?><oigusakt xmlns="Juurakt">
@@ -121,5 +127,77 @@ describe("the register", () => {
         local: false,
       },
     ]);
+  });
+});
+
+/** A government regulation laid out without sections, as the gazette serves one (2026-11-07). */
+const UNSECTIONED = `<?xml version='1.0' encoding='UTF-8'?><oigusakt xmlns="Juurakt"><sisu>
+<preambul><tavatekst>Tulenevalt </tavatekst><viide><kuvatavTekst><![CDATA[eluruumide erastamise seaduse]]></kuvatavTekst><viideURID><viideURI><![CDATA[./dyn=13351854&id=893050!pr9lg2]]></viideURI></viideURID></viide><tavatekst> paragrahvi 9 lõikest 2 Vabariigi Valitsus määrab:</tavatekst></preambul>
+<sisuTekst><tavatekst>Kinnitada «Eluruumi erastamise kord» (juurde lisatud).</tavatekst></sisuTekst>
+<sisuTekst><HTMLKonteiner><![CDATA[<table><tr><td>Kinnitatud<br/>määrusega nr 188</td></tr></table>]]></HTMLKonteiner></sisuTekst>
+<osa id="osa1"><osaNr>I</osaNr><kuvatavNr><![CDATA[I osa]]></kuvatavNr><osaPealkiri>ÜLDSÄTTED</osaPealkiri></osa>
+<sisuTekst><tavatekst>1. Käesoleva korra kohaselt korraldatakse enampakkumisi.</tavatekst></sisuTekst>
+</sisu></oigusakt>`;
+
+describe("an act without sections", () => {
+  it("is its preamble and its text, in order, with the gazette's link targets left out", () => {
+    expect(parseRiigiTeatajaXml(UNSECTIONED)).toEqual([
+      {
+        path: "preambul",
+        heading: "Preambul",
+        text: "Tulenevalt eluruumide erastamise seaduse paragrahvi 9 lõikest 2 Vabariigi Valitsus määrab:",
+      },
+      {
+        path: "tekst",
+        heading: "Tekst",
+        text: [
+          "Kinnitada «Eluruumi erastamise kord» (juurde lisatud).",
+          "Kinnitatud",
+          "määrusega nr 188",
+          "I osa ÜLDSÄTTED",
+          "1. Käesoleva korra kohaselt korraldatakse enampakkumisi.",
+        ].join("\n"),
+      },
+    ]);
+  });
+});
+
+describe("two sections with one id", () => {
+  it("keeps both, the second found under its own path", () => {
+    const xml = `<oigusakt><paragrahv id="para1"><kuvatavNr><![CDATA[§ 1.]]></kuvatavNr><loige><sisuTekst><tavatekst>Esimene.</tavatekst></sisuTekst></loige></paragrahv><paragrahv id="para1"><kuvatavNr><![CDATA[§ 1.]]></kuvatavNr><loige><sisuTekst><tavatekst>Teine.</tavatekst></sisuTekst></loige></paragrahv></oigusakt>`;
+    expect(parseRiigiTeatajaXml(xml).map((p) => [p.path, p.text])).toEqual([
+      ["para1", "Esimene."],
+      ["para1-2", "Teine."],
+    ]);
+  });
+});
+
+describe("a register whose pages are not stable", () => {
+  it("lists every act once, reading again for the acts a pass skipped", async () => {
+    const result = (id: number) => ({
+      id,
+      groupId: id + 1000,
+      title: "Kaitseväe kasutamine",
+      abbreviation: null,
+      reportType: "otsus",
+      reportIssuer: "Riigikogu",
+      reportDateStart: "2026-01-01T00:00:00+02:00",
+      localGovernment: false,
+    });
+    // The first pass shows act 2 twice and never act 3; the second shows all three.
+    const passes = [
+      [[1, 2], [2]],
+      [[1, 2], [3]],
+    ];
+    let calls = 0;
+    const doFetch: typeof fetch = async (_input, init) => {
+      const offset = JSON.parse(String(init?.body)).general.searchAfter as number;
+      const pass = passes[Math.min(Math.floor(calls++ / 2), 1)]!;
+      const ids = pass[offset === 0 ? 0 : 1]!;
+      return Response.json({ kehtivad: 3, results: ids.map(result) });
+    };
+    const acts = await listInForce("2026-11-08", doFetch, { pauseMs: 0 });
+    expect(acts.map((a) => a.id)).toEqual(["1", "2", "3"]);
+    expect(calls).toBe(4);
   });
 });

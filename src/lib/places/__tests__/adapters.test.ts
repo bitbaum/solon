@@ -1366,3 +1366,105 @@ describe("swisstopo's commune boundaries", () => {
     });
   });
 });
+
+describe("boundaries from swisstopo's file, Liechtenstein's part", () => {
+  it("draws Vaduz under its commune number from the same layer", () => {
+    const zip = fixture("swissboundaries3d_2026-01_cut.shp.zip");
+    const batch = mapSource("swisstopo-li-commune-boundaries", zip, [], {
+      url: "https://data.geo.admin.ch/ch.swisstopo.swissboundaries3d/swissboundaries3d_2026-01/swissboundaries3d_2026-01_2056_5728.shp.zip",
+      validFrom: "2026-01-01",
+    });
+    expect(batch.pack).toBe("liechtenstein");
+    expect(batch.areas).toEqual([
+      {
+        place: { scheme: "li_municipality", value: "7001" },
+        feature: "7001",
+        validFrom: "2026-01-01",
+        validTo: null,
+      },
+    ]);
+  });
+});
+
+describe("boundaries from one address updated in place (Estonia's Land Board)", () => {
+  const source = placesConfig.sources.find((s) => s.key === "ee-maaamet-municipality-boundaries")!;
+  const adapter = ADAPTERS.get(source.adapter)!;
+
+  it("fetches the one address, dated by the day it is read", async () => {
+    const options = adapter.options!.parse(source.options);
+    const probe: Probe = async () => {
+      throw new Error("no catalogue to ask");
+    };
+    expect(await adapter.retrievals!(options, "2026-11-08", probe)).toEqual([
+      {
+        url: "https://geoportaal.maaamet.ee/docs/haldus_asustus/omavalitsus_shp.zip",
+        validFrom: "2026-11-08",
+      },
+    ]);
+  });
+
+  it("finds a layer whose file names carry their date, and names the edition by that date", () => {
+    // swisstopo's cut, its members renamed the way the Land Board dates its own.
+    const files = unzipSync(fixture("swissboundaries3d_2026-01_cut.shp.zip"));
+    const dated = zipSync(
+      Object.fromEntries(
+        Object.entries(files).map(([name, bytes]) => [
+          name.replace("swissBOUNDARIES3D_1_5_TLM_HOHEITSGEBIET", "omavalitsus_20260501"),
+          bytes,
+        ]),
+      ),
+    );
+    const options = adapter.options!.parse({
+      ...source.options,
+      place: { scheme: "bfs_municipality", column: "BFS_NUMMER" },
+      where: [
+        { column: "ICC", values: ["CH"] },
+        { column: "OBJEKTART", values: ["Gemeindegebiet"] },
+      ],
+    });
+    const batch = adapter.map(adapter.decode ? adapter.decode(dated) : dated, {
+      source,
+      pack: placesConfig.packs.find((p) => p.key === "estonia"),
+      options,
+      retrieval: { url: source.options.url as string, validFrom: "2026-11-08" },
+    } as never) as ImportBatch;
+    expect(batch.areas?.map((a) => [a.feature, a.validFrom])).toEqual([
+      ["154", "2026-11-08"],
+      ["261", "2026-11-08"],
+      ["371", "2026-11-08"],
+    ]);
+    // The layer's own name dates it.
+    expect(batch.geometry?.datasetVersion).toBe("2026-05-01");
+  });
+
+  it("takes a catalogue or one address, never both or neither", () => {
+    const { url: _url, ...rest } = source.options as Record<string, unknown>;
+    expect(adapter.options!.safeParse(rest).success).toBe(false);
+    expect(
+      adapter.options!.safeParse({
+        ...source.options,
+        catalogue: { url: "https://example.org/items", asset: ".zip" },
+        edition: "(\\d{4})",
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe("a place the file still draws apart after it merged", () => {
+  it("is drawn as part of its successor's area", () => {
+    const source = placesConfig.sources.find((s) => s.key === "swisstopo-commune-boundaries")!;
+    const adapter = ADAPTERS.get(source.adapter)!;
+    // Küsnacht (154) drawn as part of Zürich (261), as Toila is drawn as part of Jõhvi.
+    const options = adapter.options!.parse({ ...source.options, recode: { "154": "261" } });
+    const batch = adapter.map(fixture("swissboundaries3d_2026-01_cut.shp.zip"), {
+      source,
+      pack: placesConfig.packs.find((p) => p.key === "switzerland"),
+      options,
+      retrieval: {
+        url: "https://data.geo.admin.ch/ch.swisstopo.swissboundaries3d/swissboundaries3d_2026-01/swissboundaries3d_2026-01_2056_5728.shp.zip",
+        validFrom: "2026-01-01",
+      },
+    } as never) as ImportBatch;
+    expect(batch.areas?.map((a) => a.feature)).toEqual(["261", "371"]);
+  });
+});
