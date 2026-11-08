@@ -8,6 +8,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Estonia and Liechtenstein drawn on the atlas.** Liechtenstein's eleven communes come
+  from the same swisstopo boundary file as Switzerland's; Estonia's municipalities from
+  the Land Board's own file, read again each month, so opening either country on the
+  atlas now draws its places. {#globe-deep}
+
 - **One atlas.** The globe on the home page and the map on Places are one now. Tap a
   country and the Earth turns to it and draws its places, coloured by what tax would
   cost you there; beside it, how much of its law Solon holds with a link to read it and

@@ -128,7 +128,7 @@ export const estonia: CountryPackInput = {
     },
   ],
   identifierSchemes: ["iso_3166_1", "ee_county", "ee_municipality"],
-  sources: ["ee-ehak-units", "ee-income-tax"],
+  sources: ["ee-ehak-units", "ee-income-tax", "ee-maaamet-municipality-boundaries"],
   instrumentKinds: [],
   taxModel: estoniaIncomeTax,
   taxLabels: estoniaTaxLabels,
