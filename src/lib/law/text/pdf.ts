@@ -9,7 +9,7 @@ import { createRequire } from "node:module";
 import { dirname, join, sep } from "node:path";
 import { definePDFJSModule, getDocumentProxy } from "unpdf";
 
-let ready: Promise<void> | null = null;
+let configured = false;
 
 /** The folder PDF.js loads its decoders from, with the trailing separator it expects. */
 export function wasmFolder(): string {
@@ -17,9 +17,15 @@ export function wasmFolder(): string {
   return join(dirname(pkg), "wasm") + sep;
 }
 
-/** A PDF, opened with every decoder PDF.js has. */
+/**
+ * A PDF, opened with every decoder PDF.js has.
+ * unpdf 2 stores the PDF.js loader and loads it on the first read, so
+ * `definePDFJSModule` returns nothing to await.
+ */
 export async function openPdf(bytes: Uint8Array) {
-  ready ??= definePDFJSModule(() => import("pdfjs-dist/legacy/build/pdf.mjs"));
-  await ready;
+  if (!configured) {
+    definePDFJSModule(() => import("pdfjs-dist/legacy/build/pdf.mjs"));
+    configured = true;
+  }
   return getDocumentProxy(new Uint8Array(bytes), { wasmUrl: wasmFolder() });
 }
