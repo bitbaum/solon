@@ -125,6 +125,10 @@
     "signIn": "Se connecter",
     "account": "Compte",
     "language": "Langue",
+    "theme": "Thème de couleurs",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Comme l’appareil",
     "overview": "Vue d'ensemble",
     "featured": "À la une"
   },

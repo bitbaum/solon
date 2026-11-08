@@ -67,7 +67,7 @@ export default function PlatformPage({ params }: Params) {
         </div>
       </section>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
             <h2 className="headline-caps text-3xl sm:text-4xl">{t("today.title")}</h2>

@@ -137,7 +137,8 @@ was deleted so a fix to the sweep reaches here without being re-ported.
   `tailwind.config.js` consumes its Tailwind preset and never holds a literal
   value, and `src/app/globals.css` carries Solon-specific rules, no tokens.
 - Loki depends on the same package; OrangeCat does not (its `globals.css`
-  mirrors some of the values). Solon is **dark-only** today.
+  mirrors some of the values). Solon is **light and dark**: the device decides
+  unless the reader picks one in the header (`src/components/theme/`).
   The legacy `navy` / `solon-*` palette is deleted — using it fails the build.
 - `pnpm run design:check` (part of `verify`) enforces this. See
   `docs/development/ui-guidelines.md`.

@@ -125,6 +125,10 @@
     "signIn": "Accedi",
     "account": "Account",
     "language": "Lingua",
+    "theme": "Tema dei colori",
+    "themeLight": "Chiaro",
+    "themeDark": "Scuro",
+    "themeSystem": "Come il dispositivo",
     "overview": "Panoramica",
     "featured": "In evidenza"
   },

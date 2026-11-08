@@ -125,6 +125,10 @@
     "signIn": "Войти",
     "account": "Аккаунт",
     "language": "Язык",
+    "theme": "Цветовая тема",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная",
+    "themeSystem": "Как на устройстве",
     "overview": "Обзор",
     "featured": "Главное"
   },

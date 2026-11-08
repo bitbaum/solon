@@ -120,6 +120,14 @@ repository and served through the fleet map.
       without authentication
 - [ ] Link signed-decision and source-code evidence from the development profile
 
+### Light and dark, as the reader chooses {#themes}
+
+Solon was dark only. The shared tokens carry both themes; the reader should get
+the one their device uses, or the one they pick.
+
+- [x] A light theme beside the dark one: the device decides until the reader picks Light, Dark or Device in the header, kept in their browser; photographs stay dark under their type {#theme-light}
+- [ ] The theme script and the toggle moved into `@bitbaum/design-tokens`, so Loki and the fleet's other apps switch the same way {#theme-package}
+
 ## Next
 
 ### The charter: rules as data, amended by the rules

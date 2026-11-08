@@ -157,3 +157,33 @@ test.describe("phones", () => {
     await expect(menu.getByRole("link", { name: "Security" })).toBeVisible();
   });
 });
+
+/*
+ * The theme: the device decides until the reader picks one, the pick survives
+ * a reload, and the head script paints it before the page hydrates (a flash of
+ * the wrong theme is invisible to every other check).
+ */
+test.describe("theme", () => {
+  test.use({ colorScheme: "dark" });
+
+  test("follows the device, then the reader's choice, from the first paint", async ({ page }) => {
+    const theme = () => page.evaluate(() => document.documentElement.dataset.theme);
+    await page.goto("/security", { waitUntil: "domcontentloaded" });
+    expect(await theme()).toBe("dark");
+    const button = page
+      .locator("header")
+      .getByRole("button", { name: en.Nav.theme })
+      .locator("visible=true");
+    const light = page.getByRole("menuitemradio", { name: en.Nav.themeLight });
+    // A first click can land before hydration; click only while it is closed.
+    await expect(async () => {
+      if (!(await light.isVisible())) await button.click();
+      await expect(light).toBeVisible({ timeout: 1_000 });
+    }).toPass({ timeout: 20_000 });
+    await light.click();
+    expect(await theme()).toBe("light");
+    await page.goto("/security", { waitUntil: "commit" });
+    await page.waitForLoadState("domcontentloaded");
+    expect(await theme()).toBe("light");
+  });
+});

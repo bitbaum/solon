@@ -125,6 +125,10 @@
     "signIn": "Anmelden",
     "account": "Konto",
     "language": "Sprache",
+    "theme": "Farbschema",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "themeSystem": "Wie das Gerät",
     "overview": "Übersicht",
     "featured": "Im Fokus"
   },

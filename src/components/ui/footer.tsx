@@ -15,7 +15,7 @@ export default function Footer() {
   const site = useTranslations("Site");
 
   return (
-    <footer className="border-t border-subtle bg-surface-public">
+    <footer className="border-t border-subtle band">
       <div className="section-shell py-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">

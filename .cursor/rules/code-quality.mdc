@@ -36,7 +36,7 @@ Next.js 16 Bitcoin governance platform:
 ## Design System
 
 Tokens live in `src/app/globals.css` and nowhere else. Solon shares OrangeCat's
-token names and values and is dark-only. `npm run design:check` (part of
+token names and values, light and dark. `npm run design:check` (part of
 `verify`) fails the build on violations — see `docs/development/ui-guidelines.md`.
 
 ```tsx

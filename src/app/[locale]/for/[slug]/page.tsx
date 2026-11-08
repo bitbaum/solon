@@ -66,7 +66,7 @@ export default function UseCasePage({ params }: Params) {
         <CapabilityList items={u.capabilities} />
       </section>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
             <h2 className="headline-caps text-3xl sm:text-4xl">{t("common.rules")}</h2>
@@ -109,7 +109,7 @@ function GroupBody({ u }: { u: UseCase }) {
         </div>
       </section>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell">
           <h2 className="headline-caps text-3xl sm:text-4xl">{t("common.how")}</h2>
           <div className="mt-12 grid gap-x-10 gap-y-12 md:grid-cols-2">
@@ -165,7 +165,7 @@ function NetworkStateBody() {
         </div>
       </section>
 
-      <section className="border-t border-subtle bg-surface-public py-section">
+      <section className="border-t border-subtle band py-section">
         <div className="section-shell">
           <h2 className="headline-caps text-3xl sm:text-4xl">{t("path.title")}</h2>
           <ol className="mt-12 divide-y divide-subtle border-y border-subtle">
