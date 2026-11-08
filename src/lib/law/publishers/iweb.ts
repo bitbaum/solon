@@ -307,7 +307,7 @@ export function iweb(config: IwebConfig, pauseMs = 500): PublisherAdapter {
           ),
         ].slice(0, 25);
         throw new Error(
-          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, a row: ${JSON.stringify(pages.flatMap((h) => tableRows(h))[0] ?? null).slice(0, 600)}, links: ${seen.join(" ")}`,
+          `${config.key}: the pages listed no acts${missed.length ? ` (${missed.join("; ")})` : ""}; ${pages.length} page(s), tables ${pages.map((h) => tableRows(h).length).join("/")}, a row: ${JSON.stringify(Object.fromEntries(Object.entries(pages.flatMap((h) => tableRows(h))[0] ?? {}).filter(([k]) => !k.endsWith("-sort")))).slice(0, 1500)}, links: ${seen.join(" ")}`,
         );
       }
       return {
