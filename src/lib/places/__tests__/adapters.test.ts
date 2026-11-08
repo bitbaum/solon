@@ -1403,7 +1403,7 @@ describe("boundaries from one address updated in place (Estonia's Land Board)", 
     ]);
   });
 
-  it("finds a layer whose file names carry their date, and names the edition by the day read", () => {
+  it("finds a layer whose file names carry their date, and names the edition by that date", () => {
     // swisstopo's cut, its members renamed the way the Land Board dates its own.
     const files = unzipSync(fixture("swissboundaries3d_2026-01_cut.shp.zip"));
     const dated = zipSync(
@@ -1433,7 +1433,8 @@ describe("boundaries from one address updated in place (Estonia's Land Board)", 
       ["261", "2026-11-08"],
       ["371", "2026-11-08"],
     ]);
-    expect(batch.geometry?.datasetVersion).toBe("2026-11-08");
+    // The layer's own name dates it.
+    expect(batch.geometry?.datasetVersion).toBe("2026-05-01");
   });
 
   it("takes a catalogue or one address, never both or neither", () => {

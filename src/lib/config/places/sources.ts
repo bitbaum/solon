@@ -1009,11 +1009,27 @@ export const SOURCES: readonly SourceInput[] = [
       url: "https://geoportaal.maaamet.ee/docs/haldus_asustus/omavalitsus_shp.zip",
       member: "omavalitsus",
       memberPrefix: true,
-      // Toila vald (0803) has merged into Jõhvi vald (0250): EHAK2026v1 lists no 0803
-      // and puts Toila's settlements in Jõhvi (Toila alevik 8275, Voka alevik 9455, both
-      // parent 0250). The Land Board's file of 2026-11 still draws Toila apart, so its
-      // polygon is drawn as part of Jõhvi's. Remove this line once the file catches up.
-      recode: { "0803": "0250" },
+      // The Land Board's file still uses EHAK codes from before the latest recodings:
+      // EHAK gives a municipality a new code when its boundary changes, and eleven
+      // municipalities have new codes in EHAK2026v1 under the same name (old code →
+      // new, matched by name against the Land Board's 2018 layer). Toila vald (0803)
+      // has merged into Jõhvi vald: EHAK2026v1 puts its settlements in Jõhvi (Toila
+      // alevik 8275, Voka alevik 9455, parent 0250). Each is drawn as the place it is
+      // now. The boundaries are the file's; the edition is the date its layer names.
+      recode: {
+        "0142": "0145", // Antsla vald
+        "0251": "0250", // Jõhvi vald
+        "0304": "0305", // Kiili vald
+        "0503": "0502", // Märjamaa vald
+        "0514": "0515", // Narva-Jõesuu linn
+        "0638": "0637", // Põhja-Pärnumaa vald
+        "0718": "0719", // Saku vald
+        "0726": "0725", // Saue vald
+        "0735": "0736", // Sillamäe linn
+        "0803": "0250", // Toila vald, merged into Jõhvi vald
+        "0809": "0806", // Tori vald
+        "0855": "0857", // Valga vald
+      },
       place: { scheme: "ee_municipality", column: "OKOOD" },
       level: "municipality",
       grid: 25,
