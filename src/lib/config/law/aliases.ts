@@ -50,6 +50,20 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
     "grand-duche",
     "grossherzogtum",
   ],
+  // Not the bare "EU": in French it is a word ("j'ai eu").
+  eu: [
+    "european union",
+    "eu law",
+    "eu regulation",
+    "eu directive",
+    "europaische union",
+    "europaeische union",
+    "eu-recht",
+    "union europeenne",
+    "droit de l'union",
+    "unione europea",
+    "diritto dell'unione",
+  ],
   "us-wy": ["wyoming", "wyo."],
   "us-nh": ["new hampshire", "n.h.", "granite state"],
   li7001: ["vaduz", "gemeinde vaduz"],
@@ -70,4 +84,8 @@ export const AUTHORITY_ALIASES: Readonly<Record<string, readonly string[]>> = {
   bfs2939: ["schaffhausen", "schaffhouse", "stadt schaffhausen"],
   bfs6266: ["sion", "sitten", "ville de sion"],
   bfs261: ["city of zurich", "stadt zurich", "stadt zuerich", "ville de zurich", "citta di zurigo"],
+  bfs230: ["winterthur", "stadt winterthur", "winti"],
+  // "St. Gallen" names the canton and the city, as "Zürich" does: the city's rules apply there too.
+  bfs3203: ["st. gallen", "st gallen", "sankt gallen", "saint-gall", "san gallo"],
+  bfs371: ["biel", "bienne", "biel/bienne", "stadt biel", "ville de bienne"],
 };

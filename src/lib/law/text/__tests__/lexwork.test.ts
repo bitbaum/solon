@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { LAW_AUTHORITIES, LEXWORK } from "@/lib/config/law";
 import {
   fetchLexworkAct,
   fetchLexworkIndex,
@@ -148,5 +149,19 @@ describe("the interface", () => {
   });
   it("is null for an act it does not serve", async () => {
     expect(await fetchLexworkAct(HOST, "9.9", undefined, reply(404, {}))).toBeNull();
+  });
+});
+
+describe("the configured collections", () => {
+  it("each belong to a commune the register knows, within its canton, one collection per commune", () => {
+    const authorities = LEXWORK.instances.map((i) => i.authority);
+    expect(new Set(authorities).size).toBe(authorities.length);
+    for (const instance of LEXWORK.instances) {
+      const authority = LAW_AUTHORITIES.find((a) => a.key === instance.authority);
+      expect(authority?.place?.scheme, instance.host).toBe("bfs_municipality");
+      expect(authority?.key, instance.host).toBe(`bfs${authority?.place?.value}`);
+      expect(LAW_AUTHORITIES.some((a) => a.key === authority?.within)).toBe(true);
+      expect(instance.host).toMatch(/^[a-z0-9.-]+\.tlex\.ch$/);
+    }
   });
 });

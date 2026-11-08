@@ -6,6 +6,7 @@
  *   pnpm run law:text cantons [--authority zh] [--limit 200] [--dry-run]
  *   pnpm run law:text legilux [--limit 200] [--dry-run]   (Luxembourg: the register and each act's applicable text)
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
+ *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text wyoleg [--limit 50] [--again] [--title 15] [--dry-run]   (Wyoming: each title of the statutes and the Constitution)
  *   pnpm run law:text gcnh [--limit 1000] [--again] [--title III] [--chapter 39] [--dry-run]   (New Hampshire: each chapter of the RSA, about 11 seconds apart)
  *   pnpm run law:text lexwork [--host zug.tlex.ch] [--limit 500] [--dry-run]   (communes' LexWork collections: acts and their dated versions)
@@ -22,6 +23,7 @@ import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importGcnh } from "@/lib/law/text/import-gcnh";
 import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
+import { importEurLex } from "@/lib/law/text/import-eurlex";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
 import { FEDLEX, LILEX } from "@/lib/config/law";
@@ -143,6 +145,27 @@ async function main(): Promise<number> {
     console.log(
       JSON.stringify(
         { ...report, failures: report.failures.slice(0, 5), failureCount: report.failures.length },
+        null,
+        2,
+      ),
+    );
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "eurlex") {
+    const years = flag("year")
+      ?.split(",")
+      .map(Number)
+      .filter((y) => Number.isInteger(y) && y > 1900);
+    const report = await importEurLex(db, {
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      years: years?.length ? years : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        { ...report, failures: report.failures.slice(0, 10), failureCount: report.failures.length },
         null,
         2,
       ),
