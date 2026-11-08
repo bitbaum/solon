@@ -230,7 +230,7 @@ export async function importRis(db: Database, options: RisOptions): Promise<RisR
         if (stored.byReading) report.datedByReading++;
         if (stored.fromArchive) report.fromArchive++;
         say(
-          `${act.gesetzesnummer} ${stored.from}: ${stored.provisions} provisions · ${act.kind} · ${act.title.slice(0, 60)}`,
+          `${act.gesetzesnummer} ${stored.from}: ${stored.provisions} provisions (${stored.paths}) · ${act.kind} · ${act.title.slice(0, 50)}`,
         );
       }
       refusedInARow = 0;
@@ -267,13 +267,22 @@ async function storeAct(
   byReading: boolean;
   unchanged: boolean;
   from: string;
+  /** The first anchors and the annexes, for the log: what the cut made of the page. */
+  paths: string;
 }> {
   const { doFetch, options, pauseMs } = context;
   // The day the text in force began, as the publisher dates it; failing that, the day it was read.
   const dated = await inForceFromOf(act.gesetzesnummer, today, doFetch, pauseMs > 0 ? 3000 : 0);
   const from = dated ?? today;
   if (heldFrom && dated && heldFrom >= dated) {
-    return { provisions: 0, fromArchive: false, byReading: false, unchanged: true, from };
+    return {
+      provisions: 0,
+      fromArchive: false,
+      byReading: false,
+      unchanged: true,
+      from,
+      paths: "",
+    };
   }
   await sleep(Math.min(pauseMs, 1000));
   const page = await read(act.textUrl, doFetch, RIS.hosts, options.archiveRetryMs);
@@ -309,5 +318,14 @@ async function storeAct(
     byReading: !dated,
     unchanged: false,
     from,
+    paths: pathsOf(provisions),
   };
+}
+
+/** "§ 0, § 1, § 2 … § 1503, 4 Anlage": the cut in a line. */
+function pathsOf(provisions: readonly { path: string }[]): string {
+  const annexes = provisions.filter((p) => p.path.startsWith("Anlage")).length;
+  const head = provisions.slice(0, 3).map((p) => p.path);
+  const last = provisions.at(-1)?.path;
+  return `${head.join(", ")}${provisions.length > 3 ? ` … ${last}` : ""}${annexes ? `, ${annexes} Anlage` : ""}`;
 }
