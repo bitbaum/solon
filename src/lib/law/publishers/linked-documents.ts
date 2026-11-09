@@ -594,3 +594,55 @@ export const bellinzonaCity = linkedDocuments({
   include: CH_IT_ACT,
   exclude: CH_IT_FORM,
 });
+
+/**
+ * Vernier: "Règlements", each act a PDF in the commune's own files, named
+ * "RSRV - <number> <title>" after its recueil systématique.
+ */
+export const vernier = linkedDocuments({
+  key: "vernier",
+  authority: "bfs6633",
+  name: "Commune de Vernier, Règlements",
+  homepage: "https://www.vernier.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.vernier.ch/fr/admin/reglements/"],
+  link: /\/sites\/default\/files\/[^/]+\/(RSRV_-_[^/?#]+\.pdf)(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * La Chaux-de-Fonds: "Réglementation", PDFs numbered by the commune's own
+ * classification (10_10 "Règlement général", 43_00 …) in one document folder.
+ */
+export const chauxDeFonds = linkedDocuments({
+  key: "chaux-de-fonds",
+  authority: "bfs6421",
+  name: "Ville de La Chaux-de-Fonds, Réglementation",
+  homepage: "https://www.chaux-de-fonds.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: ["https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Pages/default.aspx"],
+  link: /\/rapports-et-reglements\/reglementation\/Documents\/(\d+_\d+\.pdf)(?:[?#]|$)/i,
+  include: /./,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * Bern: the Systematische Sammlung des Stadtrechts (SSSB). An act is a page,
+ * /lex-<number>, and its PDF sits under it.
+ */
+export const bernCity = linkedDocuments({
+  key: "bern-city",
+  authority: "bfs351",
+  name: "Stadt Bern, Systematische Sammlung des Stadtrechts",
+  homepage: "https://stadtrecht.bern.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "de",
+  pages: ["https://stadtrecht.bern.ch/lexoverview-home"],
+  link: /\/(lex-[0-9_]+)(?:[?#]|$)/i,
+  file: /\.pdf(?:[?#]|$)/i,
+  include: /./,
+  exclude: CH_DE_FORM,
+});
