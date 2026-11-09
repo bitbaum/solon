@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Compulsory provision for old age, coded.** Switzerland (BV Art. 112 and 113: the old-age
+  insurance is obligatory, and so are occupational pensions for employees) and the United States
+  (26 U.S.C. § 3101: a tax of 6.2 percent of wages for old-age, survivors and disability
+  insurance) both stand at 3, a duty to a public scheme with no way out; the US coding is
+  medium confidence until exemptions are read. Estonia is left uncoded until its provisions are
+  read. {#stats-assessments}
+
 - **Research with AI.** `/statistics/research` takes a question about governance, freedom,
   statistics or the law. An AI reads what Solon holds, for a few rounds: series with their
   definitions and quality notes, dimensions that keep the law, practice and results apart, how

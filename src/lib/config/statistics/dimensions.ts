@@ -58,7 +58,13 @@ export const DIMENSIONS = defineDimensions(
         en: "Where the law forces a person to take part in a collective arrangement, as against leaving them to join it or not. Each feature is read from the statute itself and placed on a written scale, with the articles it was read from, how sure the reader is and why, and whether a second person has checked it.",
       },
       layers: {
-        de_jure: { rubrics: ["compulsion.military_service", "compulsion.health_insurance"] },
+        de_jure: {
+          rubrics: [
+            "compulsion.military_service",
+            "compulsion.health_insurance",
+            "compulsion.old_age_pension",
+          ],
+        },
         de_facto: {
           wanted: {
             en: "What is done in practice: how many people are actually called up or serve in a replacement service each year, how many refuse and what happens to them, from defence ministries and justice statistics.",
