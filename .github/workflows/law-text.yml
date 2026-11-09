@@ -12,7 +12,10 @@ name: Law text load
 # several runs at limit 1500; `acts` reads only those, e.g. bgb,gg), or Austria's
 # consolidated federal acts in force from the RIS of the Federal Chancellery (ris:
 # some thousands of acts, two requests and about three seconds an act, so a full load
-# is a few runs at limit 1500), and store it in the production
+# is a few runs at limit 1500), or the United Kingdom's Public General Acts and
+# Statutory Instruments from legislation.gov.uk (ukleg: one request every 5 seconds, as
+# its robots.txt asks, so a run at limit 1500 takes about two hours and a full load is
+# many runs; `year` and `types` narrow a run, e.g. year 2024 types ukpga), and store it in the production
 # database (design L1, L2). Resumable: an act whose version is already
 # held is not fetched again, so run it again until "remaining" is 0. About one to
 # two seconds per Fedlex act and three per Lilex act, politely paced; a full load
@@ -38,14 +41,18 @@ on:
             recut-eurlex,
             recut-gii,
             recut-municipal,
+            recut-ukleg,
             legilux,
             riigiteataja,
             eurlex,
+            ukleg,
             ris,
             gii,
             wyoleg,
             gcnh,
             refresh,
+            box-status,
+            box-stop,
           ]
         default: fedlex
       authority:
@@ -77,8 +84,16 @@ on:
         description: "Germany (gii) only: acts to read, by the portal's abbreviation, comma-separated (bgb,gg), or empty for all"
         type: string
         default: ""
+      types:
+        description: "UK (ukleg) only: types to read, comma-separated (ukpga,uksi), or empty for both"
+        type: string
+        default: ""
+      batches:
+        description: "Run this many batches of `limit` one after another, stopping early when nothing remains or a batch makes no progress (1 = one batch)"
+        type: string
+        default: "1"
       limit:
-        description: "Store at most this many versions in this run"
+        description: "Store at most this many versions in each batch"
         type: string
         default: "1500"
       dry_run:
@@ -92,7 +107,7 @@ permissions:
 jobs:
   load:
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    timeout-minutes: 360
     steps:
       - name: Run it on the box
         env:
@@ -108,11 +123,15 @@ jobs:
           YEAR: ${{ inputs.year }}
           ACT: ${{ inputs.act }}
           ACTS: ${{ inputs.acts }}
+          TYPES: ${{ inputs.types }}
+          BATCHES: ${{ inputs.batches }}
         run: |
           set -euo pipefail
+          [[ "$BATCHES" =~ ^[0-9]{1,2}$ ]] || { echo "batches must be a number"; exit 1; }
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
           [[ "$AUTHORITY" =~ ^[a-z]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
           [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
+          [[ "$TYPES" =~ ^[a-z,]{0,40}$ ]] || { echo "types must be like ukpga,uksi"; exit 1; }
           [[ "$YEAR" =~ ^[0-9,]{0,60}$ ]] || { echo "year must be years like 2016,2024"; exit 1; }
           [[ "$ACT" =~ ^[0-9,]{0,120}$ ]] || { echo "act must be numbers like 10001622,10000138"; exit 1; }
           [[ "$ACTS" =~ ^[A-Za-z0-9_.,-]{0,300}$ ]] || { echo "acts must be abbreviations like bgb,gg"; exit 1; }
@@ -121,11 +140,42 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
           ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
-            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+            "SHA=$SHA DRY=$DRY LANGUAGE=$LANGUAGE SOURCE=$SOURCE LIMIT=$LIMIT AUTHORITY=$AUTHORITY PUBLISHER=$PUBLISHER HISTORY=$HISTORY YEAR=$YEAR ACT=$ACT ACTS=$ACTS TYPES=$TYPES BATCHES=$BATCHES bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -euo pipefail
-          # One load at a time on the box: a second waits here for the first to finish,
-          # so two big loads never share its memory (two at once ran it out, 2026-11-08).
-          exec 9>/tmp/solon-law-load.lock
+          # The box's memory is the limit, not its patience. Loads that read PDFs, scans or the EU's
+          # large pages take one shared turn (two at once ran it out, 2026-11-08, and so did an install
+          # beside three loads); loads that mostly wait on a slow publisher (the UK's five seconds a
+          # request) share a second turn, so at most two run at once and a slow one never holds up the rest.
+          # box-status and box-stop never wait for a turn: they say what holds one, and end it. Cancelling
+          # a run in GitHub drops the connection but leaves the box's own process running, so a stuck or
+          # cancelled load keeps its turn until box-stop ends it.
+          holders() {
+            for p in /proc/[0-9]*; do
+              ls -l "$p/fd" 2>/dev/null | grep -q 'solon-law-load' || continue
+              echo "${p#/proc/}"
+            done
+          }
+          tree() { local c; for c in $(pgrep -P "$1" 2>/dev/null || true); do tree "$c"; done; echo "$1"; }
+          if [ "$SOURCE" = "box-status" ]; then
+            uptime; free -m; df -h /tmp | tail -1
+            for pid in $(holders); do
+              echo "turn held by pid $pid, running $(ps -o etime= -p "$pid" | tr -d ' '): $(tr '\0' ' ' < /proc/$pid/cmdline | cut -c1-120)"
+            done
+            ps -eo pid,etime,rss,args --sort=-rss | grep -E 'tsx|law-text|pnpm|node' | grep -v grep | head -12 | cut -c1-200
+            exit 0
+          fi
+          if [ "$SOURCE" = "box-stop" ]; then
+            for pid in $(holders); do
+              echo "ending the tree of pid $pid"
+              for t in $(tree "$pid"); do kill -TERM "$t" 2>/dev/null || true; done
+            done
+            exit 0
+          fi
+          case "$SOURCE" in
+            ukleg|gcnh|wyoleg|legilux|riigiteataja) LOCK="paced" ;;
+            *) LOCK="heavy" ;;
+          esac
+          exec 9>"/tmp/solon-law-load-$LOCK.lock"
           flock 9
           WD=$(mktemp -d /tmp/solon-law-text.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
@@ -145,7 +195,23 @@ jobs:
           [ "$SOURCE" = "eurlex" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
           [ "$SOURCE" = "ris" ] && [ -n "$ACT" ] && auth="$auth --act $ACT"
           [ "$SOURCE" = "gii" ] && [ -n "$ACTS" ] && auth="$auth --act $ACTS"
-          $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+          [ "$SOURCE" = "ukleg" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
+          [ "$SOURCE" = "ukleg" ] && [ -n "$TYPES" ] && auth="$auth --type $TYPES"
+          rc=0; last=-1
+          for batch in $(seq 1 "$BATCHES"); do
+            rc=0
+            $PNPM run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' > batch.log || rc=$?
+            tail -n 80 batch.log
+            # A dry run stores nothing, so a second batch would read the same; a batch that left
+            # as much as the one before it made no progress.
+            [ "$DRY" = "true" ] && break
+            left=$(grep -oE '"remaining(Acts)?": [0-9]+' batch.log | tail -1 | grep -oE '[0-9]+' || true)
+            [ "${left:-0}" -gt 0 ] || break
+            [ "$left" != "$last" ] || { echo "no progress: $left still remain"; break; }
+            last=$left
+            echo "batch $batch done, $left remain"
+          done
+          exit "$rc"
           REMOTE
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt

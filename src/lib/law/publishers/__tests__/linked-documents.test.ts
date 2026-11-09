@@ -415,6 +415,18 @@ describe("cities whose acts are pages that link their file", () => {
         { inForceFrom: "2026-11-08", inForceTo: null, pageUrl: "https://www.bellinzona.ch/a" },
         site('<a href="/Altra-pagina-1234abcd?i=1">x</a>'),
       ),
-    ).rejects.toThrow(/no document on https:\/\/www\.bellinzona\.ch\/a; its links: .*Altra-pagina/);
+    ).rejects.toThrow(
+      /no document on https:\/\/www\.bellinzona\.ch\/a; page: \d+ bytes, title "", 1 links, text "x"; same-host links: .*Altra-pagina/,
+    );
+  });
+
+  it("takes a Bellinzona act's address as its PDF, which is what the site serves there", async () => {
+    const pageUrl = "https://www.bellinzona.ch/Regolamento-comunale-4e93e800?i=1&MasterId=g1_35058";
+    const never: typeof fetch = async () => {
+      throw new Error("the act's address is the document: nothing else is fetched");
+    };
+    await expect(
+      bellinzonaCity.document({ inForceFrom: "2026-11-08", inForceTo: null, pageUrl }, never),
+    ).resolves.toEqual({ url: pageUrl, format: "pdf" });
   });
 });

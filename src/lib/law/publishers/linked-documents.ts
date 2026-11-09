@@ -259,7 +259,12 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
         throw new Error(
           `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}; ` +
             `${pages.length} page(s), ${anchors.length} links, ${documents.length} matching the document pattern, ` +
-            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}`,
+            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}. ` +
+            `Other pages: ${[...new Set(anchors.map((a) => a.href.split("#")[0]!))]
+              .filter((h) => !h.includes("#"))
+              .slice(0, 40)
+              .map((h) => h.slice(0, 120))
+              .join(" ")}`,
         );
       }
       for (const act of acts) titles.set(act.pageUrl, act.title);
@@ -283,13 +288,21 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
       if (!config.file) return { url: version.pageUrl, format: "pdf" };
       // The act's link is a page: its file is the first matching link on it.
       const page = await read(version.pageUrl, doFetch, [host]);
-      const links = anchorsOf(new TextDecoder().decode(page.bytes), version.pageUrl);
+      const html = new TextDecoder().decode(page.bytes);
+      const links = anchorsOf(html, version.pageUrl);
       const file = links.find(
         (a) => config.file!.test(a.href) && new URL(a.href).hostname === host,
       );
       if (!file) {
+        // What the page was, so a page that is a shell, a refusal or the act itself is told from one with no file.
+        const title = /<title[^>]*>([^<]*)/i.exec(html)?.[1]?.trim().slice(0, 80) ?? "";
+        const text = html
+          .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
         throw new Error(
-          `no document on ${version.pageUrl}; its links: ${links
+          `no document on ${version.pageUrl}; page: ${page.bytes.length} bytes, title "${title}", ${links.length} links, text "${text.slice(0, 160)}"; same-host links: ${links
             .map((a) => a.href)
             .filter((h) => new URL(h).hostname === host)
             .slice(0, 15)
@@ -520,8 +533,8 @@ export const geneveCity = linkedDocuments({
   pages: [GENEVE_LIST, ...Array.from({ length: 27 }, (_, i) => `${GENEVE_LIST}?page=${i + 1}`)],
   maxPages: 30,
   // Each act is a page of its own, /administration-municipale/reglements-municipaux/lc<number>-<title>.
+  // The act's address serves the PDF itself (no HTML page between), so there is no `file`.
   link: /\/administration-municipale\/reglements-municipaux\/(lc[0-9a-z-]+)(?:[?#]|$)/i,
-  file: /\.pdf(?:[?#]|$)/i,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
@@ -569,8 +582,8 @@ export const luganoCity = linkedDocuments({
 });
 
 /**
- * Bellinzona: "Legislazione comunale", grouped by subject, each act a page of
- * the site's own (`<Title>-<8 hex digits>?i=1&MasterId=<group>`).
+ * Bellinzona: "Legislazione comunale", grouped by subject, each act the PDF
+ * itself at the site's own address (`<Title>-<8 hex digits>?i=1&MasterId=<group>`).
  */
 export const bellinzonaCity = linkedDocuments({
   key: "bellinzona-city",
@@ -581,8 +594,51 @@ export const bellinzonaCity = linkedDocuments({
   locale: "it",
   pages: ["https://www.bellinzona.ch/1d212c00"],
   link: /bellinzona\.ch\/([A-Za-z0-9-]+-[0-9a-f]{8})\?i=1&MasterId=/i,
-  // The file on the act's page; when none matches, the failure lists the page's links.
-  file: /\.pdf(?:[?#]|$)|downdoc|\/(?:docs?|documenti|files?)\//i,
+  // The act's address serves its PDF itself (no extension in it): the server's first run
+  // read 88 acts as "%PDF-1.7 …", each one a document, none a page with a link to a file.
   include: CH_IT_ACT,
   exclude: CH_IT_FORM,
+});
+
+const VERNIER_LIST = "https://www.vernier.ch/fr/admin/reglements/";
+
+/**
+ * Vernier: "Règlements", each act a PDF in the commune's own files, named
+ * "RSRV - <number> <title>" after its recueil systématique.
+ */
+export const vernier = linkedDocuments({
+  key: "vernier",
+  authority: "bfs6633",
+  name: "Commune de Vernier, Règlements",
+  homepage: "https://www.vernier.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: [VERNIER_LIST, ...Array.from({ length: 9 }, (_, i) => `${VERNIER_LIST}?page=${i + 1}`)],
+  maxPages: 10,
+  // Each act is a publication page, /administration-et-autorites/publications/<title>, with its PDF on it.
+  link: /\/administration-et-autorites\/publications\/([a-z0-9-]+)(?:[?#]|$)/i,
+  file: /\.pdf(?:[?#]|$)/i,
+  include: CH_FR_ACT,
+  exclude: CH_FR_FORM,
+});
+
+/**
+ * La Chaux-de-Fonds: "Réglementation", PDFs numbered by the commune's own
+ * classification (10_10 "Règlement général", 43_00 …) in one document folder.
+ */
+export const chauxDeFonds = linkedDocuments({
+  key: "chaux-de-fonds",
+  authority: "bfs6421",
+  name: "Ville de La Chaux-de-Fonds, Réglementation",
+  homepage: "https://www.chaux-de-fonds.ch/",
+  licenceSpdx: "LicenseRef-ch-official-act",
+  locale: "fr",
+  pages: [
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements",
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Pages/default.aspx",
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Documents/",
+  ],
+  link: /\/rapports-et-reglements\/reglementation\/Documents\/(\d+_\d+\.pdf)(?:[?#]|$)/i,
+  include: /./,
+  exclude: CH_FR_FORM,
 });

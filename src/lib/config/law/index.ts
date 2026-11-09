@@ -39,6 +39,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "lu_eli",
   /** The European Union's CELEX number: `32016R0679` (sector 3, year, R regulation or L directive, number). */
   "celex",
+  /** The United Kingdom's legislation.gov.uk address without the host: `ukpga/2018/12` (type, year, number). */
+  "uk_leg_id",
   /** Austria's Gesetzesnummer: the number the RIS gives an act, shared by every document of it (`10001622` is the ABGB). */
   "at_gesetzesnummer",
   /** The RIS's NOR number of an act's own document (`NOR40198929`), the one that carries its Langtitel. */
@@ -86,6 +88,10 @@ export interface LawAuthority {
   attribution?: string;
 }
 
+/** The notice the Open Government Licence v3.0 asks a reuser to show (its "Attribution" condition). */
+const UKLEG_ATTRIBUTION =
+  "Contains public sector information licensed under the Open Government Licence v3.0. Source: legislation.gov.uk, The National Archives.";
+
 export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ch", name: "Confederation", place: { scheme: "iso_3166_1", value: "CH" } },
   { key: "intercantonal", name: "Intercantonal", place: null },
@@ -119,6 +125,12 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", name: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", name: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  {
+    key: "uk",
+    name: "United Kingdom",
+    place: { scheme: "iso_3166_1", value: "GB" },
+    attribution: UKLEG_ATTRIBUTION,
+  },
   {
     key: "at",
     name: "Austria",
@@ -401,6 +413,24 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "5586" },
     within: "vd",
   },
+  {
+    key: "bfs351",
+    name: "Bern (city)",
+    place: { scheme: "bfs_municipality", value: "351" },
+    within: "be",
+  },
+  {
+    key: "bfs6633",
+    name: "Vernier",
+    place: { scheme: "bfs_municipality", value: "6633" },
+    within: "ge",
+  },
+  {
+    key: "bfs6421",
+    name: "La Chaux-de-Fonds",
+    place: { scheme: "bfs_municipality", value: "6421" },
+    within: "ne",
+  },
 ];
 
 /**
@@ -646,6 +676,9 @@ export const LEXWORK = {
     { host: "winterthur.tlex.ch", authority: "bfs230" },
     { host: "st.gallen.tlex.ch", authority: "bfs3203" },
     { host: "biel-bienne.tlex.ch", authority: "bfs371" },
+    // Bern's Systematische Sammlung des Stadtrechts, on the city's own host; the first run says
+    // whether it answers LexWork's interface.
+    { host: "stadtrecht.bern.ch", authority: "bfs351" },
   ] as readonly { host: string; authority: string }[],
 } as const;
 
@@ -759,6 +792,51 @@ export const EURLEX = {
   kinds: { R: "regulation", L: "directive" } as Readonly<Record<string, ActKind>>,
   /** The first year of the Official Journal's acts; the register is read a year at a time from it. */
   firstYear: 1952,
+} as const;
+
+/**
+ * The United Kingdom's legislation from legislation.gov.uk, The National
+ * Archives' official service: each type's items as Atom feeds, and each item's
+ * current ("revised") version as Crown Legislation Markup Language (CLML) XML
+ * at `<address>/data.xml`. An item's address is its type, year and number
+ * (`ukpga/2018/12`); older acts are numbered by regnal year
+ * (`ukpga/Geo5/15-16/20`), which the same pattern holds.
+ *
+ * Licence: Open Government Licence v3.0, which asks for attribution and is not
+ * share-alike (https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+ * Fair use (https://www.legislation.gov.uk/fair-use-policy): at most 1,500
+ * requests in any 5 minutes, per user and not per address; follow robots.txt
+ * and its crawl-delay; without one, about 10 requests per 5 to 10 seconds. The
+ * reader pauses `pauseMs` (a second) between requests and honours a larger
+ * crawl-delay when robots.txt gives one; it gave 5 seconds when read on
+ * 2026-11-08 (by the server's dry run), so a run asks 12 times a minute.
+ */
+export const UKLEG = {
+  key: "ukleg",
+  authority: "uk",
+  publisher: "legislation.gov.uk, The National Archives",
+  homepage: "https://www.legislation.gov.uk",
+  /** `{type}` is a type (`ukpga`), `{year}` a year, `{page}` a feed page from 1. */
+  listUrl: "https://www.legislation.gov.uk/{type}/{year}/data.feed?page={page}",
+  /** `{path}` is an item's address (`ukpga/2018/12`). */
+  xmlUrl: "https://www.legislation.gov.uk/{path}/data.xml",
+  pageUrl: "https://www.legislation.gov.uk/{path}",
+  robotsUrl: "https://www.legislation.gov.uk/robots.txt",
+  /** Only this host is read. */
+  hosts: ["www.legislation.gov.uk"],
+  licenceSpdx: "OGL-UK-3.0",
+  locale: "en",
+  textStatus: "consolidated" as ActTextStatus,
+  /**
+   * The types read: UK Public General Acts and UK Statutory Instruments. The
+   * devolved legislatures' (asp, anaw, asc, nia, ssi, wsi, nisr) are the same
+   * reader with one line more here, and wait for their own authorities.
+   */
+  kinds: { ukpga: "statute", uksi: "regulation" } as Readonly<Record<string, ActKind>>,
+  /** The first year listed for each type (the first statutory instruments are of 1948). */
+  firstYear: { ukpga: 1801, uksi: 1948 } as Readonly<Record<string, number>>,
+  /** Between requests, milliseconds. */
+  pauseMs: 1000,
 } as const;
 
 /**

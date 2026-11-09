@@ -6,6 +6,8 @@ import {
   fribourgCity,
   gamprin,
   geneveCity,
+  vernier,
+  chauxDeFonds,
   koeniz,
   lausanneCity,
   luganoCity,
@@ -42,6 +44,8 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [luganoCity.key]: luganoCity,
   [bellinzonaCity.key]: bellinzonaCity,
   [geneveCity.key]: geneveCity,
+  [vernier.key]: vernier,
+  [chauxDeFonds.key]: chauxDeFonds,
   [lausanneCity.key]: lausanneCity,
 
   [luzernCity.key]: luzernCity,

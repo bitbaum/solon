@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hand-written: a small instrument never amended, as the site serves it as made: no revised-version
+     dates, only the day it was made and the day it came into force. Not a capture. -->
+<Legislation xmlns="http://www.legislation.gov.uk/namespaces/legislation" xmlns:ukm="http://www.legislation.gov.uk/namespaces/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/" IdURI="http://www.legislation.gov.uk/id/uksi/2024/100" RestrictExtent="E+W+S" SchemaVersion="1.0">
+  <ukm:Metadata>
+    <dc:title>The Example (Amendment) Regulations 2024</dc:title>
+    <ukm:SecondaryMetadata>
+      <ukm:DocumentClassification><ukm:DocumentMainType Value="UnitedKingdomStatutoryInstrument"/><ukm:DocumentStatus Value="final"/></ukm:DocumentClassification>
+      <ukm:Made Date="2024-01-15"/>
+      <ukm:ComingIntoForce><ukm:DateTime Date="2024-02-12"/></ukm:ComingIntoForce>
+    </ukm:SecondaryMetadata>
+  </ukm:Metadata>
+  <Secondary>
+    <SecondaryPrelims>
+      <Title>The Example (Amendment) Regulations 2024</Title>
+      <Number Category="UnitedKingdomStatutoryInstrument" Value="100">2024 No. 100</Number>
+      <Preamble><P><Text>The Secretary of State makes these Regulations in exercise of the powers conferred by section 1 of the Example Act 2000.</Text></P></Preamble>
+    </SecondaryPrelims>
+    <Body>
+      <P1group><Title>Citation and commencement</Title>
+        <P1 id="regulation-1"><Pnumber>1</Pnumber><P1para><Text>These Regulations may be cited as the Example (Amendment) Regulations 2024 and come into force on 12th February 2024.</Text></P1para></P1>
+      </P1group>
+      <P1group><Title>Amendment</Title>
+        <P1 id="regulation-2"><Pnumber>2</Pnumber><P1para><Text>In regulation 3 of the Example Regulations 2000, for “10” substitute “12”.</Text></P1para></P1>
+      </P1group>
+    </Body>
+  </Secondary>
+</Legislation>

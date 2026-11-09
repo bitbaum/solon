@@ -14,6 +14,7 @@ export const GLOBE_FEATURES: Readonly<Record<string, { layer: GlobeLayer; id: st
   li: { layer: "countries", id: "438" },
   lux: { layer: "countries", id: "442" },
   ee: { layer: "countries", id: "233" },
+  uk: { layer: "countries", id: "826" },
   at: { layer: "countries", id: "040" },
   de: { layer: "countries", id: "276" },
   us: { layer: "countries", id: "840" },
