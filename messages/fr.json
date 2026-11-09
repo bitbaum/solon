@@ -1382,6 +1382,43 @@
       "ownIntro": "Les dimensions de Solon séparent le droit, la pratique et les résultats et codent les traits du droit sur des échelles écrites, chaque codage montrant son article, sa fiabilité et si une seconde personne l'a vérifié.",
       "back": "Toutes les méthodes",
       "open": "Ouvrir"
+    },
+    "research": {
+      "metaTitle": "Recherche avec l'IA",
+      "metaDescription": "Posez une question sur la gouvernance, la liberté ou les statistiques : une IA lit les séries, dimensions, descriptions de méthodes et le droit de Solon, et écrit un rapport dont chaque chiffre et chaque citation sont vérifiés.",
+      "kicker": "Recherche",
+      "title": "Recherche avec l'IA",
+      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources.",
+      "questionLabel": "Votre question",
+      "placeholder": "Par exemple : comment la charge fiscale de l'Estonie se compare-t-elle à celle de la Suisse, et que dit le droit du taux maximal ?",
+      "ask": "Rechercher",
+      "asking": "Recherche en cours…",
+      "steps": {
+        "search": "Lecture",
+        "write": "Rédaction du rapport"
+      },
+      "tools": {
+        "search_catalog": "Recherche dans le catalogue de",
+        "read_series": "Lecture de la série",
+        "read_dimension": "Lecture de la dimension",
+        "read_method": "Lecture de sa méthode",
+        "search_law": "Recherche dans le droit de",
+        "web_search": "Recherche sur le web de",
+        "web_read": "Lecture de la page"
+      },
+      "sourcesTitle": "Sources trouvées",
+      "reportTitle": "Rapport",
+      "aiLabel": "Écrit par une IA à partir des sources listées. Chaque nombre et chaque citation a été vérifié par rapport à elles ; le raisonnement, non. Vérifiez-le auprès des sources.",
+      "cited": "S'appuie sur",
+      "rateLimited": "Veuillez patienter quelques minutes avant de redemander.",
+      "unavailable": "La recherche n'est pas disponible pour le moment.",
+      "failed": "La recherche n'a pas pu être menée à bien, ou le rapport n'a pas pu être vérifié par rapport à ses sources, et n'est donc pas affiché. Les sources trouvées sont listées.",
+      "examplesTitle": "Ou essayez",
+      "examples": {
+        "a": "Comment l'Estonie et la Suisse se comparent-elles sur les impôts, en droit et dans ce qui est perçu ?",
+        "b": "Que coûte-t-il de quitter un pays, selon le droit, dans les lieux que Solon a codés ?",
+        "c": "Comment la note d'État de droit de la Banque mondiale est-elle faite, et que lui demander ?"
+      }
     }
   }
 }

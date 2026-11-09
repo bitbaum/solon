@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Research with AI.** `/statistics/research` takes a question about governance, freedom,
+  statistics or the law. An AI reads what Solon holds, for a few rounds: series with their
+  definitions and quality notes, dimensions that keep the law, practice and results apart, how
+  published rankings are made, and the law itself, and the open web where one is configured.
+  Every fact it finds is listed as a numbered source, and the report is written from those
+  alone: each number must be one a source holds, each citation a source that exists, each
+  paragraph must cite, and nothing may pass a verdict on a place or a person. A report that fails
+  the check is not shown; the sources still are. {#stats-research}
+
 - **Every country is a place, and governance is measured for all.** 235 more countries are now
   places (the countries no country pack holds in depth), each with the World Bank's indicators,
   and the OECD's tax series for its 38 members. New: six World Bank governance scores (voice and

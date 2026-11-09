@@ -1382,6 +1382,43 @@
       "ownIntro": "Le dimensioni di Solon separano diritto, pratica e risultati e codificano i tratti del diritto su scale scritte; ogni codifica mostra il suo articolo, la sua affidabilità e se una seconda persona l'ha verificata.",
       "back": "Tutti i metodi",
       "open": "Apri"
+    },
+    "research": {
+      "metaTitle": "Ricerca con l'IA",
+      "metaDescription": "Ponete una domanda su governo, libertà o statistica: un'IA legge le serie, le dimensioni, le descrizioni dei metodi e il diritto di Solon e scrive un rapporto in cui ogni cifra e citazione è verificata.",
+      "kicker": "Ricerca",
+      "title": "Ricerca con l'IA",
+      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti.",
+      "questionLabel": "La vostra domanda",
+      "placeholder": "Per esempio: come si confronta il carico fiscale dell'Estonia con quello della Svizzera, e cosa dice il diritto sull'aliquota massima?",
+      "ask": "Ricerca",
+      "asking": "Ricerca in corso…",
+      "steps": {
+        "search": "Lettura",
+        "write": "Stesura del rapporto"
+      },
+      "tools": {
+        "search_catalog": "Cerco nel catalogo",
+        "read_series": "Leggo la serie",
+        "read_dimension": "Leggo la dimensione",
+        "read_method": "Leggo come è fatto",
+        "search_law": "Cerco nel diritto",
+        "web_search": "Cerco sul web",
+        "web_read": "Leggo la pagina"
+      },
+      "sourcesTitle": "Fonti trovate",
+      "reportTitle": "Rapporto",
+      "aiLabel": "Scritto da un'IA dalle fonti elencate. Ogni numero e ogni citazione è stato verificato rispetto a esse; il ragionamento no. Verificatelo sulle fonti.",
+      "cited": "Si basa su",
+      "rateLimited": "Attendete qualche minuto prima di chiedere di nuovo.",
+      "unavailable": "La ricerca non è disponibile in questo momento.",
+      "failed": "La ricerca non ha potuto essere completata, o il rapporto non ha potuto essere verificato rispetto alle sue fonti, e quindi non viene mostrato. Le fonti trovate sono elencate.",
+      "examplesTitle": "Oppure provate",
+      "examples": {
+        "a": "Come si confrontano Estonia e Svizzera sulle imposte, nel diritto e in ciò che si riscuote?",
+        "b": "Quanto costa lasciare un paese, per legge, nei luoghi che Solon ha codificato?",
+        "c": "Come è fatto il punteggio Stato di diritto della Banca mondiale, e cosa chiedergli?"
+      }
     }
   }
 }

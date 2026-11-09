@@ -2075,6 +2075,43 @@
       "ownIntro": "Solon's dimensions keep the law, practice and results apart and code features of the law on written scales, every coding showing its article, its confidence and whether a second person has checked it.",
       "back": "All methods",
       "open": "Open"
+    },
+    "research": {
+      "metaTitle": "Research with AI",
+      "metaDescription": "Ask a question about governance, freedom or statistics: an AI reads Solon's series, dimensions, method descriptions and law, and writes a report whose every figure and citation is checked against what it read.",
+      "kicker": "Research",
+      "title": "Research with AI",
+      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources.",
+      "questionLabel": "Your question",
+      "placeholder": "For example: How does Estonia's tax burden compare with Switzerland's, and what does the law say about the top rate?",
+      "ask": "Research this",
+      "asking": "Researching…",
+      "steps": {
+        "search": "Reading",
+        "write": "Writing the report"
+      },
+      "tools": {
+        "search_catalog": "Looking in the catalog for",
+        "read_series": "Reading the series",
+        "read_dimension": "Reading the dimension",
+        "read_method": "Reading how it is made",
+        "search_law": "Searching the law for",
+        "web_search": "Searching the web for",
+        "web_read": "Reading the page"
+      },
+      "sourcesTitle": "Sources found",
+      "reportTitle": "Report",
+      "aiLabel": "Written by an AI from the sources listed. Every number and every citation was checked against them; the reasoning was not. Check it against the sources.",
+      "cited": "Rests on",
+      "rateLimited": "Please wait a few minutes before asking again.",
+      "unavailable": "Research is not available just now.",
+      "failed": "The research could not be completed, or the report could not be checked against its sources, so it is not shown. Any sources found are listed.",
+      "examplesTitle": "Or try",
+      "examples": {
+        "a": "How do Estonia and Switzerland compare on taxes, in law and in what is collected?",
+        "b": "What does it cost to leave a country, by law, in the places Solon has coded?",
+        "c": "How is the World Bank's Rule of Law score made, and what should I ask of it?"
+      }
     }
   }
 }

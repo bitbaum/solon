@@ -127,7 +127,7 @@ metric says what it covers (`scope`). Charts are screened by `src/lib/statistics
 (a figure outside its plausible band is left out and listed; misleading comparisons carry a
 warning) and every page can offer an AI explanation (`brief.ts`, `explain.ts`): the model sees
 only the page's numbered facts, and an answer with a number or citation not in them is dropped.
-A check that warns on correct data is a bug: remove or narrow it, do not add a caveat.
+A check that warns on correct data is a bug: remove or narrow it, do not add a caveat. `/statistics/research` (`research.ts`, `research-tools.ts`) lets a model read Solon's data and law with read-only tools: every fact a tool returns is a numbered source, and the report is checked with the same rules.
 
 ## CI
 

@@ -1382,6 +1382,43 @@
       "ownIntro": "Solons Dimensionen halten Recht, Praxis und Ergebnis getrennt und kodieren Merkmale des Rechts auf schriftlichen Skalen; jede Kodierung zeigt ihren Artikel, ihre Zuverlässigkeit und ob eine zweite Person sie geprüft hat.",
       "back": "Alle Methoden",
       "open": "Öffnen"
+    },
+    "research": {
+      "metaTitle": "Recherche mit KI",
+      "metaDescription": "Stellen Sie eine Frage zu Regierungsführung, Freiheit oder Statistik: Eine KI liest Solons Reihen, Dimensionen, Methodenbeschreibungen und das Recht und schreibt einen Bericht, dessen Zahlen und Verweise gegen das Gelesene geprüft sind.",
+      "kicker": "Recherche",
+      "title": "Recherche mit KI",
+      "intro": "Stellen Sie eine Frage zu Regierungsführung, Freiheit, Statistik oder Recht. Eine KI liest, was Solon führt (Reihen mit Definitionen und Qualitätshinweisen, Dimensionen, die Recht, Praxis und Ergebnis trennen, wie veröffentlichte Ranglisten entstehen, das Recht selbst) und schreibt einen kurzen Bericht. Jede Zahl und jeder Verweis darin wird gegen die gelesenen Quellen geprüft, bevor Sie ihn sehen; die Argumentation nicht, lesen Sie also die Quellen.",
+      "questionLabel": "Ihre Frage",
+      "placeholder": "Zum Beispiel: Wie verhält sich Estlands Steuerlast zu der der Schweiz, und was sagt das Recht zum Spitzensatz?",
+      "ask": "Recherchieren",
+      "asking": "Recherche läuft …",
+      "steps": {
+        "search": "Lesen",
+        "write": "Bericht wird geschrieben"
+      },
+      "tools": {
+        "search_catalog": "Suche im Katalog nach",
+        "read_series": "Lese die Reihe",
+        "read_dimension": "Lese die Dimension",
+        "read_method": "Lese, wie sie entsteht",
+        "search_law": "Suche im Recht nach",
+        "web_search": "Suche im Web nach",
+        "web_read": "Lese die Seite"
+      },
+      "sourcesTitle": "Gefundene Quellen",
+      "reportTitle": "Bericht",
+      "aiLabel": "Von einer KI aus den aufgeführten Quellen geschrieben. Jede Zahl und jeder Verweis wurde gegen sie geprüft; die Argumentation nicht. Prüfen Sie sie an den Quellen.",
+      "cited": "Stützt sich auf",
+      "rateLimited": "Bitte warten Sie einige Minuten, bevor Sie erneut fragen.",
+      "unavailable": "Die Recherche ist gerade nicht verfügbar.",
+      "failed": "Die Recherche konnte nicht abgeschlossen oder der Bericht nicht gegen seine Quellen geprüft werden und wird deshalb nicht gezeigt. Gefundene Quellen sind aufgeführt.",
+      "examplesTitle": "Oder versuchen Sie",
+      "examples": {
+        "a": "Wie vergleichen sich Estland und die Schweiz bei den Steuern, im Recht und in dem, was eingenommen wird?",
+        "b": "Was kostet es laut Recht, ein Land zu verlassen, in den Orten, die Solon kodiert hat?",
+        "c": "Wie entsteht der Rechtsstaatlichkeits-Wert der Weltbank, und was sollte ich ihn fragen?"
+      }
     }
   }
 }
