@@ -6,6 +6,7 @@
  */
 import { placesConfig } from "@/lib/config/places";
 import { defineDimensions } from "@/lib/statistics/dimensions";
+import { RUBRICS } from "./rubrics";
 
 const AUTHOR =
   "An example in Solon's configuration (version 1, 2026-11-09), built from OECD series. Not an index.";
@@ -49,6 +50,30 @@ export const DIMENSIONS = defineDimensions(
       },
       author: AUTHOR,
     },
+    {
+      key: "compulsion",
+      version: 1,
+      label: { en: "What the law compels" },
+      summary: {
+        en: "Where the law forces a person to take part in a collective arrangement, as against leaving them to join it or not. Each feature is read from the statute itself and placed on a written scale, with the articles it was read from, how sure the reader is and why, and whether a second person has checked it.",
+      },
+      layers: {
+        de_jure: { rubrics: ["compulsion.military_service"] },
+        de_facto: {
+          wanted: {
+            en: "What is done in practice: how many people are actually called up or serve in a replacement service each year, how many refuse and what happens to them, from defence ministries and justice statistics.",
+          },
+        },
+        outcome: {
+          wanted: {
+            en: "What follows: the share of each age group that serves, and the cost of the service to those who serve, from defence ministries or statistical offices.",
+          },
+        },
+      },
+      author:
+        "An example in Solon's configuration (version 1, 2026-11-09), coded from statutes. Not an index.",
+    },
   ],
   new Set(placesConfig.metrics.filter((m) => m.statistic && !m.retired).map((m) => m.key)),
+  new Set(RUBRICS.map((r) => r.key)),
 );

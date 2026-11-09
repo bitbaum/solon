@@ -7,6 +7,7 @@ import { DIMENSION_LAYERS } from "@/lib/statistics/dimensions";
 import type { loadDimensionPage } from "@/lib/statistics/dimension-page";
 import { chartValue, latestPoint, metricPath } from "@/lib/statistics/present";
 import { unitLabel, type StatisticsTranslator } from "./metric-view";
+import AssessmentSection from "./assessment-section";
 import ScatterPlot from "./scatter-plot";
 
 type Page = NonNullable<Awaited<ReturnType<typeof loadDimensionPage>>>;
@@ -21,13 +22,16 @@ type Page = NonNullable<Awaited<ReturnType<typeof loadDimensionPage>>>;
 export default function DimensionView({
   page,
   locale,
+  selfUrl,
   t,
 }: {
   page: Page;
   locale: Locale;
+  selfUrl: string;
   t: StatisticsTranslator;
 }) {
-  const { dimension, measures, x, y, points, gaps, sameUnit, places, place, timeMeasures } = page;
+  const { dimension, measures, coded, x, y, points, gaps, sameUnit, places, place, timeMeasures } =
+    page;
   const name = (m: { metric: Page["measures"][number]["metric"] }) => {
     const unit = unitLabel(m.metric, t);
     return `${localized(m.metric.label, locale)}${unit ? `, ${unit}` : ""}`;
@@ -48,6 +52,7 @@ export default function DimensionView({
         <section className="grid gap-4 md:grid-cols-3">
           {DIMENSION_LAYERS.map((layer) => {
             const here = measures.filter((m) => m.layer === layer);
+            const hereCoded = coded.filter((c) => c.layer === layer);
             const spec = dimension.layers[layer];
             return (
               <div
@@ -60,13 +65,28 @@ export default function DimensionView({
                 <p className="mb-0 text-sm text-fg-secondary">
                   {t(`dimension.layerMeaning.${layer}`)}
                 </p>
-                {here.length === 0 ? (
+                {here.length === 0 && hereCoded.length === 0 ? (
                   <p className="mb-0 rounded-surface border border-default bg-surface-raised p-3 text-sm text-fg-secondary">
                     <span className="font-semibold text-fg-primary">{t("dimension.noSeries")}</span>{" "}
                     {spec.wanted ? localized(spec.wanted, locale) : ""}
                   </p>
                 ) : (
                   <ul className="space-y-3">
+                    {hereCoded.map(({ rubric, rows }) => (
+                      <li key={rubric.key} className="space-y-1">
+                        <span className="font-medium text-fg-primary">
+                          {localized(rubric.label, locale)}
+                        </span>
+                        <p className="mb-0 text-sm text-fg-secondary">
+                          {rows
+                            .map((r) => {
+                              const point = rubric.scale.find((p) => p.value === r.body.value);
+                              return `${r.placeName} ${r.body.value}${point ? ` (${localized(point.label, locale)})` : ""}`;
+                            })
+                            .join(" · ")}
+                        </p>
+                      </li>
+                    ))}
                     {here.map((m) => (
                       <li key={m.metric.key} className="space-y-1">
                         <Link
@@ -92,6 +112,8 @@ export default function DimensionView({
             );
           })}
         </section>
+
+        <AssessmentSection coded={coded} selfUrl={selfUrl} locale={locale} t={t} />
 
         {measures.length >= 1 && (
           <section className="space-y-4">

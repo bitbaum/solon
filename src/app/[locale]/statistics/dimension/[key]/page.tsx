@@ -6,6 +6,8 @@ import { placesConfig } from "@/lib/config/places";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { db } from "@/lib/db/client";
 import { localized } from "@/lib/places/place-view";
+import { getPathname } from "@/i18n/navigation";
+import { SITE } from "@/lib/law/site";
 import { loadDimensionPage } from "@/lib/statistics/dimension-page";
 
 export const dynamic = "force-dynamic";
@@ -40,5 +42,6 @@ export default async function DimensionPage({
   const page = await loadDimensionPage(db, placesConfig, key, locale, await searchParams);
   if (!page) notFound();
   const t = await getTranslations({ locale, namespace: "Statistics" });
-  return <DimensionView page={page} locale={locale} t={t} />;
+  const selfUrl = `${SITE}${getPathname({ href: `/statistics/dimension/${key}`, locale })}`;
+  return <DimensionView page={page} locale={locale} selfUrl={selfUrl} t={t} />;
 }

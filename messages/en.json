@@ -1920,6 +1920,25 @@
       "timeCaption": "{place}: the measures of this dimension that share a unit, by year.",
       "timeNote": "Measures in other units are on their own charts above; no chart here has a second axis.",
       "caveat": "A layer is only as good as the series in it. Where a layer has none, the dimension is silent about it rather than guessing."
+    },
+    "coded": {
+      "title": "Coded from the law",
+      "intro": "Each feature is read from the statute itself and placed on a written scale. A coding is a judgement and can be wrong, so it shows what it was read from, how sure the reader is and why, what it leaves open, who coded it, and whether a second person has checked it.",
+      "edgeCases": "Cases already decided",
+      "rubricAuthor": "Rubric version {version}. {author}",
+      "none": "Nothing coded yet.",
+      "confidence": {
+        "high": "High confidence.",
+        "medium": "Medium confidence.",
+        "low": "Low confidence."
+      },
+      "settled": "Settled: checked by {by}.",
+      "awaiting": "Awaiting a second reader. Until a person other than the coder checks it, treat it as one reader's judgement.",
+      "open": "What it leaves open:",
+      "codedBy": "Coded by {by}; applies from {from}.",
+      "review": "Check this coding",
+      "reviewTitle": "Check the coding: {title}",
+      "reviewBody": "Page: {url}\nCoding: {key}\nI have read the cited articles and I agree or disagree, and why: \nPages or words I relied on: \n"
     }
   }
 }
