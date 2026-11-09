@@ -68,7 +68,7 @@ describe("the world pack", () => {
       expect(sourceKeys.has(`worldbank-wdi-${a2.toLowerCase()}`), a2).toBe(false);
   });
 
-  it("spreads the OECD's sources so none starts within five minutes of another", () => {
+  it("spreads the OECD's sources so none starts within two minutes of another", () => {
     const cadences = placesConfig.sources
       .filter((s) => s.key.startsWith("oecd-tax-") && s.packs.includes("world"))
       .map((s) => s.cadence.split(" "))
@@ -76,7 +76,7 @@ describe("the world pack", () => {
     expect(cadences.length).toBeGreaterThan(30);
     const sorted = [...cadences].sort((a, b) => a - b);
     for (let i = 1; i < sorted.length; i++)
-      expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(5);
+      expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(2);
   });
 });
 

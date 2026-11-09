@@ -1291,12 +1291,11 @@ function worldSources(): SourceInput[] {
       adapter: "fixture",
       packs: ["world"],
     },
-    // Spread over the morning, so no publisher sees a burst. The OECD's SDMX API allows about 60
-    // data requests an hour per client and answers the rest with 500: a source asks five, so one
-    // starts every five minutes. The World Bank is asked one country a minute.
+    // Spread over the morning, so no publisher sees a burst: the World Bank is asked one country a
+    // minute, the OECD one every two.
     ...countries.map((a2, i) => worldBankSource("world", a2, staggered(i, 9))),
     ...countries
       .filter((a2) => OECD_MEMBERS.includes(a2))
-      .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 5))),
+      .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),
   ];
 }

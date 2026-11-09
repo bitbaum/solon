@@ -34,9 +34,10 @@ A country that gets a pack of its own leaves the world pack by regenerating the 
 are re-pointed to its pack (`worldBankSource`/`oecdSource` take the pack as an argument).
 
 Schedules are spread through the morning (the World Bank one country a minute, the OECD one every
-five minutes): the OECD's SDMX API allows about 60 data requests an hour and answers the rest with
-500. The importer names itself in its User-Agent, retries a server error five times with backoff and
-paces the OECD six seconds between requests.
+two). The importer names itself in its User-Agent and sends `accept` and `accept-language: en`:
+the OECD's SDMX gateway answered Node's default request (`accept-language: *`) with 500, and the
+same request with a plain language with 200, found on 2026-11-09 by trying the headers one at a
+time. It retries a server error five times with backoff.
 
 ## Next: research with AI
 

@@ -26,17 +26,22 @@ export interface FetchOptions {
   backfill?: boolean;
   adapters?: ReadonlyMap<string, Adapter>;
   fetchImpl?: typeof fetch;
-  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 1 s, and 6 s for the OECD, which answers a burst with 500). */
+  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 1 s). */
   paceMs?: number;
 }
 
 const FETCH_TIMEOUT_MS = 120_000;
 
 export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): Promise<Response> {
-  // Say who is asking, as the law reader does: publishers that rate-limit anonymous clients
-  // answer a named one (the OECD's SDMX API answered the default client 500, a named one 200).
+  // Say who is asking, as the law reader does, and say what is wanted. The OECD's SDMX API
+  // answered Node's default request (`accept-language: *`) with 500 and the same request with
+  // a plain language and a data type with 200: a gateway rule, not a rate limit (found 2026-11-09).
   const init: RequestInit = {
-    headers: { "user-agent": "Solon places importer (solon.orangecat.ch)" },
+    headers: {
+      "user-agent": "Solon places importer (solon.orangecat.ch)",
+      accept: "text/csv, application/json;q=0.9, */*;q=0.5",
+      "accept-language": "en",
+    },
   };
   if (request.body !== undefined) {
     init.method = "POST";
@@ -110,10 +115,7 @@ export async function fetchAndImport(db: Database, options: FetchOptions): Promi
     adapters,
     fetchImpl,
   });
-  // The OECD's SDMX API answers a burst with 500 (about 60 data requests an hour are allowed), so
-  // its sources are paced; the World Bank and the rest are asked politely, not slowly.
-  const source = options.config.sources.find((x) => x.key === options.sourceKey);
-  const paceMs = options.paceMs ?? (source?.adapter === "oecd_sdmx" ? 6_000 : 1_000);
+  const paceMs = options.paceMs ?? 1_000;
   for (const [i, request] of requests.entries()) {
     if (i > 0 && paceMs > 0) {
       await new Promise((resolve) => setTimeout(resolve, paceMs));
