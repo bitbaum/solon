@@ -96,7 +96,10 @@ describe("planSync — config is the producer, the tables its projection", () =>
   it("retires and brings back a key when config says so", () => {
     const retired: RegistryRows = {
       ...testland,
-      metrics: testland.metrics.map((m) => ({ ...m, retired: m.key === "test.multiplier" })),
+      metrics: testland.metrics.map((m) => ({
+        ...m,
+        retired: m.key === "test.multiplier" ? true : m.retired,
+      })),
     };
     expect(planSync(retired, testland, NOTHING_USED).changes).toEqual([
       { registry: "metrics", key: "test.multiplier", action: "retire" },

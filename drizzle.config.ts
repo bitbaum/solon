@@ -22,6 +22,7 @@ export default defineConfig({
     "./src/lib/db/places-schema.ts",
     "./src/lib/db/law-schema.ts",
     "./src/lib/db/amendments-schema.ts",
+    "./src/lib/db/statistics-schema.ts",
   ],
   out: "./drizzle",
   dialect: "postgresql",

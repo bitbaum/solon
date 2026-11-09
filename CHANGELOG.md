@@ -8,6 +8,50 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **What happened to the law, step by step.** Every mark on a statistic's timeline now opens
+  an event page: what changed in the law (the wording before and after), how it came about,
+  how each body voted (by party where the record gives it), who started it, sponsored it,
+  recommended it or opposed it, what was claimed about its effect and what critics said (kept
+  apart from what happened, each with who said it), and what the numbers did around it. Five
+  events are loaded, each with the pages they were read on: Estonia's rise of the income tax
+  rate from 20% to 22%, the US Tax Cuts and Jobs Act, two Swiss firearms ballots (2011 and
+  2019) and the 1982 Kennesaw gun ordinance. {#stats-events} {#stats-event-numbers}
+
+- **Maps, scatter plots and your own axes.** Each statistic has a world map shaded by its
+  latest values; any two measures can be set against each other in a scatter plot; every
+  axis shows all its measures at once as parallel lines; and you can build an axis of your
+  own from the measures you pick, the direction of each and a weight, kept in the link so it
+  can be shared, saved or proposed to a group. {#stats-map} {#stats-charts-more} {#stats-axes}
+
+- **Numbers that mean the same thing in every country.** The first version charted central
+  government's tax revenue and expense, which made federal countries such as Switzerland and
+  the United States look small. They are replaced by tax revenue and expenditure for all
+  levels of government, and every chart now says what its numbers cover. {#stats-series}
+
+- **Statistics beside the law.** A new page, `/statistics`, shows five series over time
+  for Switzerland, Liechtenstein, Estonia and the United States: the top statutory income
+  tax rate (OECD Tax Database); government consumption, government expense and tax
+  revenue as shares of GDP; and intentional homicides per 100,000 (World Bank). They are
+  read from the publishers every month, and each value is kept with the day it was read.
+  Every bar and point opens the publisher's own figures, and every chart can be read as
+  a table. {#stats-series} {#stats-first} {#stats-charts}
+
+- **The law a series is about, and its changes on the same years.** A series links to the
+  articles it is about, each link with why and the page it was checked on: the federal
+  income tax tariff (DBG Art. 36), Estonia's income tax rate (TuMS § 4) and intentional
+  killing in Switzerland (StGB Art. 111). Each link opens the article and a way to propose
+  a change to it. Under the line chart, a timeline marks every day a version of a linked
+  act took effect, with the caveat that a line moving afterwards does not show the law
+  moved it. Links are never edited: a change or a removal is a new row in an append-only
+  record. {#stats-law-links} {#stats-events} {#stats-timeline}
+
+- **Axes with your weights, saved views as evidence.** An axis reads several series along
+  one stated direction. It is a definition with its author, scored only among the places
+  shown, and the reader sets every weight. A group can vote its own axes and weights as
+  its `statistic_axes` policy. Any chart can be saved under the hash of what it shows, and
+  a proposal that links a saved view carries it as evidence. {#stats-axes} {#stats-views}
+  {#stats-governed}
+
 - **United Kingdom legislation.** Solon now reads the United Kingdom's Public General Acts
   and Statutory Instruments from legislation.gov.uk, The National Archives' official
   service: each item by its address (`ukpga/2018/12`), titled in English, with its current

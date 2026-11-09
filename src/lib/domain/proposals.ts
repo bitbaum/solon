@@ -19,6 +19,7 @@ import { methodId } from "@/lib/domain/methods/db-enum";
 import { methodSpec } from "@/lib/domain/methods";
 import { proofOf, voterRef, type Actor } from "@/lib/domain/proof";
 import { effectPairingProblem, parseEffect } from "@/lib/domain/effects";
+import { attachCitedViews } from "@/lib/statistics/views";
 
 export interface CreateProposalInput {
   orgSlug: string;
@@ -249,6 +250,9 @@ export async function createProposal(input: CreateProposalInput): Promise<Create
         ...(effect ? { effect } : {}),
       },
     });
+    // A saved statistics view the text links becomes the proposal's evidence:
+    // the hash is in the signed text, so the record cites exactly that view.
+    await attachCitedViews(tx, p.id, input.body, member.id);
     return p;
   });
 

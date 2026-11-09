@@ -147,6 +147,8 @@ export const unitedStates: CountryPackInput = {
   identifierSchemes: ["iso_3166_1", "iso_3166_2", "us_state_fips", "us_county_fips"],
   sources: [
     "us-census-units",
+    "worldbank-wdi-us",
+    "oecd-tax-us",
     "us-census-county-boundaries",
     "us-federal-income-tax",
     "wy-income-tax",

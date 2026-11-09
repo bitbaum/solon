@@ -161,3 +161,80 @@ annotate "this caused that".
 - How a reader's unsaved weights are kept without storing anything about the
   reader (principle 9: privacy by architecture) — the address bar, as the
   atlas does.
+
+## What was built (2026-11-08)
+
+- **Series.** Metrics carry a `statistic` block (definition, publisher, series
+  code, page) in `src/lib/config/places/metrics.ts`; sources are generated from
+  it in `sources.ts`, so a series code is written once. Two adapters:
+  `worldbank_indicators` (World Bank Indicators API v2, JSON) and `oecd_sdmx`
+  (OECD SDMX, CSV with codes). Both licences are CC BY 4.0. A percentage is
+  stored as a ratio. A year with no value is skipped and reported, never stored as
+  zero. A server error from a publisher is retried twice, because the OECD's API
+  answered 500 and then 200 on the same day.
+- **The record.** `statistic_records` (`src/lib/db/statistics-schema.ts`) is one
+  append-only log for law links, events and enforcement: the latest row of a
+  `record_key` is its state, and a trigger refuses updates and deletes. The
+  curated list is `src/lib/config/statistics/records.ts`, written by
+  `pnpm run statistics:sync` and by every run of the daily places cron. Each record
+  names its place and its act by identifiers, so it survives a reload of either.
+  A record whose place is not loaded yet is skipped and tried again on the next run.
+- **Law events** are read from `legal_act_versions` of the linked acts, dated by the
+  publisher, and are never entered twice.
+- **Pages.** `/statistics` shows ranked bars per series and the axes.
+  `/statistics/<metric>` is a line chart of the chosen places, with a timeline of
+  law events over the same years, the linked law, enforcement and per-place
+  sources; the metric's dots become hyphens in the path, because a dotted path skips
+  the locale routing. `/statistics/view/<sha256>` is a saved view. All five
+  languages are covered.
+- **Evidence.** `statistic_views` keeps a view under the sha256 of its canonical
+  spec. `createProposal` attaches every saved view its text links
+  (`proposal_evidence`) in the same transaction, so the hash is inside the signed
+  text.
+- **Axes.** `src/lib/statistics/axes.ts` scores among the places shown (min to
+  max, turned by sign, weighted mean). Reader weights come from the link
+  (`w.<metric>=`). A group's own axes are its active `statistic_axes` policy,
+  read with `?org=`.
+
+### Added 2026-11-09
+
+- **Scope.** A statistic carries a `scope` sentence shown beside every chart. The first
+  version charted central-government-only series (World Bank `GC.TAX.TOTL.GD.ZS`,
+  `GC.XPN.TOTL.GD.ZS`), which put Switzerland at 9.5% of GDP in tax and Estonia at
+  22.7%; the OECD's all-levels figures are 27.2% and 35.2% (2024). Those two metrics are
+  retired and replaced by `tax.revenue.general` (Revenue Statistics) and
+  `economy.government.expenditure` (Government at a Glance); `tax.revenue.central_share`
+  is the central government's share of all tax collected, a decentralisation proxy.
+  SDMX series that share a flow and measure are told apart by `match` columns.
+- **Events.** An event record (`src/lib/config/statistics/events.ts`) holds what
+  changed (the wording before and after, in its own language, with a translation),
+  `process` steps, `votes` (counts or a share, with a breakdown by party that must add
+  up to the totals), `actors` by role (initiator, sponsor, responsible, voted for or
+  against, recommended yes or no, supported, opposed, said), `reported` statements
+  (claim, critique, context, each with who made it), the `series` to chart, a caveat,
+  and the pages everything was read on. Every line needs a source, enforced by the
+  schema; a claim about an effect is never a fact in Solon's voice. Sources read for the
+  first five: Riigikogu's open API and Riigi Teataja (Estonia), GovInfo bill status and
+  the House Clerk's roll call (US), Swissvotes (CC BY 4.0), the Christian Science
+  Monitor of 17 March 1982 and Scientific American (Kennesaw). The US Senate's site
+  refused a plain request, so its vote is taken from GovInfo's bill status instead.
+- **Pages.** `/statistics/event/<slug>`, `/statistics/events` (filter by place and kind),
+  timeline marks that open them (two marks when the change begins later than the
+  decision), the numbers around an event (its line cut at the year the change applies
+  and scaled to itself, peers on their own chart, and a table: the year before, the year
+  of, three years on, and the change), `/statistics/compare` (scatter), parallel
+  coordinates in every axis panel, a world map per statistic on `@bitbaum/geo-kit`
+  (`ISO_NUMERIC` in `config/statistics/world.ts` must list every pack's country; a test
+  enforces it) and a reader-built axis kept in the link.
+- **What the Kennesaw page shows, and does not.** The ordinance text, the vote
+  (unanimous, per the 1982 report, no count), the council members, police chief, NRA and
+  anti-handgun coalition quoted then, the officials' burglary claim and McDowall's
+  critique of 1981 as the base year. Solon holds no burglary series for a city that size,
+  so no chart is drawn and the page says so.
+
+Still open, with the reason, on the roadmap: the map with every country (it
+needs the world as places), enforcement statements, more series (Eurostat,
+national offices, the tax wedge), who lobbied beyond who voted, the axes of
+collectivism and exit (they need series nobody has loaded), event markers on
+the line, and moving scatter, parallel coordinates and the map into the shared
+packages.

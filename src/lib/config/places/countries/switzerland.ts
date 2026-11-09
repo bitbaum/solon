@@ -505,6 +505,8 @@ export const switzerland: CountryPackInput = {
   },
   sources: [
     "bfs-communes-snapshot",
+    "worldbank-wdi-ch",
+    "oecd-tax-ch",
     "bfs-communes-mutations",
     "zurich-statistical-quarters",
     "zurich-municipal-multipliers",

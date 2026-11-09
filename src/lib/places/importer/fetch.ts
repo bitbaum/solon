@@ -26,23 +26,42 @@ export interface FetchOptions {
   backfill?: boolean;
   adapters?: ReadonlyMap<string, Adapter>;
   fetchImpl?: typeof fetch;
+  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 2 s). */
+  paceMs?: number;
 }
 
 const FETCH_TIMEOUT_MS = 120_000;
 
-async function send(fetchImpl: typeof fetch, request: RetrievalRequest): Promise<Response> {
-  const init: RequestInit = { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) };
+export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): Promise<Response> {
+  const init: RequestInit = {};
   if (request.body !== undefined) {
     init.method = "POST";
     init.headers = { "content-type": "application/json" };
     init.body = JSON.stringify(request.body);
   }
-  const response = await fetchImpl(request.url, init);
-  if (!response.ok) {
-    throw new Error(`${describeRequest(request)}: HTTP ${response.status}`);
+  // A server error is retried four times, backing off from a few seconds: some publishers
+  // (the OECD's SDMX API, 2026-11-08) answer 500 now and 200 a moment later.
+  for (let attempt = 0; ; attempt += 1) {
+    const response = await fetchImpl(request.url, {
+      ...init,
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (response.ok) {
+      return response;
+    }
+    if (response.status < 500 || attempt >= RETRIES_ON_SERVER_ERROR) {
+      throw new Error(`${describeRequest(request)}: HTTP ${response.status}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, retryDelayMs * 2 ** attempt));
   }
-  return response;
 }
+
+const RETRIES_ON_SERVER_ERROR = 4;
+let retryDelayMs = 4_000;
+/** Tests shorten the wait between retries. */
+export const setRetryDelayForTests = (ms: number) => {
+  retryDelayMs = ms;
+};
 
 /** One line per request: the URL, and the body when it is a POST. */
 export const describeRequest = (request: RetrievalRequest): string =>
@@ -87,7 +106,11 @@ export async function fetchAndImport(db: Database, options: FetchOptions): Promi
     adapters,
     fetchImpl,
   });
-  for (const request of requests) {
+  const paceMs = options.paceMs ?? 2_000;
+  for (const [i, request] of requests.entries()) {
+    if (i > 0 && paceMs > 0) {
+      await new Promise((resolve) => setTimeout(resolve, paceMs));
+    }
     const response = await send(fetchImpl, request);
     const bytes =
       request.body === undefined

@@ -1,0 +1,116 @@
+[
+  {
+    "page": 1,
+    "pages": 1,
+    "per_page": 1000,
+    "total": 8,
+    "sourceid": "2",
+    "lastupdated": "2026-10-08"
+  },
+  [
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2025",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2024",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2023",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2022",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2021",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2020",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2019",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    },
+    {
+      "indicator": {
+        "id": "NE.CON.GOVT.ZS",
+        "value": "General government final consumption expenditure (% of GDP)"
+      },
+      "country": { "id": "LI", "value": "Liechtenstein" },
+      "countryiso3code": "LIE",
+      "date": "2018",
+      "value": null,
+      "unit": "",
+      "obs_status": "",
+      "decimal": 1
+    }
+  ]
+]

@@ -52,7 +52,7 @@ export const METRIC_VALUE_TYPES = ["number", "tariff"] as const;
 export type MetricValueType = (typeof METRIC_VALUE_TYPES)[number];
 
 /** What a number means; a currency amount always carries its ISO 4217 code on the fact. */
-export const METRIC_UNITS = ["ratio", "count", "currency", "none"] as const;
+export const METRIC_UNITS = ["ratio", "count", "currency", "per_100k", "none"] as const;
 export type MetricUnit = (typeof METRIC_UNITS)[number];
 
 /** How far a level's coverage reaches inside its parent (§5.2). */

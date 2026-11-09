@@ -20,6 +20,9 @@ importers:
       '@bitbaum/ai-kit':
         specifier: ^1.24.0
         version: 1.24.0(react@19.3.1)
+      '@bitbaum/chartkit':
+        specifier: ^0.7.0
+        version: 0.7.0(react@19.3.1)
       '@bitbaum/chatkit':
         specifier: ^0.22.1
         version: 0.22.1(react@19.3.1)
@@ -395,6 +398,12 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@bitbaum/chartkit@0.7.0':
+    resolution: {integrity: sha512-E1Df9N4yr/9pWWUUc8a4e6NyfSFMK2njOIeiDjI3gxfxDjO8jqoDCT67gjQTyMLr5nnYoJSyDHNwd8247+kAAQ==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: '>=18'
 
   '@bitbaum/chatkit@0.22.1':
     resolution: {integrity: sha512-hAvxeJbpsMS6Jn0TTNyiVRpbhmsQqx52dG6woCH+UbZCZhuK4czldjIU8LpHppMk/NDuz7Yg+phKxJ6HDNiIkw==}
@@ -4677,6 +4686,10 @@ snapshots:
       react: 19.3.1
     transitivePeerDependencies:
       - canvas
+
+  '@bitbaum/chartkit@0.7.0(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
 
   '@bitbaum/chatkit@0.22.1(react@19.3.1)':
     dependencies:
