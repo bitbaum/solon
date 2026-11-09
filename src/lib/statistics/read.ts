@@ -9,7 +9,14 @@ import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
 import type { NameType } from "@/lib/places/vocabulary";
-import { BODY_SCHEMAS, type ActRef, type EventBody, type LawLinkBody } from "./records";
+import {
+  BODY_SCHEMAS,
+  reviewStatus,
+  type ActRef,
+  type AssessmentBody,
+  type EventBody,
+  type LawLinkBody,
+} from "./records";
 import type { StatisticRecordKind } from "./vocabulary";
 
 export interface SeriesPoint {
@@ -341,4 +348,54 @@ export async function actFor(
     (titles.find((t) => t.locale === locale) ?? titles.find((t) => t.locale === "en") ?? titles[0])
       ?.text ?? null;
   return { actId, title, versions: rowsOf<{ day: string }>(dates).map((d) => d.day) };
+}
+
+export interface AssessmentRow {
+  recordKey: string;
+  jurisdictionId: string;
+  placeCode: string;
+  placeName: string;
+  body: AssessmentBody;
+  status: "settled" | "awaiting_review";
+  /** Where each provision can be read in Solon's law register, when it holds the act. */
+  provisions: { label: string; actId: string | null; provision: string | null }[];
+}
+
+/** The codings currently asserted for the given rubrics, each with its place named and where its articles can be read. */
+export async function loadAssessments(
+  db: Database,
+  config: PlacesConfig,
+  rubricKeys: readonly string[],
+  locale: string,
+): Promise<AssessmentRow[]> {
+  const records = (await currentRecords(db, { kinds: ["assessment"] })).filter((r) =>
+    rubricKeys.includes((r.body as AssessmentBody).rubric),
+  );
+  const ids = [...new Set(records.flatMap((r) => (r.jurisdictionId ? [r.jurisdictionId] : [])))];
+  if (ids.length === 0) return [];
+  const labels = await placeLabels(db, config, ids, locale);
+  const rows: AssessmentRow[] = [];
+  for (const r of records) {
+    const label = r.jurisdictionId ? labels.get(r.jurisdictionId) : undefined;
+    if (!r.jurisdictionId || !label) continue;
+    const body = r.body as AssessmentBody;
+    const provisions = [];
+    for (const p of body.provisions) {
+      provisions.push({
+        label: p.label,
+        actId: await findAct(db, p.act),
+        provision: p.provision,
+      });
+    }
+    rows.push({
+      recordKey: r.recordKey,
+      jurisdictionId: r.jurisdictionId,
+      placeCode: label.code,
+      placeName: label.name,
+      body,
+      status: reviewStatus(body),
+      provisions,
+    });
+  }
+  return rows.sort((a, b) => a.placeName.localeCompare(b.placeName, locale));
 }

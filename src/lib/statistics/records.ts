@@ -6,7 +6,7 @@
  */
 import { z } from "zod";
 import { localizedTextSchema } from "@/lib/config/places/schema";
-import { ENFORCEMENT_FORMS } from "./vocabulary";
+import { ASSESSMENT_CONFIDENCES, ASSESSMENT_METHODS, ENFORCEMENT_FORMS } from "./vocabulary";
 
 const placeRef = z.object({ scheme: z.string().min(1), value: z.string().min(1) });
 const isoDate = z.iso.date();
@@ -195,10 +195,60 @@ export const enforcementBodySchema = z.object({
   evidence: z.array(evidenceSchema).min(1),
 });
 
+/**
+ * A legal feature read from a text and placed on a rubric's scale. A judgement
+ * can be wrong, so it carries what it was read from (provisions and the words,
+ * each with the page and the words the page must still hold), how sure the
+ * reader is and why, who coded it and who checked it. It is shown as settled
+ * only once a person other than the coder has checked it.
+ */
+export const assessmentBodySchema = z.object({
+  place: placeRef,
+  /** The rubric's key; its question and scale decide what the value means. */
+  rubric: z.string().min(1),
+  /** The version of the rubric the coder worked from. */
+  rubricVersion: z.number().int().positive(),
+  /** A point on the rubric's scale. */
+  value: z.number(),
+  validFrom: isoDate,
+  validTo: isoDate.nullable(),
+  method: z.enum(ASSESSMENT_METHODS),
+  confidence: z.enum(ASSESSMENT_CONFIDENCES),
+  confidenceNote: localizedTextSchema,
+  /** The reading in a sentence: what the text says that puts it at this point. */
+  reading: localizedTextSchema,
+  /** The articles it was read from, linked to the law register where it holds them. */
+  provisions: z
+    .array(
+      z.object({
+        act: actRefSchema,
+        provision: z.string().min(1).nullable(),
+        label: z.string().min(1),
+      }),
+    )
+    .min(1),
+  /** The words that decide it, in the language they were enacted in. */
+  quotes: z.array(wordingSchema).min(1),
+  /** What the reading leaves open, and what would change it. */
+  open: localizedTextSchema.optional(),
+  codedBy: z.string().min(1),
+  /** People other than the coder who checked it; empty until someone has. */
+  reviewedBy: z.array(z.string().min(1)).default([]),
+  evidence: z.array(evidenceSchema).min(1),
+});
+
+/** Settled once someone other than the coder has checked it; until then it is shown as awaiting a second reader. */
+export const reviewStatus = (b: {
+  codedBy: string;
+  reviewedBy: readonly string[];
+}): "settled" | "awaiting_review" =>
+  b.reviewedBy.some((r) => r !== b.codedBy) ? "settled" : "awaiting_review";
+
 export const BODY_SCHEMAS = {
   law_link: lawLinkBodySchema,
   event: eventBodySchema,
   enforcement: enforcementBodySchema,
+  assessment: assessmentBodySchema,
 } as const;
 
 export const curatedRecordSchema = z.discriminatedUnion("kind", [
@@ -220,6 +270,12 @@ export const curatedRecordSchema = z.discriminatedUnion("kind", [
     metric: z.string().min(1).nullable(),
     body: enforcementBodySchema,
   }),
+  z.object({
+    key: z.string().regex(/^[a-z0-9][a-z0-9._:-]*$/),
+    kind: z.literal("assessment"),
+    metric: z.null(),
+    body: assessmentBodySchema,
+  }),
 ]);
 export type CuratedRecord = z.infer<typeof curatedRecordSchema>;
 export type CuratedRecordInput = z.input<typeof curatedRecordSchema>;
@@ -228,6 +284,7 @@ export type EventBody = z.infer<typeof eventBodySchema>;
 export type EventVote = z.infer<typeof voteSchema>;
 export type EventActor = z.infer<typeof actorSchema>;
 export type EnforcementBody = z.infer<typeof enforcementBodySchema>;
+export type AssessmentBody = z.infer<typeof assessmentBodySchema>;
 
 /** Parse the curated list and cross-check it against the metric catalog and the law's authorities. */
 export function defineCuratedRecords(
@@ -236,6 +293,8 @@ export function defineCuratedRecords(
     metrics: ReadonlySet<string>;
     authorities: ReadonlySet<string>;
     schemes: ReadonlySet<string>;
+    /** Each rubric's current version and the points of its scale; assessments are checked against them. */
+    rubrics?: ReadonlyMap<string, { version: number; values: readonly number[] }>;
   },
 ): CuratedRecord[] {
   const records = input.map((r) => curatedRecordSchema.parse(r));
@@ -280,6 +339,38 @@ export function defineCuratedRecords(
             `record "${record.key}": the breakdown's votes against (${against}) do not add up to ${vote.against}`,
           );
         }
+      }
+    }
+    if (record.kind === "assessment") {
+      const b = record.body;
+      const rubric = known.rubrics?.get(b.rubric);
+      if (!rubric) {
+        problems.push(
+          `record "${record.key}": rubric "${b.rubric}" does not exist; a feature with no rubric is refused`,
+        );
+      } else {
+        if (b.rubricVersion !== rubric.version) {
+          problems.push(
+            `record "${record.key}": coded on rubric version ${b.rubricVersion}, the current one is ${rubric.version}`,
+          );
+        }
+        if (!rubric.values.includes(b.value)) {
+          problems.push(`record "${record.key}": ${b.value} is not a point of the rubric's scale`);
+        }
+      }
+      for (const p of b.provisions) {
+        if (!known.authorities.has(p.act.authority)) {
+          problems.push(`record "${record.key}": unknown authority "${p.act.authority}"`);
+        }
+        if (!known.schemes.has(p.act.scheme)) {
+          problems.push(`record "${record.key}": unknown act identifier scheme "${p.act.scheme}"`);
+        }
+      }
+      if (b.validTo !== null && b.validTo <= b.validFrom) {
+        problems.push(`record "${record.key}": it ends before it begins`);
+      }
+      if (b.reviewedBy.includes(b.codedBy)) {
+        problems.push(`record "${record.key}": the coder cannot be the one who reviews it`);
       }
     }
     if (record.kind === "enforcement" && record.body.form === "rate" && !record.body.rateMetric) {

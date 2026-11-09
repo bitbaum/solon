@@ -13,13 +13,16 @@
 import { ACT_IDENTIFIER_SCHEMES, LAW_AUTHORITIES } from "@/lib/config/law";
 import { placesConfig } from "@/lib/config/places";
 import { defineCuratedRecords, type CuratedRecordInput } from "@/lib/statistics/records";
+import { ASSESSMENT_RECORDS } from "./assessments";
 import { EVENT_RECORDS } from "./events";
+import { RUBRICS } from "./rubrics";
 
 const FEDLEX = "Fedlex, the Federal Chancellery's publication platform";
 const RIIGI_TEATAJA = "Riigi Teataja (State Gazette)";
 
 const RECORDS: readonly CuratedRecordInput[] = [
   ...EVENT_RECORDS,
+  ...ASSESSMENT_RECORDS,
   {
     // Read 2026-11-08: DBG (SR 642.11) Art. 36 in the version in force from
     // 2026-09-02 states the federal income tax tariff for a single person.
@@ -130,4 +133,7 @@ export const STATISTIC_RECORDS = defineCuratedRecords(RECORDS, {
   metrics: new Set(placesConfig.metrics.map((m) => m.key)),
   authorities: new Set(LAW_AUTHORITIES.map((a) => a.key)),
   schemes: new Set<string>(ACT_IDENTIFIER_SCHEMES),
+  rubrics: new Map(
+    RUBRICS.map((r) => [r.key, { version: r.version, values: r.scale.map((p) => p.value) }]),
+  ),
 });

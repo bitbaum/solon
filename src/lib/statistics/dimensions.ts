@@ -23,6 +23,8 @@ export type DimensionLayer = (typeof DIMENSION_LAYERS)[number];
 const layerSchema = z.object({
   /** Metric keys of live statistics, each a measure on this layer. */
   metrics: z.array(z.string().min(1)).default([]),
+  /** Rubric keys of legal features coded from the law, each a measure on this layer. */
+  rubrics: z.array(z.string().min(1)).default([]),
   /** What series would fill the layer, where it holds none; required then. */
   wanted: localizedTextSchema.optional(),
 });
@@ -48,6 +50,7 @@ export const measuresOf = (d: Dimension): { metric: string; layer: DimensionLaye
 export function defineDimensions(
   input: readonly DimensionInput[],
   liveMetrics: ReadonlySet<string>,
+  rubricKeys: ReadonlySet<string> = new Set(),
 ): Dimension[] {
   const dimensions = input.map((d) => dimensionSchema.parse(d));
   const problems: string[] = [];
@@ -58,10 +61,16 @@ export function defineDimensions(
     keys.add(d.key);
     for (const layer of DIMENSION_LAYERS) {
       const l = d.layers[layer];
-      if (l.metrics.length === 0 && !l.wanted) {
+      if (l.metrics.length === 0 && l.rubrics.length === 0 && !l.wanted) {
         problems.push(
           `dimension "${d.key}": the ${layer} layer has no series and does not say what would fill it`,
         );
+      }
+      for (const r of l.rubrics) {
+        if (!rubricKeys.has(r)) problems.push(`dimension "${d.key}": rubric "${r}" does not exist`);
+        const where = placed.get(`rubric:${r}`);
+        if (where) problems.push(`rubric "${r}" is on two layers: ${where} and ${d.key}.${layer}`);
+        placed.set(`rubric:${r}`, `${d.key}.${layer}`);
       }
       for (const m of l.metrics) {
         if (!liveMetrics.has(m))

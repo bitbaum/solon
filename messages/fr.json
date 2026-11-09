@@ -1227,6 +1227,25 @@
       "timeCaption": "{place} : les mesures de cette dimension qui partagent une unité, par année.",
       "timeNote": "Les mesures dans d'autres unités figurent plus haut sur leurs propres graphiques ; aucun graphique ici n'a de second axe.",
       "caveat": "Une couche ne vaut que par les séries qu'elle contient. Là où elle n'en a pas, la dimension se tait au lieu de deviner."
+    },
+    "coded": {
+      "title": "Codé d'après la loi",
+      "intro": "Chaque caractéristique est lue dans la loi elle-même et placée sur une échelle écrite. Un codage est un jugement et peut être faux ; il montre donc ce dont il a été tiré, le degré de certitude du lecteur et pourquoi, ce qu'il laisse ouvert, qui l'a codé, et si une deuxième personne l'a vérifié.",
+      "edgeCases": "Cas déjà tranchés",
+      "rubricAuthor": "Grille, version {version}. {author}",
+      "none": "Rien n'est encore codé.",
+      "confidence": {
+        "high": "Confiance élevée.",
+        "medium": "Confiance moyenne.",
+        "low": "Confiance faible."
+      },
+      "settled": "Établi : vérifié par {by}.",
+      "awaiting": "En attente d'un deuxième lecteur. Tant qu'une personne autre que celle qui l'a codé ne l'a pas vérifié, tenez-le pour le jugement d'un seul lecteur.",
+      "open": "Ce qu'il laisse ouvert :",
+      "codedBy": "Codé par {by} ; s'applique dès le {from}.",
+      "review": "Vérifier ce codage",
+      "reviewTitle": "Vérifier le codage : {title}",
+      "reviewBody": "Page : {url}\nCodage : {key}\nJ'ai lu les articles cités et je suis d'accord ou non, et pourquoi : \nPages ou termes sur lesquels je me suis appuyé : \n"
     }
   }
 }

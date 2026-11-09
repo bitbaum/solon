@@ -1,0 +1,2 @@
+ALTER TABLE "statistic_records" DROP CONSTRAINT "statistic_records_kind_check";--> statement-breakpoint
+ALTER TABLE "statistic_records" ADD CONSTRAINT "statistic_records_kind_check" CHECK ("statistic_records"."kind" IN ('law_link', 'event', 'enforcement', 'assessment'));

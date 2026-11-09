@@ -205,7 +205,7 @@ Solon score; each licence must be read first.
 | Axes | `src/lib/config/statistics/axes.ts`; a group's own as the `statistic_axes` policy | Versioned, authored; weights are the reader's or the group's |
 | Saved views and evidence | `statistic_views` (sha256 of the spec), `proposal_evidence` | Append-only; a proposal that links a view carries it |
 
-### Next **[next]**: coded assessments
+### Coded assessments **[built, first codings 2026-11-09]**
 
 Numbers come from publishers. **Coded legal features** (is possession a
 criminal or an administrative offence? what is the maximum penalty? can a member

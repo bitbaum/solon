@@ -4,6 +4,17 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-09
+
+### Added
+
+- **What the law compels, read from the statutes.** `/statistics/dimension/compulsion` shows
+  compulsory military service coded on a written four-point scale: Switzerland and Estonia
+  at 2 (service with a civilian alternative), the United States at 1 (registration and
+  liability; medium confidence, with what is left open). Each coding names the articles it
+  was read from, quotes their wording, says how sure the reader is and why, and shows
+  "awaiting a second reader" until someone other than the coder has checked it. {#stats-assessments}
+
 ## 2026-11-08
 
 ### Added
