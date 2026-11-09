@@ -413,6 +413,24 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "5586" },
     within: "vd",
   },
+  {
+    key: "bfs351",
+    name: "Bern (city)",
+    place: { scheme: "bfs_municipality", value: "351" },
+    within: "be",
+  },
+  {
+    key: "bfs6633",
+    name: "Vernier",
+    place: { scheme: "bfs_municipality", value: "6633" },
+    within: "ge",
+  },
+  {
+    key: "bfs6421",
+    name: "La Chaux-de-Fonds",
+    place: { scheme: "bfs_municipality", value: "6421" },
+    within: "ne",
+  },
 ];
 
 /**
