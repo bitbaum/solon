@@ -165,7 +165,16 @@ jobs:
             exit 0
           fi
           if [ "$SOURCE" = "box-stop" ]; then
+            # Only the loads whose command names the "publisher" input (a source or publisher key such as
+            # ukleg); "all" ends every one. The input's default names nothing, so a bare run ends nothing.
             for pid in $(holders); do
+              if [ "$PUBLISHER" != "all" ]; then
+                named=0
+                for t in $(tree "$pid"); do
+                  tr '\0' ' ' < "/proc/$t/cmdline" 2>/dev/null | grep -q -- "$PUBLISHER" && named=1
+                done
+                [ "$named" = 1 ] || continue
+              fi
               echo "ending the tree of pid $pid"
               for t in $(tree "$pid"); do kill -TERM "$t" 2>/dev/null || true; done
             done
