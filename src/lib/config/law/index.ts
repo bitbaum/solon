@@ -676,6 +676,9 @@ export const LEXWORK = {
     { host: "winterthur.tlex.ch", authority: "bfs230" },
     { host: "st.gallen.tlex.ch", authority: "bfs3203" },
     { host: "biel-bienne.tlex.ch", authority: "bfs371" },
+    // Bern's Systematische Sammlung des Stadtrechts, on the city's own host; the first run says
+    // whether it answers LexWork's interface.
+    { host: "stadtrecht.bern.ch", authority: "bfs351" },
   ] as readonly { host: string; authority: string }[],
 } as const;
 

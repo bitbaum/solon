@@ -8,7 +8,6 @@ import {
   geneveCity,
   vernier,
   chauxDeFonds,
-  bernCity,
   koeniz,
   lausanneCity,
   luganoCity,
@@ -47,7 +46,6 @@ export const PUBLISHERS: Readonly<Record<string, PublisherAdapter>> = {
   [geneveCity.key]: geneveCity,
   [vernier.key]: vernier,
   [chauxDeFonds.key]: chauxDeFonds,
-  [bernCity.key]: bernCity,
   [lausanneCity.key]: lausanneCity,
 
   [luzernCity.key]: luzernCity,
