@@ -68,6 +68,7 @@ export interface AtlasTokens {
   land: string;
   text: string;
   muted: string;
+  faint: string;
   font: string;
   dark: boolean;
 }
@@ -90,6 +91,7 @@ export function readAtlasTokens(): AtlasTokens {
     land: token(s, "--surface-base"),
     text: token(s, "--text-primary"),
     muted: token(s, "--text-secondary"),
+    faint: token(s, "--text-tertiary"),
     font: s.getPropertyValue("--font-sans").trim() || "system-ui, sans-serif",
     dark: document.documentElement.classList.contains("dark"),
   };

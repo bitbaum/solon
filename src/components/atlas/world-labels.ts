@@ -215,28 +215,51 @@ export function worldLabels(
   return out;
 }
 
-/** The label styles, from the page's own type and colours. */
+/**
+ * The label styles, from the page's own type and colours. A quiet hierarchy,
+ * as a good atlas sets it: countries small, spaced capitals in a muted colour
+ * (they name an area, not a point); capitals and towns in the text colour
+ * beside a small dot; subdivisions faint and italic, last in line. Each keeps
+ * room around it, most for the quietest, so the map is never a wall of names.
+ */
 export function labelStyles(colours: {
   text: string;
   muted: string;
+  faint: string;
   halo: string;
-  dot: string;
   font: string;
 }): LabelStyles {
-  const { text, muted, halo, dot, font } = colours;
+  const { text, muted, faint, halo, font } = colours;
   return {
-    default: { font: `500 11px ${font}`, colour: text, halo, haloWidth: 3 },
+    default: { font: `500 11px ${font}`, colour: text, halo, haloWidth: 3, padding: 6 },
     country: {
-      font: `600 11px ${font}`,
+      font: `600 10.5px ${font}`,
+      colour: muted,
+      halo,
+      haloWidth: 3,
+      uppercase: true,
+      tracking: 1.6,
+      padding: 10,
+    },
+    region: { font: `italic 500 10.5px ${font}`, colour: faint, halo, haloWidth: 2.5, padding: 12 },
+    capital: {
+      font: `600 12px ${font}`,
       colour: text,
       halo,
-      haloWidth: 3.5,
-      uppercase: true,
-      tracking: 1.2,
+      haloWidth: 3,
+      dot: text,
+      dotRadius: 3,
+      padding: 8,
     },
-    region: { font: `italic 500 11px ${font}`, colour: muted, halo, haloWidth: 3 },
-    capital: { font: `600 12px ${font}`, colour: text, halo, haloWidth: 3, dot, dotRadius: 3.5 },
-    town: { font: `500 11px ${font}`, colour: text, halo, haloWidth: 3, dot, dotRadius: 2.5 },
+    town: {
+      font: `500 11px ${font}`,
+      colour: text,
+      halo,
+      haloWidth: 3,
+      dot: muted,
+      dotRadius: 2,
+      padding: 7,
+    },
   };
 }
 

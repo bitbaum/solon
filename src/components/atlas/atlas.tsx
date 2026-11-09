@@ -159,43 +159,37 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
   );
   const [admin1, setAdmin1] = useState<Map<string, MapFeature[]>>(new Map());
   const [towns, setTowns] = useState<Map<string, Town[]>>(new Map());
+  // Asked once per country; a result is kept whenever it lands, so a newer view never drops it.
+  const askedTowns = useRef(new Set<string>());
   useEffect(() => {
     if (!cam || !worldIndex) return;
     const { camera } = cam;
     if (camera.k < zoomOfLevel(TOWNS_FROM_LEVEL, cam.radius)) return;
     const reach = (Math.asin(Math.min(1, 1.4 / camera.k)) * 180) / Math.PI;
-    const wanted = countriesNear(worldIndex, camera.center, reach, 6).filter(
-      (a2) => !towns.has(a2),
-    );
-    let cancelled = false;
-    for (const a2 of wanted) {
+    for (const a2 of countriesNear(worldIndex, camera.center, reach, 6)) {
+      if (askedTowns.current.has(a2)) continue;
+      askedTowns.current.add(a2);
       loadTowns(a2, worldIndex).then(
-        (list) => !cancelled && setTowns((was) => (was.has(a2) ? was : new Map(was).set(a2, list))),
-        () => undefined,
+        (list) => setTowns((was) => (was.has(a2) ? was : new Map(was).set(a2, list))),
+        () => askedTowns.current.delete(a2),
       );
     }
-    return () => {
-      cancelled = true;
-    };
-  }, [cam, worldIndex, towns]);
+  }, [cam, worldIndex]);
+  const askedAdmin1 = useRef(new Set<string>());
   useEffect(() => {
     if (!cam || !worldIndex) return;
     const { camera } = cam;
     if (camera.k < zoomOfLevel(ADMIN1_FROM_LEVEL, cam.radius)) return;
     const reach = (Math.asin(Math.min(1, 1.4 / camera.k)) * 180) / Math.PI;
-    const wanted = countriesNear(worldIndex, camera.center, reach).filter((a2) => !admin1.has(a2));
-    let cancelled = false;
-    for (const a2 of wanted) {
+    for (const a2 of countriesNear(worldIndex, camera.center, reach)) {
+      if (askedAdmin1.current.has(a2)) continue;
+      askedAdmin1.current.add(a2);
       loadAdmin1(a2, worldIndex).then(
-        (features) =>
-          !cancelled && setAdmin1((was) => (was.has(a2) ? was : new Map(was).set(a2, features))),
-        () => undefined,
+        (features) => setAdmin1((was) => (was.has(a2) ? was : new Map(was).set(a2, features))),
+        () => askedAdmin1.current.delete(a2),
       );
     }
-    return () => {
-      cancelled = true;
-    };
-  }, [cam, worldIndex, admin1]);
+  }, [cam, worldIndex]);
 
   // The country open, by its law key, and its places when drawn.
   const [open, setOpen] = useState<string | null>(mode === "full" ? initial : null);
@@ -300,8 +294,11 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
     const all = world ?? [];
     const countries = all.filter((f) => f.id.startsWith("countries:"));
     const rest = all.filter((f) => !f.id.startsWith("countries:"));
-    const subdivisions = [...admin1].flatMap(([a2, features]) => (a2 === openA2 ? [] : features));
-    const base = [...countries, ...subdivisions, ...rest];
+    // Each lies over the one before, so each is its own layer (geo-kit never merges layers into one path).
+    const subdivisions = [...admin1]
+      .flatMap(([a2, features]) => (a2 === openA2 ? [] : features))
+      .map((f) => ({ ...f, layer: 1 }));
+    const base = [...countries, ...subdivisions, ...rest.map((f) => ({ ...f, layer: 2 }))];
     if (!drawn) return base;
     return [
       ...base,
@@ -309,6 +306,7 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
         id: SUB + f.properties.code,
         geometry: f.geometry,
         properties: {},
+        layer: 3,
       })),
     ];
   }, [world, drawn, admin1, openA2]);
@@ -481,8 +479,19 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
 
   const labels = useMemo(
     () =>
-      labelData ? worldLabels(labelData, locale, radius, new Set(openA2 ? [openA2] : [])) : [],
-    [labelData, locale, radius, openA2],
+      labelData
+        ? [
+            ...worldLabels(
+              labelData,
+              locale,
+              radius,
+              new Set(openA2 ? [openA2] : []),
+              new Set(towns.keys()),
+            ),
+            ...[...towns].flatMap(([a2, list]) => townLabels(a2, list, radius)),
+          ]
+        : [],
+    [labelData, locale, radius, openA2, towns],
   );
   const styles = useMemo(
     () =>
@@ -490,8 +499,8 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
         ? labelStyles({
             text: tokens.text,
             muted: tokens.muted,
+            faint: tokens.faint,
             halo: tokens.land,
-            dot: tokens.text,
             font: tokens.font,
           })
         : null,

@@ -65,6 +65,7 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
   const map = useRef<MapController | null>(null);
   const [tip, setTip] = useState<{ text: string; x: number; y: number } | null>(null);
   const reported = useRef("");
+  const controls = useRef<HTMLDivElement>(null);
   const settle = useRef(0);
   const live = useRef(props);
   useEffect(() => {
@@ -104,6 +105,17 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
         return true;
       },
       labels: live.current.labels ?? [],
+      // The zoom buttons float over the map: no name goes under them.
+      labelKeepClear: () => {
+        const c = controls.current;
+        const host = box.current;
+        if (!c || !host) return [];
+        const a = c.getBoundingClientRect();
+        const b = host.getBoundingClientRect();
+        return [
+          [a.left - b.left - 4, a.top - b.top - 4, a.right - b.left + 4, a.bottom - b.top + 4],
+        ];
+      },
       ...(live.current.labelStyles ? { labelStyles: live.current.labelStyles } : {}),
       ...(live.current.onSelectLabel
         ? { onSelectLabel: (id: string) => live.current.onSelectLabel?.(id) }
@@ -181,7 +193,10 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
         className="block h-full w-full cursor-grab outline-none focus-visible:ring-2 focus-visible:ring-accent"
         onPointerLeave={() => setTip(null)}
       />
-      <div className="absolute bottom-3 right-3 flex flex-col overflow-hidden rounded-control border border-default bg-surface-overlay">
+      <div
+        ref={controls}
+        className="absolute bottom-3 right-3 flex flex-col overflow-hidden rounded-control border border-default bg-surface-overlay"
+      >
         <button
           type="button"
           className={control}
