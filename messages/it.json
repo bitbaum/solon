@@ -1227,6 +1227,25 @@
       "timeCaption": "{place}: le misure di questa dimensione che condividono un'unità, per anno.",
       "timeNote": "Le misure in altre unità stanno più su, nei loro grafici; nessun grafico qui ha un secondo asse.",
       "caveat": "Uno strato vale quanto le serie che contiene. Dove non ne ha, la dimensione tace invece di indovinare."
+    },
+    "coded": {
+      "title": "Codificato dalla legge",
+      "intro": "Ogni caratteristica è letta dalla legge stessa e collocata su una scala scritta. Una codifica è un giudizio e può essere sbagliata; perciò mostra da che cosa è stata letta, quanto è sicuro chi l'ha letta e perché, che cosa lascia aperto, chi l'ha codificata e se una seconda persona l'ha verificata.",
+      "edgeCases": "Casi già decisi",
+      "rubricAuthor": "Griglia, versione {version}. {author}",
+      "none": "Ancora nulla di codificato.",
+      "confidence": {
+        "high": "Alta fiducia.",
+        "medium": "Fiducia media.",
+        "low": "Bassa fiducia."
+      },
+      "settled": "Accertata: verificata da {by}.",
+      "awaiting": "In attesa di un secondo lettore. Finché una persona diversa da chi l'ha codificata non la verifica, considerala il giudizio di un solo lettore.",
+      "open": "Che cosa lascia aperto:",
+      "codedBy": "Codificata da {by}; vale dal {from}.",
+      "review": "Verifica questa codifica",
+      "reviewTitle": "Verificare la codifica: {title}",
+      "reviewBody": "Pagina: {url}\nCodifica: {key}\nHo letto gli articoli citati e sono d'accordo o no, e perché: \nPagine o parole su cui mi sono basato: \n"
     }
   }
 }

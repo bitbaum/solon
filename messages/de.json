@@ -1227,6 +1227,25 @@
       "timeCaption": "{place}: die Messgrössen dieser Dimension mit gleicher Einheit, nach Jahr.",
       "timeNote": "Messgrössen in anderen Einheiten stehen oben auf eigenen Diagrammen; kein Diagramm hier hat eine zweite Achse.",
       "caveat": "Eine Schicht ist nur so gut wie die Reihen darin. Wo sie keine hat, schweigt die Dimension dazu, statt zu raten."
+    },
+    "coded": {
+      "title": "Aus dem Gesetz kodiert",
+      "intro": "Jedes Merkmal wird aus dem Gesetz selbst gelesen und auf einer geschriebenen Skala eingeordnet. Eine Kodierung ist ein Urteil und kann falsch sein; deshalb zeigt sie, woraus sie gelesen wurde, wie sicher sich der Leser ist und warum, was sie offenlässt, wer sie kodiert hat und ob eine zweite Person sie geprüft hat.",
+      "edgeCases": "Bereits entschiedene Fälle",
+      "rubricAuthor": "Raster in Version {version}. {author}",
+      "none": "Noch nichts kodiert.",
+      "confidence": {
+        "high": "Hohe Sicherheit.",
+        "medium": "Mittlere Sicherheit.",
+        "low": "Geringe Sicherheit."
+      },
+      "settled": "Gesichert: geprüft von {by}.",
+      "awaiting": "Wartet auf einen zweiten Leser. Solange keine andere Person als der Kodierer sie geprüft hat, gilt sie als Urteil eines einzigen Lesers.",
+      "open": "Was sie offenlässt:",
+      "codedBy": "Kodiert von {by}; gilt ab {from}.",
+      "review": "Diese Kodierung prüfen",
+      "reviewTitle": "Die Kodierung prüfen: {title}",
+      "reviewBody": "Seite: {url}\nKodierung: {key}\nIch habe die genannten Artikel gelesen und stimme zu oder nicht, und warum: \nSeiten oder Worte, auf die ich mich gestützt habe: \n"
     }
   }
 }

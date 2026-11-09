@@ -105,6 +105,22 @@ text you read; the human page may be unreadable by a program (`unchecked`).
   (never which end is better) and an `author`. Use only series whose scope is the
   same in every country shown.
 
+## 4a. Code a legal feature
+
+A coding reads one feature of a law onto a written scale.
+
+1. Write the rubric in `src/lib/config/statistics/rubrics.ts`: the question, every point of
+   the scale with a definition, and the edge cases decided so far. Changing a point's
+   meaning means a new `version`; old codings keep the version they were made under.
+2. Add the coding to `src/lib/config/statistics/assessments.ts`: the place, the rubric and
+   its current version, the value, the provisions (act and article) and the quoted
+   wording with where it was read, a `confidence` and, below high, what is `open`.
+   Code only from a text you opened.
+3. Put the rubric on a layer of a dimension (`rubrics: [...]`).
+4. `reviewedBy` starts empty. The page says "awaiting a second reader" until a person other
+   than `codedBy` is named there; the loader refuses the coder as their own reviewer.
+5. `pnpm run statistics:sync`, then `pnpm run statistics:verify` to check the cited words.
+
 ## 5. Add a country
 
 A country is a pack and its sources (see `docs/design/2026-09-places-and-jurisdictions.md`).

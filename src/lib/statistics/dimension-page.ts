@@ -9,7 +9,9 @@ import type { Database } from "@/lib/db/client";
 import { scatterPoints, type ScatterPoint } from "./compare";
 import { measuresOf, type Dimension, type DimensionLayer } from "./dimensions";
 import { findStatistic, latestPoint } from "./present";
-import { loadSeries, type PlaceSeries } from "./read";
+import { RUBRICS } from "@/lib/config/statistics/rubrics";
+import { DIMENSION_LAYERS } from "./dimensions";
+import { loadAssessments, loadSeries, type PlaceSeries } from "./read";
 
 export interface Measure {
   metric: Metric;
@@ -41,6 +43,17 @@ export async function loadDimensionPage(
     const metric = findStatistic(config, mk);
     if (metric) measures.push({ metric, layer, series: await loadSeries(db, config, mk, locale) });
   }
+  // Features coded from the law, by rubric, each with the codings that place a country on its scale.
+  const rubricKeys = DIMENSION_LAYERS.flatMap((layer) => dimension.layers[layer].rubrics);
+  const assessments = await loadAssessments(db, config, rubricKeys, locale);
+  const coded = DIMENSION_LAYERS.flatMap((layer) =>
+    dimension.layers[layer].rubrics.flatMap((key) => {
+      const rubric = RUBRICS.find((r) => r.key === key);
+      return rubric
+        ? [{ layer, rubric, rows: assessments.filter((a) => a.body.rubric === key) }]
+        : [];
+    }),
+  );
   const byKey = new Map(measures.map((m) => [m.metric.key, m]));
   // The default pair: the headline measure against the next one the dimension names.
   const x = byKey.get(query.x ?? "") ?? measures[0];
@@ -64,6 +77,7 @@ export async function loadDimensionPage(
   return {
     dimension,
     measures,
+    coded,
     x: x ?? null,
     y: y ?? null,
     points,
