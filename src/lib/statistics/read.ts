@@ -16,6 +16,8 @@ export interface SeriesPoint {
   /** The calendar year the value describes. */
   year: number;
   value: number;
+  /** What the publisher says about the figure; ordinary unless it says otherwise. */
+  quality: "normal" | "estimated" | "provisional" | "forecast";
 }
 
 export interface PlaceSeries {
@@ -120,13 +122,14 @@ export async function loadSeries(
     jurisdiction_id: string;
     valid_from: string;
     value: string;
+    quality: SeriesPoint["quality"];
     source_key: string;
     url: string | null;
     retrieved_at: Date | string;
   }>(
     await db.execute(sql`
       SELECT f.jurisdiction_id, f.valid_from::text AS valid_from, f.value_numeric::text AS value,
-             s.source_key, s.url, s.retrieved_at
+             f.quality, s.source_key, s.url, s.retrieved_at
       FROM facts f JOIN sources s ON s.id = f.source_id
       WHERE f.metric_key = ${metricKey} AND f.superseded_at IS NULL AND f.value_numeric IS NOT NULL
         AND f.variant IS NULL
@@ -146,7 +149,11 @@ export async function loadSeries(
       series = { jurisdictionId: f.jurisdiction_id, ...place, points: [], source: sourceOf(f) };
       byPlace.set(f.jurisdiction_id, series);
     }
-    series.points.push({ year: Number(f.valid_from.slice(0, 4)), value: Number(f.value) });
+    series.points.push({
+      year: Number(f.valid_from.slice(0, 4)),
+      value: Number(f.value),
+      quality: f.quality,
+    });
     series.source = sourceOf(f); // ordered by period, so the last is the latest value's
   }
   return [...byPlace.values()].sort((a, b) => a.name.localeCompare(b.name, locale));

@@ -127,10 +127,10 @@ export function compareAround(
  * applies, the two sharing the last year before so the line stays joined. A
  * chart draws the two in different colours: the break is what the reader sees.
  */
-export function splitAt(
-  points: readonly { year: number; value: number }[],
+export function splitAt<T extends { year: number }>(
+  points: readonly T[],
   pivot: number,
-): { before: { year: number; value: number }[]; from: { year: number; value: number }[] } {
+): { before: T[]; from: T[] } {
   const before = points.filter((p) => p.year < pivot);
   const from = points.filter((p) => p.year >= pivot);
   const join = before.at(-1);

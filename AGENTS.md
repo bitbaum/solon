@@ -113,6 +113,18 @@ pnpm run verify       # format:check + lint + typecheck + design:check + check:p
   predates this history and is baselined in the deploy ledger
   (`public._deploy_schema_history`), so these two files never run there.
 
+## Statistics
+
+The statistics layer (`/statistics`, design `docs/design/2026-11-freedom-framework.md`,
+how to add content `docs/development/adding-statistics.md`) holds series as `facts`,
+curated links and events in the append-only `statistic_records`, and dimensions and axes
+in `src/lib/config/statistics/`. Three commands keep it honest: `pnpm run statistics:sync`
+writes the curated records, `pnpm run statistics:quality` reports gaps and large steps per
+series, and `pnpm run statistics:verify` fetches every page a record cites and checks the
+words it is expected to hold (a weekly workflow runs it). Every line of a curated record
+needs a source, a claim about an effect is a `reported` line with who made it, and every
+metric says what it covers (`scope`).
+
 ## CI
 
 `.github/workflows/ci.yml` runs two jobs on every push/PR to `main`:

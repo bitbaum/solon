@@ -5,6 +5,8 @@ import { toLocale } from "@/i18n/routing";
 import StatisticsIndex from "@/components/statistics/statistics-index";
 import { placesConfig } from "@/lib/config/places";
 import { EXAMPLE_AXES } from "@/lib/config/statistics/axes";
+import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
+import { localized } from "@/lib/places/place-view";
 import { db } from "@/lib/db/client";
 import { policies } from "@/lib/db/schema";
 import { orgBySlug } from "@/lib/domain/org";
@@ -131,6 +133,11 @@ export default async function StatisticsPage({
     <StatisticsIndex
       statistics={statistics}
       axes={axes}
+      dimensions={DIMENSIONS.map((d) => ({
+        key: d.key,
+        label: localized(d.label, locale),
+        summary: localized(d.summary, locale),
+      }))}
       custom={custom}
       builder={{ chosen: builtAxis }}
       locale={locale}

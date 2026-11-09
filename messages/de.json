@@ -995,7 +995,10 @@
       "customLabel": "Ihre Achse",
       "customDirection": "Höher: die von Ihnen gewählten, gewichteten Messgrössen ergeben zusammen mehr, jede in die von Ihnen gesetzte Richtung gedreht.",
       "customAuthor": "Sie, im Link oben. Kein Index und nicht gespeichert, bis Sie sie speichern.",
-      "compareLink": "Zwei Messgrössen gegeneinander vergleichen"
+      "compareLink": "Zwei Messgrössen gegeneinander vergleichen",
+      "dimensionsTitle": "Gesetz, Praxis und Ergebnis",
+      "dimensionsIntro": "Eine Dimension hält, was das Gesetz sagt, was in der Praxis geschieht und was dabei herauskommt, als getrennte Schichten, nie zu einer Zahl zusammengefasst, damit man die Lücke dazwischen sieht. Eine Schicht ohne Reihe sagt, was sie füllen würde.",
+      "dimensionOpen": "Die drei Schichten öffnen"
     },
     "metric": {
       "metaTitle": "{metric} · Statistik",
@@ -1061,7 +1064,8 @@
       "mapOpen": "Reihe dieses Ortes öffnen",
       "mapColPlace": "Ort",
       "mapColValue": "Wert",
-      "mapColYear": "Jahr"
+      "mapColYear": "Jahr",
+      "preliminary": "vorläufig, geschätzt oder Prognose"
     },
     "view": {
       "metaTitle": "Gespeicherte Ansicht · {metric}",
@@ -1185,6 +1189,44 @@
       "empty": "Noch kein Ort hat beide Messgrössen.",
       "caveat": "Orte, die beieinander liegen, gleichen sich nur in diesen beiden Messgrössen. Ein Muster über eine Handvoll Orte ist kein Beleg dafür, dass das eine das andere verursacht.",
       "back": "Zurück zu allen Statistiken"
+    },
+    "quality": {
+      "title": "Taugt diese Reihe zum Lesen?",
+      "range": "{count} Jahreswerte, {from}–{to}.",
+      "none": "Nichts Auffälliges gefunden.",
+      "gap": "Dazwischen fehlende Jahre: {years}.",
+      "jump": "Ein grosser Sprung in {years}, viel grösser als der übliche der Reihe: mit dem Gesetz oder den Hinweisen des Herausgebers abzugleichen.",
+      "stale": "Der neueste Wert ist von {year}, vor {count} Jahren.",
+      "provisional": "Vom Herausgeber als vorläufig, geschätzt oder Prognose gekennzeichnet: {years}.",
+      "short": "Nur {count} Werte: zu wenig, um Sprünge zu beurteilen.",
+      "how": "Programmatisch aus den Zahlen selbst ermittelt. Es markiert und verwirft nie: ein markierter Wert wird weiter gezeigt, mit seiner Markierung."
+    },
+    "dimension": {
+      "metaTitle": "{label} · Gesetz, Praxis, Ergebnis",
+      "metaDescription": "{label}: was das Gesetz sagt, was in der Praxis geschieht und was herauskommt, als getrennte Schichten mit der Lücke dazwischen.",
+      "kicker": "Dimension",
+      "author": "Version {version}. Definiert von: {author}",
+      "layers": {
+        "de_jure": "Was das Gesetz sagt",
+        "de_facto": "Was in der Praxis geschieht",
+        "outcome": "Was dabei herauskommt"
+      },
+      "layerMeaning": {
+        "de_jure": "Die eigenen Bestimmungen des Gesetzes, einschliesslich dessen, was sie für einen typischen Fall ergeben.",
+        "de_facto": "Durchsetzung, Strafverfolgung, Befolgung und Duldung: was getan wird, was vom Geschriebenen abweichen kann.",
+        "outcome": "Was für Menschen und Gesellschaft folgt: Einnahmen, Preise, Verfügbarkeit, wie frei sich Menschen nennen."
+      },
+      "noSeries": "Noch keine Reihe.",
+      "rankedTitle": "Jede Messgrösse, Ort für Ort",
+      "gapTitle": "Eine Messgrösse gegen eine andere",
+      "gapCaption": "{x} waagrecht, {y} senkrecht, ein Punkt pro Ort im neuesten Jahr, für das er beide hat. Die Tabelle darunter nennt die Lücke je Ort.",
+      "gapTable": "{y} minus {x}, in den eigenen Einheiten der Messgrössen",
+      "gap": "Lücke",
+      "gapNote": "Eine positive Lücke heisst, die zweite Messgrösse ist höher als die erste. Es ist ein Unterschied zwischen zwei Zahlen, die verschiedene Fragen beantworten (der Spitzensatz gilt für die höchsten Einkommen, die Belastung für den Durchschnittslohn), kein Urteil über eine von ihnen.",
+      "timeTitle": "Ein Ort über die Zeit",
+      "timeCaption": "{place}: die Messgrössen dieser Dimension mit gleicher Einheit, nach Jahr.",
+      "timeNote": "Messgrössen in anderen Einheiten stehen oben auf eigenen Diagrammen; kein Diagramm hier hat eine zweite Achse.",
+      "caveat": "Eine Schicht ist nur so gut wie die Reihen darin. Wo sie keine hat, schweigt die Dimension dazu, statt zu raten."
     }
   }
 }

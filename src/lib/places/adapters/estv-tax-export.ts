@@ -14,7 +14,7 @@
  */
 import { z } from "zod";
 import { tariffProblem, type Tariff } from "@/lib/tax-model";
-import type { BatchFact, ExternalRef, tariffSchema } from "../importer/batch";
+import type { BatchFactInput, ExternalRef, tariffSchema } from "../importer/batch";
 import { decodeJsonEnvelope } from "../importer/envelope";
 import { fiscalYearPeriod } from "./csv-facts";
 import { parseFormula } from "./formula";
@@ -307,7 +307,7 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
     }
     const year = exported.request.body.TaxYear;
     const period = fiscalYearPeriod(year, pack.fiscalYear.startMonthDay);
-    const facts = new Map<string, BatchFact>();
+    const facts = new Map<string, BatchFactInput>();
     /** Rows not read, by fact; reported only when no other row gives that fact. */
     const unread = new Map<string, { label: string; reason: string }>();
     const rows = exported.response.response.filter((row) => row.TaxType === options.taxType);
@@ -355,7 +355,7 @@ export const estvTaxScalesAdapter: Adapter<Scales, ScalesOptions> = {
         if (problem) {
           throw new Error(`${label}: ${problem}`);
         }
-        const read: BatchFact[] = tariffMetrics.map((metricKey) => ({
+        const read: BatchFactInput[] = tariffMetrics.map((metricKey) => ({
           jurisdiction: place,
           metricKey,
           variant,
@@ -462,7 +462,7 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
       throw new Error("multipliers belong to a pack's places; the source names none");
     }
     const year = exported.request.body.TaxYear;
-    const facts = new Map<string, BatchFact>();
+    const facts = new Map<string, BatchFactInput>();
     for (const row of exported.response.response) {
       const place = placeOfRate(options, row.Location);
       if (!place) {
@@ -481,7 +481,7 @@ export const estvSimpleRatesAdapter: Adapter<Rates, RatesOptions> = {
           throw new Error(`${place.scheme}:${place.value} ${year}: ${field} is not a number`);
         }
         const key = `${place.scheme}:${place.value} ${metric}`;
-        const fact: BatchFact = {
+        const fact: BatchFactInput = {
           jurisdiction: place,
           metricKey: metric,
           variant: null,

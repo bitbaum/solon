@@ -181,7 +181,10 @@ propose a change on the same page. Several axes of freedom, never one score:
 each axis is a published, versioned definition with its author, and a group's
 weights are its own policy, voted like any other. Statistics are facts in the
 existing places model, not a second store. The reasons, the model and the
-order are in `docs/design/2026-11-freedom-laws-statistics.md`.
+order are in `docs/design/2026-11-freedom-laws-statistics.md`; the framework behind them
+(rules, practice and outcome without political labels, and the collectivism–individualism
+compass defined as compulsion and exit) is `docs/design/2026-11-freedom-framework.md`, and how
+to add content is `docs/development/adding-statistics.md`.
 
 - [x] Statistical series as facts: metrics in the registry with their definition, what they cover (which levels of government, which part of the country) and the publisher's series code, every year's value kept with the retrieval it came from, a revision superseding and never overwriting; read every month from the World Bank's World Development Indicators and the OECD's Tax Database, Revenue Statistics and Government at a Glance for Switzerland, Liechtenstein (World Bank only), Estonia and the United States, at `/statistics`. Series that cover only central government were taken off the charts because they made federal countries look small {#stats-series}
 - [ ] Eurostat's and the national statistical offices' series, beside the World Bank's and the OECD's {#stats-series-more}
@@ -204,6 +207,15 @@ order are in `docs/design/2026-11-freedom-laws-statistics.md`.
 - [ ] More events, loaded one at a time with sources someone read: more tax and firearms laws, and the laws behind each loaded series {#stats-events-more}
 - [ ] What a place claims (its constitution, its statutes) kept apart from what it achieves, as separate metrics on the same axis {#stats-claims}
 - [x] Saved chart views and saved axes, stored under the sha256 of what they show, shared by link, and attached to a proposal as evidence when its text links one {#stats-views}
+- [x] Dimensions held in three layers (what the law says, what happens in practice, what results), never collapsed to one score: each measure ranked place by place, one measure against another with the gap, one place over time, and a layer with no series saying what would fill it. Taxation is loaded: the statutory top rate and the average tax wedge (law), tax revenue and expenditure (outcome); the practice layer waits for tax-gap series {#stats-layers}
+- [x] Data integrity plumbing: a publisher's reliability flag kept on every figure and drawn on the charts, a series-quality report (gaps, large steps, stale, provisional) on every page and as `statistics:quality`, and `statistics:verify`, which checks every page a record cites for the words the record relies on, run weekly {#stats-quality}
+- [ ] The compass as data: collectivism–individualism read as compulsion and exit, from measures coded from the law (conscription, compulsory insurance, compulsory membership, exit tax, cost and time to renounce citizenship, right to resign from an association), each linked to its provision, with the dimension and its weights a group can adopt {#stats-compass}
+- [ ] Exit measures first among them: what it costs a person or a sub-group to leave, in money, time and rights, as series by place {#stats-exit}
+- [ ] Coded assessments: legal features and enforcement ratings as versioned, evidenced records with a rubric, a confidence and a second person's review before they show as settled; the cannabis possession example for Liechtenstein and Monaco is the first specification {#stats-assessments}
+- [ ] The practice layer for the first dimensions: tax compliance and the tax gap, then drug-law enforcement where a publisher has figures {#stats-practice}
+- [ ] Published freedom indexes' components, credited to their publisher and only where their licence has been read and allows it {#stats-indexes}
+- [ ] Law-change markers drawn on the line and paired bars for one place, both added to `@bitbaum/chartkit`, and small multiples {#stats-chartkit-features}
+- [ ] A group adopts a dimension, its layers and its codings as policy, amended by vote, every mapping in the append-only record {#stats-dimension-policy}
 - [x] A group's own axes and weights, voted as its `statistic_axes` policy and read by `/statistics?org=`; the page pre-fills the proposal with the exact content, and the binding version is filed through the API like every policy {#stats-governed}
 
 ### A record anyone can prove complete {#proof}

@@ -9,7 +9,7 @@
  * reported, never stored as zero.
  */
 import { z } from "zod";
-import type { BatchFact } from "../importer/batch";
+import type { BatchFactInput } from "../importer/batch";
 import type { Adapter } from "./types";
 
 const API = "https://api.worldbank.org/v2";
@@ -19,6 +19,8 @@ const row = z.object({
   country: z.object({ id: z.string().min(1), value: z.string() }),
   date: z.string().regex(/^\d{4}$/, "a calendar year"),
   value: z.number().nullable(),
+  /** The World Bank's status for the figure; empty for an ordinary one. */
+  obs_status: z.string().optional(),
 });
 const response = z.tuple([
   z.object({ page: z.number(), pages: z.number(), total: z.number() }).loose(),
@@ -71,7 +73,7 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
     if (page.pages > 1) {
       throw new Error(`the answer has ${page.pages} pages; only one is read`);
     }
-    const facts: BatchFact[] = [];
+    const facts: BatchFactInput[] = [];
     for (const r of rows ?? []) {
       const indicator = options.indicators.find((i) => i.code === r.indicator.id);
       if (!indicator) {
@@ -93,6 +95,9 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
         validFrom: `${year}-01-01`,
         validTo: `${year + 1}-01-01`,
         value: r.value / indicator.divideBy,
+        // The World Bank leaves the status empty; anything it fills in is kept, not interpreted.
+        quality: "normal",
+        publisherFlag: r.obs_status ? r.obs_status : null,
       });
     }
     return { pack: pack.key, jurisdictions: [], facts };

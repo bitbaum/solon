@@ -90,6 +90,7 @@ describe("the OECD Tax Database", () => {
       "https://sdmx.oecd.org/public/rest/data/OECD.GOV.GIP,DSD_GOV@DF_GOV_PF_2025,1.0/A.EST.GE.PT_B1GQ.S13..?startPeriod=2000&format=csvfile",
       "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/EST.TAX_REV.S13._T..PT_B1GQ.A?startPeriod=2000&format=csvfile",
       "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/EST.TAX_REV.S1311._T..PT_OTR_REV_CAT.A?startPeriod=2000&format=csvfile",
+      "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_TAX_WAGES_COMP@DF_TW_COMP,2.1/EST.AV_TW.PT_COS_LB.S_C0.AW100._Z.A?startPeriod=2000&format=csvfile",
     ]);
   });
 
@@ -149,6 +150,12 @@ describe("the OECD's all-levels series", () => {
     expect(central.metricKey).toBe("tax.revenue.central_share");
     expect(central.value).toBeGreaterThan(0.5);
     expect(central.value).toBeLessThan(1);
+    // The wedge is for one household type on one wage; the key narrows the request to it.
+    const wedge = read("oecd-est-tax-wedge.csv").facts.find((f) => f.validFrom === "2023-01-01")!;
+    expect(wedge.metricKey).toBe("tax.wedge.average");
+    expect(wedge.value).toBeCloseTo(0.39894, 4);
+    expect(wedge.quality).toBe("normal");
+    expect(wedge.publisherFlag).toBeNull();
   });
 
   it("no longer charts the central-government-only series, which made federal countries look small", () => {

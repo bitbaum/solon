@@ -12,6 +12,7 @@ import type { EnforcementBody } from "@/lib/statistics/records";
 import type { ViewSpec } from "@/lib/statistics/views";
 import EnforcementList from "./enforcement-list";
 import MetricMap, { type MapValue } from "./metric-map";
+import QualityPanel from "./quality-panel";
 import LawLinks from "./law-links";
 
 /** A day as the reader's language writes it; an ISO date, read as UTC so no timezone moves it. */
@@ -70,6 +71,8 @@ export default function MetricView(props: MetricViewProps) {
         x: String(p.year),
         y: chartValue(metric, p.value),
         href: seriesPageFor(metric, s.code),
+        // The publisher's own word that the figure will be revised or is not an observation.
+        preliminary: p.quality !== "normal",
       })),
   }));
   const actName = (a: LinkedAct) => a.title ?? `${a.link.act.authority} ${a.link.act.value}`;
@@ -206,6 +209,7 @@ export default function MetricView(props: MetricViewProps) {
             unit={unit}
             locale={locale}
             yFrom="zero"
+            preliminaryLabel={t("metric.preliminary")}
             caption={t("metric.chartCaption", {
               metric: label,
               unit,
@@ -266,6 +270,8 @@ export default function MetricView(props: MetricViewProps) {
 
         <LawLinks {...props} label={label} />
         <EnforcementList {...props} label={label} />
+
+        <QualityPanel shown={shown} t={t} />
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-fg-primary">{t("metric.sourcesTitle")}</h2>

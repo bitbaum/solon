@@ -7,7 +7,7 @@
  * also be written by hand, reviewed, and imported with its source.
  */
 import { z } from "zod";
-import { JURISDICTION_RELATIONS, NAME_TYPES } from "../vocabulary";
+import { FACT_QUALITIES, JURISDICTION_RELATIONS, NAME_TYPES } from "../vocabulary";
 
 const isoDate = z.iso.date();
 
@@ -94,6 +94,10 @@ export const batchFactSchema = z.object({
   validFrom: isoDate,
   validTo: isoDate.nullable().default(null),
   value: z.union([z.number(), tariffSchema]),
+  /** What the publisher says about the figure's reliability; ordinary when it says nothing. */
+  quality: z.enum(FACT_QUALITIES).default("normal"),
+  /** The publisher's own code for it. */
+  publisherFlag: z.string().min(1).nullable().default(null),
 });
 
 /** A postcode locality and a place it lies in; one postcode may span several places. */
@@ -178,6 +182,8 @@ export type BatchJurisdiction = z.infer<typeof batchJurisdictionSchema>;
 export type BatchName = z.infer<typeof batchNameSchema>;
 export type BatchRelation = z.infer<typeof batchRelationSchema>;
 export type BatchFact = z.infer<typeof batchFactSchema>;
+/** A fact as an adapter writes it: quality and the publisher's flag may be left out. */
+export type BatchFactInput = z.input<typeof batchFactSchema>;
 export type BatchPostcode = z.infer<typeof batchPostcodeSchema>;
 export type BatchInstrument = z.infer<typeof batchInstrumentSchema>;
 export type BatchArea = z.infer<typeof batchAreaSchema>;

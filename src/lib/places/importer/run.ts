@@ -714,12 +714,17 @@ async function applyBatch(
       valueJson: typeof fact.value === "number" ? null : fact.value,
       currency: typeof fact.value === "number" ? null : fact.value.currency,
       unit: metrics.get(fact.metricKey)?.unit ?? null,
+      quality: fact.quality,
+      publisherFlag: fact.publisherFlag,
     };
     const have = haveFacts.get(factKey(row));
     if (have) {
       const same =
         have.validTo === row.validTo &&
         have.currency === row.currency &&
+        // A figure turning from provisional to final is a revision, kept as one.
+        have.quality === row.quality &&
+        have.publisherFlag === row.publisherFlag &&
         (row.valueNumeric !== null
           ? have.valueNumeric !== null && Number(have.valueNumeric) === Number(row.valueNumeric)
           : canonical(have.valueJson) === canonical(row.valueJson));

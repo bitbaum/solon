@@ -30,6 +30,8 @@
     "places:import-files": "tsx scripts/places-import-files.ts",
     "places:fetch": "tsx scripts/places-fetch.ts",
     "statistics:sync": "tsx scripts/statistics-sync.ts",
+    "statistics:quality": "tsx scripts/statistics-quality.ts",
+    "statistics:verify": "tsx scripts/statistics-verify.ts",
     "law:register": "tsx scripts/law-register.ts",
     "law:text": "tsx scripts/law-text.ts",
     "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts",

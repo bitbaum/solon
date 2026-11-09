@@ -179,11 +179,12 @@ export function NumbersAround({
   const unit = unitLabel(metric, t);
   const label = localized(metric.label, locale);
   const inWindow = (p: { year: number }) => p.year >= window.from && p.year <= window.to;
-  const draw = (code: string, list: { year: number; value: number }[]) =>
+  const draw = (code: string, list: { year: number; value: number; quality: string }[]) =>
     list.map((p) => ({
       x: String(p.year),
       y: chartValue(metric, p.value),
       href: seriesPageFor(metric, code),
+      preliminary: p.quality !== "normal",
     }));
   // The place itself, cut at the change and scaled to its own values so a step
   // of two points is visible; its peers on a chart of their own, since a country
@@ -222,6 +223,7 @@ export function NumbersAround({
         unit={unit}
         locale={locale}
         yFrom="data"
+        preliminaryLabel={t("metric.preliminary")}
         caption={t("event.numbersCaption", {
           metric: label,
           unit,
@@ -236,6 +238,7 @@ export function NumbersAround({
           unit={unit}
           locale={locale}
           yFrom="zero"
+          preliminaryLabel={t("metric.preliminary")}
           caption={t("event.peersCaption", {
             metric: label,
             unit,

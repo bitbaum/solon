@@ -6,7 +6,7 @@
  * source's `options`.
  */
 import { z } from "zod";
-import type { BatchFact } from "../importer/batch";
+import type { BatchFactInput } from "../importer/batch";
 import { decodeCsv } from "./csv";
 import type { Adapter } from "./types";
 
@@ -57,7 +57,7 @@ export const csvFactsAdapter: Adapter<Rows, CsvFactsOptions> = {
     if (!pack) {
       throw new Error("figures belong to a pack's places; the source names none");
     }
-    const facts: BatchFact[] = [];
+    const facts: BatchFactInput[] = [];
     for (const [i, row] of table.entries()) {
       const where = `row ${i + 2}`;
       const year = Number(row[options.yearColumn]);

@@ -47,6 +47,15 @@ export const SELF_STATED_RELATIONS = [
 export const FACT_METHODS = ["imported", "derived", "corrected"] as const;
 export type FactMethod = (typeof FACT_METHODS)[number];
 
+/**
+ * How far a publisher stands behind a figure when it says so: an ordinary
+ * value, an estimate (or imputed value), a provisional value that will be
+ * revised, or a forecast. Anything a publisher does not say is `normal`; its
+ * own code is kept beside it (`publisher_flag`) so nothing is lost.
+ */
+export const FACT_QUALITIES = ["normal", "estimated", "provisional", "forecast"] as const;
+export type FactQuality = (typeof FACT_QUALITIES)[number];
+
 /** What shape a metric's value has, and so which fact column holds it. */
 export const METRIC_VALUE_TYPES = ["number", "tariff"] as const;
 export type MetricValueType = (typeof METRIC_VALUE_TYPES)[number];

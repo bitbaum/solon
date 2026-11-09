@@ -5,7 +5,8 @@
  * metric each becomes are the source's `options`.
  */
 import { z } from "zod";
-import type { BatchFact } from "../importer/batch";
+import type { FactQuality } from "../vocabulary";
+import type { BatchFactInput } from "../importer/batch";
 import { decodeCsv } from "./csv";
 import type { Adapter } from "./types";
 
@@ -48,6 +49,26 @@ export const dataflowColumn = (flow: string): string => {
 export const oecdUrl = (flow: string, key: string, fromYear: number) =>
   `${API}/${flow}/${key}?startPeriod=${fromYear}&format=csvfile`;
 
+/**
+ * SDMX's observation status (OBS_STATUS) as a quality: E and I (estimated,
+ * imputed) are estimates, P provisional, F forecast; A (normal) and the codes
+ * that annotate a figure without doubting it (a break in series, a different
+ * definition) are ordinary. The publisher's own code is kept beside it.
+ */
+export function qualityOfObsStatus(code: string | undefined): FactQuality {
+  switch ((code ?? "").trim().toUpperCase()) {
+    case "E":
+    case "I":
+      return "estimated";
+    case "P":
+      return "provisional";
+    case "F":
+      return "forecast";
+    default:
+      return "normal";
+  }
+}
+
 export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
   key: "oecd_sdmx",
   version: "1",
@@ -62,7 +83,7 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
     if (!pack) {
       throw new Error("figures belong to a pack's places; the source names none");
     }
-    const facts: BatchFact[] = [];
+    const facts: BatchFactInput[] = [];
     for (const [i, row] of table.entries()) {
       const where = `row ${i + 2}`;
       const series = options.series.find(
@@ -98,6 +119,8 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
         validFrom: `${year}-01-01`,
         validTo: `${year + 1}-01-01`,
         value: value / series.divideBy,
+        quality: qualityOfObsStatus(row.OBS_STATUS),
+        publisherFlag: row.OBS_STATUS && row.OBS_STATUS !== "A" ? row.OBS_STATUS : null,
       });
     }
     return { pack: pack.key, jurisdictions: [], facts };
