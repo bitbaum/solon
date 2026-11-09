@@ -161,7 +161,7 @@ describe("the configured collections", () => {
       expect(authority?.place?.scheme, instance.host).toBe("bfs_municipality");
       expect(authority?.key, instance.host).toBe(`bfs${authority?.place?.value}`);
       expect(LAW_AUTHORITIES.some((a) => a.key === authority?.within)).toBe(true);
-      expect(instance.host).toMatch(/^[a-z0-9.-]+\.(?:tlex\.ch|bern\.ch)$/);
+      expect(instance.host).toMatch(/^[a-z0-9.-]+\.tlex\.ch$/);
     }
   });
 });
