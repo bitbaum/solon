@@ -100,7 +100,7 @@ use.
 - [x] The United States in Places: the nation, its fifty states and the District of Columbia, and Wyoming's counties, by their FIPS codes (Census Bureau); another state's counties are data, not code {#places-us}
 - [x] The federal income tax in Places for 2026, single and married filing jointly, with the standard deduction (Rev. Proc. 2025-32), and Wyoming's state income tax recorded as zero (W.S. 39-12-101) {#places-us-tax}
 - [x] The globe names the world: countries, first-level subdivisions (Natural Earth 1:10m, public domain) and every place of 1,000 people or more (GeoNames, CC BY 4.0), placed without overlap and revealed by zoom, loaded a country at a time; zoom where you point; built by `pnpm run geography:world` {#places-globe}
-- [ ] Second-level subdivisions (districts, counties) for every country, from geoBoundaries (CC BY 4.0), loaded the same way, and villages under 1,000 people (GeoNames cities500) where a reader zooms that far {#places-globe-more}
+- [ ] Second-level subdivisions (districts, counties) from geoBoundaries, loaded a country at a time like the first level, and villages under 1,000 people (GeoNames cities500). geoBoundaries carries a licence per country (Public Domain for the United States, swisstopo's terms for Switzerland, "Data license Germany – Attribution – Version 2.0" for Germany, read from its API on 2026-11-09), so each country's licence is read against the policy before its file is built, not the set loaded in bulk {#places-globe-more}
 - [ ] Every state's counties, and each state's own income tax beside the federal one {#places-us-states}
 
 ### Every organization on its own pages
