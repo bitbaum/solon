@@ -292,7 +292,26 @@ Integrity is enforced by the system, not by care. In force today:
    sentence and the tests now prevent it.
 10. **Licences are a gate**: a source's licence must be on the policy before its
     adapter runs.
-11. **Coded assessments will need two different people** (§6).
+11. **Coded assessments need two different people** (§6): a coding shows as
+    awaiting a second reader until someone other than the coder is named.
+12. **A chart is checked for whether it can bear its weight**
+    (`src/lib/statistics/sanity.ts`), on the page and in `statistics:quality`. A figure
+    that is not a number or lies outside the metric's plausible band is left out of
+    the chart and listed; places read at dates more than two years apart, a trend
+    from fewer than three figures, a ranking of fewer than three places, a value
+    carried forward for ten years to the latest, and a scatter of fewer than five
+    points or of points from years far apart each carry a warning above the chart.
+    A check that cried wolf on real data was removed rather than kept: a rate fixed
+    by law legitimately stays put, and the retrieval a figure came from cannot say
+    which publisher it is.
+13. **An AI explanation can only restate the page's facts, and is checked.** Each
+    page's figures become numbered facts without a model (`brief.ts`); a model writes
+    from those alone and must cite them (`explain.ts`). Every number in its answer
+    must be one a fact holds, every citation a fact that exists, every paragraph
+    must cite, and it may not pass a verdict on a place or a person. It gets one
+    retry with the problems named, then it is dropped and the plain facts remain. This
+    catches invented figures and invented sources; it does not prove the reasoning
+    wise, and the page says so.
 
 ### Definition of done for new content
 

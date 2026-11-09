@@ -10,6 +10,7 @@ import { db } from "@/lib/db/client";
 import { statisticMetrics } from "@/lib/statistics/present";
 import { assessSeries } from "@/lib/statistics/quality";
 import { loadSeries } from "@/lib/statistics/read";
+import { checkSeries, screenSeries } from "@/lib/statistics/sanity";
 
 const strict = process.argv.includes("--strict");
 
@@ -17,7 +18,11 @@ async function main(): Promise<number> {
   const thisYear = new Date().getUTCFullYear();
   let bad = 0;
   for (const metric of statisticMetrics(placesConfig)) {
-    const all = await loadSeries(db, placesConfig, metric.key, "en");
+    const screened = screenSeries(
+      metric.plausible,
+      await loadSeries(db, placesConfig, metric.key, "en"),
+    );
+    const all = screened.series;
     console.log(`\n${metric.key} (${all.length} place${all.length === 1 ? "" : "s"})`);
     if (all.length === 0) {
       console.log("  no figures loaded");
@@ -31,8 +36,13 @@ async function main(): Promise<number> {
       );
       if (q.notes.some((n) => n.kind === "gap" || n.kind === "stale")) bad += 1;
     }
+    // What the chart of this statistic would carry a warning about, or leave out.
+    for (const f of [...screened.findings, ...checkSeries(all)]) {
+      console.log(`  ! ${f.severity} ${f.kind}: ${f.places.join(", ")} ${f.years.join(",")}`);
+      if (f.severity === "withheld") bad += 1;
+    }
   }
-  console.log(`\n${bad} series with a gap or stale`);
+  console.log(`\n${bad} series with a gap, stale, or a figure left out`);
   return strict && bad > 0 ? 1 : 0;
 }
 

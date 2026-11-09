@@ -1939,6 +1939,81 @@
       "review": "Check this coding",
       "reviewTitle": "Check the coding: {title}",
       "reviewBody": "Page: {url}\nCoding: {key}\nI have read the cited articles and I agree or disagree, and why: \nPages or words I relied on: \n"
+    },
+    "sanity": {
+      "title": "Before you rely on this chart",
+      "none": "Nothing here makes the picture misleading.",
+      "how": "Worked out by program from the figures on this page. A figure that cannot be real is left out and listed; anything else only carries a warning.",
+      "withheld": {
+        "non_finite": "Left out because it is not a number ({places}, {years}).",
+        "implausible": "Left out because it lies outside what this measure can be, {min} to {max}: {places}, {years}. Likely an error in the source or in how it was read."
+      },
+      "warn": {
+        "year_spread": "The places are not read at the same date: their latest figures are {from} to {to}, {spread} years apart. Compare them with care; the oldest are {places}.",
+        "short_series": "{places}: only {points} figures. Too few to call a trend.",
+        "constant_series": "{places}: the same value for {run} years in a row, {from} to {to}. That can be a rule that did not change, or a figure filled in rather than measured; check the source.",
+        "few_places": "Only {places} place(s) to compare. A ranking or a map of so few says little.",
+        "thin_scatter": "Only {points} points. Too few to read any pattern from.",
+        "scatter_years": "The points are from different years, {from} to {to} ({spread} years apart); the oldest are {places}."
+      }
+    },
+    "explain": {
+      "title": "Read these figures with help",
+      "intro": "The facts below are worked out by program from this page's figures, with no AI. The explanation, if you ask for one, is written by an AI from these facts only, and is checked against them before you see it.",
+      "factsTitle": "The facts, in plain words",
+      "ask": "Explain with AI",
+      "asking": "Reading the facts…",
+      "questionLabel": "Ask about these figures (optional)",
+      "questionPlaceholder": "For example: why does one place look so different?",
+      "again": "Explain again",
+      "aiLabel": "Written by an AI from the facts above. Every number and every citation was checked against them; the reasoning was not. Check it against the sources.",
+      "cited": "Rests on",
+      "rateLimited": "Please wait a few minutes before asking again.",
+      "unavailable": "The explanation is not available just now. The facts above are.",
+      "failed": "An explanation could not be checked against the figures, so it is not shown. The facts above are.",
+      "pp": " percentage points",
+      "facts": {
+        "definition": "{metric}: {definition} Source: {publisher}.",
+        "latest": "{place}, {year}: {value}",
+        "latestMetric": "{metric} ({layer}), {place}, {year}: {value}",
+        "flagged": "marked {flag} by the publisher",
+        "change": "{place}: {fromValue} in {fromYear}, {toValue} in {toYear} ({direction}{delta}).",
+        "up": "up ",
+        "down": "down ",
+        "same": "unchanged",
+        "rank": "From highest to lowest: {order}.",
+        "event": "{date}, {place}: {title} ({category}).",
+        "quality": "{place}: {note} {years}",
+        "caution": "Caution: {note} {places} {years}",
+        "coded": "{place}, {rubric}: point {value} ({label}), confidence {confidence}, {status}. {reading}",
+        "gap": "{place}, {year}: {xName} {x}; {yName} {y}{difference}",
+        "difference": "; difference {gap}",
+        "empty": "No series yet for {layer}. It would be filled by: {wanted}"
+      },
+      "layers": {
+        "de_jure": "what the law says",
+        "de_facto": "what happens in practice",
+        "outcome": "what results"
+      },
+      "status": {
+        "settled": "checked by a second reader",
+        "awaiting": "not yet checked by a second reader"
+      },
+      "notes": {
+        "gap": "years missing in between",
+        "jump": "a step much larger than usual",
+        "stale": "the latest figure is old",
+        "provisional": "provisional, estimated or forecast figures",
+        "short": "too few figures",
+        "non_finite": "a figure that was not a number was left out",
+        "implausible": "an impossible figure was left out",
+        "year_spread": "places read at years more than two apart",
+        "short_series": "too few figures for a trend",
+        "constant_series": "the same value for many years",
+        "few_places": "too few places to rank",
+        "thin_scatter": "too few points for a pattern",
+        "scatter_years": "points from years far apart"
+      }
     }
   }
 }

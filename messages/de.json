@@ -1246,6 +1246,81 @@
       "review": "Diese Kodierung prüfen",
       "reviewTitle": "Die Kodierung prüfen: {title}",
       "reviewBody": "Seite: {url}\nKodierung: {key}\nIch habe die genannten Artikel gelesen und stimme zu oder nicht, und warum: \nSeiten oder Worte, auf die ich mich gestützt habe: \n"
+    },
+    "sanity": {
+      "title": "Bevor Sie sich auf dieses Diagramm stützen",
+      "none": "Nichts hier macht das Bild irreführend.",
+      "how": "Maschinell aus den Zahlen dieser Seite berechnet. Eine Zahl, die nicht stimmen kann, wird weggelassen und aufgeführt; alles andere trägt nur eine Warnung.",
+      "withheld": {
+        "non_finite": "Weggelassen, weil es keine Zahl ist ({places}, {years}).",
+        "implausible": "Weggelassen, weil es ausserhalb dessen liegt, was dieses Mass sein kann, {min} bis {max}: {places}, {years}. Wahrscheinlich ein Fehler in der Quelle oder beim Einlesen."
+      },
+      "warn": {
+        "year_spread": "Die Orte sind nicht zum selben Zeitpunkt gelesen: ihre neuesten Zahlen liegen zwischen {from} und {to}, {spread} Jahre auseinander. Mit Vorsicht vergleichen; am ältesten sind {places}.",
+        "short_series": "{places}: nur {points} Werte. Zu wenig für einen Trend.",
+        "constant_series": "{places}: derselbe Wert {run} Jahre in Folge, {from} bis {to}. Das kann eine unveränderte Regel sein oder ein eingesetzter statt gemessener Wert; Quelle prüfen.",
+        "few_places": "Nur {places} Ort(e) zum Vergleichen. Eine Rangliste oder Karte mit so wenigen sagt wenig.",
+        "thin_scatter": "Nur {points} Punkte. Zu wenig, um ein Muster zu erkennen.",
+        "scatter_years": "Die Punkte stammen aus verschiedenen Jahren, {from} bis {to} ({spread} Jahre auseinander); am ältesten sind {places}."
+      }
+    },
+    "explain": {
+      "title": "Diese Zahlen mit Hilfe lesen",
+      "intro": "Die Fakten unten werden maschinell aus den Zahlen dieser Seite berechnet, ohne KI. Die Erklärung, wenn Sie eine wollen, schreibt eine KI nur aus diesen Fakten und sie wird geprüft, bevor Sie sie sehen.",
+      "factsTitle": "Die Fakten in einfachen Worten",
+      "ask": "Mit KI erklären",
+      "asking": "Die Fakten werden gelesen …",
+      "questionLabel": "Fragen zu diesen Zahlen (optional)",
+      "questionPlaceholder": "Zum Beispiel: Warum sieht ein Ort so anders aus?",
+      "again": "Nochmals erklären",
+      "aiLabel": "Von einer KI aus den Fakten oben geschrieben. Jede Zahl und jeder Verweis wurde gegen sie geprüft; die Argumentation nicht. Prüfen Sie sie an den Quellen.",
+      "cited": "Stützt sich auf",
+      "rateLimited": "Bitte warten Sie einige Minuten, bevor Sie erneut fragen.",
+      "unavailable": "Die Erklärung ist gerade nicht verfügbar. Die Fakten oben sind es.",
+      "failed": "Eine Erklärung liess sich nicht an den Zahlen prüfen und wird deshalb nicht gezeigt. Die Fakten oben sind da.",
+      "pp": " Prozentpunkte",
+      "facts": {
+        "definition": "{metric}: {definition} Quelle: {publisher}.",
+        "latest": "{place}, {year}: {value}",
+        "latestMetric": "{metric} ({layer}), {place}, {year}: {value}",
+        "flagged": "vom Herausgeber als {flag} markiert",
+        "change": "{place}: {fromValue} im Jahr {fromYear}, {toValue} im Jahr {toYear} ({direction}{delta}).",
+        "up": "gestiegen um ",
+        "down": "gesunken um ",
+        "same": "unverändert",
+        "rank": "Vom höchsten zum tiefsten: {order}.",
+        "event": "{date}, {place}: {title} ({category}).",
+        "quality": "{place}: {note} {years}",
+        "caution": "Vorsicht: {note} {places} {years}",
+        "coded": "{place}, {rubric}: Stufe {value} ({label}), Zuverlässigkeit {confidence}, {status}. {reading}",
+        "gap": "{place}, {year}: {xName} {x}; {yName} {y}{difference}",
+        "difference": "; Unterschied {gap}",
+        "empty": "Noch keine Reihe für {layer}. Sie würde gefüllt durch: {wanted}"
+      },
+      "layers": {
+        "de_jure": "was das Recht sagt",
+        "de_facto": "was in der Praxis geschieht",
+        "outcome": "was herauskommt"
+      },
+      "status": {
+        "settled": "von einer zweiten Person geprüft",
+        "awaiting": "noch nicht von einer zweiten Person geprüft"
+      },
+      "notes": {
+        "gap": "dazwischen fehlende Jahre",
+        "jump": "ein ungewöhnlich grosser Sprung",
+        "stale": "die neueste Zahl ist alt",
+        "provisional": "vorläufige, geschätzte oder prognostizierte Zahlen",
+        "short": "zu wenige Werte",
+        "non_finite": "eine Zahl, die keine war, wurde weggelassen",
+        "implausible": "eine unmögliche Zahl wurde weggelassen",
+        "year_spread": "Orte mit mehr als zwei Jahren Abstand gelesen",
+        "short_series": "zu wenige Werte für einen Trend",
+        "constant_series": "derselbe Wert über viele Jahre",
+        "few_places": "zu wenige Orte für eine Rangliste",
+        "thin_scatter": "zu wenige Punkte für ein Muster",
+        "scatter_years": "Punkte aus weit auseinanderliegenden Jahren"
+      }
     }
   }
 }

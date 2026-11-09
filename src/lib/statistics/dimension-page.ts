@@ -11,6 +11,7 @@ import { measuresOf, type Dimension, type DimensionLayer } from "./dimensions";
 import { findStatistic, latestPoint } from "./present";
 import { RUBRICS } from "@/lib/config/statistics/rubrics";
 import { DIMENSION_LAYERS } from "./dimensions";
+import { checkScatter, checkSeries, screenSeries, type SanityFinding } from "./sanity";
 import { loadAssessments, loadSeries, type PlaceSeries } from "./read";
 
 export interface Measure {
@@ -39,9 +40,13 @@ export async function loadDimensionPage(
   const dimension: Dimension | undefined = DIMENSIONS.find((d) => d.key === key);
   if (!dimension) return null;
   const measures: Measure[] = [];
+  const withheld: SanityFinding[] = [];
   for (const { metric: mk, layer } of measuresOf(dimension)) {
     const metric = findStatistic(config, mk);
-    if (metric) measures.push({ metric, layer, series: await loadSeries(db, config, mk, locale) });
+    if (!metric) continue;
+    const screened = screenSeries(metric.plausible, await loadSeries(db, config, mk, locale));
+    withheld.push(...screened.findings);
+    measures.push({ metric, layer, series: screened.series });
   }
   // Features coded from the law, by rubric, each with the codings that place a country on its scale.
   const rubricKeys = DIMENSION_LAYERS.flatMap((layer) => dimension.layers[layer].rubrics);
@@ -74,8 +79,15 @@ export async function loadDimensionPage(
   ];
   const place = places.find(([code]) => code === query.p)?.[0] ?? places[0]?.[0] ?? null;
   const timeMeasures = measures.filter((m) => x && m.metric.unit === x.metric.unit);
+  // What would mislead on this page: figures left out, places read at different dates, a thin scatter.
+  const sanity: SanityFinding[] = [
+    ...withheld,
+    ...(x ? checkSeries(x.series) : []),
+    ...checkScatter(points),
+  ];
   return {
     dimension,
+    sanity,
     measures,
     coded,
     x: x ?? null,

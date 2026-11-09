@@ -13,6 +13,10 @@ import type { ViewSpec } from "@/lib/statistics/views";
 import EnforcementList from "./enforcement-list";
 import MetricMap, { type MapValue } from "./metric-map";
 import QualityPanel from "./quality-panel";
+import ExplainPanel from "./explain-panel";
+import SanityPanel from "./sanity-panel";
+import { buildBrief } from "@/lib/statistics/brief";
+import type { SanityFinding } from "@/lib/statistics/sanity";
 import LawLinks from "./law-links";
 
 /** A day as the reader's language writes it; an ISO date, read as UTC so no timezone moves it. */
@@ -40,6 +44,8 @@ export interface MetricViewProps {
   mapValues: MapValue[];
   /** The spec of what is on screen, for "save this view". */
   spec: ViewSpec;
+  /** What the checks on the figures found: warnings, and figures left out. */
+  sanity: SanityFinding[];
   /** The page's own address, absolute, for the texts that cite it. */
   selfUrl: string;
   /** Shown above the chart on a saved view's page. */
@@ -109,6 +115,18 @@ export default function MetricView(props: MetricViewProps) {
     }),
   ];
   const chosen = new Set(shown.map((s) => s.code));
+  const facts = buildBrief(
+    {
+      metric,
+      shown,
+      years,
+      events,
+      sanity: props.sanity,
+      thisYear: new Date().getUTCFullYear(),
+      per100k: t("units.per_100k"),
+    },
+    locale,
+  );
 
   return (
     <PageLayout
@@ -135,6 +153,8 @@ export default function MetricView(props: MetricViewProps) {
         )}
 
         {props.banner}
+
+        <SanityPanel findings={props.sanity} t={t} />
 
         {mapValues.length > 0 && (
           <section className="space-y-3">
@@ -272,6 +292,19 @@ export default function MetricView(props: MetricViewProps) {
         <EnforcementList {...props} label={label} />
 
         <QualityPanel shown={shown} t={t} />
+
+        <ExplainPanel
+          facts={facts}
+          locale={locale}
+          t={t}
+          subject={{
+            kind: "metric",
+            metric: metric.key,
+            places: spec.places,
+            ...(spec.from !== null ? { from: String(spec.from) } : {}),
+            ...(spec.to !== null ? { to: String(spec.to) } : {}),
+          }}
+        />
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-fg-primary">{t("metric.sourcesTitle")}</h2>

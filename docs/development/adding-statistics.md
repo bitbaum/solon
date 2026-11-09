@@ -128,6 +128,16 @@ For the statistics: add its ISO 3166-1 numeric code to
 `src/lib/config/statistics/world.ts` (a test fails if a pack's country is
 missing), and its World Bank and OECD sources are generated from the metrics.
 
+## 6. What the page checks for you
+
+- Every metric needs a `plausible` band; a figure outside it is left out of every chart.
+- `pnpm run statistics:quality` prints the chart warnings (`!` lines) beside the series
+  notes. A warning on data you know is right means the check is wrong: narrow or remove it
+  in `src/lib/statistics/sanity.ts` with a test, never explain it away in a caveat.
+- The AI explanation reads only what `brief.ts` (metric pages) and `dimension-brief.ts`
+  (dimension pages) list as facts. A new kind of thing a page shows needs a fact kind there,
+  its English line in `explain.ts` and its template in `Statistics.explain.facts`.
+
 ## Before you open the pull request
 
 `pnpm run verify`, `pnpm run statistics:verify`, `pnpm run statistics:quality`,
