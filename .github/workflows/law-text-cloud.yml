@@ -1,0 +1,158 @@
+name: Law text load (cloud runner)
+
+# The same loads as `law-text.yml`, run on a GitHub runner instead of the box. The box is shared with
+# other services and its memory is spent (swap full, 2026-11-09), which starved the EU and UK loads for
+# hours; a runner has its own memory and nothing else on it. It writes to the same production database
+# through an SSH tunnel to the box, and copies the snapshots it takes back to the box's snapshot
+# directory afterwards (they are named by their content, so a copy never overwrites a different file).
+#
+# Load only; the re-cuts (`recut*`) read snapshots already on the box and stay on `law-text.yml`.
+# A source runs here or on the box, not both at once: end the box's load first (`box-stop`).
+# dry_run=true (default) fetches and parses but stores nothing, and shows that the tunnel and the
+# database answer.
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "Whose laws"
+        type: choice
+        options: [eurlex, ukleg, ris, gii, gcnh, wyoleg, legilux, riigiteataja, municipal, lexwork]
+        default: eurlex
+      lang:
+        description: "Language to read"
+        type: string
+        default: "de"
+      publisher:
+        description: "Municipal only: the publisher's key (zurich-city)"
+        type: string
+        default: "zurich-city"
+      year:
+        description: "EU (eurlex) or UK (ukleg): years to read, comma-separated, or empty for all"
+        type: string
+        default: ""
+      types:
+        description: "UK (ukleg) only: types to read, comma-separated (ukpga,uksi), or empty for both"
+        type: string
+        default: ""
+      batches:
+        description: "Run this many batches of `limit` one after another, stopping early when nothing remains or a batch makes no progress"
+        type: string
+        default: "1"
+      limit:
+        description: "Store at most this many versions in each batch"
+        type: string
+        default: "1500"
+      dry_run:
+        description: "Fetch and parse, store nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# One load of a source at a time, whatever the inputs: two writers of one source repeat each other's work.
+concurrency:
+  group: law-cloud-${{ inputs.source }}
+  cancel-in-progress: false
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Reach the production database
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="ssh -i $HOME/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40"
+          # The box's own settings: where its database is, and where its snapshots are kept.
+          settings=$($SSH "ubuntu@$IP" 'f=/opt/solon/shared/.env; [ -f "$f" ] || f=/opt/solon/app/.env; grep -E "^(DATABASE_URL|PLACES_SNAPSHOT_DIR)=" "$f"')
+          url=$(printf '%s\n' "$settings" | sed -n 's/^DATABASE_URL=//p' | head -1 | tr -d "\"'")
+          snaps=$(printf '%s\n' "$settings" | sed -n 's/^PLACES_SNAPSHOT_DIR=//p' | head -1 | tr -d "\"'")
+          [ -n "$url" ] || { echo "the box has no DATABASE_URL"; exit 1; }
+          pass=$(node -e 'const u=new URL(process.argv[1]); process.stdout.write(decodeURIComponent(u.password))' "$url")
+          [ -z "$pass" ] || echo "::add-mask::$pass"
+          echo "::add-mask::$url"
+          host=$(node -e 'process.stdout.write(new URL(process.argv[1]).hostname)' "$url")
+          port=$(node -e 'process.stdout.write(new URL(process.argv[1]).port||"5432")' "$url")
+          case "$host" in
+            localhost|127.0.0.1|'[::1]') ;;
+            *) echo "the box's database is on $host, not on the box itself; the tunnel goes to the box"; exit 1 ;;
+          esac
+          # The runner's port 15432 reaches the box's database port.
+          $SSH -f -N -o ExitOnForwardFailure=yes -L "15432:127.0.0.1:$port" "ubuntu@$IP"
+          local_url=$(node -e 'const u=new URL(process.argv[1]); u.hostname="127.0.0.1"; u.port="15432"; process.stdout.write(u.toString())' "$url")
+          echo "::add-mask::$local_url"
+          {
+            echo "DATABASE_URL=$local_url"
+            echo "PLACES_SNAPSHOT_DIR=$RUNNER_TEMP/snapshots"
+            echo "BOX_SNAPSHOT_DIR=${snaps:-/opt/solon/shared/places-snapshots}"
+          } >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/snapshots"
+          echo "tunnel up: runner 15432 -> box database port $port"
+
+      - name: Load
+        env:
+          DRY: ${{ inputs.dry_run }}
+          LANGUAGE: ${{ inputs.lang }}
+          SOURCE: ${{ inputs.source }}
+          LIMIT: ${{ inputs.limit }}
+          PUBLISHER: ${{ inputs.publisher }}
+          YEAR: ${{ inputs.year }}
+          TYPES: ${{ inputs.types }}
+          BATCHES: ${{ inputs.batches }}
+        run: |
+          set -euo pipefail
+          [[ "$BATCHES" =~ ^[0-9]{1,2}$ ]] || { echo "batches must be a number"; exit 1; }
+          [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
+          [[ "$LANGUAGE" =~ ^[a-z]{2}$ ]] || { echo "lang must be a language code"; exit 1; }
+          [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
+          [[ "$TYPES" =~ ^[a-z,]{0,40}$ ]] || { echo "types must be like ukpga,uksi"; exit 1; }
+          [[ "$YEAR" =~ ^[0-9,]{0,60}$ ]] || { echo "year must be years like 2016,2024"; exit 1; }
+          flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
+          auth=""
+          [ "$SOURCE" = "municipal" ] && auth="--publisher $PUBLISHER"
+          [ "$SOURCE" = "eurlex" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
+          [ "$SOURCE" = "ukleg" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
+          [ "$SOURCE" = "ukleg" ] && [ -n "$TYPES" ] && auth="$auth --type $TYPES"
+          rc=0; last=-1
+          for batch in $(seq 1 "$BATCHES"); do
+            rc=0
+            pnpm run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' > batch.log || rc=$?
+            tail -n 80 batch.log
+            [ "$DRY" = "true" ] && break
+            left=$(grep -oE '"remaining(Acts)?": [0-9]+' batch.log | tail -1 | grep -oE '[0-9]+' || true)
+            [ "${left:-0}" -gt 0 ] || break
+            [ "$left" != "$last" ] || { echo "no progress: $left still remain"; break; }
+            last=$left
+            echo "batch $batch done, $left remain"
+          done
+          exit "$rc"
+
+      # Whatever the load did, the snapshots it took belong with the box's others: the database now
+      # points at them. Content-named, so copying again is harmless.
+      - name: Copy the snapshots to the box
+        if: always() && inputs.dry_run == false
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          [ -d "$PLACES_SNAPSHOT_DIR" ] && [ -n "$(ls -A "$PLACES_SNAPSHOT_DIR")" ] || { echo "no snapshots taken"; exit 0; }
+          rsync -a --ignore-existing -e "ssh -i $HOME/.ssh/id -o BatchMode=yes" "$PLACES_SNAPSHOT_DIR"/ "ubuntu@$IP:$BOX_SNAPSHOT_DIR/"
+          echo "copied $(find "$PLACES_SNAPSHOT_DIR" -type f | wc -l) snapshot files to the box"
