@@ -8,6 +8,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Charts that cannot show nonsense, and help to read them.** A figure that is not a number
+  or lies outside what the measure can be is left out of the chart and listed above it, not
+  drawn. Places read at dates more than two years apart, a trend from fewer than three
+  figures, a ranking of fewer than three places and a scatter of fewer than five points each
+  carry a warning above the chart. Every statistic and dimension page now lists its figures
+  as numbered facts in plain words, and "Explain with AI" (with an optional question) writes
+  an explanation from those facts only. Before it is shown, every number in it must be one
+  of the facts, every citation a fact that exists, and every paragraph must cite; an answer
+  that fails is asked for again once and then dropped. {#stats-explain}
+
 - **What the law compels, read from the statutes.** `/statistics/dimension/compulsion` shows
   compulsory military service coded on a written four-point scale: Switzerland and Estonia
   at 2 (service with a civilian alternative), the United States at 1 (registration and

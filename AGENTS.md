@@ -123,7 +123,11 @@ writes the curated records, `pnpm run statistics:quality` reports gaps and large
 series, and `pnpm run statistics:verify` fetches every page a record cites and checks the
 words it is expected to hold (a weekly workflow runs it). Every line of a curated record
 needs a source, a claim about an effect is a `reported` line with who made it, and every
-metric says what it covers (`scope`).
+metric says what it covers (`scope`). Charts are screened by `src/lib/statistics/sanity.ts`
+(a figure outside its plausible band is left out and listed; misleading comparisons carry a
+warning) and every page can offer an AI explanation (`brief.ts`, `explain.ts`): the model sees
+only the page's numbered facts, and an answer with a number or citation not in them is dropped.
+A check that warns on correct data is a bug: remove or narrow it, do not add a caveat.
 
 ## CI
 
@@ -228,7 +232,7 @@ native speaker before an essay ships in that language.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 

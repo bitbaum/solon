@@ -15,6 +15,7 @@ import {
 } from "./present";
 import { currentRecords, linkedActs, loadEvents, loadSeries, placeLabels } from "./read";
 import type { EnforcementBody } from "./records";
+import { checkSeries, screenSeries, type SanityFinding } from "./sanity";
 import type { ViewSpec } from "./views";
 
 export interface MetricPageQuery {
@@ -46,7 +47,9 @@ export async function loadMetricPage(
 ) {
   const metric = findStatistic(config, metricKey);
   if (!metric) return null;
-  const all = await loadSeries(db, config, metric.key, locale);
+  // A figure that cannot be real never reaches a chart; the page says what was left out.
+  const screened = screenSeries(metric.plausible, await loadSeries(db, config, metric.key, locale));
+  const all = screened.series;
   const shown = pickPlaces(all, query.places.join(","));
   const years = pickYears(shown, query.from, query.to);
   const shownIds = new Set(shown.map((s) => s.jurisdictionId));
@@ -92,7 +95,23 @@ export async function loadMetricPage(
       },
     ];
   });
-  return { metric, all, shown, years, acts, events, enforcement, placeNames, spec, mapValues };
+  const sanity: SanityFinding[] = [
+    ...screened.findings.filter((f) => f.places.some((n) => shown.some((s) => s.name === n))),
+    ...checkSeries(shown),
+  ];
+  return {
+    metric,
+    all,
+    shown,
+    years,
+    acts,
+    events,
+    enforcement,
+    placeNames,
+    spec,
+    mapValues,
+    sanity,
+  };
 }
 
 /** The query that reopens a spec on the live page. */

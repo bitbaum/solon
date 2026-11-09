@@ -1246,6 +1246,81 @@
       "review": "Vérifier ce codage",
       "reviewTitle": "Vérifier le codage : {title}",
       "reviewBody": "Page : {url}\nCodage : {key}\nJ'ai lu les articles cités et je suis d'accord ou non, et pourquoi : \nPages ou termes sur lesquels je me suis appuyé : \n"
+    },
+    "sanity": {
+      "title": "Avant de vous fier à ce graphique",
+      "none": "Rien ici ne rend l'image trompeuse.",
+      "how": "Calculé par programme à partir des chiffres de cette page. Un chiffre qui ne peut pas être réel est écarté et listé ; tout le reste ne porte qu'un avertissement.",
+      "withheld": {
+        "non_finite": "Écarté parce que ce n'est pas un nombre ({places}, {years}).",
+        "implausible": "Écarté parce qu'il sort de ce que cette mesure peut être, {min} à {max} : {places}, {years}. Probablement une erreur dans la source ou dans la lecture."
+      },
+      "warn": {
+        "year_spread": "Les lieux ne sont pas lus à la même date : leurs derniers chiffres vont de {from} à {to}, {spread} ans d'écart. Comparez avec prudence ; les plus anciens sont {places}.",
+        "short_series": "{places} : seulement {points} chiffres. Trop peu pour parler de tendance.",
+        "constant_series": "{places} : la même valeur {run} années de suite, de {from} à {to}. Cela peut être une règle inchangée ou un chiffre reporté plutôt que mesuré ; vérifiez la source.",
+        "few_places": "Seulement {places} lieu(x) à comparer. Un classement ou une carte de si peu en dit peu.",
+        "thin_scatter": "Seulement {points} points. Trop peu pour y lire une tendance.",
+        "scatter_years": "Les points viennent d'années différentes, de {from} à {to} ({spread} ans d'écart) ; les plus anciens sont {places}."
+      }
+    },
+    "explain": {
+      "title": "Lire ces chiffres avec de l'aide",
+      "intro": "Les faits ci-dessous sont calculés par programme à partir des chiffres de cette page, sans IA. L'explication, si vous en demandez une, est écrite par une IA à partir de ces seuls faits et vérifiée avant que vous la voyiez.",
+      "factsTitle": "Les faits, en mots simples",
+      "ask": "Expliquer avec l'IA",
+      "asking": "Lecture des faits…",
+      "questionLabel": "Poser une question sur ces chiffres (facultatif)",
+      "questionPlaceholder": "Par exemple : pourquoi un lieu paraît-il si différent ?",
+      "again": "Expliquer à nouveau",
+      "aiLabel": "Écrit par une IA à partir des faits ci-dessus. Chaque nombre et chaque citation a été vérifié par rapport à eux ; le raisonnement, non. Vérifiez-le auprès des sources.",
+      "cited": "S'appuie sur",
+      "rateLimited": "Veuillez patienter quelques minutes avant de redemander.",
+      "unavailable": "L'explication n'est pas disponible pour le moment. Les faits ci-dessus le sont.",
+      "failed": "Une explication n'a pas pu être vérifiée par rapport aux chiffres et n'est donc pas affichée. Les faits ci-dessus le sont.",
+      "pp": " points de pourcentage",
+      "facts": {
+        "definition": "{metric} : {definition} Source : {publisher}.",
+        "latest": "{place}, {year} : {value}",
+        "latestMetric": "{metric} ({layer}), {place}, {year} : {value}",
+        "flagged": "marqué {flag} par l'éditeur",
+        "change": "{place} : {fromValue} en {fromYear}, {toValue} en {toYear} ({direction}{delta}).",
+        "up": "en hausse de ",
+        "down": "en baisse de ",
+        "same": "inchangé",
+        "rank": "Du plus haut au plus bas : {order}.",
+        "event": "{date}, {place} : {title} ({category}).",
+        "quality": "{place} : {note} {years}",
+        "caution": "Attention : {note} {places} {years}",
+        "coded": "{place}, {rubric} : niveau {value} ({label}), confiance {confidence}, {status}. {reading}",
+        "gap": "{place}, {year} : {xName} {x} ; {yName} {y}{difference}",
+        "difference": " ; écart {gap}",
+        "empty": "Pas encore de série pour {layer}. Elle serait remplie par : {wanted}"
+      },
+      "layers": {
+        "de_jure": "ce que dit la loi",
+        "de_facto": "ce qui se passe en pratique",
+        "outcome": "ce qui en résulte"
+      },
+      "status": {
+        "settled": "vérifié par un second lecteur",
+        "awaiting": "pas encore vérifié par un second lecteur"
+      },
+      "notes": {
+        "gap": "années manquantes entre deux",
+        "jump": "un saut bien plus grand que d'habitude",
+        "stale": "le dernier chiffre est ancien",
+        "provisional": "chiffres provisoires, estimés ou prévus",
+        "short": "trop peu de chiffres",
+        "non_finite": "un chiffre qui n'était pas un nombre a été écarté",
+        "implausible": "un chiffre impossible a été écarté",
+        "year_spread": "lieux lus à plus de deux ans d'écart",
+        "short_series": "trop peu de chiffres pour une tendance",
+        "constant_series": "la même valeur pendant de nombreuses années",
+        "few_places": "trop peu de lieux pour un classement",
+        "thin_scatter": "trop peu de points pour une tendance",
+        "scatter_years": "points d'années très éloignées"
+      }
     }
   }
 }

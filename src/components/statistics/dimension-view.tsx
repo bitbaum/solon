@@ -8,6 +8,9 @@ import type { loadDimensionPage } from "@/lib/statistics/dimension-page";
 import { chartValue, latestPoint, metricPath } from "@/lib/statistics/present";
 import { unitLabel, type StatisticsTranslator } from "./metric-view";
 import AssessmentSection from "./assessment-section";
+import { buildDimensionBrief } from "@/lib/statistics/dimension-brief";
+import ExplainPanel from "./explain-panel";
+import SanityPanel from "./sanity-panel";
 import ScatterPlot from "./scatter-plot";
 
 type Page = NonNullable<Awaited<ReturnType<typeof loadDimensionPage>>>;
@@ -30,8 +33,20 @@ export default function DimensionView({
   selfUrl: string;
   t: StatisticsTranslator;
 }) {
-  const { dimension, measures, coded, x, y, points, gaps, sameUnit, places, place, timeMeasures } =
-    page;
+  const {
+    dimension,
+    sanity,
+    measures,
+    coded,
+    x,
+    y,
+    points,
+    gaps,
+    sameUnit,
+    places,
+    place,
+    timeMeasures,
+  } = page;
   const name = (m: { metric: Page["measures"][number]["metric"] }) => {
     const unit = unitLabel(m.metric, t);
     return `${localized(m.metric.label, locale)}${unit ? `, ${unit}` : ""}`;
@@ -48,6 +63,8 @@ export default function DimensionView({
         <p className="mb-0 text-sm text-fg-tertiary">
           {t("dimension.author", { version: dimension.version, author: dimension.author })}
         </p>
+
+        <SanityPanel findings={sanity} t={t} />
 
         <section className="grid gap-4 md:grid-cols-3">
           {DIMENSION_LAYERS.map((layer) => {
@@ -287,6 +304,18 @@ export default function DimensionView({
         )}
 
         <p className="mb-0 text-sm text-fg-tertiary">{t("dimension.caveat")}</p>
+
+        <ExplainPanel
+          facts={buildDimensionBrief(page, locale, t("units.per_100k"))}
+          locale={locale}
+          t={t}
+          subject={{
+            kind: "dimension",
+            dimension: dimension.key,
+            ...(x ? { x: x.metric.key } : {}),
+            ...(y ? { y: y.metric.key } : {}),
+          }}
+        />
       </div>
     </PageLayout>
   );
