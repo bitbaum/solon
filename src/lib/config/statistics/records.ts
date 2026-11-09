@@ -14,6 +14,7 @@ import { ACT_IDENTIFIER_SCHEMES, LAW_AUTHORITIES } from "@/lib/config/law";
 import { placesConfig } from "@/lib/config/places";
 import { defineCuratedRecords, type CuratedRecordInput } from "@/lib/statistics/records";
 import { ASSESSMENT_RECORDS } from "./assessments";
+import { HEALTH_ASSESSMENTS } from "./assessments-health";
 import { EVENT_RECORDS } from "./events";
 import { RUBRICS } from "./rubrics";
 
@@ -23,6 +24,7 @@ const RIIGI_TEATAJA = "Riigi Teataja (State Gazette)";
 const RECORDS: readonly CuratedRecordInput[] = [
   ...EVENT_RECORDS,
   ...ASSESSMENT_RECORDS,
+  ...HEALTH_ASSESSMENTS,
   {
     // Read 2026-11-08: DBG (SR 642.11) Art. 36 in the version in force from
     // 2026-09-02 states the federal income tax tariff for a single person.

@@ -60,4 +60,49 @@ export const RUBRICS = defineRubrics([
     ],
     author: AUTHOR,
   },
+  {
+    key: "compulsion.health_insurance",
+    version: 1,
+    label: { en: "Compulsory health insurance" },
+    question: {
+      en: "Does the law compel a person to be covered by health insurance, and with what choice?",
+    },
+    scale: [
+      {
+        value: 0,
+        label: { en: "No duty" },
+        definition: { en: "The law does not require a person to be covered by health insurance." },
+      },
+      {
+        value: 1,
+        label: { en: "Duty without a payment" },
+        definition: {
+          en: "The law states a duty to be covered, but the payment or other consequence for not being covered is zero, so nothing enforces it.",
+        },
+      },
+      {
+        value: 2,
+        label: { en: "Duty, with a choice of insurer" },
+        definition: {
+          en: "The law requires every resident to be insured and lets each person choose among insurers, and to change insurer.",
+        },
+      },
+      {
+        value: 3,
+        label: { en: "Duty, one insurer" },
+        definition: {
+          en: "The law requires every resident to be covered and assigns them to one public insurer, with no choice of insurer.",
+        },
+      },
+    ],
+    edgeCases: [
+      {
+        en: "Coverage that follows automatically from paying a tax, with no separate act of insuring, is not coded here until a reader has decided which point it is; the place is left uncoded and the reason stated.",
+      },
+      {
+        en: "A duty that the law states but that carries a payment of zero is coded 1, and the reading says what the payment is.",
+      },
+    ],
+    author: AUTHOR,
+  },
 ]);

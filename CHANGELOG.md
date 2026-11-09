@@ -15,6 +15,11 @@ one to read for the detail. Fixes get the same weight as features.
   was read from, quotes their wording, says how sure the reader is and why, and shows
   "awaiting a second reader" until someone other than the coder has checked it. {#stats-assessments}
 
+- **Compulsory health insurance, coded the same way.** Switzerland's KVG Art. 3 requires every
+  resident to insure within three months, with a choice of insurer (point 2). The United
+  States' 26 U.S.C. § 5000A still states the duty, but its payment is $0 (point 1). Estonia is
+  left uncoded until a reader decides how cover that follows from a tax is placed.
+
 ## 2026-11-08
 
 ### Added
