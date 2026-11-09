@@ -27,8 +27,8 @@ importers:
         specifier: ^0.22.1
         version: 0.22.1(react@19.3.1)
       '@bitbaum/geo-kit':
-        specifier: ^0.3.0
-        version: 0.3.0(d3-geo@3.1.1)(topojson-client@3.1.0)
+        specifier: ^0.4.0
+        version: 0.4.0(d3-geo@3.1.1)(topojson-client@3.1.0)
       '@bitbaum/mail-kit':
         specifier: 0.2.0
         version: 0.2.0
@@ -417,8 +417,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  '@bitbaum/geo-kit@0.3.0':
-    resolution: {integrity: sha512-DWqV+XM9jOXtss2CiHkfq2hMW8ZS1oXPk0SpiDOQoBftATpEjmTlBOAEv8bwjh8jbmi082EZ3RxAIgOVyblMtg==}
+  '@bitbaum/geo-kit@0.4.0':
+    resolution: {integrity: sha512-tREhd+YTvYzFK7cKTb1OCkMACxtxLz13/rIijJMu74We2crjA0MAtA2okGjMZEXBqxff3c/xQBSd9siEjhi4JA==}
     engines: {node: '>=20'}
     peerDependencies:
       d3-geo: ^3.1.0
@@ -4698,7 +4698,7 @@ snapshots:
 
   '@bitbaum/design-tokens@1.5.2': {}
 
-  '@bitbaum/geo-kit@0.3.0(d3-geo@3.1.1)(topojson-client@3.1.0)':
+  '@bitbaum/geo-kit@0.4.0(d3-geo@3.1.1)(topojson-client@3.1.0)':
     optionalDependencies:
       d3-geo: 3.1.1
       topojson-client: 3.1.0

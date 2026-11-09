@@ -1387,7 +1387,7 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "home": "Back to the whole Earth",
-      "credit": "Outlines: Natural Earth and the US Census Bureau, public domain. Tap a shaded place to read its law.",
+      "credit": "Outlines and names: Natural Earth and the US Census Bureau, public domain; towns: GeoNames, CC BY 4.0. Drag to turn, scroll or pinch to zoom, double-tap to zoom in, tap any place to name it or a shaded one to read its law.",
       "title": "Every place, its law",
       "body": "Shaded places are those whose law Solon holds, darker for more. Turn the globe, tap a place, and read its law article by article."
     }

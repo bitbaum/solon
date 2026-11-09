@@ -8,6 +8,13 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **A globe you can read.** The atlas now names every country, its subdivisions and its towns
+  (Natural Earth for countries and the world's first-level subdivisions, GeoNames for every
+  place of 1,000 people or more), placed so that no name covers another and appearing as you
+  zoom in. Zooming goes where you point (wheel, pinch, double tap). Subdivisions and towns load
+  a country at a time as you reach them. Tapping any place names and outlines it; a town flies
+  you to it. The sea is blue, the land is the page, in light and dark. {#places-globe}
+
 - **What it costs to leave.** A new dimension, `/statistics/dimension/exit`, codes from the
   statutes whether a citizen can give up their citizenship and whether leaving is taxed.
   Switzerland (BüG Art. 37: released on request if living abroad with another citizenship),

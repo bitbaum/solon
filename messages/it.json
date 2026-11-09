@@ -801,7 +801,7 @@
       "zoomIn": "Ingrandire",
       "zoomOut": "Ridurre",
       "home": "Tornare alla Terra intera",
-      "credit": "Contorni: Natural Earth e US Census Bureau, pubblico dominio. Toccate un luogo ombreggiato per leggerne il diritto.",
+      "credit": "Contorni e nomi: Natural Earth e US Census Bureau, pubblico dominio; località: GeoNames, CC BY 4.0. Trascinate per ruotare, scorrete o pizzicate per zoomare, toccate due volte per ingrandire, toccate un luogo per vederne il nome o uno ombreggiato per leggerne il diritto.",
       "title": "Ogni luogo, il suo diritto",
       "body": "I luoghi ombreggiati sono quelli di cui Solon conserva il diritto, più scuri quando ce n'è di più. Girate il globo, toccate un luogo e leggetene il diritto articolo per articolo."
     }

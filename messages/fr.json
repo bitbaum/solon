@@ -801,7 +801,7 @@
       "zoomIn": "Agrandir",
       "zoomOut": "Réduire",
       "home": "Revenir à la Terre entière",
-      "credit": "Contours : Natural Earth et US Census Bureau, domaine public. Touchez un lieu ombré pour lire son droit.",
+      "credit": "Contours et noms : Natural Earth et US Census Bureau, domaine public ; localités : GeoNames, CC BY 4.0. Glissez pour tourner, faites défiler ou pincez pour zoomer, touchez deux fois pour agrandir, touchez un lieu pour le nommer ou un lieu ombré pour lire son droit.",
       "title": "Chaque lieu, son droit",
       "body": "Les lieux ombrés sont ceux dont Solon détient le droit, plus foncés quand il y en a davantage. Tournez le globe, touchez un lieu et lisez son droit article par article."
     }
