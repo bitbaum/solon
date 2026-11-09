@@ -162,6 +162,23 @@ jobs:
               echo "turn held by pid $pid, running $(ps -o etime= -p "$pid" | tr -d ' '): $(tr '\0' ' ' < /proc/$pid/cmdline | cut -c1-120)"
             done
             ps -eo pid,etime,rss,args --sort=-rss | grep -E 'tsx|law-text|pnpm|node' | grep -v grep | head -12 | cut -c1-200
+            # Where the memory is: every process by resident size and by what it has pushed to swap, the
+            # kernel's own account of cache, shared memory and slab, and what the memory-backed filesystems hold.
+            echo "--- by resident size (MB), user, command"
+            ps -eo rss=,user=,args= --sort=-rss | head -20 | awk '{ printf "%7.0f %-10s", $1/1024, $2; $1=""; $2=""; print substr($0,1,110) }'
+            echo "--- by swap (MB), pid, command"
+            for p in /proc/[0-9]*; do
+              sw=$(awk '/^VmSwap:/ {print $2}' "$p/status" 2>/dev/null || true)
+              [ -n "${sw:-}" ] && [ "$sw" -gt 20000 ] && echo "$((sw/1024)) ${p#/proc/} $(tr '\0' ' ' < "$p/cmdline" 2>/dev/null | cut -c1-100)"
+            done | sort -rn | head -15
+            echo "--- kernel (MB)"
+            awk '/^(MemTotal|MemFree|MemAvailable|Buffers|Cached|SwapCached|Shmem|Slab|SReclaimable|SUnreclaim|AnonPages|Mapped|PageTables|SwapTotal|SwapFree|Dirty):/ { printf "%-14s %8.0f\n", $1, $2/1024 }' /proc/meminfo
+            echo "--- memory-backed filesystems"
+            df -h -t tmpfs 2>/dev/null | head -12
+            echo "--- biggest in /tmp and /dev/shm"
+            du -sm /tmp/* /dev/shm/* 2>/dev/null | sort -rn | head -8
+            echo "--- cgroup limit"
+            cat /sys/fs/cgroup/memory.max /sys/fs/cgroup/memory.current 2>/dev/null || true
             exit 0
           fi
           if [ "$SOURCE" = "box-stop" ]; then
