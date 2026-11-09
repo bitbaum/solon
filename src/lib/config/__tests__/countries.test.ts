@@ -79,3 +79,22 @@ describe("the world pack", () => {
       expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(5);
   });
 });
+
+describe("the world pack's data", () => {
+  it("has one root, the Earth, every country part of it, and a country once", () => {
+    const data = JSON.parse(readFileSync("data/places/world/countries.json", "utf8")) as {
+      jurisdictions: { ref: { scheme: string; value: string }; levelKey: string }[];
+      relations: { from: { value: string }; to: { value: string }; relation: string }[];
+    };
+    const roots = data.jurisdictions.filter((j) => j.levelKey === "world");
+    expect(roots.map((r) => r.ref)).toEqual([{ scheme: "world_root", value: "earth" }]);
+    const nations = data.jurisdictions
+      .filter((j) => j.levelKey === "nation")
+      .map((j) => j.ref.value);
+    expect(new Set(nations).size).toBe(nations.length);
+    expect(data.relations.map((r) => r.from.value).sort()).toEqual([...nations].sort());
+    expect(data.relations.every((r) => r.to.value === "earth" && r.relation === "part_of")).toBe(
+      true,
+    );
+  });
+});
