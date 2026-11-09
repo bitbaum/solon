@@ -6,12 +6,16 @@ import type { Metric } from "@/lib/config/places/schema";
 import { localized } from "@/lib/places/place-view";
 import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statistics/present";
 import type { PlaceSeries } from "@/lib/statistics/read";
+import AxisBuilder from "./axis-builder";
 import AxisPanel, { type AxisPanelProps } from "./axis-panel";
 import { unitLabel, type StatisticsTranslator } from "./metric-view";
 
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];
   axes: Omit<AxisPanelProps, "t" | "locale">[];
+  /** The axis a reader built in the link, ready to draw. */
+  custom: Omit<AxisPanelProps, "t" | "locale"> | null;
+  builder: { chosen: import("@/lib/statistics/axes").Axis | null };
   locale: Locale;
   t: StatisticsTranslator;
 }
@@ -21,7 +25,14 @@ interface StatisticsIndexProps {
  * bar opening the publisher's figures and each card the series over time;
  * then the axes, read with the reader's weights or a group's.
  */
-export default function StatisticsIndex({ statistics, axes, locale, t }: StatisticsIndexProps) {
+export default function StatisticsIndex({
+  statistics,
+  axes,
+  custom,
+  builder,
+  locale,
+  t,
+}: StatisticsIndexProps) {
   return (
     <PageLayout title={t("index.title")} kicker={t("kicker")} description={t("index.intro")}>
       <div className="max-w-5xl space-y-12">
@@ -68,6 +79,11 @@ export default function StatisticsIndex({ statistics, axes, locale, t }: Statist
                     </a>
                   </p>
                 )}
+                {statistic.scope && (
+                  <p className="mb-0 text-sm text-fg-tertiary">
+                    {t("metric.scopeLabel")} {localized(statistic.scope, locale)}
+                  </p>
+                )}
                 <Link href={metricPath(metric.key)} className="btn-secondary min-h-11">
                   {t("index.open")}
                 </Link>
@@ -89,6 +105,18 @@ export default function StatisticsIndex({ statistics, axes, locale, t }: Statist
               t={t}
             />
           ))}
+          <AxisBuilder
+            metrics={statistics.map((x) => x.metric)}
+            chosen={builder.chosen}
+            locale={locale}
+            t={t}
+          />
+          {custom && <AxisPanel {...custom} locale={locale} t={t} />}
+          <p className="mb-0">
+            <Link href="/statistics/compare" className="btn-secondary min-h-11">
+              {t("index.compareLink")}
+            </Link>
+          </p>
         </section>
       </div>
     </PageLayout>

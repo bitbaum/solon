@@ -193,7 +193,17 @@ export const metricSchema = z.object({
         url: z.url({ protocol: /^https$/ }),
         /** Within a dataset of several measures (an SDMX dataflow), the one read. */
         measure: z.string().min(1).optional(),
+        /** The SDMX data key for one country, with `{iso3}` where its code goes. */
+        key: z.string().min(1).optional(),
+        /** Columns a row must carry to belong to this series, where a dataflow holds several under one measure. */
+        match: z.record(z.string(), z.string()).optional(),
       }),
+      /**
+       * What the figures cover, in one sentence a reader sees beside every
+       * chart: which levels of government, which part of the country. A number
+       * without its scope invites the wrong comparison.
+       */
+      scope: localizedTextSchema.optional(),
     })
     .optional(),
   retired: z.literal(true).optional(),

@@ -8,6 +8,26 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **What happened to the law, step by step.** Every mark on a statistic's timeline now opens
+  an event page: what changed in the law (the wording before and after), how it came about,
+  how each body voted (by party where the record gives it), who started it, sponsored it,
+  recommended it or opposed it, what was claimed about its effect and what critics said (kept
+  apart from what happened, each with who said it), and what the numbers did around it. Five
+  events are loaded, each with the pages they were read on: Estonia's rise of the income tax
+  rate from 20% to 22%, the US Tax Cuts and Jobs Act, two Swiss firearms ballots (2011 and
+  2019) and the 1982 Kennesaw gun ordinance. {#stats-events} {#stats-event-numbers}
+
+- **Maps, scatter plots and your own axes.** Each statistic has a world map shaded by its
+  latest values; any two measures can be set against each other in a scatter plot; every
+  axis shows all its measures at once as parallel lines; and you can build an axis of your
+  own from the measures you pick, the direction of each and a weight, kept in the link so it
+  can be shared, saved or proposed to a group. {#stats-map} {#stats-charts-more} {#stats-axes}
+
+- **Numbers that mean the same thing in every country.** The first version charted central
+  government's tax revenue and expense, which made federal countries such as Switzerland and
+  the United States look small. They are replaced by tax revenue and expenditure for all
+  levels of government, and every chart now says what its numbers cover. {#stats-series}
+
 - **Statistics beside the law.** A new page, `/statistics`, shows five series over time
   for Switzerland, Liechtenstein, Estonia and the United States: the top statutory income
   tax rate (OECD Tax Database); government consumption, government expense and tax

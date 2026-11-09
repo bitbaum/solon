@@ -25,8 +25,8 @@ function mapSource(sourceKey: string, body: unknown, skipped: { row: string; rea
 }
 
 describe("the World Bank's indicators", () => {
-  const statistics = placesConfig.metrics.filter((m) =>
-    m.statistic?.series.publisher.startsWith("World Bank"),
+  const statistics = placesConfig.metrics.filter(
+    (m) => !m.retired && m.statistic?.series.publisher.startsWith("World Bank"),
   );
 
   it("reads every World Bank statistic for each country, the code kept once on the metric", async () => {
@@ -81,12 +81,15 @@ describe("the World Bank's indicators", () => {
 });
 
 describe("the OECD Tax Database", () => {
-  it("asks for the country's series, the measure in the fourth place of the key", async () => {
+  it("asks for each OECD series of the country with the key its metric names", async () => {
     const urls = (await plannedRetrievals(placesConfig, "oecd-tax-ee", "2026-11-08")).map(
       (r) => r.url,
     );
     expect(urls).toEqual([
       "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_TAX_PIT@DF_PIT_TOP_EARN_THRESH,1.0/EST.A..TS_PIT........?startPeriod=2000&format=csvfile",
+      "https://sdmx.oecd.org/public/rest/data/OECD.GOV.GIP,DSD_GOV@DF_GOV_PF_2025,1.0/A.EST.GE.PT_B1GQ.S13..?startPeriod=2000&format=csvfile",
+      "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/EST.TAX_REV.S13._T..PT_B1GQ.A?startPeriod=2000&format=csvfile",
+      "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/EST.TAX_REV.S1311._T..PT_OTR_REV_CAT.A?startPeriod=2000&format=csvfile",
     ]);
   });
 
@@ -116,8 +119,48 @@ describe("the OECD Tax Database", () => {
   });
 });
 
+describe("the OECD's all-levels series", () => {
+  const read = (file: string) => {
+    const source = placesConfig.sources.find((x) => x.key === "oecd-tax-ee")!;
+    const adapter = ADAPTERS.get(source.adapter)!;
+    const bytes = new Uint8Array(readFileSync(join(__dirname, "fixtures", "oecd", file)));
+    return importBatchSchema.parse(
+      adapter.map(adapter.schema.parse(adapter.decode!(bytes)), {
+        source,
+        pack: placesConfig.packs.find((p) => p.key === "estonia"),
+        options: adapter.options?.parse(source.options),
+        retrieval: { url: null, validFrom: null },
+        skip: () => undefined,
+      }),
+    );
+  };
+
+  it("reads government expenditure and total tax revenue of general government as ratios", () => {
+    const spend = read("oecd-est-ge.csv").facts.find((f) => f.validFrom === "2023-01-01")!;
+    expect(spend.metricKey).toBe("economy.government.expenditure");
+    expect(spend.value).toBeCloseTo(0.4368, 4);
+    const tax = read("oecd-est-taxrev.csv").facts.find((f) => f.validFrom === "2022-01-01")!;
+    expect(tax.metricKey).toBe("tax.revenue.general");
+    expect(tax.value).toBeCloseTo(0.329346, 5);
+    // Two series of one flow and measure are told apart by their sector and unit.
+    const central = read("oecd-est-central-share.csv").facts.find(
+      (f) => f.validFrom === "2022-01-01",
+    )!;
+    expect(central.metricKey).toBe("tax.revenue.central_share");
+    expect(central.value).toBeGreaterThan(0.5);
+    expect(central.value).toBeLessThan(1);
+  });
+
+  it("no longer charts the central-government-only series, which made federal countries look small", () => {
+    const retired = placesConfig.metrics.filter((m) => m.retired).map((m) => m.key);
+    expect(retired).toEqual(
+      expect.arrayContaining(["economy.government.expense", "tax.revenue.total"]),
+    );
+  });
+});
+
 describe("fetching a source", () => {
-  it("retries a server error twice, then gives up; a client error is not retried", async () => {
+  it("retries a server error four times, then gives up; a client error is not retried", async () => {
     setRetryDelayForTests(1);
     const answers = (codes: number[]) => {
       let calls = 0;
@@ -129,9 +172,9 @@ describe("fetching a source", () => {
     expect((await send(flaky.impl, { url: "https://example.org/a" })).status).toBe(200);
     expect(flaky.calls()).toBe(3);
 
-    const down = answers([500, 500, 500, 200]);
+    const down = answers([500, 500, 500, 500, 500, 200]);
     await expect(send(down.impl, { url: "https://example.org/b" })).rejects.toThrow(/HTTP 500/);
-    expect(down.calls()).toBe(3);
+    expect(down.calls()).toBe(5);
 
     const missing = answers([404]);
     await expect(send(missing.impl, { url: "https://example.org/c" })).rejects.toThrow(/HTTP 404/);

@@ -13,11 +13,13 @@
 import { ACT_IDENTIFIER_SCHEMES, LAW_AUTHORITIES } from "@/lib/config/law";
 import { placesConfig } from "@/lib/config/places";
 import { defineCuratedRecords, type CuratedRecordInput } from "@/lib/statistics/records";
+import { EVENT_RECORDS } from "./events";
 
 const FEDLEX = "Fedlex, the Federal Chancellery's publication platform";
 const RIIGI_TEATAJA = "Riigi Teataja (State Gazette)";
 
 const RECORDS: readonly CuratedRecordInput[] = [
+  ...EVENT_RECORDS,
   {
     // Read 2026-11-08: DBG (SR 642.11) Art. 36 in the version in force from
     // 2026-09-02 states the federal income tax tariff for a single person.

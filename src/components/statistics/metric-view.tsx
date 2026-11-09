@@ -6,12 +6,20 @@ import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
-import { chartValue, latestPoint, seriesPageFor } from "@/lib/statistics/present";
-import type { LinkedAct, PlaceSeries } from "@/lib/statistics/read";
-import type { EnforcementBody, EventBody } from "@/lib/statistics/records";
+import { chartValue, eventPath, latestPoint, seriesPageFor } from "@/lib/statistics/present";
+import type { EventRow, LinkedAct, PlaceSeries } from "@/lib/statistics/read";
+import type { EnforcementBody } from "@/lib/statistics/records";
 import type { ViewSpec } from "@/lib/statistics/views";
 import EnforcementList from "./enforcement-list";
+import MetricMap, { type MapValue } from "./metric-map";
 import LawLinks from "./law-links";
+
+/** A day as the reader's language writes it; an ISO date, read as UTC so no timezone moves it. */
+export function formatDay(day: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
+    new Date(`${day}T00:00:00Z`),
+  );
+}
 
 export type StatisticsTranslator = ReturnType<typeof useTranslations<"Statistics">>;
 
@@ -24,9 +32,11 @@ export interface MetricViewProps {
   shown: PlaceSeries[];
   years: { from: number | null; to: number | null };
   acts: LinkedAct[];
-  events: { body: EventBody }[];
+  events: EventRow[];
   enforcement: { body: EnforcementBody; placeName: string }[];
   placeNames: Map<string, string>;
+  /** The latest value per place, for the map. */
+  mapValues: MapValue[];
   /** The spec of what is on screen, for "save this view". */
   spec: ViewSpec;
   /** The page's own address, absolute, for the texts that cite it. */
@@ -47,7 +57,7 @@ const inYears = (year: number, years: MetricViewProps["years"]) =>
  * propose a change to it.
  */
 export default function MetricView(props: MetricViewProps) {
-  const { metric, locale, all, shown, years, acts, events, spec, selfUrl, t } = props;
+  const { metric, locale, all, shown, years, acts, events, spec, selfUrl, mapValues, t } = props;
   const label = localized(metric.label, locale);
   const statistic = metric.statistic!;
   const unit = unitLabel(metric, t);
@@ -76,14 +86,24 @@ export default function MetricView(props: MetricViewProps) {
           kind: "law",
         })),
     ),
-    ...events
-      .filter((e) => inYears(Number(e.body.on.slice(0, 4)), years))
-      .map((e) => ({
-        date: e.body.on,
-        label: localized(e.body.title, locale),
-        href: e.body.evidence[0]!.url,
-        kind: "event",
-      })),
+    // An event is two marks when its change begins later than its decision, and
+    // each opens the event's own page: what changed, how, and who stood where.
+    ...events.flatMap((e) => {
+      const href = getPathname({ href: eventPath(e.body.slug), locale });
+      const title = localized(e.body.title, locale);
+      const marks: TimelineEvent[] = [
+        { date: e.body.on, label: t("metric.eventDecided", { title }), href, kind: "event" },
+      ];
+      if (e.body.effective && e.body.effective !== e.body.on) {
+        marks.push({
+          date: e.body.effective,
+          label: t("metric.eventEffective", { title }),
+          href,
+          kind: "event",
+        });
+      }
+      return marks.filter((m) => inYears(Number(m.date.slice(0, 4)), years));
+    }),
   ];
   const chosen = new Set(shown.map((s) => s.code));
 
@@ -104,7 +124,41 @@ export default function MetricView(props: MetricViewProps) {
           </a>
         </p>
 
+        {statistic.scope && (
+          <p className="mb-0 rounded-surface border border-default bg-surface-raised p-4 text-sm text-fg-secondary">
+            <span className="font-semibold text-fg-primary">{t("metric.scopeLabel")}</span>{" "}
+            {localized(statistic.scope, locale)}
+          </p>
+        )}
+
         {props.banner}
+
+        {mapValues.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-fg-primary">{t("metric.mapTitle")}</h2>
+            <MetricMap
+              values={mapValues}
+              label={t("metric.mapLabel", { metric: label })}
+              legend={{
+                low: t("metric.mapLow"),
+                high: t("metric.mapHigh"),
+                none: t("metric.mapNone"),
+                caption: t("metric.mapCaption", { metric: label, unit }),
+              }}
+              texts={{
+                zoomIn: t("metric.mapZoomIn"),
+                zoomOut: t("metric.mapZoomOut"),
+                home: t("metric.mapHome"),
+                loading: t("metric.mapLoading"),
+                unavailable: t("metric.mapUnavailable"),
+                open: t("metric.mapOpen"),
+                place: t("metric.mapColPlace"),
+                value: t("metric.mapColValue"),
+                year: t("metric.mapColYear"),
+              }}
+            />
+          </section>
+        )}
 
         <form
           method="get"
@@ -177,6 +231,36 @@ export default function MetricView(props: MetricViewProps) {
           />
         ) : (
           <p className="text-sm text-fg-secondary">{t("metric.timelineEmpty")}</p>
+        )}
+        {events.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-fg-primary">{t("metric.eventsTitle")}</h2>
+            <p className="mb-0 text-sm text-fg-secondary">{t("metric.eventsIntro")}</p>
+            <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
+              {events.map((e) => (
+                <li
+                  key={e.recordKey}
+                  className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <span className="min-w-0">
+                    <span className="block text-sm text-fg-tertiary">
+                      {e.placeName} · {t(`event.categories.${e.body.category}`)} ·{" "}
+                      {formatDay(e.body.on, locale)}
+                    </span>
+                    <span className="block font-medium text-fg-primary">
+                      {localized(e.body.title, locale)}
+                    </span>
+                  </span>
+                  <Link href={eventPath(e.body.slug)} className="btn-secondary min-h-11 shrink-0">
+                    {t("metric.eventOpen")}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link href="/statistics/events" className="text-sm text-fg-secondary underline">
+              {t("metric.eventsAll")}
+            </Link>
+          </section>
         )}
         <p className="text-sm text-fg-tertiary">{t("metric.caveat")}</p>
 

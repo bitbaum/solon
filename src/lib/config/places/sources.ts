@@ -158,7 +158,7 @@ const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code
  * on the metric. A percentage becomes a ratio; a rate stays as published.
  */
 const WDI_INDICATORS = METRICS.flatMap((metric) =>
-  metric.statistic?.series.publisher.startsWith("World Bank")
+  !("retired" in metric) && metric.statistic?.series.publisher.startsWith("World Bank")
     ? [
         {
           code: metric.statistic.series.code,
@@ -171,17 +171,20 @@ const WDI_INDICATORS = METRICS.flatMap((metric) =>
 
 /**
  * The OECD's series for one country, from every metric whose statistic names
- * an OECD dataflow and measure. The key puts the country first and leaves
- * every other dimension open but the measure, which is the fourth in the
- * Tax Database's personal income tax flows; a flow with another shape needs
- * its own key here.
+ * an OECD dataflow, a measure and a data key (`{iso3}` stands for the
+ * country's code). The key lives on the metric because every dataflow orders
+ * its dimensions its own way.
  */
 const OECD_SERIES = METRICS.flatMap((metric) =>
-  metric.statistic?.series.publisher.startsWith("OECD") && metric.statistic.series.measure
+  metric.statistic?.series.publisher.startsWith("OECD") &&
+  metric.statistic.series.measure &&
+  metric.statistic.series.key
     ? [
         {
           flow: metric.statistic.series.code,
+          key: metric.statistic.series.key,
           measure: metric.statistic.series.measure,
+          match: metric.statistic.series.match ?? {},
           metric: metric.key,
           divideBy: metric.unit === "ratio" ? 100 : 1,
         },
@@ -192,7 +195,7 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
 const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
   key: `oecd-tax-${iso2.toLowerCase()}`,
   publisher: "OECD",
-  dataset: "OECD Tax Database",
+  dataset: "OECD Tax Database, Revenue Statistics and Government at a Glance",
   homepage: "https://www.oecd.org/en/data/datasets/oecd-tax-database.html",
   licence: "CC-BY-4.0",
   attribution: {
@@ -208,10 +211,11 @@ const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
   options: {
     place: { scheme: "iso_3166_1", value: iso2 },
     fromYear: 2000,
-    series: OECD_SERIES.map(({ flow, measure, metric, divideBy }) => ({
+    series: OECD_SERIES.map(({ flow, key, measure, match, metric, divideBy }) => ({
       flow,
-      key: `${iso3}.A..${measure}........`,
+      key: key.replace("{iso3}", iso3),
       measure,
+      match,
       metric,
       divideBy,
     })),

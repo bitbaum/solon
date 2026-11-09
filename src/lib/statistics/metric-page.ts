@@ -4,9 +4,17 @@
  */
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
-import { findStatistic, pickPlaces, pickYears } from "./present";
-import { currentRecords, linkedActs, loadSeries, placeLabels } from "./read";
-import type { EnforcementBody, EventBody } from "./records";
+import { ISO_NUMERIC } from "@/lib/config/statistics/world";
+import {
+  chartValue,
+  findStatistic,
+  latestPoint,
+  metricPath,
+  pickPlaces,
+  pickYears,
+} from "./present";
+import { currentRecords, linkedActs, loadEvents, loadSeries, placeLabels } from "./read";
+import type { EnforcementBody } from "./records";
 import type { ViewSpec } from "./views";
 
 export interface MetricPageQuery {
@@ -42,16 +50,17 @@ export async function loadMetricPage(
   const shown = pickPlaces(all, query.places.join(","));
   const years = pickYears(shown, query.from, query.to);
   const shownIds = new Set(shown.map((s) => s.jurisdictionId));
-  const records = (await currentRecords(db, { metricKeys: [metric.key] })).filter(
-    (r) => r.jurisdictionId === null || shownIds.has(r.jurisdictionId),
-  );
+  const records = (
+    await currentRecords(db, { metricKeys: [metric.key], kinds: ["law_link", "enforcement"] })
+  ).filter((r) => r.jurisdictionId === null || shownIds.has(r.jurisdictionId));
   const acts = await linkedActs(db, records, locale);
   const ids = [...new Set(records.flatMap((r) => (r.jurisdictionId ? [r.jurisdictionId] : [])))];
   const labels = ids.length > 0 ? await placeLabels(db, config, ids, locale) : new Map();
   const placeNames = new Map<string, string>([...labels].map(([id, l]) => [id, l.name]));
-  const events = records
-    .filter((r) => r.kind === "event")
-    .map((r) => ({ body: r.body as EventBody }));
+  // An event is charted by every statistic it names, wherever its record is filed.
+  const events = (await loadEvents(db, config, locale)).filter(
+    (e) => e.body.series.includes(metric.key) && shownIds.has(e.jurisdictionId),
+  );
   const enforcement = records
     .filter((r) => r.kind === "enforcement")
     .map((r) => ({
@@ -66,7 +75,24 @@ export async function loadMetricPage(
     to: query.to ? years.to : null,
     axis: null,
   };
-  return { metric, all, shown, years, acts, events, enforcement, placeNames, spec };
+  // The latest value of every place with a series, whichever the chart shows:
+  // a map that left a place out because it was unticked would misreport.
+  const mapValues = all.flatMap((s) => {
+    const numeric = ISO_NUMERIC[s.code];
+    const p = latestPoint(s);
+    if (!numeric || !p) return [];
+    return [
+      {
+        feature: `countries:${numeric}`,
+        name: s.name,
+        value: p.value,
+        text: chartValue(metric, p.value).toLocaleString(locale),
+        year: p.year,
+        href: `${metricPath(metric.key)}?p=${s.code}`,
+      },
+    ];
+  });
+  return { metric, all, shown, years, acts, events, enforcement, placeNames, spec, mapValues };
 }
 
 /** The query that reopens a spec on the live page. */

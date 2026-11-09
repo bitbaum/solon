@@ -28,6 +28,8 @@ const oecdOptions = z.object({
         key: z.string().regex(/^[A-Z0-9_+]*(\.[A-Z0-9_+]*)+$/),
         /** The MEASURE code a row of this series carries. */
         measure: z.string().min(1),
+        /** Further columns a row of this series carries (a sector, a unit), where a flow holds several series under one measure. */
+        match: z.record(z.string(), z.string()).default({}),
         metric: z.string().min(1),
         /** A series in percent becomes a ratio with 100 here. */
         divideBy: z.number().positive().default(1),
@@ -64,7 +66,10 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
     for (const [i, row] of table.entries()) {
       const where = `row ${i + 2}`;
       const series = options.series.find(
-        (s) => dataflowColumn(s.flow) === row.DATAFLOW && s.measure === row.MEASURE,
+        (s) =>
+          dataflowColumn(s.flow) === row.DATAFLOW &&
+          s.measure === row.MEASURE &&
+          Object.entries(s.match).every(([column, value]) => row[column] === value),
       );
       if (!series) {
         throw new Error(`${where}: ${row.DATAFLOW} ${row.MEASURE} is not in the source's options`);

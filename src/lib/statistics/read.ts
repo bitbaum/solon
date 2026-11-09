@@ -9,7 +9,7 @@ import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
 import type { NameType } from "@/lib/places/vocabulary";
-import { BODY_SCHEMAS, type ActRef, type LawLinkBody } from "./records";
+import { BODY_SCHEMAS, type ActRef, type EventBody, type LawLinkBody } from "./records";
 import type { StatisticRecordKind } from "./vocabulary";
 
 export interface SeriesPoint {
@@ -277,4 +277,61 @@ function regionName(code: string, locale: string): string | null {
   } catch {
     return null;
   }
+}
+
+export interface EventRow {
+  recordKey: string;
+  jurisdictionId: string;
+  body: EventBody;
+  placeCode: string;
+  placeName: string;
+}
+
+/** Every event currently asserted, with its place named for the reader, newest decision first. */
+export async function loadEvents(
+  db: Database,
+  config: PlacesConfig,
+  locale: string,
+): Promise<EventRow[]> {
+  const records = await currentRecords(db, { kinds: ["event"] });
+  const ids = [...new Set(records.flatMap((r) => (r.jurisdictionId ? [r.jurisdictionId] : [])))];
+  if (ids.length === 0) return [];
+  const labels = await placeLabels(db, config, ids, locale);
+  return records
+    .filter((r) => r.jurisdictionId && labels.has(r.jurisdictionId))
+    .map((r) => {
+      const label = labels.get(r.jurisdictionId!)!;
+      return {
+        recordKey: r.recordKey,
+        jurisdictionId: r.jurisdictionId!,
+        body: r.body as EventBody,
+        placeCode: label.code,
+        placeName: label.name,
+      };
+    })
+    .sort((a, b) => b.body.on.localeCompare(a.body.on));
+}
+
+/** The law register's act for a reference, with its title and the days its versions took effect. */
+export async function actFor(
+  db: Database,
+  act: ActRef | undefined,
+  locale: string,
+): Promise<{ actId: string | null; title: string | null; versions: string[] } | null> {
+  if (!act) return null;
+  const actId = await findAct(db, act);
+  if (!actId) return { actId: null, title: null, versions: [] };
+  const [names, dates] = await Promise.all([
+    db.execute(sql`
+      SELECT locale, text FROM legal_act_names
+      WHERE act_id = ${actId} AND kind = 'title' AND superseded_at IS NULL`),
+    db.execute(sql`
+      SELECT DISTINCT in_force_from::text AS day FROM legal_act_versions
+      WHERE act_id = ${actId} AND date_basis = 'publisher' ORDER BY day`),
+  ]);
+  const titles = rowsOf<{ locale: string; text: string }>(names);
+  const title =
+    (titles.find((t) => t.locale === locale) ?? titles.find((t) => t.locale === "en") ?? titles[0])
+      ?.text ?? null;
+  return { actId, title, versions: rowsOf<{ day: string }>(dates).map((d) => d.day) };
 }

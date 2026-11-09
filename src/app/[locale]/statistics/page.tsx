@@ -18,6 +18,8 @@ import {
 } from "@/lib/statistics/axes";
 import { statisticMetrics } from "@/lib/statistics/present";
 import { loadSeries } from "@/lib/statistics/read";
+import { customAxisFromQuery } from "@/lib/statistics/compare";
+import { viewSpecSchema } from "@/lib/statistics/views";
 
 export const dynamic = "force-dynamic";
 
@@ -87,5 +89,52 @@ export default async function StatisticsPage({
     };
   });
   const t = await getTranslations({ locale, namespace: "Statistics" });
-  return <StatisticsIndex statistics={statistics} axes={axes} locale={locale} t={t} />;
+  const metricMap = new Map(metrics.map((m) => [m.key, m]));
+  const builtAxis = customAxisFromQuery(
+    q,
+    new Set(metrics.map((m) => m.key)),
+    { en: t("index.customLabel") },
+    { en: t("index.customDirection") },
+    t("index.customAuthor"),
+  );
+  let custom = null;
+  if (builtAxis) {
+    const weights = Object.fromEntries(builtAxis.components.map((c) => [c.metric, c.weight]));
+    const params = new URLSearchParams();
+    for (const c of builtAxis.components) {
+      params.append("use", c.metric);
+      params.set(`w.${c.metric}`, String(c.weight));
+      params.set(`d.${c.metric}`, String(c.sign));
+    }
+    const spec = viewSpecSchema.parse({
+      version: 1,
+      metric: builtAxis.components[0]!.metric,
+      places: [],
+      from: null,
+      to: null,
+      axis: { definition: builtAxis, weights },
+    });
+    custom = {
+      axis: builtAxis,
+      scores: scoreAxis(builtAxis, byMetric, weights),
+      weights,
+      metrics: metricMap,
+      selfUrl: `${base}?${params}`,
+      hidden: builtAxis.components.flatMap((c): [string, string][] => [
+        ["use", c.metric],
+        [`d.${c.metric}`, String(c.sign)],
+      ]),
+      saveSpec: JSON.stringify(spec),
+    };
+  }
+  return (
+    <StatisticsIndex
+      statistics={statistics}
+      axes={axes}
+      custom={custom}
+      builder={{ chosen: builtAxis }}
+      locale={locale}
+      t={t}
+    />
+  );
 }

@@ -2,17 +2,24 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { EXAMPLE_AXES } from "@/lib/config/statistics/axes";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
+import { ISO_NUMERIC } from "@/lib/config/statistics/world";
+import { filterEvents, pivotYear } from "../event-page";
 import { scoreAxis, weightsFromQuery, type Axis } from "../axes";
+import { customAxisFromQuery, parallelData, scatterPoints } from "../compare";
 import { placesFromQuery, specQuery } from "../metric-page";
 import {
   chartValue,
+  compareAround,
+  eventPath,
   findStatistic,
   metricFromSlug,
   metricSlug,
   pickPlaces,
   pickYears,
   seriesPageFor,
+  splitAt,
   statisticMetrics,
+  windowAround,
 } from "../present";
 import type { PlaceSeries } from "../read";
 import { defineCuratedRecords } from "../records";
@@ -193,5 +200,203 @@ describe("the curated records", () => {
         known,
       ),
     ).toThrow(/not in the catalog[\s\S]*unknown authority "xx"[\s\S]*a rate names the metric/);
+  });
+});
+
+describe("two measures against each other", () => {
+  const s = (code: string, id: string, points: [number, number][]) => ({
+    ...series(code, points),
+    jurisdictionId: id,
+  });
+
+  it("pairs each place's values at the latest year it has both, never across years", () => {
+    const xs = [
+      s("CH", "a", [
+        [2020, 1],
+        [2021, 2],
+        [2022, 3],
+      ]),
+      s("EE", "b", [[2020, 5]]),
+    ];
+    const ys = [
+      s("CH", "a", [
+        [2020, 10],
+        [2021, 20],
+      ]),
+      s("EE", "b", [[2021, 99]]),
+      s("US", "c", [[2020, 1]]),
+    ];
+    expect(scatterPoints(xs, ys)).toEqual([{ code: "CH", name: "CH", x: 2, y: 20, year: 2021 }]);
+  });
+
+  it("scales each column between its own lowest and highest value, and leaves gaps as gaps", () => {
+    const axis: Axis = {
+      key: "t",
+      version: 1,
+      label: { en: "T" },
+      direction: { en: "H" },
+      author: "test",
+      components: [
+        { metric: "a", sign: 1, weight: 1 },
+        { metric: "b", sign: -1, weight: 1 },
+      ],
+    };
+    const scores = [
+      {
+        jurisdictionId: "1",
+        code: "X",
+        name: "X",
+        score: 0,
+        parts: [
+          { metric: "a", value: 10, year: 1 },
+          { metric: "b", value: null, year: null },
+        ],
+      },
+      {
+        jurisdictionId: "2",
+        code: "Y",
+        name: "Y",
+        score: 1,
+        parts: [
+          { metric: "a", value: 30, year: 1 },
+          { metric: "b", value: 4, year: 1 },
+        ],
+      },
+    ];
+    const { columns, lines } = parallelData(axis, scores);
+    expect(columns).toEqual([
+      { metric: "a", min: 10, max: 30 },
+      { metric: "b", min: 4, max: 4 },
+    ]);
+    expect(lines[0]!.at).toEqual([0, null]);
+    expect(lines[1]!.at).toEqual([1, 0.5]);
+  });
+
+  it("builds a reader's axis from the link, keeping only statistics and clamping weights", () => {
+    const stats = new Set(["a", "b"]);
+    const axis = customAxisFromQuery(
+      { use: ["a", "b", "nope"], "w.a": "99", "d.b": "-1", "w.b": "x" },
+      stats,
+      { en: "Yours" },
+      { en: "Higher." },
+      "You",
+    )!;
+    expect(axis.components).toEqual([
+      { metric: "a", sign: 1, weight: 10 },
+      { metric: "b", sign: -1, weight: 1 },
+    ]);
+    expect(customAxisFromQuery({}, stats, { en: "" }, { en: "" }, "")).toBeNull();
+  });
+});
+
+describe("the curated law events", () => {
+  const events = STATISTIC_RECORDS.flatMap((r) => (r.kind === "event" ? [r] : []));
+
+  it("each has its own page address, a decision date and a source on every line", () => {
+    expect(events.length).toBeGreaterThanOrEqual(5);
+    const slugs = events.map((e) => e.body.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const e of events) {
+      const b = e.body;
+      expect(b.evidence.length, e.key).toBeGreaterThan(0);
+      for (const line of [...b.process, ...b.votes, ...b.actors, ...b.reported]) {
+        expect(line.evidence.length, `${e.key}: a line without a source`).toBeGreaterThan(0);
+      }
+      for (const m of b.series)
+        expect(findStatistic(placesConfig, m), `${e.key} ${m}`).toBeDefined();
+      if (b.effective) expect(b.effective >= b.on, e.key).toBe(true);
+    }
+  });
+
+  it("keeps what people claimed apart from what happened", () => {
+    const kennesaw = events.find((e) => e.body.slug === "us-kennesaw-gun-ordinance-1982")!;
+    const kinds = kennesaw.body.reported.map((r) => r.kind);
+    expect(kinds).toEqual(expect.arrayContaining(["claim", "critique", "context"]));
+    // A burglary figure is a reported claim with its author, never a series Solon holds.
+    expect(kennesaw.body.series).toEqual([]);
+    expect(kennesaw.body.caveat).toBeDefined();
+  });
+
+  it("states a vote's counts the way its record does: breakdowns add up to the totals", () => {
+    const estonia = events.find((e) => e.body.slug === "ee-income-tax-22-percent-2023")!;
+    const vote = estonia.body.votes[0]!;
+    expect(vote.for! + vote.against! + vote.absent!).toBe(101);
+    expect(vote.breakdown.reduce((n, g) => n + g.for, 0)).toBe(vote.for);
+    expect(vote.breakdown.reduce((n, g) => n + g.absent, 0)).toBe(vote.absent);
+  });
+
+  it("leaves no event in a language its place's reader cannot find an English line for", () => {
+    for (const e of events) {
+      expect(e.body.title.en, e.key).toBeTruthy();
+      expect(e.body.summary.en, e.key).toBeTruthy();
+    }
+  });
+});
+
+describe("the numbers around a change", () => {
+  const data = [
+    series("EE", [
+      [2023, 0.2],
+      [2024, 0.2],
+      [2025, 0.22],
+      [2026, 0.22],
+    ]),
+    series("CH", [
+      [2023, 0.41],
+      [2024, 0.41],
+      [2025, 0.41],
+    ]),
+  ];
+
+  it("states what each place's number did across the year a change applies, focal place first", () => {
+    const rows = compareAround(data, "EE", 2025, 1);
+    expect(rows.map((r) => r.code)).toEqual(["EE", "CH"]);
+    expect(rows[0]).toMatchObject({ focal: true, change: expect.closeTo(0.02, 10) });
+    expect(rows[0]!.before).toEqual({ year: 2024, value: 0.2 });
+    expect(rows[0]!.later).toEqual({ year: 2026, value: 0.22 });
+    expect(rows[1]).toMatchObject({ focal: false, change: 0, later: null });
+  });
+
+  it("cuts a line at the change, the two parts sharing the last year before so it stays joined", () => {
+    const cut = splitAt(data[0]!.points, 2025);
+    expect(cut.before.map((p) => p.year)).toEqual([2023, 2024]);
+    expect(cut.from.map((p) => p.year)).toEqual([2024, 2025, 2026]);
+    expect(splitAt([{ year: 2025, value: 1 }], 2025).from).toEqual([{ year: 2025, value: 1 }]);
+  });
+
+  it("frames the years either side of the change within what the series hold", () => {
+    expect(windowAround(data, 2025, 8)).toEqual({ from: 2023, to: 2026 });
+    expect(windowAround([], 2025, 3)).toEqual({ from: 2022, to: 2028 });
+  });
+
+  it("opens an event by its slug and filters the list by place and kind", () => {
+    expect(eventPath("x-y")).toBe("/statistics/event/x-y");
+    const rows = [
+      { placeCode: "EE", body: { category: "statute" } },
+      { placeCode: "CH", body: { category: "referendum" } },
+    ] as never;
+    expect(filterEvents(rows, { place: "CH" })).toHaveLength(1);
+    expect(filterEvents(rows, { kind: "statute", place: "EE" })).toHaveLength(1);
+    expect(filterEvents(rows, {})).toHaveLength(2);
+    expect(pivotYear({ on: "2023-06-19", effective: "2025-01-01" })).toBe(2025);
+    expect(pivotYear({ on: "2011-02-13" })).toBe(2011);
+  });
+});
+
+describe("the world map", () => {
+  it("has an outline code for every country a pack holds, so none is left off the map", () => {
+    for (const pack of placesConfig.packs.filter((p) => p.region)) {
+      expect(ISO_NUMERIC[pack.region!], `${pack.key} (${pack.region})`).toMatch(/^\d{3}$/);
+    }
+  });
+});
+
+describe("the metric catalog says what each number covers", () => {
+  it("gives every live statistic a scope and never charts a central-government-only series", () => {
+    for (const m of statisticMetrics(placesConfig)) {
+      expect(m.statistic!.scope?.en, m.key).toBeTruthy();
+    }
+    const retired = placesConfig.metrics.filter((m) => m.retired).map((m) => m.key);
+    expect(statisticMetrics(placesConfig).some((m) => retired.includes(m.key))).toBe(false);
   });
 });

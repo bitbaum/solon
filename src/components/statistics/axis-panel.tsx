@@ -6,7 +6,10 @@ import { canonicalJson } from "@/lib/domain/canonical";
 import { proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
 import { STATISTIC_AXES_POLICY_KEY, type Axis, type AxisScore } from "@/lib/statistics/axes";
+import { parallelData } from "@/lib/statistics/compare";
+import { chartValue } from "@/lib/statistics/present";
 import type { StatisticsTranslator } from "./metric-view";
+import ParallelPlot from "./parallel-plot";
 
 export interface AxisPanelProps {
   axis: Axis;
@@ -16,6 +19,10 @@ export interface AxisPanelProps {
   metrics: Map<string, Metric>;
   /** The page's address with these weights, for the proposal text. */
   selfUrl: string;
+  /** Further parameters the weights form must keep (a reader-built axis's own choices). */
+  hidden?: [string, string][];
+  /** Offers to keep this axis and its weights as a saved view. */
+  saveSpec?: string;
   locale: Locale;
   t: StatisticsTranslator;
 }
@@ -31,6 +38,8 @@ export default function AxisPanel({
   weights,
   metrics,
   selfUrl,
+  hidden = [],
+  saveSpec,
   locale,
   t,
 }: AxisPanelProps) {
@@ -54,13 +63,20 @@ export default function AxisPanel({
       <BarChart
         rows={scores.map((s) => {
           const missing = s.parts.filter((p) => p.value === null).map((p) => name(p.metric));
+          // On a one-measure axis the 0–100 is only a rescaling of the figure, so the figure itself is shown.
+          const only = axis.components.length === 1 ? s.parts[0] : undefined;
+          const metric = only ? metrics.get(only.metric) : undefined;
+          const figure =
+            only?.value != null && metric
+              ? `${chartValue(metric, only.value).toLocaleString(locale)}${
+                  metric.unit === "ratio" ? " %" : ""
+                } (${only.year})`
+              : undefined;
           return {
-            label: s.name,
+            label: figure ? `${s.name} · ${figure}` : s.name,
             value: s.score,
             note:
-              missing.length > 0
-                ? t("index.axisMissing", { metrics: missing.join(", ") })
-                : undefined,
+              missing.length > 0 ? t("index.axisMissing", { metrics: missing.join(", ") }) : figure,
           };
         })}
         max={100}
@@ -70,7 +86,28 @@ export default function AxisPanel({
           direction: localized(axis.direction, locale),
         })}
       />
+      {axis.components.length > 1 && (
+        <div className="space-y-2">
+          <h4 className="text-base font-semibold text-fg-primary">{t("index.parallelTitle")}</h4>
+          <ParallelPlot
+            {...parallelData(axis, scores)}
+            columns={parallelData(axis, scores).columns.map((c) => {
+              const m = metrics.get(c.metric);
+              return {
+                ...c,
+                label: name(c.metric),
+                fmt: (v: number) => (m ? chartValue(m, v) : v).toLocaleString(locale),
+              };
+            })}
+            caption={t("index.parallelCaption", { axis: label })}
+            texts={{ place: t("event.colPlace"), none: t("index.parallelNone") }}
+          />
+        </div>
+      )}
       <form method="get" className="space-y-3">
+        {hidden.map(([k, v]) => (
+          <input key={`${k}=${v}`} type="hidden" name={k} value={v} />
+        ))}
         <fieldset className="grid gap-3 sm:grid-cols-2">
           <legend className="mb-2 font-semibold text-fg-primary">{t("index.weightsLegend")}</legend>
           {axis.components.map((c) => (
@@ -95,6 +132,18 @@ export default function AxisPanel({
           <Link href="/statistics" className="btn-secondary min-h-11">
             {t("index.resetWeights")}
           </Link>
+          {saveSpec && (
+            <button
+              type="submit"
+              formMethod="post"
+              formAction="/api/v1/statistics/views"
+              name="spec"
+              value={saveSpec}
+              className="btn-primary min-h-11"
+            >
+              {t("index.saveAxis")}
+            </button>
+          )}
           <Link
             href={proposeHref({
               category: "GOVERNANCE_RULES",

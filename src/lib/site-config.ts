@@ -62,6 +62,7 @@ export const MENU: MenuSection[] = [
       { key: "placesCompare", href: "/compare" },
       { key: "placesCoverage", href: "/places/coverage" },
       { key: "statistics", href: "/statistics" },
+      { key: "statisticsEvents", href: "/statistics/events" },
       { key: "structures", href: "/structures" },
     ],
   },
