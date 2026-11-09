@@ -51,6 +51,8 @@ on:
             wyoleg,
             gcnh,
             refresh,
+            box-status,
+            box-stop,
           ]
         default: fedlex
       authority:
@@ -144,6 +146,31 @@ jobs:
           # large pages take one shared turn (two at once ran it out, 2026-11-08, and so did an install
           # beside three loads); loads that mostly wait on a slow publisher (the UK's five seconds a
           # request) share a second turn, so at most two run at once and a slow one never holds up the rest.
+          # box-status and box-stop never wait for a turn: they say what holds one, and end it. Cancelling
+          # a run in GitHub drops the connection but leaves the box's own process running, so a stuck or
+          # cancelled load keeps its turn until box-stop ends it.
+          holders() {
+            for p in /proc/[0-9]*; do
+              ls -l "$p/fd" 2>/dev/null | grep -q 'solon-law-load' || continue
+              echo "${p#/proc/}"
+            done
+          }
+          tree() { local c; for c in $(pgrep -P "$1" 2>/dev/null || true); do tree "$c"; done; echo "$1"; }
+          if [ "$SOURCE" = "box-status" ]; then
+            uptime; free -m; df -h /tmp | tail -1
+            for pid in $(holders); do
+              echo "turn held by pid $pid, running $(ps -o etime= -p "$pid" | tr -d ' '): $(tr '\0' ' ' < /proc/$pid/cmdline | cut -c1-120)"
+            done
+            ps -eo pid,etime,rss,args --sort=-rss | grep -E 'tsx|law-text|pnpm|node' | grep -v grep | head -12 | cut -c1-200
+            exit 0
+          fi
+          if [ "$SOURCE" = "box-stop" ]; then
+            for pid in $(holders); do
+              echo "ending the tree of pid $pid"
+              for t in $(tree "$pid"); do kill -TERM "$t" 2>/dev/null || true; done
+            done
+            exit 0
+          fi
           case "$SOURCE" in
             ukleg|gcnh|wyoleg|legilux|riigiteataja) LOCK="paced" ;;
             *) LOCK="heavy" ;;
