@@ -26,6 +26,7 @@ import SourceList from "@/components/places/source-list";
 import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
 import AtlasCanvas, { ATLAS_LIMITS } from "./atlas-canvas";
+import { COUNTRIES } from "@/lib/config/world/countries";
 import { atlasPalette, loadWorld, readAtlasTokens, shadeOf, type AtlasTokens } from "./world";
 import {
   ADMIN1,
@@ -144,11 +145,9 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
   const featureOfA2 = useMemo(
     () =>
       new Map(
-        (labelData?.countries ?? []).flatMap((c) =>
-          c.n3 ? [[c.a2, `countries:${c.n3.padStart(3, "0")}` as string] as const] : [],
-        ),
+        COUNTRIES.flatMap((c) => (c.n3 ? [[c.a2, `countries:${c.n3}` as string] as const] : [])),
       ),
-    [labelData],
+    [],
   );
   const a2OfFeature = useMemo(
     () => new Map([...featureOfA2].map(([a2, f]) => [f, a2])),

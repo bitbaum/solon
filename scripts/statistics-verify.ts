@@ -1,5 +1,5 @@
 /**
- * Does every source the curated records cite still say what they rely on?
+ * Does every source the curated records and the method descriptions cite still say what they rely on?
  *
  *   pnpm run statistics:verify                 fetch every cited page once, check its words
  *   pnpm run statistics:verify --list          list the pages and what each is expected to say
@@ -10,11 +10,16 @@
  * workflow runs it (.github/workflows/statistics-verify.yml).
  */
 import { writeFileSync } from "node:fs";
+import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { collectEvidence, verifyEvidence } from "@/lib/statistics/verify-sources";
 
 async function main(): Promise<number> {
-  const items = collectEvidence(STATISTIC_RECORDS);
+  // The records, and the pages the descriptions of other publishers' methods rest on.
+  const items = collectEvidence([
+    ...STATISTIC_RECORDS,
+    ...METHODOLOGIES.map((m) => ({ key: `method:${m.key}`, body: m }) as never),
+  ]);
   if (process.argv.includes("--list")) {
     for (const i of items) {
       console.log(

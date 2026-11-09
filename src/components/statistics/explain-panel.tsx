@@ -88,6 +88,8 @@ export function factLine(f: BriefFact, t: StatisticsTranslator): string {
             })
           : "",
       });
+    case "statement":
+      return str(p.text);
     case "empty":
       return t("explain.facts.empty", {
         layer: t(`explain.layers.${str(p.layerKey)}` as "explain.layers.de_jure"),

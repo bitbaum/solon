@@ -3,7 +3,7 @@ import { placesConfig } from "@/lib/config/places";
 import { EXAMPLE_AXES } from "@/lib/config/statistics/axes";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
-import { ISO_NUMERIC } from "@/lib/config/statistics/world";
+import { numericOf } from "@/lib/config/statistics/world";
 import { defineDimensions, measuresOf, type DimensionInput } from "../dimensions";
 import { filterEvents, pivotYear } from "../event-page";
 import { scoreAxis, weightsFromQuery, type Axis } from "../axes";
@@ -390,7 +390,7 @@ describe("the numbers around a change", () => {
 describe("the world map", () => {
   it("has an outline code for every country a pack holds, so none is left off the map", () => {
     for (const pack of placesConfig.packs.filter((p) => p.region)) {
-      expect(ISO_NUMERIC[pack.region!], `${pack.key} (${pack.region})`).toMatch(/^\d{3}$/);
+      expect(numericOf(pack.region!), `${pack.key} (${pack.region})`).toMatch(/^\d{3}$/);
     }
   });
 });

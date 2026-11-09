@@ -8,6 +8,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **How the rankings are made.** `/statistics/methods` describes nine indexes of freedom and
+  governance the same way: who makes each, what it says it measures, how (experts scoring
+  countries, a composite of other sources, perception surveys, official statistics, coding the
+  law), its parts as the publisher names them, whether its data may be shown here with the
+  terms quoted, what has not been read yet, and the questions worth asking of every index of its
+  kind (who the experts are, whether weights are argued or chosen, whether law and practice are
+  mixed). Each page can be explained by AI from what was read and nothing else. {#stats-methods}
+- **One list of countries.** The law globe, the statistics map and the OECD sources now read
+  country codes from one registry instead of three hand-kept tables. {#places-ssot}
+
 - **A globe you can read.** The atlas now names every country, its subdivisions and its towns
   (Natural Earth for countries and the world's first-level subdivisions, GeoNames for every
   place of 1,000 people or more), placed so that no name covers another and appearing as you

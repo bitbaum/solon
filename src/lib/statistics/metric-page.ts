@@ -4,7 +4,7 @@
  */
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
-import { ISO_NUMERIC } from "@/lib/config/statistics/world";
+import { numericOf } from "@/lib/config/statistics/world";
 import {
   chartValue,
   findStatistic,
@@ -81,7 +81,7 @@ export async function loadMetricPage(
   // The latest value of every place with a series, whichever the chart shows:
   // a map that left a place out because it was unticked would misreport.
   const mapValues = all.flatMap((s) => {
-    const numeric = ISO_NUMERIC[s.code];
+    const numeric = numericOf(s.code);
     const p = latestPoint(s);
     if (!numeric || !p) return [];
     return [

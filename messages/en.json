@@ -2014,6 +2014,67 @@
         "thin_scatter": "too few points for a pattern",
         "scatter_years": "points from years far apart"
       }
+    },
+    "methods": {
+      "metaTitle": "How the rankings are made",
+      "metaDescription": "Rankings and ratings of governance and freedom: who makes each, what it measures, how, and whether its data may be shown.",
+      "kicker": "Methods",
+      "title": "How the rankings are made",
+      "intro": "Every index of freedom or governance is someone's choice of what to count and how to weigh it. Here each one is described the same way: who makes it, what it says it measures, how, what it is made of, and whether its data may be shown here, with the questions worth asking of it. Nothing about a publisher's method is filled in from memory: what has not been read is listed as not read.",
+      "colName": "Index",
+      "colPublisher": "Publisher",
+      "colKind": "How",
+      "colLicence": "Its data here",
+      "kinds": {
+        "expert_scoring": "Experts score countries",
+        "composite": "Combines other sources",
+        "perception": "Surveys of perception",
+        "official_statistics": "Official statistics",
+        "coded_from_law": "Coded from the law"
+      },
+      "layers": {
+        "de_jure": "What the law says",
+        "de_facto": "What happens",
+        "outcome": "What results",
+        "perception": "How it is seen"
+      },
+      "verdicts": {
+        "loadable": "May be shown",
+        "unclear": "Licence unclear",
+        "permission": "Needs permission",
+        "not_loadable": "May not be shown"
+      },
+      "claims": "What it says it measures",
+      "about": "What it looks at",
+      "components": "What it is made of",
+      "noComponents": "Its parts have not been read yet.",
+      "coverage": "Coverage",
+      "drawsOn": "It takes inputs from",
+      "licenceTitle": "May its data be shown here?",
+      "terms": "The publisher's terms, quoted",
+      "unreadTitle": "Not read yet",
+      "unreadIntro": "These are left open rather than filled in from memory.",
+      "questionsTitle": "Questions to ask of it",
+      "questions": {
+        "experts": "Who are the experts, how many score each country, and how far do they disagree? A score from a handful of people is an opinion with a number on it.",
+        "composite": "Which sources does it combine, and does any of them count twice (the same survey feeding two parts)?",
+        "weights": "Are the weights argued for or simply chosen? A ranking that changes when the weights change says more about the weights than the countries; on Solon you can set your own.",
+        "perception": "Whose perception: business people, residents, experts abroad? Perception can lag or lead what actually happens.",
+        "official": "Do the countries count the same way? A statistic's definition and scope matter more than its decimals.",
+        "coded": "Is the scale written down, and would a second reader code the same text the same way?",
+        "layer": "Does it mix what the law says with what happens? Solon keeps those apart, so a gap between them shows instead of averaging away.",
+        "inputs": "Its inputs carry their own choices and licences, listed above.",
+        "licence": "Its figures cannot be shown here. Read them at the publisher's, and weigh them with the questions above.",
+        "unread": "Some of how it works has not been read yet; until it is, judge it on what is listed."
+      },
+      "sources": "Where this description comes from",
+      "checked": "checked by a program",
+      "forPeople": "read by a person; a program cannot read this page",
+      "homepage": "The publisher's page",
+      "ownTitle": "Solon's own measures",
+      "ownIntro": "Solon's dimensions keep the law, practice and results apart and code features of the law on written scales, every coding showing its article, its confidence and whether a second person has checked it.",
+      "back": "All methods",
+      "open": "Open"
     }
   }
 }

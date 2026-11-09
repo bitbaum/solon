@@ -51,8 +51,16 @@ describe("which countries' files a view needs", () => {
 });
 
 describe("labels", () => {
+  const ch = {
+    a2: "CH",
+    a3: "CHE",
+    n3: "756",
+    name: "Switzerland",
+    at: [8.2, 46.8] as [number, number],
+    rank: 4,
+    z: 3,
+  };
   const data: WorldLabels = {
-    countries: [{ a2: "CH", n3: "756", at: [8.2, 46.8], rank: 4, z: 3, name: "Switzerland" }],
     regions: [
       {
         a2: "CH",
@@ -69,14 +77,17 @@ describe("labels", () => {
   };
 
   it("names countries in the reader's language and regions where Natural Earth has it", () => {
-    const fr = worldLabels(data, "fr", 280);
+    const fr = worldLabels(data, "fr", 280, new Set(), new Set(), [ch]);
     expect(fr.find((l) => l.id === "c:CH")?.text).toBe("Suisse");
     expect(fr.find((l) => l.id === "r:CH-BE")?.text).toBe("Berne");
-    expect(worldLabels(data, "en", 280).find((l) => l.id === "r:CH-BE")?.text).toBe("Bern");
+    expect(
+      worldLabels(data, "en", 280, new Set(), new Set(), [ch]).find((l) => l.id === "r:CH-BE")
+        ?.text,
+    ).toBe("Bern");
   });
 
   it("drops a country's regions when its own places are drawn, and the world's towns when its own are loaded", () => {
-    const labels = worldLabels(data, "en", 280, new Set(["CH"]), new Set(["CH"]));
+    const labels = worldLabels(data, "en", 280, new Set(["CH"]), new Set(["CH"]), [ch]);
     expect(labels.map((l) => l.id)).toEqual(["c:CH"]);
   });
 
@@ -89,7 +100,9 @@ describe("labels", () => {
       ],
       280,
     );
-    const region = worldLabels(data, "en", 280).find((l) => l.id === "r:CH-BE")!;
+    const region = worldLabels(data, "en", 280, new Set(), new Set(), [ch]).find(
+      (l) => l.id === "r:CH-BE",
+    )!;
     expect(bern!.rank!).toBeLessThan(koeniz!.rank!);
     expect(koeniz!.rank!).toBeLessThan(region.rank!);
     expect(bern!.dot).toBe(true);

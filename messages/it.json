@@ -1321,6 +1321,67 @@
         "thin_scatter": "troppi pochi punti per uno schema",
         "scatter_years": "punti di anni molto lontani"
       }
+    },
+    "methods": {
+      "metaTitle": "Come sono fatte le classifiche",
+      "metaDescription": "Classifiche e valutazioni di governo e libertà: chi le fa, cosa misurano, come, e se i loro dati possono essere mostrati.",
+      "kicker": "Metodi",
+      "title": "Come sono fatte le classifiche",
+      "intro": "Ogni indice di libertà o di governo è la scelta di qualcuno su cosa contare e come pesarlo. Qui ognuno è descritto allo stesso modo: chi lo fa, cosa dice di misurare, come, di cosa è fatto, se i suoi dati possono essere mostrati qui, e le domande da porgli. Nulla del metodo di un editore è completato a memoria: ciò che non è stato letto è indicato come tale.",
+      "colName": "Indice",
+      "colPublisher": "Editore",
+      "colKind": "Come",
+      "colLicence": "I suoi dati qui",
+      "kinds": {
+        "expert_scoring": "Esperti valutano i paesi",
+        "composite": "Combina altre fonti",
+        "perception": "Sondaggi di percezione",
+        "official_statistics": "Statistiche ufficiali",
+        "coded_from_law": "Codificato dal diritto"
+      },
+      "layers": {
+        "de_jure": "Ciò che dice la legge",
+        "de_facto": "Ciò che accade",
+        "outcome": "Ciò che ne risulta",
+        "perception": "Come è percepito"
+      },
+      "verdicts": {
+        "loadable": "Può essere mostrato",
+        "unclear": "Licenza incerta",
+        "permission": "Serve un permesso",
+        "not_loadable": "Non può essere mostrato"
+      },
+      "claims": "Cosa dice di misurare",
+      "about": "Cosa guarda",
+      "components": "Di cosa è fatto",
+      "noComponents": "Le sue parti non sono ancora state lette.",
+      "coverage": "Copertura",
+      "drawsOn": "Attinge da",
+      "licenceTitle": "I suoi dati possono essere mostrati qui?",
+      "terms": "Le condizioni dell'editore, citate",
+      "unreadTitle": "Non ancora letto",
+      "unreadIntro": "Lasciato aperto invece che completato a memoria.",
+      "questionsTitle": "Domande da porgli",
+      "questions": {
+        "experts": "Chi sono gli esperti, quanti valutano ogni paese, e quanto divergono? Un voto di poche persone è un'opinione con un numero.",
+        "composite": "Quali fonti combina, e una di esse conta due volte?",
+        "weights": "I pesi sono motivati o semplicemente scelti? Su Solon potete impostare i vostri.",
+        "perception": "La percezione di chi: imprese, residenti, esperti all'estero?",
+        "official": "I paesi contano allo stesso modo? Definizione e perimetro contano più dei decimali.",
+        "coded": "La scala è scritta, e un secondo lettore codificherebbe lo stesso testo allo stesso modo?",
+        "layer": "Mescola ciò che dice la legge e ciò che accade? Solon li tiene separati perché un divario si veda.",
+        "inputs": "Le sue fonti hanno scelte e licenze proprie, elencate sopra.",
+        "licence": "Le sue cifre non possono essere mostrate qui. Leggetele presso l'editore e pesatele con le domande sopra.",
+        "unread": "Una parte del suo funzionamento non è ancora stata letta."
+      },
+      "sources": "Da dove viene questa descrizione",
+      "checked": "verificato da un programma",
+      "forPeople": "letto da una persona; un programma non può leggere questa pagina",
+      "homepage": "La pagina dell'editore",
+      "ownTitle": "Le misure proprie di Solon",
+      "ownIntro": "Le dimensioni di Solon separano diritto, pratica e risultati e codificano i tratti del diritto su scale scritte; ogni codifica mostra il suo articolo, la sua affidabilità e se una seconda persona l'ha verificata.",
+      "back": "Tutti i metodi",
+      "open": "Apri"
     }
   }
 }

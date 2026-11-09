@@ -5,7 +5,9 @@
  * needed to use Natural Earth"). Downloads the three files at a pinned tag,
  * checks each against its SHA-256, and writes to public/geography/world/:
  *
- *   labels.json        country, subdivision and town label points, with ranks and names
+ *   src/lib/config/world/countries.json   the country registry (codes, label point, rank):
+ *                      the one list of countries every part of Solon reads
+ *   labels.json        subdivision and town label points, with ranks and names
  *   admin1/<A2>.json   one TopoJSON per country, simplified for the screen, loaded on demand
  *   index.json         per country: its file, bounds, size and hash
  *   towns/<A2>.json    every place of 1,000 people or more, from GeoNames
@@ -44,6 +46,7 @@ const FILES = {
   },
 } as const;
 const OUT = path.join(process.cwd(), "public/geography/world");
+const REGISTRY = "src/lib/config/world/countries.json";
 const LOCALES = ["en", "de", "fr", "it", "ru"] as const;
 /**
  * Vertices whose triangle is smaller than this many square degrees are dropped:
@@ -79,7 +82,8 @@ const str = (v: unknown) => (typeof v === "string" && v.trim() && v !== "-99" ? 
 const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const round = (n: number) => Math.round(n * 100) / 100;
 /** A country's two-letter code: Natural Earth's ISO_A2, or its "EH" fallback for France, Norway, Kosovo and the like. */
-const a2Of = (p: Props) => str(p.ISO_A2) ?? str(p.ISO_A2_EH);
+const a2Of = (p: Props) =>
+  [str(p.ISO_A2), str(p.ISO_A2_EH)].find((v) => v !== null && /^[A-Z]{2}$/.test(v)) ?? null;
 
 function names(p: Props, keys: (l: string) => string[], fallback: string): Record<string, string> {
   const out: Record<string, string> = {};
@@ -149,11 +153,12 @@ async function main() {
     return [
       {
         a2,
+        a3: str(p.ISO_A3) ?? str(p.ISO_A3_EH),
         n3: str(p.ISO_N3) ?? str(p.ISO_N3_EH),
+        name: str(p.NAME_EN) ?? str(p.NAME) ?? a2,
         at: [round(x), round(y)],
         rank: num(p.LABELRANK) ?? 6,
         z: num(p.MIN_LABEL) ?? 3,
-        name: str(p.NAME) ?? a2,
       },
     ];
   });
@@ -201,7 +206,6 @@ async function main() {
     "labels.json",
     JSON.stringify({
       source: `Natural Earth 1:10m ${TAG}, public domain`,
-      countries: countryLabels,
       regions: regionLabels,
       towns: townLabels.sort((a, b) => a.rank - b.rank || b.pop - a.pop),
     }),
@@ -301,11 +305,25 @@ async function main() {
     }),
   );
 
+  // The country registry: one entry per ISO 3166-1 country, the list every part of Solon reads.
+  // Natural Earth splits some countries (France and Clipperton, Norway and its islands) into
+  // features that share a code: the country is the most important of them.
+  const byA2 = new Map<string, (typeof countryLabels)[number]>();
+  for (const c of countryLabels) {
+    const was = byA2.get(c.a2);
+    if (!was || c.rank < was.rank) byA2.set(c.a2, c);
+  }
+  const registry = [...byA2.values()].sort((a, b) => a.a2.localeCompare(b.a2));
+  outputs.set(
+    REGISTRY,
+    `${JSON.stringify({ source: `Natural Earth 1:10m ${TAG}, admin 0, public domain`, countries: registry }, null, 1)}\n`,
+  );
+
   let differ = 0;
   let total = 0;
   for (const [file, body] of outputs) {
     total += Buffer.byteLength(body);
-    const target = path.join(OUT, file);
+    const target = file === REGISTRY ? path.join(process.cwd(), file) : path.join(OUT, file);
     if (check) {
       const was = await readFile(target, "utf8").catch(() => null);
       if (was !== body) {

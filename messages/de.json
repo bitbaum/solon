@@ -1321,6 +1321,67 @@
         "thin_scatter": "zu wenige Punkte für ein Muster",
         "scatter_years": "Punkte aus weit auseinanderliegenden Jahren"
       }
+    },
+    "methods": {
+      "metaTitle": "Wie die Ranglisten entstehen",
+      "metaDescription": "Ranglisten und Bewertungen von Regierungsführung und Freiheit: wer sie macht, was sie messen, wie, und ob ihre Daten hier gezeigt werden dürfen.",
+      "kicker": "Methoden",
+      "title": "Wie die Ranglisten entstehen",
+      "intro": "Jeder Index der Freiheit oder der Regierungsführung ist jemandes Entscheidung, was gezählt und wie es gewichtet wird. Hier wird jeder gleich beschrieben: wer ihn macht, was er zu messen sagt, wie, woraus er besteht, ob seine Daten hier gezeigt werden dürfen, und welche Fragen man ihm stellen sollte. Nichts über die Methode eines Herausgebers wird aus dem Gedächtnis ergänzt: was nicht gelesen wurde, steht als nicht gelesen da.",
+      "colName": "Index",
+      "colPublisher": "Herausgeber",
+      "colKind": "Wie",
+      "colLicence": "Seine Daten hier",
+      "kinds": {
+        "expert_scoring": "Fachleute bewerten Länder",
+        "composite": "Kombiniert andere Quellen",
+        "perception": "Umfragen zur Wahrnehmung",
+        "official_statistics": "Amtliche Statistik",
+        "coded_from_law": "Aus dem Recht kodiert"
+      },
+      "layers": {
+        "de_jure": "Was das Recht sagt",
+        "de_facto": "Was geschieht",
+        "outcome": "Was herauskommt",
+        "perception": "Wie es gesehen wird"
+      },
+      "verdicts": {
+        "loadable": "Darf gezeigt werden",
+        "unclear": "Lizenz unklar",
+        "permission": "Braucht Erlaubnis",
+        "not_loadable": "Darf nicht gezeigt werden"
+      },
+      "claims": "Was er zu messen sagt",
+      "about": "Worauf er schaut",
+      "components": "Woraus er besteht",
+      "noComponents": "Seine Teile wurden noch nicht gelesen.",
+      "coverage": "Abdeckung",
+      "drawsOn": "Er nimmt Daten von",
+      "licenceTitle": "Dürfen seine Daten hier gezeigt werden?",
+      "terms": "Die Bedingungen des Herausgebers, zitiert",
+      "unreadTitle": "Noch nicht gelesen",
+      "unreadIntro": "Das bleibt offen, statt aus dem Gedächtnis ergänzt zu werden.",
+      "questionsTitle": "Fragen an ihn",
+      "questions": {
+        "experts": "Wer sind die Fachleute, wie viele bewerten jedes Land, und wie weit gehen sie auseinander? Eine Bewertung von einer Handvoll Leuten ist eine Meinung mit einer Zahl daran.",
+        "composite": "Welche Quellen kombiniert er, und zählt eine davon doppelt (dieselbe Umfrage in zwei Teilen)?",
+        "weights": "Sind die Gewichte begründet oder einfach gewählt? Eine Rangliste, die sich mit den Gewichten ändert, sagt mehr über die Gewichte als über die Länder; auf Solon setzen Sie Ihre eigenen.",
+        "perception": "Wessen Wahrnehmung: Geschäftsleute, Einwohner, Fachleute im Ausland? Wahrnehmung kann dem Geschehen nach- oder vorauslaufen.",
+        "official": "Zählen die Länder gleich? Definition und Umfang einer Statistik sind wichtiger als ihre Nachkommastellen.",
+        "coded": "Ist die Skala aufgeschrieben, und würde eine zweite Person denselben Text gleich kodieren?",
+        "layer": "Vermischt er, was das Recht sagt, mit dem, was geschieht? Solon hält beides getrennt, damit eine Lücke sichtbar wird statt weggemittelt.",
+        "inputs": "Seine Quellen haben eigene Entscheidungen und Lizenzen, oben aufgeführt.",
+        "licence": "Seine Zahlen dürfen hier nicht gezeigt werden. Lesen Sie sie beim Herausgeber und wägen Sie sie mit den Fragen oben.",
+        "unread": "Ein Teil seiner Funktionsweise ist noch nicht gelesen; bis dahin beurteilen Sie ihn nach dem Aufgeführten."
+      },
+      "sources": "Woher diese Beschreibung stammt",
+      "checked": "maschinell geprüft",
+      "forPeople": "von einer Person gelesen; ein Programm kann diese Seite nicht lesen",
+      "homepage": "Die Seite des Herausgebers",
+      "ownTitle": "Solons eigene Masse",
+      "ownIntro": "Solons Dimensionen halten Recht, Praxis und Ergebnis getrennt und kodieren Merkmale des Rechts auf schriftlichen Skalen; jede Kodierung zeigt ihren Artikel, ihre Zuverlässigkeit und ob eine zweite Person sie geprüft hat.",
+      "back": "Alle Methoden",
+      "open": "Öffnen"
     }
   }
 }

@@ -1,4 +1,5 @@
 import type { Rounding } from "@/lib/tax-model";
+import { alpha3Of } from "@/lib/config/world/countries";
 import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
 
@@ -192,7 +193,7 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
     : [],
 );
 
-const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
+const oecdSource = (pack: string, iso2: string): SourceInput => ({
   key: `oecd-tax-${iso2.toLowerCase()}`,
   publisher: "OECD",
   dataset: "OECD Tax Database, Revenue Statistics and Government at a Glance",
@@ -213,7 +214,7 @@ const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
     fromYear: 2000,
     series: OECD_SERIES.map(({ flow, key, measure, match, metric, divideBy }) => ({
       flow,
-      key: key.replace("{iso3}", iso3),
+      key: key.replace("{iso3}", alpha3Of(iso2)),
       measure,
       match,
       metric,
@@ -1252,7 +1253,7 @@ export const SOURCES: readonly SourceInput[] = [
   worldBankSource("estonia", "EE"),
   worldBankSource("united_states", "US"),
   // Liechtenstein is not an OECD member; the Tax Database has no figures for it.
-  oecdSource("switzerland", "CH", "CHE"),
-  oecdSource("estonia", "EE", "EST"),
-  oecdSource("united_states", "US", "USA"),
+  oecdSource("switzerland", "CH"),
+  oecdSource("estonia", "EE"),
+  oecdSource("united_states", "US"),
 ];

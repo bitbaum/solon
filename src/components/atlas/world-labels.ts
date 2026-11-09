@@ -8,17 +8,10 @@
 import type { LabelStyles, MapFeature, MapLabel } from "@bitbaum/geo-kit/map";
 import { feature as topologyFeatures } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
+import { COUNTRIES, type Country } from "@/lib/config/world/countries";
 
 const ROOT = "/geography/world";
 
-interface CountryLabel {
-  a2: string;
-  n3: string | null;
-  at: [number, number];
-  rank: number;
-  z: number;
-  name: string;
-}
 interface RegionLabel {
   a2: string;
   code: string;
@@ -39,7 +32,6 @@ interface TownLabel {
   capital: 0 | 1 | 2;
 }
 export interface WorldLabels {
-  countries: CountryLabel[];
   regions: RegionLabel[];
   towns: TownLabel[];
 }
@@ -171,11 +163,13 @@ export function worldLabels(
   hide: ReadonlySet<string> = new Set(),
   /** Countries whose own towns are loaded: the world file's towns there would be twice. */
   townsOf: ReadonlySet<string> = new Set(),
+  /** The country registry; a test passes its own. */
+  countries: readonly Country[] = COUNTRIES,
 ): MapLabel[] {
   const regionNames = new Intl.DisplayNames([locale], { type: "region" });
   const k = (z: number) => zoomOfLevel(z, radius);
   const out: MapLabel[] = [];
-  for (const c of data.countries) {
+  for (const c of countries) {
     let text = c.name;
     try {
       text = regionNames.of(c.a2) ?? c.name;

@@ -1321,6 +1321,67 @@
         "thin_scatter": "trop peu de points pour une tendance",
         "scatter_years": "points d'années très éloignées"
       }
+    },
+    "methods": {
+      "metaTitle": "Comment les classements sont faits",
+      "metaDescription": "Classements et notations de la gouvernance et de la liberté : qui les fait, ce qu'ils mesurent, comment, et si leurs données peuvent être montrées.",
+      "kicker": "Méthodes",
+      "title": "Comment les classements sont faits",
+      "intro": "Tout indice de liberté ou de gouvernance est le choix de quelqu'un sur ce qu'il faut compter et comment le pondérer. Chacun est décrit ici de la même manière : qui le fait, ce qu'il dit mesurer, comment, de quoi il est fait, si ses données peuvent être montrées ici, et les questions à lui poser. Rien de la méthode d'un éditeur n'est complété de mémoire : ce qui n'a pas été lu est indiqué comme tel.",
+      "colName": "Indice",
+      "colPublisher": "Éditeur",
+      "colKind": "Comment",
+      "colLicence": "Ses données ici",
+      "kinds": {
+        "expert_scoring": "Des experts notent les pays",
+        "composite": "Combine d'autres sources",
+        "perception": "Enquêtes de perception",
+        "official_statistics": "Statistiques officielles",
+        "coded_from_law": "Codé à partir du droit"
+      },
+      "layers": {
+        "de_jure": "Ce que dit la loi",
+        "de_facto": "Ce qui se passe",
+        "outcome": "Ce qui en résulte",
+        "perception": "Comment c'est perçu"
+      },
+      "verdicts": {
+        "loadable": "Peut être montré",
+        "unclear": "Licence incertaine",
+        "permission": "Autorisation requise",
+        "not_loadable": "Ne peut pas être montré"
+      },
+      "claims": "Ce qu'il dit mesurer",
+      "about": "Ce qu'il regarde",
+      "components": "De quoi il est fait",
+      "noComponents": "Ses parties n'ont pas encore été lues.",
+      "coverage": "Couverture",
+      "drawsOn": "Il puise dans",
+      "licenceTitle": "Ses données peuvent-elles être montrées ici ?",
+      "terms": "Les conditions de l'éditeur, citées",
+      "unreadTitle": "Pas encore lu",
+      "unreadIntro": "Laissé ouvert plutôt que complété de mémoire.",
+      "questionsTitle": "Questions à lui poser",
+      "questions": {
+        "experts": "Qui sont les experts, combien notent chaque pays, et jusqu'où divergent-ils ? Une note de quelques personnes est une opinion chiffrée.",
+        "composite": "Quelles sources combine-t-il, et l'une d'elles compte-t-elle deux fois ?",
+        "weights": "Les pondérations sont-elles justifiées ou simplement choisies ? Sur Solon, vous pouvez fixer les vôtres.",
+        "perception": "La perception de qui : entreprises, habitants, experts à l'étranger ?",
+        "official": "Les pays comptent-ils de la même façon ? La définition et le périmètre comptent plus que les décimales.",
+        "coded": "L'échelle est-elle écrite, et un second lecteur coderait-il le même texte de la même façon ?",
+        "layer": "Mélange-t-il ce que dit la loi et ce qui se passe ? Solon les sépare pour qu'un écart se voie.",
+        "inputs": "Ses sources ont leurs propres choix et licences, listés plus haut.",
+        "licence": "Ses chiffres ne peuvent pas être montrés ici. Lisez-les chez l'éditeur et pesez-les avec les questions ci-dessus.",
+        "unread": "Une partie de son fonctionnement n'a pas encore été lue."
+      },
+      "sources": "D'où vient cette description",
+      "checked": "vérifié par un programme",
+      "forPeople": "lu par une personne ; un programme ne peut pas lire cette page",
+      "homepage": "La page de l'éditeur",
+      "ownTitle": "Les mesures propres de Solon",
+      "ownIntro": "Les dimensions de Solon séparent le droit, la pratique et les résultats et codent les traits du droit sur des échelles écrites, chaque codage montrant son article, sa fiabilité et si une seconde personne l'a vérifié.",
+      "back": "Toutes les méthodes",
+      "open": "Ouvrir"
     }
   }
 }
