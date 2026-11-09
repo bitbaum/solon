@@ -75,6 +75,7 @@ describe.skipIf(!RUN)("a refusing publisher, read from the archive", () => {
       pauseMs: 0,
       fetchImpl,
     });
+    expect(report.failures).toEqual([]);
     expect(report.listedFrom).toBe(`https://web.archive.org/web/${STAMP}id_/${page}`);
 
     const [identity] = await db
