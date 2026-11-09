@@ -633,7 +633,11 @@ export const chauxDeFonds = linkedDocuments({
   homepage: "https://www.chaux-de-fonds.ch/",
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "fr",
-  pages: ["https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Pages/default.aspx"],
+  pages: [
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements",
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Pages/default.aspx",
+    "https://www.chaux-de-fonds.ch/rapports-et-reglements/reglementation/Documents/",
+  ],
   link: /\/rapports-et-reglements\/reglementation\/Documents\/(\d+_\d+\.pdf)(?:[?#]|$)/i,
   include: /./,
   exclude: CH_FR_FORM,
