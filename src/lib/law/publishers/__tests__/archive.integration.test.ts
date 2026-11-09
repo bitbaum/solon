@@ -71,10 +71,11 @@ describe.skipIf(!RUN)("a refusing publisher, read from the archive", () => {
 
     const report = await loadPublisher(db, adapter, {
       snapshots,
-      today: "2026-11-08",
+      today: new Date().toISOString().slice(0, 10), // the adapter dates a version by the day it is read
       pauseMs: 0,
       fetchImpl,
     });
+    expect(report.failures).toEqual([]);
     expect(report.listedFrom).toBe(`https://web.archive.org/web/${STAMP}id_/${page}`);
 
     const [identity] = await db

@@ -528,8 +528,8 @@ export const geneveCity = linkedDocuments({
   pages: [GENEVE_LIST, ...Array.from({ length: 27 }, (_, i) => `${GENEVE_LIST}?page=${i + 1}`)],
   maxPages: 30,
   // Each act is a page of its own, /administration-municipale/reglements-municipaux/lc<number>-<title>.
+  // The act's address serves the PDF itself (no HTML page between), so there is no `file`.
   link: /\/administration-municipale\/reglements-municipaux\/(lc[0-9a-z-]+)(?:[?#]|$)/i,
-  file: /\.pdf(?:[?#]|$)/i,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
