@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ASSESSMENT_RECORDS } from "@/lib/config/statistics/assessments";
+import { HEALTH_ASSESSMENTS } from "@/lib/config/statistics/assessments-health";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { RUBRICS } from "@/lib/config/statistics/rubrics";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
@@ -154,7 +155,7 @@ describe("the shipped codings", () => {
   const codings = STATISTIC_RECORDS.flatMap((r) => (r.kind === "assessment" ? [r] : []));
 
   it("are on the current version of a rubric that exists, one per place and rubric", () => {
-    expect(codings.length).toBe(ASSESSMENT_RECORDS.length);
+    expect(codings.length).toBe(ASSESSMENT_RECORDS.length + HEALTH_ASSESSMENTS.length);
     const seen = new Set<string>();
     for (const c of codings) {
       const rubric = RUBRICS.find((r) => r.key === c.body.rubric)!;
@@ -211,7 +212,10 @@ describe("dimensions that hold coded features", () => {
 
   it("ships the compulsion dimension with its de jure layer filled by a rubric and the rest stated as wanted", () => {
     const d = DIMENSIONS.find((x) => x.key === "compulsion")!;
-    expect(d.layers.de_jure.rubrics).toEqual(["compulsion.military_service"]);
+    expect(d.layers.de_jure.rubrics).toEqual([
+      "compulsion.military_service",
+      "compulsion.health_insurance",
+    ]);
     expect(d.layers.de_facto.metrics).toEqual([]);
     expect(d.layers.de_facto.wanted?.en).toBeTruthy();
   });
