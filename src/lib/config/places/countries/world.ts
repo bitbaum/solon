@@ -30,12 +30,18 @@ export function worldPack(held: ReadonlySet<string>): CountryPackInput {
     slug: { strategy: "official-name", transliterate: true },
     levels: [
       {
-        key: "nation",
+        // One root, so a country's path is world/<name>, not a pack of 235 roots.
+        key: "world",
         parent: null,
+        names: { en: "World", de: "Welt", fr: "monde", it: "mondo" },
+      },
+      {
+        key: "nation",
+        parent: "world",
         names: { en: "Country", de: "Land", fr: "pays", it: "paese" },
       },
     ],
-    identifierSchemes: ["iso_3166_1"],
+    identifierSchemes: ["world_root", "iso_3166_1"],
     sources: [
       "world-country-registry",
       ...countries.map(worldBankKey),

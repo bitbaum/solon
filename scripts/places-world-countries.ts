@@ -27,7 +27,27 @@ const names = LOCALES.map(
   (l) => [l, new Intl.DisplayNames([l], { type: "region", fallback: "none" })] as const,
 );
 
-const jurisdictions = COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => ({
+const EARTH = { scheme: "world_root", value: "earth" };
+const nations = COUNTRIES.filter((c) => !held.has(c.a2));
+const earth = {
+  ref: EARTH,
+  levelKey: "world",
+  names: names.flatMap(([locale]) => [
+    {
+      locale,
+      name:
+        { en: "The world", de: "Die Welt", fr: "Le monde", it: "Il mondo", ru: "Мир" }[locale] ??
+        "The world",
+      nameType: "common",
+    },
+  ]),
+};
+const relations = nations.map((c) => ({
+  from: { scheme: "iso_3166_1", value: c.a2 },
+  to: EARTH,
+  relation: "part_of",
+}));
+const jurisdictions = nations.map((c) => ({
   ref: { scheme: "iso_3166_1", value: c.a2 },
   levelKey: "nation",
   names: names.flatMap(([locale, display]) => {
@@ -38,7 +58,10 @@ const jurisdictions = COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => ({
 
 async function main() {
   // the repository formats its data with Prettier, so the generator does too
-  const body = await format(JSON.stringify({ pack: "world", jurisdictions }), { parser: "json" });
+  const body = await format(
+    JSON.stringify({ pack: "world", jurisdictions: [earth, ...jurisdictions], relations }),
+    { parser: "json" },
+  );
   if (process.argv.includes("--check")) {
     let was = "";
     try {
@@ -55,7 +78,7 @@ async function main() {
   } else {
     mkdirSync(dirname(FILE), { recursive: true });
     writeFileSync(FILE, body);
-    console.log(`${jurisdictions.length} countries written (${held.size} held by country packs)`);
+    console.log(`${nations.length} countries written (${held.size} held by country packs)`);
   }
 }
 

@@ -2,6 +2,17 @@
   "pack": "world",
   "jurisdictions": [
     {
+      "ref": { "scheme": "world_root", "value": "earth" },
+      "levelKey": "world",
+      "names": [
+        { "locale": "en", "name": "The world", "nameType": "common" },
+        { "locale": "de", "name": "Die Welt", "nameType": "common" },
+        { "locale": "fr", "name": "Le monde", "nameType": "common" },
+        { "locale": "it", "name": "Il mondo", "nameType": "common" },
+        { "locale": "ru", "name": "Мир", "nameType": "common" }
+      ]
+    },
+    {
       "ref": { "scheme": "iso_3166_1", "value": "AD" },
       "levelKey": "nation",
       "names": [
@@ -2929,6 +2940,1183 @@
         { "locale": "it", "name": "Zimbabwe", "nameType": "common" },
         { "locale": "ru", "name": "Зимбабве", "nameType": "common" }
       ]
+    }
+  ],
+  "relations": [
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AQ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AX" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "AZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BB" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BJ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "BZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CV" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "CZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DJ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "DZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "EC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "EG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "EH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ER" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ES" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ET" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FJ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "FR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GB" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GQ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "GY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "HU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ID" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IQ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "IT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "JE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "JM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "JO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "JP" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KP" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "KZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LB" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LV" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "LY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ME" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ML" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MP" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MV" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MX" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "MZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NP" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "NZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "OM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "PY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "QA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "RO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "RS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "RU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "RW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SB" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ST" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SV" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SX" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "SZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TD" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TH" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TJ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TL" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TO" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TR" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TT" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TV" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "TZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "UA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "UG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "UM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "UY" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "UZ" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VC" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VG" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VI" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VN" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "VU" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "WF" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "WS" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "XK" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "YE" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ZA" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ZM" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
+    },
+    {
+      "from": { "scheme": "iso_3166_1", "value": "ZW" },
+      "to": { "scheme": "world_root", "value": "earth" },
+      "relation": "part_of"
     }
   ]
 }
