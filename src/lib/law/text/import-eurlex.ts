@@ -204,8 +204,12 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
         .replace(/\d+/g, "N")
         .slice(0, 120);
       report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
-      // A page that is not an act's (the oldest acts have no HTML text) is an answer, not a refusal.
-      refusedInARow = /^\d{3} for|no answer|Internet Archive/.test(reason) ? refusedInARow + 1 : 0;
+      // A page that is not an act's, or a 404 (the newest consolidations have no HTML text yet, the
+      // oldest acts none at all), is an answer, not a refusal: twenty of them in a row stood in front of
+      // every act below them and stopped each run with nothing stored (2026-11-09, at 3,924 acts).
+      refusedInARow = /^(?:403|429|5\d\d) for|no answer|Internet Archive/.test(reason)
+        ? refusedInARow + 1
+        : 0;
     }
     await sleep(pauseMs);
   }
