@@ -259,7 +259,12 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
         throw new Error(
           `${config.key}: the pages listed no acts${missed.length ? ` (${missed.slice(0, 5).join("; ")})` : ""}; ` +
             `${pages.length} page(s), ${anchors.length} links, ${documents.length} matching the document pattern, ` +
-            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}`,
+            `${titled.length} of those titled as acts. Documents: ${sample(documents)}. Links: ${sample(anchors.filter((a) => /\.pdf|reglement|r[eè]glement|regolamento|verordnung/i.test(a.href + a.text)))}. ` +
+            `Other pages: ${[...new Set(anchors.map((a) => a.href.split("#")[0]!))]
+              .filter((h) => !h.includes("#"))
+              .slice(0, 40)
+              .map((h) => h.slice(0, 120))
+              .join(" ")}`,
         );
       }
       for (const act of acts) titles.set(act.pageUrl, act.title);
@@ -595,6 +600,8 @@ export const bellinzonaCity = linkedDocuments({
   exclude: CH_IT_FORM,
 });
 
+const VERNIER_LIST = "https://www.vernier.ch/fr/admin/reglements/";
+
 /**
  * Vernier: "Règlements", each act a PDF in the commune's own files, named
  * "RSRV - <number> <title>" after its recueil systématique.
@@ -606,8 +613,11 @@ export const vernier = linkedDocuments({
   homepage: "https://www.vernier.ch/",
   licenceSpdx: "LicenseRef-ch-official-act",
   locale: "fr",
-  pages: ["https://www.vernier.ch/fr/admin/reglements/"],
-  link: /\/sites\/default\/files\/[^/]+\/(RSRV_-_[^/?#]+\.pdf)(?:[?#]|$)/i,
+  pages: [VERNIER_LIST, ...Array.from({ length: 9 }, (_, i) => `${VERNIER_LIST}?page=${i + 1}`)],
+  maxPages: 10,
+  // Each act is a publication page, /administration-et-autorites/publications/<title>, with its PDF on it.
+  link: /\/administration-et-autorites\/publications\/([a-z0-9-]+)(?:[?#]|$)/i,
+  file: /\.pdf(?:[?#]|$)/i,
   include: CH_FR_ACT,
   exclude: CH_FR_FORM,
 });
@@ -627,22 +637,4 @@ export const chauxDeFonds = linkedDocuments({
   link: /\/rapports-et-reglements\/reglementation\/Documents\/(\d+_\d+\.pdf)(?:[?#]|$)/i,
   include: /./,
   exclude: CH_FR_FORM,
-});
-
-/**
- * Bern: the Systematische Sammlung des Stadtrechts (SSSB). An act is a page,
- * /lex-<number>, and its PDF sits under it.
- */
-export const bernCity = linkedDocuments({
-  key: "bern-city",
-  authority: "bfs351",
-  name: "Stadt Bern, Systematische Sammlung des Stadtrechts",
-  homepage: "https://stadtrecht.bern.ch/",
-  licenceSpdx: "LicenseRef-ch-official-act",
-  locale: "de",
-  pages: ["https://stadtrecht.bern.ch/lexoverview-home"],
-  link: /\/(lex-[0-9_]+)(?:[?#]|$)/i,
-  file: /\.pdf(?:[?#]|$)/i,
-  include: /./,
-  exclude: CH_DE_FORM,
 });
