@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **What it costs to leave.** A new dimension, `/statistics/dimension/exit`, codes from the
+  statutes whether a citizen can give up their citizenship and whether leaving is taxed.
+  Switzerland (BüG Art. 37: released on request if living abroad with another citizenship),
+  Estonia (KodS § 26 and § 29) and the United States (8 U.S.C. § 1481: renunciation before a
+  consul abroad) are each at 1, on stated conditions; the United States taxes all property of
+  a covered expatriate as if sold (26 U.S.C. § 877A), point 2. Every coding quotes its
+  article and awaits a second reader. {#stats-exit}
+
 - **Charts that cannot show nonsense, and help to read them.** A figure that is not a number
   or lies outside what the measure can be is left out of the chart and listed above it, not
   drawn. Places read at dates more than two years apart, a trend from fewer than three

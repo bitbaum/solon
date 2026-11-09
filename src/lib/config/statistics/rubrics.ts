@@ -7,7 +7,7 @@
 import { defineRubrics } from "@/lib/statistics/assessments";
 
 const AUTHOR =
-  "Solon's configuration (version 1, 2026-11-09), written for the compulsion dimension.";
+  "Solon's configuration (version 1, 2026-11-09), written for the compulsion and exit dimensions.";
 
 export const RUBRICS = defineRubrics([
   {
@@ -101,6 +101,94 @@ export const RUBRICS = defineRubrics([
       },
       {
         en: "A duty that the law states but that carries a payment of zero is coded 1, and the reading says what the payment is.",
+      },
+    ],
+    author: AUTHOR,
+  },
+  {
+    key: "exit.renounce_citizenship",
+    version: 1,
+    label: { en: "Giving up citizenship" },
+    question: {
+      en: "Can a citizen give up their citizenship, and on what conditions?",
+    },
+    scale: [
+      {
+        value: 0,
+        label: { en: "By declaration" },
+        definition: {
+          en: "A citizen who holds or will acquire another citizenship may give theirs up by their own declaration, with no further condition in the law.",
+        },
+      },
+      {
+        value: 1,
+        label: { en: "On stated conditions" },
+        definition: {
+          en: "A citizen may give it up only on further conditions the law states (living abroad, making the declaration abroad, a fee), and once they are met the law does not leave the outcome to an authority's discretion.",
+        },
+      },
+      {
+        value: 2,
+        label: { en: "At an authority's discretion" },
+        definition: {
+          en: "Release is decided by an authority that the law allows to refuse it on grounds beyond avoiding statelessness (unfulfilled duties to the state, the state's interests).",
+        },
+      },
+      {
+        value: 3,
+        label: { en: "No way out" },
+        definition: { en: "The law provides no way for a citizen to give up their citizenship." },
+      },
+    ],
+    edgeCases: [
+      {
+        en: "A refusal that only prevents statelessness does not count as discretion: international law expects it, and every point allows it.",
+      },
+      {
+        en: "Losing citizenship as a penalty (deprivation) is a different feature and is not coded here.",
+      },
+      {
+        en: "Where the law offers two ways out, the coding takes the one least burdened, and the reading names both.",
+      },
+    ],
+    author: AUTHOR,
+  },
+  {
+    key: "exit.departure_tax",
+    version: 1,
+    label: { en: "Tax on leaving" },
+    question: {
+      en: "Does the law tax a person because they give up their citizenship or their residence?",
+    },
+    scale: [
+      {
+        value: 0,
+        label: { en: "No tax on leaving" },
+        definition: {
+          en: "The tax law sets no tax triggered by giving up citizenship or residence.",
+        },
+      },
+      {
+        value: 1,
+        label: { en: "On some assets" },
+        definition: {
+          en: "Some assets (for example large shareholdings) are treated as sold when a person leaves, and the gain is taxed.",
+        },
+      },
+      {
+        value: 2,
+        label: { en: "On all assets" },
+        definition: {
+          en: "All of a person's property is treated as sold when they give up citizenship or long-term residence, and the gain above an exclusion is taxed.",
+        },
+      },
+    ],
+    edgeCases: [
+      {
+        en: "A place is coded 0 only from a reading of its tax act's provisions on departure as a whole; not finding an exit tax in one article is not enough, and such a place is left uncoded.",
+      },
+      {
+        en: "A threshold that exempts most people does not change the point; who is caught is stated in the reading.",
       },
     ],
     author: AUTHOR,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ASSESSMENT_RECORDS } from "@/lib/config/statistics/assessments";
+import { EXIT_ASSESSMENTS } from "@/lib/config/statistics/assessments-exit";
 import { HEALTH_ASSESSMENTS } from "@/lib/config/statistics/assessments-health";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { RUBRICS } from "@/lib/config/statistics/rubrics";
@@ -155,7 +156,9 @@ describe("the shipped codings", () => {
   const codings = STATISTIC_RECORDS.flatMap((r) => (r.kind === "assessment" ? [r] : []));
 
   it("are on the current version of a rubric that exists, one per place and rubric", () => {
-    expect(codings.length).toBe(ASSESSMENT_RECORDS.length + HEALTH_ASSESSMENTS.length);
+    expect(codings.length).toBe(
+      ASSESSMENT_RECORDS.length + HEALTH_ASSESSMENTS.length + EXIT_ASSESSMENTS.length,
+    );
     const seen = new Set<string>();
     for (const c of codings) {
       const rubric = RUBRICS.find((r) => r.key === c.body.rubric)!;

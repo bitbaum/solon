@@ -73,6 +73,29 @@ export const DIMENSIONS = defineDimensions(
       author:
         "An example in Solon's configuration (version 1, 2026-11-09), coded from statutes. Not an index.",
     },
+    {
+      key: "exit",
+      version: 1,
+      label: { en: "What it costs to leave" },
+      summary: {
+        en: "How free a person is to leave: whether and on what conditions they can give up their citizenship, and whether leaving is taxed. Leaving is the other half of compulsion: an arrangement a person can walk away from cheaply compels less than one they cannot. Each feature is read from the statute and placed on a written scale, with the articles, how sure the reader is, and whether a second person has checked it.",
+      },
+      layers: {
+        de_jure: { rubrics: ["exit.renounce_citizenship", "exit.departure_tax"] },
+        de_facto: {
+          wanted: {
+            en: "What leaving takes in practice: how many people give up their citizenship each year (the United States publishes the names quarterly in the Federal Register), how long a release takes, and how often one is refused.",
+          },
+        },
+        outcome: {
+          wanted: {
+            en: "What follows: emigration of citizens by year, from statistical offices.",
+          },
+        },
+      },
+      author:
+        "An example in Solon's configuration (version 1, 2026-11-09), coded from statutes. Not an index.",
+    },
   ],
   new Set(placesConfig.metrics.filter((m) => m.statistic && !m.retired).map((m) => m.key)),
   new Set(RUBRICS.map((r) => r.key)),
