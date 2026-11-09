@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Every country is a place, and governance is measured for all.** 235 more countries are now
+  places (the countries no country pack holds in depth), each with the World Bank's indicators,
+  and the OECD's tax series for its 38 members. New: six World Bank governance scores (voice and
+  accountability, political stability, government effectiveness, regulatory quality, rule of law,
+  control of corruption), on `/statistics/dimension/governance`, labelled as what they are: a
+  composite of perceptions from 35 sources, estimates rather than definitive ratings. A series a
+  law fixes (a statutory rate) is no longer flagged for staying the same for years. {#places-world} {#stats-wgi}
+
 - **How the rankings are made.** `/statistics/methods` describes nine indexes of freedom and
   governance the same way: who makes each, what it says it measures, how (experts scoring
   countries, a composite of other sources, perception surveys, official statistics, coding the

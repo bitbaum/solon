@@ -35,7 +35,12 @@ describe("the country registry", () => {
       objects: { countries: { geometries: { id?: string }[] } };
     };
     const ids = new Set(world.objects.countries.geometries.map((g) => g.id));
-    const undrawn = [...namedCountries().keys()].filter((a2) => !ids.has(numericOf(a2) ?? ""));
+    // Too small for the 1:50m outlines (Gibraltar, Tuvalu, the US minor outlying islands) or
+    // without an ISO numeric code (Kosovo): named in the lists, found on the globe by label only.
+    const KNOWN_UNDRAWN = ["GI", "TV", "UM", "XK"];
+    const undrawn = [...namedCountries().keys()]
+      .filter((a2) => !ids.has(numericOf(a2) ?? ""))
+      .filter((a2) => !KNOWN_UNDRAWN.includes(a2));
     expect(undrawn).toEqual([]);
   });
 
@@ -46,5 +51,31 @@ describe("the country registry", () => {
     expect(countryOf("fr")?.name).toBe("France");
     expect(numericOf("XK")).toBeNull();
     expect(() => alpha3Of("ZZ")).toThrow(/no alpha-3 code for ZZ/);
+  });
+});
+
+describe("the world pack", () => {
+  it("holds every registry country no other pack holds, with its series sources, and nothing twice", () => {
+    const world = placesConfig.packs.find((p) => p.key === "world")!;
+    const held = new Set(
+      placesConfig.packs.filter((p) => p.key !== "world" && p.region).map((p) => p.region!),
+    );
+    const sourceKeys = new Set(world.sources);
+    expect(sourceKeys.size).toBe(world.sources.length);
+    for (const c of COUNTRIES.filter((c) => !held.has(c.a2)))
+      expect(sourceKeys.has(`worldbank-wdi-${c.a2.toLowerCase()}`), c.a2).toBe(true);
+    for (const a2 of held)
+      expect(sourceKeys.has(`worldbank-wdi-${a2.toLowerCase()}`), a2).toBe(false);
+  });
+
+  it("spreads the OECD's sources so none starts within five minutes of another", () => {
+    const cadences = placesConfig.sources
+      .filter((s) => s.key.startsWith("oecd-tax-") && s.packs.includes("world"))
+      .map((s) => s.cadence.split(" "))
+      .map(([min, hour]) => Number(hour) * 60 + Number(min));
+    expect(cadences.length).toBeGreaterThan(30);
+    const sorted = [...cadences].sort((a, b) => a - b);
+    for (let i = 1; i < sorted.length; i++)
+      expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(5);
   });
 });

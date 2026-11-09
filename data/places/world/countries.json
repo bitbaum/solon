@@ -1,0 +1,2934 @@
+{
+  "pack": "world",
+  "jurisdictions": [
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Andorra", "nameType": "common" },
+        { "locale": "de", "name": "Andorra", "nameType": "common" },
+        { "locale": "fr", "name": "Andorre", "nameType": "common" },
+        { "locale": "it", "name": "Andorra", "nameType": "common" },
+        { "locale": "ru", "name": "Андорра", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AE" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "United Arab Emirates",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Vereinigte Arabische Emirate",
+          "nameType": "common"
+        },
+        { "locale": "fr", "name": "Émirats arabes unis", "nameType": "common" },
+        { "locale": "it", "name": "Emirati Arabi Uniti", "nameType": "common" },
+        { "locale": "ru", "name": "ОАЭ", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Afghanistan", "nameType": "common" },
+        { "locale": "de", "name": "Afghanistan", "nameType": "common" },
+        { "locale": "fr", "name": "Afghanistan", "nameType": "common" },
+        { "locale": "it", "name": "Afghanistan", "nameType": "common" },
+        { "locale": "ru", "name": "Афганистан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Antigua & Barbuda", "nameType": "common" },
+        { "locale": "de", "name": "Antigua und Barbuda", "nameType": "common" },
+        { "locale": "fr", "name": "Antigua-et-Barbuda", "nameType": "common" },
+        { "locale": "it", "name": "Antigua e Barbuda", "nameType": "common" },
+        { "locale": "ru", "name": "Антигуа и Барбуда", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Anguilla", "nameType": "common" },
+        { "locale": "de", "name": "Anguilla", "nameType": "common" },
+        { "locale": "fr", "name": "Anguilla", "nameType": "common" },
+        { "locale": "it", "name": "Anguilla", "nameType": "common" },
+        { "locale": "ru", "name": "Ангилья", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Albania", "nameType": "common" },
+        { "locale": "de", "name": "Albanien", "nameType": "common" },
+        { "locale": "fr", "name": "Albanie", "nameType": "common" },
+        { "locale": "it", "name": "Albania", "nameType": "common" },
+        { "locale": "ru", "name": "Албания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Armenia", "nameType": "common" },
+        { "locale": "de", "name": "Armenien", "nameType": "common" },
+        { "locale": "fr", "name": "Arménie", "nameType": "common" },
+        { "locale": "it", "name": "Armenia", "nameType": "common" },
+        { "locale": "ru", "name": "Армения", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Angola", "nameType": "common" },
+        { "locale": "de", "name": "Angola", "nameType": "common" },
+        { "locale": "fr", "name": "Angola", "nameType": "common" },
+        { "locale": "it", "name": "Angola", "nameType": "common" },
+        { "locale": "ru", "name": "Ангола", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AQ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Antarctica", "nameType": "common" },
+        { "locale": "de", "name": "Antarktis", "nameType": "common" },
+        { "locale": "fr", "name": "Antarctique", "nameType": "common" },
+        { "locale": "it", "name": "Antartide", "nameType": "common" },
+        { "locale": "ru", "name": "Антарктида", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Argentina", "nameType": "common" },
+        { "locale": "de", "name": "Argentinien", "nameType": "common" },
+        { "locale": "fr", "name": "Argentine", "nameType": "common" },
+        { "locale": "it", "name": "Argentina", "nameType": "common" },
+        { "locale": "ru", "name": "Аргентина", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "American Samoa", "nameType": "common" },
+        { "locale": "de", "name": "Amerikanisch-Samoa", "nameType": "common" },
+        { "locale": "fr", "name": "Samoa américaines", "nameType": "common" },
+        { "locale": "it", "name": "Samoa Americane", "nameType": "common" },
+        { "locale": "ru", "name": "Американское Самоа", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Austria", "nameType": "common" },
+        { "locale": "de", "name": "Österreich", "nameType": "common" },
+        { "locale": "fr", "name": "Autriche", "nameType": "common" },
+        { "locale": "it", "name": "Austria", "nameType": "common" },
+        { "locale": "ru", "name": "Австрия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Australia", "nameType": "common" },
+        { "locale": "de", "name": "Australien", "nameType": "common" },
+        { "locale": "fr", "name": "Australie", "nameType": "common" },
+        { "locale": "it", "name": "Australia", "nameType": "common" },
+        { "locale": "ru", "name": "Австралия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Aruba", "nameType": "common" },
+        { "locale": "de", "name": "Aruba", "nameType": "common" },
+        { "locale": "fr", "name": "Aruba", "nameType": "common" },
+        { "locale": "it", "name": "Aruba", "nameType": "common" },
+        { "locale": "ru", "name": "Аруба", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AX" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Åland Islands", "nameType": "common" },
+        { "locale": "de", "name": "Ålandinseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Åland", "nameType": "common" },
+        { "locale": "it", "name": "Isole Åland", "nameType": "common" },
+        { "locale": "ru", "name": "Аландские о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "AZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Azerbaijan", "nameType": "common" },
+        { "locale": "de", "name": "Aserbaidschan", "nameType": "common" },
+        { "locale": "fr", "name": "Azerbaïdjan", "nameType": "common" },
+        { "locale": "it", "name": "Azerbaigian", "nameType": "common" },
+        { "locale": "ru", "name": "Азербайджан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BA" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Bosnia & Herzegovina",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Bosnien und Herzegowina",
+          "nameType": "common"
+        },
+        { "locale": "fr", "name": "Bosnie-Herzégovine", "nameType": "common" },
+        {
+          "locale": "it",
+          "name": "Bosnia ed Erzegovina",
+          "nameType": "common"
+        },
+        { "locale": "ru", "name": "Босния и Герцеговина", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BB" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Barbados", "nameType": "common" },
+        { "locale": "de", "name": "Barbados", "nameType": "common" },
+        { "locale": "fr", "name": "Barbade", "nameType": "common" },
+        { "locale": "it", "name": "Barbados", "nameType": "common" },
+        { "locale": "ru", "name": "Барбадос", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bangladesh", "nameType": "common" },
+        { "locale": "de", "name": "Bangladesch", "nameType": "common" },
+        { "locale": "fr", "name": "Bangladesh", "nameType": "common" },
+        { "locale": "it", "name": "Bangladesh", "nameType": "common" },
+        { "locale": "ru", "name": "Бангладеш", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Belgium", "nameType": "common" },
+        { "locale": "de", "name": "Belgien", "nameType": "common" },
+        { "locale": "fr", "name": "Belgique", "nameType": "common" },
+        { "locale": "it", "name": "Belgio", "nameType": "common" },
+        { "locale": "ru", "name": "Бельгия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Burkina Faso", "nameType": "common" },
+        { "locale": "de", "name": "Burkina Faso", "nameType": "common" },
+        { "locale": "fr", "name": "Burkina Faso", "nameType": "common" },
+        { "locale": "it", "name": "Burkina Faso", "nameType": "common" },
+        { "locale": "ru", "name": "Буркина-Фасо", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bulgaria", "nameType": "common" },
+        { "locale": "de", "name": "Bulgarien", "nameType": "common" },
+        { "locale": "fr", "name": "Bulgarie", "nameType": "common" },
+        { "locale": "it", "name": "Bulgaria", "nameType": "common" },
+        { "locale": "ru", "name": "Болгария", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bahrain", "nameType": "common" },
+        { "locale": "de", "name": "Bahrain", "nameType": "common" },
+        { "locale": "fr", "name": "Bahreïn", "nameType": "common" },
+        { "locale": "it", "name": "Bahrein", "nameType": "common" },
+        { "locale": "ru", "name": "Бахрейн", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Burundi", "nameType": "common" },
+        { "locale": "de", "name": "Burundi", "nameType": "common" },
+        { "locale": "fr", "name": "Burundi", "nameType": "common" },
+        { "locale": "it", "name": "Burundi", "nameType": "common" },
+        { "locale": "ru", "name": "Бурунди", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BJ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Benin", "nameType": "common" },
+        { "locale": "de", "name": "Benin", "nameType": "common" },
+        { "locale": "fr", "name": "Bénin", "nameType": "common" },
+        { "locale": "it", "name": "Benin", "nameType": "common" },
+        { "locale": "ru", "name": "Бенин", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "St. Barthélemy", "nameType": "common" },
+        { "locale": "de", "name": "St. Barthélemy", "nameType": "common" },
+        { "locale": "fr", "name": "Saint-Barthélemy", "nameType": "common" },
+        { "locale": "it", "name": "Saint-Barthélemy", "nameType": "common" },
+        { "locale": "ru", "name": "Сен-Бартелеми", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bermuda", "nameType": "common" },
+        { "locale": "de", "name": "Bermuda", "nameType": "common" },
+        { "locale": "fr", "name": "Bermudes", "nameType": "common" },
+        { "locale": "it", "name": "Bermuda", "nameType": "common" },
+        { "locale": "ru", "name": "Бермудские о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Brunei", "nameType": "common" },
+        { "locale": "de", "name": "Brunei Darussalam", "nameType": "common" },
+        { "locale": "fr", "name": "Brunei", "nameType": "common" },
+        { "locale": "it", "name": "Brunei", "nameType": "common" },
+        { "locale": "ru", "name": "Бруней", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bolivia", "nameType": "common" },
+        { "locale": "de", "name": "Bolivien", "nameType": "common" },
+        { "locale": "fr", "name": "Bolivie", "nameType": "common" },
+        { "locale": "it", "name": "Bolivia", "nameType": "common" },
+        { "locale": "ru", "name": "Боливия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Brazil", "nameType": "common" },
+        { "locale": "de", "name": "Brasilien", "nameType": "common" },
+        { "locale": "fr", "name": "Brésil", "nameType": "common" },
+        { "locale": "it", "name": "Brasile", "nameType": "common" },
+        { "locale": "ru", "name": "Бразилия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bahamas", "nameType": "common" },
+        { "locale": "de", "name": "Bahamas", "nameType": "common" },
+        { "locale": "fr", "name": "Bahamas", "nameType": "common" },
+        { "locale": "it", "name": "Bahamas", "nameType": "common" },
+        { "locale": "ru", "name": "Багамы", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Bhutan", "nameType": "common" },
+        { "locale": "de", "name": "Bhutan", "nameType": "common" },
+        { "locale": "fr", "name": "Bhoutan", "nameType": "common" },
+        { "locale": "it", "name": "Bhutan", "nameType": "common" },
+        { "locale": "ru", "name": "Бутан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Botswana", "nameType": "common" },
+        { "locale": "de", "name": "Botsuana", "nameType": "common" },
+        { "locale": "fr", "name": "Botswana", "nameType": "common" },
+        { "locale": "it", "name": "Botswana", "nameType": "common" },
+        { "locale": "ru", "name": "Ботсвана", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Belarus", "nameType": "common" },
+        { "locale": "de", "name": "Belarus", "nameType": "common" },
+        { "locale": "fr", "name": "Biélorussie", "nameType": "common" },
+        { "locale": "it", "name": "Bielorussia", "nameType": "common" },
+        { "locale": "ru", "name": "Беларусь", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "BZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Belize", "nameType": "common" },
+        { "locale": "de", "name": "Belize", "nameType": "common" },
+        { "locale": "fr", "name": "Belize", "nameType": "common" },
+        { "locale": "it", "name": "Belize", "nameType": "common" },
+        { "locale": "ru", "name": "Белиз", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Canada", "nameType": "common" },
+        { "locale": "de", "name": "Kanada", "nameType": "common" },
+        { "locale": "fr", "name": "Canada", "nameType": "common" },
+        { "locale": "it", "name": "Canada", "nameType": "common" },
+        { "locale": "ru", "name": "Канада", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Congo - Kinshasa", "nameType": "common" },
+        { "locale": "de", "name": "Kongo-Kinshasa", "nameType": "common" },
+        { "locale": "fr", "name": "Congo-Kinshasa", "nameType": "common" },
+        { "locale": "it", "name": "Congo - Kinshasa", "nameType": "common" },
+        { "locale": "ru", "name": "Конго - Киншаса", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CF" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Central African Republic",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Zentralafrikanische Republik",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "République centrafricaine",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Repubblica Centrafricana",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Центрально-Африканская Республика",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Congo - Brazzaville", "nameType": "common" },
+        { "locale": "de", "name": "Kongo-Brazzaville", "nameType": "common" },
+        { "locale": "fr", "name": "Congo-Brazzaville", "nameType": "common" },
+        { "locale": "it", "name": "Congo-Brazzaville", "nameType": "common" },
+        { "locale": "ru", "name": "Конго - Браззавиль", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Côte d’Ivoire", "nameType": "common" },
+        { "locale": "de", "name": "Côte d’Ivoire", "nameType": "common" },
+        { "locale": "fr", "name": "Côte d’Ivoire", "nameType": "common" },
+        { "locale": "it", "name": "Costa d’Avorio", "nameType": "common" },
+        { "locale": "ru", "name": "Кот-д’Ивуар", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cook Islands", "nameType": "common" },
+        { "locale": "de", "name": "Cookinseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Cook", "nameType": "common" },
+        { "locale": "it", "name": "Isole Cook", "nameType": "common" },
+        { "locale": "ru", "name": "о-ва Кука", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Chile", "nameType": "common" },
+        { "locale": "de", "name": "Chile", "nameType": "common" },
+        { "locale": "fr", "name": "Chili", "nameType": "common" },
+        { "locale": "it", "name": "Cile", "nameType": "common" },
+        { "locale": "ru", "name": "Чили", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cameroon", "nameType": "common" },
+        { "locale": "de", "name": "Kamerun", "nameType": "common" },
+        { "locale": "fr", "name": "Cameroun", "nameType": "common" },
+        { "locale": "it", "name": "Camerun", "nameType": "common" },
+        { "locale": "ru", "name": "Камерун", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "China", "nameType": "common" },
+        { "locale": "de", "name": "China", "nameType": "common" },
+        { "locale": "fr", "name": "Chine", "nameType": "common" },
+        { "locale": "it", "name": "Cina", "nameType": "common" },
+        { "locale": "ru", "name": "Китай", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Colombia", "nameType": "common" },
+        { "locale": "de", "name": "Kolumbien", "nameType": "common" },
+        { "locale": "fr", "name": "Colombie", "nameType": "common" },
+        { "locale": "it", "name": "Colombia", "nameType": "common" },
+        { "locale": "ru", "name": "Колумбия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Costa Rica", "nameType": "common" },
+        { "locale": "de", "name": "Costa Rica", "nameType": "common" },
+        { "locale": "fr", "name": "Costa Rica", "nameType": "common" },
+        { "locale": "it", "name": "Costa Rica", "nameType": "common" },
+        { "locale": "ru", "name": "Коста-Рика", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cuba", "nameType": "common" },
+        { "locale": "de", "name": "Kuba", "nameType": "common" },
+        { "locale": "fr", "name": "Cuba", "nameType": "common" },
+        { "locale": "it", "name": "Cuba", "nameType": "common" },
+        { "locale": "ru", "name": "Куба", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CV" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cape Verde", "nameType": "common" },
+        { "locale": "de", "name": "Cabo Verde", "nameType": "common" },
+        { "locale": "fr", "name": "Cap-Vert", "nameType": "common" },
+        { "locale": "it", "name": "Capo Verde", "nameType": "common" },
+        { "locale": "ru", "name": "Кабо-Верде", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Curaçao", "nameType": "common" },
+        { "locale": "de", "name": "Curaçao", "nameType": "common" },
+        { "locale": "fr", "name": "Curaçao", "nameType": "common" },
+        { "locale": "it", "name": "Curaçao", "nameType": "common" },
+        { "locale": "ru", "name": "Кюрасао", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cyprus", "nameType": "common" },
+        { "locale": "de", "name": "Zypern", "nameType": "common" },
+        { "locale": "fr", "name": "Chypre", "nameType": "common" },
+        { "locale": "it", "name": "Cipro", "nameType": "common" },
+        { "locale": "ru", "name": "Кипр", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "CZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Czechia", "nameType": "common" },
+        { "locale": "de", "name": "Tschechien", "nameType": "common" },
+        { "locale": "fr", "name": "Tchéquie", "nameType": "common" },
+        { "locale": "it", "name": "Cechia", "nameType": "common" },
+        { "locale": "ru", "name": "Чехия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Germany", "nameType": "common" },
+        { "locale": "de", "name": "Deutschland", "nameType": "common" },
+        { "locale": "fr", "name": "Allemagne", "nameType": "common" },
+        { "locale": "it", "name": "Germania", "nameType": "common" },
+        { "locale": "ru", "name": "Германия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DJ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Djibouti", "nameType": "common" },
+        { "locale": "de", "name": "Dschibuti", "nameType": "common" },
+        { "locale": "fr", "name": "Djibouti", "nameType": "common" },
+        { "locale": "it", "name": "Gibuti", "nameType": "common" },
+        { "locale": "ru", "name": "Джибути", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Denmark", "nameType": "common" },
+        { "locale": "de", "name": "Dänemark", "nameType": "common" },
+        { "locale": "fr", "name": "Danemark", "nameType": "common" },
+        { "locale": "it", "name": "Danimarca", "nameType": "common" },
+        { "locale": "ru", "name": "Дания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Dominica", "nameType": "common" },
+        { "locale": "de", "name": "Dominica", "nameType": "common" },
+        { "locale": "fr", "name": "Dominique", "nameType": "common" },
+        { "locale": "it", "name": "Dominica", "nameType": "common" },
+        { "locale": "ru", "name": "Доминика", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Dominican Republic", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Dominikanische Republik",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "République dominicaine",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Repubblica Dominicana",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Доминиканская Республика",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "DZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Algeria", "nameType": "common" },
+        { "locale": "de", "name": "Algerien", "nameType": "common" },
+        { "locale": "fr", "name": "Algérie", "nameType": "common" },
+        { "locale": "it", "name": "Algeria", "nameType": "common" },
+        { "locale": "ru", "name": "Алжир", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "EC" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Ecuador", "nameType": "common" },
+        { "locale": "de", "name": "Ecuador", "nameType": "common" },
+        { "locale": "fr", "name": "Équateur", "nameType": "common" },
+        { "locale": "it", "name": "Ecuador", "nameType": "common" },
+        { "locale": "ru", "name": "Эквадор", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "EG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Egypt", "nameType": "common" },
+        { "locale": "de", "name": "Ägypten", "nameType": "common" },
+        { "locale": "fr", "name": "Égypte", "nameType": "common" },
+        { "locale": "it", "name": "Egitto", "nameType": "common" },
+        { "locale": "ru", "name": "Египет", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "EH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Western Sahara", "nameType": "common" },
+        { "locale": "de", "name": "Westsahara", "nameType": "common" },
+        { "locale": "fr", "name": "Sahara occidental", "nameType": "common" },
+        { "locale": "it", "name": "Sahara Occidentale", "nameType": "common" },
+        { "locale": "ru", "name": "Западная Сахара", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ER" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Eritrea", "nameType": "common" },
+        { "locale": "de", "name": "Eritrea", "nameType": "common" },
+        { "locale": "fr", "name": "Érythrée", "nameType": "common" },
+        { "locale": "it", "name": "Eritrea", "nameType": "common" },
+        { "locale": "ru", "name": "Эритрея", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ES" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Spain", "nameType": "common" },
+        { "locale": "de", "name": "Spanien", "nameType": "common" },
+        { "locale": "fr", "name": "Espagne", "nameType": "common" },
+        { "locale": "it", "name": "Spagna", "nameType": "common" },
+        { "locale": "ru", "name": "Испания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ET" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Ethiopia", "nameType": "common" },
+        { "locale": "de", "name": "Äthiopien", "nameType": "common" },
+        { "locale": "fr", "name": "Éthiopie", "nameType": "common" },
+        { "locale": "it", "name": "Etiopia", "nameType": "common" },
+        { "locale": "ru", "name": "Эфиопия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Finland", "nameType": "common" },
+        { "locale": "de", "name": "Finnland", "nameType": "common" },
+        { "locale": "fr", "name": "Finlande", "nameType": "common" },
+        { "locale": "it", "name": "Finlandia", "nameType": "common" },
+        { "locale": "ru", "name": "Финляндия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FJ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Fiji", "nameType": "common" },
+        { "locale": "de", "name": "Fidschi", "nameType": "common" },
+        { "locale": "fr", "name": "Fidji", "nameType": "common" },
+        { "locale": "it", "name": "Figi", "nameType": "common" },
+        { "locale": "ru", "name": "Фиджи", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Falkland Islands", "nameType": "common" },
+        { "locale": "de", "name": "Falklandinseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Malouines", "nameType": "common" },
+        { "locale": "it", "name": "Isole Falkland", "nameType": "common" },
+        { "locale": "ru", "name": "Фолклендские о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Micronesia", "nameType": "common" },
+        { "locale": "de", "name": "Mikronesien", "nameType": "common" },
+        { "locale": "fr", "name": "Micronésie", "nameType": "common" },
+        { "locale": "it", "name": "Micronesia", "nameType": "common" },
+        {
+          "locale": "ru",
+          "name": "Федеративные Штаты Микронезии",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Faroe Islands", "nameType": "common" },
+        { "locale": "de", "name": "Färöer", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Féroé", "nameType": "common" },
+        { "locale": "it", "name": "Isole Fær Øer", "nameType": "common" },
+        { "locale": "ru", "name": "Фарерские о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "FR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "France", "nameType": "common" },
+        { "locale": "de", "name": "Frankreich", "nameType": "common" },
+        { "locale": "fr", "name": "France", "nameType": "common" },
+        { "locale": "it", "name": "Francia", "nameType": "common" },
+        { "locale": "ru", "name": "Франция", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Gabon", "nameType": "common" },
+        { "locale": "de", "name": "Gabun", "nameType": "common" },
+        { "locale": "fr", "name": "Gabon", "nameType": "common" },
+        { "locale": "it", "name": "Gabon", "nameType": "common" },
+        { "locale": "ru", "name": "Габон", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GB" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "United Kingdom", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Vereinigtes Königreich",
+          "nameType": "common"
+        },
+        { "locale": "fr", "name": "Royaume-Uni", "nameType": "common" },
+        { "locale": "it", "name": "Regno Unito", "nameType": "common" },
+        { "locale": "ru", "name": "Великобритания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Grenada", "nameType": "common" },
+        { "locale": "de", "name": "Grenada", "nameType": "common" },
+        { "locale": "fr", "name": "Grenade", "nameType": "common" },
+        { "locale": "it", "name": "Grenada", "nameType": "common" },
+        { "locale": "ru", "name": "Гренада", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Georgia", "nameType": "common" },
+        { "locale": "de", "name": "Georgien", "nameType": "common" },
+        { "locale": "fr", "name": "Géorgie", "nameType": "common" },
+        { "locale": "it", "name": "Georgia", "nameType": "common" },
+        { "locale": "ru", "name": "Грузия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guernsey", "nameType": "common" },
+        { "locale": "de", "name": "Guernsey", "nameType": "common" },
+        { "locale": "fr", "name": "Guernesey", "nameType": "common" },
+        { "locale": "it", "name": "Guernsey", "nameType": "common" },
+        { "locale": "ru", "name": "Гернси", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Ghana", "nameType": "common" },
+        { "locale": "de", "name": "Ghana", "nameType": "common" },
+        { "locale": "fr", "name": "Ghana", "nameType": "common" },
+        { "locale": "it", "name": "Ghana", "nameType": "common" },
+        { "locale": "ru", "name": "Гана", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Gibraltar", "nameType": "common" },
+        { "locale": "de", "name": "Gibraltar", "nameType": "common" },
+        { "locale": "fr", "name": "Gibraltar", "nameType": "common" },
+        { "locale": "it", "name": "Gibilterra", "nameType": "common" },
+        { "locale": "ru", "name": "Гибралтар", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Greenland", "nameType": "common" },
+        { "locale": "de", "name": "Grönland", "nameType": "common" },
+        { "locale": "fr", "name": "Groenland", "nameType": "common" },
+        { "locale": "it", "name": "Groenlandia", "nameType": "common" },
+        { "locale": "ru", "name": "Гренландия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Gambia", "nameType": "common" },
+        { "locale": "de", "name": "Gambia", "nameType": "common" },
+        { "locale": "fr", "name": "Gambie", "nameType": "common" },
+        { "locale": "it", "name": "Gambia", "nameType": "common" },
+        { "locale": "ru", "name": "Гамбия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guinea", "nameType": "common" },
+        { "locale": "de", "name": "Guinea", "nameType": "common" },
+        { "locale": "fr", "name": "Guinée", "nameType": "common" },
+        { "locale": "it", "name": "Guinea", "nameType": "common" },
+        { "locale": "ru", "name": "Гвинея", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GQ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Equatorial Guinea", "nameType": "common" },
+        { "locale": "de", "name": "Äquatorialguinea", "nameType": "common" },
+        { "locale": "fr", "name": "Guinée équatoriale", "nameType": "common" },
+        { "locale": "it", "name": "Guinea Equatoriale", "nameType": "common" },
+        {
+          "locale": "ru",
+          "name": "Экваториальная Гвинея",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Greece", "nameType": "common" },
+        { "locale": "de", "name": "Griechenland", "nameType": "common" },
+        { "locale": "fr", "name": "Grèce", "nameType": "common" },
+        { "locale": "it", "name": "Grecia", "nameType": "common" },
+        { "locale": "ru", "name": "Греция", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GS" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "South Georgia & South Sandwich Islands",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Südgeorgien und die Südlichen Sandwichinseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Géorgie du Sud-et-les Îles Sandwich du Sud",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Georgia del Sud e Sandwich Australi",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Южная Георгия и Южные Сандвичевы о-ва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guatemala", "nameType": "common" },
+        { "locale": "de", "name": "Guatemala", "nameType": "common" },
+        { "locale": "fr", "name": "Guatemala", "nameType": "common" },
+        { "locale": "it", "name": "Guatemala", "nameType": "common" },
+        { "locale": "ru", "name": "Гватемала", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guam", "nameType": "common" },
+        { "locale": "de", "name": "Guam", "nameType": "common" },
+        { "locale": "fr", "name": "Guam", "nameType": "common" },
+        { "locale": "it", "name": "Guam", "nameType": "common" },
+        { "locale": "ru", "name": "Гуам", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guinea-Bissau", "nameType": "common" },
+        { "locale": "de", "name": "Guinea-Bissau", "nameType": "common" },
+        { "locale": "fr", "name": "Guinée-Bissau", "nameType": "common" },
+        { "locale": "it", "name": "Guinea-Bissau", "nameType": "common" },
+        { "locale": "ru", "name": "Гвинея-Бисау", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "GY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Guyana", "nameType": "common" },
+        { "locale": "de", "name": "Guyana", "nameType": "common" },
+        { "locale": "fr", "name": "Guyana", "nameType": "common" },
+        { "locale": "it", "name": "Guyana", "nameType": "common" },
+        { "locale": "ru", "name": "Гайана", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Hong Kong SAR China", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Sonderverwaltungsregion Hongkong",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "R.A.S. chinoise de Hong Kong",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "RAS di Hong Kong", "nameType": "common" },
+        { "locale": "ru", "name": "Гонконг (САР)", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HM" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Heard & McDonald Islands",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Heard und McDonaldinseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Îles Heard-et-MacDonald",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Heard e McDonald",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "о-ва Херд и Макдональд",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Honduras", "nameType": "common" },
+        { "locale": "de", "name": "Honduras", "nameType": "common" },
+        { "locale": "fr", "name": "Honduras", "nameType": "common" },
+        { "locale": "it", "name": "Honduras", "nameType": "common" },
+        { "locale": "ru", "name": "Гондурас", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Croatia", "nameType": "common" },
+        { "locale": "de", "name": "Kroatien", "nameType": "common" },
+        { "locale": "fr", "name": "Croatie", "nameType": "common" },
+        { "locale": "it", "name": "Croazia", "nameType": "common" },
+        { "locale": "ru", "name": "Хорватия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Haiti", "nameType": "common" },
+        { "locale": "de", "name": "Haiti", "nameType": "common" },
+        { "locale": "fr", "name": "Haïti", "nameType": "common" },
+        { "locale": "it", "name": "Haiti", "nameType": "common" },
+        { "locale": "ru", "name": "Гаити", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "HU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Hungary", "nameType": "common" },
+        { "locale": "de", "name": "Ungarn", "nameType": "common" },
+        { "locale": "fr", "name": "Hongrie", "nameType": "common" },
+        { "locale": "it", "name": "Ungheria", "nameType": "common" },
+        { "locale": "ru", "name": "Венгрия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ID" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Indonesia", "nameType": "common" },
+        { "locale": "de", "name": "Indonesien", "nameType": "common" },
+        { "locale": "fr", "name": "Indonésie", "nameType": "common" },
+        { "locale": "it", "name": "Indonesia", "nameType": "common" },
+        { "locale": "ru", "name": "Индонезия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Ireland", "nameType": "common" },
+        { "locale": "de", "name": "Irland", "nameType": "common" },
+        { "locale": "fr", "name": "Irlande", "nameType": "common" },
+        { "locale": "it", "name": "Irlanda", "nameType": "common" },
+        { "locale": "ru", "name": "Ирландия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Israel", "nameType": "common" },
+        { "locale": "de", "name": "Israel", "nameType": "common" },
+        { "locale": "fr", "name": "Israël", "nameType": "common" },
+        { "locale": "it", "name": "Israele", "nameType": "common" },
+        { "locale": "ru", "name": "Израиль", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Isle of Man", "nameType": "common" },
+        { "locale": "de", "name": "Isle of Man", "nameType": "common" },
+        { "locale": "fr", "name": "Île de Man", "nameType": "common" },
+        { "locale": "it", "name": "Isola di Man", "nameType": "common" },
+        { "locale": "ru", "name": "о-в Мэн", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "India", "nameType": "common" },
+        { "locale": "de", "name": "Indien", "nameType": "common" },
+        { "locale": "fr", "name": "Inde", "nameType": "common" },
+        { "locale": "it", "name": "India", "nameType": "common" },
+        { "locale": "ru", "name": "Индия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IO" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "British Indian Ocean Territory",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Britisches Territorium im Indischen Ozean",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Territoire britannique de l’océan Indien",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Territorio Britannico dell’Oceano Indiano",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Британская территория в Индийском океане",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IQ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Iraq", "nameType": "common" },
+        { "locale": "de", "name": "Irak", "nameType": "common" },
+        { "locale": "fr", "name": "Irak", "nameType": "common" },
+        { "locale": "it", "name": "Iraq", "nameType": "common" },
+        { "locale": "ru", "name": "Ирак", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Iran", "nameType": "common" },
+        { "locale": "de", "name": "Iran", "nameType": "common" },
+        { "locale": "fr", "name": "Iran", "nameType": "common" },
+        { "locale": "it", "name": "Iran", "nameType": "common" },
+        { "locale": "ru", "name": "Иран", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Iceland", "nameType": "common" },
+        { "locale": "de", "name": "Island", "nameType": "common" },
+        { "locale": "fr", "name": "Islande", "nameType": "common" },
+        { "locale": "it", "name": "Islanda", "nameType": "common" },
+        { "locale": "ru", "name": "Исландия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "IT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Italy", "nameType": "common" },
+        { "locale": "de", "name": "Italien", "nameType": "common" },
+        { "locale": "fr", "name": "Italie", "nameType": "common" },
+        { "locale": "it", "name": "Italia", "nameType": "common" },
+        { "locale": "ru", "name": "Италия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "JE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Jersey", "nameType": "common" },
+        { "locale": "de", "name": "Jersey", "nameType": "common" },
+        { "locale": "fr", "name": "Jersey", "nameType": "common" },
+        { "locale": "it", "name": "Jersey", "nameType": "common" },
+        { "locale": "ru", "name": "Джерси", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "JM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Jamaica", "nameType": "common" },
+        { "locale": "de", "name": "Jamaika", "nameType": "common" },
+        { "locale": "fr", "name": "Jamaïque", "nameType": "common" },
+        { "locale": "it", "name": "Giamaica", "nameType": "common" },
+        { "locale": "ru", "name": "Ямайка", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "JO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Jordan", "nameType": "common" },
+        { "locale": "de", "name": "Jordanien", "nameType": "common" },
+        { "locale": "fr", "name": "Jordanie", "nameType": "common" },
+        { "locale": "it", "name": "Giordania", "nameType": "common" },
+        { "locale": "ru", "name": "Иордания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "JP" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Japan", "nameType": "common" },
+        { "locale": "de", "name": "Japan", "nameType": "common" },
+        { "locale": "fr", "name": "Japon", "nameType": "common" },
+        { "locale": "it", "name": "Giappone", "nameType": "common" },
+        { "locale": "ru", "name": "Япония", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kenya", "nameType": "common" },
+        { "locale": "de", "name": "Kenia", "nameType": "common" },
+        { "locale": "fr", "name": "Kenya", "nameType": "common" },
+        { "locale": "it", "name": "Kenya", "nameType": "common" },
+        { "locale": "ru", "name": "Кения", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kyrgyzstan", "nameType": "common" },
+        { "locale": "de", "name": "Kirgisistan", "nameType": "common" },
+        { "locale": "fr", "name": "Kirghizstan", "nameType": "common" },
+        { "locale": "it", "name": "Kirghizistan", "nameType": "common" },
+        { "locale": "ru", "name": "Киргизия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cambodia", "nameType": "common" },
+        { "locale": "de", "name": "Kambodscha", "nameType": "common" },
+        { "locale": "fr", "name": "Cambodge", "nameType": "common" },
+        { "locale": "it", "name": "Cambogia", "nameType": "common" },
+        { "locale": "ru", "name": "Камбоджа", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kiribati", "nameType": "common" },
+        { "locale": "de", "name": "Kiribati", "nameType": "common" },
+        { "locale": "fr", "name": "Kiribati", "nameType": "common" },
+        { "locale": "it", "name": "Kiribati", "nameType": "common" },
+        { "locale": "ru", "name": "Кирибати", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Comoros", "nameType": "common" },
+        { "locale": "de", "name": "Komoren", "nameType": "common" },
+        { "locale": "fr", "name": "Comores", "nameType": "common" },
+        { "locale": "it", "name": "Comore", "nameType": "common" },
+        { "locale": "ru", "name": "Коморы", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "St. Kitts & Nevis", "nameType": "common" },
+        { "locale": "de", "name": "St. Kitts und Nevis", "nameType": "common" },
+        {
+          "locale": "fr",
+          "name": "Saint-Christophe-et-Niévès",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "Saint Kitts e Nevis", "nameType": "common" },
+        { "locale": "ru", "name": "Сент-Китс и Невис", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KP" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "North Korea", "nameType": "common" },
+        { "locale": "de", "name": "Nordkorea", "nameType": "common" },
+        { "locale": "fr", "name": "Corée du Nord", "nameType": "common" },
+        { "locale": "it", "name": "Corea del Nord", "nameType": "common" },
+        { "locale": "ru", "name": "КНДР", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "South Korea", "nameType": "common" },
+        { "locale": "de", "name": "Südkorea", "nameType": "common" },
+        { "locale": "fr", "name": "Corée du Sud", "nameType": "common" },
+        { "locale": "it", "name": "Corea del Sud", "nameType": "common" },
+        { "locale": "ru", "name": "Республика Корея", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kuwait", "nameType": "common" },
+        { "locale": "de", "name": "Kuwait", "nameType": "common" },
+        { "locale": "fr", "name": "Koweït", "nameType": "common" },
+        { "locale": "it", "name": "Kuwait", "nameType": "common" },
+        { "locale": "ru", "name": "Кувейт", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Cayman Islands", "nameType": "common" },
+        { "locale": "de", "name": "Kaimaninseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Caïmans", "nameType": "common" },
+        { "locale": "it", "name": "Isole Cayman", "nameType": "common" },
+        { "locale": "ru", "name": "о-ва Кайман", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "KZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kazakhstan", "nameType": "common" },
+        { "locale": "de", "name": "Kasachstan", "nameType": "common" },
+        { "locale": "fr", "name": "Kazakhstan", "nameType": "common" },
+        { "locale": "it", "name": "Kazakistan", "nameType": "common" },
+        { "locale": "ru", "name": "Казахстан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Laos", "nameType": "common" },
+        { "locale": "de", "name": "Laos", "nameType": "common" },
+        { "locale": "fr", "name": "Laos", "nameType": "common" },
+        { "locale": "it", "name": "Laos", "nameType": "common" },
+        { "locale": "ru", "name": "Лаос", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LB" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Lebanon", "nameType": "common" },
+        { "locale": "de", "name": "Libanon", "nameType": "common" },
+        { "locale": "fr", "name": "Liban", "nameType": "common" },
+        { "locale": "it", "name": "Libano", "nameType": "common" },
+        { "locale": "ru", "name": "Ливан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LC" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "St. Lucia", "nameType": "common" },
+        { "locale": "de", "name": "St. Lucia", "nameType": "common" },
+        { "locale": "fr", "name": "Sainte-Lucie", "nameType": "common" },
+        { "locale": "it", "name": "Saint Lucia", "nameType": "common" },
+        { "locale": "ru", "name": "Сент-Люсия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Sri Lanka", "nameType": "common" },
+        { "locale": "de", "name": "Sri Lanka", "nameType": "common" },
+        { "locale": "fr", "name": "Sri Lanka", "nameType": "common" },
+        { "locale": "it", "name": "Sri Lanka", "nameType": "common" },
+        { "locale": "ru", "name": "Шри-Ланка", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Liberia", "nameType": "common" },
+        { "locale": "de", "name": "Liberia", "nameType": "common" },
+        { "locale": "fr", "name": "Liberia", "nameType": "common" },
+        { "locale": "it", "name": "Liberia", "nameType": "common" },
+        { "locale": "ru", "name": "Либерия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Lesotho", "nameType": "common" },
+        { "locale": "de", "name": "Lesotho", "nameType": "common" },
+        { "locale": "fr", "name": "Lesotho", "nameType": "common" },
+        { "locale": "it", "name": "Lesotho", "nameType": "common" },
+        { "locale": "ru", "name": "Лесото", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Lithuania", "nameType": "common" },
+        { "locale": "de", "name": "Litauen", "nameType": "common" },
+        { "locale": "fr", "name": "Lituanie", "nameType": "common" },
+        { "locale": "it", "name": "Lituania", "nameType": "common" },
+        { "locale": "ru", "name": "Литва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Luxembourg", "nameType": "common" },
+        { "locale": "de", "name": "Luxemburg", "nameType": "common" },
+        { "locale": "fr", "name": "Luxembourg", "nameType": "common" },
+        { "locale": "it", "name": "Lussemburgo", "nameType": "common" },
+        { "locale": "ru", "name": "Люксембург", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LV" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Latvia", "nameType": "common" },
+        { "locale": "de", "name": "Lettland", "nameType": "common" },
+        { "locale": "fr", "name": "Lettonie", "nameType": "common" },
+        { "locale": "it", "name": "Lettonia", "nameType": "common" },
+        { "locale": "ru", "name": "Латвия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "LY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Libya", "nameType": "common" },
+        { "locale": "de", "name": "Libyen", "nameType": "common" },
+        { "locale": "fr", "name": "Libye", "nameType": "common" },
+        { "locale": "it", "name": "Libia", "nameType": "common" },
+        { "locale": "ru", "name": "Ливия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Morocco", "nameType": "common" },
+        { "locale": "de", "name": "Marokko", "nameType": "common" },
+        { "locale": "fr", "name": "Maroc", "nameType": "common" },
+        { "locale": "it", "name": "Marocco", "nameType": "common" },
+        { "locale": "ru", "name": "Марокко", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MC" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Monaco", "nameType": "common" },
+        { "locale": "de", "name": "Monaco", "nameType": "common" },
+        { "locale": "fr", "name": "Monaco", "nameType": "common" },
+        { "locale": "it", "name": "Monaco", "nameType": "common" },
+        { "locale": "ru", "name": "Монако", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Moldova", "nameType": "common" },
+        { "locale": "de", "name": "Republik Moldau", "nameType": "common" },
+        { "locale": "fr", "name": "Moldavie", "nameType": "common" },
+        { "locale": "it", "name": "Moldavia", "nameType": "common" },
+        { "locale": "ru", "name": "Молдова", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ME" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Montenegro", "nameType": "common" },
+        { "locale": "de", "name": "Montenegro", "nameType": "common" },
+        { "locale": "fr", "name": "Monténégro", "nameType": "common" },
+        { "locale": "it", "name": "Montenegro", "nameType": "common" },
+        { "locale": "ru", "name": "Черногория", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "St. Martin", "nameType": "common" },
+        { "locale": "de", "name": "St. Martin", "nameType": "common" },
+        { "locale": "fr", "name": "Saint-Martin", "nameType": "common" },
+        { "locale": "it", "name": "Saint Martin", "nameType": "common" },
+        { "locale": "ru", "name": "Сен-Мартен", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Madagascar", "nameType": "common" },
+        { "locale": "de", "name": "Madagaskar", "nameType": "common" },
+        { "locale": "fr", "name": "Madagascar", "nameType": "common" },
+        { "locale": "it", "name": "Madagascar", "nameType": "common" },
+        { "locale": "ru", "name": "Мадагаскар", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Marshall Islands", "nameType": "common" },
+        { "locale": "de", "name": "Marshallinseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Marshall", "nameType": "common" },
+        { "locale": "it", "name": "Isole Marshall", "nameType": "common" },
+        { "locale": "ru", "name": "Маршалловы о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "North Macedonia", "nameType": "common" },
+        { "locale": "de", "name": "Nordmazedonien", "nameType": "common" },
+        { "locale": "fr", "name": "Macédoine du Nord", "nameType": "common" },
+        { "locale": "it", "name": "Macedonia del Nord", "nameType": "common" },
+        { "locale": "ru", "name": "Северная Македония", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ML" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mali", "nameType": "common" },
+        { "locale": "de", "name": "Mali", "nameType": "common" },
+        { "locale": "fr", "name": "Mali", "nameType": "common" },
+        { "locale": "it", "name": "Mali", "nameType": "common" },
+        { "locale": "ru", "name": "Мали", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Myanmar (Burma)", "nameType": "common" },
+        { "locale": "de", "name": "Myanmar", "nameType": "common" },
+        { "locale": "fr", "name": "Myanmar (Birmanie)", "nameType": "common" },
+        { "locale": "it", "name": "Myanmar (Birmania)", "nameType": "common" },
+        { "locale": "ru", "name": "Мьянма (Бирма)", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mongolia", "nameType": "common" },
+        { "locale": "de", "name": "Mongolei", "nameType": "common" },
+        { "locale": "fr", "name": "Mongolie", "nameType": "common" },
+        { "locale": "it", "name": "Mongolia", "nameType": "common" },
+        { "locale": "ru", "name": "Монголия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Macao SAR China", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Sonderverwaltungsregion Macau",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "R.A.S. chinoise de Macao",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "RAS di Macao", "nameType": "common" },
+        { "locale": "ru", "name": "Макао (САР)", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MP" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Northern Mariana Islands",
+          "nameType": "common"
+        },
+        { "locale": "de", "name": "Nördliche Marianen", "nameType": "common" },
+        {
+          "locale": "fr",
+          "name": "Îles Mariannes du Nord",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Marianne Settentrionali",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Северные Марианские о-ва",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mauritania", "nameType": "common" },
+        { "locale": "de", "name": "Mauretanien", "nameType": "common" },
+        { "locale": "fr", "name": "Mauritanie", "nameType": "common" },
+        { "locale": "it", "name": "Mauritania", "nameType": "common" },
+        { "locale": "ru", "name": "Мавритания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Montserrat", "nameType": "common" },
+        { "locale": "de", "name": "Montserrat", "nameType": "common" },
+        { "locale": "fr", "name": "Montserrat", "nameType": "common" },
+        { "locale": "it", "name": "Montserrat", "nameType": "common" },
+        { "locale": "ru", "name": "Монтсеррат", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Malta", "nameType": "common" },
+        { "locale": "de", "name": "Malta", "nameType": "common" },
+        { "locale": "fr", "name": "Malte", "nameType": "common" },
+        { "locale": "it", "name": "Malta", "nameType": "common" },
+        { "locale": "ru", "name": "Мальта", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mauritius", "nameType": "common" },
+        { "locale": "de", "name": "Mauritius", "nameType": "common" },
+        { "locale": "fr", "name": "Maurice", "nameType": "common" },
+        { "locale": "it", "name": "Mauritius", "nameType": "common" },
+        { "locale": "ru", "name": "Маврикий", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MV" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Maldives", "nameType": "common" },
+        { "locale": "de", "name": "Malediven", "nameType": "common" },
+        { "locale": "fr", "name": "Maldives", "nameType": "common" },
+        { "locale": "it", "name": "Maldive", "nameType": "common" },
+        { "locale": "ru", "name": "Мальдивы", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Malawi", "nameType": "common" },
+        { "locale": "de", "name": "Malawi", "nameType": "common" },
+        { "locale": "fr", "name": "Malawi", "nameType": "common" },
+        { "locale": "it", "name": "Malawi", "nameType": "common" },
+        { "locale": "ru", "name": "Малави", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MX" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mexico", "nameType": "common" },
+        { "locale": "de", "name": "Mexiko", "nameType": "common" },
+        { "locale": "fr", "name": "Mexique", "nameType": "common" },
+        { "locale": "it", "name": "Messico", "nameType": "common" },
+        { "locale": "ru", "name": "Мексика", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Malaysia", "nameType": "common" },
+        { "locale": "de", "name": "Malaysia", "nameType": "common" },
+        { "locale": "fr", "name": "Malaisie", "nameType": "common" },
+        { "locale": "it", "name": "Malaysia", "nameType": "common" },
+        { "locale": "ru", "name": "Малайзия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "MZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Mozambique", "nameType": "common" },
+        { "locale": "de", "name": "Mosambik", "nameType": "common" },
+        { "locale": "fr", "name": "Mozambique", "nameType": "common" },
+        { "locale": "it", "name": "Mozambico", "nameType": "common" },
+        { "locale": "ru", "name": "Мозамбик", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Namibia", "nameType": "common" },
+        { "locale": "de", "name": "Namibia", "nameType": "common" },
+        { "locale": "fr", "name": "Namibie", "nameType": "common" },
+        { "locale": "it", "name": "Namibia", "nameType": "common" },
+        { "locale": "ru", "name": "Намибия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NC" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "New Caledonia", "nameType": "common" },
+        { "locale": "de", "name": "Neukaledonien", "nameType": "common" },
+        { "locale": "fr", "name": "Nouvelle-Calédonie", "nameType": "common" },
+        { "locale": "it", "name": "Nuova Caledonia", "nameType": "common" },
+        { "locale": "ru", "name": "Новая Каледония", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Niger", "nameType": "common" },
+        { "locale": "de", "name": "Niger", "nameType": "common" },
+        { "locale": "fr", "name": "Niger", "nameType": "common" },
+        { "locale": "it", "name": "Niger", "nameType": "common" },
+        { "locale": "ru", "name": "Нигер", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Norfolk Island", "nameType": "common" },
+        { "locale": "de", "name": "Norfolkinsel", "nameType": "common" },
+        { "locale": "fr", "name": "Île Norfolk", "nameType": "common" },
+        { "locale": "it", "name": "Isola Norfolk", "nameType": "common" },
+        { "locale": "ru", "name": "о-в Норфолк", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Nigeria", "nameType": "common" },
+        { "locale": "de", "name": "Nigeria", "nameType": "common" },
+        { "locale": "fr", "name": "Nigeria", "nameType": "common" },
+        { "locale": "it", "name": "Nigeria", "nameType": "common" },
+        { "locale": "ru", "name": "Нигерия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Nicaragua", "nameType": "common" },
+        { "locale": "de", "name": "Nicaragua", "nameType": "common" },
+        { "locale": "fr", "name": "Nicaragua", "nameType": "common" },
+        { "locale": "it", "name": "Nicaragua", "nameType": "common" },
+        { "locale": "ru", "name": "Никарагуа", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Netherlands", "nameType": "common" },
+        { "locale": "de", "name": "Niederlande", "nameType": "common" },
+        { "locale": "fr", "name": "Pays-Bas", "nameType": "common" },
+        { "locale": "it", "name": "Paesi Bassi", "nameType": "common" },
+        { "locale": "ru", "name": "Нидерланды", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Norway", "nameType": "common" },
+        { "locale": "de", "name": "Norwegen", "nameType": "common" },
+        { "locale": "fr", "name": "Norvège", "nameType": "common" },
+        { "locale": "it", "name": "Norvegia", "nameType": "common" },
+        { "locale": "ru", "name": "Норвегия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NP" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Nepal", "nameType": "common" },
+        { "locale": "de", "name": "Nepal", "nameType": "common" },
+        { "locale": "fr", "name": "Népal", "nameType": "common" },
+        { "locale": "it", "name": "Nepal", "nameType": "common" },
+        { "locale": "ru", "name": "Непал", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Nauru", "nameType": "common" },
+        { "locale": "de", "name": "Nauru", "nameType": "common" },
+        { "locale": "fr", "name": "Nauru", "nameType": "common" },
+        { "locale": "it", "name": "Nauru", "nameType": "common" },
+        { "locale": "ru", "name": "Науру", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Niue", "nameType": "common" },
+        { "locale": "de", "name": "Niue", "nameType": "common" },
+        { "locale": "fr", "name": "Niue", "nameType": "common" },
+        { "locale": "it", "name": "Niue", "nameType": "common" },
+        { "locale": "ru", "name": "Ниуэ", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "NZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "New Zealand", "nameType": "common" },
+        { "locale": "de", "name": "Neuseeland", "nameType": "common" },
+        { "locale": "fr", "name": "Nouvelle-Zélande", "nameType": "common" },
+        { "locale": "it", "name": "Nuova Zelanda", "nameType": "common" },
+        { "locale": "ru", "name": "Новая Зеландия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "OM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Oman", "nameType": "common" },
+        { "locale": "de", "name": "Oman", "nameType": "common" },
+        { "locale": "fr", "name": "Oman", "nameType": "common" },
+        { "locale": "it", "name": "Oman", "nameType": "common" },
+        { "locale": "ru", "name": "Оман", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Panama", "nameType": "common" },
+        { "locale": "de", "name": "Panama", "nameType": "common" },
+        { "locale": "fr", "name": "Panama", "nameType": "common" },
+        { "locale": "it", "name": "Panama", "nameType": "common" },
+        { "locale": "ru", "name": "Панама", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Peru", "nameType": "common" },
+        { "locale": "de", "name": "Peru", "nameType": "common" },
+        { "locale": "fr", "name": "Pérou", "nameType": "common" },
+        { "locale": "it", "name": "Perù", "nameType": "common" },
+        { "locale": "ru", "name": "Перу", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "French Polynesia", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Französisch-Polynesien",
+          "nameType": "common"
+        },
+        { "locale": "fr", "name": "Polynésie française", "nameType": "common" },
+        { "locale": "it", "name": "Polinesia Francese", "nameType": "common" },
+        {
+          "locale": "ru",
+          "name": "Французская Полинезия",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Papua New Guinea", "nameType": "common" },
+        { "locale": "de", "name": "Papua-Neuguinea", "nameType": "common" },
+        {
+          "locale": "fr",
+          "name": "Papouasie-Nouvelle-Guinée",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "Papua Nuova Guinea", "nameType": "common" },
+        { "locale": "ru", "name": "Папуа — Новая Гвинея", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Philippines", "nameType": "common" },
+        { "locale": "de", "name": "Philippinen", "nameType": "common" },
+        { "locale": "fr", "name": "Philippines", "nameType": "common" },
+        { "locale": "it", "name": "Filippine", "nameType": "common" },
+        { "locale": "ru", "name": "Филиппины", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Pakistan", "nameType": "common" },
+        { "locale": "de", "name": "Pakistan", "nameType": "common" },
+        { "locale": "fr", "name": "Pakistan", "nameType": "common" },
+        { "locale": "it", "name": "Pakistan", "nameType": "common" },
+        { "locale": "ru", "name": "Пакистан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Poland", "nameType": "common" },
+        { "locale": "de", "name": "Polen", "nameType": "common" },
+        { "locale": "fr", "name": "Pologne", "nameType": "common" },
+        { "locale": "it", "name": "Polonia", "nameType": "common" },
+        { "locale": "ru", "name": "Польша", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PM" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "St. Pierre & Miquelon",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "St. Pierre und Miquelon",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Saint-Pierre-et-Miquelon",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Saint-Pierre e Miquelon",
+          "nameType": "common"
+        },
+        { "locale": "ru", "name": "Сен-Пьер и Микелон", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Pitcairn Islands", "nameType": "common" },
+        { "locale": "de", "name": "Pitcairninseln", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Pitcairn", "nameType": "common" },
+        { "locale": "it", "name": "Isole Pitcairn", "nameType": "common" },
+        { "locale": "ru", "name": "о-ва Питкэрн", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Puerto Rico", "nameType": "common" },
+        { "locale": "de", "name": "Puerto Rico", "nameType": "common" },
+        { "locale": "fr", "name": "Porto Rico", "nameType": "common" },
+        { "locale": "it", "name": "Portorico", "nameType": "common" },
+        { "locale": "ru", "name": "Пуэрто-Рико", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PS" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Palestinian Territories",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Palästinensische Autonomiegebiete",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Territoires palestiniens",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Territori Palestinesi",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Палестинские территории",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Portugal", "nameType": "common" },
+        { "locale": "de", "name": "Portugal", "nameType": "common" },
+        { "locale": "fr", "name": "Portugal", "nameType": "common" },
+        { "locale": "it", "name": "Portogallo", "nameType": "common" },
+        { "locale": "ru", "name": "Португалия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Palau", "nameType": "common" },
+        { "locale": "de", "name": "Palau", "nameType": "common" },
+        { "locale": "fr", "name": "Palaos", "nameType": "common" },
+        { "locale": "it", "name": "Palau", "nameType": "common" },
+        { "locale": "ru", "name": "Палау", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "PY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Paraguay", "nameType": "common" },
+        { "locale": "de", "name": "Paraguay", "nameType": "common" },
+        { "locale": "fr", "name": "Paraguay", "nameType": "common" },
+        { "locale": "it", "name": "Paraguay", "nameType": "common" },
+        { "locale": "ru", "name": "Парагвай", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "QA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Qatar", "nameType": "common" },
+        { "locale": "de", "name": "Katar", "nameType": "common" },
+        { "locale": "fr", "name": "Qatar", "nameType": "common" },
+        { "locale": "it", "name": "Qatar", "nameType": "common" },
+        { "locale": "ru", "name": "Катар", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "RO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Romania", "nameType": "common" },
+        { "locale": "de", "name": "Rumänien", "nameType": "common" },
+        { "locale": "fr", "name": "Roumanie", "nameType": "common" },
+        { "locale": "it", "name": "Romania", "nameType": "common" },
+        { "locale": "ru", "name": "Румыния", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "RS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Serbia", "nameType": "common" },
+        { "locale": "de", "name": "Serbien", "nameType": "common" },
+        { "locale": "fr", "name": "Serbie", "nameType": "common" },
+        { "locale": "it", "name": "Serbia", "nameType": "common" },
+        { "locale": "ru", "name": "Сербия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "RU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Russia", "nameType": "common" },
+        { "locale": "de", "name": "Russland", "nameType": "common" },
+        { "locale": "fr", "name": "Russie", "nameType": "common" },
+        { "locale": "it", "name": "Russia", "nameType": "common" },
+        { "locale": "ru", "name": "Россия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "RW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Rwanda", "nameType": "common" },
+        { "locale": "de", "name": "Ruanda", "nameType": "common" },
+        { "locale": "fr", "name": "Rwanda", "nameType": "common" },
+        { "locale": "it", "name": "Ruanda", "nameType": "common" },
+        { "locale": "ru", "name": "Руанда", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Saudi Arabia", "nameType": "common" },
+        { "locale": "de", "name": "Saudi-Arabien", "nameType": "common" },
+        { "locale": "fr", "name": "Arabie saoudite", "nameType": "common" },
+        { "locale": "it", "name": "Arabia Saudita", "nameType": "common" },
+        { "locale": "ru", "name": "Саудовская Аравия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SB" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Solomon Islands", "nameType": "common" },
+        { "locale": "de", "name": "Salomonen", "nameType": "common" },
+        { "locale": "fr", "name": "Îles Salomon", "nameType": "common" },
+        { "locale": "it", "name": "Isole Salomone", "nameType": "common" },
+        { "locale": "ru", "name": "Соломоновы о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SC" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Seychelles", "nameType": "common" },
+        { "locale": "de", "name": "Seychellen", "nameType": "common" },
+        { "locale": "fr", "name": "Seychelles", "nameType": "common" },
+        { "locale": "it", "name": "Seychelles", "nameType": "common" },
+        { "locale": "ru", "name": "Сейшельские о-ва", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Sudan", "nameType": "common" },
+        { "locale": "de", "name": "Sudan", "nameType": "common" },
+        { "locale": "fr", "name": "Soudan", "nameType": "common" },
+        { "locale": "it", "name": "Sudan", "nameType": "common" },
+        { "locale": "ru", "name": "Судан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Sweden", "nameType": "common" },
+        { "locale": "de", "name": "Schweden", "nameType": "common" },
+        { "locale": "fr", "name": "Suède", "nameType": "common" },
+        { "locale": "it", "name": "Svezia", "nameType": "common" },
+        { "locale": "ru", "name": "Швеция", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Singapore", "nameType": "common" },
+        { "locale": "de", "name": "Singapur", "nameType": "common" },
+        { "locale": "fr", "name": "Singapour", "nameType": "common" },
+        { "locale": "it", "name": "Singapore", "nameType": "common" },
+        { "locale": "ru", "name": "Сингапур", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "St. Helena", "nameType": "common" },
+        { "locale": "de", "name": "St. Helena", "nameType": "common" },
+        { "locale": "fr", "name": "Sainte-Hélène", "nameType": "common" },
+        { "locale": "it", "name": "Sant’Elena", "nameType": "common" },
+        { "locale": "ru", "name": "о-в Св. Елены", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Slovenia", "nameType": "common" },
+        { "locale": "de", "name": "Slowenien", "nameType": "common" },
+        { "locale": "fr", "name": "Slovénie", "nameType": "common" },
+        { "locale": "it", "name": "Slovenia", "nameType": "common" },
+        { "locale": "ru", "name": "Словения", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Slovakia", "nameType": "common" },
+        { "locale": "de", "name": "Slowakei", "nameType": "common" },
+        { "locale": "fr", "name": "Slovaquie", "nameType": "common" },
+        { "locale": "it", "name": "Slovacchia", "nameType": "common" },
+        { "locale": "ru", "name": "Словакия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Sierra Leone", "nameType": "common" },
+        { "locale": "de", "name": "Sierra Leone", "nameType": "common" },
+        { "locale": "fr", "name": "Sierra Leone", "nameType": "common" },
+        { "locale": "it", "name": "Sierra Leone", "nameType": "common" },
+        { "locale": "ru", "name": "Сьерра-Леоне", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "San Marino", "nameType": "common" },
+        { "locale": "de", "name": "San Marino", "nameType": "common" },
+        { "locale": "fr", "name": "Saint-Marin", "nameType": "common" },
+        { "locale": "it", "name": "San Marino", "nameType": "common" },
+        { "locale": "ru", "name": "Сан-Марино", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Senegal", "nameType": "common" },
+        { "locale": "de", "name": "Senegal", "nameType": "common" },
+        { "locale": "fr", "name": "Sénégal", "nameType": "common" },
+        { "locale": "it", "name": "Senegal", "nameType": "common" },
+        { "locale": "ru", "name": "Сенегал", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Somalia", "nameType": "common" },
+        { "locale": "de", "name": "Somalia", "nameType": "common" },
+        { "locale": "fr", "name": "Somalie", "nameType": "common" },
+        { "locale": "it", "name": "Somalia", "nameType": "common" },
+        { "locale": "ru", "name": "Сомали", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Suriname", "nameType": "common" },
+        { "locale": "de", "name": "Suriname", "nameType": "common" },
+        { "locale": "fr", "name": "Suriname", "nameType": "common" },
+        { "locale": "it", "name": "Suriname", "nameType": "common" },
+        { "locale": "ru", "name": "Суринам", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "South Sudan", "nameType": "common" },
+        { "locale": "de", "name": "Südsudan", "nameType": "common" },
+        { "locale": "fr", "name": "Soudan du Sud", "nameType": "common" },
+        { "locale": "it", "name": "Sud Sudan", "nameType": "common" },
+        { "locale": "ru", "name": "Южный Судан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ST" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "São Tomé & Príncipe", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "São Tomé und Príncipe",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Sao Tomé-et-Principe",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "São Tomé e Príncipe", "nameType": "common" },
+        { "locale": "ru", "name": "Сан-Томе и Принсипи", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SV" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "El Salvador", "nameType": "common" },
+        { "locale": "de", "name": "El Salvador", "nameType": "common" },
+        { "locale": "fr", "name": "Salvador", "nameType": "common" },
+        { "locale": "it", "name": "El Salvador", "nameType": "common" },
+        { "locale": "ru", "name": "Сальвадор", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SX" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Sint Maarten", "nameType": "common" },
+        { "locale": "de", "name": "Sint Maarten", "nameType": "common" },
+        {
+          "locale": "fr",
+          "name": "Saint-Martin (partie néerlandaise)",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "Sint Maarten", "nameType": "common" },
+        { "locale": "ru", "name": "Синт-Мартен", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Syria", "nameType": "common" },
+        { "locale": "de", "name": "Syrien", "nameType": "common" },
+        { "locale": "fr", "name": "Syrie", "nameType": "common" },
+        { "locale": "it", "name": "Siria", "nameType": "common" },
+        { "locale": "ru", "name": "Сирия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "SZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Eswatini", "nameType": "common" },
+        { "locale": "de", "name": "Eswatini", "nameType": "common" },
+        { "locale": "fr", "name": "Eswatini", "nameType": "common" },
+        { "locale": "it", "name": "Eswatini", "nameType": "common" },
+        { "locale": "ru", "name": "Эсватини", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TC" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "Turks & Caicos Islands",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Turks- und Caicosinseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Îles Turques-et-Caïques",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Turks e Caicos",
+          "nameType": "common"
+        },
+        { "locale": "ru", "name": "Тёркс и Кайкос", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TD" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Chad", "nameType": "common" },
+        { "locale": "de", "name": "Tschad", "nameType": "common" },
+        { "locale": "fr", "name": "Tchad", "nameType": "common" },
+        { "locale": "it", "name": "Ciad", "nameType": "common" },
+        { "locale": "ru", "name": "Чад", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TF" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "French Southern Territories",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Französische Süd- und Antarktisgebiete",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Terres australes françaises",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Terre Australi Francesi",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Французские Южные территории",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Togo", "nameType": "common" },
+        { "locale": "de", "name": "Togo", "nameType": "common" },
+        { "locale": "fr", "name": "Togo", "nameType": "common" },
+        { "locale": "it", "name": "Togo", "nameType": "common" },
+        { "locale": "ru", "name": "Того", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TH" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Thailand", "nameType": "common" },
+        { "locale": "de", "name": "Thailand", "nameType": "common" },
+        { "locale": "fr", "name": "Thaïlande", "nameType": "common" },
+        { "locale": "it", "name": "Thailandia", "nameType": "common" },
+        { "locale": "ru", "name": "Таиланд", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TJ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Tajikistan", "nameType": "common" },
+        { "locale": "de", "name": "Tadschikistan", "nameType": "common" },
+        { "locale": "fr", "name": "Tadjikistan", "nameType": "common" },
+        { "locale": "it", "name": "Tagikistan", "nameType": "common" },
+        { "locale": "ru", "name": "Таджикистан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TL" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Timor-Leste", "nameType": "common" },
+        { "locale": "de", "name": "Timor-Leste", "nameType": "common" },
+        { "locale": "fr", "name": "Timor oriental", "nameType": "common" },
+        { "locale": "it", "name": "Timor Est", "nameType": "common" },
+        { "locale": "ru", "name": "Восточный Тимор", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Turkmenistan", "nameType": "common" },
+        { "locale": "de", "name": "Turkmenistan", "nameType": "common" },
+        { "locale": "fr", "name": "Turkménistan", "nameType": "common" },
+        { "locale": "it", "name": "Turkmenistan", "nameType": "common" },
+        { "locale": "ru", "name": "Туркменистан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Tunisia", "nameType": "common" },
+        { "locale": "de", "name": "Tunesien", "nameType": "common" },
+        { "locale": "fr", "name": "Tunisie", "nameType": "common" },
+        { "locale": "it", "name": "Tunisia", "nameType": "common" },
+        { "locale": "ru", "name": "Тунис", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TO" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Tonga", "nameType": "common" },
+        { "locale": "de", "name": "Tonga", "nameType": "common" },
+        { "locale": "fr", "name": "Tonga", "nameType": "common" },
+        { "locale": "it", "name": "Tonga", "nameType": "common" },
+        { "locale": "ru", "name": "Тонга", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TR" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Türkiye", "nameType": "common" },
+        { "locale": "de", "name": "Türkei", "nameType": "common" },
+        { "locale": "fr", "name": "Turquie", "nameType": "common" },
+        { "locale": "it", "name": "Turchia", "nameType": "common" },
+        { "locale": "ru", "name": "Турция", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TT" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Trinidad & Tobago", "nameType": "common" },
+        { "locale": "de", "name": "Trinidad und Tobago", "nameType": "common" },
+        { "locale": "fr", "name": "Trinité-et-Tobago", "nameType": "common" },
+        { "locale": "it", "name": "Trinidad e Tobago", "nameType": "common" },
+        { "locale": "ru", "name": "Тринидад и Тобаго", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TV" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Tuvalu", "nameType": "common" },
+        { "locale": "de", "name": "Tuvalu", "nameType": "common" },
+        { "locale": "fr", "name": "Tuvalu", "nameType": "common" },
+        { "locale": "it", "name": "Tuvalu", "nameType": "common" },
+        { "locale": "ru", "name": "Тувалу", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Taiwan", "nameType": "common" },
+        { "locale": "de", "name": "Taiwan", "nameType": "common" },
+        { "locale": "fr", "name": "Taïwan", "nameType": "common" },
+        { "locale": "it", "name": "Taiwan", "nameType": "common" },
+        { "locale": "ru", "name": "Тайвань", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "TZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Tanzania", "nameType": "common" },
+        { "locale": "de", "name": "Tansania", "nameType": "common" },
+        { "locale": "fr", "name": "Tanzanie", "nameType": "common" },
+        { "locale": "it", "name": "Tanzania", "nameType": "common" },
+        { "locale": "ru", "name": "Танзания", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "UA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Ukraine", "nameType": "common" },
+        { "locale": "de", "name": "Ukraine", "nameType": "common" },
+        { "locale": "fr", "name": "Ukraine", "nameType": "common" },
+        { "locale": "it", "name": "Ucraina", "nameType": "common" },
+        { "locale": "ru", "name": "Украина", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "UG" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Uganda", "nameType": "common" },
+        { "locale": "de", "name": "Uganda", "nameType": "common" },
+        { "locale": "fr", "name": "Ouganda", "nameType": "common" },
+        { "locale": "it", "name": "Uganda", "nameType": "common" },
+        { "locale": "ru", "name": "Уганда", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "UM" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "U.S. Outlying Islands",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Amerikanische Überseeinseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Îles mineures éloignées des États-Unis",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Minori Esterne degli Stati Uniti",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Внешние малые о-ва (США)",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "UY" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Uruguay", "nameType": "common" },
+        { "locale": "de", "name": "Uruguay", "nameType": "common" },
+        { "locale": "fr", "name": "Uruguay", "nameType": "common" },
+        { "locale": "it", "name": "Uruguay", "nameType": "common" },
+        { "locale": "ru", "name": "Уругвай", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "UZ" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Uzbekistan", "nameType": "common" },
+        { "locale": "de", "name": "Usbekistan", "nameType": "common" },
+        { "locale": "fr", "name": "Ouzbékistan", "nameType": "common" },
+        { "locale": "it", "name": "Uzbekistan", "nameType": "common" },
+        { "locale": "ru", "name": "Узбекистан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Vatican City", "nameType": "common" },
+        { "locale": "de", "name": "Vatikanstadt", "nameType": "common" },
+        {
+          "locale": "fr",
+          "name": "État de la Cité du Vatican",
+          "nameType": "common"
+        },
+        { "locale": "it", "name": "Città del Vaticano", "nameType": "common" },
+        { "locale": "ru", "name": "Ватикан", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VC" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "St. Vincent & Grenadines",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "St. Vincent und die Grenadinen",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Saint-Vincent-et-les Grenadines",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Saint Vincent e Grenadine",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Сент-Винсент и Гренадины",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Venezuela", "nameType": "common" },
+        { "locale": "de", "name": "Venezuela", "nameType": "common" },
+        { "locale": "fr", "name": "Venezuela", "nameType": "common" },
+        { "locale": "it", "name": "Venezuela", "nameType": "common" },
+        { "locale": "ru", "name": "Венесуэла", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VG" },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "en",
+          "name": "British Virgin Islands",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "name": "Britische Jungferninseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Îles Vierges britanniques",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Vergini Britanniche",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Виргинские о-ва (Великобритания)",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VI" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "U.S. Virgin Islands", "nameType": "common" },
+        {
+          "locale": "de",
+          "name": "Amerikanische Jungferninseln",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "name": "Îles Vierges des États-Unis",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "name": "Isole Vergini Americane",
+          "nameType": "common"
+        },
+        {
+          "locale": "ru",
+          "name": "Виргинские о-ва (США)",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VN" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Vietnam", "nameType": "common" },
+        { "locale": "de", "name": "Vietnam", "nameType": "common" },
+        { "locale": "fr", "name": "Viêt Nam", "nameType": "common" },
+        { "locale": "it", "name": "Vietnam", "nameType": "common" },
+        { "locale": "ru", "name": "Вьетнам", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "VU" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Vanuatu", "nameType": "common" },
+        { "locale": "de", "name": "Vanuatu", "nameType": "common" },
+        { "locale": "fr", "name": "Vanuatu", "nameType": "common" },
+        { "locale": "it", "name": "Vanuatu", "nameType": "common" },
+        { "locale": "ru", "name": "Вануату", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "WF" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Wallis & Futuna", "nameType": "common" },
+        { "locale": "de", "name": "Wallis und Futuna", "nameType": "common" },
+        { "locale": "fr", "name": "Wallis-et-Futuna", "nameType": "common" },
+        { "locale": "it", "name": "Wallis e Futuna", "nameType": "common" },
+        { "locale": "ru", "name": "Уоллис и Футуна", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "WS" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Samoa", "nameType": "common" },
+        { "locale": "de", "name": "Samoa", "nameType": "common" },
+        { "locale": "fr", "name": "Samoa", "nameType": "common" },
+        { "locale": "it", "name": "Samoa", "nameType": "common" },
+        { "locale": "ru", "name": "Самоа", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "XK" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Kosovo", "nameType": "common" },
+        { "locale": "de", "name": "Kosovo", "nameType": "common" },
+        { "locale": "fr", "name": "Kosovo", "nameType": "common" },
+        { "locale": "it", "name": "Kosovo", "nameType": "common" },
+        { "locale": "ru", "name": "Косово", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "YE" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Yemen", "nameType": "common" },
+        { "locale": "de", "name": "Jemen", "nameType": "common" },
+        { "locale": "fr", "name": "Yémen", "nameType": "common" },
+        { "locale": "it", "name": "Yemen", "nameType": "common" },
+        { "locale": "ru", "name": "Йемен", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ZA" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "South Africa", "nameType": "common" },
+        { "locale": "de", "name": "Südafrika", "nameType": "common" },
+        { "locale": "fr", "name": "Afrique du Sud", "nameType": "common" },
+        { "locale": "it", "name": "Sudafrica", "nameType": "common" },
+        {
+          "locale": "ru",
+          "name": "Южно-Африканская Республика",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ZM" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Zambia", "nameType": "common" },
+        { "locale": "de", "name": "Sambia", "nameType": "common" },
+        { "locale": "fr", "name": "Zambie", "nameType": "common" },
+        { "locale": "it", "name": "Zambia", "nameType": "common" },
+        { "locale": "ru", "name": "Замбия", "nameType": "common" }
+      ]
+    },
+    {
+      "ref": { "scheme": "iso_3166_1", "value": "ZW" },
+      "levelKey": "nation",
+      "names": [
+        { "locale": "en", "name": "Zimbabwe", "nameType": "common" },
+        { "locale": "de", "name": "Simbabwe", "nameType": "common" },
+        { "locale": "fr", "name": "Zimbabwe", "nameType": "common" },
+        { "locale": "it", "name": "Zimbabwe", "nameType": "common" },
+        { "locale": "ru", "name": "Зимбабве", "nameType": "common" }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Places: one source of truth for each fact
 
-Status: the country registry is built (2026-11-09); every country as a place is the next step.
+Status: the country registry and the world pack (every country as a place) are built (2026-11-09).
 
 A fact about a place lives in exactly one place in the repository. Everything else reads it.
 
@@ -23,14 +23,20 @@ a source or a statistic names a country the registry lacks, or one the outlines 
   to a place in the Places database, which carries its identifiers and validity.
 - Generated files are regenerated, never edited (`pnpm run geography:world`; `--check` compares).
 
-## Next: every country a place
+## Every country is a place
 
-Statistics today hang only on the four countries with a pack. To chart a series for every OECD
-member (or every country), the nation level of every country becomes a place, created from the
-registry: a light pack per country (codes, currency, the `nation` level only) generated from the
-registry rather than written by hand, so the registry stays the one list. The OECD and World Bank
-sources then come from one template per series and the registry's codes, not a line per country.
-Depth (subdivisions, tax) is added to a country only when Solon holds it, as today.
+A `world` pack (`config/places/countries/world.ts`) holds the nation level of every registry
+country no other pack holds, 235 of them, from `data/places/world/countries.json`, written by
+`pnpm run places:world-countries` (`--check` in CI-style use) with names in five languages from
+Unicode CLDR. Its sources are computed in `config/places/world.ts` and `sources.ts` from the
+registry: the World Bank's indicators for every country, the OECD's tax series for the 38 members.
+A country that gets a pack of its own leaves the world pack by regenerating the file; its sources
+are re-pointed to its pack (`worldBankSource`/`oecdSource` take the pack as an argument).
+
+Schedules are spread through the morning (the World Bank one country a minute, the OECD one every
+five minutes): the OECD's SDMX API allows about 60 data requests an hour and answers the rest with
+500. The importer names itself in its User-Agent, retries a server error five times with backoff and
+paces the OECD six seconds between requests.
 
 ## Next: research with AI
 

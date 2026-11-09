@@ -25,10 +25,19 @@ export const METHODOLOGIES = defineMethodologies([
       en: "Six broad dimensions of governance for more than 200 economies since 1996, as estimates and 0–100 scores.",
     },
     kinds: ["composite", "perception"],
-    layers: ["perception", "de_facto"],
-    components: [],
+    layers: ["perception"],
+    components: [
+      "Voice and Accountability",
+      "Political Stability",
+      "Government Effectiveness",
+      "Regulatory Quality",
+      "Rule of Law",
+      "Control of Corruption",
+    ],
     coverage: { en: "More than 200 economies, 1996 to 2025 (the 2026 update)." },
-    draws_on: ["Underlying data from many third-party sources (published as a separate file)"],
+    draws_on: [
+      "Perception data from 35 cross-country sources: household surveys, firm surveys and expert assessments",
+    ],
     licence: {
       verdict: "loadable",
       terms:
@@ -38,10 +47,19 @@ export const METHODOLOGIES = defineMethodologies([
       },
     },
     unread: [
-      "The names and definitions of the six dimensions, from the methodology page",
-      "How the sources are weighted in the aggregate",
+      "The definition of each of the six dimensions",
+      "How the 35 sources are weighted in the aggregate",
     ],
     evidence: [
+      ev(
+        "World Bank: Worldwide Governance Indicators (publication page, with its usage advisory)",
+        "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
+        [
+          "Voice and Accountability, Political Stability, Government Effectiveness, Regulatory Quality, Rule of Law, and Control of Corruption",
+          "perception data from 35 cross-country sources",
+          "should be treated as estimates rather than definitive ratings of government performance",
+        ],
+      ),
       ev(
         "World Bank Data Catalog: Worldwide Governance Indicators",
         "https://datacatalog.worldbank.org/search/dataset/0038026",

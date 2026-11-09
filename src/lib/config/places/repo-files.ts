@@ -10,6 +10,7 @@
  * `data/places/` to exactly one row here, and every row to a real source.
  */
 export const PLACES_REPO_FILES: readonly { source: string; file: string }[] = [
+  { source: "world-country-registry", file: "data/places/world/countries.json" },
   { source: "li-constitution-communes", file: "data/places/liechtenstein/communes.json" },
   { source: "li-income-tax", file: "data/places/liechtenstein/income-tax.json" },
   { source: "li-communal-surcharges", file: "data/places/liechtenstein/communal-surcharges.csv" },

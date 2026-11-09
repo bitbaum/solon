@@ -120,6 +120,17 @@ describe("checks on places side by side", () => {
     ).toEqual([]);
   });
 
+  it("does not call a rate fixed by law stuck, even when it has not moved for years", () => {
+    const fixed = ["A", "B", "C"].map((n) =>
+      series(
+        n,
+        run(2005, 2025, () => 0.45),
+      ),
+    );
+    expect(checkSeries(fixed).map((x) => x.kind)).toContain("constant_series");
+    expect(checkSeries(fixed, { fixedByLaw: true })).toEqual([]);
+  });
+
   it("is silent on three well-covered places", () => {
     expect(
       checkSeries(

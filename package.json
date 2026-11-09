@@ -32,6 +32,7 @@
     "statistics:sync": "tsx scripts/statistics-sync.ts",
     "statistics:quality": "tsx scripts/statistics-quality.ts",
     "geography:world": "tsx scripts/build-world-geography.ts",
+    "places:world-countries": "tsx scripts/places-world-countries.ts",
     "statistics:verify": "tsx scripts/statistics-verify.ts",
     "law:register": "tsx scripts/law-register.ts",
     "law:text": "tsx scripts/law-text.ts",

@@ -97,7 +97,7 @@ export async function loadMetricPage(
   });
   const sanity: SanityFinding[] = [
     ...screened.findings.filter((f) => f.places.some((n) => shown.some((s) => s.name === n))),
-    ...checkSeries(shown),
+    ...checkSeries(shown, { fixedByLaw: metric.statistic?.fixedByLaw === true }),
   ];
   return {
     metric,

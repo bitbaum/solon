@@ -37,7 +37,10 @@ async function main(): Promise<number> {
       if (q.notes.some((n) => n.kind === "gap" || n.kind === "stale")) bad += 1;
     }
     // What the chart of this statistic would carry a warning about, or leave out.
-    for (const f of [...screened.findings, ...checkSeries(all)]) {
+    for (const f of [
+      ...screened.findings,
+      ...checkSeries(all, { fixedByLaw: metric.statistic?.fixedByLaw === true }),
+    ]) {
       console.log(`  ! ${f.severity} ${f.kind}: ${f.places.join(", ")} ${f.years.join(",")}`);
       if (f.severity === "withheld") bad += 1;
     }

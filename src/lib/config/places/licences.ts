@@ -16,6 +16,9 @@ export const LICENCES = [
   { spdx: "CC0-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "PDDL-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "CC-BY-4.0", requiresAttribution: true, shareAlike: false },
+  // Unicode's CLDR (country names in each language) and its permissive licence, which asks for the notice.
+  // https://www.unicode.org/license.txt
+  { spdx: "Unicode-3.0", requiresAttribution: true, shareAlike: false },
   // opendata.swiss "Open use" (terms_open): free use, citing the source recommended.
   // https://opendata.swiss/en/terms-of-use
   { spdx: "LicenseRef-opendata-swiss-open", requiresAttribution: false, shareAlike: false },

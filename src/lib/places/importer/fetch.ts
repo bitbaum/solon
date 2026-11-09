@@ -26,20 +26,24 @@ export interface FetchOptions {
   backfill?: boolean;
   adapters?: ReadonlyMap<string, Adapter>;
   fetchImpl?: typeof fetch;
-  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 2 s). */
+  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 1 s, and 6 s for the OECD, which answers a burst with 500). */
   paceMs?: number;
 }
 
 const FETCH_TIMEOUT_MS = 120_000;
 
 export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): Promise<Response> {
-  const init: RequestInit = {};
+  // Say who is asking, as the law reader does: publishers that rate-limit anonymous clients
+  // answer a named one (the OECD's SDMX API answered the default client 500, a named one 200).
+  const init: RequestInit = {
+    headers: { "user-agent": "Solon places importer (solon.orangecat.ch)" },
+  };
   if (request.body !== undefined) {
     init.method = "POST";
-    init.headers = { "content-type": "application/json" };
+    init.headers = { ...init.headers, "content-type": "application/json" };
     init.body = JSON.stringify(request.body);
   }
-  // A server error is retried four times, backing off from a few seconds: some publishers
+  // A server error is retried five times, backing off from a few seconds: some publishers
   // (the OECD's SDMX API, 2026-11-08) answer 500 now and 200 a moment later.
   for (let attempt = 0; ; attempt += 1) {
     const response = await fetchImpl(request.url, {
@@ -56,7 +60,7 @@ export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): 
   }
 }
 
-const RETRIES_ON_SERVER_ERROR = 4;
+const RETRIES_ON_SERVER_ERROR = 5;
 let retryDelayMs = 4_000;
 /** Tests shorten the wait between retries. */
 export const setRetryDelayForTests = (ms: number) => {
@@ -106,7 +110,10 @@ export async function fetchAndImport(db: Database, options: FetchOptions): Promi
     adapters,
     fetchImpl,
   });
-  const paceMs = options.paceMs ?? 2_000;
+  // The OECD's SDMX API answers a burst with 500 (about 60 data requests an hour are allowed), so
+  // its sources are paced; the World Bank and the rest are asked politely, not slowly.
+  const source = options.config.sources.find((x) => x.key === options.sourceKey);
+  const paceMs = options.paceMs ?? (source?.adapter === "oecd_sdmx" ? 6_000 : 1_000);
   for (const [i, request] of requests.entries()) {
     if (i > 0 && paceMs > 0) {
       await new Promise((resolve) => setTimeout(resolve, paceMs));
