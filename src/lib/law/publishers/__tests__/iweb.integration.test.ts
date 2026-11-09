@@ -84,7 +84,7 @@ describe.skipIf(!RUN)("an i-web collection", () => {
 
     const report = await loadPublisher(db, adapter, {
       snapshots,
-      today: "2026-11-08",
+      today: new Date().toISOString().slice(0, 10), // the adapter dates a version by the day it is read
       history: true,
       pauseMs: 0,
       fetchImpl,
