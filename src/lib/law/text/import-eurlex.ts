@@ -224,7 +224,17 @@ async function storeAct(
   const page = await read(htmlUrlOf(act.text.celex), doFetch, EURLEX.hosts, options.archiveRetryMs);
   const html = new TextDecoder().decode(page.bytes);
   if (!isActPage(html) || /The requested document does not exist/i.test(html)) {
-    throw new Error("not an act's page");
+    // What the page was, so an act with no HTML text is told from a shell, a landing page or a refusal.
+    const title =
+      /<title[^>]*>([^<]*)/i.exec(html)?.[1]?.replace(/\s+/g, " ").trim().slice(0, 80) ?? "";
+    const text = html
+      .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    throw new Error(
+      `not an act's page: ${page.bytes.length} bytes, title "${title}", text "${text.slice(0, 160)}"`,
+    );
   }
   const provisions = parseEurLexHtml(html);
   if (provisions.length === 0) throw new Error("no text in the page");

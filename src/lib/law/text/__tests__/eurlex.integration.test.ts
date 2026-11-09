@@ -210,7 +210,9 @@ describe.skipIf(!RUN)("EU law import", () => {
       archiveRetryMs: [],
     });
     expect(report.stored).toBe(1);
-    expect(report.failures).toEqual([{ act: DIR, reason: "not an act's page" }]);
+    expect(report.failures).toEqual([
+      { act: DIR, reason: expect.stringMatching(/^not an act's page: \d+ bytes, title "/) },
+    ]);
     const reg = await held(REG);
     expect(reg!.provisions[0]!.text).toBe("This Regulation lays down rules, amended again.");
     expect(reg!.versions.map((v) => [v.inForceFrom, v.inForceTo])).toEqual([
