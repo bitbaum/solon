@@ -299,6 +299,8 @@ describe("the canton of Zürich's municipal multipliers", () => {
       validFrom: "2025-01-01",
       validTo: "2026-01-01",
       value: 1.19,
+      quality: "normal",
+      publisherFlag: null,
     });
     expect(multiplier("154", 2026)?.value).toBe(0.73);
     expect(batch.jurisdictions).toEqual([]);
@@ -1150,6 +1152,8 @@ describe("the Federal Tax Administration's exports", () => {
   ) => ({
     jurisdiction: { scheme, value },
     metricKey,
+    quality: "normal",
+    publisherFlag: null,
     variant: null,
     validFrom: "2025-01-01",
     validTo: "2026-01-01",

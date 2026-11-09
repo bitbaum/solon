@@ -995,7 +995,10 @@
       "customLabel": "Votre axe",
       "customDirection": "Plus haut : les mesures pondérées que vous avez choisies s'additionnent plus haut, chacune orientée comme vous l'avez fixé.",
       "customAuthor": "Vous, dans le lien ci-dessus. Pas un indice, et non enregistré tant que vous ne l'enregistrez pas.",
-      "compareLink": "Comparer deux mesures l'une à l'autre"
+      "compareLink": "Comparer deux mesures l'une à l'autre",
+      "dimensionsTitle": "Loi, pratique et résultat",
+      "dimensionsIntro": "Une dimension tient ce que dit la loi, ce qui se passe en pratique et ce qui en résulte comme couches séparées, jamais réunies en un seul score, afin que l'écart entre elles se voie. Une couche sans série dit ce qui la remplirait.",
+      "dimensionOpen": "Ouvrir les trois couches"
     },
     "metric": {
       "metaTitle": "{metric} · Statistiques",
@@ -1061,7 +1064,8 @@
       "mapOpen": "Ouvrir la série de ce lieu",
       "mapColPlace": "Lieu",
       "mapColValue": "Valeur",
-      "mapColYear": "Année"
+      "mapColYear": "Année",
+      "preliminary": "provisoire, estimé ou prévision"
     },
     "view": {
       "metaTitle": "Vue enregistrée · {metric}",
@@ -1185,6 +1189,44 @@
       "empty": "Aucun lieu n'a encore ces deux mesures.",
       "caveat": "Des lieux voisins sur le graphique ne se ressemblent que sur ces deux mesures. Une tendance sur une poignée de lieux ne prouve pas que l'une cause l'autre.",
       "back": "Retour à toutes les statistiques"
+    },
+    "quality": {
+      "title": "Cette série est-elle lisible ?",
+      "range": "{count} chiffres annuels, {from}–{to}.",
+      "none": "Rien d'irrégulier trouvé.",
+      "gap": "Années manquantes entre-temps : {years}.",
+      "jump": "Un grand saut en {years}, bien plus grand que le saut habituel de la série : à confirmer auprès de la loi ou des notes de l'éditeur.",
+      "stale": "Le dernier chiffre date de {year}, il y a {count} ans.",
+      "provisional": "Marqué provisoire, estimé ou prévision par l'éditeur : {years}.",
+      "short": "Seulement {count} chiffres : trop peu pour juger des sauts.",
+      "how": "Calculé par programme à partir des chiffres eux-mêmes. Il signale et n'écarte jamais : un chiffre signalé reste affiché, avec son signalement."
+    },
+    "dimension": {
+      "metaTitle": "{label} · Loi, pratique, résultat",
+      "metaDescription": "{label} : ce que dit la loi, ce qui se passe en pratique et ce qui en résulte, en couches séparées avec l'écart entre elles.",
+      "kicker": "Dimension",
+      "author": "Version {version}. Définie par : {author}",
+      "layers": {
+        "de_jure": "Ce que dit la loi",
+        "de_facto": "Ce qui se passe en pratique",
+        "outcome": "Ce qui en résulte"
+      },
+      "layerMeaning": {
+        "de_jure": "Les termes mêmes de la loi, y compris ce qu'ils donnent pour un cas typique.",
+        "de_facto": "Application, poursuites, conformité et tolérance : ce qui est fait, et qui peut différer de ce qui est écrit.",
+        "outcome": "Ce qui s'ensuit pour les personnes et la société : recettes, prix, disponibilité, degré de liberté déclaré."
+      },
+      "noSeries": "Pas encore de série.",
+      "rankedTitle": "Chaque mesure, lieu par lieu",
+      "gapTitle": "Une mesure contre une autre",
+      "gapCaption": "{x} en abscisse, {y} en ordonnée, un point par lieu à la dernière année où il a les deux. Le tableau ci-dessous donne l'écart pour chaque lieu.",
+      "gapTable": "{y} moins {x}, dans les unités propres des mesures",
+      "gap": "Écart",
+      "gapNote": "Un écart positif signifie que la deuxième mesure est plus haute que la première. C'est une différence entre deux nombres qui répondent à des questions différentes (le taux maximal vise les plus hauts revenus, le coin fiscal le salaire moyen), pas un jugement sur l'un d'eux.",
+      "timeTitle": "Un lieu dans le temps",
+      "timeCaption": "{place} : les mesures de cette dimension qui partagent une unité, par année.",
+      "timeNote": "Les mesures dans d'autres unités figurent plus haut sur leurs propres graphiques ; aucun graphique ici n'a de second axe.",
+      "caveat": "Une couche ne vaut que par les séries qu'elle contient. Là où elle n'en a pas, la dimension se tait au lieu de deviner."
     }
   }
 }

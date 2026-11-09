@@ -13,6 +13,8 @@ import { unitLabel, type StatisticsTranslator } from "./metric-view";
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];
   axes: Omit<AxisPanelProps, "t" | "locale">[];
+  /** The dimensions held in layers, for the section that opens them. */
+  dimensions: { key: string; label: string; summary: string }[];
   /** The axis a reader built in the link, ready to draw. */
   custom: Omit<AxisPanelProps, "t" | "locale"> | null;
   builder: { chosen: import("@/lib/statistics/axes").Axis | null };
@@ -28,6 +30,7 @@ interface StatisticsIndexProps {
 export default function StatisticsIndex({
   statistics,
   axes,
+  dimensions,
   custom,
   builder,
   locale,
@@ -91,6 +94,27 @@ export default function StatisticsIndex({
             );
           })}
         </ul>
+
+        <section className="space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-fg-primary">{t("index.dimensionsTitle")}</h2>
+            <p className="max-w-3xl text-fg-secondary">{t("index.dimensionsIntro")}</p>
+          </div>
+          <ul className="grid gap-4 md:grid-cols-2">
+            {dimensions.map((d) => (
+              <li
+                key={d.key}
+                className="min-w-0 space-y-3 rounded-surface border border-default bg-surface-base p-6"
+              >
+                <h3 className="text-xl font-semibold text-fg-primary">{d.label}</h3>
+                <p className="mb-0 text-sm text-fg-secondary">{d.summary}</p>
+                <Link href={`/statistics/dimension/${d.key}`} className="btn-secondary min-h-11">
+                  {t("index.dimensionOpen")}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <section className="space-y-6">
           <div className="space-y-2">

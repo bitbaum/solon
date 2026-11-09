@@ -1688,7 +1688,10 @@
       "customLabel": "Your axis",
       "customDirection": "Higher: the weighted measures you chose add up higher, each turned the way you set it.",
       "customAuthor": "You, in the link above. Not an index and not saved until you save it.",
-      "compareLink": "Compare two measures against each other"
+      "compareLink": "Compare two measures against each other",
+      "dimensionsTitle": "Law, practice and outcome",
+      "dimensionsIntro": "A dimension holds what the law says, what happens in practice and what results as separate layers, never collapsed into one score, so the gap between them can be seen. A layer with no series says what would fill it.",
+      "dimensionOpen": "Open the three layers"
     },
     "metric": {
       "metaTitle": "{metric} · Statistics",
@@ -1754,7 +1757,8 @@
       "mapOpen": "Open this place's series",
       "mapColPlace": "Place",
       "mapColValue": "Value",
-      "mapColYear": "Year"
+      "mapColYear": "Year",
+      "preliminary": "provisional, estimated or forecast"
     },
     "view": {
       "metaTitle": "Saved view · {metric}",
@@ -1878,6 +1882,44 @@
       "empty": "No place has both of these measures yet.",
       "caveat": "Places that sit together are alike on these two measures only. A pattern across a handful of places is not evidence that one thing causes the other.",
       "back": "Back to all statistics"
+    },
+    "quality": {
+      "title": "Is this series fit to read?",
+      "range": "{count} yearly figures, {from}–{to}.",
+      "none": "Nothing irregular found.",
+      "gap": "Years missing in between: {years}.",
+      "jump": "A large step in {years}, much bigger than the series' usual one: worth confirming against the law or the publisher's notes.",
+      "stale": "The latest figure is for {year}, {count} years ago.",
+      "provisional": "Marked provisional, estimated or forecast by the publisher: {years}.",
+      "short": "Only {count} figures: too few to judge steps by.",
+      "how": "Worked out by program from the figures themselves. It flags and never discards: a flagged figure is still shown, with its flag."
+    },
+    "dimension": {
+      "metaTitle": "{label} · Law, practice, outcome",
+      "metaDescription": "{label}: what the law says, what happens in practice and what results, as separate layers with the gap between them.",
+      "kicker": "Dimension",
+      "author": "Version {version}. Defined by: {author}",
+      "layers": {
+        "de_jure": "What the law says",
+        "de_facto": "What happens in practice",
+        "outcome": "What results"
+      },
+      "layerMeaning": {
+        "de_jure": "The statute's own terms, including what they work out to for a typical case.",
+        "de_facto": "Enforcement, prosecution, compliance and tolerance: what is done, which can differ from what is written.",
+        "outcome": "What follows for people and society: revenue, prices, availability, how free people say they are."
+      },
+      "noSeries": "No series yet.",
+      "rankedTitle": "Every measure, place by place",
+      "gapTitle": "One measure against another",
+      "gapCaption": "{x} across, {y} up, one point per place at the latest year it has both. The table below gives the gap for each place.",
+      "gapTable": "{y} minus {x}, in the measures' own terms",
+      "gap": "Gap",
+      "gapNote": "A positive gap means the second measure is higher than the first. It is a difference between two numbers that answer different questions (the top rate applies to the highest incomes, the wedge to an average wage), not a judgment of either.",
+      "timeTitle": "One place over time",
+      "timeCaption": "{place}: the measures of this dimension that share a unit, by year.",
+      "timeNote": "Measures in other units are on their own charts above; no chart here has a second axis.",
+      "caveat": "A layer is only as good as the series in it. Where a layer has none, the dimension is silent about it rather than guessing."
     }
   }
 }

@@ -46,6 +46,8 @@ import {
   sqlList,
   type AreaAssertion,
   type FactMethod,
+  type FactQuality,
+  FACT_QUALITIES,
   type ImportRunStatus,
   type JurisdictionOrigin,
   type JurisdictionRelation,
@@ -504,6 +506,10 @@ export const facts = pgTable(
     currency: varchar("currency", { length: 3 }),
     sourceId: text("source_id").notNull(),
     method: text("method").$type<FactMethod>().notNull(),
+    /** What the publisher says about the figure's reliability; `normal` when it says nothing. */
+    quality: text("quality").$type<FactQuality>().notNull().default("normal"),
+    /** The publisher's own code for it (an SDMX OBS_STATUS such as `P`), when it gives one. */
+    publisherFlag: text("publisher_flag"),
     /** For `corrected` facts: the decision that made the correction. */
     correctedByProposalId: text("corrected_by_proposal_id"),
     recordedAt: recordedAt(),
@@ -520,6 +526,7 @@ export const facts = pgTable(
       .on(t.jurisdictionId, t.metricKey, sql`coalesce(${t.variant}, '')`, t.validFrom)
       .where(sql`${t.supersededAt} IS NULL`),
     check("facts_method_check", sql`${t.method} IN (${sql.raw(sqlList(FACT_METHODS))})`),
+    check("facts_quality_check", sql`${t.quality} IN (${sql.raw(sqlList(FACT_QUALITIES))})`),
     check("facts_one_value", sql`(${t.valueNumeric} IS NULL) <> (${t.valueJson} IS NULL)`),
     check("facts_currency_check", sql`${t.currency} IS NULL OR ${t.currency} ~ '^[A-Z]{3}$'`),
     check(

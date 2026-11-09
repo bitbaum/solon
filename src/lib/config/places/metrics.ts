@@ -796,4 +796,41 @@ export const METRICS: readonly MetricInput[] = [
       },
     },
   },
+  {
+    key: "tax.wedge.average",
+    label: {
+      en: "Average tax wedge on labour (share of labour cost)",
+      de: "Durchschnittliche Steuer- und Abgabenbelastung der Arbeit (Anteil an den Arbeitskosten)",
+      fr: "Coin fiscal moyen sur le travail (part du coût du travail)",
+      it: "Cuneo fiscale medio sul lavoro (quota del costo del lavoro)",
+      ru: "Средний налоговый клин на труд (доля затрат на труд)",
+    },
+    valueType: "number",
+    unit: "ratio",
+    plausible: { min: -0.2, max: 0.8 },
+    statistic: {
+      definition: {
+        en: "Income tax plus employees' and employers' social security contributions, less cash benefits, as a share of total labour cost, for a single person without children earning the average wage, as the OECD's Taxing Wages states it.",
+        de: "Einkommenssteuer plus Sozialversicherungsbeiträge von Arbeitnehmern und Arbeitgebern, abzüglich Geldleistungen, als Anteil an den gesamten Arbeitskosten, für eine alleinstehende Person ohne Kinder mit Durchschnittslohn, wie es die OECD-«Taxing Wages» angeben.",
+        fr: "Impôt sur le revenu plus cotisations sociales des salariés et des employeurs, moins les prestations en espèces, en part du coût total du travail, pour une personne seule sans enfant gagnant le salaire moyen, tel que « Les impôts sur les salaires » de l'OCDE l'indiquent.",
+        it: "Imposta sul reddito più contributi sociali di lavoratori e datori di lavoro, meno le prestazioni in denaro, in quota del costo totale del lavoro, per una persona sola senza figli con il salario medio, come lo indica «Taxing Wages» dell'OCSE.",
+        ru: "Подоходный налог плюс взносы на социальное страхование работников и работодателей за вычетом денежных пособий, в доле общих затрат на труд, для одинокого человека без детей со средней зарплатой, по данным «Taxing Wages» ОЭСР.",
+      },
+      scope: {
+        en: "One household type only: a single person without children on the average wage. It is what the rules take from a typical pay packet, not the average of what everyone pays.",
+        de: "Nur ein Haushaltstyp: eine alleinstehende Person ohne Kinder mit Durchschnittslohn. Es ist, was die Regeln einem typischen Lohn entnehmen, nicht der Durchschnitt dessen, was alle zahlen.",
+        fr: "Un seul type de ménage : une personne seule sans enfant au salaire moyen. C'est ce que les règles prélèvent sur une fiche de paie typique, non la moyenne de ce que tous paient.",
+        it: "Un solo tipo di nucleo: una persona sola senza figli con il salario medio. È ciò che le regole prelevano da una busta paga tipica, non la media di ciò che tutti pagano.",
+        ru: "Только один тип домохозяйства: одинокий человек без детей со средней зарплатой. Это то, что правила берут с типичной зарплаты, а не среднее по всем.",
+      },
+      series: {
+        publisher: "OECD, Taxing Wages",
+        code: "OECD.CTP.TPS,DSD_TAX_WAGES_COMP@DF_TW_COMP,2.1",
+        measure: "AV_TW",
+        key: "{iso3}.AV_TW.PT_COS_LB.S_C0.AW100._Z.A",
+        match: { HOUSEHOLD_TYPE: "S_C0", INCOME_PRINCIPAL: "AW100" },
+        url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_TAX_WAGES_COMP%40DF_TW_COMP&df[ag]=OECD.CTP.TPS",
+      },
+    },
+  },
 ];

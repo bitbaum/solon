@@ -162,6 +162,13 @@
       "when": 1794147042026,
       "tag": "0022_statistics_beside_the_law",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794212101583,
+      "tag": "0023_facts_quality_flag",
+      "breakpoints": true
     }
   ]
 }

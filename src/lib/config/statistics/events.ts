@@ -11,7 +11,12 @@
 import type { CuratedRecordInput } from "@/lib/statistics/records";
 
 const READ = "2026-11-09";
-const ev = (publisher: string, url: string) => ({ publisher, url, read: READ });
+const ev = (publisher: string, url: string, expect: string[] = []) => ({
+  publisher,
+  url,
+  read: READ,
+  expect,
+});
 
 const SWISSVOTES = "Swissvotes, Année Politique Suisse, University of Bern (CC BY 4.0)";
 const RIIGIKOGU = "Riigikogu (Estonian Parliament), open data";
@@ -25,34 +30,118 @@ const SCIAM =
 const EE_VOTE = ev(
   RIIGIKOGU,
   "https://api.riigikogu.ee/api/votings/897b2d34-2e14-446b-9d6d-998bdff65f3e",
+  [
+    '"inFavor":58',
+    '"against":33',
+    '"present":91',
+    '"mark":148',
+    "Eesti Reformierakonna fraktsioon",
+    "Isamaa fraktsioon",
+  ],
 );
 const EE_BILL = ev(
   RIIGIKOGU,
   "https://api.riigikogu.ee/api/volumes/drafts/7a857bd6-b8da-467a-8b6c-c693e3d3fcdd",
+  [
+    "Tulumaksuseaduse ja kaitseväeteenistuse seaduse muutmise seadus 148 SE",
+    '"initiated":"2023-05-11"',
+    "Vabariigi Valitsus",
+    "Maris Lauri",
+    "Rahanduskomisjon",
+    "lähtuvalt koalitsioonileppest",
+  ],
 );
-const EE_ACT = ev(RIIGI_TEATAJA, "https://www.riigiteataja.ee/akt/130062023107");
+const EE_ACT = ev(
+  RIIGI_TEATAJA,
+  "https://www.riigiteataja.ee/public-api/api/v1/akt/130062023107/blob-xml",
+  [
+    "Tulumaksu määr, välja arvatud lõigetes 2 ja 5 ning § 43 lõikes 4 nimetatud juhtudel, on 22%",
+    "jõustuvad 2025. aasta 1. jaanuaril",
+    "130062023107",
+    "2023-06-30",
+  ],
+);
 
 const US_BILL = ev(
   GOVINFO,
   "https://www.govinfo.gov/bulkdata/BILLSTATUS/115/hr/BILLSTATUS-115hr1.xml",
+  [
+    "Rep. Brady, Kevin [R-TX-8]",
+    "Agreed to by the Yeas and Nays: 224 - 201 (Roll no. 699)",
+    "Yea-Nay Vote. 51 - 48. Record Vote Number: 323",
+    "Passed by the Yeas and Nays: 227 - 205 (Roll no. 637)",
+    "Passed Senate with an amendment by Yea-Nay Vote. 51 - 49. Record Vote Number: 303",
+    "Agreed to by the Yeas and Nays: 227 - 203 (Roll no. 692)",
+    "Signed by President.",
+  ],
 );
 const US_LAW = ev(
   GOVINFO,
   "https://www.govinfo.gov/content/pkg/PLAW-115publ97/html/PLAW-115publ97.htm",
+  [
+    "Modifications for Taxable Years 2018 Through 2025",
+    "Over $500,000",
+    "$150,689.50, plus 37% of the excess over $500,000",
+    "taxable year beginning after December 31, 2017, and before January 1, 2026",
+    "rate below 39.6 percent",
+    "Approved December 22, 2017",
+  ],
 );
-const US_ROLL = ev(HOUSE_CLERK, "https://clerk.house.gov/evs/2017/roll699.xml");
+const US_ROLL = ev(HOUSE_CLERK, "https://clerk.house.gov/evs/2017/roll699.xml", [
+  "<vote-desc>Tax Cuts and Jobs Act</vote-desc>",
+  "<party>Republican</party><yea-total>224</yea-total><nay-total>12</nay-total>",
+  "<party>Democratic</party><yea-total>0</yea-total><nay-total>189</nay-total>",
+]);
 
-const SV_2011 = ev(SWISSVOTES, "https://swissvotes.ch/vote/554.00");
-const SV_2019 = ev(SWISSVOTES, "https://swissvotes.ch/vote/628.00");
+const SV_2011 = ev(SWISSVOTES, "https://swissvotes.ch/vote/554.00", [
+  "Abgelehnt (43.70% Ja-Stimmen und 5.5 von 23 Standesstimmen)",
+  "Stimmbeteiligung 49.12%",
+  "Unterschriften 106’037",
+  "Position des Nationalrats Ablehnend (69 Ja, 119 Nein)",
+  "Position des Ständerats Ablehnend (11 Ja, 30 Nein)",
+  "Ja CSP EVP GLP GPS PdA SPS",
+  "Nein BDP CVP EDU FDP FPS KVP Lega SD SVP",
+]);
+const SV_2019 = ev(SWISSVOTES, "https://swissvotes.ch/vote/628.00", [
+  "Angenommen (63.74% Ja-Stimmen)",
+  "Stimmbeteiligung 43.88%",
+  "Unterschriften 125’233",
+  "Position des Nationalrats Befürwortend (120 Ja, 69 Nein)",
+  "Position des Ständerats Befürwortend (34 Ja, 6 Nein)",
+  "Interessengemeinschaft Schiessen Schweiz",
+  "Ja BDP CVP EVP FDP GLP GPS KVP SPS",
+  "Nein EDU FPS SD SVP",
+]);
 
-const KN_CSM = ev(CSM, "https://www.csmonitor.com/1982/0317/031747.html");
+const KN_CSM = ev(CSM, "https://www.csmonitor.com/1982/0317/031747.html", [
+  "passed by a unanimous vote of the City Council, takes effect March 25",
+  "Police Chief Robert Ruble",
+  "no idea",
+  "punishable by a fine of up to $50",
+  "Jerry Wortham",
+  "a reaction to a vote last year by Morton Grove",
+  "John Adkins",
+  "Paul Lavrakas",
+]);
 const KN_SCIAM = ev(
   SCIAM,
   "https://www.scientificamerican.com/article/more-guns-do-not-stop-more-crimes-evidence-shows/",
+  [
+    "On March 15, 1982",
+    "24 miles north of Atlanta",
+    "burglaries in Kennesaw dropped by more than half",
+    "75 percent more burglaries",
+    "the purported crime drop disappeared",
+    "the rule has never been enforced",
+  ],
 );
 const KN_WIKI = ev(
   "Wikipedia, “Kennesaw, Georgia”, section “Gun law” (quoting Sec. 34-21 of the city's code)",
   "https://en.wikipedia.org/wiki/Kennesaw,_Georgia#Gun_law",
+  [
+    "every head of household residing in the city limits is required to maintain a firearm, together with ammunition therefore",
+    "who are paupers or who conscientiously oppose maintaining firearms",
+  ],
 );
 
 export const EVENT_RECORDS: readonly CuratedRecordInput[] = [
@@ -80,7 +169,15 @@ export const EVENT_RECORDS: readonly CuratedRecordInput[] = [
           translation: {
             en: "(1) The income tax rate, except in the cases mentioned in subsections 2, 4 and 5 and in § 43(4), is 20%.",
           },
-          evidence: [ev(RIIGI_TEATAJA, "https://www.riigiteataja.ee/akt/102052024014")],
+          evidence: [
+            ev(
+              RIIGI_TEATAJA,
+              "https://www.riigiteataja.ee/public-api/api/v1/akt/102052024014/blob-xml",
+              [
+                "Tulumaksu määr, välja arvatud lõigetes 2, 4 ja 5 ning § 43 lõikes 4 nimetatud juhtudel, on 20%",
+              ],
+            ),
+          ],
         },
         after: {
           text: "(1) Tulumaksu määr, välja arvatud lõigetes 2 ja 5 ning § 43 lõikes 4 nimetatud juhtudel, on 22%.",
@@ -88,7 +185,16 @@ export const EVENT_RECORDS: readonly CuratedRecordInput[] = [
           translation: {
             en: "(1) The income tax rate, except in the cases mentioned in subsections 2 and 5 and in § 43(4), is 22%.",
           },
-          evidence: [EE_ACT, ev(RIIGI_TEATAJA, "https://www.riigiteataja.ee/akt/120122024005")],
+          evidence: [
+            EE_ACT,
+            ev(
+              RIIGI_TEATAJA,
+              "https://www.riigiteataja.ee/public-api/api/v1/akt/120122024005/blob-xml",
+              [
+                "Tulumaksu määr, välja arvatud lõigetes 2 ja 5 ning § 43 lõikes 4 nimetatud juhtudel, on 22%",
+              ],
+            ),
+          ],
         },
       },
       process: [

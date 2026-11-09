@@ -1,0 +1,80 @@
+/**
+ * Everything the page of one dimension shows: each layer's measures with their
+ * series, a pair of measures set against each other (and the gap between them
+ * where they share a unit), and one place's measures over time on one axis.
+ */
+import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
+import type { Metric, PlacesConfig } from "@/lib/config/places/schema";
+import type { Database } from "@/lib/db/client";
+import { scatterPoints, type ScatterPoint } from "./compare";
+import { measuresOf, type Dimension, type DimensionLayer } from "./dimensions";
+import { findStatistic, latestPoint } from "./present";
+import { loadSeries, type PlaceSeries } from "./read";
+
+export interface Measure {
+  metric: Metric;
+  layer: DimensionLayer;
+  series: PlaceSeries[];
+}
+
+export interface GapRow {
+  code: string;
+  name: string;
+  year: number;
+  x: number;
+  y: number;
+  /** `y - x`, in the metric's own terms, only where the two share a unit. */
+  gap: number | null;
+}
+
+export async function loadDimensionPage(
+  db: Database,
+  config: PlacesConfig,
+  key: string,
+  locale: string,
+  query: { x?: string; y?: string; p?: string },
+) {
+  const dimension: Dimension | undefined = DIMENSIONS.find((d) => d.key === key);
+  if (!dimension) return null;
+  const measures: Measure[] = [];
+  for (const { metric: mk, layer } of measuresOf(dimension)) {
+    const metric = findStatistic(config, mk);
+    if (metric) measures.push({ metric, layer, series: await loadSeries(db, config, mk, locale) });
+  }
+  const byKey = new Map(measures.map((m) => [m.metric.key, m]));
+  // The default pair: the headline measure against the next one the dimension names.
+  const x = byKey.get(query.x ?? "") ?? measures[0];
+  const y = byKey.get(query.y ?? "") ?? measures.find((m) => m !== x) ?? x;
+  const points: ScatterPoint[] = x && y ? scatterPoints(x.series, y.series) : [];
+  const sameUnit = Boolean(x && y && x.metric.unit === y.metric.unit);
+  const gaps: GapRow[] = points.map((p) => ({
+    code: p.code,
+    name: p.name,
+    year: p.year,
+    x: p.x,
+    y: p.y,
+    gap: sameUnit ? p.y - p.x : null,
+  }));
+  // One place over time: those measures that share the first measure's unit, so one axis serves.
+  const places = [
+    ...new Map(measures.flatMap((m) => m.series.map((s) => [s.code, s.name] as const))),
+  ];
+  const place = places.find(([code]) => code === query.p)?.[0] ?? places[0]?.[0] ?? null;
+  const timeMeasures = measures.filter((m) => x && m.metric.unit === x.metric.unit);
+  return {
+    dimension,
+    measures,
+    x: x ?? null,
+    y: y ?? null,
+    points,
+    gaps,
+    sameUnit,
+    places: places.map(([code, name]) => ({ code, name })),
+    place,
+    timeMeasures,
+    latest: (m: Measure, code: string) => {
+      const s = m.series.find((z) => z.code === code);
+      return s ? latestPoint(s) : null;
+    },
+  };
+}

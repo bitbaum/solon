@@ -995,7 +995,10 @@
       "customLabel": "Il tuo asse",
       "customDirection": "Più alto: le misure ponderate che hai scelto si sommano più in alto, ognuna rivolta come l'hai impostata.",
       "customAuthor": "Tu, nel link qui sopra. Non è un indice e non è salvato finché non lo salvi.",
-      "compareLink": "Confronta due misure tra loro"
+      "compareLink": "Confronta due misure tra loro",
+      "dimensionsTitle": "Legge, pratica ed esito",
+      "dimensionsIntro": "Una dimensione tiene ciò che dice la legge, ciò che accade in pratica e ciò che ne risulta come strati separati, mai ridotti a un solo punteggio, così da vedere il divario tra loro. Uno strato senza serie dice che cosa lo riempirebbe.",
+      "dimensionOpen": "Apri i tre strati"
     },
     "metric": {
       "metaTitle": "{metric} · Statistiche",
@@ -1061,7 +1064,8 @@
       "mapOpen": "Apri la serie di questo luogo",
       "mapColPlace": "Luogo",
       "mapColValue": "Valore",
-      "mapColYear": "Anno"
+      "mapColYear": "Anno",
+      "preliminary": "provvisorio, stimato o previsione"
     },
     "view": {
       "metaTitle": "Vista salvata · {metric}",
@@ -1185,6 +1189,44 @@
       "empty": "Nessun luogo ha ancora entrambe le misure.",
       "caveat": "I luoghi vicini nel grafico si somigliano solo in queste due misure. Uno schema su una manciata di luoghi non prova che l'una causi l'altra.",
       "back": "Torna a tutte le statistiche"
+    },
+    "quality": {
+      "title": "Questa serie è leggibile?",
+      "range": "{count} dati annuali, {from}–{to}.",
+      "none": "Nulla di irregolare trovato.",
+      "gap": "Anni mancanti nel mezzo: {years}.",
+      "jump": "Un grande salto in {years}, molto più grande del solito per la serie: da confermare con la legge o con le note dell'editore.",
+      "stale": "L'ultimo dato è del {year}, di {count} anni fa.",
+      "provisional": "Indicato dall'editore come provvisorio, stimato o previsione: {years}.",
+      "short": "Solo {count} dati: troppo pochi per giudicare i salti.",
+      "how": "Calcolato da un programma sui dati stessi. Segnala e non scarta mai: un dato segnalato resta mostrato, con la sua segnalazione."
+    },
+    "dimension": {
+      "metaTitle": "{label} · Legge, pratica, esito",
+      "metaDescription": "{label}: ciò che dice la legge, ciò che accade in pratica e ciò che ne risulta, in strati separati con il divario tra loro.",
+      "kicker": "Dimensione",
+      "author": "Versione {version}. Definita da: {author}",
+      "layers": {
+        "de_jure": "Ciò che dice la legge",
+        "de_facto": "Ciò che accade in pratica",
+        "outcome": "Ciò che ne risulta"
+      },
+      "layerMeaning": {
+        "de_jure": "I termini stessi della legge, compreso ciò che danno per un caso tipico.",
+        "de_facto": "Applicazione, procedimenti, conformità e tolleranza: ciò che si fa, che può differire da ciò che è scritto.",
+        "outcome": "Ciò che ne segue per le persone e la società: entrate, prezzi, disponibilità, quanto si dicono libere le persone."
+      },
+      "noSeries": "Ancora nessuna serie.",
+      "rankedTitle": "Ogni misura, luogo per luogo",
+      "gapTitle": "Una misura contro un'altra",
+      "gapCaption": "{x} in orizzontale, {y} in verticale, un punto per luogo all'ultimo anno in cui ha entrambe. La tabella qui sotto dà il divario per ogni luogo.",
+      "gapTable": "{y} meno {x}, nelle unità proprie delle misure",
+      "gap": "Divario",
+      "gapNote": "Un divario positivo significa che la seconda misura è più alta della prima. È una differenza tra due numeri che rispondono a domande diverse (l'aliquota massima riguarda i redditi più alti, il cuneo il salario medio), non un giudizio su nessuno dei due.",
+      "timeTitle": "Un luogo nel tempo",
+      "timeCaption": "{place}: le misure di questa dimensione che condividono un'unità, per anno.",
+      "timeNote": "Le misure in altre unità stanno più su, nei loro grafici; nessun grafico qui ha un secondo asse.",
+      "caveat": "Uno strato vale quanto le serie che contiene. Dove non ne ha, la dimensione tace invece di indovinare."
     }
   }
 }

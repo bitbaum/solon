@@ -26,6 +26,18 @@ export const evidenceSchema = z.object({
   url: httpsUrl,
   /** The day the page was read for this record. */
   read: isoDate,
+  /**
+   * Words the page must still contain for the record to stand: a figure, a name,
+   * a quoted sentence. `pnpm run statistics:verify` fetches the page and fails
+   * when one is gone, so a page that moved or was rewritten is found, not trusted.
+   */
+  expect: z.array(z.string().min(1)).default([]),
+  /**
+   * A page for people that a program cannot read (a JavaScript app, or a front
+   * that refuses programs). It stays a link; the record also cites a copy a program
+   * can read, which carries the checked words.
+   */
+  unchecked: z.literal(true).optional(),
 });
 
 /** A metric is about this act, or this article of it. */

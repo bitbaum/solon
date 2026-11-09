@@ -8,6 +8,23 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Law, practice and outcome, kept apart.** A new kind of page, `/statistics/dimension/<key>`,
+  holds one subject in three layers: what the law says, what happens in practice, and what
+  results, never merged into one score. Taxation is the first. The statutory top income tax
+  rate and the average tax wedge on a single worker at the average wage (both law) sit beside
+  tax revenue and expenditure (outcome), and the gap between them is a table and a scatter:
+  in 2025 Estonia's rate is 22% and its wedge 42.6%, Switzerland's 41.4% and 23.0%, the
+  United States' 43.7% and 30.0%. The practice layer has no series yet, and says what would
+  fill it instead of guessing. {#stats-layers}
+
+- **Every figure says how far to trust it, and every source is checked.** Each figure now
+  carries its publisher's own reliability flag (provisional, estimated or forecast figures are
+  marked on the charts), each statistic's page reports gaps, unusually large steps, stale and
+  provisional figures computed from the figures themselves (the World Bank's homicide series,
+  for example, has no figures for 2003 to 2006), and a weekly check fetches every page the
+  event and law records cite and confirms it still holds the words the record relies on.
+  {#stats-quality}
+
 - **What happened to the law, step by step.** Every mark on a statistic's timeline now opens
   an event page: what changed in the law (the wording before and after), how it came about,
   how each body voted (by party where the record gives it), who started it, sponsored it,

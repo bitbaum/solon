@@ -1,0 +1,35 @@
+name: Statistics sources
+
+# Weekly, and by hand: does every page the curated statistics records cite still
+# exist and still say what the record relies on (the words each evidence line
+# expects)? Needs no database and no secrets: it only reads public pages, one
+# polite request per page. A failure means a source moved or was rewritten and
+# a record resting on it should be looked at.
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Check every cited page
+        run: pnpm run statistics:verify --json=statistics-sources.json
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: statistics-sources
+          path: statistics-sources.json

@@ -483,4 +483,58 @@ describe.runIf(RUN)("Testland, through the importer", () => {
     ]);
     expect(report.contentSha256).toBeNull();
   });
+
+  it("keeps a figure's turn from provisional to final as a revision, and nothing more", async () => {
+    const withQuality = (quality: "provisional" | "normal") => {
+      const batch = testlandBatch();
+      const fact = batch.facts.find(
+        (f) => f.jurisdiction.value === "T111" && f.metricKey === "test.multiplier",
+      )!;
+      fact.value = 1.25; // what an earlier test left current: only the flag changes here
+      fact.quality = quality;
+      fact.publisherFlag = quality === "provisional" ? "P" : null;
+      return batch;
+    };
+    const current = async () =>
+      (
+        await db
+          .select({ quality: facts.quality, flag: facts.publisherFlag })
+          .from(facts)
+          .where(
+            and(
+              eq(facts.jurisdictionId, await placeId(register("T111"))),
+              eq(facts.metricKey, "test.multiplier"),
+              isNull(facts.supersededAt),
+            ),
+          )
+      )[0];
+
+    expect((await importBatch(withQuality("provisional"))).counts).toMatchObject({
+      factsSuperseded: 1,
+      factsInserted: 1,
+    });
+    expect(await current()).toEqual({ quality: "provisional", flag: "P" });
+    // The same again changes nothing; the publisher then confirms the figure.
+    expect((await importBatch(withQuality("provisional"))).counts).toMatchObject({
+      factsSuperseded: 0,
+      factsInserted: 0,
+    });
+    expect((await importBatch(withQuality("normal"))).counts).toMatchObject({
+      factsSuperseded: 1,
+      factsInserted: 1,
+    });
+    expect(await current()).toEqual({ quality: "normal", flag: null });
+    // Both earlier states are kept.
+    const history = await db
+      .select({ quality: facts.quality })
+      .from(facts)
+      .where(
+        and(
+          eq(facts.jurisdictionId, await placeId(register("T111"))),
+          eq(facts.metricKey, "test.multiplier"),
+          isNotNull(facts.supersededAt),
+        ),
+      );
+    expect(history.map((h) => h.quality)).toContain("provisional");
+  });
 });

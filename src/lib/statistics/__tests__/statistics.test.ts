@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { EXAMPLE_AXES } from "@/lib/config/statistics/axes";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
+import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { ISO_NUMERIC } from "@/lib/config/statistics/world";
+import { defineDimensions, measuresOf, type DimensionInput } from "../dimensions";
 import { filterEvents, pivotYear } from "../event-page";
 import { scoreAxis, weightsFromQuery, type Axis } from "../axes";
+import { qualityOfObsStatus } from "@/lib/places/adapters/oecd-sdmx";
+import { assessSeries } from "../quality";
 import { customAxisFromQuery, parallelData, scatterPoints } from "../compare";
 import { placesFromQuery, specQuery } from "../metric-page";
 import {
@@ -30,7 +34,7 @@ const series = (code: string, points: [number, number][]): PlaceSeries => ({
   code,
   name: code,
   slugPath: null,
-  points: points.map(([year, value]) => ({ year, value })),
+  points: points.map(([year, value]) => ({ year, value, quality: "normal" as const })),
   source: { key: "s", url: null, retrievedAt: "2026-11-08" },
 });
 
@@ -398,5 +402,114 @@ describe("the metric catalog says what each number covers", () => {
     }
     const retired = placesConfig.metrics.filter((m) => m.retired).map((m) => m.key);
     expect(statisticMetrics(placesConfig).some((m) => retired.includes(m.key))).toBe(false);
+  });
+});
+
+describe("a publisher's reliability flag", () => {
+  it("reads SDMX observation statuses as qualities, keeping everything else ordinary", () => {
+    expect(qualityOfObsStatus("A")).toBe("normal");
+    expect(qualityOfObsStatus("P")).toBe("provisional");
+    expect(qualityOfObsStatus("E")).toBe("estimated");
+    expect(qualityOfObsStatus("i")).toBe("estimated");
+    expect(qualityOfObsStatus("F")).toBe("forecast");
+    // A break in series or a different definition annotates the figure; it does not doubt it.
+    expect(qualityOfObsStatus("B")).toBe("normal");
+    expect(qualityOfObsStatus(undefined)).toBe("normal");
+  });
+});
+
+describe("is a series fit to be read", () => {
+  const q = (points: [number, number, ("normal" | "provisional")?][]) =>
+    assessSeries(
+      {
+        ...series("X", []),
+        points: points.map(([year, value, quality]) => ({
+          year,
+          value,
+          quality: quality ?? "normal",
+        })),
+      },
+      2026,
+    );
+  const wobble = (from: number, n: number): [number, number][] =>
+    Array.from({ length: n }, (_, i) => [from + i, 10 + (i % 2) * 0.1]);
+
+  it("names the missing years between a series' first and last", () => {
+    const r = q([...wobble(2010, 4), [2016, 10], [2017, 10.1], [2018, 10]]);
+    expect(r.notes.find((n) => n.kind === "gap")!.years).toEqual([2014, 2015]);
+  });
+
+  it("flags a step far larger than the series' usual one, and leaves a steady series alone", () => {
+    const stepped = q([...wobble(2010, 8), [2018, 25], [2019, 25.1]]);
+    expect(stepped.notes.find((n) => n.kind === "jump")!.years).toEqual([2018]);
+    expect(q(wobble(2010, 12)).notes.filter((n) => n.kind === "jump")).toEqual([]);
+  });
+
+  it("calls a series stale when its last year is long past, and short when it has too few points to judge", () => {
+    expect(q(wobble(2005, 8)).notes.some((n) => n.kind === "stale")).toBe(true);
+    expect(q(wobble(2020, 3)).notes.some((n) => n.kind === "short")).toBe(true);
+  });
+
+  it("lists the years the publisher calls provisional", () => {
+    const r = q([...wobble(2018, 7), [2025, 10, "provisional"]]);
+    expect(r.notes.find((n) => n.kind === "provisional")!.years).toEqual([2025]);
+  });
+});
+
+describe("dimensions: what the law says, what happens in practice, what results", () => {
+  const live = new Set(["a", "b", "c"]);
+  const dim = (layers: DimensionInput["layers"]) => ({
+    key: "d",
+    version: 1,
+    label: { en: "D" },
+    summary: { en: "S" },
+    author: "test",
+    layers,
+  });
+  const empty = { metrics: [], wanted: { en: "what would fill it" } };
+
+  it("ships dimensions whose measures are live statistics, each on one layer only", () => {
+    expect(DIMENSIONS.length).toBeGreaterThan(0);
+    const seen = new Set<string>();
+    for (const d of DIMENSIONS) {
+      for (const { metric } of measuresOf(d)) {
+        expect(findStatistic(placesConfig, metric), metric).toBeDefined();
+        expect(seen.has(metric), `${metric} on two layers`).toBe(false);
+        seen.add(metric);
+      }
+    }
+  });
+
+  it("states a layer's gap in the data: an empty layer must say what would fill it", () => {
+    expect(() =>
+      defineDimensions(
+        [dim({ de_jure: { metrics: ["a"] }, de_facto: { metrics: [] }, outcome: empty })],
+        live,
+      ),
+    ).toThrow(/de_facto layer has no series and does not say what would fill it/);
+    expect(() =>
+      defineDimensions(
+        [dim({ de_jure: { metrics: ["a", "zzz"] }, de_facto: empty, outcome: empty })],
+        live,
+      ),
+    ).toThrow(/"zzz" is not a live statistic/);
+    expect(() =>
+      defineDimensions(
+        [dim({ de_jure: { metrics: ["a"] }, de_facto: { metrics: ["a"] }, outcome: empty })],
+        live,
+      ),
+    ).toThrow(/"a" is on two layers/);
+  });
+
+  it("lists every measure with its layer, in layer order", () => {
+    const [d] = defineDimensions(
+      [dim({ de_jure: { metrics: ["a", "b"] }, de_facto: empty, outcome: { metrics: ["c"] } })],
+      live,
+    );
+    expect(measuresOf(d!)).toEqual([
+      { metric: "a", layer: "de_jure" },
+      { metric: "b", layer: "de_jure" },
+      { metric: "c", layer: "outcome" },
+    ]);
   });
 });
