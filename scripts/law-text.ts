@@ -123,6 +123,14 @@ async function main(): Promise<number> {
           : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
       );
     console.log(lines.join("\n"));
+    // What the three lowest pages hold that the provisions do not, and how those pages are built.
+    for (const a of [...report.acts]
+      .filter((x) => x.coverage)
+      .sort((x, y) => x.coverage!.ratio - y.coverage!.ratio)
+      .slice(0, 3)) {
+      console.log(`LOW ${a.title.slice(0, 30)} ${a.url} | classes: ${a.classes}`);
+      for (const run of a.runs ?? []) console.log(`  RUN ${run.slice(0, 260)}`);
+    }
     console.log(
       JSON.stringify({
         authority: report.authority,
