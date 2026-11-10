@@ -205,15 +205,17 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
     try {
       if (!url) throw new Error("the version has no source address");
       const page = await read(url, doFetch, [new URL(url).hostname]);
-      const cov = coverage(
-        wordsOf(visibleText(new TextDecoder().decode(page.bytes))),
-        wordsOf(provisions.map((p) => `${p.heading} ${p.text}`).join(" ")),
-      );
-      const act = {
+      const html = new TextDecoder().decode(page.bytes);
+      const pageWords = wordsOf(visibleText(html));
+      const storedWords = wordsOf(provisions.map((p) => `${p.heading} ${p.text}`).join(" "));
+      const cov = coverage(pageWords, storedWords);
+      const act: VerifiedAct = {
         title,
         url,
         provisions: provisions.length,
         coverage: cov,
+        runs: missingRuns(pageWords, storedWords),
+        classes: divClasses(html),
         short: cov.ratio < threshold,
       };
       acts.push(act);
