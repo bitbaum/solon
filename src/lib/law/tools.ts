@@ -21,7 +21,7 @@ import { SEARCH_LIMIT_MAX, searchProvisions } from "./search";
 import { loadActContents, loadActView } from "./view";
 
 const today = () => new Date().toISOString().slice(0, 10);
-const authorityName = (key: string) => LAW_AUTHORITIES.find((a) => a.key === key)?.name ?? key;
+const authorityName = (key: string) => LAW_AUTHORITIES.find((a) => a.key === key)?.label ?? key;
 const actUrl = (id: string, path?: string) =>
   path ? `${SITE}/law/${id}?at=${encodeURIComponent(path)}#${path}` : `${SITE}/law/${id}`;
 
@@ -62,7 +62,7 @@ export const LAW_TOOLS = [
           const c = coverage.authorities.find((x) => x.key === a.key);
           return {
             key: a.key,
-            name: a.name,
+            name: a.label,
             place: a.place,
             level: levelOf(a),
             // The authorities whose law also applies where this one's does, nearest first.

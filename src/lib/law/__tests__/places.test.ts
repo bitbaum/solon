@@ -5,7 +5,7 @@ import { chainOf, levelOf, parentOf, placeTree } from "../places";
 
 const counts = LAW_AUTHORITIES.map((a) => ({
   key: a.key,
-  name: a.name,
+  name: a.label,
   inForce: 1,
   notInForce: 0,
   statusNotStated: 0,

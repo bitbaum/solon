@@ -36,8 +36,8 @@ export function GET() {
     "",
     ...LAW_AUTHORITIES.filter((a) => levelOf(a) !== "commune").map(
       (a) =>
-        `- [${a.name}](${SITE}/law/place/${a.key}) (${a.key})${
-          chainOf(a.key).length > 1 ? `, within ${chainOf(a.key)[1]!.name}` : ""
+        `- [${a.label}](${SITE}/law/place/${a.key}) (${a.key})${
+          chainOf(a.key).length > 1 ? `, within ${chainOf(a.key)[1]!.label}` : ""
         }`,
     ),
     `- ${LAW_AUTHORITIES.filter((a) => levelOf(a) === "commune").length} communes: ${SITE}/law/place/{key}, keys from law_authorities`,

@@ -13,6 +13,7 @@ import AmendmentList from "./amendment-list";
 import OfficialRoutes from "./official-routes";
 import PlaceTrail from "./place-trail";
 import { statusLabel } from "./status-label";
+import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 interface ActViewProps {
   act: ActView;
@@ -28,8 +29,6 @@ interface ActViewProps {
   locale: Locale;
 }
 
-const authorityName = (key: string): string => authorityOf(key)?.name ?? key;
-
 const cardClass = "rounded-surface border border-default bg-surface-base p-6";
 
 /**
@@ -38,7 +37,7 @@ const cardClass = "rounded-surface border border-default bg-surface-base p-6";
  * and the hash that proves the copy. A version dated only by the day it was
  * read says so, rather than claiming a day it took effect.
  */
-export default function ActViewPage({
+export default async function ActViewPage({
   act,
   page,
   contents,
@@ -47,13 +46,14 @@ export default function ActViewPage({
   amendLabels,
   locale,
 }: ActViewProps) {
+  const names = await readerAuthorityNames();
   const { version } = act;
   const day = (iso: string) => formatDay(iso, locale);
   // A text read from the Internet Archive's copy says so, and when the copy was captured.
   const archived = archiveCopyOf(version?.sourceUrl);
   const pages = version ? Math.max(1, Math.ceil(version.provisionCount / PROVISIONS_PER_PAGE)) : 1;
   const meta = [
-    authorityName(act.authority),
+    authorityName(names, act.authority),
     act.systematicNumber,
     t(`kinds.${act.kind}` as `kinds.${ActKind}`),
     statusLabel(act, t),
@@ -70,7 +70,7 @@ export default function ActViewPage({
             {t("act.askAbout")}
           </Link>
           <Link href={`/law/place/${act.authority}`} className="text-fg-secondary underline">
-            {t("act.morePlace", { place: authorityName(act.authority) })}
+            {t("act.morePlace", { place: authorityName(names, act.authority) })}
           </Link>
           <a href={`/api/v1/law/acts/${act.id}?format=md`} className="text-fg-secondary underline">
             {t("act.asMarkdown")}

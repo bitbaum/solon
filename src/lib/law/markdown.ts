@@ -10,7 +10,7 @@ import type { ActView } from "./view";
 
 export function actToMarkdown(act: ActView, site: string): string {
   const { version } = act;
-  const place = authorityOf(act.authority)?.name ?? act.authority;
+  const place = authorityOf(act.authority)?.label ?? act.authority;
   const copy = archiveCopyOf(version?.sourceUrl);
   const front = [
     "---",

@@ -6,7 +6,7 @@ import { localized } from "@/lib/places/place-view";
 import { DIMENSION_LAYERS } from "@/lib/statistics/dimensions";
 import type { loadDimensionPage } from "@/lib/statistics/dimension-page";
 import { chartValue, latestPoint, metricPath } from "@/lib/statistics/present";
-import { unitLabel, type StatisticsTranslator } from "./metric-view";
+import { unitLabel, type StatisticsTranslator } from "./shared";
 import AssessmentSection from "./assessment-section";
 import { buildDimensionBrief } from "@/lib/statistics/dimension-brief";
 import ExplainPanel from "./explain-panel";

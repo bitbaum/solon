@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/routing";
 import type { Metric } from "@/lib/config/places/schema";
 import { localized } from "@/lib/places/place-view";
 import type { Axis } from "@/lib/statistics/axes";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 /**
  * Build an axis of your own: pick the measures, say which way each should move

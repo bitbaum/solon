@@ -1,6 +1,6 @@
 import { assessSeries, type QualityNote } from "@/lib/statistics/quality";
 import type { PlaceSeries } from "@/lib/statistics/read";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 const years = (list: number[]) =>
   list.length > 6 ? `${list.slice(0, 5).join(", ")} … ${list.at(-1)}` : list.join(", ");

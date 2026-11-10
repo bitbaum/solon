@@ -4,6 +4,7 @@
  * each with how many acts in force Solon holds the text of.
  */
 import type { Database } from "@/lib/db/client";
+import { authorityName, loadAuthorityNames } from "./authority-names";
 import { chainOf, countryAuthority, partsOf } from "./places";
 import { loadLawCoverage } from "./register/coverage";
 
@@ -23,36 +24,50 @@ export interface PlaceLaw {
 export async function loadPlaceLaw(
   db: Database,
   authorities: readonly string[],
+  locale: string,
 ): Promise<PlaceLaw[]> {
   if (authorities.length === 0) return [];
   const nearest = authorities.map((key) => chainOf(key)).sort((a, b) => b.length - a.length)[0]!;
   const coverage = await loadLawCoverage(db);
   const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
-  return withParts(nearest, held);
+  const names = await loadAuthorityNames(locale);
+  return withParts(nearest, held, (a) => authorityName(names, a.key));
 }
 
-/** Pure: the chain with each authority's count, the nearest carrying the authorities within it. */
+/**
+ * Pure: the chain with each authority's count, the nearest carrying the
+ * authorities within it, each named by `nameOf` (the place's own name in the
+ * reader's language; the authority's label when none is given).
+ */
 export function withParts(
-  chain: readonly { key: string; name: string }[],
+  chain: readonly { key: string; label: string }[],
   held: ReadonlyMap<string, number>,
+  nameOf: (authority: { key: string; label: string }) => string = (a) => a.label,
 ): PlaceLaw[] {
   return chain.map((a, i) => {
-    const parts = i === 0 ? partsOf(a.key) : [];
+    const parts =
+      i === 0
+        ? partsOf(a.key)
+            .map((p) => ({ key: p.key, name: nameOf(p), acts: held.get(p.key) ?? 0 }))
+            .sort((x, y) => x.name.localeCompare(y.name))
+        : [];
     return {
       key: a.key,
-      name: a.name,
+      name: nameOf(a),
       acts: held.get(a.key) ?? 0,
-      ...(parts.length > 0
-        ? { parts: parts.map((p) => ({ key: p.key, name: p.name, acts: held.get(p.key) ?? 0 })) }
-        : {}),
+      ...(parts.length > 0 ? { parts } : {}),
     };
   });
 }
 
 /** The law of a whole country, by its ISO 3166-1 code, when Solon has an authority for it. */
-export async function loadCountryLaw(db: Database, region: string): Promise<PlaceLaw[]> {
+export async function loadCountryLaw(
+  db: Database,
+  region: string,
+  locale: string,
+): Promise<PlaceLaw[]> {
   const authority = countryAuthority(region);
-  return authority ? loadPlaceLaw(db, [authority.key]) : [];
+  return authority ? loadPlaceLaw(db, [authority.key], locale) : [];
 }
 
 /** The key the atlas opens a country under (`/places?in=`), by its ISO 3166-1 code. */

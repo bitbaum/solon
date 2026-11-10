@@ -18,40 +18,7 @@ import SanityPanel from "./sanity-panel";
 import { buildBrief } from "@/lib/statistics/brief";
 import type { SanityFinding } from "@/lib/statistics/sanity";
 import LawLinks from "./law-links";
-
-/** A day as the reader's language writes it; an ISO date, read as UTC so no timezone moves it. */
-export function formatDay(day: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
-    new Date(`${day}T00:00:00Z`),
-  );
-}
-
-export type StatisticsTranslator = ReturnType<typeof useTranslations<"Statistics">>;
-
-export interface MetricViewProps {
-  metric: Metric;
-  locale: Locale;
-  /** Every place with a series, for the chooser. */
-  all: PlaceSeries[];
-  /** The places shown. */
-  shown: PlaceSeries[];
-  years: { from: number | null; to: number | null };
-  acts: LinkedAct[];
-  events: EventRow[];
-  enforcement: { body: EnforcementBody; placeName: string }[];
-  placeNames: Map<string, string>;
-  /** The latest value per place, for the map. */
-  mapValues: MapValue[];
-  /** The spec of what is on screen, for "save this view". */
-  spec: ViewSpec;
-  /** What the checks on the figures found: warnings, and figures left out. */
-  sanity: SanityFinding[];
-  /** The page's own address, absolute, for the texts that cite it. */
-  selfUrl: string;
-  /** Shown above the chart on a saved view's page. */
-  banner?: React.ReactNode;
-  t: StatisticsTranslator;
-}
+import { formatDay, unitLabel, type MetricViewProps, type StatisticsTranslator } from "./shared";
 
 const inYears = (year: number, years: MetricViewProps["years"]) =>
   (years.from === null || year >= years.from) && (years.to === null || year <= years.to);
@@ -353,9 +320,4 @@ export default function MetricView(props: MetricViewProps) {
       </div>
     </PageLayout>
   );
-}
-
-/** The unit a chart names: per cent for a ratio, "per 100,000" for a rate, none otherwise. */
-export function unitLabel(metric: Pick<Metric, "unit">, t: StatisticsTranslator): string {
-  return metric.unit === "ratio" || metric.unit === "per_100k" ? t(`units.${metric.unit}`) : "";
 }

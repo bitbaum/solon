@@ -176,6 +176,10 @@ test.describe("phones", () => {
     // It must cover the screen below the header, not collapse inside it.
     expect(box?.height ?? 0).toBeGreaterThan(400);
     await expect(menu.getByRole("link", { name: "Hire Solon" }).first()).toBeVisible();
+    // The rest of the site is folded by section (only the current one opens),
+    // so the menu fits a phone: a section opens, and its pages are there.
+    await expect(menu.getByRole("link", { name: "Security" })).toBeHidden();
+    await menu.locator("summary").filter({ hasText: "Platform" }).first().click();
     await expect(menu.getByRole("link", { name: "Security" })).toBeVisible();
   });
 });

@@ -2,6 +2,7 @@ import type { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { LawCoverage } from "@/lib/law/register/coverage";
+import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 export type LawTranslator = ReturnType<typeof useTranslations<"Law">>;
 
@@ -16,7 +17,8 @@ const cardClass = "rounded-surface border border-default bg-surface-base p-6";
  * The law register as the data has it (design L0). Nothing here is typed in:
  * an authority with no acts shows as zero, not as silence.
  */
-export default function LawCoverageReport({ coverage, t }: LawCoverageReportProps) {
+export default async function LawCoverageReport({ coverage, t }: LawCoverageReportProps) {
+  const names = await readerAuthorityNames();
   const { authorities, totals, retrievedOn } = coverage;
   return (
     <PageLayout title={t("coverage.title")} kicker={t("coverage.kicker")}>
@@ -52,7 +54,7 @@ export default function LawCoverageReport({ coverage, t }: LawCoverageReportProp
                 key={authority.key}
                 className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6"
               >
-                <span className="text-fg-primary">{authority.name}</span>
+                <span className="text-fg-primary">{authorityName(names, authority.key)}</span>
                 <span className="text-fg-secondary tabular-nums sm:text-right">
                   {authority.statusNotStated > 0
                     ? t("coverage.rowNotStated", {

@@ -47,7 +47,7 @@ export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCoun
     const mine = counts.filter((row) => row.authority === authority.key);
     return {
       key: authority.key,
-      name: authority.name,
+      name: authority.label,
       inForce: mine
         .filter((row) => row.inForce && row.statusStated !== false)
         .reduce((sum, row) => sum + row.acts, 0),

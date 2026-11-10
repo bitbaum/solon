@@ -120,6 +120,13 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     reserved: true,
   },
   {
+    // The root of the world pack: the Earth, the one place every country is part of.
+    key: "world_root",
+    label: { en: "The Earth", de: "Die Erde" },
+    pattern: "earth",
+    reserved: true,
+  },
+  {
     // A country's subdivision by its ISO 3166-2 code: the country's ISO 3166-1
     // code, a hyphen and up to three letters or digits. A US state's is `US-`
     // and its postal code (US-WY), the code the law registry keys a state by.

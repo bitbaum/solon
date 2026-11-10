@@ -8,7 +8,7 @@ import { localized } from "@/lib/places/place-view";
 import { STATISTIC_AXES_POLICY_KEY, type Axis, type AxisScore } from "@/lib/statistics/axes";
 import { parallelData } from "@/lib/statistics/compare";
 import { chartValue } from "@/lib/statistics/present";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 import ParallelPlot from "./parallel-plot";
 
 export interface AxisPanelProps {
