@@ -10,6 +10,7 @@
  * workflow runs it (.github/workflows/statistics-verify.yml).
  */
 import { writeFileSync } from "node:fs";
+import { GAPS } from "@/lib/config/statistics/gaps";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { collectEvidence, verifyEvidence } from "@/lib/statistics/verify-sources";
@@ -19,6 +20,9 @@ async function main(): Promise<number> {
   const items = collectEvidence([
     ...STATISTIC_RECORDS,
     ...METHODOLOGIES.map((m) => ({ key: `method:${m.key}`, body: m }) as never),
+    ...GAPS.coverage.map(
+      (c) => ({ key: `gap:${c.topic}:${c.place.value}:${c.variant}`, body: c }) as never,
+    ),
   ]);
   if (process.argv.includes("--list")) {
     for (const i of items) {

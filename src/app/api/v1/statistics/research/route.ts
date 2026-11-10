@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       const run = await gather({
         question,
         tools,
-        web: tools.specs.length > 5,
+        web: tools.web === true,
         call: (options) =>
           complete({ ...options, chain, env: process.env, timeoutMs: 25000, signal }),
         onStep: (tool, args) =>

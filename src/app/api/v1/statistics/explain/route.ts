@@ -11,6 +11,8 @@ import { buildDimensionBrief } from "@/lib/statistics/dimension-brief";
 import { loadDimensionPage } from "@/lib/statistics/dimension-page";
 import { explain } from "@/lib/statistics/explain-run";
 import { loadMetricPage } from "@/lib/statistics/metric-page";
+import { GAPS } from "@/lib/config/statistics/gaps";
+import { buildGapsBrief } from "@/lib/statistics/gaps-brief";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { buildMethodBrief } from "@/lib/statistics/method-brief";
 
@@ -29,6 +31,7 @@ const Subject = z.discriminatedUnion("kind", [
     to: z.string().max(4).optional(),
   }),
   z.object({ kind: z.literal("method"), method: z.string().min(1).max(80) }),
+  z.object({ kind: z.literal("gaps"), topic: z.string().min(1).max(80) }),
   z.object({
     kind: z.literal("dimension"),
     dimension: z.string().min(1).max(80),
@@ -93,6 +96,12 @@ export async function POST(req: Request) {
 }
 
 async function factsFor(subject: Subject) {
+  if (subject.kind === "gaps") {
+    const topic = GAPS.topics.find((t) => t.key === subject.topic);
+    if (!topic) return null;
+    const names = new Intl.DisplayNames(["en"], { type: "region" });
+    return buildGapsBrief(topic, GAPS.coverage, (a2) => names.of(a2) ?? a2);
+  }
   if (subject.kind === "method") {
     const m = METHODOLOGIES.find((x) => x.key === subject.method);
     return m ? buildMethodBrief(m) : null;

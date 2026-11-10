@@ -1419,6 +1419,56 @@
         "b": "Quanto costa lasciare un paese, per legge, nei luoghi che Solon ha codificato?",
         "c": "Come è fatto il punteggio Stato di diritto della Banca mondiale, e cosa chiedergli?"
       }
+    },
+    "gaps": {
+      "metaTitle": "Cosa viene misurato, e cosa no",
+      "metaDescription": "Cosa raccolgono e pubblicano gli uffici di statistica, luogo per luogo; dove la stessa domanda ha risposta in un paese e non in un altro; e cosa dovrebbe accompagnare una nuova misura.",
+      "kicker": "Lacune",
+      "title": "Cosa viene misurato, e cosa no",
+      "intro": "Gli uffici di statistica decidono cosa raccogliere e pubblicare, per ragioni giuridiche, storiche, pratiche o politiche: la stessa domanda può quindi avere risposta in un paese e non in un altro. Qui ogni tema è presentato allo stesso modo: cosa dice una fonte letta che si raccoglie, incrociato con cosa, sotto quale diritto, dove la risposta manca, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Solon descrive e propone; non valuta gli uffici e non caratterizza le persone.",
+      "open": "Apri",
+      "back": "Tutti i temi",
+      "stance": "Solon riporta ciò che dicono le pagine di ciascun ufficio e ciò che non è stato letto. Una lacuna può essere una legge scelta da un paese; una differenza in una tabella non è una spiegazione. Nulla qui descrive un ufficio o un gruppo di persone.",
+      "purposesTitle": "A cosa serve la risposta",
+      "matrixTitle": "Cosa pubblica ogni luogo",
+      "matrixIntro": "Una riga per luogo e per ripartizione, da pagine lette. «Non letto» significa che Solon non ha guardato, non che nulla sia pubblicato.",
+      "colPlace": "Luogo",
+      "status": {
+        "published": "Pubblicato",
+        "restricted": "Accessibile ai ricercatori",
+        "not_collected": "Non raccolto",
+        "barred_by_law": "Vietato dalla legge"
+      },
+      "crossedWith": "Incrociato con",
+      "crossing": {
+        "age": "età",
+        "sex": "sesso",
+        "region": "regione",
+        "income": "reddito",
+        "education": "istruzione",
+        "offence_type": "tipo di reato"
+      },
+      "notRead": "Non letto",
+      "detailsTitle": "Il dettaglio, e dove è stato letto",
+      "frame": "Il diritto o la politica:",
+      "unread": "Non letto:",
+      "byPerson": "letto da una persona",
+      "byProgram": "verificato ogni settimana da un programma",
+      "gapsTitle": "Dove la risposta differisce",
+      "gapLine": "{place} è «{status}» per «{variant}», che {others} pubblicano.",
+      "gapNote": "Una differenza tra luoghi è una domanda, non una colpa. Dove una legge vieta una categoria, cambiarla spetta ai legislatori di quel paese; Solon può esporre cosa si guadagnerebbe, cosa si rischierebbe e cosa dovrebbe accompagnarla.",
+      "companionsTitle": "Cosa dovrebbe accompagnarla",
+      "companionsIntro": "Una ripartizione senza questi elementi invita a leggere male. Sono ciò che permette di mettere alla prova una spiegazione, non solo di mostrare una differenza.",
+      "cautionsTitle": "Cautele nella lettura",
+      "risksTitle": "Obiezioni, e cosa risponde",
+      "risksIntro": "I rischi del raccogliere e pubblicare sono reali, e gli uffici che oggi pubblicano hanno risposte; entrambi sono esposti.",
+      "risk": "Rischio:",
+      "safeguard": "Salvaguardia:",
+      "decidesTitle": "Chi decide",
+      "decides": "Se un paese raccoglie o pubblica una misura lo decidono i suoi legislatori e il suo ufficio, nel quadro della sua costituzione. Un gruppo su Solon può adottare una posizione, o chiedere una misura a un ufficio, con una proposta.",
+      "propose": "Proponi una posizione",
+      "proposeTitle": "Posizione su ciò che viene misurato: {topic}",
+      "proposeBody": "Chiediamo al nostro ufficio di statistica di considerare la misura descritta in {url}, con gli elementi di accompagnamento e le salvaguardie ivi elencati."
     }
   }
 }

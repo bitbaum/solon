@@ -1,0 +1,126 @@
+import { describe, expect, it } from "vitest";
+import { GAPS } from "@/lib/config/statistics/gaps";
+import { countryOf } from "@/lib/config/world/countries";
+import { buildGapsBrief } from "../gaps-brief";
+import { checkExplanation } from "../explain";
+import { defineGaps, gapsOf } from "../gaps";
+
+const topic = {
+  key: "t.x",
+  label: { en: "T" },
+  question: { en: "Q?" },
+  purposes: [{ en: "P" }],
+  variants: [
+    { key: "a", label: { en: "A" } },
+    { key: "b", label: { en: "B" } },
+  ],
+  cautions: [{ en: "C" }],
+  risks: [],
+  companions: [],
+  author: "x",
+};
+const ev = { publisher: "P", url: "https://example.org/p", read: "2026-11-10", expect: ["words"] };
+const line = (place: string, variant: string, status: string, extra = {}) => ({
+  topic: "t.x",
+  place: { scheme: "iso_3166_1", value: place },
+  variant,
+  status,
+  publisher: "O",
+  summary: { en: "S" },
+  evidence: [ev],
+  ...extra,
+});
+
+describe("defining gaps", () => {
+  it("refuses a line for an unknown topic or variant, and one covered twice", () => {
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        coverage: [{ ...line("DK", "a", "published"), topic: "nope" }],
+      }),
+    ).toThrow(/unknown topic/);
+    expect(() =>
+      defineGaps({ topics: [topic], coverage: [line("DK", "zzz", "published")] }),
+    ).toThrow(/not a variant/);
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        coverage: [line("DK", "a", "published"), line("DK", "a", "restricted")],
+      }),
+    ).toThrow(/covered twice/);
+  });
+
+  it("makes a bar in law quote the law, and every cited page name its words or say a program cannot read it", () => {
+    expect(() =>
+      defineGaps({ topics: [topic], coverage: [line("FR", "a", "barred_by_law")] }),
+    ).toThrow(/quote the law/);
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        coverage: [line("DK", "a", "published", { evidence: [{ ...ev, expect: [] }] })],
+      }),
+    ).toThrow(/must name the words/);
+    expect(
+      defineGaps({
+        topics: [topic],
+        coverage: [
+          line("DK", "a", "published", { evidence: [{ ...ev, expect: [], unchecked: true }] }),
+        ],
+      }).coverage,
+    ).toHaveLength(1);
+  });
+});
+
+describe("where the gaps are", () => {
+  const cov = defineGaps({
+    topics: [topic],
+    coverage: [
+      line("DK", "a", "published"),
+      line("SE", "a", "published"),
+      line("FR", "a", "barred_by_law", { frame: { en: "the law" } }),
+      line("DE", "b", "not_collected"),
+    ],
+  }).coverage;
+
+  it("lists, for a variant someone publishes, the places that do not, with who does", () => {
+    expect(gapsOf("t.x", cov)).toEqual([
+      { variant: "a", place: "FR", status: "barred_by_law", publishedElsewhere: ["DK", "SE"] },
+    ]);
+  });
+
+  it("does not call a variant nobody publishes a gap between places", () => {
+    expect(gapsOf("t.x", cov).some((g) => g.variant === "b")).toBe(false);
+  });
+});
+
+describe("the shipped registry", () => {
+  it("names real countries, and every line says what it rests on", () => {
+    for (const c of GAPS.coverage) {
+      expect(countryOf(c.place.value), `${c.place.value}`).toBeDefined();
+      expect(c.evidence.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("lays out the objections beside the purposes, and lists the companions a breakdown needs", () => {
+    const t = GAPS.topics[0]!;
+    expect(t.risks.length).toBeGreaterThan(0);
+    expect(t.cautions.length).toBeGreaterThan(0);
+    expect(t.companions.map((c) => c.en).join(" ")).toMatch(/Age and sex/);
+  });
+
+  it("gives an AI only what was read: it cannot answer with a figure no line holds", () => {
+    const names = new Intl.DisplayNames(["en"], { type: "region" });
+    const facts = buildGapsBrief(GAPS.topics[0]!, GAPS.coverage, (a) => names.of(a) ?? a);
+    expect(facts.map((f) => f.params.text).join("\n")).toContain("Denmark");
+    const denmark = facts.find((f) => String(f.params.text).startsWith("Denmark"))!.id;
+    expect(checkExplanation(`Denmark lists 80 countries of origin [${denmark}].`, facts).ok).toBe(
+      false,
+    );
+    expect(checkExplanation(`Denmark lists 75 countries of origin [${denmark}].`, facts).ok).toBe(
+      true,
+    );
+    expect(checkExplanation(`France is an enemy of statistics [${denmark}].`, facts).ok).toBe(
+      false,
+    );
+  });
+});

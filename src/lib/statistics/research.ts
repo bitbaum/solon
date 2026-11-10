@@ -32,6 +32,8 @@ export interface ToolResult {
 
 export interface ResearchTools {
   specs: unknown[];
+  /** Whether the open web is among the tools. */
+  web?: boolean;
   run: (name: string, args: Record<string, unknown>) => Promise<ToolResult>;
 }
 

@@ -4,6 +4,21 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-10
+
+### Added
+
+- **What is measured, and where it is not.** `/statistics/gaps` sets out, for a topic, what each
+  place's statistical office collects and publishes, crossed with what and under what law, read
+  from the office's own pages; where the same question can be answered in one country and not in
+  another; what must come with a new measure so it is not misread (age and sex, income and
+  education, where people live, type of offence); the objections and their safeguards; and who
+  decides. The first topic is crime by a person's background: Denmark, Sweden, Norway and the
+  Netherlands publish a background the office defines, Germany and Switzerland citizenship, the
+  United Kingdom and the United States an ethnic or racial category, and in France a Constitutional
+  Council decision bars studies that rest on ethnic origin or race. Each page lists what was not
+  read, and a group can propose a position from it. {#stats-gaps}
+
 ## 2026-11-09
 
 ### Added

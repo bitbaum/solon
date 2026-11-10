@@ -1419,6 +1419,56 @@
         "b": "Was kostet es laut Recht, ein Land zu verlassen, in den Orten, die Solon kodiert hat?",
         "c": "Wie entsteht der Rechtsstaatlichkeits-Wert der Weltbank, und was sollte ich ihn fragen?"
       }
+    },
+    "gaps": {
+      "metaTitle": "Was gemessen wird und was nicht",
+      "metaDescription": "Was statistische Ämter erheben und veröffentlichen, Ort für Ort; wo dieselbe Frage in einem Land beantwortbar ist und in einem anderen nicht; und was ein neues Mass begleiten müsste.",
+      "kicker": "Lücken",
+      "title": "Was gemessen wird und was nicht",
+      "intro": "Statistische Ämter entscheiden, was sie erheben und veröffentlichen, aus rechtlichen, historischen, praktischen oder politischen Gründen; dieselbe Frage kann deshalb in einem Land beantwortbar sein und in einem anderen nicht. Hier ist jedes Thema gleich dargestellt: was laut einer gelesenen Quelle erhoben wird, wonach aufgeschlüsselt, unter welchem Recht, wo die Antwort fehlt und was ein neues Mass begleiten müsste, damit es nicht missverstanden wird. Solon beschreibt und schlägt vor; es bewertet keine Ämter und charakterisiert keine Menschen.",
+      "open": "Öffnen",
+      "back": "Alle Themen",
+      "stance": "Solon nennt, was die Seiten des jeweiligen Amtes sagen und was nicht gelesen wurde. Eine Lücke kann ein Gesetz sein, das ein Land gewählt hat; ein Unterschied in einer Tabelle ist keine Erklärung. Nichts hier beschreibt ein Amt oder eine Gruppe von Menschen.",
+      "purposesTitle": "Wozu die Antwort dient",
+      "matrixTitle": "Was jeder Ort veröffentlicht",
+      "matrixIntro": "Eine Zeile pro Ort und Aufschlüsselung, aus gelesenen Seiten. «Nicht gelesen» heisst, Solon hat nicht nachgesehen, nicht dass nichts veröffentlicht wird.",
+      "colPlace": "Ort",
+      "status": {
+        "published": "Veröffentlicht",
+        "restricted": "Für Forschende zugänglich",
+        "not_collected": "Nicht erhoben",
+        "barred_by_law": "Gesetzlich untersagt"
+      },
+      "crossedWith": "Aufgeschlüsselt nach",
+      "crossing": {
+        "age": "Alter",
+        "sex": "Geschlecht",
+        "region": "Region",
+        "income": "Einkommen",
+        "education": "Bildung",
+        "offence_type": "Art der Straftat"
+      },
+      "notRead": "Nicht gelesen",
+      "detailsTitle": "Die Einzelheiten und wo sie gelesen wurden",
+      "frame": "Das Recht oder die Politik:",
+      "unread": "Nicht gelesen:",
+      "byPerson": "von einer Person gelesen",
+      "byProgram": "wöchentlich maschinell geprüft",
+      "gapsTitle": "Wo die Antwort abweicht",
+      "gapLine": "{place} ist «{status}» bei «{variant}», was {others} veröffentlichen.",
+      "gapNote": "Ein Unterschied zwischen Orten ist eine Frage, kein Fehler. Wo ein Gesetz eine Kategorie untersagt, ist eine Änderung Sache der Gesetzgeber dieses Landes; Solon kann darlegen, was gewonnen, was riskiert und was mitgeliefert werden müsste.",
+      "companionsTitle": "Was mitgeliefert werden müsste",
+      "companionsIntro": "Eine Aufschlüsselung ohne diese lädt zu Fehldeutungen ein. Damit lässt sich eine Erklärung prüfen, nicht nur ein Unterschied zeigen.",
+      "cautionsTitle": "Vorsicht beim Lesen",
+      "risksTitle": "Einwände und was sie beantwortet",
+      "risksIntro": "Die Risiken des Erhebens und Veröffentlichens sind real, und die Ämter, die heute veröffentlichen, haben Antworten darauf; beides ist dargestellt.",
+      "risk": "Risiko:",
+      "safeguard": "Schutz:",
+      "decidesTitle": "Wer entscheidet",
+      "decides": "Ob ein Land ein Mass erhebt oder veröffentlicht, entscheiden seine Gesetzgeber und sein Amt im Rahmen seiner Verfassung. Eine Gruppe auf Solon kann per Antrag eine Haltung beschliessen oder ein Amt um ein Mass bitten.",
+      "propose": "Eine Haltung vorschlagen",
+      "proposeTitle": "Haltung zu dem, was gemessen wird: {topic}",
+      "proposeBody": "Wir bitten unser statistisches Amt, das unter {url} beschriebene Mass zu prüfen, mit den dort genannten Begleitgrössen und Schutzvorkehrungen."
     }
   }
 }

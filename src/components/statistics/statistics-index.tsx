@@ -103,6 +103,9 @@ export default function StatisticsIndex({
               <Link href="/statistics/methods" className="text-fg-primary underline">
                 {t("methods.title")}
               </Link>
+              <Link href="/statistics/gaps" className="text-fg-primary underline">
+                {t("gaps.title")}
+              </Link>
               <Link href="/statistics/research" className="text-fg-primary underline">
                 {t("research.title")}
               </Link>

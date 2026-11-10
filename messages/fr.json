@@ -1419,6 +1419,56 @@
         "b": "Que coûte-t-il de quitter un pays, selon le droit, dans les lieux que Solon a codés ?",
         "c": "Comment la note d'État de droit de la Banque mondiale est-elle faite, et que lui demander ?"
       }
+    },
+    "gaps": {
+      "metaTitle": "Ce qui est mesuré, et ce qui ne l'est pas",
+      "metaDescription": "Ce que les offices statistiques collectent et publient, lieu par lieu ; où la même question a une réponse dans un pays et pas dans un autre ; et ce qui devrait accompagner une nouvelle mesure.",
+      "kicker": "Lacunes",
+      "title": "Ce qui est mesuré, et ce qui ne l'est pas",
+      "intro": "Les offices statistiques décident de ce qu'ils collectent et publient, pour des raisons juridiques, historiques, pratiques ou politiques : la même question peut donc avoir une réponse dans un pays et pas dans un autre. Chaque sujet est présenté de la même façon : ce qu'une source lue dit être collecté, croisé avec quoi, sous quel droit, où la réponse manque, et ce qui devrait accompagner une nouvelle mesure pour qu'elle ne soit pas mal lue. Solon décrit et propose ; il ne note pas les offices et ne caractérise pas les personnes.",
+      "open": "Ouvrir",
+      "back": "Tous les sujets",
+      "stance": "Solon dit ce que disent les pages de chaque office et ce qui n'a pas été lu. Une lacune peut être une loi choisie par un pays ; une différence dans un tableau n'est pas une explication. Rien ici ne décrit un office ou un groupe de personnes.",
+      "purposesTitle": "À quoi sert la réponse",
+      "matrixTitle": "Ce que chaque lieu publie",
+      "matrixIntro": "Une ligne par lieu et par ventilation, d'après des pages lues. « Non lu » signifie que Solon n'a pas regardé, pas qu'il n'y a rien de publié.",
+      "colPlace": "Lieu",
+      "status": {
+        "published": "Publié",
+        "restricted": "Accessible aux chercheurs",
+        "not_collected": "Non collecté",
+        "barred_by_law": "Interdit par la loi"
+      },
+      "crossedWith": "Croisé avec",
+      "crossing": {
+        "age": "âge",
+        "sex": "sexe",
+        "region": "région",
+        "income": "revenu",
+        "education": "éducation",
+        "offence_type": "type d'infraction"
+      },
+      "notRead": "Non lu",
+      "detailsTitle": "Le détail, et où il a été lu",
+      "frame": "Le droit ou la politique :",
+      "unread": "Non lu :",
+      "byPerson": "lu par une personne",
+      "byProgram": "vérifié chaque semaine par un programme",
+      "gapsTitle": "Où la réponse diffère",
+      "gapLine": "{place} est « {status} » pour « {variant} », que {others} publient.",
+      "gapNote": "Une différence entre lieux est une question, pas une faute. Là où une loi interdit une catégorie, la changer relève des législateurs de ce pays ; Solon peut exposer ce qu'on y gagnerait, ce qu'on y risquerait et ce qui devrait l'accompagner.",
+      "companionsTitle": "Ce qui devrait l'accompagner",
+      "companionsIntro": "Une ventilation sans cela invite à la mauvaise lecture. Ce sont ces éléments qui permettent de tester une explication, pas seulement de montrer une différence.",
+      "cautionsTitle": "Précautions de lecture",
+      "risksTitle": "Objections, et ce qui y répond",
+      "risksIntro": "Les risques de collecter et de publier sont réels, et les offices qui publient aujourd'hui y ont des réponses ; les deux sont exposés.",
+      "risk": "Risque :",
+      "safeguard": "Garde-fou :",
+      "decidesTitle": "Qui décide",
+      "decides": "C'est aux législateurs et à l'office d'un pays, dans le cadre de sa constitution, de décider s'il collecte ou publie une mesure. Un groupe sur Solon peut adopter une position, ou demander une mesure à un office, par une proposition.",
+      "propose": "Proposer une position",
+      "proposeTitle": "Position sur ce qui est mesuré : {topic}",
+      "proposeBody": "Nous demandons à notre office statistique d'examiner la mesure décrite à {url}, avec les éléments d'accompagnement et les garde-fous qui y sont listés."
     }
   }
 }

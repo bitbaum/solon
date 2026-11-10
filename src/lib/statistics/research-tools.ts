@@ -7,6 +7,7 @@
  */
 import { readPage, webSearch, type WebEnv } from "@bitbaum/ai-kit/web";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
+import { GAPS } from "@/lib/config/statistics/gaps";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
@@ -17,6 +18,7 @@ import { buildBrief } from "./brief";
 import { buildDimensionBrief } from "./dimension-brief";
 import { loadDimensionPage } from "./dimension-page";
 import { factText } from "./explain";
+import { buildGapsBrief } from "./gaps-brief";
 import { buildMethodBrief } from "./method-brief";
 import { loadMetricPage } from "./metric-page";
 import { metricPath, statisticMetrics } from "./present";
@@ -61,6 +63,12 @@ const SPECS = [
     "Read how a published ranking or rating is made, by its key: who makes it, what it measures, its parts, whether its data may be shown, what has not been read, and the questions to ask of it.",
     { key: { type: "string" } },
     ["key"],
+  ),
+  spec(
+    "read_gaps",
+    "Read what statistical offices collect on a topic, place by place: which breakdowns each publishes, crossed with what, under what legal frame, where a gap is between places, and the cautions, objections and safeguards. Topic keys come from search_catalog.",
+    { topic: { type: "string" } },
+    ["topic"],
   ),
   spec(
     "search_law",
@@ -126,6 +134,12 @@ export function researchTools(deps: {
             label: localized(d.label, locale),
             text: `${localized(d.label, locale)} ${localized(d.summary, locale)}`,
           })),
+          ...GAPS.topics.map((t) => ({
+            kind: "gaps",
+            key: t.key,
+            label: localized(t.label, locale),
+            text: `${localized(t.label, locale)} ${localized(t.question, locale)}`,
+          })),
           ...METHODOLOGIES.map((m) => ({
             kind: "method",
             key: m.key,
@@ -190,6 +204,19 @@ export function researchTools(deps: {
           })),
         };
       }
+      case "read_gaps": {
+        const topic = GAPS.topics.find((x) => x.key === str("topic"));
+        if (!topic) return { summary: `no topic "${str("topic")}"; use search_catalog for keys` };
+        const names = new Intl.DisplayNames(["en"], { type: "region" });
+        const facts = buildGapsBrief(topic, GAPS.coverage, (a2) => names.of(a2) ?? a2);
+        return {
+          summary: `${facts.length} facts about ${topic.key}`,
+          sources: facts.map((f) => ({
+            text: factText(f),
+            href: f.href ?? `${SITE}/statistics/gaps/${topic.key}`,
+          })),
+        };
+      }
       case "search_law": {
         const found = await searchProvisions(db, {
           q: str("query"),
@@ -234,5 +261,5 @@ export function researchTools(deps: {
     }
   }
 
-  return { specs: [...SPECS, ...(web ? WEB_SPECS : [])], run };
+  return { specs: [...SPECS, ...(web ? WEB_SPECS : [])], web, run };
 }
