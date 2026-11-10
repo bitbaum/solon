@@ -3,7 +3,7 @@ import PageLayout from "@/components/ui/page-layout";
 import { compareHref, type Comparison } from "@/lib/places/compare-view";
 import type { PlaceSearch } from "@/lib/places/search";
 import PlaceComparison from "./place-comparison";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
 import SourceList from "./source-list";
 
 interface CompareIndexProps {

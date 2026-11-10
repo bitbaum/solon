@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Easier to find your way.** The header now has four panels of four or five links each (Law,
+  Places, Data, Governance) instead of 27 links, with statistics given their own panel. A new
+  Find button (also Ctrl or Cmd + K, or "/") searches pages, statistics, places and laws in one
+  box. The phone menu folds by section and opens on the one you are in. Every page is still in
+  the footer. {#site-navigation}
+
 - **What is measured, and where it is not.** `/statistics/gaps` sets out, for a topic, what each
   place's statistical office collects and publishes, crossed with what and under what law, read
   from the office's own pages; where the same question can be answered in one country and not in

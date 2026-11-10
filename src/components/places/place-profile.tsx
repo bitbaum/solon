@@ -1,4 +1,5 @@
-import type { useTranslations } from "next-intl";
+import type { PlacesTranslator } from "./translator";
+
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { LawChat } from "@/components/law/law-chat";
@@ -7,8 +8,6 @@ import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
 import SourceList from "./source-list";
-
-export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
 
 interface PlaceProfileProps {
   view: PlaceView;

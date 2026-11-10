@@ -3,7 +3,7 @@ import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import { localized } from "@/lib/places/place-view";
 import type { Methodology } from "@/lib/statistics/methodologies";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 /** /statistics/methods: every index described the same way, and Solon's own beside them. */
 export function MethodsIndex({

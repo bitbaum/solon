@@ -8,7 +8,7 @@ import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statis
 import type { PlaceSeries } from "@/lib/statistics/read";
 import AxisBuilder from "./axis-builder";
 import AxisPanel, { type AxisPanelProps } from "./axis-panel";
-import { unitLabel, type StatisticsTranslator } from "./metric-view";
+import { unitLabel, type StatisticsTranslator } from "./shared";
 
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];

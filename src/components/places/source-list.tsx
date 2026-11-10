@@ -1,5 +1,5 @@
 import type { PlaceSource } from "@/lib/places/place-view";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
 
 /** The registered sources behind what a page shows, each with its retrieval and licence. */
 export default function SourceList({

@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/page-layout";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
 import { gapsOf, type Coverage, type Topic } from "@/lib/statistics/gaps";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 const name = (a2: string, locale: string) => {
   try {

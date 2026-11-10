@@ -11,7 +11,8 @@
       "decisions": "Decisioni",
       "more": "Altro",
       "places": "Luoghi",
-      "law": "Diritto"
+      "law": "Diritto",
+      "data": "Dati"
     },
     "sectionDesc": {
       "useCases": "Ogni gruppo decide. Trovate il vostro.",
@@ -20,7 +21,8 @@
       "decisions": "Il registro pubblico — e la vostra parte.",
       "more": "Tutto il resto.",
       "places": "Ogni ente territoriale, con la fonte di ogni dato.",
-      "law": "Ogni atto che Solon conserva, parola per parola, con la sua fonte."
+      "law": "Ogni atto che Solon conserva, parola per parola, con la sua fonte.",
+      "data": "Serie, classifiche e metodi, con la fonte dietro ogni cifra."
     },
     "links": {
       "whatYouCanDo": "Cosa puoi fare qui",
@@ -68,7 +70,10 @@
       "lawCoverage": "Che cosa conserva Solon",
       "lawAmendments": "Modifiche proposte",
       "statistics": "Statistiche",
-      "statisticsEvents": "Eventi giuridici"
+      "statisticsEvents": "Eventi giuridici",
+      "statisticsMethods": "Come sono fatte le classifiche",
+      "statisticsGaps": "Cosa viene misurato, e cosa no",
+      "statisticsResearch": "Ricerca con l'IA"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -116,7 +121,10 @@
       "lawCoverage": "Quali atti conserva Solon, contati dai dati",
       "lawAmendments": "Le modifiche proposte al diritto, con la redline e i sostegni",
       "statistics": "Il diritto accanto ai numeri: serie nel tempo, ognuna con la sua fonte e la sua legge",
-      "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove"
+      "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove",
+      "statisticsMethods": "Chi fa ogni indice, come, e cosa chiedergli.",
+      "statisticsGaps": "Cosa raccoglie ogni ufficio, e dove la stessa domanda non ha risposta.",
+      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti."
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },
@@ -134,7 +142,8 @@
     "themeDark": "Scuro",
     "themeSystem": "Come il dispositivo",
     "overview": "Panoramica",
-    "featured": "In evidenza"
+    "featured": "In evidenza",
+    "find": "Cerca"
   },
   "Footer": {
     "tagline": "Governance per qualsiasi gruppo di persone. Beta — in funzione, non ancora rilasciato.",
@@ -1469,6 +1478,22 @@
       "propose": "Proponi una posizione",
       "proposeTitle": "Posizione su ciò che viene misurato: {topic}",
       "proposeBody": "Chiediamo al nostro ufficio di statistica di considerare la misura descritta in {url}, con gli elementi di accompagnamento e le salvaguardie ivi elencati."
+    }
+  },
+  "Find": {
+    "button": "Cerca",
+    "title": "Trova tutto",
+    "placeholder": "Trova una pagina, una cifra, un paese, una città, una legge…",
+    "none": "Nessun risultato. Provate con meno lettere, o chiedete a Solon.",
+    "hint": "↑ ↓ per spostarsi, Invio per aprire, Esc per chiudere",
+    "groups": {
+      "pages": "Pagine",
+      "series": "Cifre",
+      "dimension": "Dimensioni",
+      "method": "Come sono fatte le classifiche",
+      "gaps": "Cosa viene misurato",
+      "places": "Luoghi",
+      "law": "Diritto"
     }
   }
 }

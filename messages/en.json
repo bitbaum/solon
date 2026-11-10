@@ -11,7 +11,8 @@
       "decisions": "Decisions",
       "more": "More",
       "places": "Places",
-      "law": "Law"
+      "law": "Law",
+      "data": "Data"
     },
     "sectionDesc": {
       "useCases": "Every kind of group decides. Find yours.",
@@ -20,7 +21,8 @@
       "decisions": "The public record — and your part in it.",
       "more": "Everything else.",
       "places": "Every jurisdiction, with the source behind every fact.",
-      "law": "Every law Solon holds, word for word, with its source."
+      "law": "Every law Solon holds, word for word, with its source.",
+      "data": "Series, rankings and methods, with the source behind every figure."
     },
     "links": {
       "whatYouCanDo": "What you can do",
@@ -68,7 +70,10 @@
       "lawCoverage": "What Solon holds",
       "lawAmendments": "Proposed changes",
       "statistics": "Statistics",
-      "statisticsEvents": "Law events"
+      "statisticsEvents": "Law events",
+      "statisticsMethods": "How rankings are made",
+      "statisticsGaps": "What is measured, and where not",
+      "statisticsResearch": "Research with AI"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -116,7 +121,10 @@
       "lawCoverage": "Which laws Solon holds, counted from the data",
       "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support",
       "statistics": "The law beside the numbers: series over time, each linked to its source and its law",
-      "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where"
+      "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where",
+      "statisticsMethods": "Who makes each index, how, and what to ask of it.",
+      "statisticsGaps": "What each office collects, and where the same question has no answer.",
+      "statisticsResearch": "Ask a question; get a report whose figures are checked against its sources."
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -134,7 +142,8 @@
     "themeDark": "Dark",
     "themeSystem": "Device",
     "overview": "Overview",
-    "featured": "Featured"
+    "featured": "Featured",
+    "find": "Find"
   },
   "Footer": {
     "tagline": "Governance for any group of people. Beta — running, not released.",
@@ -2162,6 +2171,22 @@
       "propose": "Propose a position",
       "proposeTitle": "Position on what is measured: {topic}",
       "proposeBody": "We ask our statistical office to consider the measure described at {url}, with the companions and safeguards listed there."
+    }
+  },
+  "Find": {
+    "button": "Find",
+    "title": "Find anything",
+    "placeholder": "Find a page, a figure, a country, a town, a law…",
+    "none": "Nothing matches. Try fewer letters, or ask Solon.",
+    "hint": "↑ ↓ to move, Enter to open, Esc to close",
+    "groups": {
+      "pages": "Pages",
+      "series": "Figures",
+      "dimension": "Dimensions",
+      "method": "How rankings are made",
+      "gaps": "What is measured",
+      "places": "Places",
+      "law": "Law"
     }
   }
 }

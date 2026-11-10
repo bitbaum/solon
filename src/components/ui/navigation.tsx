@@ -6,9 +6,11 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import Logo from "./logo";
 import AuthControl from "./auth-control";
+import FindPalette from "@/components/site/find-palette";
 import LanguageSwitcher from "@/components/site/language-switcher";
 import ThemeToggle from "@/components/theme/theme-toggle";
 import { PHOTOS } from "@/lib/content/photos";
+import type { FindEntry } from "@/lib/site/find-index";
 import {
   HIRE_HREF,
   MENU,
@@ -34,7 +36,14 @@ import {
  * type sits on the photograph's dark scrim (HEADER_OVER_PHOTO_ROUTES). Small
  * screens get the whole map as a full-screen menu instead.
  */
-export default function Navigation({ authEnabled = false }: { authEnabled?: boolean }) {
+export default function Navigation({
+  authEnabled = false,
+  findEntries = [],
+}: {
+  authEnabled?: boolean;
+  /** What the Find palette can open without a request (src/lib/site/find-index.ts). */
+  findEntries?: readonly FindEntry[];
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState<MenuSection["key"] | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -135,6 +144,7 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
           </ul>
 
           <div className="hidden items-center gap-6 lg:flex">
+            <FindPalette entries={findEntries} />
             <LanguageSwitcher />
             <ThemeToggle labels={themeLabels} className="-mx-3" />
             {authEnabled && <AuthControl />}
@@ -150,6 +160,13 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
                 <AuthControl />
               </span>
             )}
+            <FindPalette entries={findEntries}>
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="6" stroke="currentColor" strokeWidth="2" />
+                <path d="M16 16l4 4" stroke="currentColor" strokeWidth="2" />
+              </svg>
+              <span className="sr-only">{t("find")}</span>
+            </FindPalette>
             <ThemeToggle labels={themeLabels} className="shrink-0" />
             <button
               type="button"
@@ -187,25 +204,40 @@ export default function Navigation({ authEnabled = false }: { authEnabled?: bool
               {authEnabled && <AuthControl compact />}
             </div>
             <LanguageSwitcher list onChange={() => setMobileOpen(false)} />
-            {SITE_SECTIONS.map((section) => (
-              <div key={section.key}>
-                <div className="kicker">{site(`sections.${section.key}`)}</div>
-                <ul className="mt-3 space-y-1">
-                  {section.children.map((link) => (
-                    <li key={link.href}>
-                      <Link href={link.href} className="block py-2">
-                        <span className="block text-lg font-semibold text-fg-primary">
-                          {site(`links.${link.key}`)}
-                        </span>
-                        <span className="block text-sm text-fg-secondary">
-                          {site(`desc.${link.key}`)}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {/* A section is a fold; the one you are in is open. Find (the magnifier above) reaches the rest. */}
+            <div className="divide-y divide-default border-y border-default">
+              {SITE_SECTIONS.map((section) => (
+                <details
+                  key={section.key}
+                  open={section.children.some((l) => l.href !== "/" && pathname.startsWith(l.href))}
+                  className="group py-1"
+                >
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between py-2">
+                    <span className="kicker">{site(`sections.${section.key}`)}</span>
+                    <span
+                      aria-hidden="true"
+                      className="text-fg-tertiary transition-transform group-open:rotate-180"
+                    >
+                      ▾
+                    </span>
+                  </summary>
+                  <ul className="space-y-1 pb-3">
+                    {section.children.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href} className="block py-2">
+                          <span className="block text-lg font-semibold text-fg-primary">
+                            {site(`links.${link.key}`)}
+                          </span>
+                          <span className="block text-sm text-fg-secondary">
+                            {site(`desc.${link.key}`)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import type { BriefFact } from "@/lib/statistics/brief";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 import ExplainButton from "./explain-button";
 
 const str = (v: string | number | undefined) => (v === undefined ? "" : String(v));

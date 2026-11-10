@@ -42,15 +42,21 @@ const USE_CASE_SECTION: { key: SectionKey; children: NavLink[] } = {
   ],
 };
 
-/** The header's four panels, in reading order. */
+/**
+ * The header's four panels, in reading order: the few pages most people come
+ * for, each with one line on what it holds. They are a curated subset of the
+ * site map, never a second list: every page here is also in SITE_SECTIONS,
+ * which holds all of them and which the footer, the mobile menu and the Find
+ * palette render. A page does not need a header slot to be found.
+ */
 export const MENU: MenuSection[] = [
   {
     key: "law",
     href: "/law",
     children: [
       { key: "law", href: "/law" },
-      { key: "lawAmendments", href: "/law/amendments" },
       { key: "lawAsk", href: "/law/ask" },
+      { key: "lawAmendments", href: "/law/amendments" },
       { key: "lawCoverage", href: "/law/coverage" },
     ],
   },
@@ -60,15 +66,70 @@ export const MENU: MenuSection[] = [
     children: [
       { key: "places", href: "/places" },
       { key: "placesCompare", href: "/compare" },
-      { key: "placesCoverage", href: "/places/coverage" },
-      { key: "statistics", href: "/statistics" },
-      { key: "statisticsEvents", href: "/statistics/events" },
       { key: "structures", href: "/structures" },
+      { key: "placesCoverage", href: "/places/coverage" },
+    ],
+  },
+  {
+    key: "data",
+    href: "/statistics",
+    children: [
+      { key: "statistics", href: "/statistics" },
+      { key: "statisticsMethods", href: "/statistics/methods" },
+      { key: "statisticsGaps", href: "/statistics/gaps" },
+      { key: "statisticsResearch", href: "/statistics/research" },
+      { key: "statisticsEvents", href: "/statistics/events" },
     ],
   },
   {
     key: "governance",
     href: "/governance",
+    children: [
+      { key: "governance", href: "/governance" },
+      { key: "decisions", href: "/proposals" },
+      { key: "propose", href: "/propose" },
+      { key: "newOrg", href: "/orgs/new" },
+      { key: "dashboard", href: "/dashboard" },
+    ],
+    feature: { link: "ideas", href: "/governance/ideas", photo: "landsgemeindePainting" },
+  },
+];
+
+/**
+ * Every page on the site, grouped. The footer, the mobile menu and the Find
+ * palette render this; the header's panels (MENU) show a few of them.
+ */
+export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
+  {
+    key: "law",
+    children: [
+      { key: "law", href: "/law" },
+      { key: "lawAmendments", href: "/law/amendments" },
+      { key: "lawAsk", href: "/law/ask" },
+      { key: "lawCoverage", href: "/law/coverage" },
+    ],
+  },
+  {
+    key: "places",
+    children: [
+      { key: "places", href: "/places" },
+      { key: "placesCompare", href: "/compare" },
+      { key: "placesCoverage", href: "/places/coverage" },
+      { key: "structures", href: "/structures" },
+    ],
+  },
+  {
+    key: "data",
+    children: [
+      { key: "statistics", href: "/statistics" },
+      { key: "statisticsEvents", href: "/statistics/events" },
+      { key: "statisticsMethods", href: "/statistics/methods" },
+      { key: "statisticsGaps", href: "/statistics/gaps" },
+      { key: "statisticsResearch", href: "/statistics/research" },
+    ],
+  },
+  {
+    key: "governance",
     children: [
       { key: "governance", href: "/governance" },
       { key: "ideas", href: "/governance/ideas" },
@@ -79,11 +140,9 @@ export const MENU: MenuSection[] = [
       { key: "profiles", href: "/governance/profiles" },
       { key: "voting", href: "/governance/voting" },
     ],
-    feature: { link: "ideas", href: "/governance/ideas", photo: "landsgemeindePainting" },
   },
   {
     key: "decisions",
-    href: "/proposals",
     children: [
       { key: "decisions", href: "/proposals" },
       { key: "dashboard", href: "/dashboard" },
@@ -96,17 +155,7 @@ export const MENU: MenuSection[] = [
       { key: "liveState", href: "/ecosystem" },
     ],
   },
-];
-
-/**
- * Every page on the site, grouped — the menu's sections plus the few pages
- * that belong to no panel. The footer and mobile menu render this.
- */
-export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
-  ...MENU.map(({ key, children }) => ({ key, children })),
   USE_CASE_SECTION,
-  // Places took Platform's header slot (design 2026-09-places §9.3); Platform
-  // lives on in the footer and the mobile menu.
   {
     key: "platform",
     children: [

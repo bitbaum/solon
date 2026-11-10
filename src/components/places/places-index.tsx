@@ -2,7 +2,7 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { PackIndex, PlaceHit, PlaceSearch } from "@/lib/places/search";
 import Atlas from "@/components/atlas/atlas";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
 
 interface PlacesIndexProps {
   query: string;
