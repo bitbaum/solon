@@ -26,7 +26,7 @@ export default function NewEraPage({ params }: Params) {
 
   return (
     <main>
-      <FullBleed photo={PHOTOS.starlinkTownHall} priority under position="center 40%">
+      <FullBleed photo={PHOTOS.starlinkTownHall} priority under alwaysDark position="center 40%">
         <div className="rise max-w-3xl">
           <div className="kicker">{t("kicker")}</div>
           <h1 className="headline-caps mt-5 text-4xl sm:text-5xl lg:text-6xl">{t("title")}</h1>

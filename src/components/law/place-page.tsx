@@ -1,10 +1,11 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
-import { PLACE_ACTS_PER_PAGE, authorityOf, chainOf } from "@/lib/law/places";
+import { PLACE_ACTS_PER_PAGE, chainOf } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
 import ActRow from "./act-row";
 import type { LawTranslator } from "./coverage-report";
 import PlaceTrail from "./place-trail";
+import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 interface PlacePageProps {
   authority: string;
@@ -17,7 +18,7 @@ interface PlacePageProps {
 }
 
 /** Every law of one place, filterable by a word of its title, with the places above it whose law applies here too. */
-export default function PlacePage({
+export default async function PlacePage({
   authority,
   title,
   page,
@@ -26,7 +27,8 @@ export default function PlacePage({
   action,
   t,
 }: PlacePageProps) {
-  const name = authorityOf(authority)?.name ?? authority;
+  const names = await readerAuthorityNames();
+  const name = authorityName(names, authority);
   const above = chainOf(authority).slice(1);
   const pages = Math.max(1, Math.ceil(total / PLACE_ACTS_PER_PAGE));
   const href = (n: number) =>
@@ -46,7 +48,7 @@ export default function PlacePage({
                   href={`/law/place/${a.key}`}
                   className="font-medium text-fg-primary underline"
                 >
-                  {a.name}
+                  {authorityName(names, a.key)}
                 </Link>
               </span>
             ))}

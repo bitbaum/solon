@@ -48,7 +48,7 @@ export function parentOf(key: string): LawAuthority | null {
 
 /** The authorities that sit directly within this one (a country's communes), by name. */
 export const partsOf = (key: string): LawAuthority[] =>
-  LAW_AUTHORITIES.filter((a) => a.within === key).sort((a, b) => a.name.localeCompare(b.name));
+  LAW_AUTHORITIES.filter((a) => a.within === key).sort((a, b) => a.label.localeCompare(b.label));
 
 /** This authority and every one above it: the laws that apply where it does, nearest first. */
 export function chainOf(key: string): LawAuthority[] {
@@ -78,7 +78,7 @@ export function placeTree(counts: readonly AuthorityCoverage[]): PlaceNode[] {
     const c = counts.find((x) => x.key === authority.key);
     return {
       key: authority.key,
-      name: authority.name,
+      name: authority.label,
       level: levelOf(authority),
       inForce: c?.inForce ?? 0,
       withText: c?.withText ?? 0,

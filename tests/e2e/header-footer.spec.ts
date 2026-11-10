@@ -41,10 +41,10 @@ test.describe("Header & Footer", () => {
     await nav.getByRole("button", { name: en.Site.sections.governance }).click();
     await page
       .locator("#panel-governance")
-      .getByRole("link", { name: new RegExp(`^${en.Site.links.ideas}`) })
+      .getByRole("link", { name: new RegExp(`^${en.Site.links.decisions}`) })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/governance\/ideas$/);
+    await expect(page).toHaveURL(/\/proposals$/);
     await expect(page.locator("#panel-governance")).toHaveCount(0);
   });
 });

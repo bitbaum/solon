@@ -1,6 +1,6 @@
 import PageLayout from "@/components/ui/page-layout";
 import type { PackCoverage } from "@/lib/places/coverage";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
 
 interface CoverageReportProps {
   packs: PackCoverage[];

@@ -44,17 +44,23 @@ export async function loadWorld(stateIds: ReadonlySet<string>): Promise<MapFeatu
  * the same globe, so they share it.
  */
 export function atlasPalette(colours: MapColours, extra: AtlasTokens): Palette {
+  // The sea is the map scale's deep blue, washed out over the page; the land is
+  // the page's own surface, so land and sea read apart in both themes and the
+  // countries Solon shades stand out on a quiet ground.
+  const sea = colours.scale[1] ?? colours.boundary;
   return {
-    sphere: extra.sea,
-    sphereLight: extra.seaLight,
-    graticule: extra.graticule,
-    land: colours.noData,
-    border: colours.boundary,
-    hover: fade(colours.selected, 0.6),
+    sphere: fade(sea, extra.dark ? 0.32 : 0.16),
+    sphereLight: fade(colours.scale[2] ?? sea, extra.dark ? 0.18 : 0.07),
+    graticule: fade(sea, extra.dark ? 0.28 : 0.14),
+    land: extra.land,
+    border: fade(colours.boundary, 0.55),
+    hover: fade(colours.selected, 0.75),
+    hoverFill: fade(colours.selected, 0.1),
     selected: colours.selected,
-    glow: [fade(colours.selected, 0.16), fade(colours.selected, 0)],
-    limb: [fade(extra.page, 0), fade(extra.page, 0.45)],
-    borderWidth: 0.5,
+    selectedFill: fade(colours.selected, 0.14),
+    glow: [fade(sea, extra.dark ? 0.35 : 0.22), fade(sea, 0)],
+    limb: [fade(sea, 0), fade(sea, extra.dark ? 0.35 : 0.18)],
+    borderWidth: 0.6,
   };
 }
 
@@ -63,8 +69,13 @@ export interface AtlasTokens {
   seaLight: string;
   graticule: string;
   page: string;
-  /** Type drawn on the map (place names). */
+  /** The land: the surface cards sit on. */
+  land: string;
   text: string;
+  muted: string;
+  faint: string;
+  font: string;
+  dark: boolean;
 }
 
 /** A token as a colour: hex as it is, an HSL triplet as hsl(). */
@@ -82,7 +93,12 @@ export function readAtlasTokens(): AtlasTokens {
     seaLight: token(s, "--surface-hover"),
     graticule: token(s, "--border-subtle"),
     page: token(s, "--surface-page"),
+    land: token(s, "--surface-base"),
     text: token(s, "--text-primary"),
+    muted: token(s, "--text-secondary"),
+    faint: token(s, "--text-tertiary"),
+    font: s.getPropertyValue("--font-sans").trim() || "system-ui, sans-serif",
+    dark: document.documentElement.classList.contains("dark"),
   };
 }
 

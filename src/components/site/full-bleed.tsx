@@ -1,20 +1,20 @@
-import Image from "next/image";
-import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
-import type { Photo } from "@/lib/content/photos";
+import { lightCounterpart, type Photo } from "@/lib/content/photos";
+import ThemedPhoto from "./themed-photo";
 
 /**
  * A full-screen section: one photograph, one statement, one way forward.
  *
- * The text sits bottom-left, where the scrim is darkest, so it stays readable
+ * The text sits bottom-left, where the scrim is heaviest, so it stays readable
  * whatever the photograph does. `under` slides the section beneath the header
  * — only the first section of a page should set it.
  *
- * The section wears the dark theme in both themes, on purpose: its type and
- * its frame button sit on a photograph under a black scrim, where only light
- * type reads. `dark` here switches the shared tokens for this subtree alone.
- * A page that passes `under` is listed in HEADER_OVER_PHOTO_ROUTES, so the
- * header above it is dark too.
+ * The section follows the theme. A night photograph is shown by day as its
+ * daylight counterpart (ThemedPhoto), under a scrim of the theme's page colour,
+ * and the type on it keeps the theme's ink. `alwaysDark` is for a section whose
+ * night photograph has no counterpart: it wears the dark theme in both, and a
+ * page that passes both `under` and `alwaysDark` is listed in
+ * HEADER_OVER_PHOTO_ROUTES, so the header above it is dark too.
  */
 export default function FullBleed({
   photo,
@@ -22,6 +22,7 @@ export default function FullBleed({
   under = false,
   position = "center",
   daylight = false,
+  alwaysDark = false,
   children,
 }: {
   photo: Photo;
@@ -31,27 +32,23 @@ export default function FullBleed({
   position?: string;
   /** A bright photograph needs a heavier shade behind the text. */
   daylight?: boolean;
+  /** Wear the dark theme whatever the reader chose: a night photograph with no daylight counterpart. */
+  alwaysDark?: boolean;
   children: ReactNode;
 }) {
-  const alt = useTranslations("Photos");
+  const strong = daylight || (!alwaysDark && lightCounterpart(photo) !== null);
   return (
     <section
-      className={`dark relative flex min-h-svh items-end overflow-hidden bg-surface-public ${under ? "-mt-nav" : ""}`}
+      className={`${alwaysDark ? "dark" : ""} relative flex min-h-svh items-end overflow-hidden bg-surface-page ${under ? "-mt-nav" : ""}`}
     >
-      <Image
-        src={photo.image}
-        alt={alt(photo.id)}
-        fill
+      <ThemedPhoto
+        photo={photo}
+        alwaysDark={alwaysDark}
         priority={priority}
-        placeholder="blur"
         sizes="100vw"
-        className="object-cover"
-        style={{ objectPosition: position }}
+        position={position}
       />
-      <div
-        className={`${daylight ? "scrim-strong" : "scrim"} absolute inset-0`}
-        aria-hidden="true"
-      />
+      <div className={`${strong ? "scrim-strong" : "scrim"} absolute inset-0`} aria-hidden="true" />
       {under && <div className="scrim-top absolute inset-x-0 top-0 h-40" aria-hidden="true" />}
       <div className="section-shell relative w-full pb-20 pt-40 md:pb-28">{children}</div>
     </section>

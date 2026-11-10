@@ -6,7 +6,9 @@ import {
   createMap,
   shapesFromFeatures,
   type Camera,
+  type LabelStyles,
   type Limits,
+  type MapLabel,
   type MapController,
   type MapFeature,
   type Palette,
@@ -50,6 +52,12 @@ export interface AtlasCanvasProps {
   onSelect: (id: string | null) => void;
   /** What hovering a shape says; empty says nothing. */
   describe: (id: string) => string;
+  /** Names on the map: countries, subdivisions, towns. */
+  labels?: readonly MapLabel[];
+  labelStyles?: LabelStyles | null;
+  onSelectLabel?: (id: string) => void;
+  /** Where the map looks, after it settles: the page loads what this view needs. */
+  onCamera?: (camera: Camera, radius: number) => void;
   label: string;
   zoomIn: string;
   zoomOut: string;
@@ -70,6 +78,9 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const map = useRef<MapController | null>(null);
   const [tip, setTip] = useState<{ text: string; x: number; y: number } | null>(null);
+  const reported = useRef("");
+  const controls = useRef<HTMLDivElement>(null);
+  const settle = useRef(0);
   const live = useRef(props);
   useEffect(() => {
     live.current = props;
@@ -108,7 +119,35 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
         else setTip({ text: live.current.describe(id), x, y });
         return true;
       },
+      labels: live.current.labels ?? [],
+      // The zoom buttons float over the map: no name goes under them.
+      labelKeepClear: () => {
+        const c = controls.current;
+        const host = box.current;
+        if (!c || !host) return [];
+        const a = c.getBoundingClientRect();
+        const b = host.getBoundingClientRect();
+        return [
+          [a.left - b.left - 4, a.top - b.top - 4, a.right - b.left + 4, a.bottom - b.top + 4],
+        ];
+      },
+      ...(live.current.labelStyles ? { labelStyles: live.current.labelStyles } : {}),
+      ...(live.current.onSelectLabel
+        ? { onSelectLabel: (id: string) => live.current.onSelectLabel?.(id) }
+        : {}),
       over: (ctx, _basis, projection) => {
+        // Tell the page where the map rests, once it has rested a moment.
+        const cam = controller.camera();
+        const radius = projection.scale() / cam.k;
+        const key = `${cam.center[0].toFixed(1)},${cam.center[1].toFixed(1)},${cam.k.toFixed(2)},${radius.toFixed(0)}`;
+        if (key !== reported.current) {
+          reported.current = key;
+          window.clearTimeout(settle.current);
+          settle.current = window.setTimeout(
+            () => live.current.onCamera?.(controller.camera(), radius),
+            220,
+          );
+        }
         const { names } = live.current;
         if (names && names.size > 0) {
           ctx.save();
@@ -161,6 +200,7 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
     map.current = controller;
     live.current.onMap(controller);
     return () => {
+      window.clearTimeout(settle.current);
       resize.disconnect();
       controller.destroy();
       map.current = null;
@@ -175,6 +215,10 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
   useEffect(() => map.current?.setPalette(palette), [palette]);
   useEffect(() => map.current?.setSelected(selected), [selected]);
   useEffect(() => map.current?.invalidate(), [dots, props.names]);
+  useEffect(
+    () => map.current?.setLabels(props.labels ?? [], props.labelStyles ?? undefined),
+    [props.labels, props.labelStyles],
+  );
 
   const control =
     "flex h-11 w-11 items-center justify-center text-lg text-fg-primary hover:bg-surface-raised";
@@ -187,7 +231,10 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
         className="block h-full w-full cursor-grab outline-none focus-visible:ring-2 focus-visible:ring-accent"
         onPointerLeave={() => setTip(null)}
       />
-      <div className="absolute bottom-3 right-3 flex flex-col overflow-hidden rounded-control border border-default bg-surface-overlay">
+      <div
+        ref={controls}
+        className="absolute bottom-3 right-3 flex flex-col overflow-hidden rounded-control border border-default bg-surface-overlay"
+      >
         <button
           type="button"
           className={control}

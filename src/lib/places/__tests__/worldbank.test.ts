@@ -36,7 +36,9 @@ describe("the World Bank's indicators", () => {
     expect(urls).toHaveLength(statistics.length);
     for (const metric of statistics) {
       expect(urls).toContain(
-        `https://api.worldbank.org/v2/country/CH/indicator/${metric.statistic!.series.code}?format=json&per_page=1000&date=1990:2026`,
+        `https://api.worldbank.org/v2/country/CH/indicator/${metric.statistic!.series.code}?format=json&per_page=1000${
+          metric.statistic!.series.code.startsWith("GOV_WGI_") ? "&source=3" : ""
+        }&date=1990:2026`,
       );
     }
   });
@@ -167,7 +169,7 @@ describe("the OECD's all-levels series", () => {
 });
 
 describe("fetching a source", () => {
-  it("retries a server error four times, then gives up; a client error is not retried", async () => {
+  it("retries a server error five times, then gives up; a client error is not retried", async () => {
     setRetryDelayForTests(1);
     const answers = (codes: number[]) => {
       let calls = 0;
@@ -179,9 +181,9 @@ describe("fetching a source", () => {
     expect((await send(flaky.impl, { url: "https://example.org/a" })).status).toBe(200);
     expect(flaky.calls()).toBe(3);
 
-    const down = answers([500, 500, 500, 500, 500, 200]);
+    const down = answers([500, 500, 500, 500, 500, 500, 200]);
     await expect(send(down.impl, { url: "https://example.org/b" })).rejects.toThrow(/HTTP 500/);
-    expect(down.calls()).toBe(5);
+    expect(down.calls()).toBe(6);
 
     const missing = answers([404]);
     await expect(send(missing.impl, { url: "https://example.org/c" })).rejects.toThrow(/HTTP 404/);

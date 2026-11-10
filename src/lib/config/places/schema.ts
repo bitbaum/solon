@@ -204,6 +204,12 @@ export const metricSchema = z.object({
        * without its scope invites the wrong comparison.
        */
       scope: localizedTextSchema.optional(),
+      /**
+       * The figure is set by law and changes only when the law does (a statutory
+       * rate), so it can legitimately stay the same for years: the check for a
+       * value carried forward (statistics/sanity.ts) does not apply to it.
+       */
+      fixedByLaw: z.literal(true).optional(),
     })
     .optional(),
   retired: z.literal(true).optional(),

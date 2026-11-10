@@ -4,6 +4,7 @@ import { getPathname } from "@/i18n/navigation";
 import { toLocale } from "@/i18n/routing";
 import PlacePage from "@/components/law/place-page";
 import { db } from "@/lib/db/client";
+import { authorityName, loadAuthorityNames } from "@/lib/law/authority-names";
 import { authorityOf, listPlaceActs } from "@/lib/law/places";
 
 export const dynamic = "force-dynamic";
@@ -16,9 +17,10 @@ export async function generateMetadata({ params }: { params: Params }) {
   const authority = authorityOf(key);
   if (!authority) return {};
   const t = await getTranslations({ locale: toLocale(raw), namespace: "Law.place" });
+  const place = authorityName(await loadAuthorityNames(raw), key);
   return {
-    title: t("metaTitle", { place: authority.name }),
-    description: t("metaDescription", { place: authority.name }),
+    title: t("metaTitle", { place }),
+    description: t("metaDescription", { place }),
   };
 }
 
