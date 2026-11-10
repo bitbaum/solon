@@ -63,6 +63,8 @@ export interface AtlasTokens {
   seaLight: string;
   graticule: string;
   page: string;
+  /** Type drawn on the map (place names). */
+  text: string;
 }
 
 /** A token as a colour: hex as it is, an HSL triplet as hsl(). */
@@ -80,6 +82,7 @@ export function readAtlasTokens(): AtlasTokens {
     seaLight: token(s, "--surface-hover"),
     graticule: token(s, "--border-subtle"),
     page: token(s, "--surface-page"),
+    text: token(s, "--text-primary"),
   };
 }
 

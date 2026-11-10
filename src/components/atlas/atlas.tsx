@@ -26,7 +26,7 @@ import MapSearch from "@/components/places/map-search";
 import SourceList from "@/components/places/source-list";
 import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
-import AtlasCanvas, { ATLAS_LIMITS } from "./atlas-canvas";
+import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
 import { atlasPalette, loadWorld, readAtlasTokens, shadeOf, type AtlasTokens } from "./world";
 
 /** Rest on Europe, where most of what Solon holds is; the whole Earth in view. */
@@ -35,6 +35,8 @@ const HOME: Camera = { center: [8, 40], k: 1 };
 const ADDRESS_SPAN = 0.004;
 /** A country fills most of the map, however small (Liechtenstein stops short of one valley). */
 const COUNTRY_ZOOM = { fill: 0.85, most: 120 };
+/** A country with this many places or fewer lists them all, open; a larger one keeps the list closed. */
+const PLACE_LIST_OPEN = 30;
 /** A country's own places are drawn under this prefix, apart from the world's shapes. */
 const SUB = "sub:";
 
@@ -276,6 +278,22 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     );
   }, [open, named, worldById]);
 
+  // The names of a country's places, written on the map wherever one fits inside its shape.
+  const placeNames = useMemo(() => {
+    const out = new Map<string, PlaceName>();
+    if (!open || !drawn || !data) return out;
+    for (const place of data.places) {
+      const area = drawn.areas.get(place.feature);
+      if (!area) continue;
+      out.set(SUB + place.feature, {
+        text: place.name,
+        point: geoCentroid(area.geometry as never) as [number, number],
+        bounds: area.bounds,
+      });
+    }
+    return out;
+  }, [open, drawn, data]);
+
   const placeByFeature = useMemo(
     () => new Map((data?.places ?? []).map((p) => [p.feature, p])),
     [data],
@@ -386,6 +404,9 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       palette={atlasPalette(colours, tokens)}
       dots={dots}
       dotColour={colours.selected}
+      names={placeNames}
+      nameColour={tokens.text}
+      nameHalo={tokens.page}
       selected={selected ?? country?.feature ?? null}
       onMap={onMap}
       home={HOME}
@@ -434,10 +455,190 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     </details>
   );
 
+  const head = country ? (
+    <>
+      <div className="space-y-2">
+        <button
+          type="button"
+          onClick={backToWorld}
+          className="text-sm text-fg-secondary hover:text-fg-primary hover:underline"
+        >
+          ← {t("world")}
+        </button>
+        <h2 className="headline text-2xl text-fg-primary">{country.name}</h2>
+      </div>
+
+      {layer === "places" && (
+        <>
+          {pageLink}
+          <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
+            <h3 className="font-semibold text-fg-primary">{t("lawTitle")}</h3>
+            {country.acts === 0 ? (
+              <p className="text-sm text-fg-secondary">{t("lawNone", { country: country.name })}</p>
+            ) : country.below > 0 ? (
+              // The nation's count is the one its Law page shows; what lies below it is said apart.
+              <>
+                <p className="text-sm text-fg-secondary">
+                  {t("lawNation", { count: country.own })}
+                </p>
+                <p className="text-sm text-fg-secondary">
+                  {t("lawBelow", { count: country.below })}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-fg-secondary">{t("lawHeld", { count: country.own })}</p>
+            )}
+            <Link
+              href={`/law/place/${country.key}`}
+              className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+            >
+              {t("lawOpen")} →
+            </Link>
+          </section>
+        </>
+      )}
+    </>
+  ) : (
+    <>
+      <div className="space-y-2">
+        <h2 className="headline text-2xl text-fg-primary">
+          {layer === "tax" ? t("taxWorldTitle") : t("worldTitle")}
+        </h2>
+        <p className="text-sm text-fg-secondary">
+          {layer === "tax" ? t("taxWorldIntro") : t("worldIntro")}
+        </p>
+      </div>
+    </>
+  );
+
+  const rest = country ? (
+    <>
+      {layer === "places" ? (
+        <>
+          {country.pack && (
+            <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
+              <h3 className="font-semibold text-fg-primary">{t("placesTitle")}</h3>
+              <p className="text-sm text-fg-secondary">
+                {loading
+                  ? tm("loading")
+                  : drawn && data
+                    ? t("placesDrawn", { level: data.levelName })
+                    : t("placesNotDrawn")}
+              </p>
+              {drawn && data?.taxPack && (
+                <Link
+                  href={`/places/tax?in=${country.key}`}
+                  className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+                >
+                  {t("taxOpen", { country: country.name })} →
+                </Link>
+              )}
+            </section>
+          )}
+          {drawn && data && data.places.length > 0 && (
+            <details
+              open={data.places.length <= PLACE_LIST_OPEN}
+              className="rounded-surface border border-default bg-surface-base text-sm"
+            >
+              <summary className="min-h-11 cursor-pointer px-5 py-3 font-semibold text-fg-primary">
+                {t("placesList", { count: data.places.length })}
+              </summary>
+              <ul className="divide-y divide-default border-t border-default">
+                {[...data.places]
+                  .sort((a, b) => a.name.localeCompare(b.name, locale))
+                  .map((place) => (
+                    <li key={place.slugPath}>
+                      <Link
+                        href={`/places/${place.slugPath}`}
+                        className="flex min-h-11 items-center px-5 py-3 text-fg-primary hover:bg-surface-raised"
+                      >
+                        {place.name}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            </details>
+          )}
+        </>
+      ) : (
+        <>
+          {loading && <p className="text-sm text-fg-secondary">{tm("loading")}</p>}
+          {!loading && !(drawn && tax.taxPack) && (
+            <p className="text-sm text-fg-secondary">{t("taxNone", { country: country.name })}</p>
+          )}
+          {drawn && tax.taxPack && tax.input && (
+            <TaxSituation
+              pack={tax.taxPack}
+              input={tax.input}
+              onChange={(patch) => tax.updateInput(tax.taxPack!.key, patch)}
+              title={tc("yourSituation")}
+              idPrefix="atlas"
+              layout="narrow"
+            />
+          )}
+          {drawn && tax.money && tax.totals.length > 0 && tax.totals[0] === tax.totals.at(-1) ? (
+            <p className="text-sm text-fg-secondary">
+              {t("taxSameEverywhere", { amount: formatMoney(tax.totals[0]!, tax.money) })}
+            </p>
+          ) : null}
+          {drawn &&
+            tax.taxPack &&
+            colours &&
+            tax.money &&
+            tax.totals.length > 0 &&
+            tax.totals[0] !== tax.totals.at(-1) && (
+              <MapLegend
+                breaks={tax.breaks}
+                range={[tax.totals[0]!, tax.totals.at(-1)!]}
+                colours={colours}
+                money={tax.money}
+                caption={caption}
+              />
+            )}
+          {drawn && tax.taxPack && (
+            <p className="text-xs text-fg-tertiary">
+              {tax.taxPack.excludes} {tc("disclaimer")} {tc("privacy")}
+            </p>
+          )}
+          {pageLink}
+        </>
+      )}
+      {sourceList}
+    </>
+  ) : (
+    <>
+      <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
+        {held.map((p) => (
+          <li key={p.key}>
+            <button
+              type="button"
+              onClick={() => openCountry(p)}
+              className="flex min-h-11 w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
+            >
+              <span className="font-medium text-fg-primary">{p.name}</span>
+              <span className="text-sm text-fg-tertiary">{t("lawCount", { count: p.acts })}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {layer === "places" && (
+        <Link
+          href="/places/world"
+          className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+        >
+          {t("everyCountry")} →
+        </Link>
+      )}
+    </>
+  );
+
   return (
     <div className="space-y-4">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="space-y-3">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        <div className="space-y-6 lg:col-start-2 lg:row-start-1" aria-live="polite">
+          {head}
+        </div>
+        <div className="space-y-3 lg:col-start-1 lg:row-span-2 lg:row-start-1">
           {drawn && data && (
             <div className="flex flex-wrap items-center gap-3">
               <div className="min-w-0 flex-1">
@@ -538,145 +739,9 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           <p className="text-xs text-fg-tertiary">{tg("credit")}</p>
         </div>
 
-        <aside className="space-y-6" aria-live="polite">
-          {country ? (
-            <>
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={backToWorld}
-                  className="text-sm text-fg-secondary hover:text-fg-primary hover:underline"
-                >
-                  ← {t("world")}
-                </button>
-                <h2 className="headline text-2xl text-fg-primary">{country.name}</h2>
-              </div>
-
-              {layer === "places" ? (
-                <>
-                  {pageLink}
-                  <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
-                    <h3 className="font-semibold text-fg-primary">{t("lawTitle")}</h3>
-                    <p className="text-sm text-fg-secondary">
-                      {country.acts > 0
-                        ? t("lawHeld", { count: country.acts })
-                        : t("lawNone", { country: country.name })}
-                    </p>
-                    <Link
-                      href={`/law/place/${country.key}`}
-                      className="inline-block text-sm font-semibold text-fg-primary hover:underline"
-                    >
-                      {t("lawOpen")} →
-                    </Link>
-                  </section>
-                  {country.pack && (
-                    <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
-                      <h3 className="font-semibold text-fg-primary">{t("placesTitle")}</h3>
-                      <p className="text-sm text-fg-secondary">
-                        {loading
-                          ? tm("loading")
-                          : drawn && data
-                            ? t("placesDrawn", { level: data.levelName })
-                            : t("placesNotDrawn")}
-                      </p>
-                      {drawn && data?.taxPack && (
-                        <Link
-                          href={`/places/tax?in=${country.key}`}
-                          className="inline-block text-sm font-semibold text-fg-primary hover:underline"
-                        >
-                          {t("taxOpen", { country: country.name })} →
-                        </Link>
-                      )}
-                    </section>
-                  )}
-                </>
-              ) : (
-                <>
-                  {loading && <p className="text-sm text-fg-secondary">{tm("loading")}</p>}
-                  {!loading && !(drawn && tax.taxPack) && (
-                    <p className="text-sm text-fg-secondary">
-                      {t("taxNone", { country: country.name })}
-                    </p>
-                  )}
-                  {drawn && tax.taxPack && tax.input && (
-                    <TaxSituation
-                      pack={tax.taxPack}
-                      input={tax.input}
-                      onChange={(patch) => tax.updateInput(tax.taxPack!.key, patch)}
-                      title={tc("yourSituation")}
-                      idPrefix="atlas"
-                      layout="narrow"
-                    />
-                  )}
-                  {drawn &&
-                  tax.money &&
-                  tax.totals.length > 0 &&
-                  tax.totals[0] === tax.totals.at(-1) ? (
-                    <p className="text-sm text-fg-secondary">
-                      {t("taxSameEverywhere", { amount: formatMoney(tax.totals[0]!, tax.money) })}
-                    </p>
-                  ) : null}
-                  {drawn &&
-                    tax.taxPack &&
-                    colours &&
-                    tax.money &&
-                    tax.totals.length > 0 &&
-                    tax.totals[0] !== tax.totals.at(-1) && (
-                      <MapLegend
-                        breaks={tax.breaks}
-                        range={[tax.totals[0]!, tax.totals.at(-1)!]}
-                        colours={colours}
-                        money={tax.money}
-                        caption={caption}
-                      />
-                    )}
-                  {drawn && tax.taxPack && (
-                    <p className="text-xs text-fg-tertiary">
-                      {tax.taxPack.excludes} {tc("disclaimer")} {tc("privacy")}
-                    </p>
-                  )}
-                  {pageLink}
-                </>
-              )}
-              {sourceList}
-            </>
-          ) : (
-            <>
-              <div className="space-y-2">
-                <h2 className="headline text-2xl text-fg-primary">
-                  {layer === "tax" ? t("taxWorldTitle") : t("worldTitle")}
-                </h2>
-                <p className="text-sm text-fg-secondary">
-                  {layer === "tax" ? t("taxWorldIntro") : t("worldIntro")}
-                </p>
-              </div>
-              <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
-                {held.map((p) => (
-                  <li key={p.key}>
-                    <button
-                      type="button"
-                      onClick={() => openCountry(p)}
-                      className="flex min-h-11 w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
-                    >
-                      <span className="font-medium text-fg-primary">{p.name}</span>
-                      <span className="text-sm text-fg-tertiary">
-                        {t("lawCount", { count: p.acts })}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {layer === "places" && (
-                <Link
-                  href="/places/world"
-                  className="inline-block text-sm font-semibold text-fg-primary hover:underline"
-                >
-                  {t("everyCountry")} →
-                </Link>
-              )}
-            </>
-          )}
-        </aside>
+        <div className="space-y-6 lg:col-start-2 lg:row-start-2" aria-live="polite">
+          {rest}
+        </div>
       </div>
 
       {tray.length > 0 && (

@@ -531,7 +531,7 @@
     },
     "index": {
       "title": "Orte",
-      "kicker": "Jede Gebietskörperschaft, amtlich und gegründet",
+      "kicker": "Amtliche Orte und auf Solon gegründete Gemeinschaften",
       "metaTitle": "Orte · einen Ort finden",
       "metaDescription": "Einen Ort nach Name oder Postleitzahl finden: wozu er gehört, ob er Steuern erhebt und die Quelle hinter jeder Angabe.",
       "intro": "Jeder Ort, den Solon führt, so wie ihn die amtlichen Quellen veröffentlichen. Öffnen Sie ein Land auf dem Globus, dann einen Ort darin: Jeder hat eine eigene Seite, die Sie teilen können.",
@@ -683,7 +683,8 @@
       "title": "Recht",
       "intro": "Das Recht, das in {place} gilt, das nächste zuerst. Öffnen Sie eines, um es zu lesen und Änderungen vorzuschlagen.",
       "none": "Solon führt das Recht von {place} noch nicht.",
-      "count": "{count, plural, =0 {Noch keine Texte} one {# Erlass in Kraft} other {# Erlasse in Kraft}}"
+      "count": "{count, plural, =0 {Noch keine Texte} one {# Erlass in Kraft} other {# Erlasse in Kraft}}",
+      "communes": "Gemeinden ({count})"
     },
     "parts": {
       "title": "Orte in {place}",
@@ -978,10 +979,13 @@
     "lawCount": "{count, plural, =0 {Nur Orte} one {# Erlass} other {# Erlasse}}",
     "lawTitle": "Recht",
     "lawHeld": "{count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, im Wortlaut, aus den amtlichen Quellen.",
+    "lawNation": "Staat: {count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, im Wortlaut, aus den amtlichen Quellen.",
+    "lawBelow": "Regionen und Gemeinden: {count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, getrennt gezählt.",
     "lawNone": "Solon führt das Recht von {country} noch nicht.",
     "lawOpen": "Lesen und Änderungen vorschlagen",
     "placesTitle": "Orte",
-    "placesDrawn": "Auf der Karte: {level}. Tippen Sie auf einen Ort, um seine Seite zu öffnen, oder suchen Sie.",
+    "placesDrawn": "Auf der Karte dargestellt: {level}. Tippen Sie auf eine Fläche, um ihre Seite zu öffnen, oder suchen Sie nach dem Namen.",
+    "placesList": "Die Orte auf der Karte ({count})",
     "placesNotDrawn": "Seine Orte sind aufgeführt, aber noch nicht auf der Karte gezeichnet.",
     "mapLabelCountry": "Karte von {country} und seinen Orten",
     "unavailable": "Die Karte kann in diesem Browser nicht gezeichnet werden.",

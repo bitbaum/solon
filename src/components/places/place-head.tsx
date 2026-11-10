@@ -77,20 +77,43 @@ export function PlaceLawCard({
       {law.length > 0 && (
         <ul className="divide-y divide-default border-t border-default">
           {law.map((authority) => (
-            <li key={authority.key}>
-              <Link
-                href={`/law/place/${authority.key}`}
-                className="flex min-h-11 items-center justify-between gap-3 px-5 py-3 hover:bg-surface-raised sm:px-6"
-              >
-                <span className="font-medium text-fg-primary">{authority.name}</span>
-                <span className="text-sm text-fg-tertiary">
-                  {t("law.count", { count: authority.acts })} →
-                </span>
-              </Link>
-            </li>
+            <LawRow key={authority.key} authority={authority} t={t} />
           ))}
         </ul>
       )}
+      {law.map(
+        (authority) =>
+          authority.parts &&
+          authority.parts.length > 0 && (
+            <div key={`${authority.key}-parts`} className="border-t border-default">
+              <h3 className="px-5 pt-4 text-sm font-semibold text-fg-secondary sm:px-6">
+                {t("law.communes", { count: authority.parts.length })}
+              </h3>
+              <ul className="mt-2 divide-y divide-default border-t border-default">
+                {authority.parts.map((part) => (
+                  <LawRow key={part.key} authority={part} t={t} />
+                ))}
+              </ul>
+            </div>
+          ),
+      )}
     </section>
+  );
+}
+
+/** One authority's law: its name and how many acts in force Solon holds, a way into reading them. */
+function LawRow({ authority, t }: { authority: PlaceLaw; t: PlacesTranslator }) {
+  return (
+    <li>
+      <Link
+        href={`/law/place/${authority.key}`}
+        className="flex min-h-11 items-center justify-between gap-3 px-5 py-3 hover:bg-surface-raised sm:px-6"
+      >
+        <span className="font-medium text-fg-primary">{authority.name}</span>
+        <span className="text-sm text-fg-tertiary">
+          {t("law.count", { count: authority.acts })} →
+        </span>
+      </Link>
+    </li>
   );
 }

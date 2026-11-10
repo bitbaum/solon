@@ -1117,7 +1117,7 @@
     },
     "index": {
       "title": "Places",
-      "kicker": "Every jurisdiction, official and founded",
+      "kicker": "Official places and communities founded on Solon",
       "metaTitle": "Places · find a place",
       "metaDescription": "Find a place by name or postcode: what it is part of, whether it levies tax, and the source behind every fact.",
       "intro": "Every place Solon records, as its official sources publish it. Open a country on the globe, then a place inside it: each has a page of its own that you can share.",
@@ -1269,7 +1269,8 @@
       "title": "Law",
       "intro": "The law that applies in {place}, nearest first. Open one to read it and propose changes.",
       "none": "Solon does not hold the law of {place} yet.",
-      "count": "{count, plural, =0 {No texts yet} one {# law in force} other {# laws in force}}"
+      "count": "{count, plural, =0 {No texts yet} one {# law in force} other {# laws in force}}",
+      "communes": "Communes ({count})"
     },
     "parts": {
       "title": "Places in {place}",
@@ -1671,10 +1672,13 @@
     "lawCount": "{count, plural, =0 {Places only} one {# law} other {# laws}}",
     "lawTitle": "Law",
     "lawHeld": "{count, plural, one {# law in force} other {# laws in force}}, word for word, from the official sources.",
+    "lawNation": "Nation: {count, plural, one {# law} other {# laws}} in force, word for word, from the official sources.",
+    "lawBelow": "Regions and communes: {count, plural, one {# law} other {# laws}} in force, counted separately.",
     "lawNone": "Solon does not hold {country}'s law yet.",
     "lawOpen": "Read it and propose changes",
     "placesTitle": "Places",
-    "placesDrawn": "On the map: {level}. Tap one to open its page, or search.",
+    "placesDrawn": "Shown on the map: {level}. Tap a shape to open its page, or search by name.",
+    "placesList": "The places on the map ({count})",
     "placesNotDrawn": "Its places are listed, not drawn on the map yet.",
     "mapLabelCountry": "Map of {country} and its places",
     "unavailable": "The map cannot be drawn in this browser.",

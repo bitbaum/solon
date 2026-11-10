@@ -531,7 +531,7 @@
     },
     "index": {
       "title": "Lieux",
-      "kicker": "Chaque collectivité, officielle ou fondée",
+      "kicker": "Lieux officiels et communautés fondées sur Solon",
       "metaTitle": "Lieux · trouver un lieu",
       "metaDescription": "Trouver un lieu par son nom ou son code postal : de quoi il fait partie, s’il prélève l’impôt, et la source de chaque donnée.",
       "intro": "Chaque lieu que Solon tient, tel que ses sources officielles le publient. Ouvrez un pays sur le globe, puis un lieu à l'intérieur : chacun a sa propre page, que vous pouvez partager.",
@@ -683,7 +683,8 @@
       "title": "Droit",
       "intro": "Le droit qui s'applique à {place}, le plus proche d'abord. Ouvrez-en un pour le lire et proposer des modifications.",
       "none": "Solon ne tient pas encore le droit de {place}.",
-      "count": "{count, plural, =0 {Pas encore de textes} one {# acte en vigueur} other {# actes en vigueur}}"
+      "count": "{count, plural, =0 {Pas encore de textes} one {# acte en vigueur} other {# actes en vigueur}}",
+      "communes": "Communes ({count})"
     },
     "parts": {
       "title": "Lieux de {place}",
@@ -978,10 +979,13 @@
     "lawCount": "{count, plural, =0 {Lieux seulement} one {# acte} other {# actes}}",
     "lawTitle": "Droit",
     "lawHeld": "{count, plural, one {# acte en vigueur} other {# actes en vigueur}}, mot pour mot, tirés des sources officielles.",
+    "lawNation": "État : {count, plural, one {# acte en vigueur} other {# actes en vigueur}}, mot pour mot, tirés des sources officielles.",
+    "lawBelow": "Régions et communes : {count, plural, one {# acte en vigueur} other {# actes en vigueur}}, comptés à part.",
     "lawNone": "Solon ne tient pas encore le droit de {country}.",
     "lawOpen": "Le lire et proposer des modifications",
     "placesTitle": "Lieux",
-    "placesDrawn": "Sur la carte : {level}. Touchez-en un pour ouvrir sa page, ou cherchez.",
+    "placesDrawn": "Affiché sur la carte : {level}. Touchez une zone pour ouvrir sa page, ou cherchez par nom.",
+    "placesList": "Les lieux sur la carte ({count})",
     "placesNotDrawn": "Ses lieux sont listés, pas encore dessinés sur la carte.",
     "mapLabelCountry": "Carte de {country} et de ses lieux",
     "unavailable": "La carte ne peut pas être dessinée dans ce navigateur.",
