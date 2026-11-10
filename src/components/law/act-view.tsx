@@ -1,12 +1,16 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { ActKind } from "@/lib/config/law";
+import { routesFor } from "@/lib/config/law/routes";
+import { formatDay } from "@/lib/format-date";
+import type { Locale } from "@/i18n/routing";
 import { archiveCopyOf } from "@/lib/law/archive-copy";
 import { authorityOf } from "@/lib/law/places";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
 import type { AmendmentSummary } from "@/lib/law/amend/store";
 import AmendmentList from "./amendment-list";
+import OfficialRoutes from "./official-routes";
 import PlaceTrail from "./place-trail";
 
 interface ActViewProps {
@@ -19,6 +23,8 @@ interface ActViewProps {
   amendments: AmendmentSummary[];
   /** The words for proposing a change (messages `Amend.act`). */
   amendLabels: { propose: string; proposals: string; noProposals: string };
+  /** The reader's language: the dates and the official routes are written in it. */
+  locale: Locale;
 }
 
 const authorityName = (key: string): string => authorityOf(key)?.name ?? key;
@@ -38,8 +44,10 @@ export default function ActViewPage({
   t,
   amendments,
   amendLabels,
+  locale,
 }: ActViewProps) {
   const { version } = act;
+  const day = (iso: string) => formatDay(iso, locale);
   // A text read from the Internet Archive's copy says so, and when the copy was captured.
   const archived = archiveCopyOf(version?.sourceUrl);
   const pages = version ? Math.max(1, Math.ceil(version.provisionCount / PROVISIONS_PER_PAGE)) : 1;
@@ -84,14 +92,14 @@ export default function ActViewPage({
             <>
               <p className="text-fg-secondary">
                 {version.dateBasis === "publisher"
-                  ? t("act.inForceSince", { date: version.inForceFrom })
-                  : t("act.readOn", { date: version.inForceFrom })}
+                  ? t("act.inForceSince", { date: day(version.inForceFrom) })
+                  : t("act.readOn", { date: day(version.inForceFrom) })}
               </p>
               {archived ? (
                 <p className="text-fg-secondary">
                   {t("act.copyArchived", {
-                    date: version.retrievedOn,
-                    captured: archived.capturedOn,
+                    date: day(version.retrievedOn),
+                    captured: day(archived.capturedOn),
                   })}{" "}
                   <a href={archived.url} className="underline" rel="noopener">
                     {t("act.copyArchivedFrom")}
@@ -99,7 +107,7 @@ export default function ActViewPage({
                 </p>
               ) : (
                 <p className="text-fg-secondary">
-                  {t("act.copy", { date: version.retrievedOn })}{" "}
+                  {t("act.copy", { date: day(version.retrievedOn) })}{" "}
                   {version.sourceUrl && (
                     <a href={version.sourceUrl} className="underline" rel="noopener">
                       {t("act.copyFrom")}
@@ -152,6 +160,8 @@ export default function ActViewPage({
             />
           </section>
         )}
+
+        {version && <OfficialRoutes routes={routesFor(act.authority, act.kind)} locale={locale} />}
 
         {version && (
           <section className="space-y-6" aria-label={t("act.provisions")}>

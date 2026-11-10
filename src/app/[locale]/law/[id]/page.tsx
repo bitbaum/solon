@@ -52,6 +52,7 @@ export default async function ActPage({
       act={act}
       page={page}
       contents={contents}
+      locale={locale}
       t={t}
       amendments={amendments}
       amendLabels={{

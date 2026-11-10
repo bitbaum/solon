@@ -843,6 +843,113 @@
       "body": "Schattiert sind die Orte, deren Recht Solon führt, dunkler bei mehr. Drehen Sie den Globus, tippen Sie auf einen Ort und lesen Sie sein Recht Artikel für Artikel."
     }
   },
+  "Amend": {
+    "metaTitle": "Änderung vorschlagen",
+    "kicker": "Änderung vorschlagen",
+    "intro": "Schreiben Sie den Wortlaut dieses Erlasses so, wie er Ihrer Meinung nach lauten sollte. Solon zeigt Ihre Änderung als Gegenüberstellung zum veröffentlichten Text und bindet sie an genau diesen Text, sodass sie nie auf einen Wortlaut angewendet werden kann, den Sie nicht gesehen haben.",
+    "notLaw": "Ein Vorschlag auf Solon ist kein Gesetz. Die Unterstützung auf Solon belegt nur, dass Personen die Änderung wünschen; wie sie zu geltendem Recht wird, bestimmt der amtliche Weg.",
+    "signInFirst": "Melden Sie sich an, um Ihren Vorschlag einzureichen. Was Sie geschrieben haben, bleibt auf dieser Seite erhalten.",
+    "signIn": "Anmelden und einreichen",
+    "forkOf": "Sie gehen vom Vorschlag einer anderen Person aus. Ihrer wird als Alternative dazu eingereicht; beide bleiben festgehalten.",
+    "changeLabel": "Änderung {n}",
+    "chooseProvision": "Artikel",
+    "pickOne": "Artikel auswählen",
+    "operation": "Was soll mit dem Artikel geschehen?",
+    "ops": {
+      "replace": "Neu formulieren",
+      "repeal": "Aufheben",
+      "insert": "Einen neuen Artikel danach einfügen"
+    },
+    "asPublished": "Wie veröffentlicht",
+    "yourWording": "Ihr Wortlaut",
+    "newHeading": "Überschrift des neuen Artikels",
+    "newText": "Text des neuen Artikels",
+    "redline": "Ihre Änderung als Gegenüberstellung",
+    "loading": "Der Artikel wird gelesen …",
+    "loadFailed": "Der Artikel konnte nicht gelesen werden. Wählen Sie ihn erneut aus.",
+    "addChange": "Einen weiteren Artikel ändern",
+    "removeChange": "Diese Änderung verwerfen",
+    "title": "Titel",
+    "titleHint": "Eine Zeile, die sagt, was sich ändert, zum Beispiel «Hundesteuer halbieren».",
+    "rationale": "Begründung",
+    "rationaleHint": "Wem es nützt, was es kostet, was es behebt. Die Begründung überzeugt andere, den Vorschlag zu unterstützen.",
+    "dictate": "Sprechen statt tippen",
+    "stopDictating": "Fertig gesprochen",
+    "dictationProblems": {
+      "mic": "Hier kann kein Mikrofon verwendet werden.",
+      "silence": "Es wurde nichts gehört.",
+      "unavailable": "Die Spracheingabe ist im Moment nicht verfügbar.",
+      "fileTooLarge": "Die Aufnahme ist zu lang."
+    },
+    "submit": "Diesen Vorschlag einreichen",
+    "submitting": "Wird eingereicht …",
+    "problems": {
+      "stale_base": "Der veröffentlichte Text von {path} hat sich geändert, während Sie schrieben. Wählen Sie den Artikel erneut aus, um auf den geltenden Text hin zu schreiben.",
+      "unknown_path": "{path} ist in diesem Erlass nicht mehr enthalten.",
+      "duplicate_path": "{path} wird zweimal geändert; behalten Sie nur eine Änderung dafür.",
+      "no_effect": "Ihr Wortlaut von {path} ist derselbe wie der veröffentlichte Text.",
+      "unknown_anchor": "Der Artikel, nach dem eingefügt werden soll, ist in diesem Erlass nicht mehr enthalten."
+    },
+    "failed": "Der Vorschlag konnte nicht eingereicht werden: {reason}",
+    "amendment": {
+      "kicker": "Änderungsvorschlag",
+      "to": "Zu {act}",
+      "filed": "Fassung {revision}, eingereicht am {date}",
+      "current": "Verfasst auf den heute geltenden Text.",
+      "outdated": "Das Recht hat sich geändert, seit dieser Vorschlag verfasst wurde. Die Gegenüberstellung zeigt die Änderung gegenüber dem Text, auf den hin er verfasst wurde.",
+      "support": "{total, plural, =0 {Noch niemand unterstützt ihn} one {# Person unterstützt ihn} other {# Personen unterstützen ihn}}",
+      "supportSplit": "{account} angemeldet · {signed} mit eigenem Schlüssel signiert",
+      "supportButton": "Diesen Vorschlag unterstützen",
+      "withdrawButton": "Meine Unterstützung zurückziehen",
+      "youSupport": "Sie unterstützen diese Fassung.",
+      "signInToSupport": "Anmelden, um zu unterstützen",
+      "supportFailed": "Ihre Unterstützung konnte nicht festgehalten werden: {reason}",
+      "notLaw": "Ein Vorschlag auf Solon ist kein Gesetz. Die Unterstützung auf Solon belegt nur, dass Personen die Änderung wünschen; wie sie zu geltendem Recht wird, bestimmt der amtliche Weg.",
+      "changes": "Was er ändert",
+      "replaced": "Neu formuliert",
+      "repealed": "Aufgehoben",
+      "inserted": "Neuer Artikel",
+      "rationale": "Begründung",
+      "routes": "Wie dieses Recht amtlich geändert wird",
+      "noRoute": "Solon kennt den amtlichen Weg zur Änderung dieses Rechts noch nicht. Der Vorschlag wird trotzdem festgehalten; der Weg erscheint hier, sobald seine Quelle hinzugefügt ist.",
+      "routeBar": "{count} Unterschriften von {who}",
+      "routeWindowMonths": "innert {months} Monaten",
+      "routeWindowDays": "innert {days} Tagen",
+      "routeNoBar": "{who}; eine Mindestzahl von Unterschriften ist nicht vorgeschrieben",
+      "routeSource": "Quelle: {provision}, {title}",
+      "fork": "Eine Alternative verfassen",
+      "revisions": "Alle Fassungen",
+      "revisionRow": "Fassung {revision} · {date} · {support}",
+      "chain": "Jeder Vorschlag und jede Unterstützung ist ein Eintrag in einer einzigen Hashkette, die jede Person überprüfen kann.",
+      "chainLink": "Die Kette lesen",
+      "routeShare": "Unterschriften von {who} im Umfang von {percent} % von {of}"
+    },
+    "list": {
+      "metaTitle": "Vorgeschlagene Änderungen des Rechts",
+      "title": "Vorgeschlagene Änderungen",
+      "intro": "Änderungen des Rechts, das Solon führt, die Personen vorgeschlagen haben, die neuesten zuerst.",
+      "empty": "Hier hat noch niemand eine Änderung vorgeschlagen.",
+      "howTo": "Um eine vorzuschlagen, öffnen Sie einen Erlass und wählen Sie bei einem beliebigen Artikel «Änderung vorschlagen».",
+      "row": "Fassung {revision} · {support}",
+      "supporters": "{total, plural, =0 {noch keine Unterstützung} one {# Unterstützerin oder Unterstützer} other {# Unterstützerinnen und Unterstützer}}"
+    },
+    "act": {
+      "propose": "Änderung vorschlagen",
+      "proposals": "Vorgeschlagene Änderungen dieses Erlasses",
+      "noProposals": "Zu diesem Erlass hat noch niemand eine Änderung vorgeschlagen."
+    },
+    "consult": {
+      "title": "Überlegen Sie es sich genau",
+      "intro": "Fragen Sie, was Ihre Änderung bewirken würde, wer davon profitiert und wer Kosten trägt und wo etwas Ähnliches bereits gilt. Die Assistenz liest Ihren Entwurf, wie er vorliegt, nennt das Recht und die Studien, die sie findet, und ergreift keine Partei. Was Sie einreichen, bleibt Ihres.",
+      "placeholder": "Was würde diese Änderung bewirken?",
+      "starters": {
+        "one": "Was würde diese Änderung bewirken, und für wen?",
+        "two": "Wo gilt etwas Ähnliches bereits, und wie hat es sich bewährt?",
+        "three": "Wie könnte der Wortlaut klarer gefasst werden?"
+      },
+      "startersTitle": "Fragen für den Anfang"
+    }
+  },
   "LostPassword": {
     "title": "Passwort verloren?",
     "lede": "Dieses Solon kann noch keine E-Mails senden. Ein Passwort lässt sich darum nicht per Link zurücksetzen.",

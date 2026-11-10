@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import DictateButton from "@/components/ui/dictate-button";
@@ -41,6 +41,8 @@ interface AmendFormProps {
   signedIn: boolean;
   /** Where "sign in" goes, carrying the reader back here. */
   signInHref: string;
+  /** The act's official routes, shown above the "not law" sentence (a server-rendered slot). */
+  routes?: ReactNode;
 }
 
 const newKey = () => Math.random().toString(36).slice(2, 10);
@@ -408,6 +410,8 @@ export default function AmendForm(props: AmendFormProps) {
           </div>
         </div>
       </div>
+
+      {props.routes}
 
       <p className="text-sm text-fg-tertiary">{t("notLaw")}</p>
 

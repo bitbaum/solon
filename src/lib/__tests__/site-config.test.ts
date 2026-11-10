@@ -99,4 +99,19 @@ describe("isTranslatedRoute", () => {
     expect(isTranslatedRoute("/hire")).toBe(true);
     expect(isTranslatedRoute("/hire/more")).toBe(false);
   });
+
+  it("takes the pages that read the Amend messages in the languages that have them", () => {
+    const id = "c59a78e4-f194-4af5-9a00-eb426cbded06";
+    const pages = [`/law/${id}`, `/law/${id}/amend`, "/law/amendments", `/law/amendments/${id}`];
+    for (const page of pages) {
+      expect(isTranslatedRoute(page, "de"), page).toBe(true);
+      expect(isTranslatedRoute(page, "fr"), page).toBe(false);
+      expect(isTranslatedRoute(page, "it"), page).toBe(false);
+      expect(isTranslatedRoute(page, "ru"), page).toBe(false);
+      expect(isTranslatedRoute(page), page).toBe(false);
+    }
+    // Only those pages: not a lookalike, not another law page.
+    expect(isTranslatedRoute("/law/not-an-id", "de")).toBe(false);
+    expect(isTranslatedRoute(`/law/${id}/other`, "de")).toBe(false);
+  });
 });

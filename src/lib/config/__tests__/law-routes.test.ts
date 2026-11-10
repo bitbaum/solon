@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ACT_KINDS, LAW_AUTHORITIES } from "@/lib/config/law";
-import { OFFICIAL_ROUTES, routesFor } from "@/lib/config/law/routes";
+import {
+  OFFICIAL_ROUTES,
+  localizeRoute,
+  routesFor,
+  type OfficialRoute,
+} from "@/lib/config/law/routes";
+import de from "../../../../messages/de.json";
 
 describe("official routes", () => {
   it("are each for a known authority and known kinds of act, with unique keys", () => {
@@ -45,5 +51,107 @@ describe("official routes", () => {
     expect(routesFor("li7004", "communal_act").map((r) => r.key)).toEqual(["li7004-initiative"]);
     expect(routesFor("li", "statute")[0]!.signatures).toEqual({ count: 1_000 });
     expect(routesFor("li", "constitution")[0]!.signatures).toEqual({ count: 1_500 });
+  });
+});
+
+const isLiechtenstein = (r: OfficialRoute) => /^li(\d{4})?$/.test(r.authority);
+const LI_ROUTES = OFFICIAL_ROUTES.filter(isLiechtenstein);
+
+/** Every number a text states, as digits: "1 000", "1,000" and "1000" are one number. */
+const numbersIn = (text: string): string[] =>
+  [...text.matchAll(/\d+(?:[ ,.'’  ]\d{3})*/g)].map((m) => m[0].replace(/\D/g, "")).sort();
+
+/** Number words the English texts use, and the German word that must stand for each. */
+const NUMBER_WORDS: [RegExp, RegExp][] = [
+  [/\bthree\b/i, /\bdrei\b/i],
+  [/\bfour\b/i, /\bvier\b/i],
+  [/\btwo\b/i, /\bzwei\b/i],
+  [/\bone sixth\b/i, /\bSechstel\b/i],
+];
+
+const textOf = (r: {
+  name: string;
+  whoMaySign: string;
+  alsoRequired?: readonly string[];
+  cannotChange?: string;
+  outcome: string;
+}) => [r.name, r.whoMaySign, ...(r.alsoRequired ?? []), r.cannotChange ?? "", r.outcome].join(" ");
+
+describe("official routes in German", () => {
+  it("has the Liechtenstein routes to speak of", () => {
+    expect(LI_ROUTES.map((r) => r.key)).toEqual(
+      expect.arrayContaining([
+        "li-law-initiative",
+        "li-law-referendum",
+        "li-constitution-initiative",
+        "li-constitution-referendum",
+        "li7001-initiative",
+        "li7011-initiative",
+      ]),
+    );
+  });
+
+  it("gives every Liechtenstein route German text, field for field", () => {
+    for (const route of LI_ROUTES) {
+      const text = route.text?.de;
+      expect(text, route.key).toBeDefined();
+      if (!text) continue;
+      for (const field of [
+        text.name,
+        text.whoMaySign,
+        text.outcome,
+        text.sourceTitle,
+        text.provision,
+      ]) {
+        expect(field?.trim(), route.key).toBeTruthy();
+      }
+      expect(text.alsoRequired?.length ?? 0, route.key).toBe(route.alsoRequired?.length ?? 0);
+      expect(Boolean(text.cannotChange), route.key).toBe(Boolean(route.cannotChange));
+      if (route.signatures && "percent" in route.signatures) {
+        expect(text.signatureBase?.trim(), route.key).toBeTruthy();
+      }
+    }
+  });
+
+  it("states the same numbers as the English, and prints the signature count from the data", () => {
+    for (const route of LI_ROUTES) {
+      const text = route.text!.de!;
+      expect(numbersIn(textOf(text)), route.key).toEqual(numbersIn(textOf(route)));
+      expect(numbersIn(text.provision!), route.key).toEqual(numbersIn(route.source.provision));
+      for (const [english, german] of NUMBER_WORDS) {
+        if (english.test(textOf(route))) expect(textOf(text), route.key).toMatch(german);
+      }
+      // The bar is printed from `signatures`, never retyped, so German cannot disagree with it.
+      const localized = localizeRoute(route, "de");
+      expect(route.signatures, route.key).not.toBeNull();
+      if ("count" in route.signatures!) {
+        expect(localized.signatures, route.key).toEqual(route.signatures);
+        expect(de.Amend.amendment.routeBar).toContain("{count}");
+      } else {
+        expect((localized.signatures as { percent: number }).percent, route.key).toBe(
+          route.signatures!.percent,
+        );
+        expect(de.Amend.amendment.routeShare).toContain("{percent}");
+      }
+    }
+  });
+
+  it("leaves no English in a German field and no ß", () => {
+    for (const route of LI_ROUTES) {
+      const german = textOf(route.text!.de!);
+      expect(german, route.key).not.toMatch(/\b(the|of the|voters|communes|signature)\b/i);
+      expect(german, route.key).not.toContain("ß");
+    }
+  });
+
+  it("localizes a route to German and leaves English the fallback", () => {
+    const route = OFFICIAL_ROUTES.find((r) => r.key === "li-law-initiative")!;
+    expect(localizeRoute(route, "de").name).toBe(route.text!.de!.name);
+    expect(localizeRoute(route, "de").signatures).toEqual({ count: 1_000 });
+    expect(localizeRoute(route, "de").source.url).toBe(route.source.url);
+    expect(localizeRoute(route, "en")).toBe(route);
+    expect(localizeRoute(route, "fr")).toBe(route);
+    const swiss = OFFICIAL_ROUTES.find((r) => r.key === "ch-petition")!;
+    expect(localizeRoute(swiss, "de")).toBe(swiss);
   });
 });

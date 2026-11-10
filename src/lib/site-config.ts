@@ -8,6 +8,7 @@
  */
 import type en from "../../messages/en.json";
 import type { PhotoId } from "./content/photos";
+import type { Locale } from "@/i18n/routing";
 
 /** Keys must exist in messages (checked by typecheck). */
 export type LinkKey = keyof typeof en.Site.links;
@@ -159,9 +160,36 @@ export const TRANSLATED_ROUTES = new Set<string>([
 /** Sections translated as a whole: every page under the prefix. */
 const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics"];
 
-export const isTranslatedRoute = (pathname: string): boolean =>
+/**
+ * The languages in which the `Amend` messages (proposing a change to the law)
+ * are written. The pages that read them — an act, the proposal form, the list
+ * of proposals and one proposal — count as translated in these languages only;
+ * in every other language they stay in English under the notice. Adding a
+ * language here is how its translation becomes required (the parity test reads
+ * this list).
+ */
+export const AMEND_LOCALES: readonly Locale[] = ["de"];
+
+const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+
+/** The pages whose words are the `Amend` messages: act, propose, list, one proposal. */
+const AMEND_ROUTES = [
+  new RegExp(`^/law/${UUID}$`),
+  new RegExp(`^/law/${UUID}/amend$`),
+  /^\/law\/amendments$/,
+  new RegExp(`^/law/amendments/${UUID}$`),
+];
+
+/**
+ * Whether a page has been translated into the reader's language. Without a
+ * locale the question is asked of the sections translated for everyone.
+ */
+export const isTranslatedRoute = (pathname: string, locale?: Locale): boolean =>
   TRANSLATED_ROUTES.has(pathname) ||
-  TRANSLATED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  TRANSLATED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)) ||
+  (locale !== undefined &&
+    AMEND_LOCALES.includes(locale) &&
+    AMEND_ROUTES.some((route) => route.test(pathname)));
 
 /**
  * The everyday pages: where members join, suggest, vote and read the history.

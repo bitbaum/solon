@@ -8,9 +8,31 @@
  * amendment's page shows the route's bar beside Solon's own count and never
  * adds the two together: support on Solon is not an official signature.
  */
+import type { Locale } from "@/i18n/routing";
 import type { ActKind } from "./index";
 
 export type RouteVenue = "voters" | "legislature" | "town_meeting" | "authorities";
+
+/**
+ * A route's words in one language, written from the source's own words. Every
+ * field replaces the English one; a field left out stays English. The numbers
+ * are not repeated here: they are read from `signatures` and `window`.
+ *
+ * `whoMaySign` reads after "von" ("Unterschriften von ..."), so in German it
+ * stands in the dative.
+ */
+export interface RouteText {
+  name: string;
+  whoMaySign: string;
+  alsoRequired?: readonly string[];
+  cannotChange?: string;
+  outcome: string;
+  /** The base of a share ("of those who voted ..."), when the route has one. */
+  signatureBase?: string;
+  /** The source's title and provision, as the source words them. */
+  sourceTitle?: string;
+  provision?: string;
+}
 
 export interface OfficialRoute {
   key: string;
@@ -38,7 +60,30 @@ export interface OfficialRoute {
   /** What the route obliges the authority to do once it is taken. */
   outcome: string;
   source: { title: string; provision: string; url: string; readOn: string };
+  /** The route's words in other languages; English (the fields above) is the fallback. */
+  text?: Partial<Record<Exclude<Locale, "en">, RouteText>>;
 }
+
+const LV_DE = "Verfassung des Fürstentums Liechtenstein (LR 101)";
+const LANDESBUERGER =
+  "wahlberechtigten Landesbürgern; Unterschrift und Stimmberechtigung beglaubigt die Gemeindevorstehung des Wohnsitzes";
+
+/** Art. 41 and 42 Gemeindegesetz apply the same way in every commune. */
+const COMMUNE_DE: RouteText = {
+  name: "Initiative oder Referendum in der Gemeindeversammlung",
+  whoMaySign: "Stimmberechtigten der Gemeinde",
+  signatureBase: "der Stimmberechtigten der Gemeinde (ein Sechstel)",
+  alsoRequired: [
+    "Durch begründetes schriftliches Begehren, auf die in Art. 41 beschriebene Weise",
+    "Nur für Angelegenheiten, die nach Art. 41 dem Referendum unterstehen: Beschlüsse des Gemeinderates über dem in der Gemeindeordnung festgelegten Höchstbetrag (100 000 bis 300 000 Franken) und immer Voranschlag und Gemeindesteuerzuschlag, Zonenplan und Bauordnung sowie Verkauf und Tausch von Grundstücken",
+  ],
+  cannotChange:
+    "Nicht in Angelegenheiten, in denen die Referendumsfrist ungenutzt abgelaufen ist oder ein Referendum zustande gekommen ist; bei Bauordnungen, Zonenplänen und anderen Gemeinderatsbeschlüssen genereller Natur erst zwei Jahre nach der Beschlussfassung",
+  outcome:
+    "Die Gemeindeversammlung behandelt die Angelegenheit; bei einem Referendum gegen einen Beschluss des Gemeinderates findet sie binnen vier Monaten nach Einreichung des Begehrens statt (Art. 41 Abs. 5).",
+  sourceTitle: "Gemeindegesetz (LR 141.0)",
+  provision: "Art. 41 und Art. 42",
+};
 
 export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
   {
@@ -122,6 +167,20 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
     },
+    text: {
+      de: {
+        name: "Volksinitiative auf Erlassung, Abänderung oder Aufhebung eines Gesetzes",
+        whoMaySign: LANDESBUERGER,
+        alsoRequired: [
+          "Oder wenigstens drei Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse, anstelle der Unterschriften",
+          "Ein Begehren, aus dessen Durchführung dem Land eine einmalige, im Finanzgesetz nicht vorgesehene oder eine länger andauernde Belastung erwächst, muss mit einem Bedeckungsvorschlag versehen sein",
+        ],
+        outcome:
+          "Der Landtag hat das Begehren in der darauffolgenden Sitzung in Verhandlung zu ziehen (Art. 64 Abs. 2). Stimmt er einem ausgearbeiteten Initiativentwurf nicht zu, beauftragt er die Regierung mit der Anordnung einer Volksabstimmung (Volksrechtegesetz, LR 161, Art. 82).",
+        sourceTitle: LV_DE,
+        provision: "Art. 64 Abs. 1-3",
+      },
+    },
   },
   {
     key: "li-constitution-initiative",
@@ -144,6 +203,19 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
     },
+    text: {
+      de: {
+        name: "Volksinitiative auf Abänderung der Verfassung",
+        whoMaySign: LANDESBUERGER,
+        alsoRequired: [
+          "Oder wenigstens vier Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse, anstelle der Unterschriften",
+        ],
+        outcome:
+          "Der Landtag hat das Begehren in der darauffolgenden Sitzung in Verhandlung zu ziehen (Art. 64 Abs. 2, nach Abs. 4).",
+        sourceTitle: LV_DE,
+        provision: "Art. 64 Abs. 4",
+      },
+    },
   },
   {
     key: "li-law-referendum",
@@ -165,6 +237,21 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
     },
+    text: {
+      de: {
+        name: "Referendum gegen ein vom Landtag beschlossenes Gesetz",
+        whoMaySign: "wahlberechtigten Landesbürgern",
+        alsoRequired: [
+          "Oder wenigstens drei Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse",
+        ],
+        cannotChange:
+          "Ein vom Landtag als dringlich erklärtes Gesetz unterliegt dem Referendum nicht, ebenso kein Finanzbeschluss, der keine einmalige neue Ausgabe von mindestens 500 000 Franken und keine jährlich wiederkehrende neue Ausgabe von 250 000 Franken verursacht",
+        outcome:
+          "Das Gesetz wird der Volksabstimmung unterzogen und tritt nur in Kraft, wenn die Stimmberechtigten es annehmen; die absolute Mehrheit der im ganzen Lande gültig abgegebenen Stimmen entscheidet.",
+        sourceTitle: LV_DE,
+        provision: "Art. 66 Abs. 1, 4",
+      },
+    },
   },
   {
     key: "li-constitution-referendum",
@@ -182,6 +269,19 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       provision: "Art. 66 para. 2",
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
+    },
+    text: {
+      de: {
+        name: "Referendum gegen eine Abänderung der Verfassung",
+        whoMaySign: "wahlberechtigten Landesbürgern",
+        alsoRequired: [
+          "Oder wenigstens vier Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse",
+        ],
+        outcome:
+          "Die Änderung wird der Volksabstimmung unterzogen und tritt nur in Kraft, wenn die Stimmberechtigten sie annehmen.",
+        sourceTitle: LV_DE,
+        provision: "Art. 66 Abs. 2",
+      },
     },
   },
   ...[
@@ -219,8 +319,35 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       url: "https://www.gesetze.li/konso/html/1996076000",
       readOn: "2026-10-23",
     },
+    text: { de: COMMUNE_DE },
   })),
 ];
+
+/**
+ * The route in a reader's language: every field the language has words for
+ * replaces the English one; English stays where it has none.
+ */
+export function localizeRoute(route: OfficialRoute, locale: Locale): OfficialRoute {
+  const text = locale === "en" ? undefined : route.text?.[locale];
+  if (!text) return route;
+  return {
+    ...route,
+    name: text.name,
+    whoMaySign: text.whoMaySign,
+    alsoRequired: text.alsoRequired ?? route.alsoRequired,
+    cannotChange: text.cannotChange ?? route.cannotChange,
+    outcome: text.outcome,
+    signatures:
+      route.signatures && "percent" in route.signatures && text.signatureBase
+        ? { percent: route.signatures.percent, of: text.signatureBase }
+        : route.signatures,
+    source: {
+      ...route.source,
+      title: text.sourceTitle ?? route.source.title,
+      provision: text.provision ?? route.source.provision,
+    },
+  };
+}
 
 /** The routes an amendment to an act of this authority and kind can take. */
 export const routesFor = (authority: string, kind: string): OfficialRoute[] =>
