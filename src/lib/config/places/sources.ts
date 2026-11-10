@@ -995,6 +995,8 @@ export const SOURCES: readonly SourceInput[] = [
     options: {
       place: { scheme: "li_municipality", column: "commune" },
       yearColumn: "tax_year",
+      // A council keeps or changes the surcharge each autumn; until then the last decision stands.
+      inForceUntilNext: true,
       facts: [{ metric: "tax.multiplier", column: "surcharge_percent", divideBy: 100 }],
     },
     packs: ["liechtenstein"],
