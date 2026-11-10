@@ -12,6 +12,7 @@
  *   public/app-icons/icon.svg    the app icon
  *   public/app-icons/*.png       192, 512, maskable 512   (--png)
  *   src/app/favicon.ico          16 + 32 + 48             (--png)
+ *   src/app/apple-icon.png       180, the iOS home screen  (--png)
  *   brand/export/*               mark and tile in ink, white and accent, for
  *                                decks, press and OrangeCat's project listing
  *
@@ -94,6 +95,8 @@ if (process.argv.includes("--png")) {
   writeFileSync(join(root, "public/app-icons/icon-192.png"), await raster(iconSvg(), 192));
   writeFileSync(join(root, "public/app-icons/icon-512.png"), await raster(iconSvg(), 512));
   writeFileSync(join(root, "public/app-icons/maskable-512.png"), await raster(iconSvg(true), 512));
+  // iOS draws its own rounded corners on the home screen: the full-bleed tile, at 180.
+  writeFileSync(join(root, "src/app/apple-icon.png"), await raster(iconSvg(true), 180));
   for (const [name, color] of Object.entries(inks)) {
     writeFileSync(join(out, `solon-mark-${name}-1024.png`), await raster(markSvg({ color }), 1024));
   }
