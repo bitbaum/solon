@@ -19,6 +19,7 @@
  *   pnpm run law:text recut-municipal [--authority ch-ne-neuchatel] [--limit 5000] [--dry-run]   (the same for the communes' PDFs held)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text recut-ukleg [--limit 5000] [--dry-run]   (the same for the UK acts held)
+ *   pnpm run law:text verify --authority li [--limit 30]   (read a random sample of held HTML acts again and report how much of each page's words the stored text holds)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
@@ -42,6 +43,7 @@ import { importRis } from "@/lib/law/text/import-ris";
 import { importGii } from "@/lib/law/text/import-gii";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
+import { verifyAuthority } from "@/lib/law/text/verify";
 import { FEDLEX, LILEX } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
@@ -99,6 +101,27 @@ async function main(): Promise<number> {
       }
     }
     return failures > 0 ? 1 : 0;
+  }
+  if (sourceKey === "verify") {
+    const authority = flag("authority");
+    if (!authority) throw new Error("verify needs --authority, e.g. li");
+    const report = await verifyAuthority(db, {
+      authority,
+      sample: flag("limit") ? Number(flag("limit")) : 30,
+      onProgress: (message) => console.error(message),
+    });
+    console.log(
+      JSON.stringify(
+        {
+          ...report,
+          acts: report.acts.filter((a) => a.short || a.error).slice(0, 30),
+          shortOrFailedShownOf: report.acts.length,
+        },
+        null,
+        2,
+      ),
+    );
+    return report.short > 0 || report.failed > 0 ? 1 : 0;
   }
   if (sourceKey === "refresh") {
     const report = await refreshText(db, {
