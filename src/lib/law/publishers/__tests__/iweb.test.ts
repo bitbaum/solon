@@ -36,12 +36,14 @@ describe("the collection's table", () => {
     expect(acts).toEqual([
       {
         ref: "100.1",
+        number: "100.1",
         title: "Stadtverfassung",
         kind: "constitution",
         pageUrl: "https://www.stadt-schaffhausen.ch/rechtssammlung/sammlung/1547321",
       },
       {
         ref: "110.1",
+        number: "110.1",
         title: "Geschäftsordnung des Grossen Stadtrats von Schaffhausen",
         kind: "regulation",
         pageUrl: "https://www.stadt-schaffhausen.ch/rechtssammlung/sammlung/1547363",
@@ -54,7 +56,8 @@ describe("the collection's table", () => {
       [{ title: '<a href="/reglements/106218">Règlement du personnel de la Ville de Sion</a>' }],
       "https://www.sion.ch/reglements",
     );
-    expect(act).toMatchObject({ ref: "106218", kind: "regulation" });
+    // The id in the address names the act across versions; it is not a number a reader can cite.
+    expect(act).toMatchObject({ ref: "106218", number: null, kind: "regulation" });
   });
 });
 
