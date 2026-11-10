@@ -120,7 +120,7 @@ const BOUNDARY = /<div class="(?:art|tit\d?|fntext)"|<div class="sacht" style=/g
 export function parseLilexProvisions(html: string): Provision[] {
   const starts = [...html.matchAll(/<div class="art">/g)].map((m) => m.index!);
   const out: { at: number; provision: Provision }[] = [];
-  const seen = new Set<string>();
+  const seen = new Map<string, number>();
   for (const start of starts) {
     BOUNDARY.lastIndex = start + 1;
     const end = BOUNDARY.exec(html)?.index ?? html.length;
@@ -128,9 +128,12 @@ export function parseLilexProvisions(html: string): Provision[] {
     const block = html.slice(start, end).replace(/<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g, "");
     const anchor = /<a name="((?:art|par):[^"]+)"><\/a>/.exec(block)?.[1];
     if (!anchor) continue;
-    const path = anchor.replace(":", "_");
-    if (seen.has(path)) continue;
-    seen.add(path);
+    // An announcement of several EEA decisions numbers each decision's articles from 1, so one page
+    // repeats art:1, art:2: every one is kept, the later ones under a suffix, never dropped.
+    const base = anchor.replace(":", "_");
+    const times = (seen.get(base) ?? 0) + 1;
+    seen.set(base, times);
+    const path = times === 1 ? base : `${base}_n${times}`;
     const afterAnchor = block.slice(block.indexOf("</a>") + 4);
     const sacht = /<div class="sacht">([\s\S]*?)<\/div>/.exec(afterAnchor);
     // The number ("Art. 1", "§ 1096") runs up to the title, or to the first block when there is none.
