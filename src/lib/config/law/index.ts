@@ -45,6 +45,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "at_gesetzesnummer",
   /** The RIS's NOR number of an act's own document (`NOR40198929`), the one that carries its Langtitel. */
   "at_nor",
+  /** The number an authority gave an act within its year, `<year>/<number>`: `2004/44` is law № 44 of 2004. */
+  "act_number",
   /** Germany's federal portal's abbreviation for an act, the folder it is served from: `bgb`, `gg`, `1-dm-goldm_nzg`. */
   "gii_abbr",
 ] as const;
@@ -824,6 +826,8 @@ export const PRESIDENTRUO = {
   postsUrl:
     "https://presidentruo.org/wp-json/wp/v2/posts?categories={category}&per_page=100&page={page}&order=asc&orderby=date&_fields=id,date,link,title",
   termsPageUrl: "https://presidentruo.org/ob-ispolzovanii-informacii-sajta/",
+  /** One post with its text; `{id}` is the post's number. */
+  postUrl: "https://presidentruo.org/wp-json/wp/v2/posts/{id}?_fields=id,date,link,title,content",
   hosts: ["presidentruo.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
   licenceSpdx: "LicenseRef-so-president-site-reuse",
