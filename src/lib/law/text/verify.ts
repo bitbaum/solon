@@ -7,9 +7,9 @@
  * short, a table lost or an article skipped shows up as many. The report names the commonest
  * missing words of each act so a person can tell which it is.
  *
- * It reads only HTML pages: a PDF or XML text has no page words to compare against.
+ * It reads HTML pages, and JSON that carries the act's HTML in one field (JSON_BODIES); a PDF or XML text has no page words to compare against.
  */
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import type { Database } from "@/lib/db/client";
 import { legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
@@ -198,6 +198,18 @@ export const PAGE_REGIONS: Record<string, { from: string; to: string }> = {
   rso: { from: 'property="content:encoded">', to: '<div class="field field-name-' },
 };
 
+/**
+ * Authorities whose texts are kept as JSON that carries the act's HTML in one field (a WordPress
+ * post's `content.rendered`): how to get that HTML out of the answer. Others are read as HTML pages.
+ */
+export const JSON_BODIES: Record<string, (json: unknown) => string> = {
+  rso: (json) => {
+    const body = (json as { content?: { rendered?: unknown } }).content?.rendered;
+    if (typeof body !== "string") throw new Error("the post has no content");
+    return body;
+  },
+};
+
 /** The part of a page the act's words are in. */
 export function regionOf(html: string, authority: string): string {
   const region = PAGE_REGIONS[authority];
@@ -250,7 +262,7 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
   const where = and(
     eq(legalActs.authority, authority),
     isNull(legalActVersions.inForceTo),
-    eq(legalActVersions.format, "html"),
+    inArray(legalActVersions.format, JSON_BODIES[authority] ? ["html", "json"] : ["html"]),
   );
   const [{ n } = { n: 0 }] = await db
     .select({ n: sql<number>`count(*)::int` })
@@ -262,6 +274,7 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       versionId: legalActVersions.id,
       actId: legalActs.id,
       url: sources.url,
+      format: legalActVersions.format,
     })
     .from(legalActVersions)
     .innerJoin(legalActs, eq(legalActs.id, legalActVersions.actId))
@@ -281,7 +294,8 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
     try {
       if (!url) throw new Error("the version has no source address");
       const page = await read(url, doFetch, [new URL(url).hostname]);
-      const html = new TextDecoder().decode(page.bytes);
+      const raw = new TextDecoder().decode(page.bytes);
+      const html = row.format === "json" ? JSON_BODIES[authority]!(JSON.parse(raw)) : raw;
       const pageWords = wordsOf(
         visibleText(regionOf(html, authority), HEADER_CLASSES[authority] ?? []),
       );

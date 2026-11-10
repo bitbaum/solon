@@ -127,3 +127,12 @@ describe("a title as the publisher printed it", () => {
     expect(post!.title).toBe("Указ «0 награждении орденом «Дружбы»»");
   });
 });
+
+describe("verify reads a decree kept as JSON through its content field", () => {
+  it("takes the post's rendered HTML, and fails loudly when there is none", async () => {
+    const { JSON_BODIES } = await import("../verify");
+    const body = JSON_BODIES.rso!(JSON.parse(fixture("presidentruo-post-89961.fixture.json")));
+    expect(body).toContain("постановляю");
+    expect(() => JSON_BODIES.rso!({ id: 1 })).toThrow(/no content/);
+  });
+});
