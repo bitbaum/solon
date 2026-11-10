@@ -1,0 +1,113 @@
+name: Places load (cloud runner)
+
+# `places-load.yml` on a GitHub runner instead of the box. The box's address is refused by some
+# publishers (the World Bank's API answers it HTTP 403, 2026-11-10), so a series read from there has
+# never loaded; a runner has another address. It writes to the same production database through an SSH
+# tunnel to the box and copies the snapshots it takes back to the box afterwards (see law-text-cloud.yml).
+# dry_run=true (default) reports what would change and writes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "import (a file in the repo) or fetch (from the publisher)"
+        type: choice
+        options: [import, fetch]
+        default: fetch
+      source:
+        description: "Source key from src/lib/config/places/sources.ts"
+        type: string
+        required: true
+      file:
+        description: "For import: the file, under data/places/"
+        type: string
+        default: ""
+      dry_run:
+        description: "Only report what would change"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: places-cloud-${{ inputs.source }}
+  cancel-in-progress: false
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Reach the production database
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="ssh -i $HOME/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40"
+          # The box's own settings: where its database is, and where its snapshots are kept.
+          settings=$($SSH "ubuntu@$IP" 'f=/opt/solon/shared/.env; [ -f "$f" ] || f=/opt/solon/app/.env; grep -E "^(DATABASE_URL|PLACES_SNAPSHOT_DIR)=" "$f"')
+          url=$(printf '%s\n' "$settings" | sed -n 's/^DATABASE_URL=//p' | head -1 | tr -d "\"'")
+          snaps=$(printf '%s\n' "$settings" | sed -n 's/^PLACES_SNAPSHOT_DIR=//p' | head -1 | tr -d "\"'")
+          [ -n "$url" ] || { echo "the box has no DATABASE_URL"; exit 1; }
+          pass=$(node -e 'const u=new URL(process.argv[1]); process.stdout.write(decodeURIComponent(u.password))' "$url")
+          [ -z "$pass" ] || echo "::add-mask::$pass"
+          echo "::add-mask::$url"
+          host=$(node -e 'process.stdout.write(new URL(process.argv[1]).hostname)' "$url")
+          port=$(node -e 'process.stdout.write(new URL(process.argv[1]).port||"5432")' "$url")
+          case "$host" in
+            localhost|127.0.0.1|'[::1]') ;;
+            *) echo "the box's database is on $host, not on the box itself; the tunnel goes to the box"; exit 1 ;;
+          esac
+          # The runner's port 15432 reaches the box's database port.
+          $SSH -f -N -o ExitOnForwardFailure=yes -L "15432:127.0.0.1:$port" "ubuntu@$IP"
+          local_url=$(node -e 'const u=new URL(process.argv[1]); u.hostname="127.0.0.1"; u.port="15432"; process.stdout.write(u.toString())' "$url")
+          echo "::add-mask::$local_url"
+          {
+            echo "DATABASE_URL=$local_url"
+            echo "PLACES_SNAPSHOT_DIR=$RUNNER_TEMP/snapshots"
+            echo "BOX_SNAPSHOT_DIR=${snaps:-/opt/solon/shared/places-snapshots}"
+          } >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/snapshots"
+          echo "tunnel up: runner 15432 -> box database port $port"
+
+      - name: Load
+        env:
+          KIND: ${{ inputs.kind }}
+          SOURCE: ${{ inputs.source }}
+          FILE: ${{ inputs.file }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE" =~ ^[a-z0-9-]+$ ]] || { echo "source must be a registry key"; exit 1; }
+          flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
+          if [ "$KIND" = import ]; then
+            [[ "$FILE" =~ ^data/places/[A-Za-z0-9_./-]+$ && "$FILE" != *..* ]] || { echo "file must be under data/places/"; exit 1; }
+            pnpm run places:import "$SOURCE" "$FILE" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
+          else
+            pnpm run places:fetch "$SOURCE" $flag 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 60
+          fi
+
+      - name: Copy the snapshots to the box
+        if: always() && inputs.dry_run == false
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          [ -d "$PLACES_SNAPSHOT_DIR" ] && [ -n "$(ls -A "$PLACES_SNAPSHOT_DIR")" ] || { echo "no snapshots taken"; exit 0; }
+          rsync -a --ignore-existing -e "ssh -i $HOME/.ssh/id -o BatchMode=yes" "$PLACES_SNAPSHOT_DIR"/ "ubuntu@$IP:$BOX_SNAPSHOT_DIR/"
+          echo "copied $(find "$PLACES_SNAPSHOT_DIR" -type f | wc -l) snapshot files to the box"
