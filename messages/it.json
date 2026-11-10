@@ -798,6 +798,7 @@
       "askAbout": "Chiedere al diritto su questo punto",
       "morePlace": "Altre leggi di {place}",
       "asMarkdown": "Per le macchine: Markdown",
+      "titleDerived": "Questo titolo è stato costruito da Solon dalle ultime righe dell'atto. L'editore non dà all'atto alcun titolo oltre al suo tipo.",
       "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}"
     },
     "kinds": {

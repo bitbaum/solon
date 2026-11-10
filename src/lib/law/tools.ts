@@ -205,6 +205,7 @@ export const LAW_TOOLS = [
         title: view.title,
         number: view.systematicNumber,
         kind: view.kind,
+        titleDerivedBySolon: view.titleDerived,
         inForce: view.statusStated ? view.inForce : null,
         statusNotStatedByPublisher: !view.statusStated,
         publisherUrl: view.officialUrl,

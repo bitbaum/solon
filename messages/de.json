@@ -798,6 +798,7 @@
       "askAbout": "Das Recht dazu fragen",
       "morePlace": "Weitere Gesetze von {place}",
       "asMarkdown": "Für Maschinen: Markdown",
+      "titleDerived": "Dieser Titel stammt von Solon, aus den Schlusszeilen des Erlasses. Der Herausgeber gibt dem Erlass keinen Titel ausser seiner Art.",
       "contents": "{count, plural, one {Inhalt: # Bestimmung} other {Inhalt: # Bestimmungen}}"
     },
     "kinds": {

@@ -23,6 +23,7 @@ export function actToMarkdown(act: ActView, site: string): string {
       .map((a) => a.key)
       .join(", ")}]`,
     `kind: ${act.kind}`,
+    ...(act.titleDerived ? ["title_derived_by_solon: true"] : []),
     act.statusStated ? `in_force: ${act.inForce}` : "in_force: not stated by the publisher",
     ...(act.systematicNumber ? [`number: ${JSON.stringify(act.systematicNumber)}`] : []),
     ...(act.officialUrl ? [`publisher_url: ${act.officialUrl}`] : []),

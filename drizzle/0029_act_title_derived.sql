@@ -1,0 +1,1 @@
+ALTER TABLE "legal_act_names" ADD COLUMN "derived" boolean DEFAULT false NOT NULL;
