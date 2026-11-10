@@ -141,6 +141,28 @@ test.describe("phones", () => {
     });
   }
 
+  // A country open in the atlas: its name, its Law card and its action come
+  // before the map, so the first screen is not all map. Needs the law data, so
+  // a database without it (the CI one holds only Testland) skips.
+  test("an open country shows its name and Law card before the map", async ({ page }) => {
+    await page.goto("/places?in=li", { waitUntil: "domcontentloaded" });
+    const law = page.getByRole("heading", { name: en.Atlas.lawTitle, level: 3 });
+    const shown = await law
+      .waitFor({ timeout: 20_000 })
+      .then(() => true)
+      .catch(() => false);
+    test.skip(!shown, "the database holds no law for Liechtenstein");
+    const map = page.getByRole("img", { name: /Liechtenstein/ });
+    await expect(map).toBeVisible();
+    const [lawBox, mapBox] = [await law.boundingBox(), await map.boundingBox()];
+    expect(lawBox!.y).toBeLessThan(mapBox!.y);
+    expect(lawBox!.y + lawBox!.height).toBeLessThan(844);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
   test("the menu opens and lists the site", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     const menu = page.locator("#site-menu");

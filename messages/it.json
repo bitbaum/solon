@@ -20,7 +20,7 @@
       "decisions": "Il registro pubblico — e la vostra parte.",
       "more": "Tutto il resto.",
       "places": "Ogni ente territoriale, con la fonte di ogni dato.",
-      "law": "Ogni atto che Solon conserva, parola per parola, con la sua fonte.",
+      "law": "Ogni atto che Solon conserva, con la sua fonte.",
       "data": "Serie, classifiche e metodi, con la fonte dietro ogni cifra."
     },
     "links": {
@@ -539,7 +539,7 @@
     },
     "index": {
       "title": "Luoghi",
-      "kicker": "Ogni ente territoriale, ufficiale o fondato",
+      "kicker": "Luoghi ufficiali e comunità fondate su Solon",
       "metaTitle": "Luoghi · trovare un luogo",
       "metaDescription": "Trovare un luogo per nome o numero postale: di cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
       "intro": "Ogni luogo che Solon raccoglie, come lo pubblicano le fonti ufficiali. Apri un paese sul globo, poi un luogo al suo interno: ognuno ha una pagina propria che puoi condividere.",
@@ -691,7 +691,8 @@
       "title": "Diritto",
       "intro": "Il diritto che si applica a {place}, il più vicino per primo. Aprine uno per leggerlo e proporre modifiche.",
       "none": "Solon non raccoglie ancora il diritto di {place}.",
-      "count": "{count, plural, =0 {Ancora nessun testo} one {# atto in vigore} other {# atti in vigore}}"
+      "count": "{count, plural, =0 {Ancora nessun testo} one {# atto in vigore} other {# atti in vigore}}",
+      "communes": "Comuni ({count})"
     },
     "parts": {
       "title": "Luoghi di {place}",
@@ -989,11 +990,14 @@
     "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Tocca un paese per aprirlo.",
     "lawCount": "{count, plural, =0 {Solo luoghi} one {# atto} other {# atti}}",
     "lawTitle": "Diritto",
-    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
+    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, dalle fonti ufficiali.",
+    "lawNation": "Stato: {count, plural, one {# atto in vigore} other {# atti in vigore}}, dalle fonti ufficiali.",
+    "lawBelow": "Regioni e comuni: {count, plural, one {# atto in vigore} other {# atti in vigore}}, contati a parte.",
     "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
     "lawOpen": "Leggerlo e proporre modifiche",
     "placesTitle": "Luoghi",
-    "placesDrawn": "Sulla mappa: {level}. Toccane uno per aprire la sua pagina, o cerca.",
+    "placesDrawn": "Mostrato sulla mappa: {level}. Tocca un'area per aprire la sua pagina, o cerca per nome.",
+    "placesList": "I luoghi sulla mappa ({count})",
     "placesNotDrawn": "I suoi luoghi sono elencati, non ancora disegnati sulla carta.",
     "mapLabelCountry": "Carta di {country} e dei suoi luoghi",
     "unavailable": "La carta non può essere disegnata in questo browser.",

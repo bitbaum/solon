@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
+import OfficialRoutes from "@/components/law/official-routes";
 import AmendForm, { type DraftChange } from "@/components/law/amend-form";
 import { auth } from "@/lib/auth";
+import { routesFor } from "@/lib/config/law/routes";
 import { entryHref } from "@/lib/auth/entry-href";
 import { db } from "@/lib/db/client";
 import { loadRevision, provisionsInForce } from "@/lib/law/amend/store";
@@ -102,6 +104,7 @@ export default async function AmendPage({
           forkOf={fork?.id}
           signedIn={Boolean(session)}
           signInHref={entryHref("sign-in", locale, here)}
+          routes={<OfficialRoutes routes={routesFor(act.authority, act.kind)} locale={locale} />}
         />
       </div>
     </PageLayout>

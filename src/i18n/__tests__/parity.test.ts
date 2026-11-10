@@ -6,7 +6,8 @@
  * sentence. All three are caught here instead of by a reader.
  */
 import { describe, expect, it } from "vitest";
-import { locales } from "../routing";
+import { locales, type Locale } from "../routing";
+import { AMEND_LOCALES } from "../../lib/site-config";
 import en from "../../../messages/en.json";
 import de from "../../../messages/de.json";
 import fr from "../../../messages/fr.json";
@@ -36,19 +37,21 @@ const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1
  * of their terms of art (AGENTS.md, "Language"). Removing a name here is how
  * a translation becomes required.
  */
-const PENDING_TRANSLATION = [
-  "Status",
-  "Capabilities",
-  "UseCases",
-  "Ideas",
-  "NewEra",
-  "Platform",
-  "Amend",
-];
+const PENDING_TRANSLATION = ["Status", "Capabilities", "UseCases", "Ideas", "NewEra", "Platform"];
 
-const pending = (key: string) => PENDING_TRANSLATION.some((ns) => key.startsWith(`${ns}.`));
+/**
+ * `Amend` (proposing a change to the law) is translated per language: it is
+ * pending in every language not listed in AMEND_LOCALES (src/lib/site-config.ts),
+ * which is also what takes its pages off the translation notice.
+ */
+const pendingFor = (locale: Locale) =>
+  AMEND_LOCALES.includes(locale) ? PENDING_TRANSLATION : [...PENDING_TRANSLATION, "Amend"];
 
-const source = new Map([...leaves(en)].filter(([k]) => !pending(k)));
+const isPending = (locale: Locale, key: string) =>
+  pendingFor(locale).some((ns) => key.startsWith(`${ns}.`));
+
+const sourceFor = (locale: Locale) =>
+  new Map([...leaves(en)].filter(([k]) => !isPending(locale, k)));
 
 describe("message catalogs", () => {
   it("has a catalog for every declared locale", () => {
@@ -57,7 +60,8 @@ describe("message catalogs", () => {
 
   for (const locale of locales.filter((l) => l !== "en")) {
     describe(locale, () => {
-      const target = new Map([...leaves(CATALOGS[locale])].filter(([k]) => !pending(k)));
+      const source = sourceFor(locale);
+      const target = new Map([...leaves(CATALOGS[locale])].filter(([k]) => !isPending(locale, k)));
 
       it("has every key English has", () => {
         const missing = [...source.keys()].filter((k) => !target.has(k));

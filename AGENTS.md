@@ -217,6 +217,11 @@ fleet's choice for i18n (fleet `STACK.md`; evig, hirnli and four others use it).
   or a German reader clicks into English.
 - A page not yet translated stays English and shows a notice in the reader's
   language. `TRANSLATED_ROUTES` in `site-config.ts` lists the ones that are.
+  Translation can also be per language: `Amend` (proposing a change to the law)
+  is written in the languages of `AMEND_LOCALES` only, and only there do its
+  pages lose the notice. An official route's words per language live on the
+  route (`OfficialRoute.text`, `src/lib/config/law/routes.ts`); English is the
+  fallback.
 - German uses Swiss spelling (ss, never ß).
 
 **The one habit that matters:** never assemble a sentence by concatenation.

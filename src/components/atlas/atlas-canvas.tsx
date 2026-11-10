@@ -21,6 +21,16 @@ export const ATLAS_LIMITS: Limits = { minZoom: 0.7, maxZoom: 3000, maxTilt: 75 }
 /** Within this many pixels of a dot, a tap or a hover is that dot's place. */
 const DOT_REACH = 12;
 
+/** A drawn place's name, where it stands and how far it reaches (lon/lat), so it is written only where it fits. */
+export interface PlaceName {
+  text: string;
+  point: [number, number];
+  bounds: [number, number, number, number];
+}
+
+/** Room left round a name inside its place, in pixels. */
+const LABEL_PAD = 8;
+
 export interface AtlasCanvasProps {
   /** Every shape drawn, world first, a country's places after (so on top). */
   shapes: readonly MapFeature[];
@@ -29,6 +39,10 @@ export interface AtlasCanvasProps {
   /** Dots on places too small to tap (Liechtenstein), by shape id. */
   dots: ReadonlyMap<string, [number, number]>;
   dotColour: string;
+  /** Names of the places drawn inside a country, written on the map where they fit. */
+  names?: ReadonlyMap<string, PlaceName>;
+  nameColour?: string;
+  nameHalo?: string;
   selected: string | null;
   /** Called with the map once it is made and sized (so the page can fly it), and null when it goes. */
   onMap: (map: MapController | null) => void;
@@ -89,6 +103,7 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
       live.current.onError();
       return;
     }
+    const font = `600 12px ${getComputedStyle(el).fontFamily || "sans-serif"}`;
     const controller = createMap(el, {
       shapes: built,
       palette: live.current.palette,
@@ -133,6 +148,29 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
             220,
           );
         }
+        const { names } = live.current;
+        if (names && names.size > 0) {
+          ctx.save();
+          ctx.font = font;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.lineJoin = "round";
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = live.current.nameHalo ?? "transparent";
+          ctx.fillStyle = live.current.nameColour ?? "currentColor";
+          for (const { text, point, bounds } of names.values()) {
+            const at = pointAt(point, projection);
+            const a = at && projection([bounds[0], bounds[1]]);
+            const b = at && projection([bounds[2], bounds[3]]);
+            if (!at || !a || !b) continue;
+            // Only where the whole name fits inside its place, so names never pile up.
+            if (Math.abs(b[0] - a[0]) < ctx.measureText(text).width + LABEL_PAD) continue;
+            if (Math.abs(b[1] - a[1]) < 12 + LABEL_PAD) continue;
+            ctx.strokeText(text, at[0], at[1]);
+            ctx.fillText(text, at[0], at[1]);
+          }
+          ctx.restore();
+        }
         if (live.current.dots.size === 0) return;
         ctx.save();
         ctx.fillStyle = live.current.dotColour;
@@ -176,7 +214,7 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
   useEffect(() => map.current?.setFills(fills), [fills]);
   useEffect(() => map.current?.setPalette(palette), [palette]);
   useEffect(() => map.current?.setSelected(selected), [selected]);
-  useEffect(() => map.current?.invalidate(), [dots]);
+  useEffect(() => map.current?.invalidate(), [dots, props.names]);
   useEffect(
     () => map.current?.setLabels(props.labels ?? [], props.labelStyles ?? undefined),
     [props.labels, props.labelStyles],

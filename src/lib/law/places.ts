@@ -46,6 +46,10 @@ export function parentOf(key: string): LawAuthority | null {
   return (country && countryAuthority(country)) || null;
 }
 
+/** The authorities that sit directly within this one (a country's communes), by name. */
+export const partsOf = (key: string): LawAuthority[] =>
+  LAW_AUTHORITIES.filter((a) => a.within === key).sort((a, b) => a.label.localeCompare(b.label));
+
 /** This authority and every one above it: the laws that apply where it does, nearest first. */
 export function chainOf(key: string): LawAuthority[] {
   const chain: LawAuthority[] = [];

@@ -13,6 +13,15 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     reserved: true,
   },
   {
+    // Wikidata's item number: the one scheme expected of every state authority, including
+    // those no ISO or national code covers (design §4.3). CC0.
+    key: "wikidata",
+    label: { en: "Wikidata item", de: "Wikidata-Eintrag" },
+    pattern: "Q[1-9][0-9]*",
+    urlTemplate: "https://www.wikidata.org/wiki/{value}",
+    reserved: true,
+  },
+  {
     key: "bfs_canton",
     label: { en: "FSO canton number", de: "BFS-Kantonsnummer", fr: "numéro OFS du canton" },
     pattern: "[1-9]|1[0-9]|2[0-6]",

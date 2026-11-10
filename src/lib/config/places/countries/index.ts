@@ -1,6 +1,7 @@
 import type { CountryPackInput } from "../schema";
 import { estonia } from "./estonia";
 import { liechtenstein } from "./liechtenstein";
+import { southOssetia } from "./south_ossetia";
 import { switzerland } from "./switzerland";
 import { unitedStates } from "./united_states";
 import { worldPack } from "./world";
@@ -10,7 +11,13 @@ import { worldPack } from "./world";
  * The engine is proven against a made-up country that lives only in tests
  * (src/lib/places/__tests__/fixtures); a real pack is data like it.
  */
-const DEPTH: readonly CountryPackInput[] = [switzerland, liechtenstein, estonia, unitedStates];
+const DEPTH: readonly CountryPackInput[] = [
+  switzerland,
+  liechtenstein,
+  estonia,
+  unitedStates,
+  southOssetia,
+];
 
 export const COUNTRY_PACKS: readonly CountryPackInput[] = [
   ...DEPTH,
