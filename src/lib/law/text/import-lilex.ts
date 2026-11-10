@@ -29,7 +29,7 @@ import {
 import { provisionsOfPdf } from "./pdf-provisions";
 import { storeVersion } from "./store";
 
-export const LILEX_IMPORTER_VERSION = "law-text-lilex-2";
+export const LILEX_IMPORTER_VERSION = "law-text-lilex-3";
 
 /** The order acts are read in: what people look for first. */
 const KIND_ORDER = [

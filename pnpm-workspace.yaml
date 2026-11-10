@@ -14,17 +14,15 @@ allowBuilds:
   tesseract.js: false
   unrs-resolver: true
 
-# Own packages published to npm <24h ago; exempt from the minimum-release-age
-# supply-chain window. Redundant once the release ages past the window.
+# Our own packages are published by our own tagged workflows; minimumReleaseAge
+# would refuse each fresh publish until it ages. One scope glob covers every
+# @bitbaum package; the four unscoped ones are named (fleet SHARED.md).
 minimumReleaseAgeExclude:
-  - "@bitbaum/design-tokens"
-  - bip-kit@0.6.0
-  - "@bitbaum/chatkit"
-  - "@bitbaum/accountkit@0.8.0 || 0.8.1 || 0.9.0 || 0.9.1 || 0.10.0 || 0.12.0 || 0.13.0 || 0.14.0 || 0.16.0 || 0.18.0 || 0.18.1 || 0.19.0 || 0.20.0 || 0.23.0 || 0.23.1 || 0.25.0 || 0.26.1 || 0.27.0"
-  - "@bitbaum/geo-kit@0.1.2 || 0.2.0 || 0.3.0 || 0.4.0 || 0.5.0"
-  - "@bitbaum/searchkit@0.2.3"
-  - "@bitbaum/ai-kit@1.21.5 || 1.22.0 || 1.24.0"
-  - limitkit@0.2.1
+  - "@bitbaum/*"
+  - limitkit
+  - bip-kit
+  - threadkit
+  - ai-forms
 
 overrides:
   # Security floors (2026-10-30 dev-toolchain sweep): stay inside the

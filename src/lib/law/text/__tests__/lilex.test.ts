@@ -40,15 +40,20 @@ describe("parseLilexProvisions", () => {
   const provisions = parseLilexProvisions(PAGE);
 
   it("reads the articles and §§ in order under anchors with the colon made an underscore", () => {
-    expect(provisions.map((p) => p.path)).toEqual(["art_1", "art_2a", "par_1096"]);
+    expect(provisions.map((p) => p.path)).toEqual(["art_1", "art_2a", "par_1096", "art_1_n2"]);
   });
 
-  it("heads each with its number and title, and keeps the first of a repeated anchor", () => {
+  it("heads each with its number and title, and keeps a repeated anchor under a suffix", () => {
     expect(provisions[0]).toMatchObject({
       heading: "Art. 1 Gegenstand",
       text: "Dieses Gesetz regelt die Ein- und Ausreise von Ausländern.",
     });
     expect(provisions[2]).toMatchObject({ heading: "§ 1096" });
+    expect(provisions[3]).toMatchObject({
+      path: "art_1_n2",
+      heading: "Art. 1 Doppelt",
+      text: "nie",
+    });
   });
 
   it("drops footnote marks and keeps the list items on their own lines", () => {
