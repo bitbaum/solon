@@ -1058,7 +1058,9 @@
       "mic": "Das Mikrofon ist blockiert. Erlaube es für diese Seite und versuche es erneut.",
       "silence": "Nichts gehört. Versuche es nochmals, etwas näher am Mikrofon.",
       "unavailable": "Spracheingabe ist gerade nicht verfügbar. Tippe stattdessen oder versuche es später.",
-      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren."
+      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren.",
+      "signIn": "Melden Sie sich an, um die Spracheingabe zu nutzen.",
+      "busy": "Die Spracheingabe ist gerade ausgelastet. Versuchen Sie es gleich noch einmal."
     },
     "app": {
       "chats": "Gespräche",

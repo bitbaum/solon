@@ -951,7 +951,9 @@
       "mic": "Le microphone est bloqué. Autorisez-le pour ce site et réessayez.",
       "silence": "Rien n’a été entendu. Réessayez, un peu plus près du micro.",
       "unavailable": "La saisie vocale n’est pas disponible pour le moment. Écrivez à la place ou réessayez plus tard.",
-      "fileTooLarge": "Cet enregistrement est trop volumineux pour être transcrit ici."
+      "fileTooLarge": "Cet enregistrement est trop volumineux pour être transcrit ici.",
+      "signIn": "Connectez-vous pour utiliser la saisie vocale.",
+      "busy": "La saisie vocale est très sollicitée en ce moment. Réessayez dans un instant."
     },
     "app": {
       "chats": "Conversations",
