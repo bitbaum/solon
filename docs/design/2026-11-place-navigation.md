@@ -249,7 +249,7 @@ the step (a place is a parameter of the test, not a literal in it).
 | 5 | No town level under US counties | A `municipality` level per country pack, `part_of` its state with `overlaps` to the counties it lies in | 7 |
 | 6 | `/places/united-states` redirects to `united_states`, but `/places/united-states/wyoming` is 404 | One canonical hyphenated scheme; every other form answers 308 to it at every depth | 5 |
 | 7 | Breadcrumbs above country level show only "The world" | The chain continues above a country (continent, region, unions) from data in the world pack, rendered by the shared `Breadcrumbs` | 6 |
-| 8 | A municipality page and its law row name the same place differently | Names come from the place's names table; a law authority's label resolves to the place's name and the publisher's own name stays an attributed name | 4 |
+| 8 | A municipality page and its law row name the same place differently | Names come from the place's names table; a law authority's label resolves to the place's name and the publisher's own name stays an attributed name | #458 already adds `src/lib/law/authority-names.ts` (place name first, config label as fallback); no second module. Remaining: keep the publisher's name as an attributed `official_other` name |
 | 9 | The globe has no labels, and the page stays busy for more than 30 s | Measure first (geometry size, blocking fetches, hydration), then fix the cause; labels from the shared map | 9 (measure), 10 (labels, after #458) |
 | 10 | The search zoom barely moves | A search result selects and frames the place exactly as a click does | 10 (after #458) |
 
@@ -257,10 +257,33 @@ Reading of item 7, to be confirmed: the criterion is that nothing above a
 country exists in the chain today. If the intent is only that the first crumb
 is missing a link, step 6 is smaller.
 
+### Checked in a real browser, 2026-11-10
+
+Chromium against the live site (headless, one machine, one run each):
+
+- `/places?in=us`: the camera frames only Wyoming's 23 counties and the US
+  outline is gone, under a sidebar titled "United States". **Confirmed**; the
+  diagnosis above stands. `/places?in=li` frames Liechtenstein's communes.
+- Law counts in the sidebar: Liechtenstein reads "3,412 laws in force" and "336
+  laws in force, counted separately"; the US reads "Nation: 0" and "Regions and
+  communes: 745, counted separately". The sidebar was labelled after the QA
+  walk (#481); place pages still say "No texts yet" for a place whose own law
+  is zero and whose law within it is not. Step 3's module is what removes the
+  difference for good.
+- Busy time (QA 9): 56 requests, load at about 1 s, network idle at about 5 s,
+  in a waterfall: session, globe data, place map data, geography manifest, the
+  boundary file, one after the other (the boundary file arrives about 3.7 s in).
+  A page busy for 30 s was **not reproduced** here; CPU work (hydration and the
+  spinning globe) was not measured. Step 9 measures that before changing
+  anything.
+- The drill-down check (`tests/e2e/place-drill-down.spec.ts`, #495) passes live
+  from the United States, Liechtenstein and Switzerland: each level opens,
+  names itself and links back up.
+
 ## Not verified
 
-- The globe in a browser: the camera behaviour above is read from code
-  (step 4a).
+- Hit-testing and zoom of the globe by hand (clicks): only the framing on
+  load was seen in a browser.
 - All world-scale counts above.
 - geo-kit's internals (hit-testing when an admin-1 shape and a state shape
   overlap), and Natural Earth's disputed-areas layer.
