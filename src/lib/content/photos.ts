@@ -124,3 +124,21 @@ export const PHOTOS = {
     source: "https://commons.wikimedia.org/wiki/File:Landsgemeinde_Ende_18._Jhr.jpg",
   },
 } satisfies Record<string, Photo>;
+
+/**
+ * A night photograph has a daylight counterpart for the light theme: a section
+ * wears the photograph that matches the reader's theme, under a scrim of that
+ * theme's page colour, so the light theme reads as light and the type on it
+ * keeps the theme's own ink. A night photograph with no counterpart belongs to
+ * a section that says so (`alwaysDark` on FullBleed).
+ */
+const LIGHT_COUNTERPART: Partial<Record<PhotoId, Photo>> = {
+  earthAtNight: PHOTOS.assemblySeated,
+  europeFromOrbit: PHOTOS.mountainValley,
+  city: PHOTOS.landsgemeinde,
+};
+
+/** The photograph for the light theme, if this one is a night shot with a counterpart. */
+export function lightCounterpart(photo: Photo): Photo | null {
+  return LIGHT_COUNTERPART[photo.id] ?? null;
+}
