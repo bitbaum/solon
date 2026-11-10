@@ -219,6 +219,7 @@ describe("a copy's provenance", () => {
       authority: "li7004",
       kind: "communal_act",
       inForce: true,
+      statusStated: true,
       title: "Wasserreglement",
       systematicNumber: null,
       officialUrl: PDF,

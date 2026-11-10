@@ -37,6 +37,13 @@ export default async function LawCoverageReport({ coverage, t }: LawCoverageRepo
               withText: totals.withText.toLocaleString("en-CH"),
             })}
           </p>
+          {totals.statusNotStated > 0 ? (
+            <p className="mt-2 text-sm text-fg-secondary">
+              {t("coverage.totalsNotStated", {
+                notStated: totals.statusNotStated.toLocaleString("en-CH"),
+              })}
+            </p>
+          ) : null}
         </div>
 
         <div className={cardClass}>
@@ -49,10 +56,16 @@ export default async function LawCoverageReport({ coverage, t }: LawCoverageRepo
               >
                 <span className="text-fg-primary">{authorityName(names, authority.key)}</span>
                 <span className="text-fg-secondary tabular-nums sm:text-right">
-                  {t("coverage.row", {
-                    inForce: authority.inForce.toLocaleString("en-CH"),
-                    notInForce: authority.notInForce.toLocaleString("en-CH"),
-                  })}
+                  {authority.statusNotStated > 0
+                    ? t("coverage.rowNotStated", {
+                        inForce: authority.inForce.toLocaleString("en-CH"),
+                        notInForce: authority.notInForce.toLocaleString("en-CH"),
+                        notStated: authority.statusNotStated.toLocaleString("en-CH"),
+                      })
+                    : t("coverage.row", {
+                        inForce: authority.inForce.toLocaleString("en-CH"),
+                        notInForce: authority.notInForce.toLocaleString("en-CH"),
+                      })}
                 </span>
               </li>
             ))}

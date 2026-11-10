@@ -14,6 +14,8 @@ export interface ActView {
   authority: string;
   kind: string;
   inForce: boolean;
+  /** False when the publisher does not say whether the act is in force; `inForce` then says nothing. */
+  statusStated: boolean;
   title: string | null;
   systematicNumber: string | null;
   officialUrl: string | null;
@@ -37,7 +39,7 @@ export async function loadActView(
   input: { id: string; lang: string; page: number; all?: boolean },
 ): Promise<ActView | null> {
   const acts = await db.execute(sql`
-    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
+    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce", a.status_stated AS "statusStated",
            n.text AS title, num.value AS "systematicNumber", ou.value AS "officialUrl"
     FROM legal_acts a
     LEFT JOIN legal_act_names n

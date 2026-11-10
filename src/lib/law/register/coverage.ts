@@ -12,21 +12,30 @@ import { sources } from "@/lib/db/places-schema";
 export interface AuthorityCoverage {
   key: string;
   name: string;
+  /** Acts the publisher says are in force. */
   inForce: number;
   notInForce: number;
+  /** Acts listed by a publisher that does not say whether they are in force: in neither count above. */
+  statusNotStated: number;
   /** Acts of this authority whose text Solon holds, in any language. */
   withText: number;
 }
 
 export interface LawCoverage {
   authorities: AuthorityCoverage[];
-  totals: { inForce: number; notInForce: number; withText: number };
+  totals: { inForce: number; notInForce: number; statusNotStated: number; withText: number };
   /** ISO date the register was last read; null when never. */
   retrievedOn: string | null;
 }
 
 export interface CoverageCounts {
-  counts: readonly { authority: string; inForce: boolean; acts: number }[];
+  counts: readonly {
+    authority: string;
+    inForce: boolean;
+    /** Defaults to true: a register states a status unless it says it does not. */
+    statusStated?: boolean;
+    acts: number;
+  }[];
   /** Acts per authority that have a current version of their text. */
   withText?: readonly { authority: string; acts: number }[];
   retrievedAt: Date | null;
@@ -39,8 +48,15 @@ export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCoun
     return {
       key: authority.key,
       name: authority.label,
-      inForce: mine.filter((row) => row.inForce).reduce((sum, row) => sum + row.acts, 0),
-      notInForce: mine.filter((row) => !row.inForce).reduce((sum, row) => sum + row.acts, 0),
+      inForce: mine
+        .filter((row) => row.inForce && row.statusStated !== false)
+        .reduce((sum, row) => sum + row.acts, 0),
+      notInForce: mine
+        .filter((row) => !row.inForce && row.statusStated !== false)
+        .reduce((sum, row) => sum + row.acts, 0),
+      statusNotStated: mine
+        .filter((row) => row.statusStated === false)
+        .reduce((sum, row) => sum + row.acts, 0),
       withText: withText.find((row) => row.authority === authority.key)?.acts ?? 0,
     };
   });
@@ -51,6 +67,7 @@ export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCoun
     totals: {
       inForce: sum((a) => a.inForce),
       notInForce: sum((a) => a.notInForce),
+      statusNotStated: sum((a) => a.statusNotStated),
       withText: sum((a) => a.withText),
     },
     retrievedOn: retrievedAt ? retrievedAt.toISOString().slice(0, 10) : null,
@@ -59,9 +76,14 @@ export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCoun
 
 export async function loadLawCoverage(db: Database): Promise<LawCoverage> {
   const counts = await db
-    .select({ authority: legalActs.authority, inForce: legalActs.inForce, acts: count() })
+    .select({
+      authority: legalActs.authority,
+      inForce: legalActs.inForce,
+      statusStated: legalActs.statusStated,
+      acts: count(),
+    })
     .from(legalActs)
-    .groupBy(legalActs.authority, legalActs.inForce);
+    .groupBy(legalActs.authority, legalActs.inForce, legalActs.statusStated);
   const withText = await db
     .select({ authority: legalActs.authority, acts: countDistinct(legalActVersions.actId) })
     .from(legalActVersions)
@@ -80,6 +102,8 @@ export interface ActSearchHit {
   authority: string;
   kind: string;
   inForce: boolean;
+  /** False when the publisher does not say whether the act is in force. */
+  statusStated: boolean;
   title: string | null;
   systematicNumber: string | null;
   lexfindId: string | null;
@@ -95,7 +119,7 @@ export async function searchActs(
   offset = 0,
 ): Promise<ActSearchHit[]> {
   const rows = await db.execute(sql`
-    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
+    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce", a.status_stated AS "statusStated",
            n.text AS title, num.value AS "systematicNumber", lf.value AS "lexfindId",
            ou.value AS "officialUrl"
     FROM legal_acts a
