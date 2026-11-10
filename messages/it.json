@@ -1076,6 +1076,15 @@
       "apply": "Mostra",
       "chartCaption": "{metric}, {unit}, per anno. Fonte: {publisher}.",
       "noSeries": "Nessun dato per i luoghi scelti.",
+      "searchTitle": "Nessun valore trovato per {place}",
+      "searchIntro": "Letto il {date}. Nessuna di queste fonti ha un valore di questa serie per {place}, e Solon non ne ha caricato nessuno.",
+      "searchOpen": "Apri ciò che è stato letto",
+      "searchResult": {
+        "series_empty": "Ha la serie, senza valore:",
+        "not_published": "Non la pubblica:",
+        "not_covered": "Non copre {place}:",
+        "related": "Pubblica invece un valore vicino:"
+      },
       "timelineCaption": "Il diritto e gli eventi negli stessi anni. Un segno è il giorno in cui una versione di un atto collegato è entrata in vigore, o un evento registrato.",
       "timelineEmpty": "In questi anni nessuna versione di un atto collegato è entrata in vigore, e nessun evento è registrato.",
       "versionInForce": "{act}: nuova versione in vigore",

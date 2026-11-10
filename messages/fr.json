@@ -1076,6 +1076,15 @@
       "apply": "Afficher",
       "chartCaption": "{metric}, {unit}, par année. Source : {publisher}.",
       "noSeries": "Aucun chiffre pour les lieux choisis.",
+      "searchTitle": "Aucune valeur trouvée pour {place}",
+      "searchIntro": "Consulté le {date}. Aucune de ces sources ne détient de valeur de cette série pour {place}, et Solon n’en a chargé aucune.",
+      "searchOpen": "Ouvrir ce qui a été lu",
+      "searchResult": {
+        "series_empty": "A la série, sans valeur :",
+        "not_published": "Ne la publie pas :",
+        "not_covered": "Ne couvre pas {place} :",
+        "related": "Publie à la place une valeur voisine :"
+      },
       "timelineCaption": "Le droit et les événements sur les mêmes années. Une marque est le jour où une version d'un acte lié est entrée en vigueur, ou un événement enregistré.",
       "timelineEmpty": "Aucune version d'un acte lié n'est entrée en vigueur ces années-là, et aucun événement n'est enregistré.",
       "versionInForce": "{act} : nouvelle version en vigueur",

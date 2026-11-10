@@ -1769,6 +1769,15 @@
       "apply": "Show",
       "chartCaption": "{metric}, {unit}, by year. Source: {publisher}.",
       "noSeries": "No figures for the places chosen.",
+      "searchTitle": "No figure found for {place}",
+      "searchIntro": "Read on {date}. None of these holds a figure for this series for {place}, and Solon has loaded none.",
+      "searchOpen": "Open what was read",
+      "searchResult": {
+        "series_empty": "Has the series, with no value:",
+        "not_published": "Does not publish it:",
+        "not_covered": "Does not cover {place}:",
+        "related": "Publishes a nearby figure instead:"
+      },
       "timelineCaption": "The law and events over the same years. A mark is the day a version of a linked act took effect, or a recorded event.",
       "timelineEmpty": "No version of a linked act took effect in these years, and no event is recorded.",
       "versionInForce": "{act}: a new version in force",

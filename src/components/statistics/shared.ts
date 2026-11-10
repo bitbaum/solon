@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import type { Metric } from "@/lib/config/places/schema";
 import type { EventRow, LinkedAct, PlaceSeries } from "@/lib/statistics/read";
 import type { EnforcementBody } from "@/lib/statistics/records";
+import type { StatisticSearch } from "@/lib/config/statistics/searches";
 import type { SanityFinding } from "@/lib/statistics/sanity";
 import type { ViewSpec } from "@/lib/statistics/views";
 import type { MapValue } from "./metric-map";
@@ -32,6 +33,8 @@ export interface MetricViewProps {
   spec: ViewSpec;
   /** What the checks on the figures found: warnings, and figures left out. */
   sanity: SanityFinding[];
+  /** For a place asked for that has no figures: where Solon looked for one. */
+  searches?: StatisticSearch[];
   /** The page's own address, absolute, for the texts that cite it. */
   selfUrl: string;
   /** Shown above the chart on a saved view's page. */

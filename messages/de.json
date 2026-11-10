@@ -1183,6 +1183,15 @@
       "apply": "Zeigen",
       "chartCaption": "{metric}, {unit}, nach Jahr. Quelle: {publisher}.",
       "noSeries": "Keine Zahlen für die gewählten Orte.",
+      "searchTitle": "Kein Wert für {place} gefunden",
+      "searchIntro": "Gelesen am {date}. Keine dieser Quellen hat für diese Reihe einen Wert für {place}, und Solon hat keinen geladen.",
+      "searchOpen": "Das Gelesene öffnen",
+      "searchResult": {
+        "series_empty": "Hat die Reihe, ohne Wert:",
+        "not_published": "Veröffentlicht ihn nicht:",
+        "not_covered": "Erfasst {place} nicht:",
+        "related": "Veröffentlicht stattdessen einen nahen Wert:"
+      },
       "timelineCaption": "Das Recht und Ereignisse über dieselben Jahre. Eine Marke ist der Tag, an dem eine Fassung eines verknüpften Erlasses in Kraft trat, oder ein erfasstes Ereignis.",
       "timelineEmpty": "In diesen Jahren trat keine Fassung eines verknüpften Erlasses in Kraft, und kein Ereignis ist erfasst.",
       "versionInForce": "{act}: neue Fassung in Kraft",
