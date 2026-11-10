@@ -15,6 +15,13 @@ My favourite story about them comes from that book. When the Persian king Darius
 
 What the Scythians had in place of territory was a people. A state that cannot be captured by taking its land is an odd idea in 2026. It is also exactly the idea behind what people now call a **network state**: a community that forms online around shared values, organises itself, and only later, if at all, acquires land.
 
+| | The Scythians | A network state today |
+| --- | --- | --- |
+| What holds it together | Kinship, the kings, the herds | Shared values and a written set of rules |
+| Territory | Wherever the people were | None at first; land later, by agreement |
+| Defence | Retreat; nothing to capture | The aim: nothing to capture, with the record kept in more than one place |
+| Leaving | Riding away | Leaving with your record |
+
 ## Why not the old steppe
 
 Rebuilding Scythia where it once was is not realistic. The steppe is now divided among existing states, some of them at war. None of them would allow a new polity on their land, and there's no good reason they should. A network state that starts by claiming someone else's territory has already lost the argument.
