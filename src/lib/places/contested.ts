@@ -39,38 +39,6 @@ export const contestProvisionSchema = z.object({
 });
 export type ContestProvision = z.infer<typeof contestProvisionSchema>;
 
-/**
- * What one side's public budget rested on in one year, as its own budget law
- * states it: every revenue line counted, each marked as raised by the side
- * itself or received from someone else, and what was spent. Amounts are in the
- * law's own unit (`unit`: 1000 for "тыс. рублей").
- */
-export const contestLedgerSchema = z.object({
-  side: keySchema,
-  year: z.number().int().min(1900),
-  currency: z.string().regex(/^[A-Z]{3}$/),
-  unit: z.number().positive(),
-  revenue: z.number().positive(),
-  expenditure: z.number().positive(),
-  lines: z
-    .array(
-      z.object({
-        label: localizedTextSchema,
-        amount: z.number().min(0),
-        /** Raised by the side itself (taxes, fees, its own income), or received from another. */
-        kind: z.enum(["own", "received"]),
-        /** Who gave it, for a line received: a name that stands alone as a label. */
-        from: localizedTextSchema.optional(),
-      }),
-    )
-    .min(1),
-  /** The law's words that state the totals, and where the lines were read. */
-  quote: wordingSchema,
-  label: z.string().min(1),
-  act: actRefSchema.nullable(),
-});
-export type ContestLedger = z.infer<typeof contestLedgerSchema>;
-
 export const contestSchema = z.object({
   /** The place's slug in the world list (`src/lib/config/world.ts`). */
   place: z.string().min(1),
@@ -86,8 +54,6 @@ export const contestSchema = z.object({
     )
     .min(2),
   provisions: z.array(contestProvisionSchema).default([]),
-  /** Each side's public money, from its own budget laws. */
-  ledgers: z.array(contestLedgerSchema).default([]),
   /** What the comparison leaves open, and what would fill it. */
   open: localizedTextSchema.optional(),
 });
@@ -151,28 +117,6 @@ export function contestProblems(
         );
       }
     }
-    for (const l of c.ledgers) {
-      const side = c.sides.find((s) => s.key === l.side);
-      if (!side) problems.push(`contest "${c.place}": ledger side "${l.side}" does not exist`);
-      if (l.act && l.act.authority !== side?.lawAuthority) {
-        problems.push(`contest "${c.place}": ledger ${l.year} cites an act of another authority`);
-      }
-      const counted = l.lines.reduce((n, line) => n + line.amount, 0);
-      // The law rounds its total; the lines must add up to it within one of its units.
-      if (Math.abs(counted - l.revenue) > 1) {
-        problems.push(
-          `contest "${c.place}": ledger ${l.year} lines add up to ${counted}, not the stated revenue ${l.revenue}`,
-        );
-      }
-      if (l.lines.some((line) => line.kind === "received" && !line.from)) {
-        problems.push(`contest "${c.place}": ledger ${l.year} has money received from no one`);
-      }
-      if (l.quote.lang !== "en" && !l.quote.translation?.en) {
-        problems.push(
-          `contest "${c.place}": ledger ${l.year} is quoted without an English translation`,
-        );
-      }
-    }
   }
   return problems;
 }
@@ -185,27 +129,4 @@ export function defineContests(
   const problems = contestProblems(topics, contests);
   if (problems.length > 0) throw new Error(`contested places:\n- ${problems.join("\n- ")}`);
   return contests;
-}
-
-/**
- * What a ledger's own figures say, by arithmetic alone: what share of spending
- * the side raised itself, and what covering the same spending without the
- * money received would take. Not a forecast: a person can grow or shrink an
- * economy, a budget cannot be read for that, and the page says so.
- */
-export function ledgerArithmetic(l: ContestLedger) {
-  const own = l.lines.filter((x) => x.kind === "own").reduce((n, x) => n + x.amount, 0);
-  const received = l.revenue - own;
-  return {
-    own,
-    received,
-    /** Of all revenue, the share received from others. */
-    receivedShare: received / l.revenue,
-    /** Of what was spent, the share the side's own revenue covered. */
-    ownCoverage: own / l.expenditure,
-    /** How many times its own revenue would have to grow to cover the same spending alone. */
-    ownMultipleNeeded: own > 0 ? l.expenditure / own : null,
-    /** By what share spending would have to fall to be covered by its own revenue alone. */
-    spendingCutNeeded: Math.max(0, 1 - own / l.expenditure),
-  };
 }

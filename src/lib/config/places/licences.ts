@@ -16,6 +16,11 @@ export const LICENCES = [
   { spdx: "CC0-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "PDDL-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "CC-BY-4.0", requiresAttribution: true, shareAlike: false },
+  // Eurostat: "Reuse of statistical data, metadata, publications, and other dissemination
+  // tools published on this website for commercial or non-commercial purposes is
+  // authorised provided the source is acknowledged" (read 2026-11-10).
+  // https://ec.europa.eu/eurostat/web/main/help/copyright-notice
+  { spdx: "LicenseRef-eurostat-reuse", requiresAttribution: true, shareAlike: false },
   // Unicode's CLDR (country names in each language) and its permissive licence, which asks for the notice.
   // https://www.unicode.org/license.txt
   { spdx: "Unicode-3.0", requiresAttribution: true, shareAlike: false },

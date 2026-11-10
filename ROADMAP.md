@@ -76,6 +76,22 @@ substance; it never says which side is right (design:
 - [ ] Layered regimes, where law applies by zone and by who a person is (the West Bank and its settlements, Gaza): each layer from its own sources, two readers before it is shown {#contested-layers}
 - [ ] Results on each side (each statistics office's own series) beside the texts, and terms for a place proposed with support counted per electorate, never summed {#contested-results}
 
+### Budgets: what governments raise and what they spend it on {#budgets}
+
+Every place's public money on one model: what came in and from where, what it
+was spent on down to the group, whether it balanced, how it moved over the
+years and who pays for it, each figure linked to its law or statistics office,
+any two budgets comparable on the same classifications (design:
+`docs/design/2026-11-budgets.md`).
+
+- [x] The model: COFOG and ESA 2010 taxonomies in config, scope in every key, metrics and sources generated from them; budget laws as documents held to their stated totals; one `Budget` shape and pure analysis for both {#budgets-model}
+- [x] Eurostat's government finance for 30 countries from 1995, spending by function and group, revenue by kind, the balance, in shares of GDP; every division also a statistic with its map and ranking {#budgets-eurostat}
+- [x] `/budgets` and `/budgets/<place>`: key figures, who pays, what the money is spent on with every division opened into its groups, where it comes from, the years, the sources and the publisher's own lines, and "propose a change"; a budget card on a country's page; the contested places' budget section through the same components {#budgets-pages}
+- [ ] Sub-national budgets (cantons, communes) and Solon organizations' budgets as holders {#budgets-entities}
+- [ ] Amounts in the national currency beside the shares of GDP {#budgets-money}
+- [ ] The IMF's Government Finance Statistics for the countries Eurostat does not cover, after its licence is read {#budgets-imf}
+- [ ] A proposal that names categories and amounts, its effect on the balance computed; a page comparing places function by function {#budgets-proposals}
+
 ### One globe for every place and its law {#globe}
 
 The map is the front door to the law. One globe, from the whole Earth down to a

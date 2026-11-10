@@ -5,6 +5,7 @@
  * timeline marks an amendment without anyone entering it twice.
  */
 import { sql } from "drizzle-orm";
+import { rowsOf } from "@/lib/db/rows";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
@@ -59,9 +60,6 @@ export interface LinkedAct {
   /** The days a version of the act took effect, oldest first. */
   versions: string[];
 }
-
-const rowsOf = <T>(result: unknown): T[] =>
-  ((result as { rows?: T[] }).rows ?? (result as T[])) as T[];
 
 /** The latest row of each record, where that row asserts it. */
 export async function currentRecords(

@@ -56,7 +56,7 @@ show:
 |---|---|---|
 | **Now** | the law in force where the place is governed, as its publisher prints it, with the budget law's own figures | a description in Solon's words |
 | **The other side** | the claimant's law as it stands for its own territory, quoted the same way | a prediction of what the claimant would enact for the place: Georgia's constitution itself defers the territorial arrangement "until the complete restoration of jurisdiction" (Art. 7), so nobody can read that law today |
-| **Could be** | proposals people file against the exact text of either side's law, each with a redline, its supporters counted per electorate, and, for anything touching money, its static arithmetic against the ledger | Solon's recommendation; Solon never writes one |
+| **Could be** | proposals people file against the exact text of either side's law, each with a redline, its supporters counted per electorate, and, for anything touching money, its static arithmetic against the budget (`2026-11-budgets.md`) | Solon's recommendation; Solon never writes one |
 
 The third column is what turns a comparison into a market for rules: anyone
 can publish an offer ("the profit tax as in Georgia, the income tax as now,

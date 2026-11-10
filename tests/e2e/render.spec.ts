@@ -46,6 +46,7 @@ test("an address Solon does not serve answers a readable 404 page", async ({ pag
     ["/statistics/not-a-series", en.NotFound.title],
     ["/de/statistics/not-a-series", de.NotFound.title],
     ["/not-a-page", en.NotFound.title],
+    ["/budgets/not-a-place", en.NotFound.title],
     ["/de/places/not-a-place", de.NotFound.title],
   ] as const) {
     const res = await page.goto(href, { waitUntil: "domcontentloaded" });

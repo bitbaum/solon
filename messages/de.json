@@ -72,7 +72,8 @@
       "statisticsEvents": "Rechtsereignisse",
       "statisticsMethods": "Wie Ranglisten entstehen",
       "statisticsGaps": "Was gemessen wird und was nicht",
-      "statisticsResearch": "Recherche mit KI"
+      "statisticsResearch": "Recherche mit KI",
+      "budgets": "Haushalte"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -123,7 +124,8 @@
       "statisticsEvents": "Was mit dem Recht eines Ortes geschah: was sich änderte, wie, wer wo stand",
       "statisticsMethods": "Wer jeden Index macht, wie, und was man ihn fragen sollte.",
       "statisticsGaps": "Was jedes Amt erhebt und wo dieselbe Frage keine Antwort hat.",
-      "statisticsResearch": "Eine Frage stellen; einen Bericht erhalten, dessen Zahlen gegen die Quellen geprüft sind."
+      "statisticsResearch": "Eine Frage stellen; einen Bericht erhalten, dessen Zahlen gegen die Quellen geprüft sind.",
+      "budgets": "Was Staaten einnehmen und wofür sie es ausgeben, vergleichbar zwischen Orten"
     },
     "accountIntro": "Mit einem Solon-Konto treten Sie einer Organisation bei, stellen Anträge und stimmen ab. Eine E-Mail-Adresse und ein Passwort oder ein Passkey genügen; mit OrangeCat meldet Sie ein Klick an."
   },
@@ -747,19 +749,8 @@
       "proposeChange": "Eine Änderung dieses Artikels vorschlagen",
       "money": {
         "title": "Worauf der Staatshaushalt beruht",
-        "question": "Wie viel hat jede Seite selbst eingenommen, wie viel hat sie erhalten und von wem, und was hat sie ausgegeben?",
-        "year": "{side}, {year}",
-        "caption": "Einnahmen des Staatshaushalts von {side} im Jahr {year}, insgesamt {total}, nach Herkunft",
-        "own": "Eigene Einnahmen",
-        "from": "{from}",
-        "revenue": "Einnahmen",
-        "spent": "Ausgaben",
-        "ownCovered": "Durch eigene Einnahmen gedeckte Ausgaben",
-        "receivedShare": "Von anderen erhaltene Einnahmen",
-        "withoutTitle": "Gleich viel ausgeben ohne das Erhaltene",
-        "without": "Damit {side} allein aus eigenen Einnahmen gleich viel ausgeben könnte, müssten diese das {multiple}-Fache betragen; oder die Ausgaben müssten um {cut} sinken; oder eine Mischung aus beidem.",
-        "notForecast": "Rechnung mit den eigenen Zahlen des Haushaltsgesetzes, keine Prognose: Sie sagt nichts darüber, was die Wirtschaft unter anderen Regeln einbringen könnte oder was stattdessen ausgegeben würde.",
-        "notRead": "Für {side} wurde noch kein Haushalt gelesen."
+        "notRead": "Für {side} wurde noch kein Haushalt gelesen.",
+        "open": "Der ganze Haushalt von {side}"
       }
     }
   },
@@ -1717,6 +1708,90 @@
       "gaps": "Was gemessen wird",
       "places": "Orte",
       "law": "Recht"
+    }
+  },
+  "Budgets": {
+    "kicker": "Öffentliche Haushalte",
+    "indexTitle": "Öffentliche Haushalte: was Staaten einnehmen und wofür sie es ausgeben",
+    "indexIntro": "Jeder Ort, für den Solon einen Haushalt hält: was hereinkam und woher, wofür es ausgegeben wurde und ob er ausgeglichen war. Jede Zahl verweist auf das Gesetz oder das Statistikamt, aus dem sie gelesen wurde, und jeder Haushalt lässt sich nach derselben Klassifikation mit jedem anderen vergleichen.",
+    "indexEmpty": "Solon hält noch keinen Haushalt.",
+    "columns": {
+      "place": "Ort",
+      "year": "Jahr",
+      "spending": "Ausgaben",
+      "revenue": "Einnahmen",
+      "balance": "Saldo",
+      "largest": "Grösster Anteil der Ausgaben"
+    },
+    "title": "{place}: öffentlicher Haushalt",
+    "intro": "Was die Regierung von {place} eingenommen und wofür sie es ausgegeben hat, nach den Zahlen, die ihre eigenen Haushaltsgesetze oder ein Statistikamt veröffentlichen. Solon ordnet jede Zahl derselben internationalen Klassifikation zu, damit sie mit jedem anderen Ort vergleichbar ist.",
+    "basis": {
+      "executed": "Rechnung: was hereinkam und ausgegeben wurde",
+      "enacted": "Voranschlag: was bewilligt wurde"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Andere Jahre",
+    "figures": {
+      "revenue": "Einnahmen",
+      "spending": "Ausgaben",
+      "balance": "Überschuss (+) oder Defizit (−)",
+      "ofGdp": "des BIP"
+    },
+    "spending": {
+      "title": "Wofür das Geld ausgegeben wird",
+      "caption": "{place}, {year}: Ausgaben nach Aufgabenbereich, als Anteil aller Ausgaben"
+    },
+    "income": {
+      "title": "Woher das Geld kommt",
+      "caption": "{place}, {year}: Einnahmen nach Art, als Anteil aller Einnahmen"
+    },
+    "rest": "Nicht aufgeschlüsselt oder keiner Kategorie zugeordnet",
+    "noBreakdown": "Der Herausgeber nennt diesen Betrag, schlüsselt ihn aber nicht auf.",
+    "detailCaption": "{category} im Einzelnen, als Anteil daran",
+    "reliance": {
+      "title": "Wer dafür bezahlt",
+      "question": "Wie viel hat die Regierung selbst eingenommen, wie viel hat sie erhalten und von wem, und was hat sie ausgegeben?",
+      "own": "Selbst eingenommen",
+      "caption": "Einnahmen von {holder} im Jahr {year}, insgesamt {total}, nach Geldgeber",
+      "ownCovered": "Durch eigene Einnahmen gedeckte Ausgaben",
+      "receivedShare": "Von anderen erhaltene Einnahmen",
+      "withoutTitle": "Gleich viel ausgeben ohne das Erhaltene",
+      "without": "Damit {holder} allein aus eigenen Einnahmen gleich viel ausgeben könnte, müssten diese das {multiple}-Fache betragen; oder die Ausgaben müssten um {cut} sinken; oder eine Mischung aus beidem.",
+      "notForecast": "Rechnung mit den eigenen Zahlen des Haushalts, keine Prognose: Sie sagt nichts darüber, was die Wirtschaft unter anderen Regeln einbringen könnte oder was stattdessen ausgegeben würde."
+    },
+    "history": {
+      "title": "Über die Jahre",
+      "caption": "{place}: Einnahmen und Ausgaben, {from}–{to}",
+      "revenue": "Einnahmen",
+      "spending": "Ausgaben"
+    },
+    "sources": {
+      "title": "Woher diese Zahlen kommen",
+      "lines": "Die eigenen Zeilen des Herausgebers ({count})",
+      "code": "Code",
+      "line": "Zeile",
+      "amount": "Betrag",
+      "category": "Gezählt unter",
+      "notPlaced": "Keiner Kategorie zugeordnet",
+      "placement": "Wie die Zeilen zugeordnet wurden",
+      "facts": "Reihen von {publisher}, gelesen am {date}.",
+      "translation": "Übersetzung:",
+      "read": "gelesen am {date}",
+      "translatedBy": "Übersetzt von {translator}"
+    },
+    "act": {
+      "title": "Ändern",
+      "intro": "Sollte dieses Geld anders eingenommen oder ausgegeben werden? Entwerfen Sie es als Vorschlag: Er belegt Unterstützung, geht an die Stelle, die entscheidet, und ist nie Recht.",
+      "propose": "Eine Änderung dieses Haushalts vorschlagen",
+      "proposeTitle": "{place}: der Haushalt {year}",
+      "proposeBody": "Was sich am Haushalt von {place} ändern soll und warum: welche Einnahmen, welche Ausgaben, um wie viel. Zahlen: {url}",
+      "compare": "Einen Aufgabenbereich zwischen Ländern vergleichen"
+    },
+    "notHeld": "Solon hält noch keinen Haushalt für {place}.",
+    "placeCard": {
+      "title": "Öffentlicher Haushalt",
+      "text": "Was die Regierung von {place} einnimmt und wofür sie es ausgibt.",
+      "open": "Den Haushalt öffnen"
     }
   }
 }

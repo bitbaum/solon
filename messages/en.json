@@ -72,7 +72,8 @@
       "statisticsEvents": "Law events",
       "statisticsMethods": "How rankings are made",
       "statisticsGaps": "What is measured, and where not",
-      "statisticsResearch": "Research with AI"
+      "statisticsResearch": "Research with AI",
+      "budgets": "Budgets"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -123,7 +124,8 @@
       "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where",
       "statisticsMethods": "Who makes each index, how, and what to ask of it.",
       "statisticsGaps": "What each office collects, and where the same question has no answer.",
-      "statisticsResearch": "Ask a question; get a report whose figures are checked against its sources."
+      "statisticsResearch": "Ask a question; get a report whose figures are checked against its sources.",
+      "budgets": "What governments raise and what they spend it on, comparable across places"
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -1333,19 +1335,8 @@
       "proposeChange": "Propose a change to this article",
       "money": {
         "title": "What the public budget rests on",
-        "question": "How much did each side raise itself, how much did it receive and from whom, and what did it spend?",
-        "year": "{side}, {year}",
-        "caption": "Revenue of the State Budget of {side} in {year}, {total} in all, by where it came from",
-        "own": "Own revenue",
-        "from": "{from}",
-        "revenue": "Revenue",
-        "spent": "Spent",
-        "ownCovered": "Spending covered by own revenue",
-        "receivedShare": "Revenue received from others",
-        "withoutTitle": "Spending the same without what was received",
-        "without": "For {side} to spend the same from its own revenue alone, that revenue would have to be {multiple} times what it was; or spending would have to fall by {cut}; or some mix of the two.",
-        "notForecast": "Arithmetic on the budget law's own figures, not a forecast: it says nothing of what the economy could raise under other rules, or what would be spent instead.",
-        "notRead": "No budget has been read for {side} yet."
+        "notRead": "No budget has been read for {side} yet.",
+        "open": "The whole budget of {side}"
       }
     }
   },
@@ -2303,6 +2294,90 @@
       "gaps": "What is measured",
       "places": "Places",
       "law": "Law"
+    }
+  },
+  "Budgets": {
+    "kicker": "Public budgets",
+    "indexTitle": "Public budgets: what governments raise and what they spend it on",
+    "indexIntro": "Every place Solon holds a budget for: what came in and from where, what it was spent on, and whether it balanced. Every figure links to the law or the statistics office it was read from, and every budget can be compared with any other on the same classification.",
+    "indexEmpty": "Solon holds no budget yet.",
+    "columns": {
+      "place": "Place",
+      "year": "Year",
+      "spending": "Spending",
+      "revenue": "Revenue",
+      "balance": "Balance",
+      "largest": "Largest share of spending"
+    },
+    "title": "{place}: public budget",
+    "intro": "What {place}'s government raised and what it spent it on, from the figures its own budget laws or a statistics office publish. Solon places every figure on the same international classification, so it can be compared with any other place.",
+    "basis": {
+      "executed": "Outturn: what came in and was spent",
+      "enacted": "As enacted: what was allocated"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Other years",
+    "figures": {
+      "revenue": "Revenue",
+      "spending": "Spending",
+      "balance": "Surplus (+) or deficit (−)",
+      "ofGdp": "of GDP"
+    },
+    "spending": {
+      "title": "What the money is spent on",
+      "caption": "{place}, {year}: spending by function, as a share of all spending"
+    },
+    "income": {
+      "title": "Where the money comes from",
+      "caption": "{place}, {year}: revenue by kind, as a share of all revenue"
+    },
+    "rest": "Not broken down, or fitting no category",
+    "noBreakdown": "The publisher gives this total but no breakdown of it.",
+    "detailCaption": "{category}, in detail, as a share of it",
+    "reliance": {
+      "title": "Who pays for it",
+      "question": "How much did the government raise itself, how much did it receive and from whom, and what did it spend?",
+      "own": "Raised itself",
+      "caption": "Revenue of {holder} in {year}, {total} in all, by who provided it",
+      "ownCovered": "Spending covered by its own revenue",
+      "receivedShare": "Revenue received from others",
+      "withoutTitle": "Spending the same without what was received",
+      "without": "For {holder} to spend the same from its own revenue alone, that revenue would have to be {multiple} times what it was; or spending would have to fall by {cut}; or some mix of the two.",
+      "notForecast": "Arithmetic on the budget's own figures, not a forecast: it says nothing of what the economy could raise under other rules, or what would be spent instead."
+    },
+    "history": {
+      "title": "Over the years",
+      "caption": "{place}: revenue and spending, {from}–{to}",
+      "revenue": "Revenue",
+      "spending": "Spending"
+    },
+    "sources": {
+      "title": "Where these figures come from",
+      "lines": "The publisher's own lines ({count})",
+      "code": "Code",
+      "line": "Line",
+      "amount": "Amount",
+      "category": "Counted in",
+      "notPlaced": "Fits no category",
+      "placement": "How the lines were placed",
+      "facts": "Series read from {publisher} on {date}.",
+      "translation": "Translation:",
+      "read": "read {date}",
+      "translatedBy": "Translated by {translator}"
+    },
+    "act": {
+      "title": "Change it",
+      "intro": "Think this money should be raised or spent differently? Draft it as a proposal: a proposal is evidence of support, handed to whoever decides, never law.",
+      "propose": "Propose a change to this budget",
+      "proposeTitle": "{place}: the budget, {year}",
+      "proposeBody": "What should change in {place}'s budget, and why: which revenue, which spending, by how much. Figures: {url}",
+      "compare": "Compare one function across countries"
+    },
+    "notHeld": "Solon holds no budget for {place} yet.",
+    "placeCard": {
+      "title": "Public budget",
+      "text": "What {place}'s government raises and what it spends it on.",
+      "open": "Open the budget"
     }
   }
 }

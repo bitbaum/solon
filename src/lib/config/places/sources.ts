@@ -1,7 +1,14 @@
 import type { Rounding } from "@/lib/tax-model";
 import { alpha3Of } from "@/lib/config/world/countries";
 import { COUNTRY_PACKS } from "./countries";
-import { OECD_MEMBERS, oecdKey, worldBankKey, worldCountries } from "./world";
+import {
+  EUROSTAT_FROM_YEAR,
+  EUROSTAT_GOV_COUNTRIES,
+  EUROSTAT_PUBLISHER,
+  EUROSTAT_REQUESTS,
+  seriesOf,
+} from "@/lib/config/budgets/eurostat";
+import { OECD_MEMBERS, eurostatKey, oecdKey, worldBankKey, worldCountries } from "./world";
 import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
 
@@ -221,6 +228,40 @@ const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceI
       match,
       metric,
       divideBy,
+    })),
+  },
+  packs: [pack],
+});
+
+/**
+ * Eurostat's government finance for one country: every category of the
+ * budget taxonomies, in per cent of GDP (src/lib/config/budgets/eurostat.ts).
+ */
+const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): SourceInput => ({
+  key: eurostatKey(iso2),
+  publisher: EUROSTAT_PUBLISHER,
+  dataset: "Government finance statistics: main aggregates and expenditure by function (COFOG)",
+  homepage: "https://ec.europa.eu/eurostat/web/government-finance-statistics",
+  licence: "LicenseRef-eurostat-reuse",
+  attribution: {
+    en: "Eurostat, government finance statistics (gov_10a_main, gov_10a_exp)",
+    de: "Eurostat, Statistik der Staatsfinanzen (gov_10a_main, gov_10a_exp)",
+    fr: "Eurostat, statistiques de finances publiques (gov_10a_main, gov_10a_exp)",
+    it: "Eurostat, statistiche di finanza pubblica (gov_10a_main, gov_10a_exp)",
+    ru: "Евростат, статистика государственных финансов (gov_10a_main, gov_10a_exp)",
+  },
+  // Yearly tables, notified in April and October.
+  cadence,
+  adapter: "eurostat_json",
+  options: {
+    place: { scheme: "iso_3166_1", value: iso2 },
+    geo: EUROSTAT_GOV_COUNTRIES[iso2]!,
+    fromYear: EUROSTAT_FROM_YEAR,
+    requests: EUROSTAT_REQUESTS.map((r) => ({
+      dataset: r.dataset,
+      dimension: r.dimension,
+      filters: r.filters,
+      series: seriesOf(r).map((s) => ({ ...s, divideBy: 100 })),
     })),
   },
   packs: [pack],
@@ -1293,6 +1334,8 @@ export const SOURCES: readonly SourceInput[] = [
   oecdSource("switzerland", "CH"),
   oecdSource("estonia", "EE"),
   oecdSource("united_states", "US"),
+  eurostatSource("switzerland", "CH"),
+  eurostatSource("estonia", "EE"),
   ...worldSources(),
 ];
 
@@ -1328,5 +1371,8 @@ function worldSources(): SourceInput[] {
     ...countries
       .filter((a2) => OECD_MEMBERS.includes(a2))
       .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),
+    ...countries
+      .filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES)
+      .map((a2, i) => eurostatSource("world", a2, staggered(i, 11, 2))),
   ];
 }

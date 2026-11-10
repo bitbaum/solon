@@ -53,6 +53,7 @@ export const OECD_MEMBERS: readonly string[] = [
 
 export const worldBankKey = (a2: string) => `worldbank-wdi-${a2.toLowerCase()}`;
 export const oecdKey = (a2: string) => `oecd-tax-${a2.toLowerCase()}`;
+export const eurostatKey = (a2: string) => `eurostat-gov-${a2.toLowerCase()}`;
 
 /** Countries held by a pack of their own: given by the packs, so this file never lists them. */
 export function worldCountries(held: ReadonlySet<string>): string[] {

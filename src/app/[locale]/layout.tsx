@@ -16,13 +16,7 @@ import TranslationNotice from "@/components/site/translation-notice";
 import ThemeScript from "@/components/theme/theme-script";
 import { authEnabled } from "@/lib/auth";
 import { routing, toLocale } from "@/i18n/routing";
-
-/**
- * Where this site actually serves. Next resolves the generated og:image against
- * `metadataBase`; without it the tag is emitted as http://localhost:3000/... —
- * present, plausible, and unfetchable by every social scraper.
- */
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://solon.orangecat.ch";
+import { SITE_URL } from "@/lib/site-config";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

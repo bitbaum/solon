@@ -72,7 +72,8 @@
       "statisticsEvents": "Événements juridiques",
       "statisticsMethods": "Comment les classements sont faits",
       "statisticsGaps": "Ce qui est mesuré, et ce qui ne l'est pas",
-      "statisticsResearch": "Recherche avec l'IA"
+      "statisticsResearch": "Recherche avec l'IA",
+      "budgets": "Budgets"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -123,7 +124,8 @@
       "statisticsEvents": "Ce qui est arrivé au droit d'un lieu : ce qui a changé, comment, qui était où",
       "statisticsMethods": "Qui fait chaque indice, comment, et que lui demander.",
       "statisticsGaps": "Ce que chaque office collecte, et où la même question n'a pas de réponse.",
-      "statisticsResearch": "Posez une question ; obtenez un rapport dont les chiffres sont vérifiés par rapport à ses sources."
+      "statisticsResearch": "Posez une question ; obtenez un rapport dont les chiffres sont vérifiés par rapport à ses sources.",
+      "budgets": "Ce que les États perçoivent et à quoi ils le dépensent, comparable entre lieux"
     },
     "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
@@ -747,19 +749,8 @@
       "proposeChange": "Proposer une modification de cet article",
       "money": {
         "title": "Sur quoi repose le budget public",
-        "question": "Combien chaque côté a-t-il levé lui-même, combien a-t-il reçu et de qui, et qu'a-t-il dépensé ?",
-        "year": "{side}, {year}",
-        "caption": "Recettes du budget de l'État de {side} en {year}, {total} au total, selon leur provenance",
-        "own": "Recettes propres",
-        "from": "{from}",
-        "revenue": "Recettes",
-        "spent": "Dépenses",
-        "ownCovered": "Dépenses couvertes par les recettes propres",
-        "receivedShare": "Recettes reçues d'autres",
-        "withoutTitle": "Dépenser autant sans ce qui a été reçu",
-        "without": "Pour que {side} dépense autant avec ses seules recettes propres, celles-ci devraient être {multiple} fois plus élevées ; ou les dépenses devraient baisser de {cut} ; ou un mélange des deux.",
-        "notForecast": "Un calcul sur les chiffres de la loi budgétaire, pas une prévision : il ne dit rien de ce que l'économie pourrait lever sous d'autres règles, ni de ce qui serait dépensé à la place.",
-        "notRead": "Aucun budget n'a encore été lu pour {side}."
+        "notRead": "Aucun budget n'a encore été lu pour {side}.",
+        "open": "Tout le budget de {side}"
       }
     }
   },
@@ -1610,6 +1601,90 @@
       "gaps": "Ce qui est mesuré",
       "places": "Lieux",
       "law": "Droit"
+    }
+  },
+  "Budgets": {
+    "kicker": "Budgets publics",
+    "indexTitle": "Budgets publics : ce que les États perçoivent et à quoi ils le dépensent",
+    "indexIntro": "Chaque lieu dont Solon détient un budget : ce qui est entré et d'où, à quoi cela a été dépensé, et s'il était équilibré. Chaque chiffre renvoie à la loi ou à l'office statistique d'où il a été lu, et chaque budget peut être comparé à tout autre selon la même classification.",
+    "indexEmpty": "Solon ne détient encore aucun budget.",
+    "columns": {
+      "place": "Lieu",
+      "year": "Année",
+      "spending": "Dépenses",
+      "revenue": "Recettes",
+      "balance": "Solde",
+      "largest": "Plus grande part des dépenses"
+    },
+    "title": "{place} : budget public",
+    "intro": "Ce que le gouvernement de {place} a perçu et à quoi il l'a dépensé, d'après les chiffres que publient ses propres lois de finances ou un office statistique. Solon place chaque chiffre sur la même classification internationale, pour qu'il puisse être comparé à tout autre lieu.",
+    "basis": {
+      "executed": "Exécution : ce qui est entré et a été dépensé",
+      "enacted": "Tel qu'adopté : ce qui a été alloué"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Autres années",
+    "figures": {
+      "revenue": "Recettes",
+      "spending": "Dépenses",
+      "balance": "Excédent (+) ou déficit (−)",
+      "ofGdp": "du PIB"
+    },
+    "spending": {
+      "title": "À quoi l'argent est dépensé",
+      "caption": "{place}, {year} : dépenses par fonction, en part de toutes les dépenses"
+    },
+    "income": {
+      "title": "D'où vient l'argent",
+      "caption": "{place}, {year} : recettes par nature, en part de toutes les recettes"
+    },
+    "rest": "Non ventilé, ou sans catégorie",
+    "noBreakdown": "L'éditeur donne ce total mais ne le ventile pas.",
+    "detailCaption": "{category} en détail, en part de ce total",
+    "reliance": {
+      "title": "Qui paie",
+      "question": "Combien le gouvernement a-t-il perçu lui-même, combien a-t-il reçu et de qui, et qu'a-t-il dépensé ?",
+      "own": "Perçu lui-même",
+      "caption": "Recettes de {holder} en {year}, {total} au total, selon qui les a fournies",
+      "ownCovered": "Dépenses couvertes par ses recettes propres",
+      "receivedShare": "Recettes reçues d'autres",
+      "withoutTitle": "Dépenser autant sans ce qui a été reçu",
+      "without": "Pour que {holder} dépense autant avec ses seules recettes propres, celles-ci devraient être {multiple} fois plus élevées ; ou les dépenses devraient baisser de {cut} ; ou un mélange des deux.",
+      "notForecast": "Un calcul sur les chiffres du budget lui-même, pas une prévision : il ne dit rien de ce que l'économie pourrait lever sous d'autres règles, ni de ce qui serait dépensé à la place."
+    },
+    "history": {
+      "title": "Au fil des ans",
+      "caption": "{place} : recettes et dépenses, {from}–{to}",
+      "revenue": "Recettes",
+      "spending": "Dépenses"
+    },
+    "sources": {
+      "title": "D'où viennent ces chiffres",
+      "lines": "Les lignes de l'éditeur ({count})",
+      "code": "Code",
+      "line": "Ligne",
+      "amount": "Montant",
+      "category": "Compté dans",
+      "notPlaced": "Sans catégorie",
+      "placement": "Comment les lignes ont été placées",
+      "facts": "Séries lues chez {publisher} le {date}.",
+      "translation": "Traduction :",
+      "read": "lu le {date}",
+      "translatedBy": "Traduit par {translator}"
+    },
+    "act": {
+      "title": "Le changer",
+      "intro": "Cet argent devrait-il être perçu ou dépensé autrement ? Rédigez-le comme une proposition : elle atteste un soutien, est transmise à qui décide, et n'est jamais du droit.",
+      "propose": "Proposer une modification de ce budget",
+      "proposeTitle": "{place} : le budget {year}",
+      "proposeBody": "Ce qui devrait changer dans le budget de {place}, et pourquoi : quelles recettes, quelles dépenses, de combien. Chiffres : {url}",
+      "compare": "Comparer une fonction entre pays"
+    },
+    "notHeld": "Solon ne détient encore aucun budget pour {place}.",
+    "placeCard": {
+      "title": "Budget public",
+      "text": "Ce que le gouvernement de {place} perçoit et à quoi il le dépense.",
+      "open": "Ouvrir le budget"
     }
   }
 }
