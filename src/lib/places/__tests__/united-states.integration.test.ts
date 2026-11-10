@@ -25,6 +25,7 @@ import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import type { GeometryStore } from "../importer/geometry-store";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
+import { countWithin } from "../ancestors";
 import { loadMapData } from "../map-data";
 import { searchPlaces } from "../search";
 import { withTestland } from "./fixtures/testland/config";
@@ -164,6 +165,16 @@ describe.skipIf(!RUN)("United States, imported", () => {
   it("draws Wyoming's counties on the map", async () => {
     const map = await loadMapData(db, config, PACK, ON, "en");
     expect(map?.places).toHaveLength(23);
+  });
+
+  it("knows what lies within the nation and within Wyoming, at every depth", async () => {
+    const within = async (scheme: string, value: string) =>
+      Object.fromEntries(
+        (await countWithin(db, await placeId(scheme, value))).map((r) => [r.levelKey, r.places]),
+      );
+    expect(await within("iso_3166_1", "US")).toEqual({ state: 51, county: 23 });
+    expect(await within("us_state_fips", "56")).toEqual({ county: 23 });
+    expect(await within("us_county_fips", "56021")).toEqual({});
   });
 
   // By hand, from Rev. Proc. 2025-32 § 4.01 and § 4.14(1): taxable income is
