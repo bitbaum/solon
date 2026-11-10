@@ -1618,6 +1618,21 @@
         "candidates": []
       }
     },
+    "conch-republic": {
+      "authority": "conch-republic",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
     "CR": {
       "authority": "cr",
       "copyright": null,
@@ -2240,6 +2255,21 @@
             "ended": false
           }
         ],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
+    "filettino": {
+      "authority": "filettino",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
         "chosen": null
       },
       "national": {
@@ -3683,6 +3713,21 @@
         "candidates": []
       }
     },
+    "ladonia": {
+      "authority": "ladonia",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
     "LB": {
       "authority": "lb",
       "copyright": null,
@@ -3750,6 +3795,33 @@
         "register": "li-systematic",
         "texts": "lilex",
         "candidates": []
+      }
+    },
+    "liberland": {
+      "authority": "liberland",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": {
+          "kind": "copy",
+          "url": "https://raw.githubusercontent.com/liberland/constitution/master/Constitution.md",
+          "lang": "en",
+          "title": "Constitution of the Free Republic of Liberland",
+          "by": "person",
+          "why": "Liberland publishes its constitution as Markdown on GitHub (liberland/constitution), the text liberland.org's documentation links."
+        }
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": [
+          {
+            "url": "https://github.com/liberland/laws",
+            "note": "Liberland's laws, as Markdown in the liberland/laws repository its documentation links (docs.liberland.org, read 2026-11-10)."
+          }
+        ]
       }
     },
     "LK": {
@@ -3858,6 +3930,21 @@
       "national": {
         "register": "legilux",
         "texts": "legilux",
+        "candidates": []
+      }
+    },
+    "lundy": {
+      "authority": "lundy",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
         "candidates": []
       }
     },
@@ -5203,6 +5290,51 @@
         "candidates": []
       }
     },
+    "principality-of-sealand": {
+      "authority": "principality-of-sealand",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
+    "principality-of-seborga": {
+      "authority": "principality-of-seborga",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
+    "prospera": {
+      "authority": "prospera",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
     "PS": {
       "authority": "ps",
       "copyright": null,
@@ -5351,6 +5483,21 @@
             "ended": false
           }
         ],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
+    "republic-of-molossia": {
+      "authority": "republic-of-molossia",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
+        "candidates": [],
         "chosen": null
       },
       "national": {
@@ -7090,6 +7237,21 @@
           "amended": null,
           "constitute": "Uzbekistan_2023"
         },
+        "candidates": [],
+        "chosen": null
+      },
+      "national": {
+        "register": null,
+        "texts": null,
+        "candidates": []
+      }
+    },
+    "uzupis": {
+      "authority": "uzupis",
+      "copyright": null,
+      "languages": [],
+      "constitution": {
+        "inForce": null,
         "candidates": [],
         "chosen": null
       },

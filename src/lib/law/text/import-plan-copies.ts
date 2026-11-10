@@ -3,11 +3,10 @@
  * (data/law/plan.json, src/lib/law/plan): a Wikisource page or a document
  * someone other than the publisher keeps, stored as a `copy` with who keeps it
  * and the day it was read. One reader for every country: a new country is a
- * choice in the plan and a line naming the provision that puts its law
- * outside copyright, never new code.
+ * choice in the plan, never new code.
  *
- * Refused, and reported with the reason: a country with no copyright basis
- * recorded; a copy that does not cut into articles; a copy older than the last
+ * Refused, and reported with the reason: a copy that does not cut into
+ * articles; a copy older than the last
  * amendment the index records. A country whose constitution Solon already
  * holds from its publisher is left alone. Safe to rerun: a country whose copy
  * is held is read again only with `again`.
@@ -24,6 +23,10 @@ import { cleanPdfText, documentText } from "./cantonal";
 import { blockText } from "./html-text";
 import {
   cutArticles,
+  editionToFollow,
+  markdownText,
+  subpagesOf,
+  wikisourcePageUrl,
   refuseCopy,
   wikisourceRestUrl,
   wikisourceText,
@@ -32,6 +35,8 @@ import {
 import { storeVersion } from "./store";
 
 export const PLAN_COPY_IMPORTER_VERSION = "law-text-plan-copy-1";
+/** The licence a law's text is stored under where the plan records no provision of its own country. */
+export const DEFAULT_LAW_LICENCE = "LicenseRef-official-law";
 const USER_AGENT = "SolonLawReader/1.0 (https://solon.orangecat.ch; law register)";
 
 export interface PlanCopyOptions {
@@ -111,9 +116,10 @@ export async function importPlanCopies(
         report.skipped.push({ country: iso, reason: "held from its publisher" });
         continue;
       }
-      if (!country.copyright) throw new Error("no copyright basis recorded in the plan");
-      if (!LICENCES.some((l) => l.spdx === country.copyright!.spdx)) {
-        throw new Error(`licence ${country.copyright.spdx} is not in the policy`);
+      // A law's words are public: the country's own provision is cited where the plan records one.
+      const licenceSpdx = country.copyright?.spdx ?? DEFAULT_LAW_LICENCE;
+      if (!LICENCES.some((l) => l.spdx === licenceSpdx)) {
+        throw new Error(`licence ${licenceSpdx} is not in the policy`);
       }
       const ref = constitutionRef(iso);
       // The constitution the country's register already lists, if it lists exactly one: the copy
@@ -135,18 +141,64 @@ export async function importPlanCopies(
         continue;
       }
       if (requests++ > 0) await sleep(pauseMs);
-      const address = chosen.kind === "wikisource" ? wikisourceRestUrl(chosen.url) : chosen.url;
-      const response = await politeFetch(doFetch, address, pauseMs);
-      if (!response.ok) throw new Error(`${address}: HTTP ${response.status}`);
-      const bytes = new Uint8Array(await response.arrayBuffer());
-      const isPdf = new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-";
-      const html = new TextDecoder().decode(bytes);
-      const text = isPdf
-        ? cleanPdfText(await documentText(bytes, "pdf"))
-        : chosen.kind === "wikisource"
-          ? wikisourceText(html)
-          : blockText(html);
-      const provisions = cutArticles(text);
+      // A Wikisource page may be an index of editions: follow it to the text, at most two steps.
+      let pageUrl = chosen.url;
+      let bytes = new Uint8Array();
+      let isPdf = false;
+      let text = "";
+      let provisions: ReturnType<typeof cutArticles> = [];
+      for (let hop = 0; hop < 3; hop++) {
+        const address = chosen.kind === "wikisource" ? wikisourceRestUrl(pageUrl) : pageUrl;
+        if (hop > 0) await sleep(pauseMs);
+        const response = await politeFetch(doFetch, address, pauseMs);
+        if (!response.ok) throw new Error(`${address}: HTTP ${response.status}`);
+        bytes = new Uint8Array(await response.arrayBuffer());
+        isPdf = new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-";
+        const html = new TextDecoder().decode(bytes);
+        text = isPdf
+          ? cleanPdfText(await documentText(bytes, "pdf"))
+          : chosen.kind === "wikisource"
+            ? wikisourceText(html)
+            : /\.md(?:$|\?)/i.test(pageUrl)
+              ? markdownText(html)
+              : blockText(html);
+        provisions = cutArticles(text);
+        if (
+          chosen.kind !== "wikisource" ||
+          provisions.filter((p) => p.path.startsWith("art_")).length >= 5
+        )
+          break;
+        const origin = new URL(pageUrl).origin;
+        const title = wikisourceTitle(pageUrl);
+        // A constitution split across its own subpages is read whole, chapter after chapter.
+        const parts = subpagesOf(html, title);
+        if (parts.length >= 3) {
+          const texts: string[] = [];
+          for (const part of parts.slice(0, 80)) {
+            await sleep(pauseMs);
+            const r = await politeFetch(
+              doFetch,
+              wikisourceRestUrl(wikisourcePageUrl(origin, part)),
+              pauseMs,
+            );
+            if (!r.ok) throw new Error(`${part}: HTTP ${r.status}`);
+            texts.push(wikisourceText(await r.text()));
+          }
+          text = texts.join("\n");
+          // What was read is the subpages: their joined words are what is kept and hashed.
+          bytes = new TextEncoder().encode(text);
+          provisions = cutArticles(text);
+          say(`${iso}: read ${parts.length} subpages of ${title}`);
+          break;
+        }
+        // Only a short page is an index of editions; a long one is a text the cut could not read,
+        // and a link from it leads elsewhere (Morocco's page cites its copyright law).
+        if (text.length > 6000) break;
+        const next = editionToFollow(html, title);
+        if (!next) break;
+        pageUrl = wikisourcePageUrl(origin, next);
+        say(`${iso}: following the index to ${next}`);
+      }
       const refused = refuseCopy(provisions, text, country.constitution.inForce?.amended ?? null);
       if (refused) throw new Error(refused);
       const title =
@@ -163,7 +215,7 @@ export async function importPlanCopies(
         const register = await importRegister(db, {
           register: {
             key: `plan-${iso.toLowerCase()}-constitution`,
-            licenceSpdx: country.copyright.spdx,
+            licenceSpdx: licenceSpdx,
             identityScheme: "publisher_ref",
           },
           read: () => ({
@@ -212,11 +264,11 @@ export async function importPlanCopies(
           status: "copy",
           format: isPdf ? "pdf" : "html",
           bytes,
-          url: chosen.url,
+          url: pageUrl,
           provisions,
           source: {
             key: `plan-copy:${host}`,
-            licenceSpdx: country.copyright.spdx,
+            licenceSpdx: licenceSpdx,
             importerVersion: PLAN_COPY_IMPORTER_VERSION,
           },
         },

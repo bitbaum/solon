@@ -13,6 +13,7 @@
  */
 import type { LocalizedText } from "./places/schema";
 import { countryOf } from "./world/countries";
+import { EXTRA_PLACES } from "./world/kinds";
 
 export interface WorldRegion {
   /** ISO 3166-1 alpha-2, or the user-assigned code CLDR names it by (XK). */
@@ -27,9 +28,11 @@ export interface WorldRegion {
    * Ossetia's Wikidata item), so pages about it can find its records.
    */
   ref?: { scheme: string; value: string };
+  /** [longitude, latitude] to mark it by, for a place with no outline (a proclaimed state). */
+  point?: [number, number];
 }
 
-export const WORLD: readonly WorldRegion[] = [
+const LISTED: readonly WorldRegion[] = [
   { code: "AF", slug: "afghanistan" },
   { code: "AX", slug: "aland-islands" },
   { code: "AL", slug: "albania" },
@@ -333,6 +336,20 @@ export const WORLD: readonly WorldRegion[] = [
     mapName: "Somaliland",
     claimedBy: "SO",
   },
+];
+
+/**
+ * Every country and territory, then the places beyond the ISO list (proclaimed states, special
+ * jurisdictions, projects; ./world/extras.json, `pnpm run world:profiles`), each by its own names.
+ */
+export const WORLD: readonly WorldRegion[] = [
+  ...LISTED,
+  ...EXTRA_PLACES.filter((p) => !LISTED.some((l) => l.slug === p.slug)).map((p): WorldRegion => ({
+    slug: p.slug,
+    names: p.names as LocalizedText,
+    ref: { scheme: "wikidata", value: p.wikidata },
+    ...(p.point ? { point: p.point } : {}),
+  })),
 ];
 
 /**

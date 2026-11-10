@@ -10,6 +10,8 @@ import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
 import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
 import ContestNote, { type ContestNoteProps } from "./contest-note";
+import CountryProfile from "./country-profile";
+import type { WorldProfileView } from "@/lib/places/world-profile";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
@@ -24,6 +26,8 @@ interface PlaceProfileProps {
   contest?: ContestNoteProps | null;
   /** The way into the country's public budget, on a country's own page when Solon holds one. */
   budget?: BudgetLink | null;
+  /** A country's profile, on the country's own page. */
+  profile?: WorldProfileView | null;
   t: PlacesTranslator;
 }
 
@@ -53,6 +57,7 @@ export default function PlaceProfile({
   taxHref,
   contest = null,
   budget = null,
+  profile = null,
   t,
 }: PlaceProfileProps) {
   const above = [...view.partOf].reverse();
@@ -77,6 +82,8 @@ export default function PlaceProfile({
         <PlaceTrail above={view.partOf} name={view.name} t={t} />
 
         {contest && <ContestNote {...contest} t={t} />}
+
+        {profile && <CountryProfile profile={profile} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
 

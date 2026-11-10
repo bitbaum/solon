@@ -750,6 +750,48 @@
         "open": "Tout le budget de {side}"
       },
       "proposeLaw": "Proposer une modification du droit de {side}"
+    },
+    "profile": {
+      "title": "En bref",
+      "kinds": {
+        "state": "Membre des Nations unies depuis le {date}.",
+        "observer": "Un État observateur non membre des Nations unies.",
+        "self_governing": "Se gouverne lui-même et n'est pas membre des Nations unies.",
+        "territory": "N'est pas membre des Nations unies.",
+        "territoryOf": "N'est pas membre des Nations unies ; Wikidata le rattache à {country}.",
+        "proclaimed": "Proclamé État par ses fondateurs. N'est pas membre des Nations unies.",
+        "special": "Une juridiction dotée de son propre droit à l'intérieur de {country}.",
+        "specialNoCountry": "Une juridiction dotée de son propre droit à l'intérieur d'un État.",
+        "project": "Un projet de nouvelle juridiction."
+      },
+      "kicker": {
+        "state": "Pays",
+        "observer": "État observateur",
+        "self_governing": "Se gouverne lui-même",
+        "territory": "Territoire",
+        "proclaimed": "État proclamé",
+        "special": "Juridiction spéciale",
+        "project": "Projet de nouvelle juridiction"
+      },
+      "facts": {
+        "capital": "Capitale",
+        "population": "Population",
+        "area": "Superficie",
+        "languages": "Langues officielles",
+        "currency": "Monnaie",
+        "government": "Forme de gouvernement",
+        "headOfState": "Chef de l'État",
+        "headOfGovernment": "Chef du gouvernement",
+        "founded": "Fondé ou proclamé",
+        "unSince": "Membre de l'ONU depuis",
+        "website": "Site web"
+      },
+      "constitution": "Lire sa constitution",
+      "noConstitution": "Solon ne détient pas encore sa constitution.",
+      "allLaw": "Tout son droit dans Solon",
+      "routes": "{count, plural, =0 {Solon ne sait pas encore comment son droit est officiellement modifié.} one {# voie officielle pour modifier son droit, avec sa source.} other {# voies officielles pour modifier son droit, avec leurs sources.}}",
+      "source": "Données de <wikidata>Wikidata</wikidata>, lues le {date} ; adhésion selon la <un>liste des Nations unies</un>. Chaque catégorie de lieu dit ce qu'il fait, non si sa revendication est fondée.",
+      "rule": "Les États proclamés sont listés selon une seule règle : Wikidata les classe comme micronations, non dissoutes, avec un article dans au moins 30 Wikipédias."
     }
   },
   "AuthError": {
@@ -1171,7 +1213,11 @@
     "taxNone": "Il n'y a pas encore de carte de l'impôt pour {country}.",
     "taxWorldTitle": "Ce que l'impôt vous coûterait, lieu par lieu",
     "taxWorldIntro": "Choisissez un pays pour colorer ses lieux selon ce que l'impôt vous y coûterait.",
-    "everyCountry": "Chaque pays et chaque territoire"
+    "everyCountry": "Chaque pays et chaque territoire",
+    "showLabel": "Ce que montre la carte",
+    "showAll": "Tous les lieux",
+    "showBeyond": "Au-delà de l'ONU",
+    "beyondIntro": "Les lieux qui se gouvernent eux-mêmes sans être membres de l'ONU, les États proclamés par leurs fondateurs, les juridictions dotées de leur propre droit à l'intérieur d'un État et les projets de nouvelles juridictions. Chacun est désigné par ce qu'il fait, non selon que sa revendication soit fondée."
   },
   "Statistics": {
     "kicker": "Statistiques",

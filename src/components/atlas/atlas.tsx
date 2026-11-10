@@ -12,7 +12,13 @@ import {
 } from "@bitbaum/geo-kit/map";
 import { Link, useRouter } from "@/i18n/navigation";
 import { REGISTER_POLICY_DEFAULTS } from "@/lib/config/places/policies";
-import { WORLD, regionFeature, regionName, worldRegionByCode } from "@/lib/config/world";
+import {
+  WORLD,
+  regionFeature,
+  regionName,
+  worldRegionByCode,
+  type WorldRegion,
+} from "@/lib/config/world";
 import type { GlobePlace } from "@/lib/law/globe";
 import type { AddressHit } from "@/lib/places/address-search";
 import { compareHref, formatMoney } from "@/lib/places/compare-view";
@@ -28,6 +34,13 @@ import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
 import { COUNTRIES } from "@/lib/config/world/countries";
+import {
+  BEYOND_UN,
+  PLACE_KINDS,
+  SELF_GOVERNING_POINTS,
+  kindOf,
+  type PlaceKind,
+} from "@/lib/config/world/kinds";
 import { atlasPalette, loadWorld, readAtlasTokens, shadeOf, type AtlasTokens } from "./world";
 import {
   ADMIN1,
@@ -90,6 +103,9 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   const locale = useLocale();
   const router = useRouter();
   const colours = useMapColours();
+  // What the world view shows: every place, or only those beyond the UN's member states.
+  const [show, setShow] = useState<"all" | "beyond">("all");
+  const beyond = mode === "full" && layer === "places" && show === "beyond";
   const [tokens, setTokens] = useState<AtlasTokens | null>(null);
   useEffect(() => {
     const read = () => setTokens(readAtlasTokens());
@@ -353,6 +369,13 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       }
       return out;
     }
+    if (beyond) {
+      // Only the places beyond the UN's member states, in one shade: their kind is said in the list.
+      for (const [feature, region] of regionByFeature) {
+        if (BEYOND_UN.has(kindOf(region))) out.set(feature, colours.scale.at(-1)!);
+      }
+      return out;
+    }
     for (const p of named) if (p.acts > 0) out.set(p.feature, shadeOf(p.acts, colours.scale));
     // A subdivision is drawn over its country, so it wears the country's shade.
     for (const [a2, features] of admin1) {
@@ -360,11 +383,21 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       if (fill) for (const f of features) out.set(f.id, fill);
     }
     return out;
-  }, [colours, open, layer, tax.fills, data, named, admin1, featureOfA2]);
+  }, [colours, open, layer, tax.fills, data, named, admin1, featureOfA2, beyond, regionByFeature]);
 
   // A dot on each country Solon holds law for, so the small ones can be found; none inside a country.
   const dots = useMemo(() => {
     if (open) return new Map<string, [number, number]>();
+    if (beyond) {
+      // A dot where a place beyond the UN has no outline to fill: a proclaimed state, a special
+      // jurisdiction, a place that governs itself the world's outlines do not draw.
+      return new Map(
+        WORLD.flatMap((r) => {
+          const point = r.point ?? (regionFeature(r) ? undefined : SELF_GOVERNING_POINTS[r.slug]);
+          return point && BEYOND_UN.has(kindOf(r)) ? [[`beyond:${r.slug}`, point] as const] : [];
+        }),
+      );
+    }
     return new Map(
       named.flatMap((p) => {
         const shape = worldById.get(p.feature);
@@ -373,7 +406,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           : [];
       }),
     );
-  }, [open, named, worldById]);
+  }, [open, named, worldById, beyond]);
 
   const regionNames = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
   const countryName = (a2: string | undefined): string => {
@@ -619,6 +652,16 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     );
   }
 
+  const beyondPlaces = new Map<PlaceKind, typeof WORLD>();
+  for (const r of WORLD) {
+    const kind = kindOf(r);
+    if (BEYOND_UN.has(kind)) beyondPlaces.set(kind, [...(beyondPlaces.get(kind) ?? []), r]);
+  }
+  for (const list of beyondPlaces.values()) {
+    (list as WorldRegion[]).sort((a, b) =>
+      regionName(a, locale).localeCompare(regionName(b, locale), locale),
+    );
+  }
   const held = named
     .filter((p) => (layer === "tax" ? p.drawn : p.acts > 0 || p.pack))
     .sort((a, b) => b.acts - a.acts);
@@ -690,9 +733,30 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           {layer === "tax" ? t("taxWorldTitle") : t("worldTitle")}
         </h2>
         <p className="text-sm text-fg-secondary">
-          {layer === "tax" ? t("taxWorldIntro") : t("worldIntro")}
+          {layer === "tax" ? t("taxWorldIntro") : beyond ? t("beyondIntro") : t("worldIntro")}
         </p>
       </div>
+      {layer === "places" && (
+        <div
+          role="group"
+          aria-label={t("showLabel")}
+          className="inline-flex rounded-control border border-default p-1"
+        >
+          {(["all", "beyond"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={show === v}
+              onClick={() => setShow(v)}
+              className={`min-h-10 rounded-control px-4 text-sm font-semibold ${
+                show === v ? "bg-accent text-on-accent" : "text-fg-primary hover:bg-surface-raised"
+              }`}
+            >
+              {v === "all" ? t("showAll") : t("showBeyond")}
+            </button>
+          ))}
+        </div>
+      )}
     </>
   );
 
@@ -789,6 +853,34 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         </>
       )}
       {sourceList}
+    </>
+  ) : beyond ? (
+    <>
+      {PLACE_KINDS.filter((k) => BEYOND_UN.has(k)).map((kind) => {
+        const list = beyondPlaces.get(kind) ?? [];
+        return list.length === 0 ? null : (
+          <section key={kind} className="space-y-2">
+            <h3 className="text-sm font-semibold text-fg-secondary">
+              {tp(`profile.kicker.${kind}`)} · {list.length}
+            </h3>
+            <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
+              {list.map((r) => (
+                <li key={r.slug}>
+                  <Link
+                    href={`/places/${r.slug}`}
+                    className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
+                  >
+                    <span>{regionName(r, locale)}</span>
+                    <span aria-hidden className="text-fg-tertiary">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
     </>
   ) : (
     <>

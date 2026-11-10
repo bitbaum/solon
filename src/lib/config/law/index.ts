@@ -7,6 +7,7 @@
 
 import { WORLD } from "@/lib/config/world";
 import { countryOf as registryCountry } from "@/lib/config/world/countries";
+import { EXTRA_PLACES } from "@/lib/config/world/kinds";
 
 /** What an act is. A register's category maps onto one of these (below). */
 export const ACT_KINDS = [
@@ -514,9 +515,26 @@ function countryAuthorities(listed: readonly LawAuthority[]): LawAuthority[] {
   return out;
 }
 
+/**
+ * The places beyond the ISO list that make law of their own (proclaimed states, special
+ * jurisdictions; src/lib/config/world/extras.json), keyed by their slug and named by their own
+ * names. Projects make none yet and have no authority.
+ */
+const extraAuthorities = (listed: readonly LawAuthority[]): LawAuthority[] =>
+  EXTRA_PLACES.filter((p) => p.kind !== "project" && !listed.some((a) => a.key === p.slug)).map(
+    (p) => ({
+      key: p.slug,
+      label: p.names.en ?? p.slug,
+      names: p.names,
+      place: null,
+      topLevel: true,
+    }),
+  );
+
 export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   ...LISTED_AUTHORITIES,
   ...countryAuthorities(LISTED_AUTHORITIES),
+  ...extraAuthorities(LISTED_AUTHORITIES),
 ];
 
 /**

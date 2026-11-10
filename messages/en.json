@@ -1336,6 +1336,48 @@
         "open": "The whole budget of {side}"
       },
       "proposeLaw": "Propose a change to the law of {side}"
+    },
+    "profile": {
+      "title": "At a glance",
+      "kinds": {
+        "state": "A member of the United Nations since {date}.",
+        "observer": "A non-member observer state of the United Nations.",
+        "self_governing": "Governs itself and is not a member of the United Nations.",
+        "territory": "Not a member of the United Nations.",
+        "territoryOf": "Not a member of the United Nations; Wikidata lists it under {country}.",
+        "proclaimed": "Proclaimed as a state by its founders. Not a member of the United Nations.",
+        "special": "A jurisdiction with law of its own inside {country}.",
+        "specialNoCountry": "A jurisdiction with law of its own inside a state.",
+        "project": "A project for a new jurisdiction."
+      },
+      "kicker": {
+        "state": "Country",
+        "observer": "Observer state",
+        "self_governing": "Governs itself",
+        "territory": "Territory",
+        "proclaimed": "Proclaimed state",
+        "special": "Special jurisdiction",
+        "project": "New jurisdiction project"
+      },
+      "facts": {
+        "capital": "Capital",
+        "population": "Population",
+        "area": "Area",
+        "languages": "Official languages",
+        "currency": "Currency",
+        "government": "Form of government",
+        "headOfState": "Head of state",
+        "headOfGovernment": "Head of government",
+        "founded": "Founded or proclaimed",
+        "unSince": "UN member since",
+        "website": "Website"
+      },
+      "constitution": "Read its constitution",
+      "noConstitution": "Solon does not hold its constitution yet.",
+      "allLaw": "All its law in Solon",
+      "routes": "{count, plural, =0 {Solon does not know yet how its law is officially changed.} one {# official way to change its law, stated with its source.} other {# official ways to change its law, stated with their sources.}}",
+      "source": "Facts from <wikidata>Wikidata</wikidata>, read {date}; membership from the <un>United Nations' list</un>. Each kind of place says what it does, not whether its claim is right.",
+      "rule": "Proclaimed states are listed by one rule: Wikidata classes them as micronations, not dissolved, with an article in at least 30 Wikipedias."
     }
   },
   "AuthError": {
@@ -1757,7 +1799,11 @@
     "taxNone": "There is no tax map for {country} yet.",
     "taxWorldTitle": "What tax would cost you, place by place",
     "taxWorldIntro": "Pick a country to colour its places by what tax would cost you there.",
-    "everyCountry": "Every country and territory"
+    "everyCountry": "Every country and territory",
+    "showLabel": "What the map shows",
+    "showAll": "All places",
+    "showBeyond": "Beyond the UN",
+    "beyondIntro": "Places that govern themselves without UN membership, states proclaimed by their founders, jurisdictions with law of their own inside a state, and projects for new ones. Each is named by what it does, not by whether its claim is right."
   },
   "Statistics": {
     "kicker": "Statistics",

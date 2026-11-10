@@ -11,6 +11,7 @@ import { writeFileSync } from "node:fs";
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { WORLD } from "@/lib/config/world";
 import { countryOf } from "@/lib/config/world/countries";
+import { EXTRA_PLACES } from "@/lib/config/world/kinds";
 import { PLAN_FILE, loadPlanCounts, readPlan } from "@/lib/law/plan/load";
 import type { Candidate, LawPlan } from "@/lib/law/plan/schema";
 import { lawPlanSchema } from "@/lib/law/plan/schema";
@@ -124,6 +125,15 @@ async function seed(): Promise<number> {
       languages: [...new Set(langsOf.get(iso) ?? [])].sort(),
       inForce: inForce.get(iso) ?? null,
       candidates: (candidatesOf.get(iso) ?? []).sort((x, y) => x.url.localeCompare(y.url)),
+    });
+  }
+  // The places beyond the ISO list that make law of their own, by their slug.
+  for (const extra of EXTRA_PLACES.filter((p) => p.kind !== "project")) {
+    found.set(extra.slug, {
+      authority: extra.slug,
+      languages: [],
+      inForce: null,
+      candidates: [],
     });
   }
   let previous: LawPlan | null = null;

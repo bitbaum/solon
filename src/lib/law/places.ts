@@ -41,7 +41,8 @@ export function parentOf(key: string): LawAuthority | null {
   if (authority.within) return authorityOf(authority.within) ?? null;
   const level = levelOf(authority);
   if (level === "union") return null;
-  if (level === "country") return unionOf(authority.place!.value) ?? null; // no union holds a `topLevel` place
+  // A place with no ISO code (a `topLevel` one: South Ossetia, Liberland) is in no union.
+  if (level === "country") return authority.place ? (unionOf(authority.place.value) ?? null) : null;
   const country = countryOf(key);
   return (country && countryAuthority(country)) || null;
 }

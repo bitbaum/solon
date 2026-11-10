@@ -21,12 +21,12 @@ Solon follows it, and anyone can see where it stands. Nothing is done twice.
    a third party's translation: those are often under copyright (Constitute's
    texts are CC BY-NC, some Hein or Oxford University Press, outside the
    licence policy).
-3. **Each country's own copyright law, stated.** A country's text is stored
-   only once the plan records the provision of its own law that puts official
-   texts outside copyright, read from a source opened on a stated day (Russia:
-   Civil Code Art. 1259(6); Ukraine: Law No. 2811-IX Art. 8(1)(3)), and the
-   licence policy lists the matching entry. A missing basis is a next step,
-   not a guess.
+3. **Never held back for want of a provision.** Laws are published for
+   everyone to be bound by them. The plan records the provision of a
+   country's own law that puts official texts outside copyright where it has
+   been read (Russia: Civil Code Art. 1259(6); Ukraine: Law No. 2811-IX Art.
+   8(1)(3)) and the page cites it; elsewhere the text is stored all the same
+   (`LicenseRef-official-law`, the owner's decision of 2026-11-10).
 4. **An outdated copy is refused.** Where the index records the year of the
    last amendment, a copy that names no year since is an older edition and is
    not stored (`refuseCopy`). Ukraine's Wikisource copy (amendments to 2004)
@@ -74,7 +74,6 @@ country, from the database: the constitution (none, listed, text) and the
 national acts (none, listed, text, with counts), and derives the next step:
 
 - find a copy of the constitution in force / choose among the candidates;
-- record the copyright provision;
 - load the constitution from the chosen source;
 - build or run the national register;
 - build or run the national texts' reader;
@@ -83,8 +82,7 @@ national acts (none, listed, text, with counts), and derives the next step:
 ## 4. Order of work
 
 1. **Constitutions of every country** (this change starts it). Russia and
-   Ukraine are held. Then, for each country the rule resolves (26 today),
-   record the copyright provision and load; for the rest, choose a copy by
+   Ukraine are held. Then load each country the rule resolves (26 today); for the rest, choose a copy by
    hand from the candidates, Constitute's index naming the edition in force.
    Done when `status` shows a text for every country Constitute lists.
 2. **National registers**, a country at a time, ordered by need (places with

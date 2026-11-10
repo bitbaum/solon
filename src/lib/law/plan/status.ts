@@ -30,9 +30,6 @@ const stageOf = (c: { listed: number; withText: number }): Stage =>
 
 function nextStep(plan: CountryPlan, constitution: Stage, national: Stage): string {
   if (constitution !== "text") {
-    if (plan.constitution.chosen && !plan.copyright) {
-      return "record the provision of its own law that puts official texts outside copyright";
-    }
     if (plan.constitution.chosen) {
       return `load the constitution from ${plan.constitution.chosen.url}`;
     }

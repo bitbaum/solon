@@ -3,6 +3,8 @@ import PageLayout from "@/components/ui/page-layout";
 import type { PlaceLaw } from "@/lib/law/place-law";
 import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
 import ContestNote, { type ContestNoteProps } from "./contest-note";
+import CountryProfile from "./country-profile";
+import type { WorldProfileView } from "@/lib/places/world-profile";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import type { PlacesTranslator } from "./translator";
 
@@ -13,6 +15,8 @@ interface WorldRegionPageProps {
   /** The way into its public budget, when Solon holds one. */
   budget: BudgetLink | null;
   law: readonly PlaceLaw[];
+  /** Its profile: kind, facts and the way into its law. */
+  profile: WorldProfileView | null;
   t: PlacesTranslator;
 }
 
@@ -21,13 +25,25 @@ interface WorldRegionPageProps {
  * all the same, so it can be found and shared, with the law Solon does hold
  * for it and the way to see what is covered. Same frame as a place page.
  */
-export default function WorldRegionPage({ name, contest, budget, law, t }: WorldRegionPageProps) {
+export default function WorldRegionPage({
+  name,
+  contest,
+  budget,
+  law,
+  profile,
+  t,
+}: WorldRegionPageProps) {
   return (
-    <PageLayout title={name} kicker={t("world.kicker")}>
+    <PageLayout
+      title={name}
+      kicker={profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker")}
+    >
       <div className="max-w-3xl space-y-10">
         <PlaceTrail above={[]} name={name} t={t} />
 
         {contest && <ContestNote {...contest} t={t} />}
+
+        {profile && <CountryProfile profile={profile} t={t} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
 
