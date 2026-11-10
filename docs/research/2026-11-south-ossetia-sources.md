@@ -190,13 +190,23 @@ Each is a statement about what a page says or does not say, with the URL and dat
    (`/kontakty/`, id 665, not yet read); named persons and mobile numbers appear in the compendium
    and are not to be stored, only the institution's official channel.
 
-## 6. What this note does not claim
+## 6. Licence and what this note does not claim
 
+- **President's site: a stated permission.** The page "Об использовании информации сайта"
+  (https://presidentruo.org/ob-ispolzovanii-informacii-sajta/, read through the REST API on 2026-11-10,
+  version modified 2022-01-03) says: "Все материалы Официального сайта Президента Республики Южная
+  Осетия могут быть воспроизведены в любых средствах массовой информации, на серверах сети Интернет
+  или на любых иных носителях без каких-либо ограничений по объему и срокам публикации … Единственным
+  условием перепечатки и ретрансляции является ссылка на первоисточник." The licence entry
+  `LicenseRef-so-president-site-reuse` quotes it: attribution required, nothing else.
+- **Parliament and Government: no statement found yet.** No terms page on `parliamentrso.org` or
+  `rsogov.org` was found. Laws of the Republic cite a law "Об авторском праве и смежных правах"
+  (the Publishing Law, https://parliamentrso.org/node/397, refers to it); its text has not been
+  opened, so what it exempts is not known. The Parliament's listings are being read (a register run
+  reads every title) to find it. Until it is opened, the Parliament's and Government's texts stay
+  unloaded, and their register rows carry `LicenseRef-so-official-facts` (titles, numbers and links
+  are facts). Russia's Civil Code Art. 1259 is not cited: no South Ossetian text says it applies.
 - That the three publishers hold every act in force; none says so.
-- Any licence: no licence statement was found on the three law publishers. Solon stores the text
-  with its source URL and retrieval date, and presents it as the publisher's text. Whether it may be
-  shown is a Register decision (`docs/design/2026-10-law-as-data.md` §4); the importer will not run
-  without one on `licences.ts`.
 - That any figure is reliable. Each is the producer's, and says so.
 
 ## 7. Recognition and Georgia's own position (read 2026-11-10)

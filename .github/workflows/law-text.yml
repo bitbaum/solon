@@ -45,6 +45,8 @@ on:
             recut-ukleg,
             legilux,
             riigiteataja,
+            parliamentrso,
+            presidentruo,
             eurlex,
             ukleg,
             ris,
@@ -200,7 +202,7 @@ jobs:
             exit 0
           fi
           case "$SOURCE" in
-            ukleg|gcnh|wyoleg|legilux|riigiteataja) LOCK="paced" ;;
+            ukleg|gcnh|wyoleg|legilux|riigiteataja|parliamentrso|presidentruo) LOCK="paced" ;;
             *) LOCK="heavy" ;;
           esac
           exec 9>"/tmp/solon-law-load-$LOCK.lock"
