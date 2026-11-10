@@ -738,11 +738,8 @@
       "translation": "Traduction :",
       "translatedBy": "Traduit par {translator}",
       "read": "lu le {date}",
-      "actTitle": "Proposer des conditions",
-      "actIntro": "La règle d'un côté vous semble meilleure sur une question, ou vous voyez des conditions acceptables pour les deux ? Rédigez-les comme une proposition : elle atteste un soutien, est transmise à qui décide, et n'est jamais du droit.",
-      "propose": "Proposer des conditions pour {place}",
-      "proposeTitle": "Conditions pour {place}",
-      "proposeBody": "Quelle règle devrait s'appliquer à {place}, question par question, et pourquoi. Côtés comparés : {sides}.",
+      "actTitle": "Proposer une modification",
+      "actIntro": "Vous trouvez la règle d'un côté meilleure, ou voulez changer une loi ? Ouvrez la loi dans Solon, choisissez l'article et écrivez les mots que vous voulez : ils apparaissent en modification du texte publié, d'autres peuvent les soutenir, et la page dit comment cette loi est officiellement modifiée. Le soutien ici est une preuve, jamais une loi.",
       "methodTitle": "Comment cette comparaison est faite",
       "method": "Chaque ligne est une citation d'une page que quelqu'un a ouverte, avec le jour de lecture ; l'original figure à côté de toute traduction, et un programme relit chaque page chaque semaine et signale les mots disparus. Les questions sont les mêmes pour chaque lieu. Le côté qui gouverne vient toujours en premier, puis celui qui revendique. Là où rien n'a été lu, la page le dit.",
       "all": "Tous les lieux contestés",
@@ -751,7 +748,8 @@
         "title": "Sur quoi repose le budget public",
         "notRead": "Aucun budget n'a encore été lu pour {side}.",
         "open": "Tout le budget de {side}"
-      }
+      },
+      "proposeLaw": "Proposer une modification du droit de {side}"
     }
   },
   "AuthError": {
@@ -1039,6 +1037,113 @@
         "save": "Ce n’est pas enregistré. Vérifiez la connexion et réessayez.",
         "open": "Cette conversation ne s’est pas ouverte. Réessayez."
       }
+    }
+  },
+  "Amend": {
+    "metaTitle": "Proposer une modification",
+    "kicker": "Proposer une modification",
+    "intro": "Écrivez les mots de cet acte tels que vous pensez qu'ils devraient se lire. Solon montre votre modification par rapport au texte publié et l'attache à ce texte précis, afin qu'elle ne puisse jamais s'appliquer à une formulation que vous n'avez pas vue.",
+    "notLaw": "Une proposition ici n'est pas une loi. Le soutien sur Solon prouve que des gens veulent le changement ; la voie officielle dit ce qu'il faut pour qu'il devienne loi.",
+    "signInFirst": "Connectez-vous pour déposer votre proposition. Ce que vous avez écrit reste sur cette page.",
+    "signIn": "Se connecter pour la déposer",
+    "forkOf": "Vous partez de la proposition de quelqu'un d'autre. La vôtre est déposée comme alternative, et les deux restent consignées.",
+    "changeLabel": "Modification {n}",
+    "chooseProvision": "Article",
+    "pickOne": "Choisissez un article",
+    "operation": "Que faire de lui",
+    "ops": {
+      "replace": "Le reformuler",
+      "repeal": "L'abroger",
+      "insert": "Ajouter un nouvel article après lui"
+    },
+    "asPublished": "Tel que publié",
+    "yourWording": "Votre formulation",
+    "newHeading": "Titre du nouvel article",
+    "newText": "Texte du nouvel article",
+    "redline": "Votre modification, en comparaison",
+    "loading": "Lecture de l'article…",
+    "loadFailed": "L'article n'a pas pu être lu. Choisissez-le à nouveau.",
+    "addChange": "Modifier un autre article",
+    "removeChange": "Retirer cette modification",
+    "title": "Titre",
+    "titleHint": "Une ligne qui dit ce qui change, par exemple « Réduire de moitié la taxe sur les chiens ».",
+    "rationale": "Pourquoi",
+    "rationaleHint": "À qui cela profite, ce que cela coûte, ce que cela corrige. C'est ce qui convainc les gens de la soutenir.",
+    "dictate": "Parler au lieu de taper",
+    "stopDictating": "J'ai fini de parler",
+    "dictationProblems": {
+      "mic": "Aucun microphone ne peut être utilisé ici.",
+      "silence": "Rien n'a été entendu.",
+      "unavailable": "La reconnaissance vocale n'est pas disponible pour le moment.",
+      "fileTooLarge": "L'enregistrement est trop long."
+    },
+    "submit": "Déposer cette proposition",
+    "submitting": "Dépôt…",
+    "problems": {
+      "stale_base": "Le texte publié de {path} a changé pendant que vous écriviez. Choisissez à nouveau l'article pour écrire sur le texte actuel.",
+      "unknown_path": "{path} ne figure plus dans cet acte.",
+      "duplicate_path": "{path} est modifié deux fois ; gardez une seule modification.",
+      "no_effect": "Votre formulation de {path} est identique au texte publié.",
+      "unknown_anchor": "L'article après lequel ajouter ne figure plus dans cet acte."
+    },
+    "failed": "La proposition n'a pas pu être déposée : {reason}",
+    "amendment": {
+      "kicker": "Modification proposée",
+      "to": "À : {act}",
+      "filed": "Révision {revision}, déposée le {date}",
+      "current": "Écrite sur le texte en vigueur aujourd'hui.",
+      "outdated": "La loi a changé depuis que ceci a été écrit. La comparaison montre la modification par rapport au texte pour lequel elle a été écrite.",
+      "support": "{total, plural, =0 {Personne ne la soutient encore} one {# personne la soutient} other {# personnes la soutiennent}}",
+      "supportSplit": "{account} connectées · {signed} ont signé avec leur propre clé",
+      "supportButton": "Soutenir cette proposition",
+      "withdrawButton": "Retirer mon soutien",
+      "youSupport": "Vous soutenez cette révision.",
+      "signInToSupport": "Se connecter pour la soutenir",
+      "supportFailed": "Votre soutien n'a pas pu être enregistré : {reason}",
+      "notLaw": "Une proposition ici n'est pas une loi. Le soutien sur Solon prouve que des gens veulent le changement ; la voie officielle dit ce qu'il faut pour qu'il devienne loi.",
+      "changes": "Ce qu'elle change",
+      "replaced": "Reformulé",
+      "repealed": "Abrogé",
+      "inserted": "Nouvel article",
+      "rationale": "Pourquoi",
+      "routes": "Comment cette loi est officiellement modifiée",
+      "noRoute": "Solon ne connaît pas encore la voie officielle de cette loi. La proposition est quand même enregistrée, et la voie apparaîtra ici dès que sa source sera ajoutée.",
+      "routeBar": "{count} signatures de {who}",
+      "routeWindowMonths": "dans un délai de {months} mois",
+      "routeWindowDays": "dans un délai de {days} jours",
+      "routeNoBar": "{who} ; aucun nombre de signatures n'est requis",
+      "routeSource": "Source : {provision}, {title}",
+      "fork": "Écrire une alternative",
+      "revisions": "Toutes les révisions",
+      "revisionRow": "Révision {revision} · {date} · {support}",
+      "chain": "Chaque proposition et chaque soutien est une entrée d'une même chaîne de hachage que chacun peut vérifier.",
+      "chainLink": "Lire la chaîne",
+      "routeShare": "Signatures de {who} égales à {percent} % de {of}"
+    },
+    "list": {
+      "metaTitle": "Modifications proposées de la loi",
+      "title": "Modifications proposées",
+      "intro": "Les modifications que des personnes ont proposées aux lois que Solon détient, les plus récentes d'abord.",
+      "empty": "Personne n'a encore proposé de modification ici.",
+      "howTo": "Pour en proposer une, ouvrez un acte et appuyez sur « Proposer une modification » à côté de n'importe quel article.",
+      "row": "Révision {revision} · {support}",
+      "supporters": "{total, plural, =0 {pas encore de soutien} one {# soutien} other {# soutiens}}"
+    },
+    "act": {
+      "propose": "Proposer une modification",
+      "proposals": "Modifications proposées de cet acte",
+      "noProposals": "Personne n'a encore proposé de modification de cet acte."
+    },
+    "consult": {
+      "title": "Y réfléchir",
+      "intro": "Demandez ce que ferait votre modification, qui y gagnerait et qui en supporterait le coût, et où quelque chose de semblable est déjà loi. L'assistant lit votre brouillon tel quel, cite les lois et les études qu'il trouve et ne prend pas parti. Ce que vous déposez reste à vous.",
+      "placeholder": "Que ferait cette modification ?",
+      "starters": {
+        "one": "Que ferait cette modification, et pour qui ?",
+        "two": "Où quelque chose de semblable est-il déjà loi, et comment cela s'est-il passé ?",
+        "three": "Comment rendre la formulation plus claire ?"
+      },
+      "startersTitle": "Questions pour commencer"
     }
   },
   "Atlas": {

@@ -99,7 +99,10 @@ What the design requires before Solon is promoted anywhere it is unwelcome:
    published as counts only. The log keeps a commitment per support (a salted
    hash the supporter can use to prove their own row) instead of the account.
 2. **A new pseudonym per proposal.** A key derived per proposal, so two
-   supports by one person cannot be linked by anyone but them.
+   supports by one person cannot be linked by anyone but them. Built for
+   signed-in people: the record names them `anon:` and a keyed hash of their
+   account and the proposal (`src/lib/law/amend/pseudonym.ts`); rows written
+   before keep the account they named.
 3. **No account needed, no email asked.** Support by a key made in the
    browser; the account stays optional.
 4. **Nothing kept that could identify a reader.** In the app's own code,

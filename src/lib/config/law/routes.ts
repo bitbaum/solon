@@ -367,6 +367,105 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       },
     },
   },
+  {
+    key: "ru-bill",
+    authority: "ru",
+    name: "A bill put before the State Duma",
+    appliesTo: ["statute"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the Federation Council, senators, deputies of the State Duma, the Government and the legislatures of the subjects of the Federation, and the Constitutional Court and the Supreme Court on matters within their competence; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "A bill that introduces or abolishes a tax, grants an exemption, issues state loans, changes the state's financial obligations or calls for spending from the federal budget can be put forward only with the Government's opinion on it",
+    ],
+    window: null,
+    outcome: "Bills are put before the State Duma.",
+    source: {
+      title: "Constitution of the Russian Federation (ConsultantPlus's consolidated text)",
+      provision: "Art. 104",
+      url: "https://www.consultant.ru/document/cons_doc_LAW_28399/3f8c850abc4dc2ba4207acc563b176d93bdcf5f7/",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект, внесённый в Государственную Думу",
+        whoMaySign:
+          "Президент, Совет Федерации, сенаторы, депутаты Государственной Думы, Правительство и законодательные (представительные) органы субъектов Российской Федерации, а также Конституционный Суд и Верховный Суд по вопросам их ведения; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Законопроекты о введении или отмене налогов, освобождении от их уплаты, о выпуске государственных займов, об изменении финансовых обязательств государства и другие законопроекты, предусматривающие расходы из федерального бюджета, вносятся только при наличии заключения Правительства",
+        ],
+        outcome: "Законопроекты вносятся в Государственную Думу.",
+        sourceTitle: "Конституция Российской Федерации",
+        provision: "Статья 104",
+      },
+    },
+  },
+  ...(
+    [
+      {
+        authority: "ru",
+        level: "federal",
+        signatures: { count: 100_000 },
+        ru: {
+          name: "Российская общественная инициатива, федеральный уровень",
+          group: "федерального",
+        },
+      },
+      {
+        authority: "ru-se",
+        level: "regional",
+        signatures: {
+          percent: 5,
+          of: "the region's population (100,000 votes where it exceeds 2 million)",
+        },
+        ru: {
+          name: "Российская общественная инициатива, региональный уровень",
+          group: "регионального",
+        },
+      },
+    ] as const
+  ).map(({ authority, level, signatures, ru }): OfficialRoute => ({
+    key: `${authority}-roi`,
+    authority,
+    name: `Russian Public Initiative, ${level} level`,
+    appliesTo: ["statute"],
+    venue: "authorities",
+    whoMaySign:
+      "Citizens of the Russian Federation aged 18 or over with a SNILS number and a confirmed account on the state services portal, through which every vote is cast",
+    signatures,
+    alsoRequired: [
+      "An initiative is a proposal on the country's social and economic development or on public and municipal administration",
+      "Moderators check it against the rules before it is put to the vote, within two months",
+    ],
+    window: { months: 12 },
+    outcome: `An initiative that gathers the votes in time is sent to the ${level} expert working group for consideration.`,
+    source: {
+      title:
+        "Russian Public Initiative (roi.ru), under Presidential Decree No. 183 of 4 March 2013",
+      provision: "How it works",
+      url: "https://www.roi.ru/page/how-it-works/",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: ru.name,
+        whoMaySign:
+          "граждане Российской Федерации не моложе 18 лет, имеющие СНИЛС и подтверждённую учётную запись на Едином портале госуслуг, через которую подаётся каждый голос",
+        ...(authority === "ru-se"
+          ? { signatureBase: "населения региона (100 000 голосов, если население больше 2 млн)" }
+          : {}),
+        alsoRequired: [
+          "Общественная инициатива — предложение по вопросам социально-экономического развития страны, совершенствования государственного и муниципального управления",
+          "Модераторы проверяют её на соответствие Правилам до голосования, не более двух месяцев",
+        ],
+        outcome: `Инициатива, набравшая голоса в срок, направляется на рассмотрение в экспертную рабочую группу ${ru.group} уровня.`,
+        sourceTitle:
+          "Российская общественная инициатива (roi.ru), Указ Президента РФ № 183 от 4 марта 2013 года",
+        provision: "Как это работает",
+      },
+    },
+  })),
   ...[
     "li7001",
     "li7002",

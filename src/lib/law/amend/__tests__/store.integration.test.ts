@@ -334,6 +334,33 @@ describe.skipIf(!RUN)("the amendment engine", () => {
     ).rejects.toMatchObject({ status: 429 });
   });
 
+  it("names no account in the public log: a pseudonym per proposal, unlinkable across them", async () => {
+    const { actId } = await anAct();
+    const dave = { via: "account" as const, actorId: `dave-${randomUUID()}` };
+    const ids: string[] = [randomUUID(), randomUUID()];
+    for (const id of ids) {
+      await fileAmendment(db, {
+        id,
+        actor: dave,
+        actId,
+        lang: "de",
+        title: "Halve it",
+        rationale: "",
+        changes: lowerTheTax(),
+      });
+      await recordSupport(db, { actor: dave, amendmentId: id, revision: 1, kind: "support" });
+    }
+    const log = (await readLog(db, 0, 10000)).filter((e) => ids.includes(e.amendmentId));
+    expect(JSON.stringify(log)).not.toContain(dave.actorId);
+    const names = log.map((e) => {
+      const p = e.payload as { author?: string; supporter?: string };
+      return p.author ?? p.supporter;
+    });
+    expect(names.every((n) => n?.startsWith("anon:"))).toBe(true);
+    // One name per proposal for the author and supporter, and a different one on the other proposal.
+    expect(new Set(names).size).toBe(2);
+  });
+
   it("keeps one unbroken chain, and the database refuses to change or remove a row", async () => {
     const log = await readLog(db, 0, 1000);
     expect(log.length).toBeGreaterThan(0);

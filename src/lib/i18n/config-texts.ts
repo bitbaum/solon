@@ -66,7 +66,7 @@ export const CONFIG_TEXT_SETS: readonly {
  * written once, in English (who published a source, who wrote a rubric, who
  * translated a quote): the catalog gives them their other languages.
  */
-export const CITATION_FIELDS = ["publisher", "dataset", "author", "translator"] as const;
+export const CITATION_FIELDS = ["publisher", "dataset", "author", "translator", "label"] as const;
 
 /** Every citation string under a value, wherever it sits. */
 export function citationsIn(value: unknown, out: string[] = []): string[] {
@@ -74,7 +74,12 @@ export function citationsIn(value: unknown, out: string[] = []): string[] {
   else if (value && typeof value === "object") {
     for (const [k, v] of Object.entries(value)) {
       if (typeof v === "string" && (CITATION_FIELDS as readonly string[]).includes(k)) out.push(v);
-      else citationsIn(v, out);
+      // Words quoted from a published English translation are read in the reader's language too.
+      else if (k === "quote" && v && typeof v === "object" && "lang" in v && v.lang === "en") {
+        const text = (v as { text?: unknown }).text;
+        if (typeof text === "string") out.push(text);
+        citationsIn(v, out);
+      } else citationsIn(v, out);
     }
   }
   return out;

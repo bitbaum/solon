@@ -39,8 +39,3 @@ export function countSupport(rows: readonly SupportRow[]): SupportCount {
     account: standing.filter((r) => r.proof === "ACCOUNT").length,
   };
 }
-
-/** How a supporter is named in the record: an account, or the address that signed. */
-export const supporterRef = (
-  actor: { via: "account"; actorId: string } | { via: "key"; address: string },
-): string => (actor.via === "account" ? `actor:${actor.actorId}` : `btc:${actor.address}`);

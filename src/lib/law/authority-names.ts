@@ -42,7 +42,11 @@ export function nameAuthorities(
     const country =
       authority.place?.scheme === "iso_3166_1" ? region.of(authority.place.value) : undefined;
     const name =
-      own || country || (authority.place ? undefined : unplaced(authority.key)) || authority.label;
+      own ||
+      country ||
+      authority.names?.[locale] ||
+      (authority.place ? undefined : unplaced(authority.key)) ||
+      authority.label;
     const level = pack?.levels.find((l) => l.key === place?.levelKey);
     return { key: authority.key, name, level: level ? localized(level.names, locale) : null };
   });
