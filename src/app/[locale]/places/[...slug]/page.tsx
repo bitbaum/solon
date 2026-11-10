@@ -6,12 +6,20 @@ import { toLocale, type Locale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
 import { placesConfig } from "@/lib/config/places";
-import { regionName, worldEntryOfPack, worldRegion, type WorldRegion } from "@/lib/config/world";
+import {
+  regionName,
+  worldEntryOfPack,
+  worldRegion,
+  worldRegionByCode,
+  type WorldRegion,
+} from "@/lib/config/world";
+import { loadWorldProfile } from "@/lib/places/world-profile";
 import type { BudgetLink } from "@/components/budgets/budget-link-card";
 import { holderOfRegion } from "@/lib/budgets/holders";
 import { holdsBudget } from "@/lib/budgets/read";
 import { db } from "@/lib/db/client";
 import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law";
+import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
@@ -44,6 +52,12 @@ async function budgetLink(
     href: `/budgets/${region.slug}`,
   };
 }
+
+/** A country's, territory's or proclaimed state's profile, by its world entry. */
+const profileOf = (region: WorldRegion | undefined, locale: Locale) =>
+  region
+    ? loadWorldProfile(db, region, locale, worldRegionByCode, (r) => regionName(r, locale))
+    : Promise.resolve(null);
 
 /** A country or territory Solon holds no places for, by its one-segment path. */
 const regionOf = (slug: string[]) =>
@@ -97,6 +111,7 @@ export default async function PlacePage({ params }: { params: Params }) {
         taxHref={taxHref}
         contest={contest}
         budget={budget}
+        profile={await profileOf(country, locale)}
         t={t}
       />
     );
@@ -119,7 +134,15 @@ export default async function PlacePage({ params }: { params: Params }) {
       name={regionName(region, locale)}
       contest={contestNote(region.slug, locale)}
       budget={await budgetLink(region, locale)}
-      law={region.code ? await loadCountryLaw(db, region.code, locale) : []}
+      law={
+        region.code
+          ? await loadCountryLaw(db, region.code, locale)
+          : // A place beyond the ISO list that makes law (Liberland) has an authority by its slug.
+            LAW_AUTHORITIES.some((a) => a.key === region.slug)
+            ? await loadPlaceLaw(db, [region.slug], locale)
+            : []
+      }
+      profile={await profileOf(region, locale)}
       t={t}
     />
   );

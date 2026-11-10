@@ -88,7 +88,7 @@ export type CountryPlan = z.infer<typeof country>;
 
 export const lawPlanSchema = z.object({
   seeded: z.string(),
-  /** By ISO 3166-1 alpha-2. */
-  countries: z.record(z.string().regex(/^[A-Z]{2}$/), country),
+  /** By ISO 3166-1 alpha-2; a place with no ISO code (a proclaimed state) by its world slug. */
+  countries: z.record(z.string().regex(/^(?:[A-Z]{2}|[a-z0-9-]+)$/), country),
 });
 export type LawPlan = z.infer<typeof lawPlanSchema>;

@@ -750,6 +750,48 @@
         "open": "Der ganze Haushalt von {side}"
       },
       "proposeLaw": "Eine Änderung am Recht von {side} vorschlagen"
+    },
+    "profile": {
+      "title": "Auf einen Blick",
+      "kinds": {
+        "state": "Mitglied der Vereinten Nationen seit {date}.",
+        "observer": "Ein Beobachterstaat der Vereinten Nationen, kein Mitglied.",
+        "self_governing": "Regiert sich selbst und ist kein Mitglied der Vereinten Nationen.",
+        "territory": "Kein Mitglied der Vereinten Nationen.",
+        "territoryOf": "Kein Mitglied der Vereinten Nationen; Wikidata führt es unter {country}.",
+        "proclaimed": "Von seinen Gründern als Staat ausgerufen. Kein Mitglied der Vereinten Nationen.",
+        "special": "Ein Rechtsgebiet mit eigenem Recht innerhalb von {country}.",
+        "specialNoCountry": "Ein Rechtsgebiet mit eigenem Recht innerhalb eines Staates.",
+        "project": "Ein Projekt für ein neues Rechtsgebiet."
+      },
+      "kicker": {
+        "state": "Land",
+        "observer": "Beobachterstaat",
+        "self_governing": "Regiert sich selbst",
+        "territory": "Gebiet",
+        "proclaimed": "Ausgerufener Staat",
+        "special": "Sonderrechtsgebiet",
+        "project": "Projekt für ein neues Rechtsgebiet"
+      },
+      "facts": {
+        "capital": "Hauptstadt",
+        "population": "Bevölkerung",
+        "area": "Fläche",
+        "languages": "Amtssprachen",
+        "currency": "Währung",
+        "government": "Regierungsform",
+        "headOfState": "Staatsoberhaupt",
+        "headOfGovernment": "Regierungschef",
+        "founded": "Gegründet oder ausgerufen",
+        "unSince": "UNO-Mitglied seit",
+        "website": "Website"
+      },
+      "constitution": "Seine Verfassung lesen",
+      "noConstitution": "Solon führt seine Verfassung noch nicht.",
+      "allLaw": "Sein ganzes Recht in Solon",
+      "routes": "{count, plural, =0 {Solon weiss noch nicht, wie sein Recht offiziell geändert wird.} one {# offizieller Weg, sein Recht zu ändern, mit Quelle.} other {# offizielle Wege, sein Recht zu ändern, mit Quellen.}}",
+      "source": "Angaben aus <wikidata>Wikidata</wikidata>, gelesen am {date}; Mitgliedschaft aus der <un>Liste der Vereinten Nationen</un>. Jede Art von Ort sagt, was er tut, nicht, ob sein Anspruch berechtigt ist.",
+      "rule": "Ausgerufene Staaten werden nach einer Regel aufgeführt: Wikidata führt sie als Mikronationen, nicht aufgelöst, mit einem Artikel in mindestens 30 Wikipedias."
     }
   },
   "AuthError": {
@@ -1171,7 +1213,11 @@
     "taxNone": "Für {country} gibt es noch keine Steuerkarte.",
     "taxWorldTitle": "Was die Steuer Sie kosten würde, Ort für Ort",
     "taxWorldIntro": "Wählen Sie ein Land, um seine Orte danach einzufärben, was die Steuer Sie dort kosten würde.",
-    "everyCountry": "Jedes Land und jedes Gebiet"
+    "everyCountry": "Jedes Land und jedes Gebiet",
+    "showLabel": "Was die Karte zeigt",
+    "showAll": "Alle Orte",
+    "showBeyond": "Jenseits der UNO",
+    "beyondIntro": "Orte, die sich ohne UNO-Mitgliedschaft selbst regieren, von ihren Gründern ausgerufene Staaten, Rechtsgebiete mit eigenem Recht innerhalb eines Staates und Projekte für neue. Jeder wird danach benannt, was er tut, nicht danach, ob sein Anspruch berechtigt ist."
   },
   "Statistics": {
     "kicker": "Statistik",

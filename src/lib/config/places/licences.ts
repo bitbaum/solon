@@ -99,4 +99,10 @@ export const LICENCES = [
   // проекти та офіційні переклади" (Law No. 2811-IX "On Copyright and Related Rights", Art. 8(1)(3)).
   // Read 2026-11-10 from WIPO Lex's copy: https://www.wipo.int/wipolex/en/legislation/details/23798
   { spdx: "LicenseRef-ua-official-act", requiresAttribution: false, shareAlike: false },
+  // The words of a country's law, wherever its own provision is not recorded yet. Laws are
+  // published for everyone to be bound by them; the Berne Convention (Art. 2(4)) leaves official
+  // texts to each country, and countries put them outside copyright. Decided by the owner on
+  // 2026-11-10: a law's text is never held back for want of a recorded provision; where the plan
+  // (data/law/plan.json) records one, it is cited instead of this entry.
+  { spdx: "LicenseRef-official-law", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   cutArticles,
+  editionToFollow,
+  subpagesOf,
   latestYear,
   refuseCopy,
   wikisourceRestUrl,
@@ -56,5 +58,66 @@ describe("a copy of a constitution", () => {
     const current = `${old}\nЗакон від 7 лютого 2019 року`;
     expect(refuseCopy(cutArticles(current), current, 2019)).toBeNull();
     expect(refuseCopy(cutArticles(articles(2)), articles(2), null)).toMatch(/only 2 articles/);
+  });
+
+  it("reads the article headings of more languages and scripts", () => {
+    const paths = (text: string) => cutArticles(text).map((p) => p.path);
+    expect(paths("Art. 1º A República\nArt. 2º São Poderes")).toEqual(["art_1", "art_2"]);
+    expect(paths("Article premier\nLa France\nArticle 2\nLa langue")).toEqual(["art_1", "art_2"]);
+    expect(paths("Article I\nAll legislative Powers\nArticle XIV\nNo State")).toEqual([
+      "art_1",
+      "art_14",
+    ]);
+    expect(paths("§ 1\nKongeriget Norge\n§ 2\nVerdigrunnlaget")).toEqual(["art_1", "art_2"]);
+    expect(paths("الفصل 1\nنص\nالفصل 2\nنص")).toEqual(["art_1", "art_2"]);
+    // Where the text has articles, its sections are parts of them.
+    expect(
+      paths(
+        "Article 1: Sovereignty\nSection 1: Self\nText\nSection 2: Person\nArticle 2: Property",
+      ),
+    ).toEqual(["art_1", "art_2"]);
+    // A second printing of the same text after the first is not read.
+    expect(paths("第一条 A\n第二条 B\n第一条 A\n第二条 B")).toEqual(["art_1", "art_2"]);
+    expect(paths("第一条　天皇は\n第九十九条　天皇")).toEqual(["art_1", "art_99"]);
+    expect(paths("المادة 1\nنص\nالمادة ٢\nنص")).toEqual(["art_1", "art_2"]);
+  });
+
+  it("follows an index of editions to a full text, else to the latest edition", () => {
+    const link = (target: string, label: string) =>
+      `<a rel="mw:WikiLink" href="./${target}">${label}</a>`;
+    expect(
+      editionToFollow(
+        `${link("Grondwet_(2023)/Gehele_tekst", "Gehele tekst")}${link("Grondwet_(2023)/Hoofdstuk_1", "1")}`,
+        "Grondwet (2023)",
+      ),
+    ).toBe("Grondwet (2023)/Gehele tekst");
+    expect(
+      editionToFollow(
+        `${link("Constitution_(version_initiale)", "version initiale")}${link("Constitution_(à_jour_2008)", "à jour 2008")}${link("Fichier:x.jpg", "")}`,
+        "Constitution",
+      ),
+    ).toBe("Constitution (à jour 2008)");
+    expect(editionToFollow(link("Auteur:Someone", "Someone"), "Constitution")).toBeNull();
+  });
+
+  it("never follows a link to another document, and reads a constitution split into subpages whole", () => {
+    const link = (target: string, label: string) =>
+      `<a rel="mw:WikiLink" href="./${target}">${label}</a>`;
+    // A page that cites a 2000 copyright law: not an edition of the constitution.
+    expect(
+      editionToFollow(
+        link("Loi_n°_2-00_relative_aux_droits_d'auteur", "loi 2-00"),
+        "Constitution du Maroc",
+      ),
+    ).toBeNull();
+    const html = ["Preamble", "Part_I", "Part_II", "Part_III"]
+      .map((p) => link(`Constitution_of_India_(2020)/${p}`, p))
+      .join("");
+    expect(subpagesOf(html, "Constitution of India (2020)")).toEqual([
+      "Constitution of India (2020)/Preamble",
+      "Constitution of India (2020)/Part I",
+      "Constitution of India (2020)/Part II",
+      "Constitution of India (2020)/Part III",
+    ]);
   });
 });

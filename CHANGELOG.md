@@ -8,6 +8,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Every country, and every place beyond the UN, has a profile.** Each country's page now says
+  what kind of place it is (a UN member since a given day, an observer, a place that governs itself,
+  a territory), with its capital, population, area, languages, currency, form of government and
+  heads of state and government, and a way into its constitution and its law. Liberland, Sealand and
+  other proclaimed states, Próspera, and seasteading projects have pages too, picked by one stated
+  rule; Liberland's constitution is on Solon. The map can show only the places beyond the UN.
+  Constitutions loaded so far include Brazil's, Japan's, Morocco's, the Netherlands', Romania's,
+  Serbia's and others, each read from a copy whose source and date are on the page.
+  {#world-profiles} {#world-beyond-un} {#world-map-beyond}
+
 - **Russia's and Ukraine's constitutions, and a plan for every country's law.** Both constitutions
   are on Solon in their own language, article by article, with how each is amended and, for
   Ukraine, the referendum three million citizens can call. Where a government site would not serve
