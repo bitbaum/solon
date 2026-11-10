@@ -1,25 +1,33 @@
 # Solon's mark
 
-**The mark is one file: [`solon-mark.svg`](solon-mark.svg).** Everything else
-that shows it is written from it:
+**The owl lives in `@bitbaum/design-tokens/marks`** (repository
+`bitbaum/design-tokens`, file `marks/solon.mjs`), the one place the fleet's
+marks live; Solon installs the package as `@fleet/design-tokens`. Solon's
+header, footer and share card draw it from there (`src/lib/brand/mark.ts`), and
+so do OrangeCat's studio tiles and Solon's project page there. Everything else
+here is written from it:
 
 ```bash
-pnpm run brand            # src/lib/brand/mark.ts, src/app/icon.svg, public/app-icons/icon.svg, export/*.svg
-pnpm run brand -- --png   # also the PNG icons, favicon.ico and 1024px exports (Chromium;
-                          # set CHROMIUM_PATH if Playwright's pinned build is missing)
+pnpm run brand            # src/app/icon.svg, public/app-icons/icon.svg, export/*.svg
+pnpm run brand -- --png   # also the PNG icons, favicon.ico, apple-icon.png and 1024px exports
+                          # (Chromium; set CHROMIUM_PATH if Playwright's pinned build is missing)
 ```
 
-`src/lib/brand/__tests__/brand.test.ts` fails when a copy no longer matches the
-drawing, so a logo cannot be changed in one place and forgotten in another.
+`src/lib/brand/__tests__/brand.test.ts` fails when an icon no longer matches
+the package's mark, or when a drawing of its own appears here.
 
 ## Replacing it
 
-Export the new logo from any editor as plain SVG, a single compound path in one
-colour (holes cut with `fill-rule="evenodd"`), no transforms, no text. Save it
-over `solon-mark.svg`, run both commands, commit what they wrote. The header,
-footer, share card, favicon, app icons and the exports follow. For OrangeCat's
-copy (its studio tiles and Solon's project page there), run
-its `brand:import` script with the slug `solon` and this file (bitbaum/orangecat).
+1. Export the new logo as plain SVG: one colour, holes cut with
+   `fill-rule="evenodd"`, no transforms, no text.
+2. In bitbaum/design-tokens, run its `marks:import` script with the slug `solon`
+   and that file, open a pull request, and once it is merged run its Release
+   workflow.
+3. Here, raise `@fleet/design-tokens` to that release and run both commands
+   above. Commit what they wrote.
+
+The header, footer, share card, favicon, app icons and exports follow, and so
+does every other product that shows Solon.
 
 ## What it is
 
@@ -43,7 +51,7 @@ both sides: the law as written and what happened, one place against another.
 [`concepts.png`](concepts.png) shows the owl beside the marks it was chosen over,
 each at 128, 48, 24 and 16 px, in a header and as an app icon next to OrangeCat
 and Loki. Their drawings are in [`concepts/`](concepts/); any of them becomes the
-mark by copying it over `solon-mark.svg` and running `pnpm run brand`.
+mark by importing it into the package as above.
 
 - **Ring**: the Landsgemeinde from above, open toward you. Set aside because
   concentric arcs around a figure are the Apple Podcasts and AirDrop icons.
@@ -53,15 +61,3 @@ mark by copying it over `solon-mark.svg` and running `pnpm run brand`.
 - **Volute**: the Ionic capital. Reads as a bank or a courthouse.
 - **Double coil / One path in**: an S of two volutes; a coil you walk into.
   Too close to Loki's disc to tell apart at icon size.
-
-## Why there is still a copy in OrangeCat
-
-OrangeCat keeps every studio product's mark in its own registry
-(`src/config/marks/`) for its tiles, banners and project share cards. Loki's
-generator is mirrored there by hand. Its Solon entry was a line-icon balance
-Solon itself had stopped using, which is the drift a copy invites. Today the
-copy is refreshed with one command. The lasting fix is to move the registry
-(the mark files, `markSvg` and the importer) into `@bitbaum/design-tokens`,
-the package that already holds the three products' shared brand. Then Solon,
-OrangeCat and Loki all read one mark, and a new mark is one release. That
-move is not done yet.
