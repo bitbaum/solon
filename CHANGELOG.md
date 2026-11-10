@@ -8,6 +8,17 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Russia's laws, and North Ossetia–Alania's.** The federal laws and the laws of North
+  Ossetia–Alania are listed from Russia's official publication portal, each linked to its official
+  publication, under Russia and the republic in your language. Each says how that law is officially
+  changed: a federal bill goes to the State Duma, and citizens cannot introduce one; the Russian
+  Public Initiative takes 100,000 votes for a federal proposal and, for a region, 5% of its people,
+  each vote cast through a state services account. The texts are not held yet. {#ru-register}
+
+- **Your proposals cannot be linked to each other.** Whoever files or supports a proposal is named
+  in the public record by a name of their own for that proposal only, never by their account.
+  {#safe-pseudonyms}
+
 - **Propose a change in Russian, French and Italian.** Writing a change to a law, supporting
   one and reading how that law is officially changed now works in every language Solon speaks,
   not only German and English. On a contested place, "propose" opens each side's law to pick

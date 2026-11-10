@@ -84,6 +84,11 @@ export interface LawAuthority {
    * place (the cantons together, the European Union) is named from messages.
    */
   label: string;
+  /**
+   * The name in each language, for an authority whose place Places does not hold and no
+   * standard list names (a subject of the Russian Federation); `label` stays the English.
+   */
+  names?: Readonly<Record<string, string>>;
   place: { scheme: string; value: string } | null;
   /** The authority whose law also applies wherever this one's does: a commune's canton or country. */
   within?: string;
@@ -179,6 +184,22 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   },
   // The United States and its states: a state's key is `us-<postal code>`, its place ISO 3166-2.
   { key: "us", label: "United States", place: { scheme: "iso_3166_1", value: "US" } },
+  { key: "ru", label: "Russia", place: { scheme: "iso_3166_1", value: "RU" } },
+  // A subject of the Russian Federation: the key is `ru-` and its ISO 3166-2 code's suffix (RU-SE).
+  // No Places pack holds Russia's subjects yet, so it names no place: its law sits under Russia's,
+  // named by `names`, until a pack carries the subjects by their ISO 3166-2 codes.
+  {
+    key: "ru-se",
+    label: "North Ossetia–Alania",
+    names: {
+      de: "Nordossetien-Alanien",
+      fr: "Ossétie du Nord-Alanie",
+      it: "Ossezia Settentrionale-Alania",
+      ru: "Республика Северная Осетия — Алания",
+    },
+    place: null,
+    within: "ru",
+  },
   { key: "us-wy", label: "Wyoming", place: { scheme: "iso_3166_2", value: "US-WY" } },
   { key: "us-nh", label: "New Hampshire", place: { scheme: "iso_3166_2", value: "US-NH" } },
   // Communes: a key is `bfs<number>`, the place the commune's BFS number. One line per commune
@@ -837,7 +858,7 @@ export const PARLIAMENTRSO = {
 export const PRESIDENTRUO = {
   key: "presidentruo",
   authority: "rso",
-  publisher: "Президент Республики Южная Осетия (President of the Republic of South Ossetia)",
+  publisher: "President of the Republic of South Ossetia",
   homepage: "https://presidentruo.org",
   /** `{category}`, `{page}` from 1, 100 posts a page. */
   postsUrl:
@@ -1195,3 +1216,73 @@ export function countryOf(key: string): string | null {
   }
   return null;
 }
+
+/**
+ * Russia's official publication of law, the Official Internet Portal of Legal
+ * Information (publication.pravo.gov.ru): the federal acts and those of every
+ * subject of the Federation, each listed with its type, number, dates and the
+ * page of its official publication, through the JSON API the portal's own
+ * pages read (`/api/PublicBlocks`, `/api/DocumentTypes`, `/api/Documents`).
+ * Read 2026-11-10. robots.txt disallows `/File`, where the scanned PDF of each
+ * act is served, so Solon lists acts here and does not fetch their text from
+ * this portal. One more subject is one more entry in `blocks`.
+ * Official documents of state bodies, laws included, are not objects of
+ * copyright (Civil Code of the Russian Federation, Art. 1259(6)).
+ */
+export const PRAVO_GOV_RU = {
+  key: "pravo-gov-ru",
+  publisher: "Official Internet Portal of Legal Information",
+  homepage: "http://publication.pravo.gov.ru",
+  /** `{block}`, `{types}` (DocumentTypes, repeated), `{page}` from 1; 200 acts a page. */
+  documentsUrl:
+    "http://publication.pravo.gov.ru/api/Documents?block={block}&{types}&PageSize=200&index={page}",
+  /** The page of an act's official publication; `{eo}` is its electronic publication number. */
+  pageUrl: "http://publication.pravo.gov.ru/document/{eo}",
+  hosts: ["publication.pravo.gov.ru"],
+  userAgent: "Solon law reader (solon.orangecat.ch)",
+  licenceSpdx: "LicenseRef-ru-official-act",
+  locale: "ru",
+  textStatus: "authentic" as ActTextStatus,
+  pauseMs: 2000,
+  /**
+   * What is read, per authority: the portal's block and the document types (by the portal's own
+   * ids, from `/api/DocumentTypes?block=…`) with the kind each becomes. Decrees, orders and
+   * resolutions are left for later: the laws come first, since they are what a proposal changes.
+   */
+  blocks: [
+    {
+      authority: "ru",
+      block: "president",
+      types: [
+        { id: "8fb60238-9fee-4a1b-9534-6d99ad0ceff0", label: "Конституция", kind: "constitution" },
+        {
+          id: "e0c56da5-17f1-40ac-a10f-8a9a1cee0c4e",
+          label: "Закон Российской Федерации о поправке к Конституции Российской Федерации",
+          kind: "statute",
+        },
+        {
+          id: "93273da3-3133-4acf-96c2-4adc1ae70e19",
+          label: "Федеральный конституционный закон",
+          kind: "statute",
+        },
+        { id: "82a8bf1c-3bc7-47ed-827f-7affd43a7f27", label: "Федеральный закон", kind: "statute" },
+      ],
+    },
+    {
+      authority: "ru-se",
+      block: "region15",
+      types: [
+        {
+          id: "97d902b9-cc94-4b01-9576-b4a7d4fde1fb",
+          label: "Конституционный закон",
+          kind: "statute",
+        },
+        { id: "8910e61f-371d-490c-a1b8-aa7b8a5a48be", label: "Закон", kind: "statute" },
+      ],
+    },
+  ] as readonly {
+    authority: string;
+    block: string;
+    types: readonly { id: string; label: string; kind: ActKind }[];
+  }[],
+} as const;

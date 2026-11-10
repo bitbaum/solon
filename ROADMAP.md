@@ -71,7 +71,11 @@ substance; it never says which side is right (design:
 - [ ] A side no one claims in law yet, shown as a scenario and labelled one: South Ossetia as a subject of the Russian Federation, read from Russia's federal law and North Ossetia–Alania's, on the same questions {#contested-scenarios}
 - [ ] "My life under each": a salary, a household and a pension run through each side's tax and benefit law, every figure linked to its article {#contested-my-life}
 - [ ] Georgia's budget from its own execution law, beside South Ossetia's {#contested-budget-claimant}
-- [ ] Safe support where proposing is risky: counts without lists, a new pseudonym per proposal, commitments instead of account ids in the public log, a page that says what is kept; before any outreach (§5) {#contested-safe-support}
+- [x] A new pseudonym per proposal: a signed-in person is named in the public record by a keyed hash of their account and the proposal, never by the account, so their proposals cannot be linked to each other or to them {#safe-pseudonyms}
+- [ ] Safe support, the rest: counts without lists where a place's configuration asks for it, support without an account or an email, a page that says what is kept; before any outreach (§5) {#contested-safe-support}
+- [x] Russia and its subjects listed from the official publication portal, one adapter for all 89 (a subject is one entry in `PRAVO_GOV_RU.blocks`): the federal laws and North Ossetia–Alania's, each linked to its official publication; the federal route (Constitution Art. 104) and the Russian Public Initiative's federal and regional bars stated (research: `docs/research/2026-11-russia-sources.md`) {#ru-register}
+- [ ] Russia's texts: the portal's robots.txt disallows its files (scans), so a publisher that allows reading them, or the portal's agreement; North Ossetia–Alania's Constitution and its own routes once readable {#ru-texts}
+- [ ] A proposal on an act whose text Solon does not hold: the change asked for in words, pinned to the act's official publication, supported and counted like any other {#amend-without-text}
 - [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}
 - [ ] The deputies, from the Parliament's own page, and the hand-over: the redline, the count per electorate and the log hash, sent to deputies who choose to receive them, their answer recorded {#contested-handover}
 - [ ] Support counted per electorate and tier (declared, vouched, attested), never summed (§6) {#contested-electorates}

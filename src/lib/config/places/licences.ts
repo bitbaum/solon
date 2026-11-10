@@ -87,4 +87,10 @@ export const LICENCES = [
   // переводы". Read 2026-11-10 at https://parliamentrso.org/node/3256. The same class as the Swiss,
   // Liechtenstein and Estonian ones.
   { spdx: "LicenseRef-so-official-act", requiresAttribution: false, shareAlike: false },
+  // Russia: "Не являются объектами авторских прав: 1) официальные документы государственных органов
+  // и органов местного самоуправления муниципальных образований, в том числе законы, другие
+  // нормативные акты, судебные решения, иные материалы законодательного, административного и
+  // судебного характера […], а также их официальные переводы" (Civil Code, Art. 1259(6)). Read
+  // 2026-11-10 at https://www.consultant.ru/document/cons_doc_LAW_64629/be05678dc42ddc67aae5be9ba9beebd367fb9a3f/.
+  { spdx: "LicenseRef-ru-official-act", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

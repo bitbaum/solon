@@ -208,7 +208,8 @@ export default async function ActViewPage({
           </section>
         )}
 
-        {version && <OfficialRoutes routes={routesFor(act.authority, act.kind)} locale={locale} />}
+        {/* How the law is changed does not depend on whether Solon holds its text. */}
+        <OfficialRoutes routes={routesFor(act.authority, act.kind)} locale={locale} />
 
         {version && (
           <section className="space-y-6" aria-label={t("act.provisions")}>
