@@ -198,3 +198,50 @@ Each is a statement about what a page says or does not say, with the URL and dat
   shown is a Register decision (`docs/design/2026-10-law-as-data.md` §4); the importer will not run
   without one on `licences.ts`.
 - That any figure is reliable. Each is the producer's, and says so.
+
+## 7. Recognition and Georgia's own position (read 2026-11-10)
+
+Each line is a page that was opened; quotes are verbatim and attributed. Primary pages were
+not reachable for several (the Kremlin's sites answered HTTP 500 on every URL tried), so the
+dates below are as reported by the publisher named, and conflicts are kept.
+
+| State | Act and date as reported | Page opened | Words relied on |
+|---|---|---|---|
+| Russia | 2008-08-26, decrees announced in a televised statement | OSCE-filed copy of the statement, https://www.osce.org/files/f/documents/d/6/33163.pdf | "I signed Decrees on the recognition by the Russian Federation of South Ossetia's and Abkhazia's independence." (decree numbers: not verified) |
+| Nicaragua | announced 2 September 2008 (RIA Novosti) or 3 September (Tico Times); formalised by its Foreign Ministry the following week | https://www.globalsecurity.org/military/library/news/2008/09/mil-080906-rianovosti04.htm; https://ticotimes.net/2008/09/12/nicaragua-recognizes-abkhazia-south-ossetia | "Nicaragua recognizes the independence of S. Ossetia and Abkhazia" (conflict on the day kept) |
+| Venezuela | 2009-09-10, announced by its President in Moscow | https://www.globalsecurity.org/military/library/news/2009/09/mil-090910-voa08.htm | "…says he will now recognize the breakaway Georgian regions of South Ossetia and Abkhazia as independent countries" (quoted as the publisher words it) |
+| Nauru | 2009-12-16, joint statement on diplomatic relations | https://www.globalsecurity.org/military/library/news/2009/12/mil-091216-rianovosti08.htm (opened by this session) | "The joint statement was signed by Nauru Foreign Minister Kieren Keke and South Ossetian Ambassador to Russia Dmitry Medoyev" |
+| Nauru, withdrawn | cabinet decision 2026-07-21 per the Georgian foreign ministry; statement reported 2026-07-31 | https://georgiatoday.ge/nauru-confirms-withdrawal-of-recognition-of-abkhazia-tskhinvali-region/ (opened by this session) | "The Government of the Republic of Nauru announces the withdrawal of recognition of the Republic of South Ossetia and the Republic of Abkhazia as independent states" |
+| Syria | 2018-05-29, foreign ministry statement | https://eurasianet.org/s/syria-formally-recognizes-abkhazia-and-south-ossetia (opened by this session) | "the Syrian Arabic Republic has decided to establish diplomatic relations with the republics of Abkhazia and South Ossetia" |
+| Tuvalu | recognised September 2011; withdrawal reported 2014-03-31 | https://civil.ge/?p=123603 (opened by this session) | "Tuvalu recognized Abkhazia and South Ossetia under the previous government led by PM Willy Telavi in September, 2011." One source says neither state issued a formal act of withdrawal. |
+| Vanuatu | sources disagree whether it ever recognised South Ossetia; recognition of Abkhazia reported for 2011 | https://www.rnz.co.nz/international/pacific-news/240461/vanuatu-formally-establishes-diplomatic-relations-with-georgia | Not a South Ossetia row until a page states one |
+
+No further recognition or withdrawal in 2024 to 2026 was found. The de facto foreign ministry
+lists embassies in Russia, Abkhazia, Transnistria, Venezuela and Nicaragua
+(https://mfa.rsogov.org/ru/node/3335); that is its own account of its diplomatic presence, not a
+list of recognitions. Whether Venezuela's and Syria's recognitions still stand after their
+changes of government is contested in the press (Georgia's foreign ministry hoped for reversal;
+the South Ossetian ministry replied that the decision "is beyond question"); no withdrawal act was
+found, so those rows stay open.
+
+**Georgia's position**, from the Legislative Herald of Georgia (https://matsne.gov.ge): the Law on
+Occupied Territories (No 431, 23 October 2008, https://matsne.gov.ge/en/document/view/19132), Art. 2
+(b): "Tskhinvali region (the territories of the former South Ossetian Autonomous Region)", Georgian:
+"ცხინვალის რეგიონი (ყოფილი სამხრეთ ოსეთის ავტონომიური ოლქის ტერიტორიები)"; Art. 7(1) (Georgian):
+"ოკუპირებული ტერიტორიები საქართველოს ტერიტორიის განუყოფელი ნაწილია". The English page served a
+2015-2018 consolidated version; the 2025 English text was not obtained. The Constitution of Georgia
+Art. 1 (https://matsne.gov.ge/en/document/view/30346) names "the former Autonomous Region of South
+Ossetia" as part of the territory; the page's list ends at the 2020 version, later amendments not
+checked. The law does not place the territory in an administrative unit of Georgia (the text opened
+has no such wording), so no `part_of` row for a Georgian unit is stated by it.
+
+## 8. What South Ossetia needs from the place model
+
+For the session designing the generic place model: a place with no ISO code (identified by
+Wikidata); one area with several `claims` and one `administers` (Georgia's Law on Occupied
+Territories and the Constitution of South Ossetia are the two claim sources); two names for one
+place attributed to the authorities that use them (Tskhinvali / Tskhinval, Georgian "ცხინვალის
+რეგიონი"); level names for the districts and the city of equal rank (one level
+`administrative_unit` here); a recognition row per state with a start and an end (Nauru ends
+2026-07); a per-row source URL (the batch has one source per file, so each recognition needs its
+own source or the batch needs a source per row).
