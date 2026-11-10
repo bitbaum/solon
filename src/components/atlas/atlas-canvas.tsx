@@ -119,6 +119,8 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
           ctx.lineWidth = 3;
           ctx.strokeStyle = live.current.nameHalo ?? "transparent";
           ctx.fillStyle = live.current.nameColour ?? "currentColor";
+          // Names already written this frame: a name that would land on one is left for a closer zoom.
+          const written: { x0: number; y0: number; x1: number; y1: number }[] = [];
           for (const { text, point, bounds } of names.values()) {
             const at = pointAt(point, projection);
             const a = at && projection([bounds[0], bounds[1]]);
@@ -127,6 +129,13 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
             // Only where the whole name fits inside its place, so names never pile up.
             if (Math.abs(b[0] - a[0]) < ctx.measureText(text).width + LABEL_PAD) continue;
             if (Math.abs(b[1] - a[1]) < 12 + LABEL_PAD) continue;
+            const half = ctx.measureText(text).width / 2 + 2;
+            const box = { x0: at[0] - half, y0: at[1] - 8, x1: at[0] + half, y1: at[1] + 8 };
+            if (
+              written.some((w) => box.x0 < w.x1 && box.x1 > w.x0 && box.y0 < w.y1 && box.y1 > w.y0)
+            )
+              continue;
+            written.push(box);
             ctx.strokeText(text, at[0], at[1]);
             ctx.fillText(text, at[0], at[1]);
           }
