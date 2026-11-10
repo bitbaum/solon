@@ -487,6 +487,50 @@ export const jurisdictionRelations = pgTable(
 );
 
 /**
+ * Every path a place's page has ever had (design:
+ * docs/design/2026-11-place-navigation.md, "URLs"). One canonical path per
+ * target; the others answer with a redirect to it. A path points at a
+ * jurisdiction or at an area, never both, and being the primary key it is
+ * unique across the two. Never deleted; only `canonical` may change.
+ */
+export const placePaths = pgTable(
+  "place_paths",
+  {
+    path: text("path").primaryKey(),
+    jurisdictionId: text("jurisdiction_id"),
+    areaId: text("area_id"),
+    canonical: boolean("canonical").notNull(),
+    recordedAt: recordedAt(),
+  },
+  (t) => [
+    uniqueIndex("place_paths_one_canonical_jurisdiction")
+      .on(t.jurisdictionId)
+      .where(sql`${t.canonical} AND ${t.jurisdictionId} IS NOT NULL`),
+    uniqueIndex("place_paths_one_canonical_area")
+      .on(t.areaId)
+      .where(sql`${t.canonical} AND ${t.areaId} IS NOT NULL`),
+    index("place_paths_jurisdiction_id_idx").on(t.jurisdictionId),
+    index("place_paths_area_id_idx").on(t.areaId),
+    check("place_paths_one_target", sql`(${t.jurisdictionId} IS NULL) <> (${t.areaId} IS NULL)`),
+    check("place_paths_shape", sql`${t.path} ~ '^[^/]+(/[^/]+)*$'`),
+    foreignKey({
+      columns: [t.jurisdictionId],
+      foreignColumns: [jurisdictions.id],
+      name: "place_paths_jurisdiction_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+    foreignKey({
+      columns: [t.areaId],
+      foreignColumns: [areas.id],
+      name: "place_paths_area_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+  ],
+);
+
+/**
  * A measured value of a place for a period: a tax multiplier, a tariff, a
  * population. Bitemporal: the current view takes, per key, the row whose
  * `superseded_at` is null. A correction supersedes; it never overwrites.

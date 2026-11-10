@@ -59,7 +59,10 @@ export interface ActRow {
   locale: string;
   /** What names this act in its register: scheme (config ACT_IDENTIFIER_SCHEMES) and value. */
   identity: { scheme: string; value: string };
-  /** The number its authority gave it (systematic number), when it has one. */
+  /**
+   * The number its authority gave it (systematic number), when this register states one. A register that
+   * states none removes only a number it stated itself earlier: one read from the act's own document stands.
+   */
   systematicNumber: string | null;
   /** Further identifiers the register gives the act. */
   more?: { scheme: string; value: string }[];
@@ -147,6 +150,7 @@ export async function importRegister(
 
         const places = await placeIdsByAuthority(tx);
         const known = await currentActs(tx, register.identityScheme);
+        const registerKey = register.key;
         const listed = new Set<string>();
         const newActs: (typeof legalActs.$inferInsert)[] = [];
         const newIdentifiers: (typeof legalActIdentifiers.$inferInsert)[] = [];
@@ -200,7 +204,13 @@ export async function importRegister(
               sourceId,
             });
           }
-          if ((existing.number ?? null) !== (row.systematicNumber ?? null)) {
+          // A register that states no number removes only a number it stated itself: one read from the
+          // act's own document (store.ts, `number`) is not the register's to take away.
+          const mayChange =
+            Boolean(row.systematicNumber) ||
+            existing.numberSourceKey === undefined ||
+            existing.numberSourceKey === registerKey;
+          if (mayChange && (existing.number ?? null) !== (row.systematicNumber ?? null)) {
             if (existing.numberRowId) supersedeIdentifiers.push(existing.numberRowId);
             if (row.systematicNumber) {
               newIdentifiers.push(numberRow(existing.actId, row.systematicNumber, sourceId));
@@ -333,6 +343,8 @@ interface KnownAct {
   nameId: string;
   number: string | undefined;
   numberRowId: string | undefined;
+  /** The source that gave the number: this register's, or a publisher's reading of the act's own document. */
+  numberSourceKey?: string;
   /** The act's current page at its publisher, so a changed address replaces it. */
   officialUrl?: string;
   officialUrlRowId?: string;
@@ -389,8 +401,10 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       id: legalActIdentifiers.id,
       actId: legalActIdentifiers.actId,
       value: legalActIdentifiers.value,
+      sourceKey: sources.sourceKey,
     })
     .from(legalActIdentifiers)
+    .innerJoin(sources, eq(sources.id, legalActIdentifiers.sourceId))
     .where(
       and(
         eq(legalActIdentifiers.scheme, "systematic_number"),
@@ -402,6 +416,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
     if (known) {
       known.number = number.value;
       known.numberRowId = number.id;
+      known.numberSourceKey = number.sourceKey;
     }
   }
   const pages = await db

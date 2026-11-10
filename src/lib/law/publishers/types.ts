@@ -12,8 +12,13 @@
 import type { ActKind, ActTextStatus } from "@/lib/config/law";
 
 export interface ListedAct {
-  /** The collection's own number for the act, stable across versions. */
+  /** The collection's own handle for the act, stable across versions: a number, or an id in an address. */
   ref: string;
+  /**
+   * The number the collection itself gives the act (Zürich's 101.100), when its listing states one. Not the
+   * `ref`: an id in an address is not a number a reader can cite, and is never shown as one.
+   */
+  number?: string | null;
   title: string;
   kind: ActKind;
   /** The act's page in the collection. */
@@ -52,4 +57,9 @@ export interface PublisherAdapter {
   list(doFetch: typeof fetch): Promise<{ bytes: Uint8Array; url: string; acts: ListedAct[] }>;
   versions(pageUrl: string, doFetch: typeof fetch): Promise<VersionRef[]>;
   document(version: VersionRef, doFetch: typeof fetch): Promise<DocumentRef | null>;
+  /**
+   * Where the document itself prints the act's number ("Akte Nr.: 01.01.03"): the first capture of this,
+   * in the head of the document's text, is the act's number when the listing states none.
+   */
+  numberInDocument?: RegExp;
 }

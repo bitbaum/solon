@@ -18,8 +18,11 @@ import {
   jurisdictionIdentifiers,
   jurisdictionRelations,
   jurisdictions,
+  areas,
+  placePaths,
   sources,
 } from "@/lib/db/places-schema";
+import { resolvePlacePath } from "../paths";
 import { PlacesSyncRefused, syncPlacesConfig } from "../sync-config";
 import { withTestland } from "./fixtures/testland/config";
 
@@ -256,5 +259,128 @@ describe.runIf(RUN)("facts", () => {
     expect(await refusal(db.insert(facts).values({ ...fact, valueNumeric: "1.3" }))).toBe(
       "facts_one_current_per_key",
     );
+  });
+});
+
+describe.runIf(RUN)("place paths: one address per place, in one namespace", () => {
+  const aPlaceAt = async (slugPath: string) => {
+    await syncPlacesConfig(db, testland);
+    const [row] = await db
+      .insert(jurisdictions)
+      .values({ origin: "state", slugPath, validFrom: "1800-01-01", validTo: "1801-01-01" })
+      .returning();
+    return row!;
+  };
+  const anArea = async () => {
+    const source = await aSource();
+    const [row] = await db
+      .insert(areas)
+      .values({ geometryRef: `geo:v1:test:e:${tag()}:f`, sourceId: source.id })
+      .returning();
+    return row!;
+  };
+
+  it("a state place gets its canonical path when it is recorded, with hyphens in the root, and keeps the first path as a redirect", async () => {
+    const id = tag();
+    const place = await aPlaceAt(`snake_${id}/shire`);
+    const rows = await db.select().from(placePaths).where(eq(placePaths.jurisdictionId, place.id));
+    expect(rows.map((r) => [r.path, r.canonical]).sort()).toEqual(
+      [
+        [`snake-${id}/shire`, true],
+        [`snake_${id}/shire`, false],
+      ].sort(),
+    );
+    const resolved = await resolvePlacePath(db, `snake_${id}/shire`);
+    expect(resolved).toEqual({
+      target: { kind: "jurisdiction", id: place.id },
+      canonical: `snake-${id}/shire`,
+      isCanonical: false,
+    });
+    expect((await resolvePlacePath(db, `snake-${id}/shire`))?.isCanonical).toBe(true);
+    expect(await resolvePlacePath(db, `nowhere-${id}`)).toBeNull();
+  });
+
+  it("a path already in canonical form has no second path", async () => {
+    const place = await aPlaceAt(`oneword${tag()}/shire`);
+    const rows = await db.select().from(placePaths).where(eq(placePaths.jurisdictionId, place.id));
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.canonical).toBe(true);
+  });
+
+  it("every state place has exactly one canonical path, with no underscore in its root", async () => {
+    const places = await db.select().from(jurisdictions);
+    const paths = await db.select().from(placePaths);
+    for (const place of places.filter((p) => p.slugPath)) {
+      const canonical = paths.filter((r) => r.jurisdictionId === place.id && r.canonical);
+      expect(canonical, place.slugPath!).toHaveLength(1);
+      expect(canonical[0]!.path.split("/")[0], place.slugPath!).not.toContain("_");
+    }
+  });
+
+  it("a place and an area cannot have the same path", async () => {
+    const place = await aPlaceAt(`shared${tag()}/shire`);
+    const area = await anArea();
+    const taken = (
+      await db.select().from(placePaths).where(eq(placePaths.jurisdictionId, place.id))
+    )[0]!.path;
+    expect(
+      await refusal(
+        db.insert(placePaths).values({ path: taken, areaId: area.id, canonical: true }),
+      ),
+    ).toBe("place_paths_pkey");
+  });
+
+  it("an area has a path of its own, canonical once", async () => {
+    const area = await anArea();
+    const path = `an-area-${tag()}`;
+    await db.insert(placePaths).values({ path, areaId: area.id, canonical: true });
+    expect((await resolvePlacePath(db, path))?.target).toEqual({ kind: "area", id: area.id });
+    expect(
+      await refusal(
+        db.insert(placePaths).values({ path: `${path}-2`, areaId: area.id, canonical: true }),
+      ),
+    ).toBe("place_paths_one_canonical_area");
+  });
+
+  it("a path names one target, and a place has one canonical path", async () => {
+    const place = await aPlaceAt(`one${tag()}/shire`);
+    const area = await anArea();
+    expect(
+      await refusal(
+        db.insert(placePaths).values({
+          path: `both-${tag()}`,
+          jurisdictionId: place.id,
+          areaId: area.id,
+          canonical: false,
+        }),
+      ),
+    ).toBe("place_paths_one_target");
+    expect(
+      await refusal(db.insert(placePaths).values({ path: `neither-${tag()}`, canonical: false })),
+    ).toBe("place_paths_one_target");
+    expect(
+      await refusal(
+        db
+          .insert(placePaths)
+          .values({ path: `second-${tag()}`, jurisdictionId: place.id, canonical: true }),
+      ),
+    ).toBe("place_paths_one_canonical_jurisdiction");
+  });
+
+  it("a path is never deleted and never moves to another place", async () => {
+    const place = await aPlaceAt(`fixed${tag()}/shire`);
+    const other = await aPlaceAt(`other${tag()}/shire`);
+    const [row] = await db.select().from(placePaths).where(eq(placePaths.jurisdictionId, place.id));
+    expect(await refusal(db.delete(placePaths).where(eq(placePaths.path, row!.path)))).toMatch(
+      /never deleted/,
+    );
+    expect(
+      await refusal(
+        db
+          .update(placePaths)
+          .set({ jurisdictionId: other.id })
+          .where(eq(placePaths.path, row!.path)),
+      ),
+    ).toMatch(/never moves/);
   });
 });

@@ -48,6 +48,11 @@ export interface LinkedDocumentsConfig {
   kind?: ActKind;
   /** The language of the commune's acts; German unless said. */
   locale?: string;
+  /**
+   * Where a document prints its own number, as a pattern whose first capture is the number
+   * (`Akte Nr.: 01.01.03`); see `PublisherAdapter.numberInDocument`.
+   */
+  documentNumber?: RegExp;
 }
 
 const decode = (s: string) =>
@@ -214,6 +219,7 @@ export function linkedDocuments(config: LinkedDocumentsConfig): PublisherAdapter
     licenceSpdx: config.licenceSpdx,
     textStatus: "authentic",
     locale: config.locale ?? "de",
+    numberInDocument: config.documentNumber,
     async list(doFetch) {
       const pages: string[] = [];
       const anchors: { href: string; text: string }[] = [];
@@ -330,6 +336,9 @@ const FILES_ROOT_FILE = /\/files\/([^/?#]+\.pdf)(?:[?#]|$)/i;
 /** A file in a portal's service folder (Balzers), named by its file name. */
 const PORTAL_FILE = /\/Portal\/UserFiles\/files\/Service\/([^/?#]+\.pdf)(?:[?#]|$)/i;
 
+/** A Liechtenstein commune's regulations print their file number on the front page: "Akte Nr.: 01.01.03". */
+export const LI_AKTE_NUMBER = /Akte\s*Nr\.?\s*:?\s*(\d(?:[\d.\/-]*\d)?)/i;
+
 const liCommune = (
   key: string,
   authority: string,
@@ -350,6 +359,7 @@ const liCommune = (
     follow,
     include: LI_ACT,
     exclude: LI_FORM,
+    documentNumber: LI_AKTE_NUMBER,
   });
 
 export const vaduz = liCommune(

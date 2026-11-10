@@ -493,7 +493,7 @@ Two publishers, each a format reader that names no country:
   1,849 acts on 2026-11-10.
 
 Neither publisher states whether an act is still in force, so every act is recorded with
-`status_stated = false` (migration 0026): the act is listed and findable, its `in_force` column then
+`status_stated = false` (migration 0027): the act is listed and findable, its `in_force` column then
 says nothing, and coverage, the act pages, the Markdown and the tools all say "status not stated by the
 publisher" instead of "in force" (`statusLabel`, `AuthorityCoverage.statusNotStated`). Amendments are
 acts of their own.

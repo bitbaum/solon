@@ -1,5 +1,5 @@
 {
-  "id": "24b23bc6-e6b9-4b4f-861c-e9d756996ac3",
+  "id": "629d7839-c371-45a2-842a-2d30a4ac99ee",
   "prevId": "4abb5abe-f961-4039-b088-55e1f604f42e",
   "version": "7",
   "dialect": "postgresql",
@@ -3390,6 +3390,149 @@
       },
       "isRLSEnabled": false
     },
+    "public.place_paths": {
+      "name": "place_paths",
+      "schema": "",
+      "columns": {
+        "path": {
+          "name": "path",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "jurisdiction_id": {
+          "name": "jurisdiction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_id": {
+          "name": "area_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "canonical": {
+          "name": "canonical",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recorded_at": {
+          "name": "recorded_at",
+          "type": "timestamp (3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "place_paths_one_canonical_jurisdiction": {
+          "name": "place_paths_one_canonical_jurisdiction",
+          "columns": [
+            {
+              "expression": "jurisdiction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"jurisdiction_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_paths_one_canonical_area": {
+          "name": "place_paths_one_canonical_area",
+          "columns": [
+            {
+              "expression": "area_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"area_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_paths_jurisdiction_id_idx": {
+          "name": "place_paths_jurisdiction_id_idx",
+          "columns": [
+            {
+              "expression": "jurisdiction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_paths_area_id_idx": {
+          "name": "place_paths_area_id_idx",
+          "columns": [
+            {
+              "expression": "area_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "place_paths_jurisdiction_id_fkey": {
+          "name": "place_paths_jurisdiction_id_fkey",
+          "tableFrom": "place_paths",
+          "tableTo": "jurisdictions",
+          "columnsFrom": [
+            "jurisdiction_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        },
+        "place_paths_area_id_fkey": {
+          "name": "place_paths_area_id_fkey",
+          "tableFrom": "place_paths",
+          "tableTo": "areas",
+          "columnsFrom": [
+            "area_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "place_paths_one_target": {
+          "name": "place_paths_one_target",
+          "value": "(\"place_paths\".\"jurisdiction_id\" IS NULL) <> (\"place_paths\".\"area_id\" IS NULL)"
+        },
+        "place_paths_shape": {
+          "name": "place_paths_shape",
+          "value": "\"place_paths\".\"path\" ~ '^[^/]+(/[^/]+)*$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.place_postcodes": {
       "name": "place_postcodes",
       "schema": "",
@@ -4092,13 +4235,6 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
-        },
-        "status_stated": {
-          "name": "status_stated",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
         },
         "source_id": {
           "name": "source_id",
