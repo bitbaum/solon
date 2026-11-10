@@ -33,13 +33,13 @@ describe("law authorities and places", () => {
     }
   });
 
-  it("name a place some pack can carry, in the country the authority's tree puts it", () => {
+  it("name a place some pack can carry, in the country the authority's tree puts it (none, for a place with no ISO code)", () => {
     for (const a of placed.filter((x) => x.place.scheme !== "iso_3166_1")) {
       const packs = placesConfig.packs.filter((p) => p.identifierSchemes.includes(a.place.scheme));
       expect(packs.length, `${a.key}: no pack carries ${a.place.scheme}`).toBeGreaterThan(0);
       const country = countryOf(a.key);
       expect(
-        packs.some((p) => p.region === country),
+        packs.some((p) => (p.region ?? null) === country),
         `${a.key}: its tree says ${country}, the packs carrying ${a.place.scheme} say ${packs.map((p) => p.region).join(", ")}`,
       ).toBe(true);
     }
