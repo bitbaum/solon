@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+import { SOLON_MARK } from "@/lib/brand/mark";
+
 /**
  * Social preview card, generated at request time by Next's file convention.
  *
@@ -25,7 +27,6 @@ export const contentType = "image/png";
 // with tokens.css; design:check cannot see bare consts like these.
 const INK = "#0A0A0A"; // --surface-public: 0 0% 4%
 const ORANGE = "#FF5C00"; // --public-accent
-const BITCOIN = "#F7931A"; // --bitcoin-orange (identity, never an action colour)
 const MUTED = "#A6A6A6"; // --text-secondary: 0 0% 65%
 
 export default function OGImage() {
@@ -43,15 +44,10 @@ export default function OGImage() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 999,
-            background: BITCOIN,
-            display: "flex",
-          }}
-        />
+        {/* The mark, from the same generated data as the header and the icons. */}
+        <svg width={52} height={52} viewBox={SOLON_MARK.viewBox.join(" ")}>
+          <path fill={ORANGE} fillRule={SOLON_MARK.fillRule} d={SOLON_MARK.d} />
+        </svg>
         <div
           style={{
             fontSize: 26,
