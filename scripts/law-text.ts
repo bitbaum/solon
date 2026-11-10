@@ -9,6 +9,7 @@
  *   pnpm run law:text parliamentrso [--limit 60] [--term 2] [--dry-run]   (South Ossetia: the Parliament's register of acts, at the site's 90-second crawl-delay; --limit is listing pages, 10 acts each)
  *   pnpm run law:text presidentruo [--limit 30] [--dry-run]   (South Ossetia: the President's register of decrees, treaties and documents from the site's API, 100 a page)
  *   pnpm run law:text parliamentrso-text|presidentruo-text [--limit 50] [--act 89961,89934] [--stubs] [--dry-run]   (South Ossetia: the text of the acts the register holds, cut into articles; the Parliament's at its 90-second crawl-delay, the President's a second apart; a page that only links the act's Word file is read from the file, and --stubs reads again the acts held only as such a page)
+ *   pnpm run law:text plan-constitutions [--country RU,UA] [--again] [--dry-run]   (every country's constitution from the source data/law/plan.json chose, stored as a copy with who keeps it and the day read; docs/design/2026-11-law-of-every-country.md)
  *   pnpm run law:text pravo-gov-ru [--authority ru,ru-se] [--limit 5] [--dry-run]   (Russia: the federal laws and a subject's laws listed by the official publication portal, 200 a page, two seconds apart; the register only, since the portal's robots.txt disallows the files that hold the texts)
  *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text ukleg [--limit 1000] [--type ukpga,uksi] [--year 2018,2024] [--dry-run]   (United Kingdom: Public General Acts and Statutory Instruments from legislation.gov.uk, a year at a time, newest first; paced by the site's robots.txt crawl-delay, 5 seconds when checked)
@@ -44,6 +45,8 @@ import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importGcnh } from "@/lib/law/text/import-gcnh";
 import { registerParliament, registerPresident } from "@/lib/law/text/import-so-registers";
 import { registerPravoGovRu } from "@/lib/law/text/import-pravo-gov-ru";
+import { importPlanCopies } from "@/lib/law/text/import-plan-copies";
+import { readPlan } from "@/lib/law/plan/load";
 import { importSoText } from "@/lib/law/text/import-so-text";
 import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
 import { importEurLex } from "@/lib/law/text/import-eurlex";
@@ -202,6 +205,17 @@ async function main(): Promise<number> {
         2,
       ),
     );
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "plan-constitutions") {
+    const report = await importPlanCopies(db, readPlan(), {
+      countries: flag("country")?.split(","),
+      again: args.includes("--again"),
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message: string) => console.error(message),
+    });
+    console.log(JSON.stringify(report, null, 2));
     return report.failures.length > 0 ? 1 : 0;
   }
   if (sourceKey === "pravo-gov-ru") {

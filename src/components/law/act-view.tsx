@@ -154,6 +154,9 @@ export default async function ActViewPage({
                 </p>
               ) : (
                 <p className="text-fg-secondary">
+                  {version.status === "copy" && version.sourceUrl
+                    ? `${t("act.copyKeptBy", { keeper: new URL(version.sourceUrl).hostname })} `
+                    : null}
                   {t("act.copy", { date: day(version.retrievedOn) })}{" "}
                   {version.sourceUrl && (
                     <a href={version.sourceUrl} className="underline" rel="noopener">

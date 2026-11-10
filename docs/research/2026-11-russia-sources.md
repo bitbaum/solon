@@ -63,8 +63,14 @@ law there, how the Head is chosen), are not stated in Solon yet.
 
 ## 4. Next
 
-- The texts: a publisher whose terms allow reading them (the subjects'
-  legislatures, an archived copy), or the portal's agreement to the files.
-- North Ossetia–Alania's Constitution and its own routes, once readable.
+The Constitution itself is held: read from ru.wikisource.org's copy of the
+text as amended in 2020 (all 137 articles and the five inserted ones), under
+the plan for every country (`docs/design/2026-11-law-of-every-country.md`).
+
+- The federal texts: from a copy that publishes the consolidated texts
+  openly (ConsultantPlus's `/document/` pages are allowed to robots), each
+  shown as a copy with who keeps it and the day read.
+- North Ossetia–Alania's Constitution and its own routes, from any faithful
+  copy once found.
 - A proposal on an act whose text Solon does not hold, so a person can ask
   for a change where Solon cannot yet show the words.

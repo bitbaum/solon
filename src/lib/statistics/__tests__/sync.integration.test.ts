@@ -5,8 +5,10 @@
  */
 import { randomUUID } from "node:crypto";
 import { eq, like } from "drizzle-orm";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { db } from "@/lib/db/client";
+import { placesConfig } from "@/lib/config/places";
+import { placeMetrics } from "@/lib/db/places-schema";
 import { statisticRecords } from "@/lib/db/statistics-schema";
 import { curatedRecordSchema, type CuratedRecord } from "../records";
 import { currentRecords } from "../read";
@@ -15,6 +17,14 @@ import { syncStatisticRecords } from "../sync";
 const RUN = process.env.INTEGRATION === "1";
 
 describe.skipIf(!RUN)("syncStatisticRecords", () => {
+  // The records name a metric; on an empty database no other file may have written it yet.
+  const metric = placesConfig.metrics.find((m) => m.key === "tax.income.top_rate")!;
+  beforeAll(async () => {
+    await db
+      .insert(placeMetrics)
+      .values({ key: metric.key, valueType: metric.valueType })
+      .onConflictDoNothing();
+  });
   const prefix = `law_link:test-${randomUUID().slice(0, 8)}`;
   const link = (key: string, why: string): CuratedRecord =>
     curatedRecordSchema.parse({

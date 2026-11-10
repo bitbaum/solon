@@ -401,6 +401,148 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       },
     },
   },
+  {
+    key: "ru-constitution",
+    authority: "ru",
+    name: "A proposal to amend the Constitution",
+    appliesTo: ["constitution"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the Federation Council, the State Duma, the Government, the legislatures of the subjects of the Federation, or a group of at least one fifth of the senators or of the State Duma's deputies; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "Chapters 1, 2 and 9 cannot be revised by the Federal Assembly; a proposal to revise them supported by three fifths of all senators and deputies convenes a Constitutional Assembly (Art. 135)",
+      "Amendments to chapters 3 to 8 are adopted in the way a federal constitutional law is, and take effect once the legislatures of at least two thirds of the subjects approve them (Art. 136)",
+    ],
+    window: null,
+    outcome: "The proposal is decided under Articles 135 and 136.",
+    source: {
+      title:
+        "Constitution of the Russian Federation (Wikisource's copy of the text as amended in 2020)",
+      provision: "Art. 134 to 136",
+      url: "https://ru.wikisource.org/wiki/%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D0%B8%D1%8F_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B9_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Предложение о поправке к Конституции",
+        whoMaySign:
+          "Президент, Совет Федерации, Государственная Дума, Правительство, законодательные (представительные) органы субъектов Российской Федерации, а также группа численностью не менее одной пятой членов Совета Федерации или депутатов Государственной Думы; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Положения глав 1, 2 и 9 не могут быть пересмотрены Федеральным Собранием; предложение об их пересмотре, поддержанное тремя пятыми голосов от общего числа членов Совета Федерации и депутатов Государственной Думы, ведёт к созыву Конституционного Собрания (статья 135)",
+          "Поправки к главам 3–8 принимаются в порядке, предусмотренном для принятия федерального конституционного закона, и вступают в силу после их одобрения органами законодательной власти не менее чем двух третей субъектов (статья 136)",
+        ],
+        outcome: "Предложение рассматривается в порядке статей 135 и 136.",
+        sourceTitle: "Конституция Российской Федерации (копия Викитеки, в редакции 2020 года)",
+        provision: "Статьи 134–136",
+      },
+    },
+  },
+  {
+    key: "ua-bill",
+    authority: "ua",
+    name: "A bill put before the Verkhovna Rada",
+    appliesTo: ["statute"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the people's deputies and the Cabinet of Ministers; citizens do not hold the right themselves",
+    signatures: null,
+    window: null,
+    outcome:
+      "The bill is put before the Verkhovna Rada; a bill the President marks as urgent is considered out of turn.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 93",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект, внесённый в Верховную Раду",
+        whoMaySign:
+          "Президент, народные депутаты и Кабинет Министров; сами граждане этим правом не обладают",
+        outcome:
+          "Законопроект вносится в Верховную Раду; законопроекты, определённые Президентом как неотложные, рассматриваются вне очереди.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статья 93",
+      },
+    },
+  },
+  {
+    key: "ua-constitution",
+    authority: "ua",
+    name: "A bill amending the Constitution",
+    appliesTo: ["constitution"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, or at least one third of the constitutional membership of the Verkhovna Rada; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "Adopted when the Rada first approves it by a majority of its constitutional membership and then, at its next regular session, by at least two thirds (Art. 155)",
+      "Sections I, III and XIII: put forward by the President or two thirds of the Rada, adopted by two thirds and approved by an all-Ukrainian referendum (Art. 156)",
+    ],
+    cannotChange:
+      "No amendment that abolishes or restricts human and civil rights and freedoms or aims at ending Ukraine's independence or violating its territorial integrity; and none under martial law or a state of emergency (Art. 157)",
+    window: null,
+    outcome: "The Verkhovna Rada decides under Articles 155 and 156.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 154 to 157",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект о внесении изменений в Конституцию",
+        whoMaySign:
+          "Президент или не менее трети народных депутатов от конституционного состава Верховной Рады; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Принимается, если предварительно одобрен большинством от конституционного состава Верховной Рады, а на следующей очередной сессии за него проголосовали не менее двух третей (статья 155)",
+          "Разделы I, III и XIII: подаётся Президентом или двумя третями Верховной Рады, принимается двумя третями и утверждается всеукраинским референдумом (статья 156)",
+        ],
+        cannotChange:
+          "Конституция не может быть изменена, если изменения предусматривают отмену или ограничение прав и свобод человека и гражданина либо направлены на ликвидацию независимости или нарушение территориальной целостности Украины; не может быть изменена в условиях военного или чрезвычайного положения (статья 157)",
+        outcome: "Верховная Рада решает в порядке статей 155 и 156.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статьи 154–157",
+      },
+    },
+  },
+  {
+    key: "ua-referendum",
+    authority: "ua",
+    name: "An all-Ukrainian referendum at the people's initiative",
+    appliesTo: ["statute"],
+    venue: "voters",
+    whoMaySign: "citizens of Ukraine with the right to vote",
+    signatures: { count: 3_000_000 },
+    alsoRequired: [
+      "Signatures gathered in at least two thirds of the oblasts, at least 100,000 in each",
+    ],
+    cannotChange: "No referendum on bills about taxes, the budget or amnesty (Art. 74)",
+    window: null,
+    outcome: "An all-Ukrainian referendum is proclaimed at the people's initiative.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 72 and 74",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Всеукраинский референдум по народной инициативе",
+        whoMaySign: "граждан Украины, имеющих право голоса",
+        alsoRequired: [
+          "Подписи собраны не менее чем в двух третях областей, не менее ста тысяч в каждой",
+        ],
+        cannotChange:
+          "Референдум не допускается по законопроектам о налогах, бюджете и амнистии (статья 74)",
+        outcome: "Всеукраинский референдум провозглашается по народной инициативе.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статьи 72 и 74",
+      },
+    },
+  },
   ...(
     [
       {

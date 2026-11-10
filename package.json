@@ -42,7 +42,8 @@
     "brand": "tsx scripts/brand.mts",
     "money:rates": "tsx scripts/money-rates.ts",
     "law:translate": "tsx scripts/law-translate.ts",
-    "i18n:config": "tsx scripts/i18n-config.ts"
+    "i18n:config": "tsx scripts/i18n-config.ts",
+    "law:plan": "tsx scripts/law-plan.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.14",

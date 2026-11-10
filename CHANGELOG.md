@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Russia's and Ukraine's constitutions, and a plan for every country's law.** Both constitutions
+  are on Solon in their own language, article by article, with how each is amended and, for
+  Ukraine, the referendum three million citizens can call. Where a government site would not serve
+  the text, it is read from another faithful copy (Wikisource, Ukraine's Constitutional Court) and
+  the page says whose copy it is and when it was read; a copy older than the last amendment is
+  refused. Every country now has its place in one plan, which shows what Solon holds for it and the
+  next step. {#law-plan} {#law-constitutions-p1}
+
 - **Russia's laws, and North Ossetia–Alania's.** The federal laws and the laws of North
   Ossetia–Alania are listed from Russia's official publication portal, each linked to its official
   publication, under Russia and the republic in your language. Each says how that law is officially

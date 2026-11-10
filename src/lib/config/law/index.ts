@@ -5,6 +5,9 @@
  * under src/lib/law names none of them.
  */
 
+import { WORLD } from "@/lib/config/world";
+import { countryOf as registryCountry } from "@/lib/config/world/countries";
+
 /** What an act is. A register's category maps onto one of these (below). */
 export const ACT_KINDS = [
   "constitution",
@@ -52,8 +55,13 @@ export const ACT_IDENTIFIER_SCHEMES = [
 ] as const;
 export type ActIdentifierScheme = (typeof ACT_IDENTIFIER_SCHEMES)[number];
 
-/** Whether the publisher calls a text the authentic one or a consolidated reading of it. */
-export const ACT_TEXT_STATUSES = ["authentic", "consolidated"] as const;
+/**
+ * Whether the publisher calls a text the authentic one or a consolidated reading of it; or
+ * `copy`: the published words as someone other than the publisher keeps them (Wikisource, a
+ * legal database, an archive), read where the publisher's own copy could not be, and always
+ * shown as such with who keeps it and the day it was read.
+ */
+export const ACT_TEXT_STATUSES = ["authentic", "consolidated", "copy"] as const;
 export type ActTextStatus = (typeof ACT_TEXT_STATUSES)[number];
 
 /**
@@ -110,7 +118,7 @@ export interface LawAuthority {
 const UKLEG_ATTRIBUTION =
   "Contains public sector information licensed under the Open Government Licence v3.0. Source: legislation.gov.uk, The National Archives.";
 
-export const LAW_AUTHORITIES: readonly LawAuthority[] = [
+const LISTED_AUTHORITIES: readonly LawAuthority[] = [
   { key: "ch", label: "Confederation", place: { scheme: "iso_3166_1", value: "CH" } },
   { key: "intercantonal", label: "Intercantonal", place: null },
   { key: "zh", label: "Zürich", place: { scheme: "bfs_canton", value: "1" } },
@@ -473,6 +481,42 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
     place: { scheme: "bfs_municipality", value: "6421" },
     within: "ne",
   },
+];
+
+/**
+ * Every country of the world list (WORLD) has an authority, so the plan for the law of every
+ * country (docs/design/2026-11-law-of-every-country.md) has a key to file each country's
+ * constitution and national law under before Solon holds any of it. A country listed above keeps
+ * its key; any other is keyed by its ISO 3166-1 alpha-2 code in lower case, or, where that key is
+ * already taken (`ge` is Genève, `be` Bern), by its alpha-3 code: Georgia is `geo`, Belgium `bel`.
+ */
+function countryAuthorities(listed: readonly LawAuthority[]): LawAuthority[] {
+  const taken = new Set(listed.map((a) => a.key));
+  const placed = new Set(
+    listed.flatMap((a) => (a.place?.scheme === "iso_3166_1" ? [a.place.value] : [])),
+  );
+  const out: LawAuthority[] = [];
+  for (const region of WORLD) {
+    if (!region.code || placed.has(region.code)) continue;
+    // Only countries the registry can draw: the globe places every authority by its outline.
+    const country = registryCountry(region.code);
+    if (!country?.n3) continue;
+    const candidates = [region.code.toLowerCase(), country.a3?.toLowerCase()];
+    const key = candidates.find((k): k is string => !!k && !taken.has(k));
+    if (!key) throw new Error(`law authorities: no free key for ${region.code}`);
+    taken.add(key);
+    out.push({
+      key,
+      label: country.name,
+      place: { scheme: "iso_3166_1", value: region.code },
+    });
+  }
+  return out;
+}
+
+export const LAW_AUTHORITIES: readonly LawAuthority[] = [
+  ...LISTED_AUTHORITIES,
+  ...countryAuthorities(LISTED_AUTHORITIES),
 ];
 
 /**
