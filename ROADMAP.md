@@ -517,6 +517,32 @@ decision. Any organization can export its whole signed history and take it to
 another host, where it can be checked again — with OpenTimestamps anchoring and
 publication over Nostr so the record outlives any one server.
 
+### States through time {#time}
+
+The atlas set to a date (1990, 1980, 1945, 1914, 1900) shows the states that
+existed that day, their borders, and the law in force, asked the same questions
+as today's places so the two can be compared. Disputed borders are shown as
+[contested law](#contested) is: each claim sourced, no side taken. Nomadic
+polities with no fixed border are drawn as a range, not a line. Why, and what
+is hard about it: `content/blog/2026-11-10-states-through-time.md`.
+
+- [ ] A time control on the atlas over the dates Solon already holds (Switzerland and Liechtenstein, from [earlier versions of every act](#law-history)) {#time-control}
+- [ ] Historical borders from a sourced dataset (CShapes 2.0 from 1886; older maps marked as approximate), each state linked to the states before and after it {#time-borders}
+- [ ] Historical constitutions on the same questions as today's places (who decides, who votes, how rules change, whether people may leave), from the Comparative Constitutions Project and the texts themselves {#time-constitutions}
+
+### What if: states that never were {#whatif}
+
+A scenario is a fork: a sourced starting state on a date, plus the changes a
+person proposes (a border moved, a union kept, a constitution swapped), thought
+through by the same assistant that thinks a law change through. Always marked as
+a scenario, never shown as fact; anyone can fork anyone's. First candidates:
+Iceland and Norway never independent, Singapore in Malaysia, Ireland never
+independent, Northern Ireland's three options, the Icelandic Commonwealth set
+beside a modern constitution.
+
+- [ ] A scenario as data: starting state and date, changes, sources, and what is invented marked as invented {#whatif-model}
+- [ ] Think a scenario through: likely effects, who gains and who pays, where something like it happened, each claim cited {#whatif-consult}
+
 ## Shipped
 
 ### Places: every Swiss commune, and its income tax at your income
