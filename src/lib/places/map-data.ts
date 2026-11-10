@@ -27,7 +27,7 @@ const YEARS_BACK = 2;
 const MAX_DEPTH = 32;
 
 /** An area that draws a place on `on`: current, and administered by it then. */
-const drawnOn = (on: string) =>
+export const drawnOn = (on: string) =>
   and(
     eq(areaAssertions.assertion, "administers"),
     isNull(areas.supersededAt),
