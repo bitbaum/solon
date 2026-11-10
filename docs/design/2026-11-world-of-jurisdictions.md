@@ -59,6 +59,38 @@ law of every country (`docs/design/2026-11-law-of-every-country.md`), so
 their law is read the same way. Liberland's constitution is read from its
 own repository (`liberland/constitution` on GitHub).
 
+## Photographs
+
+Every place's page opens on its photograph, and a link to it shared anywhere
+shows that photograph with its name (`/api/og/place`). One mechanism for every
+place, a country or a county:
+
+- `pnpm run places:photos` finds a place on Wikidata by its world entry or by
+  any identifier whose scheme names a Wikidata property
+  (`wikidataProperty` in `identifier-schemes.ts`: ISO 3166-1 and -2, FSO
+  municipality numbers, US state and county FIPS codes); `--from-db` takes
+  every place the database holds. It writes `data/world/photos.json`: the
+  photograph by Wikidata item, and an index from `scheme:value` to the item.
+- The choice, best first (`src/lib/places/photo-rules.ts`): the full
+  photograph the place's Wikivoyage banner was cut from; its image (P18), then
+  its aerial or night view, when that is a landscape photograph at least 1600
+  pixels wide and not a map or a flag; a panorama or the banner itself, shown
+  as a strip. Only free licences (public domain, CC0, CC BY, CC BY-SA, the
+  Free Art License), shown unchanged, the author and licence in the photo's
+  corner and on `/credits`.
+- A person can replace any choice in one line
+  (`src/lib/config/world/photo-choices.ts`: the file, why, and where to anchor
+  it): Switzerland's Matterhorn, Liechtenstein's Vaduz Castle, Georgia's
+  Gergeti Trinity Church, a West Bank landscape for Palestine.
+- The photographs are served from Wikimedia at a width it keeps (1920),
+  through the site's own image optimiser, so a reader's browser never asks
+  Wikimedia directly.
+
+On 2026-11-10: 289 of 296 places read have a photograph (the world list, the
+US states, the Swiss cantons by ISO code). Swiss canton pages carry their FSO
+number, which Wikidata holds for one canton only, so they get theirs once the
+pack records each canton's ISO 3166-2 code.
+
 ## The map
 
 `/places` gains a switch: **All places** or **Beyond the UN**. Beyond the UN

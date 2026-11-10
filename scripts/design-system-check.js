@@ -11,7 +11,11 @@ const path = require("path");
 const ROOT = process.cwd();
 const TARGETS = ["src"];
 const EXTENSIONS = new Set([".ts", ".tsx"]);
+// Share images are drawn by Satori, which reads no stylesheet: their colours and gradients are
+// written inline, by necessity. The same exemption for a file convention and for the API route a
+// catch-all page's card is served from (a catch-all cannot hold an opengraph-image).
 const SKIP_NAMES = new Set(["opengraph-image.tsx"]);
+const SKIP_DIRS = new Set([path.join("src", "app", "api", "og")]);
 
 const FORBIDDEN = [
   {
@@ -104,6 +108,7 @@ function walk(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === "node_modules" || entry.name === ".next") continue;
     const full = path.join(dir, entry.name);
+    if (SKIP_DIRS.has(path.relative(ROOT, full))) continue;
     if (entry.isDirectory()) walk(full, files);
     else if (EXTENSIONS.has(path.extname(entry.name)) && !SKIP_NAMES.has(entry.name)) {
       files.push(full);

@@ -2,6 +2,21 @@ import { Link } from "@/i18n/navigation";
 import type { WorldProfileView } from "@/lib/places/world-profile";
 import type { PlacesTranslator } from "./translator";
 
+/** What kind of place it is, in one neutral sentence: the hero's line and the card's first. */
+export function profileStatus(profile: WorldProfileView, t: PlacesTranslator): string {
+  return profile.kind === "state" && profile.unSince
+    ? t("profile.kinds.state", {
+        date: profile.facts.find((f) => f.key === "unSince")?.value ?? profile.unSince,
+      })
+    : profile.kind === "territory" && profile.within
+      ? t("profile.kinds.territoryOf", { country: profile.within.name })
+      : profile.kind === "special"
+        ? profile.within
+          ? t("profile.kinds.special", { country: profile.within.name })
+          : t("profile.kinds.specialNoCountry")
+        : t(`profile.kinds.${profile.kind === "state" ? "territory" : profile.kind}`);
+}
+
 /**
  * A country's, a territory's or a proclaimed state's profile, the same card on
  * every such page: what kind of place it is, its facts with where they come
@@ -10,23 +25,15 @@ import type { PlacesTranslator } from "./translator";
 export default function CountryProfile({
   profile,
   t,
+  statusShown = false,
 }: {
   profile: WorldProfileView;
   t: PlacesTranslator;
+  /** The page's hero already says what kind of place it is. */
+  statusShown?: boolean;
 }) {
   const day = new Date(`${profile.read}T00:00:00Z`).toISOString().slice(0, 10);
-  const status =
-    profile.kind === "state" && profile.unSince
-      ? t("profile.kinds.state", {
-          date: profile.facts.find((f) => f.key === "unSince")?.value ?? profile.unSince,
-        })
-      : profile.kind === "territory" && profile.within
-        ? t("profile.kinds.territoryOf", { country: profile.within.name })
-        : profile.kind === "special"
-          ? profile.within
-            ? t("profile.kinds.special", { country: profile.within.name })
-            : t("profile.kinds.specialNoCountry")
-          : t(`profile.kinds.${profile.kind === "state" ? "territory" : profile.kind}`);
+  const status = profileStatus(profile, t);
   const facts = profile.facts.filter((f) => f.key !== "unSince");
   return (
     <section
@@ -36,7 +43,7 @@ export default function CountryProfile({
       <h2 id="place-profile" className="mb-2 font-semibold text-fg-primary">
         {t("profile.title")}
       </h2>
-      <p className="mb-0 text-sm text-fg-secondary">{status}</p>
+      {!statusShown && <p className="mb-0 text-sm text-fg-secondary">{status}</p>}
       {profile.description && (
         <p className="mb-0 mt-2 text-sm text-fg-secondary">{profile.description}</p>
       )}
