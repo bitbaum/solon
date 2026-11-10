@@ -55,4 +55,10 @@ export const LICENCES = [
   // are not protected by copyright: § 5 Urheberrechtsgesetz. The portal's own notice asks
   // only that the source be named; the same class as the Swiss, Liechtenstein and Estonian ones.
   { spdx: "LicenseRef-de-official-work", requiresAttribution: false, shareAlike: false },
+  // South Ossetia's own acts and publications. No copyright or terms-of-use statement was found
+  // on parliamentrso.org, presidentruo.org or rsogov.org (docs/research/2026-11-south-ossetia-sources.md,
+  // §6), so this entry admits only what a source here states as fact (an administrative
+  // structure, names, identifiers, official figures with their publisher). Admitting the full
+  // text of acts is a Register decision still to be taken; no law-text source names this class yet.
+  { spdx: "LicenseRef-so-official-facts", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];
