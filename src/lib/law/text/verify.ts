@@ -49,9 +49,12 @@ const ENTITIES: Record<string, string> = {
 };
 
 /** The text a reader sees on a page: no scripts, styles or tags, entities decoded. */
-export function visibleText(html: string): string {
+export function visibleText(html: string, ignoreClasses: readonly string[] = []): string {
+  const ignored = ignoreClasses.length
+    ? new RegExp(`<div class="(?:${ignoreClasses.join("|")})"[^>]*>[\\s\\S]*?</div>`, "g")
+    : null;
   return (
-    html
+    (ignored ? html.replace(ignored, " ") : html)
       .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, " ")
       // The notes at the foot of a Liechtenstein page ("eingefügt durch LGBl. …") are the act's amendment
       // history, which the provisions do not carry on purpose.
@@ -178,6 +181,14 @@ export function htmlAround(html: string, run: string, width = 220): string {
   return html.slice(Math.max(0, at - width), at + width).replace(/\s+/g, " ");
 }
 
+/**
+ * The blocks of a publisher's page that are the act's header, not its provisions: its title, its date
+ * and the signatures of the promulgation are held as the act's title and dates, not as provisions.
+ */
+export const HEADER_CLASSES: Record<string, readonly string[]> = {
+  li: ["htit1", "htit2", "vom", "udat", "gezf", "gezr"],
+};
+
 export interface VerifyOptions {
   authority: string;
   /** How many acts to read again. */
@@ -251,7 +262,7 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       if (!url) throw new Error("the version has no source address");
       const page = await read(url, doFetch, [new URL(url).hostname]);
       const html = new TextDecoder().decode(page.bytes);
-      const pageWords = wordsOf(visibleText(html));
+      const pageWords = wordsOf(visibleText(html, HEADER_CLASSES[authority] ?? []));
       const storedWords = wordsOf(provisions.map((p) => `${p.heading} ${p.text}`).join(" "));
       const cov = coverage(pageWords, storedWords);
       const act: VerifiedAct = {
