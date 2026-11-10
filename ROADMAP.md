@@ -52,6 +52,22 @@ authority that decides, and the record says so.
 - [ ] A proposal that reaches the place's bar is handed on in the form the authority accepts, with its supporters counted and the record linked {#law-handoff}
 - [ ] What applies here: pick a point and see every layer of law in force there — federal, state or canton, commune — each with "propose a change" {#law-here}
 
+### Contested law: one place, two sets of law, side by side {#contested}
+
+Where a place governs itself and another state regards it as its own, two sets
+of law claim the same people. Solon sets them side by side, question by
+question, in each side's own words, so the trade-offs can be argued about the
+substance; it never says which side is right (design:
+`docs/design/2026-11-contested-law.md`).
+
+- [x] Every place the world list marks as claimed has a comparison page and its place pages link to it; South Ossetia and Georgia compared from their constitutions on four questions (territory, citizenship, moving and leaving, defence), each quote checked weekly {#contested-p1}
+- [ ] Georgia's law in the register (matsne.gov.ge refuses automated readers; a dated archive copy read from the box), the statutes each constitution defers to on both sides, and the compulsion and exit rubrics coded for both with a second reader {#contested-statutes}
+- [ ] What each side's law says about acts, documents and property made under the other's, as its own question {#contested-recognition}
+- [ ] Abkhazia, Transnistria, Northern Cyprus, Somaliland and Kosovo read the same way: config and readers, no new code {#contested-more}
+- [ ] Land one state administers and another claims (the areas disputed by Russia and Ukraine): sourced `claims` and `administers` rows, both countries' registers, the area hatched on the atlas {#contested-areas}
+- [ ] Layered regimes, where law applies by zone and by who a person is (the West Bank and its settlements, Gaza): each layer from its own sources, two readers before it is shown {#contested-layers}
+- [ ] Results on each side (each statistics office's own series) beside the texts, and terms for a place proposed with support counted per electorate, never summed {#contested-results}
+
 ### One globe for every place and its law {#globe}
 
 The map is the front door to the law. One globe, from the whole Earth down to a

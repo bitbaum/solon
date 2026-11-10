@@ -274,7 +274,8 @@ export async function linkedActs(
   return out;
 }
 
-async function findAct(db: Database, act: ActRef): Promise<string | null> {
+/** Solon's id of the act a reference names, when the register holds it. */
+export async function findAct(db: Database, act: ActRef): Promise<string | null> {
   const rows = rowsOf<{ id: string }>(
     await db.execute(sql`
       SELECT a.id FROM legal_acts a

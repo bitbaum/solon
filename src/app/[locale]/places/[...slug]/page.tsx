@@ -6,9 +6,10 @@ import { toLocale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
 import { placesConfig } from "@/lib/config/places";
-import { regionName, worldRegion, worldRegionByCode } from "@/lib/config/world";
+import { regionName, worldRegion } from "@/lib/config/world";
 import { db } from "@/lib/db/client";
 import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law";
+import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
@@ -59,7 +60,9 @@ export default async function PlacePage({ params }: { params: Params }) {
     const law = await loadPlaceLaw(db, view.lawAuthorities ?? [], locale);
     const key = countryLawKey(view.region);
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
-    return <PlaceProfile view={view} law={law} taxHref={taxHref} t={t} />;
+    const pack = placesConfig.packs.find((p) => p.key === view.packKey);
+    const contest = contestNote(pack ? contestSlugForPack(pack) : null, locale);
+    return <PlaceProfile view={view} law={law} taxHref={taxHref} contest={contest} t={t} />;
   }
 
   const region = regionOf(slug);
@@ -74,21 +77,10 @@ export default async function PlacePage({ params }: { params: Params }) {
   if (!pack && !region.claimedBy && (await load(`${WORLD_PACK}/${region.slug}`, locale))) {
     redirect({ href: `/places/${WORLD_PACK}/${region.slug}`, locale });
   }
-  const claimant = region.claimedBy ? worldRegionByCode(region.claimedBy) : undefined;
-  const claimantPack = claimant?.code
-    ? placesConfig.packs.find((p) => p.region === claimant.code)
-    : undefined;
   return (
     <WorldRegionPage
       name={regionName(region, locale)}
-      claimedBy={
-        claimant
-          ? {
-              name: regionName(claimant, locale),
-              href: `/places/${claimantPack?.key ?? claimant.slug}`,
-            }
-          : null
-      }
+      contest={contestNote(region.slug, locale)}
       law={region.code ? await loadCountryLaw(db, region.code, locale) : []}
       t={t}
     />

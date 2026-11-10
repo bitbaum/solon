@@ -715,6 +715,35 @@
       "title": "L'impôt par lieu",
       "intro": "Choisissez un pays et saisissez votre revenu : chaque lieu y est coloré selon ce que l'impôt vous y coûterait. Ce que vous saisissez reste dans cet onglet du navigateur.",
       "back": "Tous les lieux"
+    },
+    "contested": {
+      "kicker": "Droit contesté",
+      "title": "{place} : deux ordres juridiques",
+      "intro": "{place} se gouverne lui-même ; {claimant} le considère comme une partie de son territoire. Voici ce que dit le texte de chaque côté sur les mêmes questions, cité et sourcé. Solon ne dit pas qui a raison.",
+      "indexTitle": "Lieux contestés : comparer le droit",
+      "indexIntro": "Des lieux qui se gouvernent eux-mêmes tandis qu'un autre État les considère comme une partie de son territoire. Chacun ouvre les deux ordres juridiques côte à côte, question par question, dans les mots de chaque côté.",
+      "claimedBy": "Revendiqué par {claimant}",
+      "compare": "Comparer son droit avec celui de {claimant}, question par question",
+      "progress": "Pour l'instant, {compared} questions sur {topics} ont des mots des deux côtés.",
+      "progressShort": "{compared} sur {topics} comparées",
+      "role": {
+        "governs": "Gouverne le lieu",
+        "claims": "Le considère comme une partie de son territoire"
+      },
+      "readLaw": "Lire le droit de {side} dans Solon",
+      "lawNotHeld": "Solon ne détient pas encore le droit de {side} ; les mots ci-dessous sont cités de la page indiquée sous chacun.",
+      "gap": "Rien n'a encore été lu pour {side} sur cette question.",
+      "translation": "Traduction :",
+      "translatedBy": "Traduit par {translator}",
+      "read": "lu le {date}",
+      "actTitle": "Proposer des conditions",
+      "actIntro": "La règle d'un côté vous semble meilleure sur une question, ou vous voyez des conditions acceptables pour les deux ? Rédigez-les comme une proposition : elle atteste un soutien, est transmise à qui décide, et n'est jamais du droit.",
+      "propose": "Proposer des conditions pour {place}",
+      "proposeTitle": "Conditions pour {place}",
+      "proposeBody": "Quelle règle devrait s'appliquer à {place}, question par question, et pourquoi. Côtés comparés : {sides}.",
+      "methodTitle": "Comment cette comparaison est faite",
+      "method": "Chaque ligne est une citation d'une page que quelqu'un a ouverte, avec le jour de lecture ; l'original figure à côté de toute traduction, et un programme relit chaque page chaque semaine et signale les mots disparus. Les questions sont les mêmes pour chaque lieu. Le côté qui gouverne vient toujours en premier, puis celui qui revendique. Là où rien n'a été lu, la page le dit.",
+      "all": "Tous les lieux contestés"
     }
   },
   "AuthError": {

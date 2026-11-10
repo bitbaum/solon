@@ -1,5 +1,6 @@
 /**
- * Does every source the curated records and the method descriptions cite still say what they rely on?
+ * Does every source the curated records, the method descriptions and the contested
+ * places cite still say what they rely on?
  *
  *   pnpm run statistics:verify                 fetch every cited page once, check its words
  *   pnpm run statistics:verify --list          list the pages and what each is expected to say
@@ -10,6 +11,7 @@
  * workflow runs it (.github/workflows/statistics-verify.yml).
  */
 import { writeFileSync } from "node:fs";
+import { CONTESTS } from "@/lib/config/places/contested";
 import { GAPS } from "@/lib/config/statistics/gaps";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
@@ -23,6 +25,8 @@ async function main(): Promise<number> {
     ...GAPS.coverage.map(
       (c) => ({ key: `gap:${c.topic}:${c.place.value}:${c.variant}`, body: c }) as never,
     ),
+    // The words each side of a contested place is quoted in (design 2026-11-contested-law.md §4.3).
+    ...CONTESTS.map((c) => ({ key: `contest:${c.place}`, body: c }) as never),
   ]);
   if (process.argv.includes("--list")) {
     for (const i of items) {

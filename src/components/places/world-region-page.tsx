@@ -1,13 +1,14 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { PlaceLaw } from "@/lib/law/place-law";
+import ContestNote, { type ContestNoteProps } from "./contest-note";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import type { PlacesTranslator } from "./translator";
 
 interface WorldRegionPageProps {
   name: string;
-  /** The UN member that regards it as part of its territory, for a place that governs itself without being one. */
-  claimedBy: { name: string; href: string } | null;
+  /** For a place that governs itself without being a UN member: who claims it, and its comparison. */
+  contest: ContestNoteProps | null;
   law: readonly PlaceLaw[];
   t: PlacesTranslator;
 }
@@ -17,24 +18,13 @@ interface WorldRegionPageProps {
  * all the same, so it can be found and shared, with the law Solon does hold
  * for it and the way to see what is covered. Same frame as a place page.
  */
-export default function WorldRegionPage({ name, claimedBy, law, t }: WorldRegionPageProps) {
+export default function WorldRegionPage({ name, contest, law, t }: WorldRegionPageProps) {
   return (
     <PageLayout title={name} kicker={t("world.kicker")}>
       <div className="max-w-3xl space-y-10">
         <PlaceTrail above={[]} name={name} t={t} />
 
-        {claimedBy && (
-          <p className="text-sm text-fg-secondary">
-            {t.rich("world.claimed", {
-              claimant: claimedBy.name,
-              link: (chunks) => (
-                <Link href={claimedBy.href} className="text-fg-primary hover:underline">
-                  {chunks}
-                </Link>
-              ),
-            })}
-          </p>
-        )}
+        {contest && <ContestNote {...contest} t={t} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
 

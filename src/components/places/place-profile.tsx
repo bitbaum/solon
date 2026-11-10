@@ -8,6 +8,7 @@ import type { PlaceLaw } from "@/lib/law/place-law";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
+import ContestNote, { type ContestNoteProps } from "./contest-note";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
@@ -18,6 +19,8 @@ interface PlaceProfileProps {
   law: readonly PlaceLaw[];
   /** Where the tax map of this place's country opens. */
   taxHref: string;
+  /** When the world list says another state claims the place's country: who, and its comparison. */
+  contest?: ContestNoteProps | null;
   t: PlacesTranslator;
 }
 
@@ -41,7 +44,7 @@ function PlaceName({ place }: { place: PlaceLink }) {
  * it all, closed until asked for. Every word of structure comes from the pack;
  * nothing here knows a country.
  */
-export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProps) {
+export default function PlaceProfile({ view, law, taxHref, contest = null, t }: PlaceProfileProps) {
   const above = [...view.partOf].reverse();
   const row = (label: string, value: React.ReactNode, key = label) => (
     <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
@@ -62,6 +65,8 @@ export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProp
     >
       <div className="max-w-3xl space-y-10">
         <PlaceTrail above={view.partOf} name={view.name} t={t} />
+
+        {contest && <ContestNote {...contest} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
 
