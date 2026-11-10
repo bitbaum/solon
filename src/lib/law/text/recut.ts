@@ -24,6 +24,9 @@ import { PUBLISHER_IMPORTER_VERSION } from "@/lib/law/publishers/load";
 import { provisionsOfPdf } from "./pdf-provisions";
 import { GII_IMPORTER_VERSION } from "./import-gii";
 import { parseGiiXml } from "./gii";
+import { LILEX_IMPORTER_VERSION } from "./import-lilex";
+import { parseLilexProvisions } from "./lilex";
+import { LILEX } from "@/lib/config/law";
 
 export interface RecutReport {
   status: "applied" | "dry_run";
@@ -87,6 +90,16 @@ export async function recutUkLegText(db: Database, options: RecutOptions): Promi
 }
 
 /** The German federal acts held, cut again from the portal's XML they were read from (gii.ts). */
+/** Liechtenstein's acts held, cut again from the gesetze.li pages they were read from (lilex.ts). */
+export async function recutLilexText(db: Database, options: RecutOptions): Promise<RecutReport> {
+  return recutTexts(db, options, {
+    sourceKey: LILEX.key,
+    importerVersion: LILEX_IMPORTER_VERSION,
+    authorities: [LILEX.authority],
+    cut: async (bytes) => parseLilexProvisions(new TextDecoder().decode(bytes)),
+  });
+}
+
 export async function recutGiiText(db: Database, options: RecutOptions): Promise<RecutReport> {
   return recutTexts(db, options, {
     sourceKey: GII.key,

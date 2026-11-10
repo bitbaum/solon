@@ -17,8 +17,10 @@
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text recut-eurlex [--limit 5000] [--dry-run]   (the same for the EU acts held)
  *   pnpm run law:text recut-municipal [--authority ch-ne-neuchatel] [--limit 5000] [--dry-run]   (the same for the communes' PDFs held)
+ *   pnpm run law:text recut-lilex [--limit 5000] [--dry-run]   (the same for Liechtenstein's acts held: the text outside the articles)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text recut-ukleg [--limit 5000] [--dry-run]   (the same for the UK acts held)
+ *   pnpm run law:text verify --authority li [--limit 30]   (read a random sample of held HTML acts again and report how much of each page's words the stored text holds)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
@@ -29,6 +31,7 @@ import {
   recutCantonalText,
   recutEurLexText,
   recutGiiText,
+  recutLilexText,
   recutPublisherText,
   recutUkLegText,
 } from "@/lib/law/text/recut";
@@ -42,6 +45,7 @@ import { importRis } from "@/lib/law/text/import-ris";
 import { importGii } from "@/lib/law/text/import-gii";
 import { importLexwork } from "@/lib/law/text/import-lexwork";
 import { refreshText } from "@/lib/law/text/refresh";
+import { verifyAuthority } from "@/lib/law/text/verify";
 import { FEDLEX, LILEX } from "@/lib/config/law";
 import { db } from "@/lib/db/client";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
@@ -99,6 +103,48 @@ async function main(): Promise<number> {
       }
     }
     return failures > 0 ? 1 : 0;
+  }
+  if (sourceKey === "verify") {
+    const authority = flag("authority");
+    if (!authority) throw new Error("verify needs --authority, e.g. li");
+    const report = await verifyAuthority(db, {
+      authority,
+      sample: flag("limit") ? Number(flag("limit")) : 30,
+      onProgress: (message) => console.error(message),
+    });
+    // One line an act, the lowest first, then the totals: the workflow shows only the end of the output.
+    const lines = [...report.acts]
+      .sort((x, y) => (x.coverage?.ratio ?? -1) - (y.coverage?.ratio ?? -1))
+      .map((a) =>
+        a.coverage
+          ? `${(a.coverage.ratio * 100).toFixed(1)}% page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
+            `${a.title.slice(0, 40)} | missing: ${a.coverage.missing
+              .slice(0, 8)
+              .map((m) => `${m.word}x${m.count}`)
+              .join(" ")}`
+          : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
+      );
+    console.log(lines.join("\n"));
+    // What the three lowest pages hold that the provisions do not, and how those pages are built.
+    for (const a of [...report.acts]
+      .filter((x) => x.coverage)
+      .sort((x, y) => x.coverage!.ratio - y.coverage!.ratio)
+      .slice(0, 3)) {
+      console.log(`LOW ${a.title.slice(0, 30)} ${a.url} | classes: ${a.classes}`);
+      for (const run of a.runs ?? []) console.log(`  RUN ${run.slice(0, 260)}`);
+      if (a.around) console.log(`  HTML ${a.around.slice(0, 480)}`);
+    }
+    console.log(
+      JSON.stringify({
+        authority: report.authority,
+        inForceHtmlVersions: report.inForceHtmlVersions,
+        sampled: report.sampled,
+        meanRatio: Number(report.meanRatio.toFixed(4)),
+        short: report.short,
+        failed: report.failed,
+      }),
+    );
+    return report.short > 0 || report.failed > 0 ? 1 : 0;
   }
   if (sourceKey === "refresh") {
     const report = await refreshText(db, {
@@ -287,6 +333,7 @@ async function main(): Promise<number> {
     sourceKey === "recut" ||
     sourceKey === "recut-eurlex" ||
     sourceKey === "recut-gii" ||
+    sourceKey === "recut-lilex" ||
     sourceKey === "recut-ukleg" ||
     sourceKey === "recut-municipal"
   ) {
@@ -297,9 +344,11 @@ async function main(): Promise<number> {
           ? recutUkLegText
           : sourceKey === "recut-gii"
             ? recutGiiText
-            : sourceKey === "recut-municipal"
-              ? recutPublisherText
-              : recutEurLexText;
+            : sourceKey === "recut-lilex"
+              ? recutLilexText
+              : sourceKey === "recut-municipal"
+                ? recutPublisherText
+                : recutEurLexText;
     const report = await recut(db, {
       authority: flag("authority"),
       limit: flag("limit") ? Number(flag("limit")) : undefined,

@@ -24,7 +24,8 @@ Shared types now live in `components/statistics/shared.ts` and `components/place
 |---|---|---|
 | Navigation: which pages exist and how they group | `lib/site-config.ts` (`SITE_SECTIONS`), the header's panels (`MENU`) a subset of it, a test that enforces it | one list |
 | A page's name and one-line description | `messages/*.json` `Site.links` and `Site.desc` | one list, but each page also sets its own `<title>` (debt 2) |
-| Countries: codes, names, outlines | `config/world/countries.ts`, generated from Natural Earth | one list (new, 2026-11-09) |
+| Countries: codes, label points, outlines | `config/world/countries.ts`, generated from Natural Earth | one list (new, 2026-11-09) |
+| Countries and territories: page slug, places outside the UN, who claims them | `config/world.ts` (hand-kept; codes and outlines read from the registry above, and `world.test.ts` holds the two to one list) | one list, two layers |
 | Places held in depth, identifiers, validity, boundaries | the Places database, from the country packs | one list |
 | Every country as a place | the `world` pack, generated from the country list | one list |
 | Statistics: what a series is, its source, scope, plausible band | `config/places/metrics.ts` | one list, with a quality gate (`statistics:quality`) |

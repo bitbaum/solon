@@ -32,4 +32,18 @@ describe("official routes", () => {
     ]);
     expect(routesFor("gl", "statute")).toEqual([]);
   });
+
+  it("give Liechtenstein's law and each of its communes the routes their own law names", () => {
+    expect(routesFor("li", "constitution").map((r) => r.key)).toEqual([
+      "li-constitution-initiative",
+      "li-constitution-referendum",
+    ]);
+    expect(routesFor("li", "statute").map((r) => r.key)).toEqual([
+      "li-law-initiative",
+      "li-law-referendum",
+    ]);
+    expect(routesFor("li7004", "communal_act").map((r) => r.key)).toEqual(["li7004-initiative"]);
+    expect(routesFor("li", "statute")[0]!.signatures).toEqual({ count: 1_000 });
+    expect(routesFor("li", "constitution")[0]!.signatures).toEqual({ count: 1_500 });
+  });
 });

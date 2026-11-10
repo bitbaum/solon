@@ -103,6 +103,90 @@ use.
 - [ ] Second-level subdivisions (districts, counties) from geoBoundaries, loaded a country at a time like the first level, and villages under 1,000 people (GeoNames cities500). geoBoundaries carries a licence per country (Public Domain for the United States, swisstopo's terms for Switzerland, "Data license Germany – Attribution – Version 2.0" for Germany, read from its API on 2026-11-09), so each country's licence is read against the policy before its file is built, not the set loaded in bulk {#places-globe-more}
 - [ ] Every state's counties, and each state's own income tax beside the federal one {#places-us-states}
 
+### Scope and order: what we load, where, and why {#law-scope}
+
+The goal is every law and regulation of every place. The way to get there is to
+be deliberate: loading everything at once takes forever and most of it would
+never be read. The rules below decide what is loaded next, so a load is never
+started because a source happens to be easy.
+
+**How a layer is chosen**
+
+1. **Only places on the owner's list.** A country, state or city is loaded
+   because the owner asked for it, in this order. Nothing else is scheduled, and
+   nothing is loaded "for completeness" before the list is done.
+2. **Wide before deep.** A whole layer of a place (its national law, then its
+   states, then its counties and municipalities) before the next place.
+   Rules that bind the most people come first within a place; rules made close
+   to the people they bind are never a footnote, and follow.
+3. **Sized before loaded.** Each layer starts with a sizing note: how many acts,
+   who publishes them, in what form (XML, HTML, PDF only, scripted page), under
+   what licence, how often they change, how fast the publisher lets a reader go.
+   A layer whose sizing note is missing is not loaded. A layer that cannot be
+   read yet is recorded as blocked, with the reason, not dropped.
+4. **One shape for every layer.** Every layer is the same three things: acts,
+   dated versions, and provisions with the publisher's address and a hash.
+   Because proposing a change pins to the hash of the text it amends, a
+   proposal, a redline and support work the same on a federal act, a county
+   ordinance or a municipal regulation, in any country. A new place is
+   configuration and one adapter, never a new schema or a new proposal path.
+   Anything that would need a place-specific table is a design question first.
+5. **Measure the pace.** Publishers set the speed (the UK's robots.txt asks for
+   one request every five seconds). Throughput is measured per load and written
+   here, so a plan says how long a layer takes before it is started.
+
+**Order, and where each stands** (counts as of 2026-11-10; "of" is what the
+register lists)
+
+Tier 1, the first list
+- [x] Switzerland: the Confederation, the 26 cantons, the intercantonal
+      agreements: about 25,000 texts
+- [x] Liechtenstein: 3,412 of 3,412
+- [ ] Estonia: 9,957 of 10,375; its municipalities' own regulations are not read
+- [x] Luxembourg: 1,134 of 1,134, from Legilux. Luxembourg was asked for by the
+      owner.
+- [x] Wyoming's statutes and Constitution (45 of 45 files); its administrative
+      rules and referendum route are open
+- [ ] The twenty most populous Swiss cities: loaded for Zürich, Winterthur,
+      Luzern, Lausanne, Geneva, St. Gallen, Biel, Lugano, Fribourg, Neuchâtel,
+      Sion, Thun, Chur, Schaffhausen, Köniz, Bellinzona, Vernier. Bern and La
+      Chaux-de-Fonds are blocked: both publish their lists with scripts, and
+      each needs its own reader. Basel is a canton and is covered as one.
+
+Tier 2, the large legal systems around them
+- [ ] European Union: 7,103 of 17,615. Measured about 470 acts an hour, so about
+      a day. The newest consolidated texts answer "not found" until published,
+      and are read on a later run.
+- [x] Austria: 10,681 of 10,681 (federal). Its Länder are open.
+- [x] Germany: 5,976 of 6,174; 167 acts have no text in the portal's XML. Its
+      Länder are open.
+- [ ] United Kingdom: 5,006 of 11,228, about 420 an hour at the site's own pace.
+      The devolved legislatures (`asp`, `ssi`, `anaw`, `asc`, `wsi`, `nia`,
+      `nisr`) are open.
+
+Tier 3, the mission jurisdictions: unsized, each needs its sizing note first
+- [ ] United States, federal: the United States Code (and later the regulations
+      and the Federal Register). The Code is published free by the Office of
+      the Law Revision Counsel; to be sized.
+- [ ] United States, states: Wyoming first (done), then New Hampshire (partly
+      loaded), Texas, Florida and Delaware, then the rest, one sizing note each.
+      Fifty states publish in fifty forms and under different licences; the
+      strategic question is which few matter, not how to load all fifty.
+- [ ] United States, counties and municipalities: Grafton, New Hampshire, first
+      (the warrant-article route is already recorded). Many municipal codes sit
+      with commercial hosts (Municode, American Legal Publishing); sized
+      county by county, and only for places a group on Solon asks about.
+- [ ] Microstates, DIFC and ADGM, Singapore, charter cities: each after its
+      sizing note, in the order the owner sets.
+
+**Not scheduled:** every country, state or city not listed above. They are added
+only when the owner asks, and the first step is always its sizing note.
+
+**Known gaps in what is already loaded:** Bern and La Chaux-de-Fonds (above);
+Germany's 167 acts without text; Estonia's 418; Fribourg's 8, Zürich's 17,
+Chur's 2 and Schaffhausen's 1 acts; the reasons are known for Fribourg's (a
+bot check, and acts with no PDF on their page) and not yet for the others.
+
 ### Every organization on its own pages
 
 Most app pages still read the oldest organization. Solon governs many, so every

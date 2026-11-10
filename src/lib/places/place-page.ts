@@ -50,6 +50,13 @@ export async function loadPlacePage(
     config.packs.flatMap((p) => p.levels.flatMap((l) => (l.standsFor ? [l.key] : []))),
     on,
   );
+  const pack = config.packs.find((p) => p.key === place.countryPack)!;
+  const parts = await loadRefinements(
+    db,
+    [place.id],
+    pack.levels.map((l) => l.key),
+    on,
+  );
   const identifiers = await db
     .select({
       scheme: jurisdictionIdentifiers.scheme,
@@ -108,6 +115,7 @@ export async function loadPlacePage(
     identifiers,
     instruments,
     refinements: refinements.map((r) => r.place),
+    parts: parts.map((r) => r.place),
     sources: retrievals,
     locale,
   });

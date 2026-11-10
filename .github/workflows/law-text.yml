@@ -40,6 +40,7 @@ on:
             recut,
             recut-eurlex,
             recut-gii,
+            recut-lilex,
             recut-municipal,
             recut-ukleg,
             legilux,
@@ -51,6 +52,7 @@ on:
             wyoleg,
             gcnh,
             refresh,
+            verify,
             box-status,
             box-stop,
           ]
@@ -129,7 +131,7 @@ jobs:
           set -euo pipefail
           [[ "$BATCHES" =~ ^[0-9]{1,2}$ ]] || { echo "batches must be a number"; exit 1; }
           [[ "$LIMIT" =~ ^[0-9]{1,5}$ ]] || { echo "limit must be a number"; exit 1; }
-          [[ "$AUTHORITY" =~ ^[a-z]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
+          [[ "$AUTHORITY" =~ ^[a-z0-9]{0,20}$ ]] || { echo "authority must be a key like zh"; exit 1; }
           [[ "$PUBLISHER" =~ ^[a-z0-9-]{0,30}$ ]] || { echo "publisher must be a key like zurich-city"; exit 1; }
           [[ "$TYPES" =~ ^[a-z,]{0,40}$ ]] || { echo "types must be like ukpga,uksi"; exit 1; }
           [[ "$YEAR" =~ ^[0-9,]{0,60}$ ]] || { echo "year must be years like 2016,2024"; exit 1; }

@@ -504,7 +504,8 @@
       "levies": "Riscuote imposte: le aliquote fissate qui entrano nel modello fiscale di {pack}.",
       "none": "Non riscuote imposte proprie. Qui valgono le imposte dei luoghi di cui fa parte.",
       "noModel": "Per {pack} non c'è ancora un modello fiscale.",
-      "refinedBy": "Il moltiplicatore dipende da dove abita a {place}. Scelga la sua località:"
+      "dependsOn": "L'aliquota dipende dalla località di {place} in cui vivi.",
+      "open": "Calcola la tua imposta in tutto {pack}"
     },
     "otherNames": "Altri nomi",
     "identifiers": "Identificativi",
@@ -542,7 +543,7 @@
       "kicker": "Ogni ente territoriale, ufficiale o fondato",
       "metaTitle": "Luoghi · trovare un luogo",
       "metaDescription": "Trovare un luogo per nome o numero postale: di cosa fa parte, se riscuote imposte e la fonte di ogni dato.",
-      "intro": "Ogni luogo che Solon raccoglie, come lo pubblicano le fonti ufficiali. Apri un paese sul globo: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
+      "intro": "Ogni luogo che Solon raccoglie, come lo pubblicano le fonti ufficiali. Apri un paese sul globo, poi un luogo al suo interno: ognuno ha una pagina propria che puoi condividere.",
       "searchLabel": "Nome o numero postale",
       "searchPlaceholder": "Un nome o un numero postale",
       "searchButton": "Cerca",
@@ -554,7 +555,9 @@
       "localityShare": "{locality}: {share, number, ::percent .##} dei suoi indirizzi",
       "levelTitle": "{level}: {count, plural, one {# luogo} other {# luoghi}}",
       "levelLink": "{level} ({count})",
-      "coverageLink": "Cosa coprono i luoghi e quanto è aggiornata ogni fonte →"
+      "coverageLink": "Cosa coprono i luoghi e quanto è aggiornata ogni fonte →",
+      "worldLink": "Ogni paese e ogni territorio →",
+      "taxLink": "Quanto ti costerebbe l'imposta, luogo per luogo →"
     },
     "compareLink": "Confronta con altri luoghi →",
     "compare": {
@@ -669,6 +672,39 @@
         "three": "C’è un’imposta sulla sostanza qui?"
       },
       "placeholder": "Posso dedurre le spese per il tragitto al lavoro?"
+    },
+    "summaryIn": "{level} in {place}",
+    "share": {
+      "button": "Condividi",
+      "copied": "Link copiato"
+    },
+    "world": {
+      "title": "Il mondo",
+      "kicker": "Paese o territorio",
+      "claimed": "Si amministra da sé e non è membro delle Nazioni Unite. <link>{claimant}</link> lo considera parte del proprio territorio.",
+      "notYet": "Solon non raccoglie ancora i luoghi di {place}.",
+      "coverage": "Che cosa copre Solon finora",
+      "metaDescription": "{place} su Solon: il diritto che Solon vi raccoglie e i luoghi al suo interno.",
+      "indexIntro": "Ogni paese e ogni territorio, ciascuno con una pagina propria. Aprine uno per vedere il diritto che Solon vi raccoglie e i luoghi al suo interno.",
+      "heldPlaces": "{count, plural, =0 {Solo luoghi} one {Luoghi · # atto} other {Luoghi · # atti}}"
+    },
+    "law": {
+      "title": "Diritto",
+      "intro": "Il diritto che si applica a {place}, il più vicino per primo. Aprine uno per leggerlo e proporre modifiche.",
+      "none": "Solon non raccoglie ancora il diritto di {place}.",
+      "count": "{count, plural, =0 {Ancora nessun testo} one {# atto in vigore} other {# atti in vigore}}"
+    },
+    "parts": {
+      "title": "Luoghi di {place}",
+      "level": "{level} ({count})"
+    },
+    "record": {
+      "title": "Nomi, identificativi e fonti"
+    },
+    "taxMap": {
+      "title": "L'imposta per luogo",
+      "intro": "Scegli un paese e inserisci il tuo reddito: ogni luogo è colorato secondo quanto ti costerebbe l'imposta. Ciò che inserisci resta in questa scheda del browser.",
+      "back": "Tutti i luoghi"
     }
   },
   "AuthError": {
@@ -947,21 +983,25 @@
   "Atlas": {
     "world": "Il mondo",
     "worldTitle": "Il diritto del mondo, pezzo per pezzo",
-    "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Sceglierne uno sul globo o qui sotto: il suo diritto, i suoi luoghi e quanto vi costa l'imposta.",
+    "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Tocca un paese per aprirlo.",
     "lawCount": "{count, plural, =0 {Solo luoghi} one {# atto} other {# atti}}",
     "lawTitle": "Diritto",
     "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
     "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
     "lawOpen": "Leggerlo e proporre modifiche",
     "placesTitle": "Luoghi",
-    "placesDrawn": "Sulla carta: {level}. Ognuna è colorata secondo quanto vi costerebbe l'imposta. Toccane una o cerca.",
+    "placesDrawn": "Sulla mappa: {level}. Toccane uno per aprire la sua pagina, o cerca.",
     "placesNotDrawn": "I suoi luoghi sono elencati, non ancora disegnati sulla carta.",
-    "placesOpen": "Tutti i luoghi di {country}",
     "mapLabelCountry": "Carta di {country} e dei suoi luoghi",
     "unavailable": "La carta non può essere disegnata in questo browser.",
     "sources": "Da dove viene ({count, plural, one {# fonte} other {# fonti}})",
-    "situationHint": "Inserisci il tuo reddito per colorare la carta secondo l'imposta che pagheresti.",
-    "taxSameEverywhere": "L'imposta è la stessa ovunque qui: {amount} all'anno con questo reddito. Nessun luogo ne preleva una propria."
+    "taxSameEverywhere": "L'imposta è la stessa ovunque qui: {amount} all'anno con questo reddito. Nessun luogo ne preleva una propria.",
+    "pageOpen": "Apri la pagina di {country}",
+    "taxOpen": "Quanto ti costerebbe l'imposta in {country}",
+    "taxNone": "Non c'è ancora una mappa dell'imposta per {country}.",
+    "taxWorldTitle": "Quanto ti costerebbe l'imposta, luogo per luogo",
+    "taxWorldIntro": "Scegli un paese per colorarne i luoghi secondo quanto ti costerebbe l'imposta.",
+    "everyCountry": "Ogni paese e ogni territorio"
   },
   "Statistics": {
     "kicker": "Statistiche",

@@ -90,7 +90,7 @@ export default function PlacesIndex({
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
       <p className="mb-10 max-w-3xl text-fg-secondary">{t("index.intro")}</p>
       <div className="mb-16">
-        <Atlas mode="full" initial={open} />
+        <Atlas mode="full" layer="places" initial={open} />
       </div>
       <div className="max-w-3xl space-y-10">
         {search || browse ? form : <noscript>{form}</noscript>}
@@ -134,11 +134,23 @@ export default function PlacesIndex({
           ))}
         </noscript>
 
-        <p className="text-sm text-fg-secondary">
-          <Link href="/places/coverage" className="text-fg-primary hover:underline">
-            {t("index.coverageLink")}
-          </Link>
-        </p>
+        <ul className="space-y-2 text-sm">
+          <li>
+            <Link href="/places/world" className="text-fg-primary hover:underline">
+              {t("index.worldLink")}
+            </Link>
+          </li>
+          <li>
+            <Link href="/places/tax" className="text-fg-primary hover:underline">
+              {t("index.taxLink")}
+            </Link>
+          </li>
+          <li>
+            <Link href="/places/coverage" className="text-fg-primary hover:underline">
+              {t("index.coverageLink")}
+            </Link>
+          </li>
+        </ul>
       </div>
     </PageLayout>
   );

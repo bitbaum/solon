@@ -13,10 +13,13 @@ import { OECD_MEMBERS, oecdKey, worldBankKey } from "../world";
  * The pack's sources are listed lazily by `worldPack` so that it can see which
  * countries the other packs hold without importing them (they import the config).
  */
+/** The world pack's key, and its root place's path: every country no other pack holds sits under it. */
+export const WORLD_PACK = "world";
+
 export function worldPack(held: ReadonlySet<string>): CountryPackInput {
   const countries = COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => c.a2);
   return {
-    key: "world",
+    key: WORLD_PACK,
     names: {
       en: "The world",
       de: "Die Welt",

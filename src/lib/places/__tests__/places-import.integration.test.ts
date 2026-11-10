@@ -52,7 +52,7 @@ async function renderPlacePage(slugPath: string, locale: "en" | "de"): Promise<s
     createElement(
       NextIntlClientProvider,
       { locale, messages } as ComponentProps<typeof NextIntlClientProvider>,
-      createElement(PlaceProfile, { view: view!, t }),
+      createElement(PlaceProfile, { view: view!, law: [], taxHref: "/places/tax", t }),
     ),
   );
 }
@@ -395,7 +395,7 @@ describe.runIf(RUN)("Testland, through the importer", () => {
     const html = await renderPlacePage("testland/northshire/millbrook/oak-hollow", "en");
     expect(html).toContain("<h1");
     expect(html).toContain("Oak Hollow");
-    expect(html).toContain("Hamlet · Testland");
+    expect(html).toContain("Hamlet in Millbrook, Northshire, Testland");
     const crumbs = [
       "/places/testland",
       "/places/testland/northshire",
@@ -418,7 +418,9 @@ describe.runIf(RUN)("Testland, through the importer", () => {
 
     const shire = await renderPlacePage("testland/northshire", "de");
     expect(shire).toContain("Nordgrafschaft");
-    expect(shire).toContain("Grafschaft · Testland");
+    expect(shire).toContain("Grafschaft in Testland");
+    // Every place has a page, and a place's page lists the places directly inside it.
+    expect(shire).toContain('/places/testland/northshire/millbrook"');
     expect(shire).toContain(">Northshire <");
   });
 
