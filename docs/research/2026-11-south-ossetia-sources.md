@@ -33,11 +33,8 @@ GitHub runners, which reach the three publishers above.
   enactment date in field `enactment`, the type in field `legislation`. An example, `/node/5546`
   (Law on local self-government), opens with "Принят Парламентом РЮО 18 февраля 2004 года №44".
   No PDF or DOC attachments were found on the two nodes opened.
-- Volume, from the listing pages (10 acts per page; the last page of each listing counted on
-  2026-11-10): laws 48 pages (`?page=0` to `?page=47`, the last page holds 10), constitutional laws
-  4 pages (the last holds 3), resolutions 7 pages (the last holds 2). That gives about 480 laws,
-  33 constitutional laws and 62 resolutions, 575 acts and the Constitution. These are inferred
-  from the page size and the last page; a loader reports the exact count.
+- Volume, counted by reading all 60 listing pages (10 acts a page) on 2026-11-10: 480 laws (48
+  pages), 33 constitutional laws (4 pages), 62 resolutions (7 pages): 575 acts, and the Constitution.
 - Terms: `robots.txt` has `Crawl-delay: 90` for all robots and disallows `/search/`, `/admin/` and
   system paths; the listings and nodes are not disallowed. The site has no `sitemap.xml` (404) and
   its `rssyandex.xml` is 404; `/rss.xml` answers 200. No licence page was found. Solon honours the
@@ -199,13 +196,15 @@ Each is a statement about what a page says or does not say, with the URL and dat
   или на любых иных носителях без каких-либо ограничений по объему и срокам публикации … Единственным
   условием перепечатки и ретрансляции является ссылка на первоисточник." The licence entry
   `LicenseRef-so-president-site-reuse` quotes it: attribution required, nothing else.
-- **Parliament and Government: no statement found yet.** No terms page on `parliamentrso.org` or
-  `rsogov.org` was found. Laws of the Republic cite a law "Об авторском праве и смежных правах"
-  (the Publishing Law, https://parliamentrso.org/node/397, refers to it); its text has not been
-  opened, so what it exempts is not known. The Parliament's listings are being read (a register run
-  reads every title) to find it. Until it is opened, the Parliament's and Government's texts stay
-  unloaded, and their register rows carry `LicenseRef-so-official-facts` (titles, numbers and links
-  are facts). Russia's Civil Code Art. 1259 is not cited: no South Ossetian text says it applies.
+- **Parliament and Government: the Republic's own law on copyright.** No terms page on
+  `parliamentrso.org` or `rsogov.org` was found, but the law "Об авторском праве и смежных правах"
+  (adopted by the Parliament on 12 December 2012, № 64; found by reading the titles of all 480 laws in
+  the Parliament's listing; page https://parliamentrso.org/node/3256, read 2026-11-10) says in Art. 8:
+  "Не являются объектами авторского права: 1) официальные документы (законы, судебные решения, иные
+  тексты законодательного, административного и судебного характера), а также их официальные переводы".
+  The licence entry `LicenseRef-so-official-act` quotes it. It covers the acts themselves; whether a
+  later amendment changed Art. 8 was not checked (the page is the text as the Parliament publishes it).
+  Russia's Civil Code Art. 1259 is not cited: no South Ossetian text says it applies.
 - That the three publishers hold every act in force; none says so.
 - That any figure is reliable. Each is the producer's, and says so.
 
