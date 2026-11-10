@@ -57,6 +57,8 @@ export function factText(f: BriefFact): string {
       return `${p.place}, ${p.year}: ${p.xName} ${p.x}; ${p.yName} ${p.y}${p.gap ? `; difference ${p.gap}${p.pp ? " percentage points" : ""}` : ""}.`;
     case "empty":
       return `The ${p.layer} layer has no series yet. It would be filled by: ${p.wanted}`;
+    case "statement":
+      return String(p.text);
     case "caution":
       return `Caution: ${CAUTIONS[String(p.note)] ?? String(p.note)}${p.places ? ` (${p.places})` : ""}${p.years ? ` ${p.years}` : ""}.`;
   }

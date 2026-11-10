@@ -27,7 +27,25 @@ import SourceList from "@/components/places/source-list";
 import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
+import { COUNTRIES } from "@/lib/config/world/countries";
 import { atlasPalette, loadWorld, readAtlasTokens, shadeOf, type AtlasTokens } from "./world";
+import {
+  ADMIN1,
+  ADMIN1_FROM_LEVEL,
+  countriesNear,
+  labelStyles,
+  loadAdmin1,
+  loadTowns,
+  loadWorldIndex,
+  loadWorldLabels,
+  TOWNS_FROM_LEVEL,
+  townLabels,
+  worldLabels,
+  type Town,
+  zoomOfLevel,
+  type WorldIndex,
+  type WorldLabels,
+} from "./world-labels";
 
 /** Rest on Europe, where most of what Solon holds is; the whole Earth in view. */
 const HOME: Camera = { center: [8, 40], k: 1 };
@@ -139,6 +157,67 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   }, [stateKey]);
   const worldById = useMemo(() => new Map((world ?? []).map((f) => [f.id, f])), [world]);
 
+  // Names and subdivisions for the whole world, once the globe is on screen.
+  const [labelData, setLabelData] = useState<WorldLabels | null>(null);
+  const [worldIndex, setWorldIndex] = useState<WorldIndex | null>(null);
+  useEffect(() => {
+    if (!world) return;
+    loadWorldLabels().then(setLabelData, () => undefined);
+    loadWorldIndex().then(setWorldIndex, () => undefined);
+  }, [world]);
+  const [cam, setCam] = useState<{ camera: Camera; radius: number } | null>(null);
+  const onCamera = useCallback((camera: Camera, radius: number) => setCam({ camera, radius }), []);
+  const radius = Math.round((cam?.radius ?? 280) / 20) * 20;
+  // ISO two-letter code to the world's shape id, and back, from the labels file.
+  const featureOfA2 = useMemo(
+    () =>
+      new Map(
+        COUNTRIES.flatMap((c) => (c.n3 ? [[c.a2, `countries:${c.n3}` as string] as const] : [])),
+      ),
+    [],
+  );
+  const a2OfFeature = useMemo(
+    () => new Map([...featureOfA2].map(([a2, f]) => [f, a2])),
+    [featureOfA2],
+  );
+  const regionByCode = useMemo(
+    () => new Map((labelData?.regions ?? []).map((r) => [r.code, r])),
+    [labelData],
+  );
+  const [admin1, setAdmin1] = useState<Map<string, MapFeature[]>>(new Map());
+  const [towns, setTowns] = useState<Map<string, Town[]>>(new Map());
+  // Asked once per country; a result is kept whenever it lands, so a newer view never drops it.
+  const askedTowns = useRef(new Set<string>());
+  useEffect(() => {
+    if (!cam || !worldIndex) return;
+    const { camera } = cam;
+    if (camera.k < zoomOfLevel(TOWNS_FROM_LEVEL, cam.radius)) return;
+    const reach = (Math.asin(Math.min(1, 1.4 / camera.k)) * 180) / Math.PI;
+    for (const a2 of countriesNear(worldIndex, camera.center, reach, 6)) {
+      if (askedTowns.current.has(a2)) continue;
+      askedTowns.current.add(a2);
+      loadTowns(a2, worldIndex).then(
+        (list) => setTowns((was) => (was.has(a2) ? was : new Map(was).set(a2, list))),
+        () => askedTowns.current.delete(a2),
+      );
+    }
+  }, [cam, worldIndex]);
+  const askedAdmin1 = useRef(new Set<string>());
+  useEffect(() => {
+    if (!cam || !worldIndex) return;
+    const { camera } = cam;
+    if (camera.k < zoomOfLevel(ADMIN1_FROM_LEVEL, cam.radius)) return;
+    const reach = (Math.asin(Math.min(1, 1.4 / camera.k)) * 180) / Math.PI;
+    for (const a2 of countriesNear(worldIndex, camera.center, reach)) {
+      if (askedAdmin1.current.has(a2)) continue;
+      askedAdmin1.current.add(a2);
+      loadAdmin1(a2, worldIndex).then(
+        (features) => setAdmin1((was) => (was.has(a2) ? was : new Map(was).set(a2, features))),
+        () => askedAdmin1.current.delete(a2),
+      );
+    }
+  }, [cam, worldIndex]);
+
   // The country open, by its law key, and its places when drawn.
   const [open, setOpen] = useState<string | null>(mode === "full" ? initial : null);
   const country = named.find((p) => p.key === open) ?? null;
@@ -237,8 +316,16 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     if (drawn) map.current?.flyTo(cameraForBounds(drawn.bounds, ATLAS_LIMITS, 0.9));
   }, [drawn]);
 
+  const openA2 = drawn ? (country?.region ?? null) : null;
   const shapes = useMemo<MapFeature[]>(() => {
-    const base = world ?? [];
+    const all = world ?? [];
+    const countries = all.filter((f) => f.id.startsWith("countries:"));
+    const rest = all.filter((f) => !f.id.startsWith("countries:"));
+    // Each lies over the one before, so each is its own layer (geo-kit never merges layers into one path).
+    const subdivisions = [...admin1]
+      .flatMap(([a2, features]) => (a2 === openA2 ? [] : features))
+      .map((f) => ({ ...f, layer: 1 }));
+    const base = [...countries, ...subdivisions, ...rest.map((f) => ({ ...f, layer: 2 }))];
     if (!drawn) return base;
     // Once a country's own places are drawn they are its shape: its coarse outline from the world file
     // (Natural Earth, a few dozen points for Liechtenstein) is left out, or it shows through as a
@@ -250,9 +337,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         id: SUB + f.properties.code,
         geometry: f.geometry,
         properties: {},
+        layer: 3,
       })),
     ];
-  }, [world, drawn, country?.feature]);
+  }, [world, drawn, admin1, openA2, country?.feature]);
 
   const fills = useMemo(() => {
     const out = new Map<string, string>();
@@ -266,8 +354,13 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       return out;
     }
     for (const p of named) if (p.acts > 0) out.set(p.feature, shadeOf(p.acts, colours.scale));
+    // A subdivision is drawn over its country, so it wears the country's shade.
+    for (const [a2, features] of admin1) {
+      const fill = out.get(featureOfA2.get(a2) ?? "");
+      if (fill) for (const f of features) out.set(f.id, fill);
+    }
     return out;
-  }, [colours, open, layer, tax.fills, data, named]);
+  }, [colours, open, layer, tax.fills, data, named, admin1, featureOfA2]);
 
   // A dot on each country Solon holds law for, so the small ones can be found; none inside a country.
   const dots = useMemo(() => {
@@ -281,6 +374,16 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       }),
     );
   }, [open, named, worldById]);
+
+  const regionNames = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
+  const countryName = (a2: string | undefined): string => {
+    if (!a2) return "";
+    try {
+      return regionNames.of(a2) ?? a2;
+    } catch {
+      return a2;
+    }
+  };
 
   // The names of a country's places, written on the map wherever one fits inside its shape.
   const placeNames = useMemo(() => {
@@ -309,10 +412,17 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         ? tax.describe(code, tm("notYet"))
         : (placeByFeature.get(code)?.name ?? "");
     }
+    if (id.startsWith(ADMIN1)) {
+      const region = regionByCode.get(id.slice(ADMIN1.length));
+      if (!region) return "";
+      const place = byFeature.get(featureOfA2.get(region.a2) ?? "");
+      const name = `${region.names[locale] ?? region.name}, ${countryName(region.a2)}`;
+      return place && place.acts > 0 ? tg("held", { name, count: place.acts }) : name;
+    }
     const place = byFeature.get(id);
     if (place && place.acts > 0) return tg("held", { name: place.name, count: place.acts });
     const region = regionByFeature.get(id);
-    return region ? regionName(region, locale) : "";
+    return region ? regionName(region, locale) : (place?.name ?? countryName(a2OfFeature.get(id)));
   };
 
   const onSelect = (id: string | null) => {
@@ -325,14 +435,46 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       setSelected(id);
       return;
     }
-    const place = byFeature.get(id);
+    // A subdivision answers for its country.
+    const countryFeature = id.startsWith(ADMIN1)
+      ? (featureOfA2.get(regionByCode.get(id.slice(ADMIN1.length))?.a2 ?? "") ?? "")
+      : id;
+    const place = byFeature.get(countryFeature);
     if (place && (place.acts > 0 || place.pack)) {
       if (place.key !== open) openCountry(place);
       return;
     }
     // A country Solon holds nothing for yet: its own page says so, and can be shared.
-    const region = regionByFeature.get(id);
+    const region = regionByFeature.get(countryFeature);
     if (region) router.push(`/places/${region.slug}`);
+    // Outside every list, it is still named and outlined, so a tap always answers.
+    else setSelected(id);
+  };
+
+  const onSelectLabel = (id: string) => {
+    if (!labelData || !cam) return;
+    const [kind, key] = [id.slice(0, 2), id.slice(2)];
+    const r = cam.radius;
+    if (kind === "c:") {
+      const feature = featureOfA2.get(key);
+      if (feature) onSelect(feature);
+      return;
+    }
+    if (kind === "r:") {
+      const region = regionByCode.get(key);
+      if (!region) return;
+      setSelected(ADMIN1 + key);
+      fly({ center: region.at, k: Math.max(cam.camera.k, zoomOfLevel(region.z + 1.5, r)) });
+      return;
+    }
+    if (kind === "g:") {
+      const [a2, i] = key.split(":");
+      const t = towns.get(a2 ?? "")?.[Number(i)];
+      if (t) fly({ center: [t[0], t[1]], k: Math.max(cam.camera.k * 2, zoomOfLevel(10, r)) });
+      return;
+    }
+    const town = labelData.towns[Number(key)];
+    if (town) fly({ center: town.at, k: Math.max(cam.camera.k * 1.5, zoomOfLevel(town.z + 2, r)) });
   };
 
   const showBounds = (feature: string, bounds: Bounds | undefined) => {
@@ -400,12 +542,47 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           : tm("legend", { year: data.period.slice(0, 4) })
       : "";
 
-  const ready = colours && tokens && world && !broken;
+  const labels = useMemo(
+    () =>
+      labelData
+        ? [
+            ...worldLabels(
+              labelData,
+              locale,
+              radius,
+              new Set(openA2 ? [openA2] : []),
+              new Set(towns.keys()),
+            ),
+            ...[...towns].flatMap(([a2, list]) => townLabels(a2, list, radius)),
+          ]
+        : [],
+    [labelData, locale, radius, openA2, towns],
+  );
+  const styles = useMemo(
+    () =>
+      tokens && colours
+        ? labelStyles({
+            text: tokens.text,
+            muted: tokens.muted,
+            faint: tokens.faint,
+            halo: tokens.land,
+            font: tokens.font,
+          })
+        : null,
+    [tokens, colours],
+  );
+  const palette = useMemo(() => {
+    if (!colours || !tokens) return null;
+    const p = atlasPalette(colours, tokens);
+    // Inside an open country its places carry the colour; a wash over the whole country would hide it.
+    return open ? { ...p, selectedFill: undefined } : p;
+  }, [colours, tokens, open]);
+  const ready = colours && tokens && palette && world && !broken;
   const canvas = ready ? (
     <AtlasCanvas
       shapes={shapes}
       fills={fills}
-      palette={atlasPalette(colours, tokens)}
+      palette={palette}
       dots={dots}
       dotColour={colours.selected}
       names={placeNames}
@@ -416,6 +593,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       home={HOME}
       spin={!open}
       onSelect={onSelect}
+      labels={labels}
+      labelStyles={styles}
+      onSelectLabel={onSelectLabel}
+      onCamera={onCamera}
       describe={describe}
       label={country ? t("mapLabelCountry", { country: country.name }) : tg("label")}
       zoomIn={tg("zoomIn")}

@@ -5,7 +5,7 @@ import type { Metric } from "@/lib/config/places/schema";
 import { localized } from "@/lib/places/place-view";
 import type { ScatterPoint } from "@/lib/statistics/compare";
 import { chartValue, metricPath } from "@/lib/statistics/present";
-import { unitLabel, type StatisticsTranslator } from "./metric-view";
+import { unitLabel, type StatisticsTranslator } from "./shared";
 import ScatterPlot from "./scatter-plot";
 
 interface CompareViewProps {

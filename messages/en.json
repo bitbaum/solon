@@ -1,7 +1,6 @@
 {
   "Meta": {
-    "title": "Solon — Governance any group can run",
-    "description": "Proposals, votes and the books, where every member can see them — for companies, towns, associations and communities."
+    "title": "Solon — Governance any group can run"
   },
   "Site": {
     "sections": {
@@ -11,7 +10,8 @@
       "decisions": "Decisions",
       "more": "More",
       "places": "Places",
-      "law": "Law"
+      "law": "Law",
+      "data": "Data"
     },
     "sectionDesc": {
       "useCases": "Every kind of group decides. Find yours.",
@@ -20,7 +20,8 @@
       "decisions": "The public record — and your part in it.",
       "more": "Everything else.",
       "places": "Every jurisdiction, with the source behind every fact.",
-      "law": "Every law Solon holds, with its source."
+      "law": "Every law Solon holds, with its source.",
+      "data": "Series, rankings and methods, with the source behind every figure."
     },
     "links": {
       "whatYouCanDo": "What you can do",
@@ -68,7 +69,10 @@
       "lawCoverage": "What Solon holds",
       "lawAmendments": "Proposed changes",
       "statistics": "Statistics",
-      "statisticsEvents": "Law events"
+      "statisticsEvents": "Law events",
+      "statisticsMethods": "How rankings are made",
+      "statisticsGaps": "What is measured, and where not",
+      "statisticsResearch": "Research with AI"
     },
     "desc": {
       "whatYouCanDo": "Everything here, in plain words, with a start",
@@ -116,7 +120,10 @@
       "lawCoverage": "Which laws Solon holds, counted from the data",
       "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support",
       "statistics": "The law beside the numbers: series over time, each linked to its source and its law",
-      "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where"
+      "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where",
+      "statisticsMethods": "Who makes each index, how, and what to ask of it.",
+      "statisticsGaps": "What each office collects, and where the same question has no answer.",
+      "statisticsResearch": "Ask a question; get a report whose figures are checked against its sources."
     },
     "accountIntro": "A Solon account is how you join an organisation, propose and vote. An email address and a password, or a passkey, is enough; if you have OrangeCat, one click signs you in."
   },
@@ -134,7 +141,8 @@
     "themeDark": "Dark",
     "themeSystem": "Device",
     "overview": "Overview",
-    "featured": "Featured"
+    "featured": "Featured",
+    "find": "Find"
   },
   "Footer": {
     "tagline": "Governance for any group of people. Beta — running, not released.",
@@ -1424,9 +1432,13 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "home": "Back to the whole Earth",
-      "credit": "Outlines: Natural Earth and the US Census Bureau, public domain. Tap a shaded place to read its law.",
+      "credit": "Outlines and names: Natural Earth and the US Census Bureau, public domain; towns: GeoNames, CC BY 4.0. Drag to turn, scroll or pinch to zoom, double-tap to zoom in, tap any place to name it or a shaded one to read its law.",
       "title": "Every place, its law",
       "body": "Shaded places are those whose law Solon holds, darker for more. Turn the globe, tap a place, and read its law article by article."
+    },
+    "authority": {
+      "intercantonal": "The cantons together",
+      "eu": "European Union"
     }
   },
   "LostPassword": {
@@ -2058,6 +2070,170 @@
         "thin_scatter": "too few points for a pattern",
         "scatter_years": "points from years far apart"
       }
+    },
+    "methods": {
+      "metaTitle": "How the rankings are made",
+      "metaDescription": "Rankings and ratings of governance and freedom: who makes each, what it measures, how, and whether its data may be shown.",
+      "kicker": "Methods",
+      "title": "How the rankings are made",
+      "intro": "Every index of freedom or governance is someone's choice of what to count and how to weigh it. Here each one is described the same way: who makes it, what it says it measures, how, what it is made of, and whether its data may be shown here, with the questions worth asking of it. Nothing about a publisher's method is filled in from memory: what has not been read is listed as not read.",
+      "colName": "Index",
+      "colPublisher": "Publisher",
+      "colKind": "How",
+      "colLicence": "Its data here",
+      "kinds": {
+        "expert_scoring": "Experts score countries",
+        "composite": "Combines other sources",
+        "perception": "Surveys of perception",
+        "official_statistics": "Official statistics",
+        "coded_from_law": "Coded from the law"
+      },
+      "layers": {
+        "de_jure": "What the law says",
+        "de_facto": "What happens",
+        "outcome": "What results",
+        "perception": "How it is seen"
+      },
+      "verdicts": {
+        "loadable": "May be shown",
+        "unclear": "Licence unclear",
+        "permission": "Needs permission",
+        "not_loadable": "May not be shown"
+      },
+      "claims": "What it says it measures",
+      "about": "What it looks at",
+      "components": "What it is made of",
+      "noComponents": "Its parts have not been read yet.",
+      "coverage": "Coverage",
+      "drawsOn": "It takes inputs from",
+      "licenceTitle": "May its data be shown here?",
+      "terms": "The publisher's terms, quoted",
+      "unreadTitle": "Not read yet",
+      "unreadIntro": "These are left open rather than filled in from memory.",
+      "questionsTitle": "Questions to ask of it",
+      "questions": {
+        "experts": "Who are the experts, how many score each country, and how far do they disagree? A score from a handful of people is an opinion with a number on it.",
+        "composite": "Which sources does it combine, and does any of them count twice (the same survey feeding two parts)?",
+        "weights": "Are the weights argued for or simply chosen? A ranking that changes when the weights change says more about the weights than the countries; on Solon you can set your own.",
+        "perception": "Whose perception: business people, residents, experts abroad? Perception can lag or lead what actually happens.",
+        "official": "Do the countries count the same way? A statistic's definition and scope matter more than its decimals.",
+        "coded": "Is the scale written down, and would a second reader code the same text the same way?",
+        "layer": "Does it mix what the law says with what happens? Solon keeps those apart, so a gap between them shows instead of averaging away.",
+        "inputs": "Its inputs carry their own choices and licences, listed above.",
+        "licence": "Its figures cannot be shown here. Read them at the publisher's, and weigh them with the questions above.",
+        "unread": "Some of how it works has not been read yet; until it is, judge it on what is listed."
+      },
+      "sources": "Where this description comes from",
+      "checked": "checked by a program",
+      "forPeople": "read by a person; a program cannot read this page",
+      "homepage": "The publisher's page",
+      "ownTitle": "Solon's own measures",
+      "ownIntro": "Solon's dimensions keep the law, practice and results apart and code features of the law on written scales, every coding showing its article, its confidence and whether a second person has checked it.",
+      "back": "All methods",
+      "open": "Open"
+    },
+    "research": {
+      "metaTitle": "Research with AI",
+      "metaDescription": "Ask a question about governance, freedom or statistics: an AI reads Solon's series, dimensions, method descriptions and law, and writes a report whose every figure and citation is checked against what it read.",
+      "kicker": "Research",
+      "title": "Research with AI",
+      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources.",
+      "questionLabel": "Your question",
+      "placeholder": "For example: How does Estonia's tax burden compare with Switzerland's, and what does the law say about the top rate?",
+      "ask": "Research this",
+      "asking": "Researching…",
+      "steps": {
+        "search": "Reading",
+        "write": "Writing the report"
+      },
+      "tools": {
+        "search_catalog": "Looking in the catalog for",
+        "read_series": "Reading the series",
+        "read_dimension": "Reading the dimension",
+        "read_method": "Reading how it is made",
+        "search_law": "Searching the law for",
+        "web_search": "Searching the web for",
+        "web_read": "Reading the page"
+      },
+      "sourcesTitle": "Sources found",
+      "reportTitle": "Report",
+      "aiLabel": "Written by an AI from the sources listed. Every number and every citation was checked against them; the reasoning was not. Check it against the sources.",
+      "cited": "Rests on",
+      "rateLimited": "Please wait a few minutes before asking again.",
+      "unavailable": "Research is not available just now.",
+      "failed": "The research could not be completed, or the report could not be checked against its sources, so it is not shown. Any sources found are listed.",
+      "examplesTitle": "Or try",
+      "examples": {
+        "a": "How do Estonia and Switzerland compare on taxes, in law and in what is collected?",
+        "b": "What does it cost to leave a country, by law, in the places Solon has coded?",
+        "c": "How is the World Bank's Rule of Law score made, and what should I ask of it?"
+      }
+    },
+    "gaps": {
+      "metaTitle": "What is measured, and where it is not",
+      "metaDescription": "What statistical offices collect and publish, place by place, where the same question can be answered in one country and not in another, and what would have to come with a new measure.",
+      "kicker": "Gaps",
+      "title": "What is measured, and where it is not",
+      "intro": "Statistical offices decide what to collect and what to publish, for reasons that are legal, historical, practical or political, so the same question can be answerable in one country and not in another. Here each topic is laid out the same way: what a source that was read says is collected, crossed with what, under what law, where the answer is missing, and what would have to come with a new measure so it is not misread. Solon describes and proposes; it does not rate offices or characterise people.",
+      "open": "Open",
+      "back": "All topics",
+      "stance": "Solon states what each office's own pages say and what was not read. A gap may be a law a country chose; a difference in a table is not an explanation. Nothing here describes an office or a group of people.",
+      "purposesTitle": "What answering it is for",
+      "matrixTitle": "What each place publishes",
+      "matrixIntro": "One line per place and breakdown, from pages that were read. \"Not read\" means Solon has not looked, not that nothing is published.",
+      "colPlace": "Place",
+      "status": {
+        "published": "Published",
+        "restricted": "Available to researchers",
+        "not_collected": "Not collected",
+        "barred_by_law": "Barred by law"
+      },
+      "crossedWith": "Crossed with",
+      "crossing": {
+        "age": "age",
+        "sex": "sex",
+        "region": "region",
+        "income": "income",
+        "education": "education",
+        "offence_type": "type of offence"
+      },
+      "notRead": "Not read",
+      "detailsTitle": "The detail, and where it was read",
+      "frame": "The law or policy:",
+      "unread": "Not read:",
+      "byPerson": "read by a person",
+      "byProgram": "checked weekly by a program",
+      "gapsTitle": "Where the answer differs",
+      "gapLine": "{place} is \"{status}\" for \"{variant}\", which {others} publish.",
+      "gapNote": "A difference between places is a question, not a fault. Where a law bars a category, changing it is a decision for that country's lawmakers; what Solon can do is lay out what would be gained, what would be risked, and what would have to come with it.",
+      "companionsTitle": "What would have to come with it",
+      "companionsIntro": "A breakdown without these invites misreading. These are what would let an explanation be tested, not only a difference shown.",
+      "cautionsTitle": "Cautions in reading it",
+      "risksTitle": "Objections, and what answers them",
+      "risksIntro": "The risks of collecting and publishing are real, and the offices that publish today have answers to them; both are set out.",
+      "risk": "Risk:",
+      "safeguard": "Safeguard:",
+      "decidesTitle": "Who decides",
+      "decides": "Whether a country collects or publishes a measure is for its lawmakers and its office, within its constitution. A group on Solon can adopt a position, or ask an office for a measure, by proposal.",
+      "propose": "Propose a position",
+      "proposeTitle": "Position on what is measured: {topic}",
+      "proposeBody": "We ask our statistical office to consider the measure described at {url}, with the companions and safeguards listed there."
+    }
+  },
+  "Find": {
+    "button": "Find",
+    "title": "Find anything",
+    "placeholder": "Find a page, a figure, a country, a town, a law…",
+    "none": "Nothing matches. Try fewer letters, or ask Solon.",
+    "hint": "↑ ↓ to move, Enter to open, Esc to close",
+    "groups": {
+      "pages": "Pages",
+      "series": "Figures",
+      "dimension": "Dimensions",
+      "method": "How rankings are made",
+      "gaps": "What is measured",
+      "places": "Places",
+      "law": "Law"
     }
   }
 }

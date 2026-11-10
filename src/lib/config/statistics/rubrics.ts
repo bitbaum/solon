@@ -193,4 +193,54 @@ export const RUBRICS = defineRubrics([
     ],
     author: AUTHOR,
   },
+  {
+    key: "compulsion.old_age_pension",
+    version: 1,
+    label: { en: "Compulsory provision for old age" },
+    question: {
+      en: "Does the law compel a person to contribute to, or save for, a pension, and does it leave a way out?",
+    },
+    scale: [
+      {
+        value: 0,
+        label: { en: "No duty" },
+        definition: {
+          en: "The law requires no contribution or saving for old age; a pension scheme may exist and be joined or not.",
+        },
+      },
+      {
+        value: 1,
+        label: { en: "Duty, with a choice of provider" },
+        definition: {
+          en: "The law requires every worker to save or insure for old age, and lets each choose among providers or products, public or private.",
+        },
+      },
+      {
+        value: 2,
+        label: { en: "Duty to a public scheme, with a way out" },
+        definition: {
+          en: "The law requires contributions to a public scheme, and lets a person opt out into an equivalent of their own.",
+        },
+      },
+      {
+        value: 3,
+        label: { en: "Duty to a public scheme, no way out" },
+        definition: {
+          en: "The law requires contributions to a public scheme or imposes a tax for it, and gives a person no alternative.",
+        },
+      },
+    ],
+    edgeCases: [
+      {
+        en: "A country with a compulsory public first tier and a further compulsory tier with a choice is coded by the first tier, and the reading names the second.",
+      },
+      {
+        en: "A tax earmarked for pensions counts as a contribution if the law ties it to the scheme's benefits.",
+      },
+      {
+        en: "A place is coded only from a reading of the provisions that impose the duty; one that has not been read is left uncoded, not 0.",
+      },
+    ],
+    author: AUTHOR,
+  },
 ]);

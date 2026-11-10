@@ -10,6 +10,7 @@ import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/ui/navigation";
+import { findIndex } from "@/lib/site/find-index";
 import Footer from "@/components/ui/footer";
 import TranslationNotice from "@/components/site/translation-notice";
 import ThemeScript from "@/components/theme/theme-script";
@@ -34,12 +35,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale: toLocale(locale), namespace: "Meta" });
+  // What Solon is, said once: the home page's hero; search results and shared links repeat it.
+  const hero = await getTranslations({ locale: toLocale(locale), namespace: "Home.hero" });
+  const description = hero("lede");
   return {
     metadataBase: new URL(SITE_URL),
     title: t("title"),
-    description: t("description"),
-    icons: [{ rel: "icon", url: "/favicon.ico" }],
-    openGraph: { title: "Solon", description: t("description"), url: SITE_URL, siteName: "Solon" },
+    description,
+    openGraph: { title: "Solon", description, url: SITE_URL, siteName: "Solon" },
     alternates: {
       languages: Object.fromEntries(
         routing.locales.map((l) => [l, l === routing.defaultLocale ? "/" : `/${l}`]),
@@ -71,7 +74,7 @@ export default async function LocaleLayout({
       </head>
       <body className="flex min-h-screen flex-col antialiased font-sans">
         <NextIntlClientProvider>
-          <Navigation authEnabled={authEnabled} />
+          <Navigation authEnabled={authEnabled} findEntries={findIndex(locale)} />
           <TranslationNotice />
           {/* No container: sections own their width so a photograph can
               reach the edges of the screen. */}

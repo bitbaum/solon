@@ -7,7 +7,7 @@ import type { EventChart } from "@/lib/statistics/event-page";
 import type { EventRow } from "@/lib/statistics/read";
 import { eventPath } from "@/lib/statistics/present";
 import { ActorList, NumbersAround, Sources, VoteCard } from "./event-parts";
-import { formatDay, type StatisticsTranslator } from "./metric-view";
+import { formatDay, type StatisticsTranslator } from "./shared";
 
 interface EventViewProps {
   event: EventRow;

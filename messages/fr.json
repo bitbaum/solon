@@ -1,7 +1,6 @@
 {
   "Meta": {
-    "title": "Solon — Une gouvernance que tout groupe peut mener",
-    "description": "Propositions, votes et comptes, visibles par chaque membre — pour les entreprises, les communes, les associations et les communautés."
+    "title": "Solon — Une gouvernance que tout groupe peut mener"
   },
   "Site": {
     "sections": {
@@ -11,7 +10,8 @@
       "decisions": "Décisions",
       "more": "Plus",
       "places": "Lieux",
-      "law": "Droit"
+      "law": "Droit",
+      "data": "Données"
     },
     "sectionDesc": {
       "useCases": "Tout groupe décide. Trouvez le vôtre.",
@@ -20,7 +20,8 @@
       "decisions": "Le registre public — et votre rôle.",
       "more": "Tout le reste.",
       "places": "Chaque collectivité, avec la source de chaque donnée.",
-      "law": "Chaque acte que Solon détient, avec sa source."
+      "law": "Chaque acte que Solon détient, avec sa source.",
+      "data": "Séries, classements et méthodes, avec la source derrière chaque chiffre."
     },
     "links": {
       "whatYouCanDo": "Ce que vous pouvez faire ici",
@@ -68,7 +69,10 @@
       "lawCoverage": "Ce que Solon détient",
       "lawAmendments": "Modifications proposées",
       "statistics": "Statistiques",
-      "statisticsEvents": "Événements juridiques"
+      "statisticsEvents": "Événements juridiques",
+      "statisticsMethods": "Comment les classements sont faits",
+      "statisticsGaps": "Ce qui est mesuré, et ce qui ne l'est pas",
+      "statisticsResearch": "Recherche avec l'IA"
     },
     "desc": {
       "whatYouCanDo": "Tout ce qui existe ici, en mots simples, avec un point de départ",
@@ -116,7 +120,10 @@
       "lawCoverage": "Quels actes Solon détient, comptés à partir des données",
       "lawAmendments": "Les modifications proposées au droit, avec leur redline et leurs soutiens",
       "statistics": "Le droit à côté des chiffres : des séries dans le temps, chacune avec sa source et sa loi",
-      "statisticsEvents": "Ce qui est arrivé au droit d'un lieu : ce qui a changé, comment, qui était où"
+      "statisticsEvents": "Ce qui est arrivé au droit d'un lieu : ce qui a changé, comment, qui était où",
+      "statisticsMethods": "Qui fait chaque indice, comment, et que lui demander.",
+      "statisticsGaps": "Ce que chaque office collecte, et où la même question n'a pas de réponse.",
+      "statisticsResearch": "Posez une question ; obtenez un rapport dont les chiffres sont vérifiés par rapport à ses sources."
     },
     "accountIntro": "Un compte Solon permet de rejoindre une organisation, de proposer et de voter. Une adresse e-mail et un mot de passe, ou une clé d’accès, suffisent ; avec OrangeCat, un clic vous connecte."
   },
@@ -134,7 +141,8 @@
     "themeDark": "Sombre",
     "themeSystem": "Comme l’appareil",
     "overview": "Vue d'ensemble",
-    "featured": "À la une"
+    "featured": "À la une",
+    "find": "Chercher"
   },
   "Footer": {
     "tagline": "La gouvernance pour tout groupe de personnes. Bêta — en service, pas encore publié.",
@@ -838,9 +846,13 @@
       "zoomIn": "Agrandir",
       "zoomOut": "Réduire",
       "home": "Revenir à la Terre entière",
-      "credit": "Contours : Natural Earth et US Census Bureau, domaine public. Touchez un lieu ombré pour lire son droit.",
+      "credit": "Contours et noms : Natural Earth et US Census Bureau, domaine public ; localités : GeoNames, CC BY 4.0. Glissez pour tourner, faites défiler ou pincez pour zoomer, touchez deux fois pour agrandir, touchez un lieu pour le nommer ou un lieu ombré pour lire son droit.",
       "title": "Chaque lieu, son droit",
       "body": "Les lieux ombrés sont ceux dont Solon détient le droit, plus foncés quand il y en a davantage. Tournez le globe, touchez un lieu et lisez son droit article par article."
+    },
+    "authority": {
+      "intercantonal": "Les cantons ensemble",
+      "eu": "Union européenne"
     }
   },
   "LostPassword": {
@@ -1365,6 +1377,170 @@
         "thin_scatter": "trop peu de points pour une tendance",
         "scatter_years": "points d'années très éloignées"
       }
+    },
+    "methods": {
+      "metaTitle": "Comment les classements sont faits",
+      "metaDescription": "Classements et notations de la gouvernance et de la liberté : qui les fait, ce qu'ils mesurent, comment, et si leurs données peuvent être montrées.",
+      "kicker": "Méthodes",
+      "title": "Comment les classements sont faits",
+      "intro": "Tout indice de liberté ou de gouvernance est le choix de quelqu'un sur ce qu'il faut compter et comment le pondérer. Chacun est décrit ici de la même manière : qui le fait, ce qu'il dit mesurer, comment, de quoi il est fait, si ses données peuvent être montrées ici, et les questions à lui poser. Rien de la méthode d'un éditeur n'est complété de mémoire : ce qui n'a pas été lu est indiqué comme tel.",
+      "colName": "Indice",
+      "colPublisher": "Éditeur",
+      "colKind": "Comment",
+      "colLicence": "Ses données ici",
+      "kinds": {
+        "expert_scoring": "Des experts notent les pays",
+        "composite": "Combine d'autres sources",
+        "perception": "Enquêtes de perception",
+        "official_statistics": "Statistiques officielles",
+        "coded_from_law": "Codé à partir du droit"
+      },
+      "layers": {
+        "de_jure": "Ce que dit la loi",
+        "de_facto": "Ce qui se passe",
+        "outcome": "Ce qui en résulte",
+        "perception": "Comment c'est perçu"
+      },
+      "verdicts": {
+        "loadable": "Peut être montré",
+        "unclear": "Licence incertaine",
+        "permission": "Autorisation requise",
+        "not_loadable": "Ne peut pas être montré"
+      },
+      "claims": "Ce qu'il dit mesurer",
+      "about": "Ce qu'il regarde",
+      "components": "De quoi il est fait",
+      "noComponents": "Ses parties n'ont pas encore été lues.",
+      "coverage": "Couverture",
+      "drawsOn": "Il puise dans",
+      "licenceTitle": "Ses données peuvent-elles être montrées ici ?",
+      "terms": "Les conditions de l'éditeur, citées",
+      "unreadTitle": "Pas encore lu",
+      "unreadIntro": "Laissé ouvert plutôt que complété de mémoire.",
+      "questionsTitle": "Questions à lui poser",
+      "questions": {
+        "experts": "Qui sont les experts, combien notent chaque pays, et jusqu'où divergent-ils ? Une note de quelques personnes est une opinion chiffrée.",
+        "composite": "Quelles sources combine-t-il, et l'une d'elles compte-t-elle deux fois ?",
+        "weights": "Les pondérations sont-elles justifiées ou simplement choisies ? Sur Solon, vous pouvez fixer les vôtres.",
+        "perception": "La perception de qui : entreprises, habitants, experts à l'étranger ?",
+        "official": "Les pays comptent-ils de la même façon ? La définition et le périmètre comptent plus que les décimales.",
+        "coded": "L'échelle est-elle écrite, et un second lecteur coderait-il le même texte de la même façon ?",
+        "layer": "Mélange-t-il ce que dit la loi et ce qui se passe ? Solon les sépare pour qu'un écart se voie.",
+        "inputs": "Ses sources ont leurs propres choix et licences, listés plus haut.",
+        "licence": "Ses chiffres ne peuvent pas être montrés ici. Lisez-les chez l'éditeur et pesez-les avec les questions ci-dessus.",
+        "unread": "Une partie de son fonctionnement n'a pas encore été lue."
+      },
+      "sources": "D'où vient cette description",
+      "checked": "vérifié par un programme",
+      "forPeople": "lu par une personne ; un programme ne peut pas lire cette page",
+      "homepage": "La page de l'éditeur",
+      "ownTitle": "Les mesures propres de Solon",
+      "ownIntro": "Les dimensions de Solon séparent le droit, la pratique et les résultats et codent les traits du droit sur des échelles écrites, chaque codage montrant son article, sa fiabilité et si une seconde personne l'a vérifié.",
+      "back": "Toutes les méthodes",
+      "open": "Ouvrir"
+    },
+    "research": {
+      "metaTitle": "Recherche avec l'IA",
+      "metaDescription": "Posez une question sur la gouvernance, la liberté ou les statistiques : une IA lit les séries, dimensions, descriptions de méthodes et le droit de Solon, et écrit un rapport dont chaque chiffre et chaque citation sont vérifiés.",
+      "kicker": "Recherche",
+      "title": "Recherche avec l'IA",
+      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources.",
+      "questionLabel": "Votre question",
+      "placeholder": "Par exemple : comment la charge fiscale de l'Estonie se compare-t-elle à celle de la Suisse, et que dit le droit du taux maximal ?",
+      "ask": "Rechercher",
+      "asking": "Recherche en cours…",
+      "steps": {
+        "search": "Lecture",
+        "write": "Rédaction du rapport"
+      },
+      "tools": {
+        "search_catalog": "Recherche dans le catalogue de",
+        "read_series": "Lecture de la série",
+        "read_dimension": "Lecture de la dimension",
+        "read_method": "Lecture de sa méthode",
+        "search_law": "Recherche dans le droit de",
+        "web_search": "Recherche sur le web de",
+        "web_read": "Lecture de la page"
+      },
+      "sourcesTitle": "Sources trouvées",
+      "reportTitle": "Rapport",
+      "aiLabel": "Écrit par une IA à partir des sources listées. Chaque nombre et chaque citation a été vérifié par rapport à elles ; le raisonnement, non. Vérifiez-le auprès des sources.",
+      "cited": "S'appuie sur",
+      "rateLimited": "Veuillez patienter quelques minutes avant de redemander.",
+      "unavailable": "La recherche n'est pas disponible pour le moment.",
+      "failed": "La recherche n'a pas pu être menée à bien, ou le rapport n'a pas pu être vérifié par rapport à ses sources, et n'est donc pas affiché. Les sources trouvées sont listées.",
+      "examplesTitle": "Ou essayez",
+      "examples": {
+        "a": "Comment l'Estonie et la Suisse se comparent-elles sur les impôts, en droit et dans ce qui est perçu ?",
+        "b": "Que coûte-t-il de quitter un pays, selon le droit, dans les lieux que Solon a codés ?",
+        "c": "Comment la note d'État de droit de la Banque mondiale est-elle faite, et que lui demander ?"
+      }
+    },
+    "gaps": {
+      "metaTitle": "Ce qui est mesuré, et ce qui ne l'est pas",
+      "metaDescription": "Ce que les offices statistiques collectent et publient, lieu par lieu ; où la même question a une réponse dans un pays et pas dans un autre ; et ce qui devrait accompagner une nouvelle mesure.",
+      "kicker": "Lacunes",
+      "title": "Ce qui est mesuré, et ce qui ne l'est pas",
+      "intro": "Les offices statistiques décident de ce qu'ils collectent et publient, pour des raisons juridiques, historiques, pratiques ou politiques : la même question peut donc avoir une réponse dans un pays et pas dans un autre. Chaque sujet est présenté de la même façon : ce qu'une source lue dit être collecté, croisé avec quoi, sous quel droit, où la réponse manque, et ce qui devrait accompagner une nouvelle mesure pour qu'elle ne soit pas mal lue. Solon décrit et propose ; il ne note pas les offices et ne caractérise pas les personnes.",
+      "open": "Ouvrir",
+      "back": "Tous les sujets",
+      "stance": "Solon dit ce que disent les pages de chaque office et ce qui n'a pas été lu. Une lacune peut être une loi choisie par un pays ; une différence dans un tableau n'est pas une explication. Rien ici ne décrit un office ou un groupe de personnes.",
+      "purposesTitle": "À quoi sert la réponse",
+      "matrixTitle": "Ce que chaque lieu publie",
+      "matrixIntro": "Une ligne par lieu et par ventilation, d'après des pages lues. « Non lu » signifie que Solon n'a pas regardé, pas qu'il n'y a rien de publié.",
+      "colPlace": "Lieu",
+      "status": {
+        "published": "Publié",
+        "restricted": "Accessible aux chercheurs",
+        "not_collected": "Non collecté",
+        "barred_by_law": "Interdit par la loi"
+      },
+      "crossedWith": "Croisé avec",
+      "crossing": {
+        "age": "âge",
+        "sex": "sexe",
+        "region": "région",
+        "income": "revenu",
+        "education": "éducation",
+        "offence_type": "type d'infraction"
+      },
+      "notRead": "Non lu",
+      "detailsTitle": "Le détail, et où il a été lu",
+      "frame": "Le droit ou la politique :",
+      "unread": "Non lu :",
+      "byPerson": "lu par une personne",
+      "byProgram": "vérifié chaque semaine par un programme",
+      "gapsTitle": "Où la réponse diffère",
+      "gapLine": "{place} est « {status} » pour « {variant} », que {others} publient.",
+      "gapNote": "Une différence entre lieux est une question, pas une faute. Là où une loi interdit une catégorie, la changer relève des législateurs de ce pays ; Solon peut exposer ce qu'on y gagnerait, ce qu'on y risquerait et ce qui devrait l'accompagner.",
+      "companionsTitle": "Ce qui devrait l'accompagner",
+      "companionsIntro": "Une ventilation sans cela invite à la mauvaise lecture. Ce sont ces éléments qui permettent de tester une explication, pas seulement de montrer une différence.",
+      "cautionsTitle": "Précautions de lecture",
+      "risksTitle": "Objections, et ce qui y répond",
+      "risksIntro": "Les risques de collecter et de publier sont réels, et les offices qui publient aujourd'hui y ont des réponses ; les deux sont exposés.",
+      "risk": "Risque :",
+      "safeguard": "Garde-fou :",
+      "decidesTitle": "Qui décide",
+      "decides": "C'est aux législateurs et à l'office d'un pays, dans le cadre de sa constitution, de décider s'il collecte ou publie une mesure. Un groupe sur Solon peut adopter une position, ou demander une mesure à un office, par une proposition.",
+      "propose": "Proposer une position",
+      "proposeTitle": "Position sur ce qui est mesuré : {topic}",
+      "proposeBody": "Nous demandons à notre office statistique d'examiner la mesure décrite à {url}, avec les éléments d'accompagnement et les garde-fous qui y sont listés."
+    }
+  },
+  "Find": {
+    "button": "Chercher",
+    "title": "Tout trouver",
+    "placeholder": "Trouver une page, un chiffre, un pays, une ville, une loi…",
+    "none": "Rien ne correspond. Essayez moins de lettres, ou demandez à Solon.",
+    "hint": "↑ ↓ pour se déplacer, Entrée pour ouvrir, Échap pour fermer",
+    "groups": {
+      "pages": "Pages",
+      "series": "Chiffres",
+      "dimension": "Dimensions",
+      "method": "Comment les classements sont faits",
+      "gaps": "Ce qui est mesuré",
+      "places": "Lieux",
+      "law": "Droit"
     }
   }
 }

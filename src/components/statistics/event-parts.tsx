@@ -5,7 +5,7 @@ import { localized } from "@/lib/places/place-view";
 import type { EventChart } from "@/lib/statistics/event-page";
 import type { EventActor, EventVote } from "@/lib/statistics/records";
 import { ACTOR_ROLES } from "@/lib/statistics/records";
-import { formatDay, unitLabel, type StatisticsTranslator } from "./metric-view";
+import { formatDay, unitLabel, type StatisticsTranslator } from "./shared";
 
 type Evidence = { publisher: string; url: string; read: string };
 

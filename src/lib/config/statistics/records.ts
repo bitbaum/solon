@@ -16,6 +16,7 @@ import { defineCuratedRecords, type CuratedRecordInput } from "@/lib/statistics/
 import { ASSESSMENT_RECORDS } from "./assessments";
 import { EXIT_ASSESSMENTS } from "./assessments-exit";
 import { HEALTH_ASSESSMENTS } from "./assessments-health";
+import { PENSION_ASSESSMENTS } from "./assessments-pension";
 import { EVENT_RECORDS } from "./events";
 import { RUBRICS } from "./rubrics";
 
@@ -27,6 +28,7 @@ const RECORDS: readonly CuratedRecordInput[] = [
   ...ASSESSMENT_RECORDS,
   ...HEALTH_ASSESSMENTS,
   ...EXIT_ASSESSMENTS,
+  ...PENSION_ASSESSMENTS,
   {
     // Read 2026-11-08: DBG (SR 642.11) Art. 36 in the version in force from
     // 2026-09-02 states the federal income tax tariff for a single person.

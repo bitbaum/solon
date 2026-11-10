@@ -82,7 +82,7 @@ export async function loadDimensionPage(
   // What would mislead on this page: figures left out, places read at different dates, a thin scatter.
   const sanity: SanityFinding[] = [
     ...withheld,
-    ...(x ? checkSeries(x.series) : []),
+    ...(x ? checkSeries(x.series, { fixedByLaw: x.metric.statistic?.fixedByLaw === true }) : []),
     ...checkScatter(points),
   ];
   return {

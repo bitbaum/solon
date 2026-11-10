@@ -18,7 +18,7 @@ export interface Source {
 }
 
 const authorityName = (key: string): string =>
-  LAW_AUTHORITIES.find((a) => a.key === key)?.name ?? key;
+  LAW_AUTHORITIES.find((a) => a.key === key)?.label ?? key;
 
 const hostOf = (url: string) => {
   try {
