@@ -8,6 +8,7 @@ import type { PlaceLaw } from "@/lib/law/place-law";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
+import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
 import ContestNote, { type ContestNoteProps } from "./contest-note";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import SourceList from "./source-list";
@@ -21,6 +22,8 @@ interface PlaceProfileProps {
   taxHref: string;
   /** When the world list says another state claims the place's country: who, and its comparison. */
   contest?: ContestNoteProps | null;
+  /** The way into the country's public budget, on a country's own page when Solon holds one. */
+  budget?: BudgetLink | null;
   t: PlacesTranslator;
 }
 
@@ -44,7 +47,14 @@ function PlaceName({ place }: { place: PlaceLink }) {
  * it all, closed until asked for. Every word of structure comes from the pack;
  * nothing here knows a country.
  */
-export default function PlaceProfile({ view, law, taxHref, contest = null, t }: PlaceProfileProps) {
+export default function PlaceProfile({
+  view,
+  law,
+  taxHref,
+  contest = null,
+  budget = null,
+  t,
+}: PlaceProfileProps) {
   const above = [...view.partOf].reverse();
   const row = (label: string, value: React.ReactNode, key = label) => (
     <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
@@ -69,6 +79,8 @@ export default function PlaceProfile({ view, law, taxHref, contest = null, t }: 
         {contest && <ContestNote {...contest} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
+
+        {budget && <BudgetLinkCard {...budget} />}
 
         {view.parts.length > 0 && (
           <section aria-labelledby="place-parts" className="space-y-6">

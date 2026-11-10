@@ -129,6 +129,17 @@ warning) and every page can offer an AI explanation (`brief.ts`, `explain.ts`): 
 only the page's numbered facts, and an answer with a number or citation not in them is dropped.
 A check that warns on correct data is a bug: remove or narrow it, do not add a caveat. `/statistics/research` (`research.ts`, `research-tools.ts`) lets a model read Solon's data and law with read-only tools: every fact a tool returns is a numbered source, and the report is checked with the same rules.
 
+## Budgets
+
+Budgets (`/budgets`, design `docs/design/2026-11-budgets.md`) are one model over two
+inputs. The taxonomies in `src/lib/config/budgets/` (COFOG for spending, ESA 2010 for
+revenue) are the single source: they generate the `budget.<scope>.<side>.<code>` metrics and
+the Eurostat sources (`eurostat_json` adapter, one per country, run like every Places source:
+`pnpm run places:fetch eurostat-gov-<cc>`). A budget read from a law is a document under
+`src/lib/config/budgets/documents/`, its lines as printed and each placed on a category; its
+lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
+`Budget` and holds the arithmetic; pages and the contested places use only its components.
+
 ## CI
 
 `.github/workflows/ci.yml` runs two jobs on every push/PR to `main`:

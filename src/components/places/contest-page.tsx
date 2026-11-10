@@ -2,8 +2,10 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import type { ContestSideView, ContestView } from "@/lib/places/contest-view";
-import ContestLedger from "./contest-ledger";
-import { actKey, ProvisionQuote } from "./contest-quote";
+import QuotedWords, { actKey } from "@/components/law/quoted-words";
+import type { BudgetsTranslator } from "@/components/budgets/translator";
+import type { BudgetSummary } from "@/lib/budgets/summary";
+import ContestMoney from "./contest-money";
 import { PlaceTrail } from "./place-head";
 import type { PlacesTranslator } from "./translator";
 
@@ -12,7 +14,10 @@ interface ContestPageProps {
   /** Solon's id of each act a provision cites, by `authority:scheme:value`, when the register holds it. */
   actIds: ReadonlyMap<string, string>;
   locale: string;
+  /** Each side's budget, when Solon holds one. */
+  money: readonly { side: ContestSideView; summary: BudgetSummary | null }[];
   t: PlacesTranslator;
+  tb: BudgetsTranslator;
 }
 
 function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
@@ -46,7 +51,13 @@ function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
  * other's, in a fixed order (the side that governs, then the claimant). A side
  * with nothing read says so. Solon's words only frame; the rest is quotation.
  */
-export default function ContestPage({ view, actIds, locale, t }: ContestPageProps) {
+export default function ContestPage({ view, actIds, money, locale, t, tb }: ContestPageProps) {
+  const quoteLabels = {
+    translation: t("contested.translation"),
+    read: (date: string) => t("contested.read", { date }),
+    translatedBy: (translator: string) => t("contested.translatedBy", { translator }),
+    proposeChange: t("contested.proposeChange"),
+  };
   const claimant = view.sides.find((s) => s.role === "claims");
   const propose = proposeHref({
     category: DEFAULT_CATEGORY,
@@ -98,12 +109,15 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
                     <h3 className="text-sm font-semibold text-fg-secondary">{side.name}</h3>
                     {cell.provisions.length > 0 ? (
                       cell.provisions.map((p) => (
-                        <ProvisionQuote
+                        <QuotedWords
                           key={p.label}
-                          provision={p}
+                          label={p.label}
+                          quote={p.quote}
+                          provision={p.provision}
+                          translator={p.translator}
                           actId={p.act ? (actIds.get(actKey(p.act)) ?? null) : null}
                           locale={locale}
-                          t={t}
+                          labels={quoteLabels}
                         />
                       ))
                     ) : (
@@ -118,7 +132,7 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
           </section>
         ))}
 
-        <ContestLedger view={view} actIds={actIds} locale={locale} t={t} />
+        <ContestMoney sides={money} locale={locale} t={t} tb={tb} />
 
         <section
           aria-labelledby="contest-act"

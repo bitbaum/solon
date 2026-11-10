@@ -22,6 +22,11 @@ export interface WorldRegion {
   slug: string;
   mapName?: string;
   claimedBy?: string;
+  /**
+   * The identifier Places knows a place by when it has no ISO code (South
+   * Ossetia's Wikidata item), so pages about it can find its records.
+   */
+  ref?: { scheme: string; value: string };
 }
 
 export const WORLD: readonly WorldRegion[] = [
@@ -282,6 +287,8 @@ export const WORLD: readonly WorldRegion[] = [
   },
   {
     slug: "south-ossetia",
+    // The item the South Ossetia pack identifies its nation by (its places data, `wikidata`).
+    ref: { scheme: "wikidata", value: "Q23427" },
     names: {
       en: "South Ossetia",
       de: "Südossetien",
@@ -327,6 +334,19 @@ export const WORLD: readonly WorldRegion[] = [
     claimedBy: "SO",
   },
 ];
+
+/**
+ * The world entry a place pack is about: the one with its ISO code, or, for a
+ * place with none, the one whose slug is the pack's key with hyphens (the
+ * pack root's canonical path, migration 0025).
+ */
+export const worldEntryOfPack = (
+  pack: { key: string; region?: string | null },
+  world: readonly WorldRegion[] = WORLD,
+): WorldRegion | undefined =>
+  world.find((w) =>
+    pack.region ? w.code === pack.region : w.slug === pack.key.replace(/_/g, "-"),
+  );
 
 /** The region whose slug this is. */
 export const worldRegion = (slug: string) => WORLD.find((r) => r.slug === slug);

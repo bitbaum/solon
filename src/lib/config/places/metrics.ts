@@ -1,3 +1,4 @@
+import { BUDGET_METRICS } from "@/lib/config/budgets/metrics";
 import type { MetricInput } from "./schema";
 
 /**
@@ -1038,4 +1039,6 @@ export const METRICS: readonly MetricInput[] = [
       },
     },
   },
+  // Budgets: generated from the taxonomies (src/lib/config/budgets/metrics.ts).
+  ...BUDGET_METRICS,
 ];

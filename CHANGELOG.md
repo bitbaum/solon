@@ -8,6 +8,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Budgets: what governments raise and what they spend it on.** `/budgets` lists every place
+  Solon holds a budget for, and each opens on one page: revenue, spending and the balance; what
+  the money is spent on, every function opened into its parts (old-age pensions within social
+  protection, hospitals within health); where it comes from; how both moved since 1995; who pays
+  for it where part is received from elsewhere; and every figure's source, down to the
+  publisher's own lines. Eurostat's government finance for 30 European countries is read every
+  month; South Ossetia's 2023 budget is read from its own laws. Every budget sits on the same
+  international classifications, so any two can be compared, and each page ends in "propose a
+  change to this budget". {#budgets-model} {#budgets-eurostat} {#budgets-pages}
+
 - **Contested places: two sets of law, side by side.** `/places/contested` lists every place
   that governs itself while another state regards it as part of its territory, and each opens
   the two sets of law question by question, in each side's own words: the original beside a

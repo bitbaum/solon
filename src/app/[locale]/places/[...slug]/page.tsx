@@ -2,11 +2,14 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
-import { toLocale } from "@/i18n/routing";
+import { toLocale, type Locale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
 import { placesConfig } from "@/lib/config/places";
-import { regionName, worldRegion } from "@/lib/config/world";
+import { regionName, worldEntryOfPack, worldRegion, type WorldRegion } from "@/lib/config/world";
+import type { BudgetLink } from "@/components/budgets/budget-link-card";
+import { holderOfRegion } from "@/lib/budgets/holders";
+import { holdsBudget } from "@/lib/budgets/read";
 import { db } from "@/lib/db/client";
 import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
@@ -24,6 +27,23 @@ const load = cache((slugPath: string, locale: string) =>
 );
 
 const slugPathOf = (slug: string[]) => slug.map(decodeURIComponent).join("/");
+
+/** The way into a country's public budget, when Solon holds one for it. */
+async function budgetLink(
+  region: WorldRegion | undefined,
+  locale: Locale,
+): Promise<BudgetLink | null> {
+  const holder = region ? holderOfRegion(region) : null;
+  if (!region || !holder || !(await holdsBudget(db, holder))) return null;
+  const t = await getTranslations({ locale, namespace: "Budgets" });
+  const place = regionName(region, locale);
+  return {
+    title: t("placeCard.title"),
+    text: t("placeCard.text", { place }),
+    open: t("placeCard.open"),
+    href: `/budgets/${region.slug}`,
+  };
+}
 
 /** A country or territory Solon holds no places for, by its one-segment path. */
 const regionOf = (slug: string[]) =>
@@ -62,7 +82,24 @@ export default async function PlacePage({ params }: { params: Params }) {
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
     const pack = placesConfig.packs.find((p) => p.key === view.packKey);
     const contest = contestNote(pack ? contestSlugForPack(pack) : null, locale);
-    return <PlaceProfile view={view} law={law} taxHref={taxHref} contest={contest} t={t} />;
+    // A country's budget is shown on the country's own page: a world nation, or a pack's root.
+    const country =
+      view.packKey === WORLD_PACK
+        ? worldRegion(view.slugPath.split("/").at(-1) ?? "")
+        : pack && view.partOf.length === 0
+          ? worldEntryOfPack(pack)
+          : undefined;
+    const budget = await budgetLink(country, locale);
+    return (
+      <PlaceProfile
+        view={view}
+        law={law}
+        taxHref={taxHref}
+        contest={contest}
+        budget={budget}
+        t={t}
+      />
+    );
   }
 
   const region = regionOf(slug);
@@ -81,6 +118,7 @@ export default async function PlacePage({ params }: { params: Params }) {
     <WorldRegionPage
       name={regionName(region, locale)}
       contest={contestNote(region.slug, locale)}
+      budget={await budgetLink(region, locale)}
       law={region.code ? await loadCountryLaw(db, region.code, locale) : []}
       t={t}
     />

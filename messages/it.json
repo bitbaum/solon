@@ -72,7 +72,8 @@
       "statisticsEvents": "Eventi giuridici",
       "statisticsMethods": "Come sono fatte le classifiche",
       "statisticsGaps": "Cosa viene misurato, e cosa no",
-      "statisticsResearch": "Ricerca con l'IA"
+      "statisticsResearch": "Ricerca con l'IA",
+      "budgets": "Bilanci"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -123,7 +124,8 @@
       "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove",
       "statisticsMethods": "Chi fa ogni indice, come, e cosa chiedergli.",
       "statisticsGaps": "Cosa raccoglie ogni ufficio, e dove la stessa domanda non ha risposta.",
-      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti."
+      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti.",
+      "budgets": "Cosa incassano gli Stati e per cosa lo spendono, confrontabile tra luoghi"
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },
@@ -747,19 +749,8 @@
       "proposeChange": "Proporre una modifica di questo articolo",
       "money": {
         "title": "Su cosa poggia il bilancio pubblico",
-        "question": "Quanto ha raccolto ciascuna parte da sé, quanto ha ricevuto e da chi, e quanto ha speso?",
-        "year": "{side}, {year}",
-        "caption": "Entrate del bilancio dello Stato di {side} nel {year}, {total} in tutto, per provenienza",
-        "own": "Entrate proprie",
-        "from": "{from}",
-        "revenue": "Entrate",
-        "spent": "Spese",
-        "ownCovered": "Spese coperte da entrate proprie",
-        "receivedShare": "Entrate ricevute da altri",
-        "withoutTitle": "Spendere lo stesso senza quanto ricevuto",
-        "without": "Perché {side} spenda lo stesso con le sole entrate proprie, queste dovrebbero essere {multiple} volte quelle che erano; oppure le spese dovrebbero scendere del {cut}; oppure un misto delle due cose.",
-        "notForecast": "Un calcolo sulle cifre della legge di bilancio, non una previsione: non dice nulla di ciò che l'economia potrebbe raccogliere con altre regole, né di cosa si spenderebbe invece.",
-        "notRead": "Per {side} non è ancora stato letto alcun bilancio."
+        "notRead": "Per {side} non è ancora stato letto alcun bilancio.",
+        "open": "L'intero bilancio di {side}"
       }
     }
   },
@@ -1610,6 +1601,90 @@
       "gaps": "Cosa viene misurato",
       "places": "Luoghi",
       "law": "Diritto"
+    }
+  },
+  "Budgets": {
+    "kicker": "Bilanci pubblici",
+    "indexTitle": "Bilanci pubblici: cosa incassano gli Stati e per cosa lo spendono",
+    "indexIntro": "Ogni luogo di cui Solon detiene un bilancio: cosa è entrato e da dove, per cosa è stato speso, e se era in pareggio. Ogni cifra rimanda alla legge o all'istituto di statistica da cui è stata letta, e ogni bilancio può essere confrontato con qualsiasi altro secondo la stessa classificazione.",
+    "indexEmpty": "Solon non detiene ancora alcun bilancio.",
+    "columns": {
+      "place": "Luogo",
+      "year": "Anno",
+      "spending": "Spese",
+      "revenue": "Entrate",
+      "balance": "Saldo",
+      "largest": "Quota maggiore della spesa"
+    },
+    "title": "{place}: bilancio pubblico",
+    "intro": "Cosa ha incassato il governo di {place} e per cosa lo ha speso, secondo le cifre che pubblicano le sue leggi di bilancio o un istituto di statistica. Solon colloca ogni cifra sulla stessa classificazione internazionale, perché possa essere confrontata con qualsiasi altro luogo.",
+    "basis": {
+      "executed": "Consuntivo: cosa è entrato ed è stato speso",
+      "enacted": "Come approvato: cosa è stato stanziato"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Altri anni",
+    "figures": {
+      "revenue": "Entrate",
+      "spending": "Spese",
+      "balance": "Avanzo (+) o disavanzo (−)",
+      "ofGdp": "del PIL"
+    },
+    "spending": {
+      "title": "Per cosa si spende il denaro",
+      "caption": "{place}, {year}: spesa per funzione, come quota di tutta la spesa"
+    },
+    "income": {
+      "title": "Da dove viene il denaro",
+      "caption": "{place}, {year}: entrate per tipo, come quota di tutte le entrate"
+    },
+    "rest": "Non ripartito, o senza categoria",
+    "noBreakdown": "L'editore indica questo totale ma non lo ripartisce.",
+    "detailCaption": "{category} nel dettaglio, come quota di essa",
+    "reliance": {
+      "title": "Chi paga",
+      "question": "Quanto ha incassato il governo da sé, quanto ha ricevuto e da chi, e quanto ha speso?",
+      "own": "Incassato da sé",
+      "caption": "Entrate di {holder} nel {year}, {total} in tutto, per chi le ha fornite",
+      "ownCovered": "Spese coperte da entrate proprie",
+      "receivedShare": "Entrate ricevute da altri",
+      "withoutTitle": "Spendere lo stesso senza quanto ricevuto",
+      "without": "Perché {holder} spenda lo stesso con le sole entrate proprie, queste dovrebbero essere {multiple} volte quelle che erano; oppure le spese dovrebbero scendere del {cut}; oppure un misto delle due cose.",
+      "notForecast": "Un calcolo sulle cifre del bilancio stesso, non una previsione: non dice nulla di ciò che l'economia potrebbe raccogliere con altre regole, né di cosa si spenderebbe invece."
+    },
+    "history": {
+      "title": "Negli anni",
+      "caption": "{place}: entrate e spese, {from}–{to}",
+      "revenue": "Entrate",
+      "spending": "Spese"
+    },
+    "sources": {
+      "title": "Da dove vengono queste cifre",
+      "lines": "Le righe dell'editore ({count})",
+      "code": "Codice",
+      "line": "Riga",
+      "amount": "Importo",
+      "category": "Contato in",
+      "notPlaced": "Senza categoria",
+      "placement": "Come sono state collocate le righe",
+      "facts": "Serie lette da {publisher} il {date}.",
+      "translation": "Traduzione:",
+      "read": "letto il {date}",
+      "translatedBy": "Tradotto da {translator}"
+    },
+    "act": {
+      "title": "Cambiarlo",
+      "intro": "Questo denaro dovrebbe essere incassato o speso diversamente? Redigetelo come proposta: attesta un sostegno, va a chi decide e non è mai diritto.",
+      "propose": "Proporre una modifica di questo bilancio",
+      "proposeTitle": "{place}: il bilancio {year}",
+      "proposeBody": "Cosa dovrebbe cambiare nel bilancio di {place}, e perché: quali entrate, quali spese, di quanto. Cifre: {url}",
+      "compare": "Confrontare una funzione tra paesi"
+    },
+    "notHeld": "Solon non detiene ancora alcun bilancio per {place}.",
+    "placeCard": {
+      "title": "Bilancio pubblico",
+      "text": "Cosa incassa il governo di {place} e per cosa lo spende.",
+      "open": "Aprire il bilancio"
     }
   }
 }

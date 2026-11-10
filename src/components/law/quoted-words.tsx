@@ -1,24 +1,51 @@
 import { Link } from "@/i18n/navigation";
-import type { ContestProvision } from "@/lib/places/contested";
 import { localized } from "@/lib/places/place-view";
-import type { PlacesTranslator } from "./translator";
+import type { LocalizedText } from "@/lib/config/places/schema";
 
+/** An act in the register, by its authority and one identifier: the key a page resolves act ids by. */
 export const actKey = (act: { authority: string; scheme: string; value: string }) =>
   `${act.authority}:${act.scheme}:${act.value}`;
 
-/** One side's words on one question: the article, the words as read, a translation, the page. */
-export function ProvisionQuote({
-  provision,
+export interface QuotedWordsLabels {
+  translation: string;
+  read: (date: string) => string;
+  translatedBy: (translator: string) => string;
+  /** The link to propose a change to the article; absent where proposing makes no sense. */
+  proposeChange?: string;
+}
+
+export interface Quote {
+  text: string;
+  lang: string;
+  translation?: LocalizedText;
+  evidence: readonly { publisher: string; url: string; read: string }[];
+}
+
+/**
+ * Words quoted from a text: where they are (an article of an act Solon holds,
+ * linked), the words in their own language, a translation for a reader of
+ * another, who translated them when the quote is itself a translation, and
+ * every page they were read on with the day. One shape for every quotation
+ * Solon shows from the law, a budget or a constitution.
+ */
+export default function QuotedWords({
+  label,
+  quote,
   actId,
+  provision = null,
+  translator,
   locale,
-  t,
+  labels,
 }: {
-  provision: ContestProvision;
+  label: string;
+  quote: Quote;
   actId: string | null;
+  /** The publisher's anchor of the article in the held act. */
+  provision?: string | null;
+  translator?: string;
   locale: string;
-  t: PlacesTranslator;
+  labels: QuotedWordsLabels;
 }) {
-  const { quote } = provision;
   // A reader of the quote's own language needs no translation of it.
   const translation =
     quote.translation && quote.lang !== locale ? localized(quote.translation, locale) : null;
@@ -28,16 +55,16 @@ export function ProvisionQuote({
         {actId ? (
           <Link
             href={
-              provision.provision
-                ? `/law/${actId}?at=${encodeURIComponent(provision.provision)}#${provision.provision}`
+              provision
+                ? `/law/${actId}?at=${encodeURIComponent(provision)}#${provision}`
                 : `/law/${actId}`
             }
             className="hover:underline"
           >
-            {provision.label} →
+            {label} →
           </Link>
         ) : (
-          provision.label
+          label
         )}
       </figcaption>
       <blockquote
@@ -48,28 +75,26 @@ export function ProvisionQuote({
       </blockquote>
       {translation && translation !== quote.text && (
         <p className="mb-0 whitespace-pre-line pl-3 text-sm text-fg-secondary">
-          <span className="text-fg-tertiary">{t("contested.translation")} </span>
+          <span className="text-fg-tertiary">{labels.translation} </span>
           {translation}
         </p>
       )}
-      {actId && provision.topic !== "money" && (
+      {actId && labels.proposeChange && (
         <Link
           href={`/law/${actId}/amend`}
           className="inline-block pl-3 text-sm font-semibold text-fg-primary hover:underline"
         >
-          {t("contested.proposeChange")} →
+          {labels.proposeChange} →
         </Link>
       )}
       <ul className="mb-0 space-y-1 pl-3 text-xs text-fg-tertiary">
-        {provision.translator && (
-          <li>{t("contested.translatedBy", { translator: provision.translator })}</li>
-        )}
+        {translator && <li>{labels.translatedBy(translator)}</li>}
         {quote.evidence.map((e) => (
           <li key={e.url} className="break-words">
             <a href={e.url} className="underline" rel="noopener noreferrer">
               {e.publisher}
             </a>{" "}
-            · {t("contested.read", { date: e.read })}
+            · {labels.read(e.read)}
           </li>
         ))}
       </ul>

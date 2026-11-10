@@ -186,28 +186,6 @@ const SO_TAX_CODE_FILE = {
   unchecked: true as const,
 };
 
-const SO_BUDGET_2023 = {
-  publisher:
-    "Парламент Республики Южная Осетия: Закон «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the law approving the 2023 budget's execution), as read",
-  url: "https://parliamentrso.org/node/4876",
-  read: READ,
-  expect: [
-    "Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год",
-    "по доходам в сумме 9 108 338,6 тыс. рублей",
-    "9 234 425,6 тыс. рублей",
-    "Приложение №1, 2",
-  ],
-};
-
-/** Appendix 1, the revenue lines, a spreadsheet the law's page links (sha256 6344138c…2c4a on 2026-11-10). */
-const SO_BUDGET_2023_APPENDIX = {
-  publisher:
-    "Парламент Республики Южная Осетия: Приложение 1 к Закону «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the revenue lines, a spreadsheet), as read",
-  url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/prilozhenie_1_2.xlsx",
-  read: READ,
-  unchecked: true as const,
-};
-
 const PWC = (path: string, expect: string[]) => ({
   publisher: `PwC Worldwide Tax Summaries: Georgia (reviewed 2 September 2026), a summary of the law and not the law, as read`,
   url: `https://taxsummaries.pwc.com/georgia/${path}`,
@@ -469,93 +447,6 @@ export const CONTESTS = defineContests(CONTEST_TOPICS, [
           text: "The defence of Georgia shall be every citizen's duty. The procedure for performing military service shall be determined by law.",
           lang: "en",
           evidence: [GE_CONSTITUTION],
-        },
-      },
-    ],
-    ledgers: [
-      {
-        side: "rso",
-        year: 2023,
-        currency: "RUB",
-        unit: 1000,
-        revenue: 9108338.64705,
-        expenditure: 9234425.6,
-        lines: [
-          {
-            label: {
-              en: "Taxes and other own revenue",
-              de: "Steuern und andere eigene Einnahmen",
-              fr: "Impôts et autres recettes propres",
-              it: "Imposte e altre entrate proprie",
-              ru: "Налоговые и неналоговые доходы",
-            },
-            amount: 1707844.89695,
-            kind: "own",
-          },
-          {
-            label: {
-              en: "Financial aid for social and economic development",
-              de: "Finanzhilfe für die soziale und wirtschaftliche Entwicklung",
-              fr: "Aide financière au développement social et économique",
-              it: "Aiuto finanziario allo sviluppo sociale ed economico",
-              ru: "Финансовая помощь на социально-экономическое развитие",
-            },
-            amount: 6226347.16,
-            kind: "received",
-            from: {
-              en: "Russian Federation",
-              de: "Russische Föderation",
-              fr: "Fédération de Russie",
-              it: "Federazione Russa",
-              ru: "Российская Федерация",
-            },
-          },
-          {
-            label: {
-              en: "Financial aid for public investment",
-              de: "Finanzhilfe für öffentliche Investitionen",
-              fr: "Aide financière aux investissements publics",
-              it: "Aiuto finanziario agli investimenti pubblici",
-              ru: "Финансовая помощь на бюджетные инвестиции",
-            },
-            amount: 1164146.5901,
-            kind: "received",
-            from: {
-              en: "Russian Federation",
-              de: "Russische Föderation",
-              fr: "Fédération de Russie",
-              it: "Federazione Russa",
-              ru: "Российская Федерация",
-            },
-          },
-          {
-            label: {
-              en: "Grants from non-state organisations",
-              de: "Zuwendungen nichtstaatlicher Organisationen",
-              fr: "Dons d'organisations non étatiques",
-              it: "Contributi di organizzazioni non statali",
-              ru: "Безвозмездные поступления от негосударственных организаций",
-            },
-            amount: 10000,
-            kind: "received",
-            from: {
-              en: "Non-state organisations",
-              de: "Nichtstaatliche Organisationen",
-              fr: "Organisations non étatiques",
-              it: "Organizzazioni non statali",
-              ru: "Негосударственные организации",
-            },
-          },
-        ],
-        label: "Law on the execution of the State Budget for 2023, Art. 1 and Appendix 1",
-        act: { authority: "rso", scheme: "publisher_ref", value: "parliamentrso:4876" },
-        quote: {
-          text: "Утвердить отчет об исполнении Государственного бюджета Республики Южная Осетия за 2023 год по доходам в сумме 9 108 338,6 тыс. рублей, по расходам в сумме 9 234 425,6 тыс. рублей с превышением расходов над доходами (дефицит Государственного бюджета) в сумме 126 087,0 тыс. рублей",
-          lang: "ru",
-          translation: {
-            en: "To approve the report on the execution of the State Budget of the Republic of South Ossetia for 2023, with revenue of 9,108,338.6 thousand roubles and expenditure of 9,234,425.6 thousand roubles, expenditure exceeding revenue (a deficit of the State Budget) by 126,087.0 thousand roubles",
-          },
-          evidence: [SO_BUDGET_2023, SO_BUDGET_2023_APPENDIX],
         },
       },
     ],

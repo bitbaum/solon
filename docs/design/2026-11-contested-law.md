@@ -159,8 +159,9 @@ and leaving (SO Art. 24; GE Art. 14), the duty to defend (SO Art. 42; GE
 Art. 70). Taxes: South Ossetia's Tax Code, Part Two (Arts. 166, 228, 286, read
 from the Word file its Parliament links), against PwC's summary of Georgia's
 rates, cited as a summary and not the law. Money: South Ossetia's law on the
-2023 budget's execution (Art. 1 and Appendix 1), as a ledger whose lines must
-add up to the total the law states.
+2023 budget's execution (Art. 1 and Appendix 1), held as a budget document and
+shown through the budget pages' own components (`2026-11-budgets.md`): each
+side's budget is found by its place, so Georgia's appears the day Solon holds it.
 
 What it already shows a reader, from the texts alone: both constitutions forbid
 taking citizenship away; South Ossetia's allows dual citizenship in the
