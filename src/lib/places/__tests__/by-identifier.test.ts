@@ -39,11 +39,12 @@ describe("pickHolder", () => {
 });
 
 /**
- * `/places/by/…`, `/places/world`, `/places/coverage` and `/places/tax` are
+ * `/places/by/…`, `/places/coverage` and `/places/tax` are
  * fixed segments, and `/api/v1/places/atlas` and `/map` likewise: a place whose
  * first path segment is one of them could never be reached.
  */
-const RESERVED = ["by", "world", "coverage", "tax", "atlas", "map", "compare", "geography"];
+// `world` is not here on purpose: it is the world pack's own root, and /places/world is its page.
+const RESERVED = ["by", "coverage", "tax", "atlas", "map", "compare", "geography"];
 
 describe("reserved path segments", () => {
   it("no pack key or country slug is one", () => {
