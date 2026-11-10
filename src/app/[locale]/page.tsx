@@ -198,7 +198,7 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
           <h2 className="headline-caps mt-5 text-4xl sm:text-5xl lg:text-6xl">{t("hire.title")}</h2>
           <p className="mt-6 max-w-xl text-lg text-fg-primary">{t("hire.body")}</p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link href={HIRE_HREF} className="btn-frame-accent">
+            <Link href={HIRE_HREF} className="btn-frame">
               {t("hire.talk")}
             </Link>
             <Link href="/orgs/new" className="btn-frame">
