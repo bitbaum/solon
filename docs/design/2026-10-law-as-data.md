@@ -36,7 +36,15 @@ this design keeps.
    applied on 2026-03-01" has one answer.
 4. **Language belongs to the version.** Switzerland's federal acts are authentic
    in German, French and Italian; some cantons are bilingual; Liechtenstein
-   publishes in German. A version is one language. We do not translate.
+   publishes in German. A version is one language, and no translation is ever
+   stored as a version. Readers read in their own language all the same
+   (owner's decision, 2026-11-10: a page half in a language the reader cannot
+   read is not usable): a version in the reader's language when the publisher
+   has one, else a machine translation shown labelled as such, with the
+   authentic text one click away. Translations are a cache of their own
+   (`text_translations`, keyed by the sha256 of the words they translate,
+   `src/lib/law/translate.ts`), checked before they are kept (one per passage,
+   every number kept), never the law.
 5. **Where it applies is derived, not stored.** An act applies in the place
    that enacted it and in every place inside it. A cantonal act applies in
    the canton's communes; a federal act everywhere in the pack. The chain from

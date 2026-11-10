@@ -4,7 +4,7 @@
  * every category is one series, so adding a category adds its metric, its
  * request and its place on every budget page, with nothing listed twice.
  */
-import { budgetBalanceKey, budgetMetricKey } from "@/lib/budgets/scopes";
+import { budgetBalanceKey, budgetMetricKey, type BudgetMeasureKey } from "@/lib/budgets/scopes";
 import type { Taxonomy } from "@/lib/budgets/taxonomy";
 import { COFOG } from "./cofog";
 import { ESA_REVENUE } from "./revenue";
@@ -58,35 +58,53 @@ export interface EurostatRequest {
   dimension: string;
   filters: Readonly<Record<string, string>>;
   taxonomy: Taxonomy;
+  /** How the figures are measured, and what a published figure is divided by to store it. */
+  measure: BudgetMeasureKey;
+  divideBy: number;
   /** Series read beside the taxonomy's own, by code. */
   extra: readonly { code: string; metric: string }[];
 }
 
-/** In per cent of GDP: comparable across countries and currencies without a rate of exchange. */
-const PER_CENT_OF_GDP = { unit: "PC_GDP", sector: "S13" } as const;
+const GENERAL = { sector: "S13" } as const;
 
-export const EUROSTAT_REQUESTS: readonly EurostatRequest[] = [
-  {
-    dataset: "gov_10a_exp",
-    dimension: "cofog99",
-    filters: { ...PER_CENT_OF_GDP, na_item: "TE" },
-    taxonomy: COFOG,
-    extra: [],
-  },
-  {
-    dataset: "gov_10a_main",
-    dimension: "na_item",
-    filters: PER_CENT_OF_GDP,
-    taxonomy: ESA_REVENUE,
-    extra: [{ code: "B9", metric: budgetBalanceKey(GENERAL_GOVERNMENT.key) }],
-  },
-];
+/**
+ * Each dataset twice: in per cent of GDP, comparable across countries and
+ * years without a rate of exchange (stored as a ratio), and in million euro,
+ * so a reader sees the money itself, converted at Eurostat's own rates.
+ */
+const MEASURES = [
+  { measure: "share", unit: "PC_GDP", divideBy: 100 },
+  { measure: "meur", unit: "MIO_EUR", divideBy: 1 },
+] as const;
+
+export const EUROSTAT_REQUESTS: readonly EurostatRequest[] = MEASURES.flatMap(
+  ({ measure, unit, divideBy }) => [
+    {
+      dataset: "gov_10a_exp",
+      dimension: "cofog99",
+      filters: { ...GENERAL, unit, na_item: "TE" },
+      taxonomy: COFOG,
+      measure,
+      divideBy,
+      extra: [],
+    },
+    {
+      dataset: "gov_10a_main",
+      dimension: "na_item",
+      filters: { ...GENERAL, unit },
+      taxonomy: ESA_REVENUE,
+      measure,
+      divideBy,
+      extra: [{ code: "B9", metric: budgetBalanceKey(GENERAL_GOVERNMENT.key, measure) }],
+    },
+  ],
+);
 
 /** Every series of a request: each category of its taxonomy, then the extras. */
 export const seriesOf = (r: EurostatRequest) => [
   ...r.taxonomy.categories.map((c) => ({
     code: c.code,
-    metric: budgetMetricKey(GENERAL_GOVERNMENT.key, r.taxonomy, c.code),
+    metric: budgetMetricKey(GENERAL_GOVERNMENT.key, r.taxonomy, c.code, r.measure),
   })),
   ...r.extra,
 ];

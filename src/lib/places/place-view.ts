@@ -101,23 +101,31 @@ export function localized(text: LocalizedText, locale: string): string {
   return text[locale] ?? text.en ?? Object.values(text)[0] ?? "";
 }
 
-/** A place's own name for a reader: in their language, else the pack's, else any. */
+/**
+ * A place's name for a reader, so a page reads in one language: its own name
+ * in the reader's language; else the name the reader's language uses for it
+ * (Tskhinval for an English reader, never город Цхинвал); else its own name
+ * in the pack's languages; else any. A historical name is never shown as the
+ * current one. Its own names stay listed on its page with their languages.
+ */
 export function displayName(
   names: readonly ChainName[],
   locale: string,
   packLocales: readonly string[],
 ): string {
-  const own = names.filter((n) => n.nameType === "self");
-  const pool = own.length > 0 ? own : names;
-  for (const wanted of [locale, ...packLocales]) {
-    const match =
-      pool.find((n) => n.locale === wanted && n.script === null) ??
-      pool.find((n) => n.locale === wanted);
-    if (match) {
-      return match.name;
-    }
-  }
-  return pool[0]?.name ?? "";
+  const current = names.filter((n) => n.nameType !== "historical");
+  const own = current.filter((n) => n.nameType === "self");
+  const inLocale = (pool: readonly ChainName[], wanted: string) =>
+    pool.find((n) => n.locale === wanted && n.script === null) ??
+    pool.find((n) => n.locale === wanted);
+  const found =
+    inLocale(own, locale) ??
+    inLocale(current, locale) ??
+    packLocales.map((l) => inLocale(own, l)).find(Boolean) ??
+    own[0] ??
+    current[0] ??
+    names[0];
+  return found?.name ?? "";
 }
 
 export function placeView(input: PlaceViewInput): PlaceView | null {

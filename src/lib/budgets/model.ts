@@ -70,6 +70,8 @@ export interface Budget {
   expenditure: ReadonlyMap<string, number>;
   /** Revenue less expenditure, when the publisher states it. */
   balance: number | null;
+  /** The economy's output that year in the budget's own money, when known, so a figure can be read as a share of it. */
+  gdp: number | null;
   /** The publisher's own lines, for a budget read from a document. */
   lines: readonly PublisherLine[];
   sources: readonly BudgetSourceRef[];

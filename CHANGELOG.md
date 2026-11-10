@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **One currency, one language.** Money on the budget and comparison pages is shown in the
+  currency you pick (francs by default, or euro, dollars, pounds, roubles, lari), converted at
+  that year's average rate from Eurostat and, for the rouble since 2022, the Bank of Russia;
+  each page says from what it was converted. A law in another language reads in yours: a
+  machine translation, marked as one, with the authentic text a click away, and titles in
+  lists translated too. Places are named in your language (South Ossetia, Tskhinval), not only
+  in their own. Codes South Ossetia's Parliament publishes as Word files are read from the
+  files, article by article. {#budgets-money} {#law-translated} {#law-documents}
+
 - **Budgets: what governments raise and what they spend it on.** `/budgets` lists every place
   Solon holds a budget for, and each opens on one page: revenue, spending and the balance; what
   the money is spent on, every function opened into its parts (old-age pensions within social

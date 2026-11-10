@@ -52,6 +52,17 @@ describe("displayName", () => {
     expect(displayName(names, "fr", ["en"])).toBe("Northshire");
     expect(displayName(names, "ru", ["de"])).toBe("Nordgrafschaft");
   });
+
+  it("uses the reader's language for a place whose own name is in another, never a historical name", () => {
+    const tskhinval = [
+      { locale: "ru", script: "Cyrl", name: "город Цхинвал", nameType: "self" as const },
+      { locale: "en", script: "Latn", name: "Tskhinval", nameType: "common" as const },
+      { locale: "de", script: "Latn", name: "Zchinwali", nameType: "historical" as const },
+    ];
+    expect(displayName(tskhinval, "en", ["ru"])).toBe("Tskhinval");
+    expect(displayName(tskhinval, "ru", ["ru"])).toBe("город Цхинвал");
+    expect(displayName(tskhinval, "de", ["ru"])).toBe("город Цхинвал");
+  });
 });
 
 describe("localized", () => {

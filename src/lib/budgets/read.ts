@@ -9,8 +9,8 @@ import { BUDGET_DOCUMENTS, BUDGET_TAXONOMIES } from "@/lib/config/budgets";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
 import { budgetOfDocument, type Taxonomies } from "./documents";
-import { sameHolder, type Budget, type PlaceRef } from "./model";
-import { budgetBalanceKey, parseBudgetMetricKey } from "./scopes";
+import { sameHolder, type Budget, type BudgetSourceRef, type PlaceRef } from "./model";
+import { parseBudgetMetricKey, type BudgetMeasureKey } from "./scopes";
 
 export interface BudgetFactRow {
   holder: PlaceRef;
@@ -22,64 +22,100 @@ export interface BudgetFactRow {
   retrievedAt: string;
 }
 
-/** Facts to budgets: one per holder, scope and year, every figure on its taxonomy's code. */
+interface Gathered {
+  holder: PlaceRef;
+  scope: string;
+  year: number;
+  figures: Record<
+    BudgetMeasureKey,
+    { revenue: Map<string, number>; expenditure: Map<string, number>; balance: number | null }
+  >;
+  sources: BudgetSourceRef[];
+}
+
+/**
+ * Facts to budgets: one per holder, scope and year, every figure on its
+ * taxonomy's code. Where the amounts are held (million euro) the budget is in
+ * money and knows its GDP (an amount over the same figure's share of GDP), so
+ * shares of GDP can still be shown; where only shares are held it is in shares.
+ */
 export function budgetsFromFacts(
   rows: readonly BudgetFactRow[],
   taxonomies: Taxonomies = BUDGET_TAXONOMIES,
 ): Budget[] {
-  const byKey = new Map<
-    string,
-    Budget & { revenue: Map<string, number>; expenditure: Map<string, number> }
-  >();
+  const byKey = new Map<string, Gathered>();
+  const empty = () => ({
+    revenue: new Map<string, number>(),
+    expenditure: new Map<string, number>(),
+    balance: null,
+  });
   for (const row of rows) {
     const parsed = parseBudgetMetricKey(row.metric);
-    const balanceScope = /^budget\.([a-z0-9_]+)\.balance$/.exec(row.metric)?.[1];
-    const scope = parsed?.scope ?? balanceScope;
-    if (!scope) continue;
-    const key = `${row.holder.scheme}:${row.holder.value}:${scope}:${row.year}`;
-    let budget = byKey.get(key);
-    if (!budget) {
-      budget = {
+    if (!parsed) continue;
+    const key = `${row.holder.scheme}:${row.holder.value}:${parsed.scope}:${row.year}`;
+    let gathered = byKey.get(key);
+    if (!gathered) {
+      gathered = {
         holder: row.holder,
-        scope,
+        scope: parsed.scope,
         year: row.year,
-        basis: "executed",
-        // Eurostat publishes shares of GDP to one decimal of a per cent.
-        measure: { kind: "share_of_gdp", precision: 0.001 },
-        revenue: new Map(),
-        expenditure: new Map(),
-        balance: null,
-        lines: [],
+        figures: { share: empty(), meur: empty() },
         sources: [],
       };
-      byKey.set(key, budget);
+      byKey.set(key, gathered);
     }
-    if (!budget.sources.some((s) => s.key === row.sourceKey)) {
-      budget.sources = [
-        ...budget.sources,
-        {
-          kind: "facts",
-          key: row.sourceKey,
-          publisher: row.sourceKey,
-          url: row.url,
-          read: row.retrievedAt,
-        },
-      ];
+    if (!gathered.sources.some((s) => s.key === row.sourceKey)) {
+      gathered.sources.push({
+        kind: "facts",
+        key: row.sourceKey,
+        publisher: row.sourceKey,
+        url: row.url,
+        read: row.retrievedAt,
+      });
     }
-    if (row.metric === budgetBalanceKey(scope)) {
-      budget.balance = row.value;
+    const figures = gathered.figures[parsed.measure];
+    if (parsed.side === null) {
+      figures.balance = row.value;
       continue;
     }
-    if (!parsed) continue;
     const taxonomy = taxonomies[parsed.side];
     const code =
       parsed.code === "total"
         ? taxonomy.total
         : taxonomy.categories.find((c) => c.code.toLowerCase() === parsed.code)?.code;
-    if (code)
-      (parsed.side === "revenue" ? budget.revenue : budget.expenditure).set(code, row.value);
+    if (code) figures[parsed.side].set(code, row.value);
   }
-  return [...byKey.values()];
+  return [...byKey.values()].map((g) => {
+    const money = g.figures.meur;
+    const share = g.figures.share;
+    const inMoney = money.expenditure.size > 0 || money.revenue.size > 0;
+    const figures = inMoney ? money : share;
+    // GDP from a total held both ways: the amount over its share.
+    const pairs: [number | undefined, number | undefined][] = [
+      [
+        money.expenditure.get(taxonomies.expenditure.total),
+        share.expenditure.get(taxonomies.expenditure.total),
+      ],
+      [money.revenue.get(taxonomies.revenue.total), share.revenue.get(taxonomies.revenue.total)],
+    ];
+    const pair = pairs.find(([m, s]) => m !== undefined && s !== undefined && s > 0);
+    return {
+      holder: g.holder,
+      scope: g.scope,
+      year: g.year,
+      basis: "executed",
+      measure: inMoney
+        ? { kind: "money", currency: "EUR", unit: 1_000_000 }
+        : // Eurostat publishes shares of GDP to one decimal of a per cent.
+          { kind: "share_of_gdp", precision: 0.001 },
+      revenue: figures.revenue,
+      expenditure: figures.expenditure,
+      balance: figures.balance,
+      gdp: inMoney && pair ? pair[0]! / pair[1]! : null,
+      lines: [],
+      sources: g.sources,
+    };
+  });
 }
 
 /** The budget facts of the places that carry these references (all such places when none is given). */

@@ -2,6 +2,9 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { PLACE_ACTS_PER_PAGE, chainOf } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
+import { getLocale } from "next-intl/server";
+import { db } from "@/lib/db/client";
+import { translatedTitles } from "@/lib/law/translate";
 import ActRow from "./act-row";
 import type { LawTranslator } from "./coverage-report";
 import PlaceTrail from "./place-trail";
@@ -28,6 +31,8 @@ export default async function PlacePage({
   t,
 }: PlacePageProps) {
   const names = await readerAuthorityNames();
+  // Titles in the reader's language where Solon holds a translation; the authentic title stays beneath.
+  const titles = await translatedTitles(db, acts, await getLocale());
   const name = authorityName(names, authority);
   const above = chainOf(authority).slice(1);
   const pages = Math.max(1, Math.ceil(total / PLACE_ACTS_PER_PAGE));
@@ -80,7 +85,7 @@ export default async function PlacePage({
           {acts.length > 0 && (
             <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
               {acts.map((hit) => (
-                <ActRow key={hit.id} hit={hit} t={t} />
+                <ActRow key={hit.id} hit={hit} translatedTitle={titles.get(hit.id)} t={t} />
               ))}
             </ul>
           )}

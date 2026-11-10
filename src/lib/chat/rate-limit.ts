@@ -2,7 +2,7 @@
 const windows = new Map<string, { at: number; count: number }>();
 export function allowAssistantRequest(
   actorId: string,
-  bucket: "chat" | "dictation" | "law" | "mcp" | "stats" | "research",
+  bucket: "chat" | "dictation" | "law" | "mcp" | "stats" | "research" | "translate",
   now = Date.now(),
 ): boolean {
   for (const [key, value] of windows) if (now - value.at >= 600000) windows.delete(key);
@@ -10,7 +10,9 @@ export function allowAssistantRequest(
   const window = windows.get(key) ?? { at: now, count: 0 };
   if (
     window.count >=
-      { chat: 20, dictation: 40, law: 12, mcp: 300, stats: 12, research: 4 }[bucket] ||
+      { chat: 20, dictation: 40, law: 12, mcp: 300, stats: 12, research: 4, translate: 60 }[
+        bucket
+      ] ||
     (!windows.has(key) && windows.size >= 10000)
   )
     return false;

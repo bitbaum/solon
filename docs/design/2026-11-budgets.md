@@ -97,6 +97,22 @@ src/lib/config/budgets/               src/lib/budgets/              src/componen
   (`enacted`), not mixed with the outturn. 81% of revenue was aid from the
   Russian Federation.
 
+## 4a. One currency for the reader **[built]**
+
+Every amount is shown in the currency the reader chooses (CHF by default; EUR,
+USD, GBP, RUB, GEL offered, `?in=`), converted at the budget year's average
+rate, and the page says from what and whose rate. A budget read from Eurostat
+is held in million euro (Eurostat's own conversion, `MIO_EUR`) beside its share
+of GDP; one read from a law in its own currency. Rates are data
+(`data/money/rates.json`, `pnpm run money:rates`): Eurostat's annual averages of
+the euro reference rates for 151 currencies, and, for the rouble after 2021
+(Eurostat stops there), the Bank of Russia's official euro rate averaged over
+each year. A year with no rate is not converted at another year's rate: the
+amount stays in its own currency and the page says why. The conversion code
+(`src/lib/money/`) imports nothing from Solon, so it can become the fleet's
+package for money (OrangeCat converts live Bitcoin prices, a different job
+that can sit beside it); that needs a repository of its own.
+
 ## 5. Adding a place
 
 - **A country Eurostat covers**: nothing; it is already generated.
@@ -127,9 +143,8 @@ amendment engine (`2026-11-amending-the-law.md`).
    accounts, often published as open data), and Solon organizations, whose
    budgets are proposals they vote on (`ROADMAP.md#commons`). The holder is
    already a place reference; an organization needs a holder scheme of its own.
-3. **Money as well as shares**: amounts in the national currency beside the
-   shares of GDP (Eurostat's `MIO_NAC`), as a second measure on the same
-   budget.
+3. **Money as well as shares** **[built]**: amounts beside the shares of GDP, in
+   the reader's currency (§4a).
 4. **More publishers**: the IMF's Government Finance Statistics for the
    countries Eurostat does not cover, read for its licence first.
 5. **Proposals with arithmetic** (§6), and a comparison page: two or more

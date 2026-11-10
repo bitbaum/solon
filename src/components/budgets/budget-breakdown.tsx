@@ -1,6 +1,6 @@
 import { BarChart } from "@bitbaum/chartkit/react";
 import { breakdown } from "@/lib/budgets/analysis";
-import { formatBudgetValue } from "@/lib/budgets/format";
+import { formatBudgetValue, type MoneyDisplay } from "@/lib/budgets/format";
 import type { Budget } from "@/lib/budgets/model";
 import { categoryLabel, categoryOf, type Taxonomy } from "@/lib/budgets/taxonomy";
 import { localized } from "@/lib/places/place-view";
@@ -14,7 +14,7 @@ interface BudgetBreakdownProps {
   caption: string;
   /** Where a category's own series can be charted across places, when it has one. */
   statisticHref?: (code: string) => string | undefined;
-  locale: string;
+  display: MoneyDisplay;
   t: BudgetsTranslator;
 }
 
@@ -30,16 +30,17 @@ export default function BudgetBreakdown({
   title,
   caption,
   statisticHref,
-  locale,
+  display,
   t,
 }: BudgetBreakdownProps) {
+  const { locale } = display;
   const top = breakdown(budget, taxonomy);
   if (top.value === null || top.rows.length === 0) return null;
   const nameOf = (code: string) => {
     const c = categoryOf(taxonomy, code);
     return c ? localized(categoryLabel(c), locale) : code;
   };
-  const amount = (v: number) => formatBudgetValue(v, budget.measure, locale);
+  const amount = (v: number) => formatBudgetValue(v, budget, display);
   const rows = (b: ReturnType<typeof breakdown>, linked: boolean) => [
     ...b.rows.map((r) => ({
       label: nameOf(r.code),

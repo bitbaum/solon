@@ -1,6 +1,6 @@
 import { ShareBars } from "@bitbaum/chartkit/react";
 import type { SelfReliance } from "@/lib/budgets/analysis";
-import { formatBudgetValue, formatShare } from "@/lib/budgets/format";
+import { formatBudgetValue, formatShare, type MoneyDisplay } from "@/lib/budgets/format";
 import type { Budget } from "@/lib/budgets/model";
 import { localized } from "@/lib/places/place-view";
 import FigureTiles from "./figure-tiles";
@@ -16,17 +16,18 @@ export default function BudgetSelfReliance({
   reliance: r,
   holder,
   revenue,
-  locale,
+  display,
   t,
 }: {
   budget: Budget;
   reliance: SelfReliance;
   holder: string;
   revenue: number;
-  locale: string;
+  display: MoneyDisplay;
   t: BudgetsTranslator;
 }) {
-  const amount = (v: number) => formatBudgetValue(v, budget.measure, locale);
+  const { locale } = display;
+  const amount = (v: number) => formatBudgetValue(v, budget, display);
   const times = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
   return (
     <section className="space-y-5 rounded-surface border border-default bg-surface-base p-5 sm:p-6">

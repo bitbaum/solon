@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import type { ContestSideView, ContestView } from "@/lib/places/contest-view";
 import QuotedWords, { actKey } from "@/components/law/quoted-words";
 import type { BudgetsTranslator } from "@/components/budgets/translator";
+import type { MoneyDisplay } from "@/lib/budgets/format";
 import type { BudgetSummary } from "@/lib/budgets/summary";
 import ContestMoney from "./contest-money";
 import { PlaceTrail } from "./place-head";
@@ -16,6 +17,8 @@ interface ContestPageProps {
   locale: string;
   /** Each side's budget, when Solon holds one. */
   money: readonly { side: ContestSideView; summary: BudgetSummary | null }[];
+  /** How money is shown to the reader. */
+  display: MoneyDisplay;
   t: PlacesTranslator;
   tb: BudgetsTranslator;
 }
@@ -51,7 +54,15 @@ function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
  * other's, in a fixed order (the side that governs, then the claimant). A side
  * with nothing read says so. Solon's words only frame; the rest is quotation.
  */
-export default function ContestPage({ view, actIds, money, locale, t, tb }: ContestPageProps) {
+export default function ContestPage({
+  view,
+  actIds,
+  money,
+  display,
+  locale,
+  t,
+  tb,
+}: ContestPageProps) {
   const quoteLabels = {
     translation: t("contested.translation"),
     read: (date: string) => t("contested.read", { date }),
@@ -132,7 +143,7 @@ export default function ContestPage({ view, actIds, money, locale, t, tb }: Cont
           </section>
         ))}
 
-        <ContestMoney sides={money} locale={locale} t={t} tb={tb} />
+        <ContestMoney sides={money} display={display} t={t} tb={tb} />
 
         <section
           aria-labelledby="contest-act"

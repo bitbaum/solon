@@ -4,6 +4,7 @@ import { toLocale } from "@/i18n/routing";
 import BudgetPage from "@/components/budgets/budget-page";
 import { actKey } from "@/components/law/quoted-words";
 import { BUDGET_DOCUMENTS } from "@/lib/config/budgets";
+import { RATES, displayCurrencyOf } from "@/lib/config/money";
 import { regionName, worldRegion } from "@/lib/config/world";
 import { db } from "@/lib/db/client";
 import { holderOfRegion } from "@/lib/budgets/holders";
@@ -14,7 +15,7 @@ import { findAct } from "@/lib/statistics/read";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; slug: string }>;
-type SearchParams = Promise<{ year?: string }>;
+type SearchParams = Promise<{ year?: string; in?: string }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
@@ -40,8 +41,10 @@ export default async function PlaceBudgetPage({
   const region = worldRegion(decodeURIComponent(slug));
   const holder = region ? holderOfRegion(region) : null;
   if (!region || !holder) notFound();
-  const year = Number((await searchParams).year) || undefined;
-  const sections = budgetSections(await loadBudgetsOf(db, holder), year);
+  const query = await searchParams;
+  const year = Number(query.year) || undefined;
+  const display = { locale, currency: displayCurrencyOf(query.in), rates: RATES };
+  const sections = budgetSections(await loadBudgetsOf(db, holder), display, year);
   // The budget laws these sections were read from, so their quotes open the act in the register.
   const keys = new Set(sections.flatMap((s) => s.budget.sources.map((source) => source.key)));
   const actIds = new Map<string, string>();
@@ -56,8 +59,9 @@ export default async function PlaceBudgetPage({
       place={regionName(region, locale)}
       slug={region.slug}
       sections={sections}
+      year={year}
       actIds={actIds}
-      locale={locale}
+      display={display}
       t={t}
     />
   );

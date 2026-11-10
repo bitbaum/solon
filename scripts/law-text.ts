@@ -8,7 +8,7 @@
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text parliamentrso [--limit 60] [--term 2] [--dry-run]   (South Ossetia: the Parliament's register of acts, at the site's 90-second crawl-delay; --limit is listing pages, 10 acts each)
  *   pnpm run law:text presidentruo [--limit 30] [--dry-run]   (South Ossetia: the President's register of decrees, treaties and documents from the site's API, 100 a page)
- *   pnpm run law:text parliamentrso-text|presidentruo-text [--limit 50] [--act 89961,89934] [--dry-run]   (South Ossetia: the text of the acts the register holds, cut into articles; the Parliament's at its 90-second crawl-delay, the President's a second apart)
+ *   pnpm run law:text parliamentrso-text|presidentruo-text [--limit 50] [--act 89961,89934] [--stubs] [--dry-run]   (South Ossetia: the text of the acts the register holds, cut into articles; the Parliament's at its 90-second crawl-delay, the President's a second apart; a page that only links the act's Word file is read from the file, and --stubs reads again the acts held only as such a page)
  *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text ukleg [--limit 1000] [--type ukpga,uksi] [--year 2018,2024] [--dry-run]   (United Kingdom: Public General Acts and Statutory Instruments from legislation.gov.uk, a year at a time, newest first; paced by the site's robots.txt crawl-delay, 5 seconds when checked)
  *   pnpm run law:text ris [--limit 500] [--act 10001622,10000138] [--dry-run]   (Austria: the consolidated federal acts in force from the RIS, in German; a dry run reads and cuts `limit` texts and stores nothing)
@@ -224,6 +224,7 @@ async function main(): Promise<number> {
       {
         limit: flag("limit") ? Number(flag("limit")) : undefined,
         ids: flag("act")?.split(","),
+        stubs: args.includes("--stubs"),
         snapshots: defaultSnapshotStore(),
         dryRun: args.includes("--dry-run"),
         onProgress: (message) => console.error(message),

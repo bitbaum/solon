@@ -4,6 +4,9 @@ import type { Range } from "@bitbaum/searchkit";
 import type { ProvisionHit } from "@/lib/law/search";
 import type { PlaceNode } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
+import { getLocale } from "next-intl/server";
+import { db } from "@/lib/db/client";
+import { translatedTitles } from "@/lib/law/translate";
 import ActRow from "./act-row";
 import type { LawTranslator } from "./coverage-report";
 import Excerpt from "./excerpt";
@@ -57,6 +60,8 @@ export default async function LawIndex({
   t,
 }: LawIndexProps) {
   const names = await readerAuthorityNames();
+  // Titles in the reader's language where Solon holds a translation; the authentic title stays beneath.
+  const titles = await translatedTitles(db, hits ?? [], await getLocale());
   const searched = hits !== null;
   const nothing = searched && hits.length === 0 && textHits.length === 0;
   const where = authority ? authorityName(names, authority) : null;
@@ -142,7 +147,7 @@ export default async function LawIndex({
                 </h2>
                 <ul className={listClass}>
                   {hits.map((hit) => (
-                    <ActRow key={hit.id} hit={hit} t={t} />
+                    <ActRow key={hit.id} hit={hit} translatedTitle={titles.get(hit.id)} t={t} />
                   ))}
                 </ul>
               </section>

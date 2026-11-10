@@ -6,6 +6,10 @@ import { placesConfig } from "@/lib/config/places";
 import { WORLD } from "@/lib/config/world";
 import { breakdown, history, latestWith, pickBudget, selfReliance } from "../analysis";
 import { budgetIndexRows, budgetSections } from "../page";
+import { conversionOf, formatBudgetValue, ofGdp } from "../format";
+import { RATES } from "@/lib/config/money";
+
+const DISPLAY = { locale: "en", currency: "CHF", rates: RATES };
 import { budgetOfDocument, budgetDocumentSchema, documentProblems } from "../documents";
 import { holderOfRegion, regionOfHolder } from "../holders";
 import type { Budget } from "../model";
@@ -84,6 +88,7 @@ describe("the taxonomies", () => {
           scope: "gg",
           side: t.side,
           code: c.code === t.total ? "total" : c.code.toLowerCase(),
+          measure: "share",
         });
       }
     }
@@ -268,6 +273,7 @@ describe("which budget a page shows", () => {
         ])
       : new Map(),
     balance: -0.03,
+    gdp: null,
     lines: [],
     sources: [],
   });
@@ -280,24 +286,107 @@ describe("which budget a page shows", () => {
   });
 
   it("the page's sections and the index's rows show the same year", () => {
-    const [section] = budgetSections(budgets);
+    const [section] = budgetSections(budgets, DISPLAY);
     expect(section?.budget.year).toBe(2024);
     expect(section?.years).toEqual([2025, 2024, 2023]);
     expect(section?.history.spending.map((p) => p.year)).toEqual([2023, 2024]);
-    const [row] = budgetIndexRows(budgets, "en");
+    const [row] = budgetIndexRows(budgets, DISPLAY);
     expect(row).toMatchObject({ slug: "germany", year: 2024, spending: "49%", balance: "-3%" });
     expect(row?.largest).toMatch(/^Social protection · 41%$/);
   });
 
   it("orders a holder's sections by scope, outturn before allocation", () => {
-    const so = budgetSections([
-      document("rso-state-2023-enacted"),
-      document("rso-state-2023-executed"),
-    ]);
+    const so = budgetSections(
+      [document("rso-state-2023-enacted"), document("rso-state-2023-executed")],
+      DISPLAY,
+    );
     expect(so.map((s) => [s.scope.key, s.basis])).toEqual([
       ["state", "executed"],
       ["state", "enacted"],
     ]);
     expect(so[0]?.reliance?.receivedShare).toBeCloseTo(0.8125, 3);
+  });
+});
+
+describe("one currency for the reader", () => {
+  const ch = { scheme: "iso_3166_1", value: "DE" };
+  const row = (metric: string, value: number) => ({
+    holder: ch,
+    metric,
+    year: 2023,
+    value,
+    sourceKey: "eurostat-gov-de",
+    url: null,
+    retrievedAt: "2026-11-10",
+  });
+  const [de] = budgetsFromFacts([
+    row("budget.gg.expenditure.total", 0.481),
+    row("budget.gg.expenditure.total.meur", 2_000_000),
+    row("budget.gg.expenditure.gf10.meur", 800_000),
+    row("budget.gg.revenue.total.meur", 1_900_000),
+    row("budget.gg.balance.meur", -100_000),
+  ]);
+
+  it("a budget held in million euro is in money, and knows its GDP from a total held both ways", () => {
+    expect(de?.measure).toEqual({ kind: "money", currency: "EUR", unit: 1_000_000 });
+    expect(de?.expenditure.get("GF10")).toBe(800_000);
+    expect(de?.balance).toBe(-100_000);
+    expect(de?.gdp).toBeCloseTo(2_000_000 / 0.481, 3);
+    expect(ofGdp(2_000_000, de!)).toBeCloseTo(0.481, 6);
+  });
+
+  it("shows money in the reader's currency at the budget year's rate, and says from what", () => {
+    const chf = 2_000_000e6 * RATES.rates.CHF!["2023"]!.perBase;
+    expect(formatBudgetValue(2_000_000, de!, DISPLAY)).toBe(
+      new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "CHF",
+        notation: "compact",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(chf),
+    );
+    expect(conversionOf(de!, DISPLAY)).toMatchObject({ from: "EUR", to: "CHF", converted: true });
+    expect(conversionOf(de!, { ...DISPLAY, currency: "EUR" })).toBeNull();
+  });
+
+  it("South Ossetia's roubles reach the reader in francs, at 2023's rates", () => {
+    const so = document("rso-state-2023-executed");
+    const c = conversionOf(so, DISPLAY);
+    expect(c).toMatchObject({ from: "RUB", to: "CHF", year: 2023, converted: true });
+    expect(c?.sources.sort()).toEqual(["cbr-official", "eurostat-ert"]);
+  });
+
+  it("keys name their measure, and the catalog holds every amount beside its share", () => {
+    expect(parseBudgetMetricKey("budget.gg.expenditure.gf07.meur")).toEqual({
+      scope: "gg",
+      side: "expenditure",
+      code: "gf07",
+      measure: "meur",
+    });
+    expect(parseBudgetMetricKey("budget.gg.balance")).toMatchObject({
+      side: null,
+      measure: "share",
+    });
+    for (const c of COFOG.categories) {
+      const key = budgetMetricKey("gg", COFOG, c.code, "meur");
+      expect(
+        placesConfig.metrics.some((m) => m.key === key && !m.statistic),
+        key,
+      ).toBe(true);
+    }
+  });
+
+  it("history over thirty years is drawn in shares of GDP when every year knows its GDP", () => {
+    const year = (y: number, gdp: number | null): Budget => ({
+      ...de!,
+      year: y,
+      gdp,
+    });
+    const [s] = budgetSections([year(2022, 4e6), year(2023, 4e6)], DISPLAY);
+    expect(s?.history.unit).toEqual({ kind: "share_of_gdp" });
+    expect(s?.history.spending[0]?.value).toBeCloseTo(0.5, 6);
+    const [m] = budgetSections([year(2022, null), year(2023, null)], DISPLAY);
+    expect(m?.history.unit).toEqual({ kind: "money", currency: "CHF" });
   });
 });

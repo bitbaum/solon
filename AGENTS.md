@@ -140,6 +140,16 @@ the Eurostat sources (`eurostat_json` adapter, one per country, run like every P
 lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
 `Budget` and holds the arithmetic; pages and the contested places use only its components.
 
+## Money and language
+
+Money on any page is in the reader's currency: `src/lib/money/` converts at a year's average
+rate from `data/money/rates.json` (`pnpm run money:rates`, official publishers only) and never
+borrows another year's rate. The law reads in the reader's language: a version in it when the
+publisher has one, else a cached machine translation labelled as such
+(`src/lib/law/translate.ts`, `text_translations`), with the authentic text a click away.
+`pnpm run law:translate --authority <key>` translates an authority's titles ahead of readers;
+texts are translated when a page is first read.
+
 ## CI
 
 `.github/workflows/ci.yml` runs two jobs on every push/PR to `main`:
