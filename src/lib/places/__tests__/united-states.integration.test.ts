@@ -25,6 +25,8 @@ import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import type { GeometryStore } from "../importer/geometry-store";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
+import { loadAtlasPlace } from "../atlas-place";
+import { findPlaceByIdentifier } from "../by-identifier";
 import { loadMapData } from "../map-data";
 import { searchPlaces } from "../search";
 import { withTestland } from "./fixtures/testland/config";
@@ -164,6 +166,29 @@ describe.skipIf(!RUN)("United States, imported", () => {
   it("draws Wyoming's counties on the map", async () => {
     const map = await loadMapData(db, config, PACK, ON, "en");
     expect(map?.places).toHaveLength(23);
+  });
+
+  it("finds Wyoming by its FIPS code and by its ISO code", async () => {
+    const wyoming = await findPlaceByIdentifier(db, { scheme: "us_state_fips", value: "56" }, ON);
+    expect(wyoming).toMatch(/\/wyoming$/);
+    expect(await findPlaceByIdentifier(db, { scheme: "iso_3166_2", value: "US-WY" }, ON)).toBe(
+      wyoming,
+    );
+    expect(
+      await findPlaceByIdentifier(db, { scheme: "us_state_fips", value: "03" }, ON),
+    ).toBeNull();
+  });
+
+  it("gives the map the nation's 51 states with none drawn, and Wyoming's counties all drawn", async () => {
+    const wyoming = await findPlaceByIdentifier(db, { scheme: "us_state_fips", value: "56" }, ON);
+    const nation = await loadAtlasPlace(db, config, PACK, ON, "en");
+    expect(nation?.children[0]).toMatchObject({ levelKey: "state" });
+    expect(nation?.children[0]?.places).toHaveLength(51);
+    expect(nation?.drawn).toEqual({ children: 0, total: 51 });
+    const state = await loadAtlasPlace(db, config, wyoming!, ON, "en");
+    expect(state?.chain.map((c) => c.name)).toEqual(["United States"]);
+    expect(state?.children[0]?.places).toHaveLength(23);
+    expect(state?.drawn).toEqual({ children: 23, total: 23 });
   });
 
   // By hand, from Rev. Proc. 2025-32 § 4.01 and § 4.14(1): taxable income is
