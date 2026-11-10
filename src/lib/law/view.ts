@@ -17,6 +17,8 @@ export interface ActView {
   /** False when the publisher does not say whether the act is in force; `inForce` then says nothing. */
   statusStated: boolean;
   title: string | null;
+  /** True when Solon built the title from the act's text; the publisher gives none. */
+  titleDerived: boolean;
   systematicNumber: string | null;
   officialUrl: string | null;
   version: {
@@ -40,7 +42,7 @@ export async function loadActView(
 ): Promise<ActView | null> {
   const acts = await db.execute(sql`
     SELECT a.id, a.authority, a.kind, a.in_force AS "inForce", a.status_stated AS "statusStated",
-           n.text AS title, num.value AS "systematicNumber", ou.value AS "officialUrl"
+           n.text AS title, n.derived AS "titleDerived", num.value AS "systematicNumber", ou.value AS "officialUrl"
     FROM legal_acts a
     LEFT JOIN legal_act_names n
       ON n.act_id = a.id AND n.kind = 'title' AND n.superseded_at IS NULL

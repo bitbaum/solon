@@ -794,6 +794,7 @@
       "askAbout": "Interroger le droit à ce sujet",
       "morePlace": "Autres lois de {place}",
       "asMarkdown": "Pour les machines : Markdown",
+      "titleDerived": "Ce titre a été construit par Solon à partir des dernières lignes de l'acte. L'éditeur ne donne à l'acte aucun titre en dehors de son type.",
       "contents": "{count, plural, one {Table des matières : # disposition} other {Table des matières : # dispositions}}"
     },
     "kinds": {

@@ -1,7 +1,16 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { cutProvisions, linesOf, numberOf, parseNode, postText, signedOn } from "../so-text";
+import {
+  cutProvisions,
+  linesOf,
+  numberOf,
+  parseNode,
+  postText,
+  signedOn,
+  titleFromBody,
+} from "../so-text";
+import { parsePosts } from "../wp-rest";
 
 const fixture = (name: string) => readFileSync(join(__dirname, "fixtures", name), "utf8");
 
@@ -84,5 +93,37 @@ describe("verify reads the act's words, not the Drupal page's menus", () => {
     );
     expect(region).not.toContain("Структура Парламента");
     expect(regionOf("<p>any page</p>", "li")).toBe("<p>any page</p>");
+  });
+});
+
+describe("a title for an act the site titles with a bare type word", () => {
+  it("is the word with the day the act prints, as printed (post 56034, 2021)", () => {
+    const text =
+      "3. Настоящий Указ вступает в силу со дня его подписания.\nПрезидент Республики Южная Осетия А. БИБИЛОВ\nг. Цхинвал, 27 апреля 2021 г.";
+    expect(titleFromBody("Указ", text)).toBe("Указ от 27 апреля 2021 г.");
+  });
+
+  it("adds the number when the act prints one", () => {
+    const text =
+      "Президент Республики Южная Осетия М. КАМБОЛОВ\nг. Цхинвал, 6 ноября 2026 г.\n№494";
+    expect(titleFromBody("Указ", text)).toBe("Указ от 6 ноября 2026 г. № 494");
+  });
+
+  it("is nothing when the act prints no day: no title is made up", () => {
+    expect(titleFromBody("Указ", "Принять отставку Правительства.")).toBeNull();
+  });
+});
+
+describe("a title as the publisher printed it", () => {
+  it("keeps a typo of the publisher's (a zero for the letter О), and decodes only entities", () => {
+    const [post] = parsePosts([
+      {
+        id: 1,
+        date: "2026-01-01T00:00:00",
+        link: "https://presidentruo.org/a/",
+        title: { rendered: "Указ «0 награждении орденом &laquo;Дружбы&raquo;»" },
+      },
+    ]);
+    expect(post!.title).toBe("Указ «0 награждении орденом «Дружбы»»");
   });
 });

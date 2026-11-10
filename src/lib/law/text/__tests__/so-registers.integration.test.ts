@@ -52,7 +52,10 @@ function parliament(titleOfFirst: string): typeof fetch {
   };
 }
 
-/** The President: category 7 (decrees) and 5 (documents) share a post, as the live API does. */
+/**
+ * The President: category 7 (decrees), 5 (documents) and 6 (treaties) share posts as the live API
+ * does, one decree has the bare title "Указ", and a single post's page serves the decree's text.
+ */
 function president(): typeof fetch {
   const post = (id: number, title: string) => ({
     id,
@@ -60,21 +63,35 @@ function president(): typeof fetch {
     link: `https://presidentruo.org/ukaz-${id}/`,
     title: { rendered: title },
   });
+  const treaty = post(N + 14, "Договор об углублении союзнического взаимодействия");
   const byCategory: Record<string, unknown[]> = {
     "7": [
       post(N + 11, "Указ «О членах Центральной избирательной комиссии»"),
       post(N + 12, "Указ «О Министре»"),
+      post(N + 15, "Указ"),
     ],
-    "5": [post(N + 12, "Указ «О Министре»")],
-    "6": [post(N + 13, "Договор о дружбе и сотрудничестве")],
+    "5": [post(N + 12, "Указ «О Министре»"), treaty],
+    "6": [post(N + 13, "Договор о дружбе и сотрудничестве"), treaty],
     "14": [],
   };
   return async (input) => {
-    const m = /categories=(\d+)&per_page=100&page=(\d+)/.exec(String(input));
+    const url = String(input);
+    const single = new RegExp(`/posts/${N + 15}\\?`).exec(url);
+    if (single) {
+      return Response.json({
+        ...post(N + 15, "Указ"),
+        content: {
+          rendered:
+            "<p>постановляю:</p><p>1. Назначить.</p><p>Президент Республики Южная Осетия А. БИБИЛОВ</p><p>г. Цхинвал, 27 апреля 2021 г.</p>",
+        },
+      });
+    }
+    const m = /categories=(\d+)&per_page=100&page=(\d+)/.exec(url);
     const list = m ? byCategory[m[1]!] : undefined;
     if (!list) return new Response("", { status: 404 });
-    if (Number(m![2]) > 1)
+    if (Number(m![2]) > 1) {
       return Response.json({ code: "rest_post_invalid_page_number" }, { status: 400 });
+    }
     return Response.json(list, { headers: { "x-wp-totalpages": "1" } });
   };
 }
@@ -160,20 +177,34 @@ describe.skipIf(!RUN)("South Ossetia's registers (real database)", () => {
     expect(names).toHaveLength(2);
   });
 
-  it("registers an act the President's API lists under two categories once, and a treaty as a treaty", async () => {
+  it("registers an act listed under several categories once, a treaty as a treaty, and names a bare-titled decree from its own text", async () => {
     const report = await registerPresident(db, { snapshots, pauseMs: 0, fetchImpl: president() });
     expect(report.register.status).toBe("applied");
     const mine = await actsOf("presidentruo:");
-    const ours = mine.filter((a) =>
-      [11, 12, 13].map((d) => `presidentruo:${N + d}`).includes(a.identity),
-    );
+    const ids = [11, 12, 13, 14, 15].map((d) => `presidentruo:${N + d}`);
+    const ours = mine.filter((a) => ids.includes(a.identity));
     expect(ours.map((a) => [a.identity, a.kind]).sort()).toEqual(
       [
         [`presidentruo:${N + 11}`, "decree"],
         [`presidentruo:${N + 12}`, "decree"],
         [`presidentruo:${N + 13}`, "treaty"],
+        // Listed under "Документы" and "Договоры": the more specific category decides.
+        [`presidentruo:${N + 14}`, "treaty"],
+        [`presidentruo:${N + 15}`, "decree"],
       ].sort(),
     );
+    const [named] = await db
+      .select({ text: legalActNames.text, derived: legalActNames.derived })
+      .from(legalActNames)
+      .innerJoin(legalActIdentifiers, eq(legalActIdentifiers.actId, legalActNames.actId))
+      .where(eq(legalActIdentifiers.value, `presidentruo:${N + 15}`));
+    expect(named).toEqual({ text: "Указ от 27 апреля 2021 г.", derived: true });
+    const [own] = await db
+      .select({ derived: legalActNames.derived })
+      .from(legalActNames)
+      .innerJoin(legalActIdentifiers, eq(legalActIdentifiers.actId, legalActNames.actId))
+      .where(eq(legalActIdentifiers.value, `presidentruo:${N + 11}`));
+    expect(own).toEqual({ derived: false });
   });
 
   it("writes nothing on a dry run", async () => {

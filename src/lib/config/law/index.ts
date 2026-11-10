@@ -847,12 +847,15 @@ export const PRESIDENTRUO = {
   textsAdmitted: true as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
-  /** The categories read, in this order; a post found in several keeps the first kind. */
+  /**
+   * The categories read, most specific first; a post found in several keeps the first kind, so the
+   * treaty that "Документы" also lists is a treaty, not a decree.
+   */
   categories: [
+    { category: "14", label: "Конституция", kind: "constitution" },
+    { category: "6", label: "Договоры", kind: "treaty" },
     { category: "7", label: "Указы", kind: "decree" },
     { category: "5", label: "Документы", kind: "decree" },
-    { category: "6", label: "Договоры", kind: "treaty" },
-    { category: "14", label: "Конституция", kind: "constitution" },
   ] as readonly { category: string; label: string; kind: ActKind }[],
   pauseMs: 1000,
 } as const;

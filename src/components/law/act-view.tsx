@@ -65,6 +65,9 @@ export default async function ActViewPage({
       <div className="max-w-3xl space-y-8">
         <PlaceTrail authority={act.authority} t={t} />
         <p className="text-fg-secondary">{meta}</p>
+        {act.titleDerived ? (
+          <p className="text-sm text-fg-tertiary">{t("act.titleDerived")}</p>
+        ) : null}
         <p className="space-x-4 text-sm">
           <Link href="/law/ask" className="font-medium text-fg-primary underline">
             {t("act.askAbout")}

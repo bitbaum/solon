@@ -18,6 +18,7 @@ import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow, type RegisterReport } from "../register/import";
 import { parseListing, type ListedNode } from "./drupal-listing";
 import { parsePosts, type WpPost } from "./wp-rest";
+import { linesOf, postText, titleFromBody } from "./so-text";
 import { crawlDelayMs } from "./ukleg";
 
 export interface SoRegisterOptions {
@@ -157,12 +158,30 @@ export async function registerPresident(
       trace.push({ category, page, ids: posts.map((p) => p.id) });
       for (const post of posts) {
         if (rows.has(post.id)) continue;
+        let title = post.title;
+        let titleDerived = false;
+        if (title.split(/\s+/).filter(Boolean).length <= 1) {
+          // A post titled with a bare type word has no title of its own: read what the act itself prints.
+          const read = await doFetch(config.postUrl.replace("{id}", post.id), {
+            headers: { "user-agent": config.userAgent, accept: "application/json" },
+            signal: AbortSignal.timeout(60_000),
+          });
+          const derived = read.ok
+            ? titleFromBody(post.title, postText(await read.json()).text)
+            : null;
+          if (derived) {
+            title = derived;
+            titleDerived = true;
+          }
+          await sleep(pauseMs);
+        }
         rows.set(post.id, {
           authority: config.authority,
           kind,
           inForce: true,
           statusStated: false,
-          title: post.title,
+          title,
+          titleDerived,
           locale: config.locale,
           identity: { scheme: "publisher_ref", value: `${config.key}:${post.id}` },
           systematicNumber: null,
