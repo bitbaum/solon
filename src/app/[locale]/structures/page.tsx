@@ -4,6 +4,7 @@ import StructureComparison from "@/components/structures/structure-comparison";
 import { toLocale } from "@/i18n/routing";
 import { db } from "@/lib/db/client";
 import { loadStructureTable } from "@/lib/structures/load";
+import { readerMoney } from "@/lib/site/reader-money";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ export default async function StructuresPage({ params }: { params: Params }) {
   const t = await getTranslations({ locale, namespace: "Structures" });
   return (
     <PageLayout title={t("title")} kicker={t("kicker")} description={t("description")}>
-      <StructureComparison table={table} locale={locale} t={t} />
+      <StructureComparison table={table} display={await readerMoney(locale)} t={t} />
     </PageLayout>
   );
 }

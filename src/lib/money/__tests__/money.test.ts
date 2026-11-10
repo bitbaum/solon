@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { DISPLAY_CURRENCIES, RATES, displayCurrencyOf } from "@/lib/config/money";
-import { convert, defineRateTable, formatMoney, perBase, yearsFor } from "..";
+import {
+  convert,
+  defineRateTable,
+  formatMoney,
+  formatWithEquivalent,
+  latestCommonYear,
+  perBase,
+  yearsFor,
+} from "..";
 import { averageOfCbrXml } from "../../../../scripts/money-rates";
 
 const table = defineRateTable({
@@ -43,6 +51,22 @@ describe("conversion", () => {
     ).toThrow(/unknown source/);
   });
 
+  it("finds the newest year both currencies have a rate in", () => {
+    expect(latestCommonYear(table, "RUB", "CHF")).toBe(2023);
+    expect(latestCommonYear(table, "EUR", "CHF")).toBe(2023);
+    expect(latestCommonYear(table, "XYZ", "CHF")).toBeNull();
+  });
+
+  it("writes an amount in its own currency, with the reader's beside it only when it differs", () => {
+    // Intl writes "CHF" and the number with a no-break space between them.
+    const read = (s: string) => s.replace(/\s/g, " ");
+    expect(read(formatWithEquivalent(30_000, "CHF", 33_500, "USD", "en"))).toBe(
+      "CHF 30,000 (≈ $33,500)",
+    );
+    expect(read(formatWithEquivalent(30_000, "CHF", 30_000, "CHF", "en"))).toBe("CHF 30,000");
+    expect(read(formatWithEquivalent(30_000, "CHF", null, "USD", "en"))).toBe("CHF 30,000");
+  });
+
   it("writes money the reader's way", () => {
     expect(formatMoney(2_100_000_000, "CHF", "en")).toMatch(/CHF\s?2\.1B/);
   });
@@ -56,6 +80,13 @@ describe("the rates Solon holds", () => {
     // The Bank of Russia's averaged official rate fills the years Eurostat no longer publishes.
     expect(RATES.rates.RUB?.["2023"]?.source).toBe("cbr-official");
     expect(RATES.rates.CHF?.["2023"]?.source).toBe("eurostat-ert");
+  });
+
+  it("shows the currency the address asks for, else the reader's earlier choice, else the dollar", () => {
+    expect(DISPLAY_CURRENCIES[0]).toBe("USD");
+    expect(displayCurrencyOf("EUR", "CHF")).toBe("EUR");
+    expect(displayCurrencyOf(undefined, "CHF")).toBe("CHF");
+    expect(displayCurrencyOf("XYZ", "nope")).toBe("USD");
   });
 
   it("falls back to the default display currency for anything not offered", () => {

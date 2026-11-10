@@ -23,12 +23,11 @@ export default function SourceList({
               className="text-fg-primary hover:underline"
               rel="noopener noreferrer"
             >
-              {source.publisher}: {source.dataset}
+              {source.attribution ?? `${source.publisher}: ${source.dataset}`}
             </a>
             <span className="block text-xs">
               {t("sources.retrieved", { date: source.retrievedAt })} ·{" "}
               {t("sources.licence", { licence: source.licence })}
-              {source.attribution && ` · ${source.attribution}`}
             </span>
           </li>
         ))}

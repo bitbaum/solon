@@ -13,6 +13,7 @@ import {
 } from "@/lib/budgets/format";
 import type { BudgetSection } from "@/lib/budgets/page";
 import { budgetMetricKey } from "@/lib/budgets/scopes";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { SITE_URL } from "@/lib/site-config";
 import BudgetBreakdown from "./budget-breakdown";
@@ -27,8 +28,8 @@ interface BudgetPageProps {
   place: string;
   slug: string;
   sections: readonly BudgetSection[];
-  /** The year asked for in the address, kept when the reader changes currency. */
-  year: number | undefined;
+  /** This page's own path (with its year), to come back to after choosing a currency. */
+  next: string;
   actIds: ReadonlyMap<string, string>;
   display: MoneyDisplay;
   t: BudgetsTranslator;
@@ -54,18 +55,14 @@ export default function BudgetPage({
   place,
   slug,
   sections,
-  year,
+  next,
   actIds,
   display,
   t,
 }: BudgetPageProps) {
   const { locale } = display;
   const newest = sections[0]?.budget;
-  const href = (currency: string, y = year) =>
-    `/budgets/${slug}?${new URLSearchParams({
-      ...(y ? { year: String(y) } : {}),
-      in: currency,
-    }).toString()}`;
+  const href = (y?: number) => `/budgets/${slug}${y ? `?year=${y}` : ""}`;
   return (
     <PageLayout
       title={t("title", { place })}
@@ -77,7 +74,7 @@ export default function BudgetPage({
           label={t("currency.label")}
           current={display.currency}
           currencies={DISPLAY_CURRENCIES}
-          hrefFor={(c) => href(c)}
+          next={next}
         />
         {sections.length === 0 && <p className="text-fg-secondary">{t("notHeld", { place })}</p>}
         {sections.map((section) => {
@@ -120,9 +117,11 @@ export default function BudgetPage({
                           from: conversion.from,
                           year: conversion.year,
                           sources: conversion.sources
-                            .map(
-                              (key) =>
+                            .map((key) =>
+                              cite(
                                 display.rates.sources.find((s) => s.key === key)?.publisher ?? key,
+                                display.locale,
+                              ),
                             )
                             .join(", "),
                         })
@@ -139,7 +138,7 @@ export default function BudgetPage({
                     {section.years.map((y) => (
                       <Link
                         key={y}
-                        href={href(display.currency, y)}
+                        href={href(y)}
                         aria-current={y === budget.year ? "page" : undefined}
                         className={
                           y === budget.year

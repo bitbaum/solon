@@ -43,7 +43,7 @@ export default function ContestMoney({
               />
             )}
             <Link
-              href={`/budgets/${side.slug}?in=${display.currency}`}
+              href={`/budgets/${side.slug}`}
               className="inline-block text-sm font-semibold text-fg-primary hover:underline"
             >
               {t("contested.money.open", { side: side.name })} →

@@ -24,8 +24,11 @@ export function TallyChart({
   aggregate,
   unit,
   highlightKey,
+  labelOf,
 }: {
   aggregate: Aggregate;
+  /** An option's name in the reader's language, by its key; the aggregate's own label otherwise. */
+  labelOf?: (key: string) => string;
   /** What the number means for this method: "approvals", "dots", "avg", "points". */
   unit?: string;
   /** Force the highlight (used to mark the Condorcet winner when it differs). */
@@ -42,7 +45,7 @@ export function TallyChart({
               <span
                 className={`text-sm ${entry.key === marked ? "font-semibold text-fg-primary" : "text-fg-secondary"}`}
               >
-                {entry.label}
+                {labelOf ? labelOf(entry.key) : entry.label}
               </span>
               <span className="font-mono text-sm tabular-nums text-fg-primary">
                 {entry.score}

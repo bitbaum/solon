@@ -43,3 +43,13 @@ export const yearsFor = (table: RateTable, cur: string): number[] =>
     : Object.keys(table.rates[cur] ?? {})
         .map(Number)
         .sort((a, b) => b - a);
+
+/** The newest year both currencies have a rate in: for an amount set now (a legal minimum), not for a year's figure. */
+export function latestCommonYear(table: RateTable, from: string, to: string): number | null {
+  const years = (cur: string) =>
+    cur === table.base ? null : new Set(Object.keys(table.rates[cur] ?? {}).map(Number));
+  const a = years(from);
+  const b = years(to);
+  const all = [...(a ?? b ?? [])].filter((y) => (a ? a.has(y) : true) && (b ? b.has(y) : true));
+  return all.length > 0 ? Math.max(...all) : null;
+}

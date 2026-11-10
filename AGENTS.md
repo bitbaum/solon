@@ -243,6 +243,14 @@ fleet's choice for i18n (fleet `STACK.md`; evig, hirnli and four others use it).
   pages lose the notice. An official route's words per language live on the
   route (`OfficialRoute.text`, `src/lib/config/law/routes.ts`); English is the
   fallback.
+- Words in the configuration (a rubric, a budget line, a source's attribution,
+  who published a series) are written once, in English, beside their source.
+  Their other languages live in `data/i18n/config.json`, keyed by the English
+  words, and `localized()` / `cite()` read it (`src/lib/i18n/`). A changed
+  English text has no translation until one is written, so a stale one is
+  never shown. `pnpm run i18n:config` lists what is missing (`--json` prints a
+  skeleton to fill), and `src/lib/i18n/__tests__/config-texts.test.ts` fails
+  while any text a translated page shows lacks a language.
 - German uses Swiss spelling (ss, never ß).
 
 **The one habit that matters:** never assemble a sentence by concatenation.

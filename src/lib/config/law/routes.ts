@@ -323,7 +323,7 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     outcome:
       "The bill is put before the Parliament of the Republic of South Ossetia by a holder of the right of legislative initiative.",
     source: {
-      title: "Конституция Республики Южная Осетия (Constitution of the Republic of South Ossetia)",
+      title: "Constitution of the Republic of South Ossetia",
       provision: "Art. 69",
       url: "https://parliamentrso.org/node/3567",
       readOn: "2026-11-10",
@@ -337,6 +337,33 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
           "Законопроект вносится в Парламент Республики Южная Осетия обладателем права законодательной инициативы.",
         sourceTitle: "Конституция Республики Южная Осетия",
         provision: "Статья 69",
+      },
+      de: {
+        name: "Ein von einem Abgeordneten eingebrachter Gesetzentwurf",
+        whoMaySign:
+          "Jeder einzelne Abgeordnete des Parlaments, der das Recht der Gesetzesinitiative hat (wie der Präsident, die Regierung sowie das Verfassungsgericht, das Oberste Gericht, der Generalstaatsanwalt und die Zentrale Wahlkommission in ihren Zuständigkeitsbereichen); die Bürgerinnen und Bürger selbst haben es nicht",
+        outcome:
+          "Der Gesetzentwurf wird dem Parlament der Republik Südossetien von einem Inhaber des Rechts der Gesetzesinitiative vorgelegt.",
+        sourceTitle: "Verfassung der Republik Südossetien",
+        provision: "Art. 69",
+      },
+      fr: {
+        name: "Un projet de loi déposé par un député",
+        whoMaySign:
+          "Tout député du Parlement, titulaire du droit d'initiative législative (comme le Président, le Gouvernement, ainsi que la Cour constitutionnelle, la Cour suprême, le Procureur général et la Commission électorale centrale dans les domaines de leur compétence) ; les citoyens eux-mêmes ne le détiennent pas",
+        outcome:
+          "Le projet de loi est soumis au Parlement de la République d'Ossétie du Sud par un titulaire du droit d'initiative législative.",
+        sourceTitle: "Constitution de la République d'Ossétie du Sud",
+        provision: "Art. 69",
+      },
+      it: {
+        name: "Un disegno di legge presentato da un deputato",
+        whoMaySign:
+          "Qualsiasi deputato del Parlamento, titolare del diritto di iniziativa legislativa (come il Presidente, il Governo, nonché la Corte costituzionale, la Corte suprema, il Procuratore generale e la Commissione elettorale centrale nelle materie di loro competenza); i cittadini stessi non lo hanno",
+        outcome:
+          "Il disegno di legge è presentato al Parlamento della Repubblica dell'Ossezia del Sud da un titolare del diritto di iniziativa legislativa.",
+        sourceTitle: "Costituzione della Repubblica dell'Ossezia del Sud",
+        provision: "Art. 69",
       },
     },
   },

@@ -77,7 +77,7 @@ async function main(): Promise<number> {
       },
       {
         key: "cbr-official",
-        publisher: "Банк России (Bank of Russia)",
+        publisher: "Bank of Russia",
         dataset:
           "Official rate of the euro against the rouble, every day it was set in the year, averaged by Solon",
         url: "https://www.cbr.ru/currency_base/dynamics/",

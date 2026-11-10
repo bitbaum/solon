@@ -1,7 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
 import BudgetIndex from "@/components/budgets/budget-index";
-import { RATES, displayCurrencyOf } from "@/lib/config/money";
+import { getPathname } from "@/i18n/navigation";
+import { readerMoney } from "@/lib/site/reader-money";
 import { db } from "@/lib/db/client";
 import { budgetIndexRows } from "@/lib/budgets/page";
 import { loadAllBudgets } from "@/lib/budgets/read";
@@ -31,6 +32,13 @@ export default async function BudgetsPage({
     getTranslations({ locale, namespace: "Budgets" }),
     loadAllBudgets(db),
   ]);
-  const display = { locale, currency: displayCurrencyOf((await searchParams).in), rates: RATES };
-  return <BudgetIndex rows={budgetIndexRows(budgets, display)} currency={display.currency} t={t} />;
+  const display = await readerMoney(locale, (await searchParams).in);
+  return (
+    <BudgetIndex
+      rows={budgetIndexRows(budgets, display)}
+      currency={display.currency}
+      next={getPathname({ href: "/budgets", locale })}
+      t={t}
+    />
+  );
 }

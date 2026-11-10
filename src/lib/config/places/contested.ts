@@ -123,7 +123,7 @@ const READ = "2026-11-10";
 
 const SO_CONSTITUTION = {
   publisher:
-    "Парламент Республики Южная Осетия: Конституция Республики Южная Осетия (Parliament of the Republic of South Ossetia: the Constitution), as read",
+    "Parliament of the Republic of South Ossetia: the Constitution of the Republic of South Ossetia, as read",
   url: "https://parliamentrso.org/node/3567",
   read: READ,
   expect: [
@@ -167,7 +167,7 @@ const GE_CONSTITUTION = {
 
 const SO_TAX_CODE_PAGE = {
   publisher:
-    "Парламент Республики Южная Осетия: Налоговый кодекс Республики Южная Осетия. Часть вторая (the Parliament's page for the Tax Code, Part Two), as read",
+    "Parliament of the Republic of South Ossetia: the page for the Tax Code of the Republic of South Ossetia, Part Two, as read",
   url: "https://parliamentrso.org/node/5469",
   read: READ,
   expect: ["Налоговый кодекс Республики Южная Осетия. Часть вторая", "Текст кодекса скачать тут"],
@@ -180,7 +180,7 @@ const SO_TAX_CODE_PAGE = {
  */
 const SO_TAX_CODE_FILE = {
   publisher:
-    "Парламент Республики Южная Осетия: Налоговый кодекс Республики Южная Осетия, часть вторая, the Word file the page links, as read",
+    "Parliament of the Republic of South Ossetia: the Tax Code of the Republic of South Ossetia, Part Two, the Word file the page links, as read",
   url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/nalogovyy_kodeks_respubliki_yuzhnaya_osetiya_ch.2_ispr_parl_0.doc",
   read: READ,
   unchecked: true as const,

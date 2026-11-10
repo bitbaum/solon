@@ -2392,5 +2392,59 @@
       "converted": "Amounts in {to}, converted from {from} at {year}'s average rate ({sources}).",
       "notConverted": "Amounts in {from}: Solon holds no {year} rate to convert them to {to}."
     }
+  },
+  "MethodLab": {
+    "tablist": "How to count the same preferences",
+    "caption": "How each group of members rates each option, from 0 to 5",
+    "members": "{count} members",
+    "asks": "The ballot asks:",
+    "floor": "Anything rated {floor} or more counts as acceptable; the rest dim above.",
+    "firstChoices": "first choices",
+    "rating": "{value} out of 5",
+    "ratingApproved": "{value} out of 5 — approved",
+    "ratingNotApproved": "{value} out of 5 — not approved",
+    "pluralityWins": "{winner} wins with {count} of {total}.",
+    "pluralityNote": "Four of the seven members rated it zero. Nothing was counted wrongly — this is what “pick one” is for, and it is why the option most people can live with can lose to the one a large minority loves.",
+    "otherWins": "{winner} wins.",
+    "otherNote": "Same seven members, same preferences, a different question — and a different answer.",
+    "tabs": {
+      "plurality": {
+        "label": "Pick one",
+        "asks": "Which single option do you want most?"
+      },
+      "approval": {
+        "label": "Approval",
+        "asks": "Which options could you live with?"
+      },
+      "dot": {
+        "label": "Dots",
+        "asks": "How would you split five dots across them?"
+      },
+      "score": {
+        "label": "Score",
+        "asks": "Rate each option from 0 to 5."
+      },
+      "ranked": {
+        "label": "Ranked",
+        "asks": "Put them in your order of preference."
+      }
+    },
+    "units": {
+      "approvals": "approvals",
+      "dots": "dots",
+      "avg": "avg",
+      "points": "points"
+    },
+    "options": {
+      "roof": "Repair the roof",
+      "apprenticeship": "Fund the apprenticeship",
+      "tooling": "Buy the tooling",
+      "reserve": "Hold in reserve"
+    },
+    "camps": {
+      "daily": "Three members who use the building daily",
+      "train": "Two members who train newcomers",
+      "work": "Two members who do the work itself"
+    }
   }
 }

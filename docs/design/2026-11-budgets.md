@@ -99,9 +99,16 @@ src/lib/config/budgets/               src/lib/budgets/              src/componen
 
 ## 4a. One currency for the reader **[built]**
 
-Every amount is shown in the currency the reader chooses (CHF by default; EUR,
-USD, GBP, RUB, GEL offered, `?in=`), converted at the budget year's average
-rate, and the page says from what and whose rate. A budget read from Eurostat
+Every amount is shown in the currency the reader chooses, converted at the
+budget year's average rate, and the page says from what and whose rate. The US
+dollar is the default (the unit cross-country statistics are most often read
+in); EUR, CHF, GBP, RUB and GEL are offered (`DISPLAY_CURRENCIES`,
+`src/lib/config/money.ts`). The choice is remembered for the whole site in a
+cookie (`/api/preferences/currency`), so the budget pages, the contested
+places and the structures comparison all show the same currency; `?in=` on a
+link still wins for that page. An amount quoted in its own currency on the
+structures comparison keeps it and adds the reader's equivalent
+("CHF 30,000 (≈ $33,500)"). A budget read from Eurostat
 is held in million euro (Eurostat's own conversion, `MIO_EUR`) beside its share
 of GDP; one read from a law in its own currency. Rates are data
 (`data/money/rates.json`, `pnpm run money:rates`): Eurostat's annual averages of

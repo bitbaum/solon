@@ -5,7 +5,7 @@ import ContestPage from "@/components/places/contest-page";
 import { actKey } from "@/components/law/quoted-words";
 import { loadBudgetsOf } from "@/lib/budgets/read";
 import { summarize } from "@/lib/budgets/summary";
-import { RATES, displayCurrencyOf } from "@/lib/config/money";
+import { readerMoney } from "@/lib/site/reader-money";
 import { db } from "@/lib/db/client";
 import { contestView } from "@/lib/places/contest-view";
 import { findAct } from "@/lib/statistics/read";
@@ -68,7 +68,7 @@ export default async function ContestedPlacePage({
       view={view}
       actIds={actIds}
       money={money}
-      display={{ locale, currency: displayCurrencyOf((await searchParams).in), rates: RATES }}
+      display={await readerMoney(locale, (await searchParams).in)}
       locale={locale}
       t={t}
       tb={tb}

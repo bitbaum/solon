@@ -6,6 +6,7 @@ import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
 import type { StatisticSearch } from "@/lib/config/statistics/searches";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { chartValue, eventPath, latestPoint, seriesPageFor } from "@/lib/statistics/present";
 import type { EventRow, LinkedAct, PlaceSeries } from "@/lib/statistics/read";
@@ -106,7 +107,7 @@ export default function MetricView(props: MetricViewProps) {
       <div className="max-w-5xl space-y-10">
         <p className="mb-0 text-sm text-fg-secondary wrap-anywhere">
           {t("metric.publisher", {
-            publisher: statistic.series.publisher,
+            publisher: cite(statistic.series.publisher, locale),
             code: statistic.series.code,
           })}{" "}
           <a href={statistic.series.url} className="underline" rel="noopener">
@@ -202,7 +203,7 @@ export default function MetricView(props: MetricViewProps) {
             caption={t("metric.chartCaption", {
               metric: label,
               unit,
-              publisher: statistic.series.publisher,
+              publisher: cite(statistic.series.publisher, locale),
             })}
           />
         ) : (
@@ -226,7 +227,7 @@ export default function MetricView(props: MetricViewProps) {
                     }),
                     openLabel: t("metric.searchOpen"),
                     rows: record.looked.map((l) => ({
-                      publisher: l.publisher,
+                      publisher: cite(l.publisher, locale),
                       result: t(`metric.searchResult.${l.result}`, { place }),
                       note: localized(l.note, locale),
                       url: l.url,
