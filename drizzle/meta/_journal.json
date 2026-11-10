@@ -183,6 +183,13 @@
       "when": 1794215309165,
       "tag": "0025_place_ancestors",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794306272305,
+      "tag": "0026_place_paths",
+      "breakpoints": true
     }
   ]
 }
