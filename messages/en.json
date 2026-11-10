@@ -1081,7 +1081,8 @@
       "levies": "Levies tax: rates set here enter the tax model of {pack}.",
       "none": "Levies no tax of its own. The taxes here are those of the places it is part of.",
       "noModel": "No tax model for {pack} yet.",
-      "refinedBy": "The rate depends on where in {place} you live. Choose your locality:"
+      "dependsOn": "The rate depends on which locality of {place} you live in.",
+      "open": "Work out your tax across {pack}"
     },
     "otherNames": "Other names",
     "identifiers": "Identifiers",
@@ -1119,7 +1120,7 @@
       "kicker": "Every jurisdiction, official and founded",
       "metaTitle": "Places · find a place",
       "metaDescription": "Find a place by name or postcode: what it is part of, whether it levies tax, and the source behind every fact.",
-      "intro": "Every place Solon records, as its official sources publish it. Open a country on the globe to see its law, its places and what tax costs there.",
+      "intro": "Every place Solon records, as its official sources publish it. Open a country on the globe, then a place inside it: each has a page of its own that you can share.",
       "searchLabel": "Name or postcode",
       "searchPlaceholder": "A name or a postcode",
       "searchButton": "Search",
@@ -1131,7 +1132,9 @@
       "localityShare": "{locality}: {share, number, ::percent .##} of its addresses",
       "levelTitle": "{level}: {count, plural, one {# place} other {# places}}",
       "levelLink": "{level} ({count})",
-      "coverageLink": "What Places covers, and how fresh each source is →"
+      "coverageLink": "What Places covers, and how fresh each source is →",
+      "worldLink": "Every country and territory →",
+      "taxLink": "What tax would cost you, place by place →"
     },
     "compareLink": "Compare with other places →",
     "compare": {
@@ -1246,6 +1249,39 @@
         "three": "Is there a tax on wealth here?"
       },
       "placeholder": "Can I deduct the cost of getting to work?"
+    },
+    "summaryIn": "{level} in {place}",
+    "share": {
+      "button": "Share",
+      "copied": "Link copied"
+    },
+    "world": {
+      "title": "The world",
+      "kicker": "Country or territory",
+      "claimed": "Governs itself and is not a member of the United Nations. <link>{claimant}</link> regards it as part of its territory.",
+      "notYet": "Solon does not hold the places of {place} yet.",
+      "coverage": "What Solon covers so far",
+      "metaDescription": "{place} on Solon: the law Solon holds there and the places inside it.",
+      "indexIntro": "Every country and territory, each with a page of its own. Open one to see the law Solon holds there and the places inside it.",
+      "heldPlaces": "{count, plural, =0 {Places only} one {Places · # law} other {Places · # laws}}"
+    },
+    "law": {
+      "title": "Law",
+      "intro": "The law that applies in {place}, nearest first. Open one to read it and propose changes.",
+      "none": "Solon does not hold the law of {place} yet.",
+      "count": "{count, plural, =0 {No texts yet} one {# law in force} other {# laws in force}}"
+    },
+    "parts": {
+      "title": "Places in {place}",
+      "level": "{level} ({count})"
+    },
+    "record": {
+      "title": "Names, identifiers and sources"
+    },
+    "taxMap": {
+      "title": "Tax by place",
+      "intro": "Pick a country and enter your income: every place in it is coloured by what tax would cost you there. What you enter stays in this browser tab.",
+      "back": "All places"
     }
   },
   "AuthError": {
@@ -1631,21 +1667,25 @@
   "Atlas": {
     "world": "The world",
     "worldTitle": "The world's law, piece by piece",
-    "worldIntro": "Every country Solon holds is shaded by how much of its law is here. Pick one on the globe or below to open it: its law, its places and what tax costs there.",
+    "worldIntro": "Every country Solon holds is shaded by how much of its law is here. Tap any country to open it.",
     "lawCount": "{count, plural, =0 {Places only} one {# law} other {# laws}}",
     "lawTitle": "Law",
     "lawHeld": "{count, plural, one {# law in force} other {# laws in force}}, word for word, from the official sources.",
     "lawNone": "Solon does not hold {country}'s law yet.",
     "lawOpen": "Read it and propose changes",
     "placesTitle": "Places",
-    "placesDrawn": "On the map: {level}. Each is coloured by what tax would cost you there. Tap one, or search.",
+    "placesDrawn": "On the map: {level}. Tap one to open its page, or search.",
     "placesNotDrawn": "Its places are listed, not drawn on the map yet.",
-    "placesOpen": "Every place in {country}",
     "mapLabelCountry": "Map of {country} and its places",
     "unavailable": "The map cannot be drawn in this browser.",
     "sources": "Where this comes from ({count, plural, one {# source} other {# sources}})",
-    "situationHint": "Enter your income to colour the map by what tax would cost you.",
-    "taxSameEverywhere": "Tax is the same in every place here: {amount} a year at this income. No place levies its own."
+    "taxSameEverywhere": "Tax is the same in every place here: {amount} a year at this income. No place levies its own.",
+    "pageOpen": "Open the page of {country}",
+    "taxOpen": "What tax would cost you across {country}",
+    "taxNone": "There is no tax map for {country} yet.",
+    "taxWorldTitle": "What tax would cost you, place by place",
+    "taxWorldIntro": "Pick a country to colour its places by what tax would cost you there.",
+    "everyCountry": "Every country and territory"
   },
   "Statistics": {
     "kicker": "Statistics",

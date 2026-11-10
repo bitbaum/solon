@@ -24,9 +24,14 @@ export async function loadWorld(stateIds: ReadonlySet<string>): Promise<MapFeatu
         features: Feature<Geometry, { name?: string }>[];
       }
     ).features;
+  // Natural Earth draws a few places without an ISO code (Kosovo, Somaliland): those go by name.
   const countries = features(world.default as Layer, "countries")
-    .filter((f) => f.id !== undefined && f.geometry)
-    .map((f) => ({ id: `countries:${f.id}`, geometry: f.geometry, properties: {} }));
+    .filter((f) => f.geometry && (f.id !== undefined || f.properties?.name))
+    .map((f) => ({
+      id: f.id !== undefined ? `countries:${f.id}` : `countries:name:${f.properties.name}`,
+      geometry: f.geometry,
+      properties: {},
+    }));
   const states = features(us.default as Layer, "states")
     .filter((f) => stateIds.has(String(f.id)))
     .map((f) => ({ id: `states:${f.id}`, geometry: f.geometry, properties: {} }));

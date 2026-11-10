@@ -12,6 +12,7 @@ import {
 } from "@bitbaum/geo-kit/map";
 import { Link, useRouter } from "@/i18n/navigation";
 import { REGISTER_POLICY_DEFAULTS } from "@/lib/config/places/policies";
+import { WORLD, regionFeature, regionName, worldRegionByCode } from "@/lib/config/world";
 import type { GlobePlace } from "@/lib/law/globe";
 import type { AddressHit } from "@/lib/places/address-search";
 import { compareHref, formatMoney } from "@/lib/places/compare-view";
@@ -45,6 +46,12 @@ interface AtlasProps {
   mode: "preview" | "full";
   /** The law key of the country open at first (`?in=`), in full mode. */
   initial?: string | null;
+  /**
+   * In full mode, what a country's places show: `places` (/places) draws them
+   * plainly, a tap opening the place's page; `tax` (/places/tax) colours them
+   * by what tax would cost the reader, with the form that drives it.
+   */
+  layer?: "places" | "tax";
 }
 
 /**
@@ -54,7 +61,7 @@ interface AtlasProps {
  * place in view: its law, its places, its tax. Estimates run in the browser;
  * an income never leaves it.
  */
-export default function Atlas({ mode, initial = null }: AtlasProps) {
+export default function Atlas({ mode, initial = null, layer = "places" }: AtlasProps) {
   const t = useTranslations("Atlas");
   const tg = useTranslations("Law.globe");
   const tm = useTranslations("Places.map");
@@ -90,6 +97,24 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
     }));
   }, [places, locale]);
   const byFeature = useMemo(() => new Map(named.map((p) => [p.feature, p])), [named]);
+  // Every country and territory drawn on the globe, so one Solon holds nothing for still opens its page.
+  const regionByFeature = useMemo(
+    () =>
+      new Map(
+        WORLD.flatMap((r) => {
+          const feature = regionFeature(r);
+          return feature ? [[feature, r] as const] : [];
+        }),
+      ),
+    [],
+  );
+  /** The page of a country Solon holds, by its law place: its pack's path, else its world slug. */
+  const pageOf = useCallback((place: GlobePlace | null) => {
+    if (!place) return null;
+    if (place.pack) return `/places/${place.pack}`;
+    const region = place.region ? worldRegionByCode(place.region) : undefined;
+    return region ? `/places/${region.slug}` : null;
+  }, []);
 
   // The world's outlines.
   const stateIds = useMemo(
@@ -227,12 +252,16 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
     const out = new Map<string, string>();
     if (!colours) return out;
     if (open) {
-      for (const [code, fill] of tax.fills) out.set(SUB + code, fill);
+      if (layer === "tax") {
+        for (const [code, fill] of tax.fills) out.set(SUB + code, fill);
+      } else {
+        for (const place of data?.places ?? []) out.set(SUB + place.feature, colours.scale[1]!);
+      }
       return out;
     }
     for (const p of named) if (p.acts > 0) out.set(p.feature, shadeOf(p.acts, colours.scale));
     return out;
-  }, [colours, open, tax.fills, named]);
+  }, [colours, open, layer, tax.fills, data, named]);
 
   // A dot on each country Solon holds law for, so the small ones can be found; none inside a country.
   const dots = useMemo(() => {
@@ -247,11 +276,21 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
     );
   }, [open, named, worldById]);
 
+  const placeByFeature = useMemo(
+    () => new Map((data?.places ?? []).map((p) => [p.feature, p])),
+    [data],
+  );
   const describe = (id: string): string => {
-    if (id.startsWith(SUB)) return tax.describe(id.slice(SUB.length), tm("notYet"));
+    if (id.startsWith(SUB)) {
+      const code = id.slice(SUB.length);
+      return layer === "tax"
+        ? tax.describe(code, tm("notYet"))
+        : (placeByFeature.get(code)?.name ?? "");
+    }
     const place = byFeature.get(id);
-    if (!place) return "";
-    return place.acts > 0 ? tg("held", { name: place.name, count: place.acts }) : "";
+    if (place && place.acts > 0) return tg("held", { name: place.name, count: place.acts });
+    const region = regionByFeature.get(id);
+    return region ? regionName(region, locale) : "";
   };
 
   const onSelect = (id: string | null) => {
@@ -265,7 +304,13 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
       return;
     }
     const place = byFeature.get(id);
-    if (place && place.key !== open) openCountry(place);
+    if (place && (place.acts > 0 || place.pack)) {
+      if (place.key !== open) openCountry(place);
+      return;
+    }
+    // A country Solon holds nothing for yet: its own page says so, and can be shared.
+    const region = regionByFeature.get(id);
+    if (region) router.push(`/places/${region.slug}`);
   };
 
   const showBounds = (feature: string, bounds: Bounds | undefined) => {
@@ -368,7 +413,26 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
     );
   }
 
-  const held = named.filter((p) => p.acts > 0 || p.pack).sort((a, b) => b.acts - a.acts);
+  const held = named
+    .filter((p) => (layer === "tax" ? p.drawn : p.acts > 0 || p.pack))
+    .sort((a, b) => b.acts - a.acts);
+  const countryPage = pageOf(country);
+  const selectedPlace = selected ? placeByFeature.get(selected.slice(SUB.length)) : undefined;
+  const pageLink = country && countryPage && (
+    <Link href={countryPage} className="btn-primary min-h-11 w-full justify-center">
+      {t("pageOpen", { country: country.name })}
+    </Link>
+  );
+  const sourceList = data && data.sources.length > 0 && (
+    <details className="rounded-surface border border-default bg-surface-base p-5 text-sm">
+      <summary className="cursor-pointer font-semibold text-fg-primary">
+        {t("sources", { count: data.sources.length })}
+      </summary>
+      <div className="mt-4">
+        <SourceList sources={data.sources} t={tp} />
+      </div>
+    </details>
+  );
 
   return (
     <div className="space-y-4">
@@ -379,27 +443,29 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
               <div className="min-w-0 flex-1">
                 <MapSearch data={data} onPlace={showPlace} onAddress={showAddress} />
               </div>
-              <div
-                role="group"
-                aria-label={tm("viewLabel")}
-                className="inline-flex shrink-0 rounded-control border border-default p-1"
-              >
-                {(["map", "list"] as const).map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    aria-pressed={view === v}
-                    onClick={() => setView(v)}
-                    className={`min-h-10 rounded-control px-4 text-sm font-semibold ${
-                      view === v
-                        ? "bg-accent text-on-accent"
-                        : "text-fg-primary hover:bg-surface-raised"
-                    }`}
-                  >
-                    {v === "map" ? tm("viewMap") : tm("viewList")}
-                  </button>
-                ))}
-              </div>
+              {layer === "tax" && (
+                <div
+                  role="group"
+                  aria-label={tm("viewLabel")}
+                  className="inline-flex shrink-0 rounded-control border border-default p-1"
+                >
+                  {(["map", "list"] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      aria-pressed={view === v}
+                      onClick={() => setView(v)}
+                      className={`min-h-10 rounded-control px-4 text-sm font-semibold ${
+                        view === v
+                          ? "bg-accent text-on-accent"
+                          : "text-fg-primary hover:bg-surface-raised"
+                      }`}
+                    >
+                      {v === "map" ? tm("viewMap") : tm("viewList")}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
           {notice && (
@@ -407,12 +473,12 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
               {notice}
             </p>
           )}
-          {view === "list" && drawn && data ? (
+          {layer === "tax" && view === "list" && drawn && data ? (
             <MapList rows={tax.rows} levelName={data.levelName} onShow={showPlace} />
           ) : (
-            <div className="relative h-[70vh] min-h-96 overflow-hidden rounded-surface border border-default bg-surface-raised">
+            <div className="relative h-[60vh] min-h-80 overflow-hidden rounded-surface border border-default bg-surface-raised">
               {canvas}
-              {selectedRow && (
+              {layer === "tax" && selectedRow && (
                 <div className="absolute inset-x-3 bottom-3 sm:right-auto sm:w-80">
                   <MapCard
                     place={selectedRow.place}
@@ -434,6 +500,39 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                   />
                 </div>
               )}
+              {layer === "places" && selectedPlace && (
+                <div className="absolute inset-x-3 bottom-3 sm:right-auto sm:w-80">
+                  <section
+                    aria-labelledby="atlas-place-title"
+                    className="space-y-3 rounded-surface border border-default bg-surface-overlay p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h2 id="atlas-place-title" className="font-semibold text-fg-primary">
+                          {selectedPlace.name}
+                        </h2>
+                        {selectedPlace.parentName && (
+                          <p className="text-sm text-fg-tertiary">{selectedPlace.parentName}</p>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelected(null)}
+                        aria-label={tm("close")}
+                        className="-m-2 inline-flex min-h-11 min-w-11 items-center justify-center rounded-control text-fg-secondary hover:bg-surface-raised"
+                      >
+                        <span aria-hidden>×</span>
+                      </button>
+                    </div>
+                    <Link
+                      href={`/places/${selectedPlace.slugPath}`}
+                      className="btn-primary min-h-11"
+                    >
+                      {tm("open")}
+                    </Link>
+                  </section>
+                </div>
+              )}
             </div>
           )}
           <p className="text-xs text-fg-tertiary">{tg("credit")}</p>
@@ -452,47 +551,54 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                 </button>
                 <h2 className="headline text-2xl text-fg-primary">{country.name}</h2>
               </div>
-              <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
-                <h3 className="font-semibold text-fg-primary">{t("lawTitle")}</h3>
-                <p className="text-sm text-fg-secondary">
-                  {country.acts > 0
-                    ? t("lawHeld", { count: country.acts })
-                    : t("lawNone", { country: country.name })}
-                </p>
-                <Link
-                  href={`/law/place/${country.key}`}
-                  className="inline-block text-sm font-semibold text-fg-primary hover:underline"
-                >
-                  {t("lawOpen")} →
-                </Link>
-              </section>
-              {country.pack && (
-                <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
-                  <h3 className="font-semibold text-fg-primary">{t("placesTitle")}</h3>
-                  <p className="text-sm text-fg-secondary">
-                    {loading
-                      ? tm("loading")
-                      : drawn && data
-                        ? t("placesDrawn", { level: data.levelName })
-                        : t("placesNotDrawn")}
-                  </p>
-                  <Link
-                    href={`/places/${country.pack}`}
-                    className="inline-block text-sm font-semibold text-fg-primary hover:underline"
-                  >
-                    {t("placesOpen", { country: country.name })} →
-                  </Link>
-                </section>
-              )}
-              {drawn && tax.taxPack && tax.input && (
-                <details className="group rounded-surface border border-default bg-surface-base">
-                  <summary className="cursor-pointer list-none px-5 py-4 font-semibold text-fg-primary">
-                    {tc("yourSituation")}
-                    <span className="block text-sm font-normal text-fg-secondary">
-                      {t("situationHint")}
-                    </span>
-                  </summary>
-                  <div className="border-t border-default">
+
+              {layer === "places" ? (
+                <>
+                  {pageLink}
+                  <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
+                    <h3 className="font-semibold text-fg-primary">{t("lawTitle")}</h3>
+                    <p className="text-sm text-fg-secondary">
+                      {country.acts > 0
+                        ? t("lawHeld", { count: country.acts })
+                        : t("lawNone", { country: country.name })}
+                    </p>
+                    <Link
+                      href={`/law/place/${country.key}`}
+                      className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+                    >
+                      {t("lawOpen")} →
+                    </Link>
+                  </section>
+                  {country.pack && (
+                    <section className="space-y-2 rounded-surface border border-default bg-surface-base p-5">
+                      <h3 className="font-semibold text-fg-primary">{t("placesTitle")}</h3>
+                      <p className="text-sm text-fg-secondary">
+                        {loading
+                          ? tm("loading")
+                          : drawn && data
+                            ? t("placesDrawn", { level: data.levelName })
+                            : t("placesNotDrawn")}
+                      </p>
+                      {drawn && data?.taxPack && (
+                        <Link
+                          href={`/places/tax?in=${country.key}`}
+                          className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+                        >
+                          {t("taxOpen", { country: country.name })} →
+                        </Link>
+                      )}
+                    </section>
+                  )}
+                </>
+              ) : (
+                <>
+                  {loading && <p className="text-sm text-fg-secondary">{tm("loading")}</p>}
+                  {!loading && !(drawn && tax.taxPack) && (
+                    <p className="text-sm text-fg-secondary">
+                      {t("taxNone", { country: country.name })}
+                    </p>
+                  )}
+                  {drawn && tax.taxPack && tax.input && (
                     <TaxSituation
                       pack={tax.taxPack}
                       input={tax.input}
@@ -501,52 +607,48 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                       idPrefix="atlas"
                       layout="narrow"
                     />
-                  </div>
-                </details>
+                  )}
+                  {drawn &&
+                  tax.money &&
+                  tax.totals.length > 0 &&
+                  tax.totals[0] === tax.totals.at(-1) ? (
+                    <p className="text-sm text-fg-secondary">
+                      {t("taxSameEverywhere", { amount: formatMoney(tax.totals[0]!, tax.money) })}
+                    </p>
+                  ) : null}
+                  {drawn &&
+                    tax.taxPack &&
+                    colours &&
+                    tax.money &&
+                    tax.totals.length > 0 &&
+                    tax.totals[0] !== tax.totals.at(-1) && (
+                      <MapLegend
+                        breaks={tax.breaks}
+                        range={[tax.totals[0]!, tax.totals.at(-1)!]}
+                        colours={colours}
+                        money={tax.money}
+                        caption={caption}
+                      />
+                    )}
+                  {drawn && tax.taxPack && (
+                    <p className="text-xs text-fg-tertiary">
+                      {tax.taxPack.excludes} {tc("disclaimer")} {tc("privacy")}
+                    </p>
+                  )}
+                  {pageLink}
+                </>
               )}
-              {drawn &&
-              tax.money &&
-              tax.totals.length > 0 &&
-              tax.totals[0] === tax.totals.at(-1) ? (
-                <p className="text-sm text-fg-secondary">
-                  {t("taxSameEverywhere", { amount: formatMoney(tax.totals[0]!, tax.money) })}
-                </p>
-              ) : null}
-              {drawn &&
-                tax.taxPack &&
-                colours &&
-                tax.money &&
-                tax.totals.length > 0 &&
-                tax.totals[0] !== tax.totals.at(-1) && (
-                  <MapLegend
-                    breaks={tax.breaks}
-                    range={[tax.totals[0]!, tax.totals.at(-1)!]}
-                    colours={colours}
-                    money={tax.money}
-                    caption={caption}
-                  />
-                )}
-              {drawn && tax.taxPack && (
-                <p className="text-xs text-fg-tertiary">
-                  {tax.taxPack.excludes} {tc("disclaimer")} {tc("privacy")}
-                </p>
-              )}
-              {data && data.sources.length > 0 && (
-                <details className="rounded-surface border border-default bg-surface-base p-5 text-sm">
-                  <summary className="cursor-pointer font-semibold text-fg-primary">
-                    {t("sources", { count: data.sources.length })}
-                  </summary>
-                  <div className="mt-4">
-                    <SourceList sources={data.sources} t={tp} />
-                  </div>
-                </details>
-              )}
+              {sourceList}
             </>
           ) : (
             <>
               <div className="space-y-2">
-                <h2 className="headline text-2xl text-fg-primary">{t("worldTitle")}</h2>
-                <p className="text-sm text-fg-secondary">{t("worldIntro")}</p>
+                <h2 className="headline text-2xl text-fg-primary">
+                  {layer === "tax" ? t("taxWorldTitle") : t("worldTitle")}
+                </h2>
+                <p className="text-sm text-fg-secondary">
+                  {layer === "tax" ? t("taxWorldIntro") : t("worldIntro")}
+                </p>
               </div>
               <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
                 {held.map((p) => (
@@ -554,7 +656,7 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                     <button
                       type="button"
                       onClick={() => openCountry(p)}
-                      className="flex w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
+                      className="flex min-h-11 w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
                     >
                       <span className="font-medium text-fg-primary">{p.name}</span>
                       <span className="text-sm text-fg-tertiary">
@@ -564,6 +666,14 @@ export default function Atlas({ mode, initial = null }: AtlasProps) {
                   </li>
                 ))}
               </ul>
+              {layer === "places" && (
+                <Link
+                  href="/places/world"
+                  className="inline-block text-sm font-semibold text-fg-primary hover:underline"
+                >
+                  {t("everyCountry")} →
+                </Link>
+              )}
             </>
           )}
         </aside>
