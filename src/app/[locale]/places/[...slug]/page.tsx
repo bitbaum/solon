@@ -13,7 +13,11 @@ import {
   worldRegionByCode,
   type WorldRegion,
 } from "@/lib/config/world";
-import { loadWorldProfile } from "@/lib/places/world-profile";
+import { loadWorldProfile, type WorldProfileView } from "@/lib/places/world-profile";
+import { placePhoto } from "@/lib/places/place-photo";
+import PlaceHero from "@/components/places/place-hero";
+import { profileStatus } from "@/components/places/country-profile";
+import type { PlacesTranslator } from "@/components/places/translator";
 import type { BudgetLink } from "@/components/budgets/budget-link-card";
 import { holderOfRegion } from "@/lib/budgets/holders";
 import { holdsBudget } from "@/lib/budgets/read";
@@ -59,6 +63,37 @@ const profileOf = (region: WorldRegion | undefined, locale: Locale) =>
     ? loadWorldProfile(db, region, locale, worldRegionByCode, (r) => regionName(r, locale))
     : Promise.resolve(null);
 
+/**
+ * The top of a place's page when Solon holds a photograph of it: its kind, its name, the
+ * sentence that says what it is, and a country's capital, population and area.
+ */
+function heroOf(
+  keys: readonly string[],
+  title: string,
+  kicker: string,
+  line: string | null,
+  profile: WorldProfileView | null,
+  t: PlacesTranslator,
+) {
+  const photo = placePhoto(keys);
+  if (!photo) return null;
+  const facts = (profile?.facts ?? [])
+    // Capital, population and area; a population of none (Liberland's) is left to the card below.
+    .filter((f) => f.key === "capital" || f.key === "population" || f.key === "area")
+    .filter((f) => !(f.key === "population" && /^0(\s|$)/.test(f.value)))
+    .map((f) => ({ label: t(`profile.facts.${f.key}`), value: f.value }));
+  return (
+    <PlaceHero
+      photo={photo}
+      kicker={kicker}
+      title={title}
+      line={line}
+      facts={facts}
+      credit={t("photoCredit", { author: photo.author, license: photo.license })}
+    />
+  );
+}
+
 /** A country or territory Solon holds no places for, by its one-segment path. */
 const regionOf = (slug: string[]) =>
   slug.length === 1 ? worldRegion(slugPathOf(slug)) : undefined;
@@ -67,15 +102,38 @@ export async function generateMetadata({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
   const locale = toLocale(raw);
   const t = await getTranslations({ locale, namespace: "Places" });
+  // The card a shared link shows: the place's photograph and name (src/app/api/og/place).
+  const card = {
+    images: [
+      {
+        url: `/api/og/place?locale=${locale}&path=${encodeURIComponent(slugPathOf(slug))}`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+  };
   const view = await load(slugPathOf(slug), locale);
   if (view) {
     const values = { name: view.name, level: view.levelName, pack: view.packName };
-    return { title: t("metaTitle", values), description: t("metaDescription", values) };
+    const title = t("metaTitle", values);
+    const description = t("metaDescription", values);
+    return {
+      title,
+      description,
+      openGraph: { title, description, ...card },
+      twitter: { card: "summary_large_image", ...card },
+    };
   }
   const region = regionOf(slug);
   if (!region) return {};
   const name = regionName(region, locale);
-  return { title: name, description: t("world.metaDescription", { place: name }) };
+  const description = t("world.metaDescription", { place: name });
+  return {
+    title: name,
+    description,
+    openGraph: { title: name, description, ...card },
+    twitter: { card: "summary_large_image", ...card },
+  };
 }
 
 /**
@@ -104,6 +162,20 @@ export default async function PlacePage({ params }: { params: Params }) {
           ? worldEntryOfPack(pack)
           : undefined;
     const budget = await budgetLink(country, locale);
+    const profile = await profileOf(country, locale);
+    const above = [...view.partOf].reverse();
+    const hero = heroOf(
+      [...(country ? [`world:${country.slug}`] : []), ...view.refs],
+      view.name,
+      profile ? t(`profile.kicker.${profile.kind}`) : view.levelName,
+      profile
+        ? profileStatus(profile, t)
+        : above.length > 0
+          ? t("summaryIn", { level: view.levelName, place: above.map((p) => p.name).join(", ") })
+          : null,
+      profile,
+      t,
+    );
     return (
       <PlaceProfile
         view={view}
@@ -111,7 +183,8 @@ export default async function PlacePage({ params }: { params: Params }) {
         taxHref={taxHref}
         contest={contest}
         budget={budget}
-        profile={await profileOf(country, locale)}
+        profile={profile}
+        hero={hero}
         t={t}
       />
     );
@@ -129,9 +202,11 @@ export default async function PlacePage({ params }: { params: Params }) {
   if (!pack && !region.claimedBy && (await load(`${WORLD_PACK}/${region.slug}`, locale))) {
     redirect({ href: `/places/${WORLD_PACK}/${region.slug}`, locale });
   }
+  const profile = await profileOf(region, locale);
+  const name = regionName(region, locale);
   return (
     <WorldRegionPage
-      name={regionName(region, locale)}
+      name={name}
       contest={contestNote(region.slug, locale)}
       budget={await budgetLink(region, locale)}
       law={
@@ -142,7 +217,15 @@ export default async function PlacePage({ params }: { params: Params }) {
             ? await loadPlaceLaw(db, [region.slug], locale)
             : []
       }
-      profile={await profileOf(region, locale)}
+      profile={profile}
+      hero={heroOf(
+        [`world:${region.slug}`],
+        name,
+        profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker"),
+        profile ? profileStatus(profile, t) : null,
+        profile,
+        t,
+      )}
       t={t}
     />
   );

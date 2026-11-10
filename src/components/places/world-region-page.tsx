@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import PageLayout from "@/components/ui/page-layout";
+import ProfileFrame from "./profile-frame";
 import type { PlaceLaw } from "@/lib/law/place-law";
 import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
 import ContestNote, { type ContestNoteProps } from "./contest-note";
@@ -17,6 +17,8 @@ interface WorldRegionPageProps {
   law: readonly PlaceLaw[];
   /** Its profile: kind, facts and the way into its law. */
   profile: WorldProfileView | null;
+  /** Its photograph and title, when it has one. */
+  hero?: React.ReactNode | null;
   t: PlacesTranslator;
 }
 
@@ -31,10 +33,12 @@ export default function WorldRegionPage({
   budget,
   law,
   profile,
+  hero = null,
   t,
 }: WorldRegionPageProps) {
   return (
-    <PageLayout
+    <ProfileFrame
+      hero={hero}
       title={name}
       kicker={profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker")}
     >
@@ -43,7 +47,7 @@ export default function WorldRegionPage({
 
         {contest && <ContestNote {...contest} t={t} />}
 
-        {profile && <CountryProfile profile={profile} t={t} />}
+        {profile && <CountryProfile profile={profile} t={t} statusShown={!!hero} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
 
@@ -65,6 +69,6 @@ export default function WorldRegionPage({
           </Link>
         </section>
       </div>
-    </PageLayout>
+    </ProfileFrame>
   );
 }

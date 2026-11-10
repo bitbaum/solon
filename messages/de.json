@@ -490,7 +490,9 @@
     "metaDescription": "Wer die Fotografien auf dieser Website gemacht hat, und unter welcher Lizenz.",
     "kicker": "Bildnachweise",
     "title": "Die Fotografien auf dieser Website",
-    "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an."
+    "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an.",
+    "placesTitle": "Die Fotos der Orte",
+    "placesLede": "Das Foto jedes Landes, Gebiets und Rechtsgebiets, aus Wikimedia Commons, jedes unter seiner freien Lizenz und unverändert gezeigt. Urheber und Lizenz stehen auch auf dem Foto selbst."
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -792,7 +794,8 @@
       "routes": "{count, plural, =0 {Solon weiss noch nicht, wie sein Recht offiziell geändert wird.} one {# offizieller Weg, sein Recht zu ändern, mit Quelle.} other {# offizielle Wege, sein Recht zu ändern, mit Quellen.}}",
       "source": "Angaben aus <wikidata>Wikidata</wikidata>, gelesen am {date}; Mitgliedschaft aus der <un>Liste der Vereinten Nationen</un>. Jede Art von Ort sagt, was er tut, nicht, ob sein Anspruch berechtigt ist.",
       "rule": "Ausgerufene Staaten werden nach einer Regel aufgeführt: Wikidata führt sie als Mikronationen, nicht aufgelöst, mit einem Artikel in mindestens 30 Wikipedias."
-    }
+    },
+    "photoCredit": "Foto: {author} · {license}"
   },
   "AuthError": {
     "metaTitle": "Anmeldung nicht abgeschlossen",

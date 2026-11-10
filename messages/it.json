@@ -490,7 +490,9 @@
     "metaDescription": "Chi ha scattato le fotografie di questo sito, e con quale licenza.",
     "kicker": "Crediti fotografici",
     "title": "Le fotografie di questo sito",
-    "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere."
+    "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere.",
+    "placesTitle": "Le fotografie dei luoghi",
+    "placesLede": "La fotografia di ogni paese, territorio e giurisdizione, da Wikimedia Commons, ciascuna con la sua licenza libera e mostrata senza modifiche. Autore e licenza sono indicati anche sulla fotografia stessa."
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -792,7 +794,8 @@
       "routes": "{count, plural, =0 {Solon non sa ancora come il suo diritto viene modificato ufficialmente.} one {# via ufficiale per modificare il suo diritto, con la fonte.} other {# vie ufficiali per modificare il suo diritto, con le fonti.}}",
       "source": "Dati da <wikidata>Wikidata</wikidata>, letti il {date}; appartenenza dall'<un>elenco delle Nazioni Unite</un>. Ogni tipo di luogo dice cosa fa, non se la sua rivendicazione è fondata.",
       "rule": "Gli Stati proclamati sono elencati secondo un'unica regola: Wikidata li classifica come micronazioni, non disciolte, con una voce in almeno 30 Wikipedie."
-    }
+    },
+    "photoCredit": "Foto: {author} · {license}"
   },
   "AuthError": {
     "metaTitle": "Accesso non completato",

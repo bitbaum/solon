@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Every place opens on its photograph.** A country's page, a proclaimed state's, a US state's
+  now begins with a photograph of the place across the screen, its name, what kind of place it is,
+  its capital, population and area; a shared link shows the same photograph with its name. The
+  Matterhorn for Switzerland, Vaduz Castle for Liechtenstein, Fiagdon monastery for South Ossetia,
+  Yellowstone for Wyoming. The list of every country and territory is now a wall of photographs.
+  Every photograph is from Wikimedia Commons under a free licence, its author named on it.
+  {#place-photos}
+
 - **Every country, and every place beyond the UN, has a profile.** Each country's page now says
   what kind of place it is (a UN member since a given day, an observer, a place that governs itself,
   a territory), with its capital, population, area, languages, currency, form of government and

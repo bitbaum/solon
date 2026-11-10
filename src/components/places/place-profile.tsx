@@ -1,7 +1,7 @@
 import type { PlacesTranslator } from "./translator";
 
 import { Link } from "@/i18n/navigation";
-import PageLayout from "@/components/ui/page-layout";
+import ProfileFrame from "./profile-frame";
 import { LawChat } from "@/components/law/law-chat";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLaw } from "@/lib/law/place-law";
@@ -28,6 +28,8 @@ interface PlaceProfileProps {
   budget?: BudgetLink | null;
   /** A country's profile, on the country's own page. */
   profile?: WorldProfileView | null;
+  /** Its photograph and title, when it has one. */
+  hero?: React.ReactNode | null;
   t: PlacesTranslator;
 }
 
@@ -58,6 +60,7 @@ export default function PlaceProfile({
   contest = null,
   budget = null,
   profile = null,
+  hero = null,
   t,
 }: PlaceProfileProps) {
   const above = [...view.partOf].reverse();
@@ -69,7 +72,8 @@ export default function PlaceProfile({
   );
 
   return (
-    <PageLayout
+    <ProfileFrame
+      hero={hero}
       title={view.name}
       kicker={view.levelName}
       description={
@@ -83,7 +87,7 @@ export default function PlaceProfile({
 
         {contest && <ContestNote {...contest} t={t} />}
 
-        {profile && <CountryProfile profile={profile} t={t} />}
+        {profile && <CountryProfile profile={profile} t={t} statusShown={!!hero} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
 
@@ -243,6 +247,6 @@ export default function PlaceProfile({
           </div>
         </details>
       </div>
-    </PageLayout>
+    </ProfileFrame>
   );
 }

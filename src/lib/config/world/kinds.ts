@@ -44,6 +44,8 @@ export const SELF_GOVERNING_POINTS = data.points as unknown as Readonly<
 >;
 /** Where `pnpm run world:profiles` writes every place's facts, read by place pages on the server. */
 export const WORLD_PROFILES_FILE = "data/world/profiles.json";
+/** Where `pnpm run places:photos` writes every place's photograph, read by place pages on the server. */
+export const WORLD_PHOTOS_FILE = "data/world/photos.json";
 /** The day the list and the extras were read. */
 export const WORLD_READ = data.read;
 

@@ -166,6 +166,14 @@ export const identifierSchemeSchema = z.object({
   /** Only a state authority may carry it: the anti-impersonation rule (§4.3). */
   reserved: z.boolean(),
   retired: z.literal(true).optional(),
+  /**
+   * The Wikidata property that holds the same code (ISO 3166-2 is P300), so a place carrying
+   * it is found on Wikidata, and from there its photograph (`pnpm run places:photos`).
+   */
+  wikidataProperty: z
+    .string()
+    .regex(/^P[1-9][0-9]*$/)
+    .optional(),
 });
 export type IdentifierScheme = z.infer<typeof identifierSchemeSchema>;
 

@@ -71,6 +71,8 @@ export interface PlaceView {
   alsoServedBy: PlaceLink[];
   otherNames: { locale: string; name: string }[];
   identifiers: PlaceIdentifier[];
+  /** Its identifiers as stored, `scheme:value`: how its photograph and other records are found. */
+  refs: string[];
   /** Null when the pack has no tax model yet. */
   takesTax: boolean | null;
   /** What a resident can do here, one per kind, in the registry's order. */
@@ -197,6 +199,7 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
         (n, i, all) => all.findIndex((m) => m.locale === n.locale && m.name === n.name) === i,
       ),
     identifiers,
+    refs: input.identifiers.map(({ scheme, value }) => `${scheme}:${value}`),
     takesTax:
       pack.taxModel && place.levelKey
         ? taxingLevels(

@@ -490,7 +490,9 @@
     "metaDescription": "Who made the photographs on this site, and under what licence.",
     "kicker": "Photo credits",
     "title": "The photographs on this site",
-    "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one."
+    "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one.",
+    "placesTitle": "The photographs of places",
+    "placesLede": "Every country's, territory's and jurisdiction's photograph, from Wikimedia Commons, each under its free licence and shown unchanged. The author and licence are also on the photograph itself."
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -1378,7 +1380,8 @@
       "routes": "{count, plural, =0 {Solon does not know yet how its law is officially changed.} one {# official way to change its law, stated with its source.} other {# official ways to change its law, stated with their sources.}}",
       "source": "Facts from <wikidata>Wikidata</wikidata>, read {date}; membership from the <un>United Nations' list</un>. Each kind of place says what it does, not whether its claim is right.",
       "rule": "Proclaimed states are listed by one rule: Wikidata classes them as micronations, not dissolved, with an article in at least 30 Wikipedias."
-    }
+    },
+    "photoCredit": "Photo: {author} · {license}"
   },
   "AuthError": {
     "metaTitle": "Sign-in didn’t finish",
