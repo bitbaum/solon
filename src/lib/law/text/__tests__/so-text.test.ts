@@ -86,3 +86,12 @@ describe("verify reads the act's words, not the Drupal page's menus", () => {
     expect(regionOf("<p>any page</p>", "li")).toBe("<p>any page</p>");
   });
 });
+
+describe("verify reads a decree kept as JSON through its content field", () => {
+  it("takes the post's rendered HTML, and fails loudly when there is none", async () => {
+    const { JSON_BODIES } = await import("../verify");
+    const body = JSON_BODIES.rso!(JSON.parse(fixture("presidentruo-post-89961.fixture.json")));
+    expect(body).toContain("постановляю");
+    expect(() => JSON_BODIES.rso!({ id: 1 })).toThrow(/no content/);
+  });
+});
