@@ -66,4 +66,11 @@ describe("verifying held text against the page it came from", () => {
     expect(htmlAround(html, "5 words: liste der staaten", 20)).toContain('<div class="ab">Liste');
     expect(htmlAround(html, "5 words: gibtesnicht", 20)).toBe("");
   });
+
+  it("can leave an act's header blocks out, so the check measures its provisions", () => {
+    const html =
+      '<div class="htit1">Gesetz vom 5. Mai 2026</div><div class="art">Art. 1 Zweck</div><div class="gezf">gez. Fürst</div>';
+    expect(wordsOf(visibleText(html, ["htit1", "gezf"]))).toEqual(["art", "zweck"]);
+    expect(wordsOf(visibleText(html))).toContain("gesetz");
+  });
 });
