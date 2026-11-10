@@ -1,18 +1,18 @@
 import type { MetadataRoute } from "next";
+import en from "../../messages/en.json";
 
 /**
  * The web app manifest. Without it Android and desktop browsers never offer
  * "Install app", so the site could only be pinned as a bookmark. The PNGs in
- * public/app-icons/ are rasterised from public/app-icons/icon.svg — the scales
- * of components/ui/logo.tsx on the dark tile (192, 512, and a maskable 512
- * with the icon inside the 80% safe zone); regenerate them when it changes.
+ * The icons are written from brand/solon-mark.svg by `pnpm run brand -- --png`
+ * (192, 512, and a maskable 512 with the owl inside the safe zone).
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Solon — Governance any group can run",
+    name: en.Meta.title,
     short_name: "Solon",
-    description:
-      "Proposals, votes and the books, where every member can see them — for companies, towns, associations and communities.",
+    // The home page's hero, as everywhere Solon describes itself.
+    description: en.Home.hero.lede,
     start_url: "/",
     scope: "/",
     display: "standalone",
