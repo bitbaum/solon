@@ -204,8 +204,12 @@ export async function importEurLex(db: Database, options: EurLexOptions): Promis
         .replace(/\d+/g, "N")
         .slice(0, 120);
       report.failureReasons[kind] = (report.failureReasons[kind] ?? 0) + 1;
-      // A page that is not an act's (the oldest acts have no HTML text) is an answer, not a refusal.
-      refusedInARow = /^\d{3} for|no answer|Internet Archive/.test(reason) ? refusedInARow + 1 : 0;
+      // A page that is not an act's, or a 404 (the newest consolidations have no HTML text yet, the
+      // oldest acts none at all), is an answer, not a refusal: twenty of them in a row stood in front of
+      // every act below them and stopped each run with nothing stored (2026-11-09, at 3,924 acts).
+      refusedInARow = /^(?:403|429|5\d\d) for|no answer|Internet Archive/.test(reason)
+        ? refusedInARow + 1
+        : 0;
     }
     await sleep(pauseMs);
   }
@@ -224,7 +228,17 @@ async function storeAct(
   const page = await read(htmlUrlOf(act.text.celex), doFetch, EURLEX.hosts, options.archiveRetryMs);
   const html = new TextDecoder().decode(page.bytes);
   if (!isActPage(html) || /The requested document does not exist/i.test(html)) {
-    throw new Error("not an act's page");
+    // What the page was, so an act with no HTML text is told from a shell, a landing page or a refusal.
+    const title =
+      /<title[^>]*>([^<]*)/i.exec(html)?.[1]?.replace(/\s+/g, " ").trim().slice(0, 80) ?? "";
+    const text = html
+      .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    throw new Error(
+      `not an act's page: ${page.bytes.length} bytes, title "${title}", text "${text.slice(0, 160)}"`,
+    );
   }
   const provisions = parseEurLexHtml(html);
   if (provisions.length === 0) throw new Error("no text in the page");
