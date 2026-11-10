@@ -8,6 +8,12 @@ describe("verifying held text against the page it came from", () => {
     expect(wordsOf(visibleText(html))).toEqual(["art", "überschrift", "und", "text", "mehr"]);
   });
 
+  it("leaves the page's footnotes out: they are amendment history, not the law's text", () => {
+    const html =
+      '<div class="art">Art. 1 Zweck</div><div class="fntext"><a href="#fr1">1</a> eingefügt durch LGBl. 2024 Nr. 416.</div>';
+    expect(wordsOf(visibleText(html))).toEqual(["art", "zweck"]);
+  });
+
   it("counts every repeat, so a skipped article shows up", () => {
     const page = wordsOf("Die Gemeinde erhebt Gebühren. Die Gebühren sind geschuldet.");
     const whole = coverage(page, page);

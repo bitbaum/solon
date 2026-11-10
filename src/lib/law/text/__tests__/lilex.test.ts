@@ -67,6 +67,40 @@ describe("parseLilexProvisions", () => {
   });
 });
 
+describe("parseLilexProvisions: the text outside the articles", () => {
+  const PAGE_WITH_ANNEX = `<html><body>
+<div class="htit1">Kundmachung</div><div class="vom">vom 1. Mai 2020</div>
+<div class="einl">Gestützt auf Art. 3 macht die Regierung kund:</div>
+<div class="tit1">I. Allgemeine Bestimmungen</div>
+<div class="art"><a name="art:1"></a>Art. 1<div class="sacht">Zweck</div><div class="abs">Zweck des Gesetzes.</div></div>
+<div class="tit1">Anhang I</div>
+<div class="ab">Liste der Partnerstaaten</div>
+<div class="ab">Albanien, Andorra</div>
+<div class="art"><a name="art:2"></a>Art. 2<div class="abs">Schluss.</div></div>
+<div class="tit1">Anhang II</div>
+<div class="ab">Zweite Liste</div>
+<div class="fntext"><a href="#fr1" name="fn1">1</a> eingefügt durch LGBl. 2024 Nr. 416.</div>
+</body></html>`;
+  const provisions = parseLilexProvisions(PAGE_WITH_ANNEX);
+
+  it("keeps the promulgation before the first article and the body under each annex heading, in page order", () => {
+    expect(provisions.map((p) => [p.path, p.heading])).toEqual([
+      ["part_1", "Kundmachung"],
+      ["art_1", "Art. 1 Zweck"],
+      ["part_2", "Anhang I"],
+      ["art_2", "Art. 2"],
+      ["part_3", "Anhang II"],
+    ]);
+    expect(provisions[0]!.text).toBe("Gestützt auf Art. 3 macht die Regierung kund:");
+    expect(provisions[2]!.text).toBe("Liste der Partnerstaaten\nAlbanien, Andorra");
+  });
+
+  it("gives nothing for a chapter heading with an article straight after it, and leaves footnotes out", () => {
+    expect(provisions.some((p) => p.heading.startsWith("I. Allgemeine"))).toBe(false);
+    expect(provisions.some((p) => p.text.includes("LGBl. 2024"))).toBe(false);
+  });
+});
+
 describe("lilexId", () => {
   it("is the issue's year, its number to three digits and 000", () => {
     expect(lilexId("2008/311", "152.20")).toBe("2008311000");
