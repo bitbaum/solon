@@ -1,4 +1,3 @@
-import { Link } from "@/i18n/navigation";
 import type { WorldProfileView } from "@/lib/places/world-profile";
 import type { PlacesTranslator } from "./translator";
 
@@ -17,38 +16,39 @@ export function profileStatus(profile: WorldProfileView, t: PlacesTranslator): s
         : t(`profile.kinds.${profile.kind === "state" ? "territory" : profile.kind}`);
 }
 
+/** The facts the hero carries, over the photograph; the glance below holds the rest. */
+export const HERO_FACTS = ["capital", "population", "area"] as const;
+
 /**
- * A country's, a territory's or a proclaimed state's profile, the same card on
- * every such page: what kind of place it is, its facts with where they come
- * from, and the way into its constitution and its law.
+ * A country's, a territory's or a proclaimed state's facts at a glance, the
+ * same card on every such page beside its law: the facts the hero does not
+ * carry, how many official routes change its law, and where it all comes from.
+ * The way into its constitution and its law is the hero's.
  */
 export default function CountryProfile({
   profile,
   t,
-  statusShown = false,
 }: {
   profile: WorldProfileView;
   t: PlacesTranslator;
-  /** The page's hero already says what kind of place it is. */
-  statusShown?: boolean;
 }) {
   const day = new Date(`${profile.read}T00:00:00Z`).toISOString().slice(0, 10);
-  const status = profileStatus(profile, t);
-  const facts = profile.facts.filter((f) => f.key !== "unSince");
+  const facts = profile.facts.filter(
+    (f) => f.key !== "unSince" && !(HERO_FACTS as readonly string[]).includes(f.key),
+  );
   return (
     <section
       aria-labelledby="place-profile"
       className="rounded-surface border border-default bg-surface-base p-5 sm:p-6"
     >
-      <h2 id="place-profile" className="mb-2 font-semibold text-fg-primary">
+      <h2 id="place-profile" className="mb-0 font-semibold text-fg-primary">
         {t("profile.title")}
       </h2>
-      {!statusShown && <p className="mb-0 text-sm text-fg-secondary">{status}</p>}
       {profile.description && (
         <p className="mb-0 mt-2 text-sm text-fg-secondary">{profile.description}</p>
       )}
       {facts.length > 0 && (
-        <dl className="mt-4 grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm lg:grid-cols-1">
           {facts.map((f) => (
             <div key={f.key} className="min-w-0">
               <dt className="text-fg-tertiary">{t(`profile.facts.${f.key}`)}</dt>
@@ -65,25 +65,9 @@ export default function CountryProfile({
           ))}
         </dl>
       )}
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        {profile.constitution ? (
-          <Link href={`/law/${profile.constitution.actId}`} className="btn-primary min-h-11">
-            {t("profile.constitution")}
-          </Link>
-        ) : (
-          <p className="mb-0 text-sm text-fg-secondary">{t("profile.noConstitution")}</p>
-        )}
-        {profile.authority && (
-          <Link
-            href={`/law/place/${profile.authority}`}
-            className="text-sm font-semibold text-fg-primary hover:underline"
-          >
-            {t("profile.allLaw")} →
-          </Link>
-        )}
-      </div>
       {profile.authority && (
-        <p className="mb-0 mt-3 text-sm text-fg-secondary">
+        <p className="mb-0 mt-4 border-t border-default pt-4 text-sm text-fg-secondary">
+          {profile.constitution ? null : <>{t("profile.noConstitution")} </>}
           {t("profile.routes", { count: profile.routes })}
         </p>
       )}

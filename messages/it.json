@@ -492,7 +492,8 @@
     "title": "Le fotografie di questo sito",
     "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere.",
     "placesTitle": "Le fotografie dei luoghi",
-    "placesLede": "La fotografia di ogni paese, territorio e giurisdizione, da Wikimedia Commons, ciascuna con la sua licenza libera e mostrata senza modifiche. Autore e licenza sono indicati anche sulla fotografia stessa."
+    "placesLede": "La fotografia di ogni paese, territorio e giurisdizione, da Wikimedia Commons, ciascuna con la sua licenza libera e mostrata senza modifiche. Autore e licenza sono indicati anche sulla fotografia stessa.",
+    "placesPages": "Pagine delle fotografie dei luoghi"
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -691,11 +692,21 @@
       "title": "Il mondo",
       "kicker": "Paese o territorio",
       "claimed": "Si amministra da sé e non è membro delle Nazioni Unite. <link>{claimant}</link> lo considera parte del proprio territorio.",
+      "claimedBy": "<link>{claimant}</link> lo considera parte del proprio territorio.",
       "notYet": "Solon non raccoglie ancora i luoghi di {place}.",
       "coverage": "Che cosa copre Solon finora",
       "metaDescription": "{place} su Solon: il diritto che Solon vi raccoglie e i luoghi al suo interno.",
       "indexIntro": "Ogni paese e ogni territorio, ciascuno con una pagina propria. Aprine uno per vedere il diritto che Solon vi raccoglie e i luoghi al suo interno.",
-      "heldPlaces": "{count, plural, =0 {Solo luoghi} one {Luoghi · # atto} other {Luoghi · # atti}}"
+      "heldPlaces": "{count, plural, =0 {Solo luoghi} one {Luoghi · # atto} other {Luoghi · # atti}}",
+      "groups": {
+        "state": "Membri delle Nazioni Unite",
+        "observer": "Stati osservatori",
+        "self_governing": "Si governano da sé, fuori dall'ONU",
+        "territory": "Territori",
+        "proclaimed": "Stati proclamati",
+        "special": "Giurisdizioni speciali",
+        "project": "Progetti di nuove giurisdizioni"
+      }
     },
     "law": {
       "title": "Diritto",

@@ -108,6 +108,26 @@ export async function loadPlacePage(
       ),
     );
 
+  const partIdentifiers =
+    parts.length > 0
+      ? await db
+          .select({
+            jurisdictionId: jurisdictionIdentifiers.jurisdictionId,
+            scheme: jurisdictionIdentifiers.scheme,
+            value: jurisdictionIdentifiers.value,
+          })
+          .from(jurisdictionIdentifiers)
+          .where(
+            and(
+              inArray(
+                jurisdictionIdentifiers.jurisdictionId,
+                parts.map((r) => r.place.id),
+              ),
+              isNull(jurisdictionIdentifiers.supersededAt),
+            ),
+          )
+      : [];
+
   const view = placeView({
     config,
     chain,
@@ -116,6 +136,7 @@ export async function loadPlacePage(
     instruments,
     refinements: refinements.map((r) => r.place),
     parts: parts.map((r) => r.place),
+    partIdentifiers,
     sources: retrievals,
     locale,
   });

@@ -16,7 +16,12 @@ import {
 import { loadWorldProfile, type WorldProfileView } from "@/lib/places/world-profile";
 import { placePhoto } from "@/lib/places/place-photo";
 import PlaceHero from "@/components/places/place-hero";
+import { placeHero, placeViewHero } from "@/components/places/place-page-hero";
 import { profileStatus } from "@/components/places/country-profile";
+import { PlaceTrail } from "@/components/places/place-head";
+import ShareButton from "@/components/places/share-button";
+import type { PlaceLaw } from "@/lib/law/place-law";
+import type { PlaceLink } from "@/lib/places/place-view";
 import type { PlacesTranslator } from "@/components/places/translator";
 import type { BudgetLink } from "@/components/budgets/budget-link-card";
 import { holderOfRegion } from "@/lib/budgets/holders";
@@ -62,37 +67,6 @@ const profileOf = (region: WorldRegion | undefined, locale: Locale) =>
   region
     ? loadWorldProfile(db, region, locale, worldRegionByCode, (r) => regionName(r, locale))
     : Promise.resolve(null);
-
-/**
- * The top of a place's page when Solon holds a photograph of it: its kind, its name, the
- * sentence that says what it is, and a country's capital, population and area.
- */
-function heroOf(
-  keys: readonly string[],
-  title: string,
-  kicker: string,
-  line: string | null,
-  profile: WorldProfileView | null,
-  t: PlacesTranslator,
-) {
-  const photo = placePhoto(keys);
-  if (!photo) return null;
-  const facts = (profile?.facts ?? [])
-    // Capital, population and area; a population of none (Liberland's) is left to the card below.
-    .filter((f) => f.key === "capital" || f.key === "population" || f.key === "area")
-    .filter((f) => !(f.key === "population" && /^0(\s|$)/.test(f.value)))
-    .map((f) => ({ label: t(`profile.facts.${f.key}`), value: f.value }));
-  return (
-    <PlaceHero
-      photo={photo}
-      kicker={kicker}
-      title={title}
-      line={line}
-      facts={facts}
-      credit={t("photoCredit", { author: photo.author, license: photo.license })}
-    />
-  );
-}
 
 /** A country or territory Solon holds no places for, by its one-segment path. */
 const regionOf = (slug: string[]) =>
@@ -163,19 +137,7 @@ export default async function PlacePage({ params }: { params: Params }) {
           : undefined;
     const budget = await budgetLink(country, locale);
     const profile = await profileOf(country, locale);
-    const above = [...view.partOf].reverse();
-    const hero = heroOf(
-      [...(country ? [`world:${country.slug}`] : []), ...view.refs],
-      view.name,
-      profile ? t(`profile.kicker.${profile.kind}`) : view.levelName,
-      profile
-        ? profileStatus(profile, t)
-        : above.length > 0
-          ? t("summaryIn", { level: view.levelName, place: above.map((p) => p.name).join(", ") })
-          : null,
-      profile,
-      t,
-    );
+    const hero = placeViewHero({ view, country: country?.slug ?? null, profile, law, t });
     return (
       <PlaceProfile
         view={view}
@@ -204,28 +166,29 @@ export default async function PlacePage({ params }: { params: Params }) {
   }
   const profile = await profileOf(region, locale);
   const name = regionName(region, locale);
+  const law = region.code
+    ? await loadCountryLaw(db, region.code, locale)
+    : // A place beyond the ISO list that makes law (Liberland) has an authority by its slug.
+      LAW_AUTHORITIES.some((a) => a.key === region.slug)
+      ? await loadPlaceLaw(db, [region.slug], locale)
+      : [];
   return (
     <WorldRegionPage
       name={name}
       contest={contestNote(region.slug, locale)}
       budget={await budgetLink(region, locale)}
-      law={
-        region.code
-          ? await loadCountryLaw(db, region.code, locale)
-          : // A place beyond the ISO list that makes law (Liberland) has an authority by its slug.
-            LAW_AUTHORITIES.some((a) => a.key === region.slug)
-            ? await loadPlaceLaw(db, [region.slug], locale)
-            : []
-      }
+      law={law}
       profile={profile}
-      hero={heroOf(
-        [`world:${region.slug}`],
-        name,
-        profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker"),
-        profile ? profileStatus(profile, t) : null,
+      hero={placeHero({
+        keys: [`world:${region.slug}`],
+        title: name,
+        kicker: profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker"),
+        line: profile ? profileStatus(profile, t) : null,
         profile,
+        law,
+        above: [],
         t,
-      )}
+      })}
       t={t}
     />
   );

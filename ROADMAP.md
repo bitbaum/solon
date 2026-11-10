@@ -84,7 +84,9 @@ substance; it never says which side is right (design:
 - [x] The map's switch: all places, or only those beyond the UN's member states, each listed by kind {#world-map-beyond}
 - [ ] Liberland's laws and the other proclaimed states' and special jurisdictions' law, through the plan {#world-beyond-law}
 - [x] A photograph on every place's page and on the card its link shows when shared, chosen by one rule from Wikidata and Wikimedia Commons for any place an identifier finds, replaceable by a person in one line, credited on the photograph and on `/credits`; the world index as a wall of photographs {#place-photos}
-- [ ] Swiss cantons' and communes' photographs: record each canton's ISO 3166-2 code in the pack, run `places:photos --from-db` on the box {#place-photos-subdivisions}
+- [x] Photographs for the places inside countries: every ISO 3166-2 subdivision, Swiss canton (through a crosswalk from its FSO number) and commune, US state and county Wikidata holds; the places inside a place as tiles {#place-photos-subdivisions}
+- [x] Solon serves place photographs from its own store, read once from Wikimedia, so none fails to load and none waits on Wikimedia twice {#place-photo-store}
+- [x] One page shape for every place: the hero with its main action, the law and what a reader can do beside the place at a glance; the world index grouped by kind of place {#place-page-shape}
 - [ ] A proposal on an act whose text Solon does not hold: the change asked for in words, pinned to the act's official publication, supported and counted like any other {#amend-without-text}
 - [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}
 - [ ] The deputies, from the Parliament's own page, and the hand-over: the redline, the count per electorate and the log hash, sent to deputies who choose to receive them, their answer recorded {#contested-handover}

@@ -492,7 +492,8 @@
     "title": "Die Fotografien auf dieser Website",
     "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an.",
     "placesTitle": "Die Fotos der Orte",
-    "placesLede": "Das Foto jedes Landes, Gebiets und Rechtsgebiets, aus Wikimedia Commons, jedes unter seiner freien Lizenz und unverändert gezeigt. Urheber und Lizenz stehen auch auf dem Foto selbst."
+    "placesLede": "Das Foto jedes Landes, Gebiets und Rechtsgebiets, aus Wikimedia Commons, jedes unter seiner freien Lizenz und unverändert gezeigt. Urheber und Lizenz stehen auch auf dem Foto selbst.",
+    "placesPages": "Seiten der Ortsfotos"
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -691,11 +692,21 @@
       "title": "Die Welt",
       "kicker": "Land oder Gebiet",
       "claimed": "Verwaltet sich selbst und ist nicht Mitglied der Vereinten Nationen. <link>{claimant}</link> betrachtet es als Teil seines Staatsgebiets.",
+      "claimedBy": "<link>{claimant}</link> betrachtet es als Teil seines Staatsgebiets.",
       "notYet": "Solon führt die Orte von {place} noch nicht.",
       "coverage": "Was Solon bisher abdeckt",
       "metaDescription": "{place} auf Solon: das Recht, das Solon dort führt, und die Orte darin.",
       "indexIntro": "Jedes Land und jedes Gebiet, jedes mit einer eigenen Seite. Öffnen Sie eines, um das Recht zu sehen, das Solon dort führt, und die Orte darin.",
-      "heldPlaces": "{count, plural, =0 {Nur Orte} one {Orte · # Erlass} other {Orte · # Erlasse}}"
+      "heldPlaces": "{count, plural, =0 {Nur Orte} one {Orte · # Erlass} other {Orte · # Erlasse}}",
+      "groups": {
+        "state": "Mitglieder der Vereinten Nationen",
+        "observer": "Beobachterstaaten",
+        "self_governing": "Regieren sich selbst, ohne UNO",
+        "territory": "Gebiete",
+        "proclaimed": "Ausgerufene Staaten",
+        "special": "Sonderrechtsgebiete",
+        "project": "Projekte für neue Rechtsgebiete"
+      }
     },
     "law": {
       "title": "Recht",

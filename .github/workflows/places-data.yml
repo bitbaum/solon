@@ -67,3 +67,25 @@ jobs:
           rm -f ~/.ssh/id
           while IFS= read -r line; do echo "::notice::$line"; done < out.txt
           exit "${status:-0}"
+
+  # The world list's photographs read into Solon's store (place_photo_bytes)
+  # once, through the live site, so no reader is the first to ask for one. Held
+  # photographs answer at once; a deploy that added none costs a minute.
+  photos:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Read the world's photographs into the store
+        env:
+          BASE: https://solon.orangecat.ch
+        run: pnpm run places:photos:warm

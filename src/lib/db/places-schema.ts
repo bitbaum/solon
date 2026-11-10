@@ -34,6 +34,7 @@ import {
   uniqueIndex,
   varchar,
   type AnyPgColumn,
+  customType,
 } from "drizzle-orm/pg-core";
 import { randomUUID } from "node:crypto";
 import {
@@ -739,3 +740,22 @@ export type JurisdictionRelationRow = typeof jurisdictionRelations.$inferSelect;
 export type Fact = typeof facts.$inferSelect;
 export type Source = typeof sources.$inferSelect;
 export type PlaceImportRun = typeof placeImportRuns.$inferSelect;
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => "bytea" });
+
+/**
+ * A place's photograph as Solon serves it: the bytes of one Wikimedia Commons
+ * thumbnail, read once (src/lib/places/photo-store.ts) and kept, so a page
+ * never waits on Wikimedia and a deploy never empties the store. Keyed by the
+ * Commons file and the width; a file is never rewritten, so a row is never
+ * updated.
+ */
+export const placePhotoBytes = pgTable("place_photo_bytes", {
+  /** `<Commons file name>@<width>`. */
+  key: text("key").primaryKey(),
+  contentType: text("content_type").notNull(),
+  bytes: bytea("bytes").notNull(),
+  /** Where they were read. */
+  url: text("url").notNull(),
+  recordedAt: recordedAt(),
+});

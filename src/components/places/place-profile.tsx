@@ -12,7 +12,8 @@ import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-lin
 import ContestNote, { type ContestNoteProps } from "./contest-note";
 import CountryProfile from "./country-profile";
 import type { WorldProfileView } from "@/lib/places/world-profile";
-import { PlaceLawCard, PlaceTrail } from "./place-head";
+import { PlaceLawCard } from "./place-head";
+import PlaceParts from "./place-parts";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
@@ -28,8 +29,8 @@ interface PlaceProfileProps {
   budget?: BudgetLink | null;
   /** A country's profile, on the country's own page. */
   profile?: WorldProfileView | null;
-  /** Its photograph and title, when it has one. */
-  hero?: React.ReactNode | null;
+  /** The top of the page: its photograph, name, headline facts and main action. */
+  hero: React.ReactNode;
   t: PlacesTranslator;
 }
 
@@ -60,10 +61,9 @@ export default function PlaceProfile({
   contest = null,
   budget = null,
   profile = null,
-  hero = null,
+  hero,
   t,
 }: PlaceProfileProps) {
-  const above = [...view.partOf].reverse();
   const row = (label: string, value: React.ReactNode, key = label) => (
     <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
       <dt className="text-fg-secondary">{label}</dt>
@@ -72,62 +72,15 @@ export default function PlaceProfile({
   );
 
   return (
-    <ProfileFrame
-      hero={hero}
-      title={view.name}
-      kicker={view.levelName}
-      description={
-        above.length > 0
-          ? t("summaryIn", { level: view.levelName, place: above.map((p) => p.name).join(", ") })
-          : undefined
-      }
-    >
-      <div className="max-w-3xl space-y-10">
-        <PlaceTrail above={view.partOf} name={view.name} t={t} />
-
-        {contest && <ContestNote {...contest} t={t} />}
-
-        {profile && <CountryProfile profile={profile} t={t} statusShown={!!hero} />}
+    <ProfileFrame hero={hero} aside={profile ? <CountryProfile profile={profile} t={t} /> : null}>
+      <>
+        {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
 
         {budget && <BudgetLinkCard {...budget} />}
 
-        {view.parts.length > 0 && (
-          <section aria-labelledby="place-parts" className="space-y-6">
-            <h2 id="place-parts" className="headline text-2xl text-fg-primary">
-              {t("parts.title", { place: view.name })}
-            </h2>
-            {view.parts.map((group) => (
-              <div key={group.levelName} className="space-y-3">
-                <h3 className="text-sm font-semibold text-fg-secondary">
-                  {t("parts.level", { level: group.levelName, count: group.places.length })}
-                </h3>
-                <ul className="grid overflow-hidden rounded-surface border border-default bg-surface-base sm:grid-cols-2">
-                  {group.places.map((place, i) => (
-                    <li key={`${place.slugPath}-${i}`} className="-mb-px border-b border-default">
-                      {place.slugPath ? (
-                        <Link
-                          href={placeHref(place.slugPath)}
-                          className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
-                        >
-                          <span>{place.name}</span>
-                          <span aria-hidden className="text-fg-tertiary">
-                            →
-                          </span>
-                        </Link>
-                      ) : (
-                        <span className="flex min-h-11 items-center px-5 py-2 text-fg-primary">
-                          {place.name}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </section>
-        )}
+        {view.parts.length > 0 && <PlaceParts view={view} t={t} />}
 
         {view.alsoServedBy.length > 0 && (
           <section>
@@ -246,7 +199,7 @@ export default function PlaceProfile({
             <SourceList sources={view.sources} t={t} />
           </div>
         </details>
-      </div>
+      </>
     </ProfileFrame>
   );
 }

@@ -5,7 +5,7 @@ import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-lin
 import ContestNote, { type ContestNoteProps } from "./contest-note";
 import CountryProfile from "./country-profile";
 import type { WorldProfileView } from "@/lib/places/world-profile";
-import { PlaceLawCard, PlaceTrail } from "./place-head";
+import { PlaceLawCard } from "./place-head";
 import type { PlacesTranslator } from "./translator";
 
 interface WorldRegionPageProps {
@@ -17,8 +17,8 @@ interface WorldRegionPageProps {
   law: readonly PlaceLaw[];
   /** Its profile: kind, facts and the way into its law. */
   profile: WorldProfileView | null;
-  /** Its photograph and title, when it has one. */
-  hero?: React.ReactNode | null;
+  /** The top of the page: its photograph, name, headline facts and main action. */
+  hero: React.ReactNode;
   t: PlacesTranslator;
 }
 
@@ -33,21 +33,13 @@ export default function WorldRegionPage({
   budget,
   law,
   profile,
-  hero = null,
+  hero,
   t,
 }: WorldRegionPageProps) {
   return (
-    <ProfileFrame
-      hero={hero}
-      title={name}
-      kicker={profile ? t(`profile.kicker.${profile.kind}`) : t("world.kicker")}
-    >
-      <div className="max-w-3xl space-y-10">
-        <PlaceTrail above={[]} name={name} t={t} />
-
-        {contest && <ContestNote {...contest} t={t} />}
-
-        {profile && <CountryProfile profile={profile} t={t} statusShown={!!hero} />}
+    <ProfileFrame hero={hero} aside={profile ? <CountryProfile profile={profile} t={t} /> : null}>
+      <>
+        {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
 
@@ -68,7 +60,7 @@ export default function WorldRegionPage({
             {t("world.coverage")} →
           </Link>
         </section>
-      </div>
+      </>
     </ProfileFrame>
   );
 }

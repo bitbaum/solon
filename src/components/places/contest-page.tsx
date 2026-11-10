@@ -8,6 +8,7 @@ import type { MoneyDisplay } from "@/lib/budgets/format";
 import type { BudgetSummary } from "@/lib/budgets/summary";
 import ContestMoney from "./contest-money";
 import { PlaceTrail } from "./place-head";
+import ShareButton from "./share-button";
 import type { PlacesTranslator } from "./translator";
 
 interface ContestPageProps {
@@ -80,7 +81,10 @@ export default function ContestPage({
       })}
     >
       <div className="max-w-5xl space-y-10">
-        <PlaceTrail above={[]} name={view.name} t={t} />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <PlaceTrail above={[]} t={t} />
+          <ShareButton title={view.name} />
+        </div>
 
         <ul className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
           {view.sides.map((side) => (

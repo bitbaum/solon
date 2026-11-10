@@ -492,7 +492,8 @@
     "title": "Les photographies de ce site",
     "lede": "Toutes proviennent de Wikimedia Commons et sont utilisées sous les licences ci-dessous. Aucune ne montre un client de Solon ni ne le laisse entendre.",
     "placesTitle": "Les photographies des lieux",
-    "placesLede": "La photographie de chaque pays, territoire et juridiction, issue de Wikimedia Commons, chacune sous sa licence libre et montrée sans modification. L'auteur et la licence figurent aussi sur la photographie elle-même."
+    "placesLede": "La photographie de chaque pays, territoire et juridiction, issue de Wikimedia Commons, chacune sous sa licence libre et montrée sans modification. L'auteur et la licence figurent aussi sur la photographie elle-même.",
+    "placesPages": "Pages des photographies de lieux"
   },
   "Development": {
     "roadmapTitle": "Feuille de route — Solon",
@@ -691,11 +692,21 @@
       "title": "Le monde",
       "kicker": "Pays ou territoire",
       "claimed": "S'administre lui-même et n'est pas membre des Nations unies. <link>{claimant}</link> le considère comme une partie de son territoire.",
+      "claimedBy": "<link>{claimant}</link> le considère comme une partie de son territoire.",
       "notYet": "Solon ne tient pas encore les lieux de {place}.",
       "coverage": "Ce que Solon couvre jusqu'ici",
       "metaDescription": "{place} sur Solon : le droit que Solon y tient et les lieux qu'il contient.",
       "indexIntro": "Chaque pays et chaque territoire, chacun avec sa propre page. Ouvrez-en un pour voir le droit que Solon y tient et les lieux qu'il contient.",
-      "heldPlaces": "{count, plural, =0 {Lieux seulement} one {Lieux · # acte} other {Lieux · # actes}}"
+      "heldPlaces": "{count, plural, =0 {Lieux seulement} one {Lieux · # acte} other {Lieux · # actes}}",
+      "groups": {
+        "state": "Membres des Nations unies",
+        "observer": "États observateurs",
+        "self_governing": "Se gouvernent eux-mêmes, hors de l'ONU",
+        "territory": "Territoires",
+        "proclaimed": "États proclamés",
+        "special": "Juridictions spéciales",
+        "project": "Projets de nouvelles juridictions"
+      }
     },
     "law": {
       "title": "Droit",

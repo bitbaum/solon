@@ -16,12 +16,17 @@ export interface ContestNoteProps {
 export default function ContestNote({
   claimant,
   href,
+  statusShown = false,
   t,
-}: ContestNoteProps & { t: PlacesTranslator }) {
+}: ContestNoteProps & {
+  /** The page's hero already says the place governs itself: only the claim is left to say. */
+  statusShown?: boolean;
+  t: PlacesTranslator;
+}) {
   return (
     <div className="space-y-2 rounded-surface border border-default bg-surface-base p-5 sm:p-6">
       <p className="mb-0 text-sm text-fg-secondary">
-        {t.rich("world.claimed", {
+        {t.rich(statusShown ? "world.claimedBy" : "world.claimed", {
           claimant: claimant.name,
           link: (chunks) => (
             <Link href={claimant.href} className="text-fg-primary hover:underline">
