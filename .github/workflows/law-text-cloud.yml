@@ -28,6 +28,8 @@ on:
             riigiteataja,
             parliamentrso,
             presidentruo,
+            parliamentrso-text,
+            presidentruo-text,
             municipal,
             lexwork,
           ]
