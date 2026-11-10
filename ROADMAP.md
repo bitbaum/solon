@@ -60,7 +60,15 @@ question, in each side's own words, so the trade-offs can be argued about the
 substance; it never says which side is right (design:
 `docs/design/2026-11-contested-law.md`).
 
-- [x] Every place the world list marks as claimed has a comparison page and its place pages link to it; South Ossetia and Georgia compared from their constitutions on four questions (territory, citizenship, moving and leaving, defence), each quote checked weekly {#contested-p1}
+- [x] Every place the world list marks as claimed has a comparison page and its place pages link to it; South Ossetia and Georgia compared on six questions (territory, who may propose a law, taxes, citizenship, moving and leaving, defence), each quote checked weekly {#contested-p1}
+- [x] What each side's public budget rests on, from its own budget law, with what the figures say by arithmetic about spending the same without what was received (South Ossetia 2023: 81% of revenue was aid from the Russian Federation) {#contested-ledger}
+- [x] South Ossetia's official route: a bill reaches the Parliament through any one deputy (Constitution, Art. 69); "propose a change" on every held article of the comparison {#contested-route}
+- [ ] The codes the South Ossetian Parliament publishes as Word files read into articles, so the Tax Code can be amended article by article (design: `docs/design/2026-11-from-comparison-to-change.md` §4) {#contested-codes}
+- [ ] Safe support where proposing is risky: counts without lists, a new pseudonym per proposal, commitments instead of account ids in the public log, a page that says what is kept; before any outreach (§5) {#contested-safe-support}
+- [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}
+- [ ] The deputies, from the Parliament's own page, and the hand-over: the redline, the count per electorate and the log hash, sent to deputies who choose to receive them, their answer recorded {#contested-handover}
+- [ ] Support counted per electorate and tier (declared, vouched, attested), never summed (§6) {#contested-electorates}
+- [ ] Reach: a Telegram bot through chatkit, a signed static mirror, an onion address {#contested-reach}
 - [ ] Georgia's law in the register (matsne.gov.ge refuses automated readers; a dated archive copy read from the box), the statutes each constitution defers to on both sides, and the compulsion and exit rubrics coded for both with a second reader {#contested-statutes}
 - [ ] What each side's law says about acts, documents and property made under the other's, as its own question {#contested-recognition}
 - [ ] Abkhazia, Transnistria, Northern Cyprus, Somaliland and Kosovo read the same way: config and readers, no new code {#contested-more}

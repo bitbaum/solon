@@ -8,7 +8,14 @@
  */
 import { CONTEST_TOPICS, CONTESTS } from "@/lib/config/places/contested";
 import { WORLD, regionName, type WorldRegion } from "@/lib/config/world";
-import type { Contest, ContestProvision, ContestRole, ContestTopic } from "./contested";
+import {
+  ledgerArithmetic,
+  type Contest,
+  type ContestLedger,
+  type ContestProvision,
+  type ContestRole,
+  type ContestTopic,
+} from "./contested";
 import { localized } from "./place-view";
 
 export interface ContestSideView {
@@ -34,11 +41,21 @@ export interface ContestRow {
   cells: ContestCell[];
 }
 
+export interface ContestLedgerView {
+  side: string;
+  sideName: string;
+  ledger: ContestLedger;
+  lines: { label: string; amount: number; kind: "own" | "received"; from: string | null }[];
+  arithmetic: ReturnType<typeof ledgerArithmetic>;
+}
+
 export interface ContestView {
   slug: string;
   name: string;
   sides: ContestSideView[];
   rows: ContestRow[];
+  /** Each side's public money, newest year first. */
+  ledgers: ContestLedgerView[];
   open: string | null;
   /** Questions with words from every side. */
   compared: number;
@@ -104,11 +121,33 @@ export function contestView(
       ),
     })),
   }));
+  const ledgers = (contest?.ledgers ?? [])
+    .flatMap((ledger) => {
+      const side = sides.find((s) => s.key === ledger.side);
+      return side
+        ? [
+            {
+              side: side.key,
+              sideName: side.name,
+              ledger,
+              lines: ledger.lines.map((l) => ({
+                label: localized(l.label, locale),
+                amount: l.amount,
+                kind: l.kind,
+                from: l.from ? localized(l.from, locale) : null,
+              })),
+              arithmetic: ledgerArithmetic(ledger),
+            },
+          ]
+        : [];
+    })
+    .sort((a, b) => b.ledger.year - a.ledger.year);
   return {
     slug,
     name: regionName(place, locale),
     sides,
     rows,
+    ledgers,
     open: contest?.open ? localized(contest.open, locale) : null,
     compared: rows.filter((r) => r.cells.every((c) => c.provisions.length > 0)).length,
     topics: data.topics.length,

@@ -1329,7 +1329,24 @@
       "proposeBody": "Which rule should apply in {place}, question by question, and why. Sides compared: {sides}.",
       "methodTitle": "How this comparison is made",
       "method": "Every line is a quotation from a page someone opened, with the day it was read; the original is shown beside any translation, and a program re-reads each page every week and flags words that are gone. The questions are the same for every place. The side that governs is shown first, then the claimant, always. Where nothing has been read, the page says so.",
-      "all": "Every contested place"
+      "all": "Every contested place",
+      "proposeChange": "Propose a change to this article",
+      "money": {
+        "title": "What the public budget rests on",
+        "question": "How much did each side raise itself, how much did it receive and from whom, and what did it spend?",
+        "year": "{side}, {year}",
+        "caption": "Revenue of the State Budget of {side} in {year}, {total} in all, by where it came from",
+        "own": "Own revenue",
+        "from": "{from}",
+        "revenue": "Revenue",
+        "spent": "Spent",
+        "ownCovered": "Spending covered by own revenue",
+        "receivedShare": "Revenue received from others",
+        "withoutTitle": "Spending the same without what was received",
+        "without": "For {side} to spend the same from its own revenue alone, that revenue would have to be {multiple} times what it was; or spending would have to fall by {cut}; or some mix of the two.",
+        "notForecast": "Arithmetic on the budget law's own figures, not a forecast: it says nothing of what the economy could raise under other rules, or what would be spent instead.",
+        "notRead": "No budget has been read for {side} yet."
+      }
     }
   },
   "AuthError": {

@@ -743,7 +743,24 @@
       "proposeBody": "Quelle règle devrait s'appliquer à {place}, question par question, et pourquoi. Côtés comparés : {sides}.",
       "methodTitle": "Comment cette comparaison est faite",
       "method": "Chaque ligne est une citation d'une page que quelqu'un a ouverte, avec le jour de lecture ; l'original figure à côté de toute traduction, et un programme relit chaque page chaque semaine et signale les mots disparus. Les questions sont les mêmes pour chaque lieu. Le côté qui gouverne vient toujours en premier, puis celui qui revendique. Là où rien n'a été lu, la page le dit.",
-      "all": "Tous les lieux contestés"
+      "all": "Tous les lieux contestés",
+      "proposeChange": "Proposer une modification de cet article",
+      "money": {
+        "title": "Sur quoi repose le budget public",
+        "question": "Combien chaque côté a-t-il levé lui-même, combien a-t-il reçu et de qui, et qu'a-t-il dépensé ?",
+        "year": "{side}, {year}",
+        "caption": "Recettes du budget de l'État de {side} en {year}, {total} au total, selon leur provenance",
+        "own": "Recettes propres",
+        "from": "{from}",
+        "revenue": "Recettes",
+        "spent": "Dépenses",
+        "ownCovered": "Dépenses couvertes par les recettes propres",
+        "receivedShare": "Recettes reçues d'autres",
+        "withoutTitle": "Dépenser autant sans ce qui a été reçu",
+        "without": "Pour que {side} dépense autant avec ses seules recettes propres, celles-ci devraient être {multiple} fois plus élevées ; ou les dépenses devraient baisser de {cut} ; ou un mélange des deux.",
+        "notForecast": "Un calcul sur les chiffres de la loi budgétaire, pas une prévision : il ne dit rien de ce que l'économie pourrait lever sous d'autres règles, ni de ce qui serait dépensé à la place.",
+        "notRead": "Aucun budget n'a encore été lu pour {side}."
+      }
     }
   },
   "AuthError": {

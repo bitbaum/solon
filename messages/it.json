@@ -743,7 +743,24 @@
       "proposeBody": "Quale regola dovrebbe valere a {place}, domanda per domanda, e perché. Parti confrontate: {sides}.",
       "methodTitle": "Come è fatto questo confronto",
       "method": "Ogni riga è una citazione da una pagina che qualcuno ha aperto, con il giorno della lettura; l'originale sta accanto a ogni traduzione, e un programma rilegge ogni pagina ogni settimana e segnala le parole scomparse. Le domande sono le stesse per ogni luogo. La parte che governa viene sempre per prima, poi quella che rivendica. Dove non è stato letto nulla, la pagina lo dice.",
-      "all": "Tutti i luoghi contesi"
+      "all": "Tutti i luoghi contesi",
+      "proposeChange": "Proporre una modifica di questo articolo",
+      "money": {
+        "title": "Su cosa poggia il bilancio pubblico",
+        "question": "Quanto ha raccolto ciascuna parte da sé, quanto ha ricevuto e da chi, e quanto ha speso?",
+        "year": "{side}, {year}",
+        "caption": "Entrate del bilancio dello Stato di {side} nel {year}, {total} in tutto, per provenienza",
+        "own": "Entrate proprie",
+        "from": "{from}",
+        "revenue": "Entrate",
+        "spent": "Spese",
+        "ownCovered": "Spese coperte da entrate proprie",
+        "receivedShare": "Entrate ricevute da altri",
+        "withoutTitle": "Spendere lo stesso senza quanto ricevuto",
+        "without": "Perché {side} spenda lo stesso con le sole entrate proprie, queste dovrebbero essere {multiple} volte quelle che erano; oppure le spese dovrebbero scendere del {cut}; oppure un misto delle due cose.",
+        "notForecast": "Un calcolo sulle cifre della legge di bilancio, non una previsione: non dice nulla di ciò che l'economia potrebbe raccogliere con altre regole, né di cosa si spenderebbe invece.",
+        "notRead": "Per {side} non è ancora stato letto alcun bilancio."
+      }
     }
   },
   "AuthError": {

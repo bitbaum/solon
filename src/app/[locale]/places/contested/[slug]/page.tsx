@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
-import ContestPage, { actKey } from "@/components/places/contest-page";
+import ContestPage from "@/components/places/contest-page";
+import { actKey } from "@/components/places/contest-quote";
 import { db } from "@/lib/db/client";
 import { contestView } from "@/lib/places/contest-view";
 import { findAct } from "@/lib/statistics/read";
@@ -30,9 +31,12 @@ export default async function ContestedPlacePage({ params }: { params: Params })
   setRequestLocale(locale);
   const view = contestView(decodeURIComponent(slug), locale);
   if (!view) notFound();
-  const acts = view.rows.flatMap((r) =>
-    r.cells.flatMap((c) => c.provisions.flatMap((p) => (p.act ? [p.act] : []))),
-  );
+  const acts = [
+    ...view.rows.flatMap((r) =>
+      r.cells.flatMap((c) => c.provisions.flatMap((p) => (p.act ? [p.act] : []))),
+    ),
+    ...view.ledgers.flatMap((l) => (l.ledger.act ? [l.ledger.act] : [])),
+  ];
   const actIds = new Map<string, string>();
   for (const act of acts) {
     const key = actKey(act);

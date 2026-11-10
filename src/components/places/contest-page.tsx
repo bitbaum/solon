@@ -1,9 +1,9 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
-import type { ContestProvision } from "@/lib/places/contested";
 import type { ContestSideView, ContestView } from "@/lib/places/contest-view";
-import { localized } from "@/lib/places/place-view";
+import ContestLedger from "./contest-ledger";
+import { actKey, ProvisionQuote } from "./contest-quote";
 import { PlaceTrail } from "./place-head";
 import type { PlacesTranslator } from "./translator";
 
@@ -13,70 +13,6 @@ interface ContestPageProps {
   actIds: ReadonlyMap<string, string>;
   locale: string;
   t: PlacesTranslator;
-}
-
-export const actKey = (act: { authority: string; scheme: string; value: string }) =>
-  `${act.authority}:${act.scheme}:${act.value}`;
-
-/** One side's words on one question: the article, the words as read, a translation, the page. */
-function ProvisionQuote({
-  provision,
-  actId,
-  locale,
-  t,
-}: {
-  provision: ContestProvision;
-  actId: string | null;
-  locale: string;
-  t: PlacesTranslator;
-}) {
-  const { quote } = provision;
-  const translation = quote.translation ? localized(quote.translation, locale) : null;
-  return (
-    <figure className="min-w-0 space-y-2">
-      <figcaption className="text-sm font-semibold text-fg-primary">
-        {actId ? (
-          <Link
-            href={
-              provision.provision
-                ? `/law/${actId}?at=${encodeURIComponent(provision.provision)}#${provision.provision}`
-                : `/law/${actId}`
-            }
-            className="hover:underline"
-          >
-            {provision.label} →
-          </Link>
-        ) : (
-          provision.label
-        )}
-      </figcaption>
-      <blockquote
-        lang={quote.lang}
-        className="mb-0 whitespace-pre-line border-l-2 border-default pl-3 text-sm text-fg-primary"
-      >
-        {quote.text}
-      </blockquote>
-      {translation && translation !== quote.text && (
-        <p className="mb-0 whitespace-pre-line pl-3 text-sm text-fg-secondary">
-          <span className="text-fg-tertiary">{t("contested.translation")} </span>
-          {translation}
-        </p>
-      )}
-      <ul className="mb-0 space-y-1 pl-3 text-xs text-fg-tertiary">
-        {provision.translator && (
-          <li>{t("contested.translatedBy", { translator: provision.translator })}</li>
-        )}
-        {quote.evidence.map((e) => (
-          <li key={e.url} className="break-words">
-            <a href={e.url} className="underline" rel="noopener noreferrer">
-              {e.publisher}
-            </a>{" "}
-            · {t("contested.read", { date: e.read })}
-          </li>
-        ))}
-      </ul>
-    </figure>
-  );
 }
 
 function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
@@ -181,6 +117,8 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
             </div>
           </section>
         ))}
+
+        <ContestLedger view={view} actIds={actIds} locale={locale} t={t} />
 
         <section
           aria-labelledby="contest-act"

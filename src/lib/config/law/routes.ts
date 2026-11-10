@@ -308,6 +308,38 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
       },
     },
   },
+  {
+    // Citizens hold no right of legislative initiative here; one deputy does, so a
+    // proposal reaches the Parliament through any deputy willing to introduce it.
+    key: "rso-deputy-initiative",
+    authority: "rso",
+    name: "A bill introduced by a deputy",
+    appliesTo: ["statute"],
+    venue: "legislature",
+    whoMaySign:
+      "Any one deputy of the Parliament, who holds the right of legislative initiative (as do the President, the Government, and the Constitutional Court, the Supreme Court, the Prosecutor General and the Central Electoral Commission on matters within their competence); citizens do not hold it themselves",
+    signatures: null,
+    window: null,
+    outcome:
+      "The bill is put before the Parliament of the Republic of South Ossetia by a holder of the right of legislative initiative.",
+    source: {
+      title: "Конституция Республики Южная Осетия (Constitution of the Republic of South Ossetia)",
+      provision: "Art. 69",
+      url: "https://parliamentrso.org/node/3567",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект, внесённый депутатом",
+        whoMaySign:
+          "Любой депутат Парламента, обладающий правом законодательной инициативы (как и Президент, Правительство, а также Конституционный Суд, Верховный Суд, Генеральный прокурор и Центральная избирательная комиссия по вопросам их ведения); сами граждане этим правом не обладают",
+        outcome:
+          "Законопроект вносится в Парламент Республики Южная Осетия обладателем права законодательной инициативы.",
+        sourceTitle: "Конституция Республики Южная Осетия",
+        provision: "Статья 69",
+      },
+    },
+  },
   ...[
     "li7001",
     "li7002",
