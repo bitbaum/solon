@@ -157,13 +157,17 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     alsoRequired: [
       "Or three communes, by matching resolutions of their municipal assemblies, instead of the signatures",
       "A proposal that would burden the State with a new or lasting expense must come with a proposal to cover it",
+      "Registered first with the Government (Anmeldung), which has it announced officially; the six weeks for the signatures run from that announcement (Volksrechtegesetz, LR 161, Art. 70 paras. 1 b, 2)",
+      "The Government checks it against the Constitution and the treaties; the Landtag takes it up at its next sitting and may declare it void, which can be appealed to the State Court (Volksrechtegesetz Art. 70b)",
     ],
-    window: null,
+    cannotChange:
+      "After a vote has rejected a request on the same subject, a new one is allowed only after two years (Volksrechtegesetz Art. 70 para. 3)",
+    window: { days: 42 },
     outcome:
       "The Landtag must take the proposal up at its next sitting (Art. 64 para. 2). A drafted initiative the Landtag does not accept goes to a popular vote (Volksrechtegesetz, LR 161, Art. 82).",
     source: {
       title: "Constitution of the Principality of Liechtenstein (LR 101)",
-      provision: "Art. 64 paras. 1-3",
+      provision: "Art. 64 paras. 1-3; Volksrechtegesetz Art. 70, 70b",
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
     },
@@ -174,11 +178,15 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
         alsoRequired: [
           "Oder wenigstens drei Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse, anstelle der Unterschriften",
           "Ein Begehren, aus dessen Durchführung dem Land eine einmalige, im Finanzgesetz nicht vorgesehene oder eine länger andauernde Belastung erwächst, muss mit einem Bedeckungsvorschlag versehen sein",
+          "Zuerst bei der Regierung anzumelden; sie lässt es amtlich kundmachen, und die sechs Wochen für die Unterschriften laufen ab dieser Kundmachung (Volksrechtegesetz, LR 161, Art. 70 Abs. 1 Bst. b und Abs. 2)",
+          "Die Regierung prüft das Begehren auf Übereinstimmung mit der Verfassung und den Staatsverträgen; der Landtag zieht es in seiner nächsten Sitzung in Behandlung und kann es für nichtig erklären, wogegen Beschwerde an den Staatsgerichtshof zulässig ist (Volksrechtegesetz Art. 70b)",
         ],
+        cannotChange:
+          "Wurde ein Begehren über denselben Gegenstand in einer Volksabstimmung verworfen, so ist ein neues erst nach Ablauf von zwei Jahren zulässig (Volksrechtegesetz Art. 70 Abs. 3)",
         outcome:
           "Der Landtag hat das Begehren in der darauffolgenden Sitzung in Verhandlung zu ziehen (Art. 64 Abs. 2). Stimmt er einem ausgearbeiteten Initiativentwurf nicht zu, beauftragt er die Regierung mit der Anordnung einer Volksabstimmung (Volksrechtegesetz, LR 161, Art. 82).",
         sourceTitle: LV_DE,
-        provision: "Art. 64 Abs. 1-3",
+        provision: "Art. 64 Abs. 1-3; Volksrechtegesetz Art. 70, 70b",
       },
     },
   },
@@ -193,13 +201,17 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     signatures: { count: 1_500 },
     alsoRequired: [
       "Or four communes, by matching resolutions of their municipal assemblies, instead of the signatures",
+      "Registered first with the Government (Anmeldung), which has it announced officially; the six weeks for the signatures run from that announcement (Volksrechtegesetz, LR 161, Art. 70 paras. 1 b, 2)",
+      "The Government checks it against the Constitution and the treaties; the Landtag takes it up at its next sitting and may declare it void, which can be appealed to the State Court (Volksrechtegesetz Art. 70b)",
     ],
-    window: null,
+    cannotChange:
+      "After a vote has rejected a request on the same subject, a new one is allowed only after two years (Volksrechtegesetz Art. 70 para. 3)",
+    window: { days: 42 },
     outcome:
       "The Landtag must take the proposal up at its next sitting (Art. 64 para. 2, by para. 4).",
     source: {
       title: "Constitution of the Principality of Liechtenstein (LR 101)",
-      provision: "Art. 64 para. 4",
+      provision: "Art. 64 para. 4; Volksrechtegesetz Art. 70, 70b",
       url: "https://www.gesetze.li/konso/html/1921015000",
       readOn: "2026-10-23",
     },
@@ -209,11 +221,15 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
         whoMaySign: LANDESBUERGER,
         alsoRequired: [
           "Oder wenigstens vier Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse, anstelle der Unterschriften",
+          "Zuerst bei der Regierung anzumelden; sie lässt es amtlich kundmachen, und die sechs Wochen für die Unterschriften laufen ab dieser Kundmachung (Volksrechtegesetz, LR 161, Art. 70 Abs. 1 Bst. b und Abs. 2)",
+          "Die Regierung prüft das Begehren auf Übereinstimmung mit der Verfassung und den Staatsverträgen; der Landtag zieht es in seiner nächsten Sitzung in Behandlung und kann es für nichtig erklären, wogegen Beschwerde an den Staatsgerichtshof zulässig ist (Volksrechtegesetz Art. 70b)",
         ],
+        cannotChange:
+          "Wurde ein Begehren über denselben Gegenstand in einer Volksabstimmung verworfen, so ist ein neues erst nach Ablauf von zwei Jahren zulässig (Volksrechtegesetz Art. 70 Abs. 3)",
         outcome:
           "Der Landtag hat das Begehren in der darauffolgenden Sitzung in Verhandlung zu ziehen (Art. 64 Abs. 2, nach Abs. 4).",
         sourceTitle: LV_DE,
-        provision: "Art. 64 Abs. 4",
+        provision: "Art. 64 Abs. 4; Volksrechtegesetz Art. 70, 70b",
       },
     },
   },
@@ -225,7 +241,10 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     venue: "voters",
     whoMaySign: "Voting citizens of Liechtenstein (Landesbürger)",
     signatures: { count: 1_000 },
-    alsoRequired: ["Or three communes, by matching resolutions of their municipal assemblies"],
+    alsoRequired: [
+      "Or three communes, by matching resolutions of their municipal assemblies",
+      "The 30 days run from the official announcement of the Landtag's decision in the official gazettes, counted from the first publication, the day itself not included (Volksrechtegesetz, LR 161, Art. 70 para. 1 a)",
+    ],
     cannotChange:
       "A law the Landtag has declared urgent, and a financial decision below a one-off new expense of CHF 500,000 or a yearly new expense of CHF 250,000, are not subject to it",
     window: { days: 30 },
@@ -243,6 +262,7 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
         whoMaySign: "wahlberechtigten Landesbürgern",
         alsoRequired: [
           "Oder wenigstens drei Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse",
+          "Die 30 Tage laufen ab der amtlichen Kundmachung des Landtagsbeschlusses in den amtlichen Kundmachungsorganen, ab der zuerst erscheinenden Veröffentlichung gerechnet und der Tag dieser selbst nicht eingerechnet (Volksrechtegesetz, LR 161, Art. 70 Abs. 1 Bst. a)",
         ],
         cannotChange:
           "Ein vom Landtag als dringlich erklärtes Gesetz unterliegt dem Referendum nicht, ebenso kein Finanzbeschluss, der keine einmalige neue Ausgabe von mindestens 500 000 Franken und keine jährlich wiederkehrende neue Ausgabe von 250 000 Franken verursacht",
@@ -261,7 +281,10 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     venue: "voters",
     whoMaySign: "Voting citizens of Liechtenstein (Landesbürger)",
     signatures: { count: 1_500 },
-    alsoRequired: ["Or four communes, by matching resolutions of their municipal assemblies"],
+    alsoRequired: [
+      "Or four communes, by matching resolutions of their municipal assemblies",
+      "The 30 days run from the official announcement of the Landtag's decision in the official gazettes, counted from the first publication, the day itself not included (Volksrechtegesetz, LR 161, Art. 70 para. 1 a)",
+    ],
     window: { days: 30 },
     outcome: "The change goes to a popular vote and takes effect only if the voters accept it.",
     source: {
@@ -276,6 +299,7 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
         whoMaySign: "wahlberechtigten Landesbürgern",
         alsoRequired: [
           "Oder wenigstens vier Gemeinden in Form übereinstimmender Gemeindeversammlungsbeschlüsse",
+          "Die 30 Tage laufen ab der amtlichen Kundmachung des Landtagsbeschlusses in den amtlichen Kundmachungsorganen, ab der zuerst erscheinenden Veröffentlichung gerechnet und der Tag dieser selbst nicht eingerechnet (Volksrechtegesetz, LR 161, Art. 70 Abs. 1 Bst. a)",
         ],
         outcome:
           "Die Änderung wird der Volksabstimmung unterzogen und tritt nur in Kraft, wenn die Stimmberechtigten sie annehmen.",
