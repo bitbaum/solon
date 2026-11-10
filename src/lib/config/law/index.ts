@@ -791,6 +791,12 @@ export const PARLIAMENTRSO = {
   hosts: ["parliamentrso.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
   licenceSpdx: "LicenseRef-so-official-facts",
+  /**
+   * Whether the texts may be stored: no terms of use and no copyright law of the Republic have been
+   * opened that say so (docs/research/2026-11-south-ossetia-sources.md §6), so only the register is
+   * loaded. Set true, with the provision quoted in the licence entry, when one is.
+   */
+  textsAdmitted: false as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
   /** The three listings under "Законодательство": laws, constitutional laws, resolutions. */
@@ -831,6 +837,8 @@ export const PRESIDENTRUO = {
   hosts: ["presidentruo.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
   licenceSpdx: "LicenseRef-so-president-site-reuse",
+  /** The site's reuse page allows reproduction with a reference to the source (see the licence entry). */
+  textsAdmitted: true as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
   /** The categories read, in this order; a post found in several keeps the first kind. */

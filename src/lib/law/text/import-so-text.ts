@@ -29,6 +29,8 @@ export type SoPublisher = "parliamentrso" | "presidentruo";
 export interface SoTextOptions {
   snapshots: SnapshotStore;
   limit?: number;
+  /** Read only the acts with these publisher ids (a node or post number); absent: every act the register holds. */
+  ids?: readonly string[];
   dryRun?: boolean;
   today?: string;
   fetchImpl?: typeof fetch;
@@ -60,6 +62,11 @@ export async function importSoText(
   options: SoTextOptions,
 ): Promise<SoTextReport> {
   const config = publisher === "parliamentrso" ? PARLIAMENTRSO : PRESIDENTRUO;
+  if (!config.textsAdmitted) {
+    throw new Error(
+      `${config.key}: no licence or terms admit storing its texts yet; only its register is loaded`,
+    );
+  }
   const doFetch = options.fetchImpl ?? fetch;
   const say = options.onProgress ?? (() => undefined);
   const limit = options.limit ?? Infinity;
@@ -119,6 +126,7 @@ export async function importSoText(
     ).map((r) => r.actId),
   );
   const todo = acts
+    .filter((a) => !options.ids || options.ids.includes(a.identity.slice(prefix.length)))
     .filter((a) => {
       if (held.has(a.actId)) {
         report.alreadyHeld++;

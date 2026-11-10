@@ -1,9 +1,9 @@
 /**
  * South Ossetia's texts through the real importer into a real database,
- * against stand-ins built from the pages read on 2026-11-10: a law of the
- * Parliament dated by its own field and numbered from its header, a decree of
- * the President dated by its closing lines, a rerun that fetches nothing, and
- * a page that is not an act reported and left unstored.
+ * against stand-ins built from the pages read on 2026-11-10: a decree of the
+ * President dated by its closing lines and numbered from them, a rerun that
+ * fetches nothing, a dry run that writes nothing, and the Parliament's texts
+ * refused while no terms admit them.
  *
  * Runs only with INTEGRATION=1 against a migrated database.
  */
@@ -91,27 +91,28 @@ async function versionsOf(identity: string) {
 }
 
 describe.skipIf(!RUN)("South Ossetia's texts (real database)", () => {
-  it("stores a law under the Parliament's own date and number, and reports a page that is no act", async () => {
-    await registerParliament(db, { snapshots, pauseMs: 0, fetchImpl: parliament, term: "2" });
-    const report = await importSoText(db, "parliamentrso", {
-      snapshots,
-      pauseMs: 0,
-      fetchImpl: parliament,
-      limit: 5,
-    });
-    const mine = report.failures.filter((f) => f.act === String(N + 2));
-    expect(mine).toHaveLength(1);
-    expect(mine[0]!.reason).toMatch(/not an act page/);
-    const versions = await versionsOf(`parliamentrso:${N + 1}`);
+  it("refuses to store the Parliament's texts while no terms admit them", async () => {
+    await expect(
+      importSoText(db, "parliamentrso", { snapshots, pauseMs: 0, fetchImpl: parliament, limit: 1 }),
+    ).rejects.toThrow(/no licence or terms admit storing/);
+  });
+
+  const mine = { snapshots, pauseMs: 0, fetchImpl: president, ids: [String(N + 11)] };
+
+  it("dates a decree by the day it is signed, numbers it from its closing lines, and cuts it whole", async () => {
+    await registerPresident(db, { snapshots, pauseMs: 0, fetchImpl: president });
+    const report = await importSoText(db, "presidentruo", mine);
+    expect(report.failures).toEqual([]);
+    expect(report.stored).toBe(1);
+    const versions = await versionsOf(`presidentruo:${N + 11}`);
     expect(versions).toHaveLength(1);
-    expect(versions[0]).toMatchObject({ basis: "publisher", format: "html" });
-    expect(String(versions[0]!.from)).toBe("2004-02-18");
+    expect(String(versions[0]!.from)).toBe("2026-11-06");
+    expect(versions[0]).toMatchObject({ basis: "publisher", format: "json" });
     const provisions = await db
       .select({ path: legalProvisions.path })
       .from(legalProvisions)
-      .where(eq(legalProvisions.versionId, versions[0]!.id))
-      .orderBy(asc(legalProvisions.ord));
-    expect(provisions.map((p) => p.path)).toEqual(["preamble", "ch_i", "art_1", "art_2", "art_3"]);
+      .where(eq(legalProvisions.versionId, versions[0]!.id));
+    expect(provisions.map((p) => p.path)).toEqual(["text"]);
     const [number] = await db
       .select({ value: legalActIdentifiers.value })
       .from(legalActIdentifiers)
@@ -119,45 +120,19 @@ describe.skipIf(!RUN)("South Ossetia's texts (real database)", () => {
       .where(
         and(eq(legalActIdentifiers.scheme, "act_number"), eq(legalActVersions.id, versions[0]!.id)),
       );
-    expect(number?.value).toBe("2004/44");
+    expect(number?.value).toBe("2026/494");
   });
 
   it("fetches nothing again for an act it holds", async () => {
-    const again = await importSoText(db, "parliamentrso", {
-      snapshots,
-      pauseMs: 0,
-      fetchImpl: parliament,
-      limit: 5,
-    });
+    const again = await importSoText(db, "presidentruo", mine);
     expect(again.stored).toBe(0);
-    expect(again.alreadyHeld).toBeGreaterThanOrEqual(1);
-  });
-
-  it("dates a decree by the day it is signed", async () => {
-    await registerPresident(db, { snapshots, pauseMs: 0, fetchImpl: president });
-    const report = await importSoText(db, "presidentruo", {
-      snapshots,
-      pauseMs: 0,
-      fetchImpl: president,
-      limit: 3,
-    });
-    expect(report.failures.filter((f) => f.act === String(N + 11))).toEqual([]);
-    const versions = await versionsOf(`presidentruo:${N + 11}`);
-    expect(versions).toHaveLength(1);
-    expect(String(versions[0]!.from)).toBe("2026-11-06");
-    expect(versions[0]).toMatchObject({ basis: "publisher", format: "json" });
+    expect(again.alreadyHeld).toBe(1);
   });
 
   it("writes nothing on a dry run", async () => {
-    const before = await versionsOf(`parliamentrso:${N + 1}`);
-    const report = await importSoText(db, "parliamentrso", {
-      snapshots,
-      pauseMs: 0,
-      fetchImpl: parliament,
-      dryRun: true,
-      limit: 1,
-    });
+    const before = await versionsOf(`presidentruo:${N + 11}`);
+    const report = await importSoText(db, "presidentruo", { ...mine, dryRun: true });
     expect(report.status).toBe("dry_run");
-    expect(await versionsOf(`parliamentrso:${N + 1}`)).toEqual(before);
+    expect(await versionsOf(`presidentruo:${N + 11}`)).toEqual(before);
   });
 });
