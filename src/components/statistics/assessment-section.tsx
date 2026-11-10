@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { pointOf, type Rubric } from "@/lib/statistics/assessments";
 import type { AssessmentRow } from "@/lib/statistics/read";
@@ -84,7 +85,10 @@ export default function AssessmentSection({
               </details>
             )}
             <p className="mb-0 text-xs text-fg-tertiary">
-              {t("coded.rubricAuthor", { version: rubric.version, author: rubric.author })}
+              {t("coded.rubricAuthor", {
+                version: rubric.version,
+                author: cite(rubric.author, locale),
+              })}
             </p>
           </div>
 

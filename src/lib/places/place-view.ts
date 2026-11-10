@@ -4,6 +4,7 @@
  * country renders from its pack alone.
  */
 import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
+import { configTranslation } from "@/lib/i18n/config-catalog";
 import { taxingLevels } from "@/lib/tax-model";
 import {
   evaluatorFacts,
@@ -97,8 +98,19 @@ export interface PlaceViewInput {
 }
 
 /** The text for a locale, else English, else whatever there is. */
+/**
+ * A configured text in the reader's language: the configuration's own words
+ * for that language, else the catalog's translation of the English
+ * (`data/i18n/config.json`), else the English.
+ */
 export function localized(text: LocalizedText, locale: string): string {
-  return text[locale] ?? text.en ?? Object.values(text)[0] ?? "";
+  return (
+    text[locale] ??
+    (text.en === undefined ? undefined : configTranslation(text.en, locale)) ??
+    text.en ??
+    Object.values(text)[0] ??
+    ""
+  );
 }
 
 /**

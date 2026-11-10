@@ -1699,5 +1699,59 @@
       "converted": "Montants en {to}, convertis depuis {from} au cours moyen de {year} ({sources}).",
       "notConverted": "Montants en {from} : Solon ne détient aucun cours de {year} pour les convertir en {to}."
     }
+  },
+  "MethodLab": {
+    "tablist": "Comment compter les mêmes préférences",
+    "caption": "Comment chaque groupe de membres note chaque option, de 0 à 5",
+    "members": "{count} membres",
+    "asks": "Le bulletin demande :",
+    "floor": "Tout ce qui est noté {floor} ou plus compte comme acceptable ; le reste s'estompe ci-dessus.",
+    "firstChoices": "premiers choix",
+    "rating": "{value} sur 5",
+    "ratingApproved": "{value} sur 5 — approuvé",
+    "ratingNotApproved": "{value} sur 5 — non approuvé",
+    "pluralityWins": "{winner} l'emporte avec {count} sur {total}.",
+    "pluralityNote": "Quatre des sept membres lui ont donné zéro. Rien n'a été mal compté — c'est à cela que sert « en choisir un », et c'est pourquoi l'option avec laquelle la plupart peuvent vivre peut perdre face à celle qu'une grande minorité adore.",
+    "otherWins": "{winner} l'emporte.",
+    "otherNote": "Les mêmes sept membres, les mêmes préférences, une autre question — et une autre réponse.",
+    "tabs": {
+      "plurality": {
+        "label": "En choisir un",
+        "asks": "Quelle option voulez-vous le plus ?"
+      },
+      "approval": {
+        "label": "Approbation",
+        "asks": "Avec quelles options pourriez-vous vivre ?"
+      },
+      "dot": {
+        "label": "Points",
+        "asks": "Comment répartiriez-vous cinq points entre elles ?"
+      },
+      "score": {
+        "label": "Notes",
+        "asks": "Notez chaque option de 0 à 5."
+      },
+      "ranked": {
+        "label": "Classement",
+        "asks": "Classez-les dans votre ordre de préférence."
+      }
+    },
+    "units": {
+      "approvals": "approbations",
+      "dots": "points",
+      "avg": "moy.",
+      "points": "points"
+    },
+    "options": {
+      "roof": "Réparer le toit",
+      "apprenticeship": "Financer l'apprentissage",
+      "tooling": "Acheter l'outillage",
+      "reserve": "Garder en réserve"
+    },
+    "camps": {
+      "daily": "Trois membres qui utilisent le bâtiment chaque jour",
+      "train": "Deux membres qui forment les nouveaux",
+      "work": "Deux membres qui font le travail eux-mêmes"
+    }
   }
 }

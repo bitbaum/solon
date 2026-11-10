@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { methodSpec } from "@/lib/domain/methods";
 import type { MethodId } from "@/lib/domain/methods/types";
 import {
@@ -9,7 +10,6 @@ import {
   APPROVAL_FLOOR,
   ballotsFor,
   firstPreferenceCounts,
-  labelFor,
   TOTAL_MEMBERS,
 } from "@/lib/governance/worked-example";
 import { TallyChart } from "./tally";
@@ -28,23 +28,17 @@ import { TallyChart } from "./tally";
  * favourite is the reason the other five exist.
  */
 
-type Tab = { id: "plurality" | MethodId; label: string; asks: string; unit?: string };
+type Unit = "approvals" | "dots" | "avg" | "points";
+type TabId = "plurality" | Extract<MethodId, "approval" | "dot" | "score" | "ranked">;
+type Tab = { id: TabId; unit?: Unit };
 
+/** The tabs, in order; their words are the `MethodLab` messages, in the reader's language. */
 const TABS: Tab[] = [
-  {
-    id: "plurality",
-    label: "Pick one",
-    asks: "Which single option do you want most?",
-  },
-  {
-    id: "approval",
-    label: "Approval",
-    asks: "Which options could you live with?",
-    unit: "approvals",
-  },
-  { id: "dot", label: "Dots", asks: "How would you split five dots across them?", unit: "dots" },
-  { id: "score", label: "Score", asks: "Rate each option from 0 to 5.", unit: "avg" },
-  { id: "ranked", label: "Ranked", asks: "Put them in your order of preference.", unit: "points" },
+  { id: "plurality" },
+  { id: "approval", unit: "approvals" },
+  { id: "dot", unit: "dots" },
+  { id: "score", unit: "avg" },
+  { id: "ranked", unit: "points" },
 ];
 
 /**
@@ -55,18 +49,19 @@ const TABS: Tab[] = [
  * floor dims, so the reader can see the approval tally being assembled out of
  * the same table rather than having to take the bar chart on faith.
  */
-function Rating({ value, floorApplies }: { value: number; floorApplies: boolean }) {
+function Rating({
+  value,
+  floorApplies,
+  label,
+}: {
+  value: number;
+  floorApplies: boolean;
+  label: string;
+}) {
   const approved = value >= APPROVAL_FLOOR;
   const filled = floorApplies && !approved ? "bg-border-strong" : "bg-accent";
   return (
-    <span
-      className="inline-flex gap-0.5"
-      aria-label={
-        floorApplies
-          ? `${value} out of 5 — ${approved ? "approved" : "not approved"}`
-          : `${value} out of 5`
-      }
-    >
+    <span className="inline-flex gap-0.5" aria-label={label}>
       {[1, 2, 3, 4, 5].map((n) => (
         <span
           key={n}
@@ -78,7 +73,19 @@ function Rating({ value, floorApplies }: { value: number; floorApplies: boolean 
   );
 }
 
+type FundOption = "roof" | "apprenticeship" | "tooling" | "reserve";
+type Camp = "daily" | "train" | "work";
+
 export function MethodLab() {
+  const t = useTranslations("MethodLab");
+  const optionLabel = (key: string) =>
+    FUND_OPTIONS.some((o) => o.key === key) ? t(`options.${key as FundOption}`) : "—";
+  const ratingLabel = (value: number, floorApplies: boolean) =>
+    !floorApplies
+      ? t("rating", { value })
+      : value >= APPROVAL_FLOOR
+        ? t("ratingApproved", { value })
+        : t("ratingNotApproved", { value });
   const [tab, setTab] = useState<Tab["id"]>("plurality");
   const active = TABS.find((t) => t.id === tab)!;
 
@@ -94,20 +101,18 @@ export function MethodLab() {
   const plurality = useMemo(() => firstPreferenceCounts(), []);
   const winner =
     tab === "plurality" ? plurality[0] : { key: result?.ranked?.[0]?.key ?? "", count: 0 };
-  const winnerLabel = labelFor(FUND_OPTIONS, winner.key);
+  const winnerLabel = optionLabel(winner.key);
 
   return (
     <div className="space-y-8">
       {/* The room. Constant across every tab — that is the point. */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[34rem] border-collapse text-sm">
-          <caption className="sr-only">
-            How each group of members rates each option, from 0 to 5
-          </caption>
+          <caption className="sr-only">{t("caption")}</caption>
           <thead>
             <tr className="border-b border-default">
               <th scope="col" className="py-3 pr-4 text-left font-semibold text-fg-primary">
-                {TOTAL_MEMBERS} members
+                {t("members", { count: TOTAL_MEMBERS })}
               </th>
               {FUND_OPTIONS.map((o) => (
                 <th
@@ -115,20 +120,24 @@ export function MethodLab() {
                   scope="col"
                   className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-caps text-fg-secondary"
                 >
-                  {o.label}
+                  {optionLabel(o.key)}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {FUND_PREFERENCES.map((camp) => (
-              <tr key={camp.label} className="border-b border-subtle">
+              <tr key={camp.key} className="border-b border-subtle">
                 <th scope="row" className="py-4 pr-4 text-left font-normal text-fg-secondary">
-                  {camp.label}
+                  {t(`camps.${camp.key as Camp}`)}
                 </th>
                 {FUND_OPTIONS.map((o) => (
                   <td key={o.key} className="px-3 py-4">
-                    <Rating value={camp.ratings[o.key] ?? 0} floorApplies={tab === "approval"} />
+                    <Rating
+                      value={camp.ratings[o.key] ?? 0}
+                      floorApplies={tab === "approval"}
+                      label={ratingLabel(camp.ratings[o.key] ?? 0, tab === "approval")}
+                    />
                   </td>
                 ))}
               </tr>
@@ -139,35 +148,28 @@ export function MethodLab() {
 
       {/* The switcher. */}
       <div>
-        <div
-          className="flex flex-wrap gap-2"
-          role="tablist"
-          aria-label="How to count the same preferences"
-        >
-          {TABS.map((t) => (
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label={t("tablist")}>
+          {TABS.map((t2) => (
             <button
-              key={t.id}
+              key={t2.id}
               type="button"
               role="tab"
-              aria-selected={t.id === tab}
-              onClick={() => setTab(t.id)}
+              aria-selected={t2.id === tab}
+              onClick={() => setTab(t2.id)}
               className={`min-h-11 rounded-pill border px-4 text-sm transition-colors ${
-                t.id === tab
+                t2.id === tab
                   ? "border-accent bg-accent text-on-accent"
                   : "border-default text-fg-secondary hover:border-interactive hover:text-fg-primary"
               }`}
             >
-              {t.label}
+              {t(`tabs.${t2.id}.label`)}
             </button>
           ))}
         </div>
         <p className="mt-4 text-sm text-fg-secondary">
-          <span className="text-fg-muted">The ballot asks:</span> {active.asks}
+          <span className="text-fg-muted">{t("asks")}</span> {t(`tabs.${active.id}.asks`)}
           {tab === "approval" && (
-            <span className="text-fg-muted">
-              {" "}
-              Anything rated {APPROVAL_FLOOR} or more counts as acceptable; the rest dim above.
-            </span>
+            <span className="text-fg-muted"> {t("floor", { floor: APPROVAL_FLOOR })}</span>
           )}
         </p>
       </div>
@@ -182,11 +184,11 @@ export function MethodLab() {
                   <span
                     className={`text-sm ${i === 0 ? "font-semibold text-fg-primary" : "text-fg-secondary"}`}
                   >
-                    {entry.label}
+                    {optionLabel(entry.key)}
                   </span>
                   <span className="font-mono text-sm tabular-nums text-fg-primary">
                     {entry.count}
-                    <span className="text-fg-muted"> first choices</span>
+                    <span className="text-fg-muted"> {t("firstChoices")}</span>
                   </span>
                 </div>
                 <div className="mt-2 h-2 w-full overflow-hidden rounded-pill bg-surface-overlay">
@@ -199,23 +201,33 @@ export function MethodLab() {
             ))}
           </ol>
         ) : (
-          result && <TallyChart aggregate={result} unit={active.unit} />
+          result && (
+            <TallyChart
+              aggregate={result}
+              unit={active.unit ? t(`units.${active.unit}`) : undefined}
+              labelOf={optionLabel}
+            />
+          )
         )}
 
         <p className="mt-6 border-t border-subtle pt-5 text-sm leading-relaxed text-fg-secondary">
           {tab === "plurality" ? (
             <>
               <span className="font-semibold text-fg-primary">
-                {winnerLabel} wins with {plurality[0].count} of {TOTAL_MEMBERS}.
+                {t("pluralityWins", {
+                  winner: winnerLabel,
+                  count: plurality[0].count,
+                  total: TOTAL_MEMBERS,
+                })}
               </span>{" "}
-              Four of the seven members rated it zero. Nothing was counted wrongly — this is what
-              &ldquo;pick one&rdquo; is for, and it is why the option most people can live with can
-              lose to the one a large minority loves.
+              {t("pluralityNote")}
             </>
           ) : (
             <>
-              <span className="font-semibold text-fg-primary">{winnerLabel} wins.</span> Same seven
-              members, same preferences, a different question — and a different answer.
+              <span className="font-semibold text-fg-primary">
+                {t("otherWins", { winner: winnerLabel })}
+              </span>{" "}
+              {t("otherNote")}
             </>
           )}
         </p>

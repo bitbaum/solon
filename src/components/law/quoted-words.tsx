@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import type { LocalizedText } from "@/lib/config/places/schema";
 
@@ -88,11 +89,11 @@ export default function QuotedWords({
         </Link>
       )}
       <ul className="mb-0 space-y-1 pl-3 text-xs text-fg-tertiary">
-        {translator && <li>{labels.translatedBy(translator)}</li>}
+        {translator && <li>{labels.translatedBy(cite(translator, locale))}</li>}
         {quote.evidence.map((e) => (
           <li key={e.url} className="break-words">
             <a href={e.url} className="underline" rel="noopener noreferrer">
-              {e.publisher}
+              {cite(e.publisher, locale)}
             </a>{" "}
             · {labels.read(e.read)}
           </li>

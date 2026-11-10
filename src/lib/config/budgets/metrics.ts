@@ -4,15 +4,22 @@
  */
 import { categoryLabel } from "@/lib/budgets/taxonomy";
 import type { LocalizedText, MetricInput } from "@/lib/config/places/schema";
+import { configTranslation } from "@/lib/i18n/config-catalog";
 import { EUROSTAT_PUBLISHER, EUROSTAT_REQUESTS, eurostatBrowserUrl, seriesOf } from "./eurostat";
 import { GENERAL_GOVERNMENT } from "./scopes";
 
 const LOCALES = ["en", "de", "fr", "it", "ru"] as const;
 
-/** "{label}" put into a sentence in each language, the label falling back to English. */
+/** "{label}" put into a sentence in each language, the label from the catalog where the taxonomy has none. */
 const sentence = (templates: Record<(typeof LOCALES)[number], string>, label: LocalizedText) =>
   Object.fromEntries(
-    LOCALES.map((l) => [l, templates[l].replace("{label}", label[l] ?? label.en ?? "")]),
+    LOCALES.map((l) => [
+      l,
+      templates[l].replace(
+        "{label}",
+        label[l] ?? configTranslation(label.en ?? "", l) ?? label.en ?? "",
+      ),
+    ]),
   ) as LocalizedText;
 
 const LABEL = {

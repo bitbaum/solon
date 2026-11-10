@@ -8,6 +8,14 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Every page in your language and one currency.** Money is shown in US dollars unless you
+  pick another currency, and your pick holds on every page: budgets, contested places and the
+  comparison of structures, where a salary quoted in francs now also shows its equivalent. The
+  words that came from Solon's own configuration and stayed in English or Russian on translated
+  pages (the statistics' scales, the tax forms, the budget lines and their classifications,
+  who published each figure, the voting example) now read in German, French, Italian and
+  Russian too. {#budgets-money} {#i18n-config}
+
 - **One currency, one language.** Money on the budget and comparison pages is shown in the
   currency you pick (francs by default, or euro, dollars, pounds, roubles, lari), converted at
   that year's average rate from Eurostat and, for the rouble since 2022, the Bank of Russia;

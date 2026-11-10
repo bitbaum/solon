@@ -17,7 +17,7 @@ const HOLDER = { scheme: "wikidata", value: "Q23427" };
 
 export const SO_BUDGET_2023_LAW = {
   publisher:
-    "Парламент Республики Южная Осетия: Закон «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the law approving the 2023 budget's execution), as read",
+    "Parliament of the Republic of South Ossetia: the Law on the execution of the State Budget of the Republic of South Ossetia for 2023, as read",
   url: "https://parliamentrso.org/node/4876",
   read: READ,
   expect: [
@@ -31,7 +31,7 @@ export const SO_BUDGET_2023_LAW = {
 /** Appendix 1, the revenue lines, a spreadsheet the law's page links (sha256 6344138c…2c4a on 2026-11-10). */
 const APPENDIX_1 = {
   publisher:
-    "Парламент Республики Южная Осетия: Приложение 1 к Закону «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the revenue lines, a spreadsheet), as read",
+    "Parliament of the Republic of South Ossetia: Appendix 1 to the Law on the execution of the State Budget of the Republic of South Ossetia for 2023 (the revenue lines, a spreadsheet), as read",
   url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/prilozhenie_1_2.xlsx",
   read: READ,
   unchecked: true as const,
@@ -44,7 +44,7 @@ const APPENDIX_1 = {
  */
 const APPENDIX_3 = {
   publisher:
-    'Парламент Республики Южная Осетия: «Приложение 3 к Закону Республики Южная Осетия "О Государственном бюджете Республики Южная Осетия на 2023 год"» (allocations by section, a spreadsheet the execution law\'s page links), as read',
+    "Parliament of the Republic of South Ossetia: Appendix 3 to the Law on the State Budget of the Republic of South Ossetia for 2023 (allocations by section, a spreadsheet the execution law's page links), as read",
   url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/prilozhenie_3.xls",
   read: READ,
   unchecked: true as const,

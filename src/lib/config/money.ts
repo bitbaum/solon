@@ -16,11 +16,22 @@ for (const source of RATES.sources) {
   }
 }
 
-/** The currencies a reader can choose to see money in, the first the default. */
-export const DISPLAY_CURRENCIES = ["CHF", "EUR", "USD", "GBP", "RUB", "GEL"] as const;
+/**
+ * The currencies a reader can choose to see money in. The first is the default:
+ * the US dollar, the unit statistics are most often read in across countries.
+ */
+export const DISPLAY_CURRENCIES = ["USD", "EUR", "CHF", "GBP", "RUB", "GEL"] as const;
 export type DisplayCurrency = (typeof DISPLAY_CURRENCIES)[number];
 
-export const displayCurrencyOf = (asked: string | undefined | null): DisplayCurrency =>
-  (DISPLAY_CURRENCIES as readonly string[]).includes(asked ?? "")
-    ? (asked as DisplayCurrency)
-    : DISPLAY_CURRENCIES[0];
+/** The cookie that remembers the reader's choice across the site, set by /api/preferences/currency. */
+export const CURRENCY_COOKIE = "solon-currency";
+
+const offered = (c: string | undefined | null): c is DisplayCurrency =>
+  (DISPLAY_CURRENCIES as readonly string[]).includes(c ?? "");
+
+/** The currency to show: the one the address asks for, else the one the reader chose before, else the default. */
+export const displayCurrencyOf = (
+  asked: string | undefined | null,
+  remembered?: string | null,
+): DisplayCurrency =>
+  offered(asked) ? asked : offered(remembered) ? remembered : DISPLAY_CURRENCIES[0];

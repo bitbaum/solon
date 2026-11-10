@@ -1699,5 +1699,59 @@
       "converted": "Importi in {to}, convertiti da {from} al cambio medio del {year} ({sources}).",
       "notConverted": "Importi in {from}: Solon non detiene alcun cambio del {year} per convertirli in {to}."
     }
+  },
+  "MethodLab": {
+    "tablist": "Come contare le stesse preferenze",
+    "caption": "Come ogni gruppo di membri valuta ogni opzione, da 0 a 5",
+    "members": "{count} membri",
+    "asks": "La scheda chiede:",
+    "floor": "Tutto ciò che ha {floor} o più conta come accettabile; il resto si attenua qui sopra.",
+    "firstChoices": "prime scelte",
+    "rating": "{value} su 5",
+    "ratingApproved": "{value} su 5 — approvato",
+    "ratingNotApproved": "{value} su 5 — non approvato",
+    "pluralityWins": "{winner} vince con {count} su {total}.",
+    "pluralityNote": "Quattro dei sette membri le hanno dato zero. Nulla è stato contato male — è a questo che serve «sceglierne una», ed è per questo che l'opzione con cui i più possono convivere può perdere contro quella che una grande minoranza ama.",
+    "otherWins": "{winner} vince.",
+    "otherNote": "Gli stessi sette membri, le stesse preferenze, una domanda diversa — e una risposta diversa.",
+    "tabs": {
+      "plurality": {
+        "label": "Sceglierne una",
+        "asks": "Quale singola opzione vuole di più?"
+      },
+      "approval": {
+        "label": "Approvazione",
+        "asks": "Con quali opzioni potrebbe convivere?"
+      },
+      "dot": {
+        "label": "Punti",
+        "asks": "Come dividerebbe cinque punti tra di esse?"
+      },
+      "score": {
+        "label": "Voto",
+        "asks": "Valuti ogni opzione da 0 a 5."
+      },
+      "ranked": {
+        "label": "Classifica",
+        "asks": "Le metta nel suo ordine di preferenza."
+      }
+    },
+    "units": {
+      "approvals": "approvazioni",
+      "dots": "punti",
+      "avg": "media",
+      "points": "punti"
+    },
+    "options": {
+      "roof": "Riparare il tetto",
+      "apprenticeship": "Finanziare l'apprendistato",
+      "tooling": "Comprare gli attrezzi",
+      "reserve": "Tenere in riserva"
+    },
+    "camps": {
+      "daily": "Tre membri che usano l'edificio ogni giorno",
+      "train": "Due membri che formano i nuovi",
+      "work": "Due membri che fanno il lavoro stesso"
+    }
   }
 }

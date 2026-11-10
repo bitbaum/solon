@@ -9,10 +9,13 @@ import type { BudgetsTranslator } from "./translator";
 export default function BudgetIndex({
   rows,
   currency,
+  next,
   t,
 }: {
   rows: readonly BudgetIndexRow[];
   currency: string;
+  /** This page's own path, to come back to after choosing a currency. */
+  next: string;
   t: BudgetsTranslator;
 }) {
   return (
@@ -22,7 +25,7 @@ export default function BudgetIndex({
           label={t("currency.label")}
           current={currency}
           currencies={DISPLAY_CURRENCIES}
-          hrefFor={(c) => `/budgets?in=${c}`}
+          next={next}
         />
       </div>
       {rows.length === 0 ? (
@@ -32,7 +35,7 @@ export default function BudgetIndex({
           {rows.map((row) => (
             <li key={`${row.slug}-${row.scope}`}>
               <Link
-                href={`/budgets/${row.slug}?in=${currency}`}
+                href={`/budgets/${row.slug}`}
                 className="flex min-h-11 flex-col gap-1 px-5 py-3 hover:bg-surface-raised sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6"
               >
                 <span className="min-w-0">

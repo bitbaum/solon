@@ -787,7 +787,7 @@ export const RIIGITEATAJA = {
 export const PARLIAMENTRSO = {
   key: "parliamentrso",
   authority: "rso",
-  publisher: "Парламент Республики Южная Осетия (Parliament of the Republic of South Ossetia)",
+  publisher: "Parliament of the Republic of South Ossetia",
   homepage: "https://parliamentrso.org",
   robotsUrl: "https://parliamentrso.org/robots.txt",
   /** `{term}` is a taxonomy term, `{page}` the listing page from 0; ten acts a page. */

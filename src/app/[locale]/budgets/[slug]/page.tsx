@@ -4,9 +4,10 @@ import { toLocale } from "@/i18n/routing";
 import BudgetPage from "@/components/budgets/budget-page";
 import { actKey } from "@/components/law/quoted-words";
 import { BUDGET_DOCUMENTS } from "@/lib/config/budgets";
-import { RATES, displayCurrencyOf } from "@/lib/config/money";
 import { regionName, worldRegion } from "@/lib/config/world";
 import { db } from "@/lib/db/client";
+import { getPathname } from "@/i18n/navigation";
+import { readerMoney } from "@/lib/site/reader-money";
 import { holderOfRegion } from "@/lib/budgets/holders";
 import { budgetSections } from "@/lib/budgets/page";
 import { loadBudgetsOf } from "@/lib/budgets/read";
@@ -43,7 +44,7 @@ export default async function PlaceBudgetPage({
   if (!region || !holder) notFound();
   const query = await searchParams;
   const year = Number(query.year) || undefined;
-  const display = { locale, currency: displayCurrencyOf(query.in), rates: RATES };
+  const display = await readerMoney(locale, query.in);
   const sections = budgetSections(await loadBudgetsOf(db, holder), display, year);
   // The budget laws these sections were read from, so their quotes open the act in the register.
   const keys = new Set(sections.flatMap((s) => s.budget.sources.map((source) => source.key)));
@@ -59,7 +60,7 @@ export default async function PlaceBudgetPage({
       place={regionName(region, locale)}
       slug={region.slug}
       sections={sections}
-      year={year}
+      next={getPathname({ href: `/budgets/${region.slug}${year ? `?year=${year}` : ""}`, locale })}
       actIds={actIds}
       display={display}
       t={t}

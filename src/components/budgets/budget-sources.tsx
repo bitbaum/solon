@@ -47,7 +47,7 @@ export default function BudgetSources({
       <div className="mt-4 space-y-6">
         {series.map((s) => {
           const source = placesConfig.sources.find((c) => c.key === s.key);
-          const name = source ? `${source.publisher}: ${source.dataset}` : s.key;
+          const name = source?.attribution ? localized(source.attribution, locale) : s.key;
           return (
             <p key={s.key} className="mb-0 text-fg-secondary">
               <a
@@ -64,7 +64,7 @@ export default function BudgetSources({
           <div key={doc.key} className="space-y-4">
             {doc.quote ? (
               <QuotedWords
-                label={doc.title}
+                label={doc.lang === locale ? doc.title : localized(doc.titleTranslation, locale)}
                 quote={doc.quote}
                 actId={doc.act ? (actIds.get(actKey(doc.act)) ?? null) : null}
                 locale={locale}
@@ -72,7 +72,7 @@ export default function BudgetSources({
               />
             ) : (
               <QuotedWords
-                label={doc.title}
+                label={doc.lang === locale ? doc.title : localized(doc.titleTranslation, locale)}
                 quote={{
                   text: doc.title,
                   lang: doc.lang,

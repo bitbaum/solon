@@ -1806,5 +1806,59 @@
       "converted": "Beträge in {to}, umgerechnet aus {from} zum Durchschnittskurs von {year} ({sources}).",
       "notConverted": "Beträge in {from}: Solon hält keinen Kurs für {year}, um sie in {to} umzurechnen."
     }
+  },
+  "MethodLab": {
+    "tablist": "Wie dieselben Vorlieben gezählt werden",
+    "caption": "Wie jede Gruppe von Mitgliedern jede Option bewertet, von 0 bis 5",
+    "members": "{count} Mitglieder",
+    "asks": "Der Stimmzettel fragt:",
+    "floor": "Alles mit {floor} oder mehr gilt als annehmbar; der Rest wird oben blasser.",
+    "firstChoices": "erste Wahlen",
+    "rating": "{value} von 5",
+    "ratingApproved": "{value} von 5 — angenommen",
+    "ratingNotApproved": "{value} von 5 — nicht angenommen",
+    "pluralityWins": "{winner} gewinnt mit {count} von {total}.",
+    "pluralityNote": "Vier der sieben Mitglieder haben sie mit null bewertet. Nichts wurde falsch gezählt — dafür ist «eine wählen» da, und deshalb kann die Option, mit der die meisten leben können, gegen jene verlieren, die eine grosse Minderheit liebt.",
+    "otherWins": "{winner} gewinnt.",
+    "otherNote": "Dieselben sieben Mitglieder, dieselben Vorlieben, eine andere Frage — und eine andere Antwort.",
+    "tabs": {
+      "plurality": {
+        "label": "Eine wählen",
+        "asks": "Welche einzelne Option wollen Sie am meisten?"
+      },
+      "approval": {
+        "label": "Zustimmung",
+        "asks": "Mit welchen Optionen könnten Sie leben?"
+      },
+      "dot": {
+        "label": "Punkte",
+        "asks": "Wie würden Sie fünf Punkte auf sie verteilen?"
+      },
+      "score": {
+        "label": "Bewertung",
+        "asks": "Bewerten Sie jede Option von 0 bis 5."
+      },
+      "ranked": {
+        "label": "Rangfolge",
+        "asks": "Bringen Sie sie in Ihre Reihenfolge."
+      }
+    },
+    "units": {
+      "approvals": "Zustimmungen",
+      "dots": "Punkte",
+      "avg": "Schnitt",
+      "points": "Punkte"
+    },
+    "options": {
+      "roof": "Das Dach reparieren",
+      "apprenticeship": "Die Lehrstelle finanzieren",
+      "tooling": "Das Werkzeug kaufen",
+      "reserve": "In Reserve halten"
+    },
+    "camps": {
+      "daily": "Drei Mitglieder, die das Gebäude täglich nutzen",
+      "train": "Zwei Mitglieder, die Neue ausbilden",
+      "work": "Zwei Mitglieder, die die Arbeit selbst machen"
+    }
   }
 }
