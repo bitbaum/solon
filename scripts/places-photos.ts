@@ -7,6 +7,9 @@
  *   pnpm run places:photos --from-db           and every place in the database whose identifier
  *                                              Wikidata holds (ISO 3166-2, FIPS, FSO numbers, …)
  *   pnpm run places:photos --scheme iso_3166_2 --values US-WY,CH-ZH
+ *   pnpm run places:photos --all               and every place Wikidata holds under any scheme
+ *                                              that names a property: every ISO 3166-2
+ *                                              subdivision, every Swiss commune, US county
  *
  * A place is found on Wikidata by its item or by the property its identifier
  * scheme names (`wikidataProperty`). Its photograph, best first: the full
@@ -35,7 +38,7 @@ import {
   type PhotoInfo as Info,
 } from "@/lib/places/photo-rules";
 
-const UA = "SolonLawReader/1.0 (https://solon.orangecat.ch; place photographs)";
+const UA = "SolonPlacePhotos/1.0 (https://solon.orangecat.ch/credits; place photographs)";
 const OUT = join(process.cwd(), WORLD_PHOTOS_FILE);
 const COMMONS = "https://commons.wikimedia.org/w/api.php";
 
@@ -173,6 +176,20 @@ const photoOf = (i: Info, shape: "photo" | "banner"): PlacePhoto => ({
   shape,
 });
 
+/** One entry per line, sorted: thousands of places, and a rerun's diff shows what changed. */
+function serialise(
+  read: string,
+  photos: Record<string, PlacePhoto>,
+  index: Record<string, string>,
+) {
+  const block = (o: Record<string, unknown>) =>
+    Object.keys(o)
+      .sort()
+      .map((k) => `    ${JSON.stringify(k)}: ${JSON.stringify(o[k])}`)
+      .join(",\n");
+  return `{\n  "read": ${JSON.stringify(read)},\n  "photos": {\n${block(photos)}\n  },\n  "index": {\n${block(index)}\n  }\n}\n`;
+}
+
 async function main() {
   const previous = existsSync(OUT)
     ? (JSON.parse(readFileSync(OUT, "utf8")) as {
@@ -203,6 +220,17 @@ async function main() {
     );
     for (const r of rows) wanted.set(r.scheme, (wanted.get(r.scheme) ?? new Set()).add(r.value));
   }
+  if (args.includes("--all")) {
+    for (const entry of placesConfig.identifierSchemes) {
+      // Countries come from the world list, by the item each profile names.
+      if (!entry.wikidataProperty || entry.key === "iso_3166_1") continue;
+      const rows = await sparql(
+        `SELECT ?i ?v WHERE { ?i wdt:${entry.wikidataProperty} ?v . FILTER NOT EXISTS { ?i wdt:P576 ?end } }`,
+      );
+      for (const r of rows) index[`${entry.key}:${r.v}`] = r.i!.replace(/^.*\//, "");
+      console.error(`${entry.key}: ${rows.length} places`);
+    }
+  }
   for (const [key, values] of wanted) {
     if (key === "wikidata") {
       for (const v of values) index[`wikidata:${v}`] = v;
@@ -224,7 +252,18 @@ async function main() {
     console.error(`${key}: ${list.length} codes`);
   }
 
-  const items = [...new Set(Object.values(index))];
+  // `--scheme` alone reads only the places it names; any other run reads every place indexed.
+  const asked = scheme && !args.includes("--all") && !args.includes("--from-db");
+  const items = asked
+    ? [
+        ...new Set(
+          [...(wanted.get(scheme) ?? [])].flatMap((v) => {
+            const item = index[`${scheme}:${v}`];
+            return item ? [item] : [];
+          }),
+        ),
+      ]
+    : [...new Set(Object.values(index))];
   const files = new Map<
     string,
     { image?: string; banner?: string; aerial?: string; night?: string }
@@ -301,10 +340,7 @@ async function main() {
       found++;
     }
   }
-  writeFileSync(
-    OUT,
-    `${JSON.stringify({ read: new Date().toISOString().slice(0, 10), photos: out, index }, null, 2)}\n`,
-  );
+  writeFileSync(OUT, serialise(new Date().toISOString().slice(0, 10), out, index));
   console.log(`${items.length} places; ${found} with a photograph`);
 }
 

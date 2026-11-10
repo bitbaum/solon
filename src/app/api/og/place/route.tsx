@@ -8,6 +8,7 @@ import { regionName, worldRegion } from "@/lib/config/world";
 import { kindOf } from "@/lib/config/world/kinds";
 import { db } from "@/lib/db/client";
 import { placePhoto } from "@/lib/places/place-photo";
+import { databaseKeep, photoBytes } from "@/lib/places/photo-store";
 import { loadPlacePage } from "@/lib/places/place-page";
 
 /**
@@ -24,9 +25,6 @@ const INK = "#0A0A0A";
 const ORANGE = "#FF5C00";
 const MUTED = "#D4D4D4";
 const FACES = "inter:400,600";
-
-/** The card's photograph at a width Wikimedia keeps (1280), not the page's 1920. */
-const cardSize = (src: string) => src.replace(/\/\d+px-/, "/1280px-");
 
 /** `?locale=de&path=switzerland/zh` — the place page's own path below /places. */
 export async function GET(request: Request) {
@@ -51,6 +49,8 @@ export async function GET(request: Request) {
     ? t(`profile.kicker.${kindOf(region)}`)
     : (view?.levelName ?? t("world.kicker"));
   const photo = placePhoto([...(region ? [`world:${region.slug}`] : []), ...(view?.refs ?? [])]);
+  // From Solon's store, at the width the card needs: the card never waits on Wikimedia twice.
+  const bytes = photo ? await photoBytes(databaseKeep(db), photo, 1280).catch(() => null) : null;
   const line = (text: string) => ogText(text, FACES);
   const title = name.length > 22 ? 72 : 96;
 
@@ -65,10 +65,10 @@ export async function GET(request: Request) {
         fontFamily: "Inter",
       }}
     >
-      {photo && (
+      {bytes && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={cardSize(photo.src)}
+          src={`data:${bytes.contentType};base64,${bytes.bytes.toString("base64")}`}
           width={1200}
           height={630}
           style={{
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
             width: 1200,
             height: 630,
             objectFit: "cover",
-            objectPosition: photo.position ?? "center 40%",
+            objectPosition: photo?.position ?? "center 40%",
           }}
           alt=""
         />

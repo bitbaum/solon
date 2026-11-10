@@ -45,7 +45,8 @@
     "i18n:config": "tsx scripts/i18n-config.ts",
     "law:plan": "tsx scripts/law-plan.ts",
     "world:profiles": "tsx scripts/world-profiles.ts",
-    "places:photos": "tsx scripts/places-photos.ts"
+    "places:photos": "tsx scripts/places-photos.ts",
+    "places:photos:warm": "tsx scripts/places-photos-warm.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.14",

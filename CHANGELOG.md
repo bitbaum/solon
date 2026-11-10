@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Every place's page, rebuilt around what matters.** The photograph, the name, what kind of
+  place it is and its headline facts come first, with the one thing to do next: read its
+  constitution, or its law. Below, the law and what a resident can do sit beside the place at a
+  glance, without repeating what the photograph already says. The cantons of Switzerland, the
+  regions of France, the states and counties of the United States and every other subdivision
+  Wikidata photographs now have their photograph too, and a country's places are shown as
+  photographs. The list of the world opens on the Earth from Apollo 17 and is grouped by what each
+  place is. {#place-page-shape} {#place-photos-subdivisions}
+
 - **Every place opens on its photograph.** A country's page, a proclaimed state's, a US state's
   now begins with a photograph of the place across the screen, its name, what kind of place it is,
   its capital, population and area; a shared link shows the same photograph with its name. The
@@ -105,6 +114,14 @@ one to read for the detail. Fixes get the same weight as features.
   United Kingdom and the United States an ethnic or racial category, and in France a Constitutional
   Council decision bars studies that rest on ethnic origin or race. Each page lists what was not
   read, and a group can propose a position from it. {#stats-gaps}
+
+### Fixed
+
+- **Photographs of places always load.** Solon now keeps every place photograph it shows and
+  serves it itself; before, about one in sixteen came up black on a first visit while Wikimedia
+  asked the site to slow down. {#place-photo-store}
+- **The chat on place pages no longer reports an error** for its "Thought for…" line, in every
+  language.
 
 ## 2026-11-09
 

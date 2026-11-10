@@ -492,7 +492,8 @@
     "title": "The photographs on this site",
     "lede": "All are from Wikimedia Commons, used under the licences below. None shows a Solon customer or implies one.",
     "placesTitle": "The photographs of places",
-    "placesLede": "Every country's, territory's and jurisdiction's photograph, from Wikimedia Commons, each under its free licence and shown unchanged. The author and licence are also on the photograph itself."
+    "placesLede": "Every country's, territory's and jurisdiction's photograph, from Wikimedia Commons, each under its free licence and shown unchanged. The author and licence are also on the photograph itself.",
+    "placesPages": "Pages of place photographs"
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
@@ -1277,11 +1278,21 @@
       "title": "The world",
       "kicker": "Country or territory",
       "claimed": "Governs itself and is not a member of the United Nations. <link>{claimant}</link> regards it as part of its territory.",
+      "claimedBy": "<link>{claimant}</link> regards it as part of its territory.",
       "notYet": "Solon does not hold the places of {place} yet.",
       "coverage": "What Solon covers so far",
       "metaDescription": "{place} on Solon: the law Solon holds there and the places inside it.",
       "indexIntro": "Every country and territory, each with a page of its own. Open one to see the law Solon holds there and the places inside it.",
-      "heldPlaces": "{count, plural, =0 {Places only} one {Places · # law} other {Places · # laws}}"
+      "heldPlaces": "{count, plural, =0 {Places only} one {Places · # law} other {Places · # laws}}",
+      "groups": {
+        "state": "Members of the United Nations",
+        "observer": "Observer states",
+        "self_governing": "Governing themselves outside the UN",
+        "territory": "Territories",
+        "proclaimed": "Proclaimed states",
+        "special": "Special jurisdictions",
+        "project": "Projects for new jurisdictions"
+      }
     },
     "law": {
       "title": "Law",

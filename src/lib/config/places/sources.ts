@@ -41,7 +41,7 @@ const HUNDRED_DIVIDED = { base: 100, divided: 100 };
  * for the canton, one per commune) with a couple's rebate and a minimum tax
  * (vs-income-tax), matches it in every commune, 2026-10-30.
  */
-const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
+export const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   ZH: { fso: "1", rounding: HUNDRED },
   BE: { fso: "2", rounding: HUNDRED },
   LU: { fso: "3", rounding: HUNDRED },

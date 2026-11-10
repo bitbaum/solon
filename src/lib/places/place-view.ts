@@ -19,6 +19,8 @@ export interface PlaceLink {
   name: string;
   levelName: string;
   slugPath: string | null;
+  /** Its identifiers as `scheme:value`, for a place inside this one (its photograph, its tile). */
+  refs?: string[];
 }
 
 export interface PlaceIdentifier {
@@ -94,6 +96,8 @@ export interface PlaceViewInput {
   refinements?: readonly ChainPlace[];
   /** Every place directly inside it. */
   parts?: readonly ChainPlace[];
+  /** The identifiers of the places inside it. */
+  partIdentifiers?: readonly { jurisdictionId: string; scheme: string; value: string }[];
   /** The latest retrieval of each source that stated something about the place. */
   sources: readonly { sourceKey: string; retrievedAt: Date }[];
   locale: string;
@@ -159,6 +163,10 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     slugPath: p.slugPath,
   });
   const name = displayName(place.names, locale, pack.defaultLocales);
+  const partRefs = new Map<string, string[]>();
+  for (const { jurisdictionId, scheme, value } of input.partIdentifiers ?? []) {
+    partRefs.set(jurisdictionId, [...(partRefs.get(jurisdictionId) ?? []), `${scheme}:${value}`]);
+  }
 
   const schemes = new Map(config.identifierSchemes.map((s) => [s.key, s]));
   const identifiers = input.identifiers.map(({ scheme, value }) => {
@@ -183,7 +191,7 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     parts: pack.levels.flatMap((level) => {
       const places = (input.parts ?? [])
         .filter((p) => p.levelKey === level.key)
-        .map(link)
+        .map((p) => ({ ...link(p), refs: partRefs.get(p.id) ?? [] }))
         .sort((a, b) => a.name.localeCompare(b.name, locale));
       return places.length > 0 ? [{ levelName: localized(level.names, locale), places }] : [];
     }),

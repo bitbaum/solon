@@ -63,14 +63,19 @@ own repository (`liberland/constitution` on GitHub).
 
 Every place's page opens on its photograph, and a link to it shared anywhere
 shows that photograph with its name (`/api/og/place`). One mechanism for every
-place, a country or a county:
+place, a country or a commune:
 
 - `pnpm run places:photos` finds a place on Wikidata by its world entry or by
   any identifier whose scheme names a Wikidata property
   (`wikidataProperty` in `identifier-schemes.ts`: ISO 3166-1 and -2, FSO
-  municipality numbers, US state and county FIPS codes); `--from-db` takes
-  every place the database holds. It writes `data/world/photos.json`: the
+  municipality numbers, US state and county FIPS codes). `--all` reads every
+  place Wikidata holds under those schemes, so a place reaches its page with
+  its photograph already chosen; `--from-db` reads the places the database
+  holds. It writes `data/world/photos.json`, one entry per line: the
   photograph by Wikidata item, and an index from `scheme:value` to the item.
+- A scheme no other source keeps reaches its photograph through a crosswalk
+  (`src/lib/config/places/crosswalks.ts`): a Swiss canton's FSO number is read
+  as its ISO 3166-2 code.
 - The choice, best first (`src/lib/places/photo-rules.ts`): the full
   photograph the place's Wikivoyage banner was cut from; its image (P18), then
   its aerial or night view, when that is a landscape photograph at least 1600
@@ -80,16 +85,35 @@ place, a country or a county:
   corner and on `/credits`.
 - A person can replace any choice in one line
   (`src/lib/config/world/photo-choices.ts`: the file, why, and where to anchor
-  it): Switzerland's Matterhorn, Liechtenstein's Vaduz Castle, Georgia's
-  Gergeti Trinity Church, a West Bank landscape for Palestine.
-- The photographs are served from Wikimedia at a width it keeps (1920),
-  through the site's own image optimiser, so a reader's browser never asks
-  Wikimedia directly.
+  it): the Earth from Apollo 17 for the world, Switzerland's Matterhorn,
+  Liechtenstein's Vaduz Castle, Georgia's Gergeti Trinity Church, a West Bank
+  landscape for Palestine.
+- Solon serves the photographs itself (`/api/place-photo/<width>/<file>`,
+  `src/lib/places/photo-store.ts`): each Commons thumbnail is read once, one
+  request at a time with Solon's own user agent, and kept in
+  `place_photo_bytes`, so a reader's browser never asks Wikimedia, a page never
+  waits on it twice and a deploy never empties the store. Only files
+  `photos.json` names are served. After each deploy the places-data workflow
+  reads the world list's photographs (`places:photos:warm`); a subdivision's is
+  read the first time it is opened.
 
-On 2026-11-10: 289 of 296 places read have a photograph (the world list, the
-US states, the Swiss cantons by ISO code). Swiss canton pages carry their FSO
-number, which Wikidata holds for one canton only, so they get theirs once the
-pack records each canton's ISO 3166-2 code.
+## The page
+
+One page shape for every place, with or without a photograph:
+
+- **The hero**: where the place sits and the way to share it; what kind of
+  place it is, its name and the sentence that says so; a country's capital,
+  population and area; the one main action, its constitution, else its law.
+- **Two columns below**: what a reader came to do (the law that applies, its
+  budget, the places inside it, tax, what a resident can do, the record) and,
+  beside it, the place at a glance: the facts the hero does not carry, how its
+  law is changed, where the facts come from. On a phone the glance comes first,
+  in two columns.
+- **The places inside it** are tiles, the same tile as the world's countries,
+  when most of them have a photograph; a list otherwise, and always a list
+  past 120.
+- **The world index** opens on the Earth and groups every place by what it
+  does, the UN's members first.
 
 ## The map
 
