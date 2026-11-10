@@ -42,11 +42,15 @@ The second idea follows from the first. Once Solon holds a state's law and borde
 
 Some of the questions we want people to be able to ask:
 
-- **What if Iceland had never left Denmark?** It became a sovereign kingdom in union with Denmark in 1918 and a republic in 1944.
-- **What if Norway had stayed in a union?** It left Denmark in 1814 and the union with Sweden in 1905.
-- **What if Singapore had stayed in Malaysia?** Instead of separating in 1965.
-- **What if Ireland had never become independent?** The Irish Free State was founded in 1922.
-- **Northern Ireland:** independent, united with Ireland, or as it is. The 1998 Good Friday Agreement already provides for a vote on the question, so this one is more than a thought experiment.
+| What if… | What actually happened |
+| --- | --- |
+| Iceland had never left Denmark | Sovereign kingdom in union with Denmark in 1918, republic in 1944 |
+| Norway had stayed in a union | Left Denmark in 1814, left the union with Sweden in 1905 |
+| Singapore had stayed in Malaysia | Separated in 1965 |
+| Ireland had never become independent | Irish Free State founded in 1922 |
+| Northern Ireland were independent, or united with Ireland | Part of the United Kingdom; the 1998 Good Friday Agreement provides for a vote on unity |
+
+The last one is more than a thought experiment: the vote it describes could actually be held.
 
 A scenario on Solon would be a **fork**: a starting state on a date, plus the changes you propose. It might move a border, transfer sovereignty, or keep one country's constitution in place of another's. That is close to how Solon already handles [a proposed change to a law](/blog/think-a-change-through), a draft shown as a redline against the real text. The assistant that thinks a law change through with you could also think a scenario through. It would set out what would likely follow, who would gain and who would pay, and where something similar actually happened, with every claim cited and no side taken.
 
