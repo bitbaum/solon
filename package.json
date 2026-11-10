@@ -50,7 +50,7 @@
     "@bitbaum/geo-kit": "^0.5.0",
     "@bitbaum/mail-kit": "0.2.0",
     "@bitbaum/searchkit": "^0.2.3",
-    "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.6.1",
+    "@fleet/design-tokens": "npm:@bitbaum/design-tokens@^1.7.1",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "@napi-rs/canvas": "^1.1.0",
     "@noble/hashes": "2.4.0",
