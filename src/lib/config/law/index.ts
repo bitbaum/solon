@@ -63,8 +63,8 @@ export type ActTextStatus = (typeof ACT_TEXT_STATUSES)[number];
 export const ACT_VERSION_DATE_BASES = ["publisher", "retrieved"] as const;
 export type ActVersionDateBasis = (typeof ACT_VERSION_DATE_BASES)[number];
 
-/** What a version's snapshot holds. */
-export const ACT_TEXT_FORMATS = ["html", "pdf", "json", "xml"] as const;
+/** What a version's snapshot holds: a page, a document (a code printed as a Word file), data. */
+export const ACT_TEXT_FORMATS = ["html", "pdf", "json", "xml", "doc", "docx"] as const;
 export type ActTextFormat = (typeof ACT_TEXT_FORMATS)[number];
 
 export const ACT_NAME_KINDS = ["title"] as const;
@@ -811,6 +811,11 @@ export const PARLIAMENTRSO = {
     { term: "1", label: "Конституционные законы", kind: "statute" },
     { term: "16", label: "Постановления", kind: "decree" },
   ] as readonly { term: string; label: string; kind: ActKind }[],
+  /**
+   * A code is printed as a page linking Word files: "Содержание кодекса читать тут" (its
+   * contents) and "Текст кодекса скачать тут" (its text). How the link to the text is worded.
+   */
+  documentLinks: { text: /текст/i, notText: /содержание|перечень|оглавление/i },
   /** The Constitution, a page of its own that no listing carries (its title as the page's h1). */
   constitution: {
     id: "3567",

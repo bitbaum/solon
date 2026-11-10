@@ -836,7 +836,13 @@
       "morePlace": "Autres lois de {place}",
       "asMarkdown": "Pour les machines : Markdown",
       "titleDerived": "Ce titre a été construit par Solon à partir des dernières lignes de l'acte. L'éditeur ne donne à l'acte aucun titre en dehors de son type.",
-      "contents": "{count, plural, one {Table des matières : # disposition} other {Table des matières : # dispositions}}"
+      "contents": "{count, plural, one {Table des matières : # disposition} other {Table des matières : # dispositions}}",
+      "translatedNote": "Traduction automatique pour la lecture ({from} → {to}). Seul le texte authentique fait droit.",
+      "originalNote": "Le texte authentique ({from}).",
+      "showOriginal": "Afficher le texte authentique ({from})",
+      "showTranslation": "Afficher la traduction ({to})",
+      "translating": "Traduction de cette page…",
+      "translationFailed": "Cette page n'a pas pu être traduite pour l'instant ; le texte authentique est affiché."
     },
     "kinds": {
       "constitution": "constitution",
@@ -1628,7 +1634,8 @@
       "revenue": "Recettes",
       "spending": "Dépenses",
       "balance": "Excédent (+) ou déficit (−)",
-      "ofGdp": "du PIB"
+      "ofGdp": "du PIB",
+      "withGdp": "{value} · {share} du PIB"
     },
     "spending": {
       "title": "À quoi l'argent est dépensé",
@@ -1656,7 +1663,8 @@
       "title": "Au fil des ans",
       "caption": "{place} : recettes et dépenses, {from}–{to}",
       "revenue": "Recettes",
-      "spending": "Dépenses"
+      "spending": "Dépenses",
+      "millions": "millions {currency}"
     },
     "sources": {
       "title": "D'où viennent ces chiffres",
@@ -1685,6 +1693,11 @@
       "title": "Budget public",
       "text": "Ce que le gouvernement de {place} perçoit et à quoi il le dépense.",
       "open": "Ouvrir le budget"
+    },
+    "currency": {
+      "label": "Montrer l'argent en",
+      "converted": "Montants en {to}, convertis depuis {from} au cours moyen de {year} ({sources}).",
+      "notConverted": "Montants en {from} : Solon ne détient aucun cours de {year} pour les convertir en {to}."
     }
   }
 }

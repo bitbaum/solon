@@ -108,7 +108,20 @@ describe("Eurostat JSON-stat", () => {
       ...CH,
       requests: [{ ...CH.requests[0]!, filters: { ...CH.requests[0]!.filters, unit: "MIO_EUR" } }],
     };
-    expect(() => run("gov_10a_exp-ch.json", wrongUnit)).toThrow(/unit is not MIO_EUR/);
+    expect(() => run("gov_10a_exp-ch.json", wrongUnit)).toThrow(/not in the source's options/);
+  });
+
+  it("answers the request whose filters the cube holds, when a dataset is asked for in two units", () => {
+    const meur = { ...CH.requests[0]!, filters: { ...CH.requests[0]!.filters, unit: "MIO_EUR" } };
+    const both = {
+      ...CH,
+      requests: [
+        { ...meur, series: meur.series.map((s) => ({ ...s, metric: `${s.metric}.meur` })) },
+        CH.requests[0]!,
+      ],
+    };
+    const { batch } = run("gov_10a_exp-ch.json", both);
+    expect(batch.facts!.every((f) => !f.metricKey.endsWith(".meur"))).toBe(true);
   });
 
   it("asks for one dataset per request, every series named, from the first year", () => {

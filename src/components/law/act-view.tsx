@@ -6,12 +6,14 @@ import { formatDay } from "@/lib/format-date";
 import type { Locale } from "@/i18n/routing";
 import { archiveCopyOf } from "@/lib/law/archive-copy";
 import { authorityOf } from "@/lib/law/places";
+import type { ActTranslation } from "@/lib/law/act-translation";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
 import type { AmendmentSummary } from "@/lib/law/amend/store";
 import AmendmentList from "./amendment-list";
 import OfficialRoutes from "./official-routes";
 import PlaceTrail from "./place-trail";
+import TranslationLoader from "./translation-loader";
 import { statusLabel } from "./status-label";
 import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
@@ -27,6 +29,10 @@ interface ActViewProps {
   amendLabels: { propose: string; proposals: string; noProposals: string };
   /** The reader's language: the dates and the official routes are written in it. */
   locale: Locale;
+  /** The page in the reader's language, when the authentic text is in another. */
+  translation: ActTranslation | null;
+  /** The reader asked for the authentic words instead of the translation. */
+  original: boolean;
 }
 
 const cardClass = "rounded-surface border border-default bg-surface-base p-6";
@@ -45,7 +51,16 @@ export default async function ActViewPage({
   amendments,
   amendLabels,
   locale,
+  translation,
+  original,
 }: ActViewProps) {
+  // The reader's language unless they asked for the original: the translation where Solon holds it.
+  const shown = translation && !original ? translation : null;
+  const title = shown?.title ?? act.title;
+  const provisions = shown?.provisions ?? act.provisions;
+  const language = (code: string) =>
+    new Intl.DisplayNames([locale], { type: "language" }).of(code) ?? code;
+  const here = `/law/${act.id}?page=${page}`;
   const names = await readerAuthorityNames();
   const { version } = act;
   const day = (iso: string) => formatDay(iso, locale);
@@ -61,10 +76,38 @@ export default async function ActViewPage({
     .filter(Boolean)
     .join(" · ");
   return (
-    <PageLayout title={act.title ?? act.systematicNumber ?? act.id} kicker={t("act.kicker")}>
+    <PageLayout title={title ?? act.systematicNumber ?? act.id} kicker={t("act.kicker")}>
       <div className="max-w-3xl space-y-8">
         <PlaceTrail authority={act.authority} t={t} />
         <p className="text-fg-secondary">{meta}</p>
+        {translation && (
+          <div className={`${cardClass} space-y-2 text-sm`}>
+            <p className="mb-0 text-fg-secondary">
+              {original
+                ? t("act.originalNote", { from: language(translation.from) })
+                : t("act.translatedNote", {
+                    to: language(translation.lang),
+                    from: language(translation.from),
+                  })}
+            </p>
+            <Link
+              href={original ? here : `${here}&original=1`}
+              className="inline-block font-medium text-fg-primary underline"
+            >
+              {original
+                ? t("act.showTranslation", { to: language(translation.lang) })
+                : t("act.showOriginal", { from: language(translation.from) })}
+            </Link>
+            {!original && !translation.complete && (
+              <TranslationLoader
+                act={act.id}
+                page={page}
+                to={translation.lang}
+                labels={{ translating: t("act.translating"), failed: t("act.translationFailed") }}
+              />
+            )}
+          </div>
+        )}
         {act.titleDerived ? (
           <p className="text-sm text-fg-tertiary">{t("act.titleDerived")}</p>
         ) : null}
@@ -172,7 +215,7 @@ export default async function ActViewPage({
             <h2 className="font-semibold text-fg-primary">
               {t("act.provisionCount", { count: version.provisionCount })}
             </h2>
-            {act.provisions.map((provision) => (
+            {provisions.map((provision) => (
               <article key={provision.path} id={provision.path} className="space-y-2">
                 <h3 className="font-medium text-fg-primary">{provision.heading}</h3>
                 <p className="whitespace-pre-line text-fg-secondary">{provision.text}</p>

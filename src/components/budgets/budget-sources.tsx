@@ -2,7 +2,7 @@ import { actKey } from "@/components/law/quoted-words";
 import QuotedWords from "@/components/law/quoted-words";
 import { BUDGET_DOCUMENTS, BUDGET_TAXONOMIES } from "@/lib/config/budgets";
 import { placesConfig } from "@/lib/config/places";
-import { formatBudgetValue } from "@/lib/budgets/format";
+import { formatOriginal } from "@/lib/budgets/format";
 import type { Budget } from "@/lib/budgets/model";
 import { categoryLabel, categoryOf } from "@/lib/budgets/taxonomy";
 import { localized } from "@/lib/places/place-view";
@@ -34,7 +34,7 @@ export default function BudgetSources({
     read: (date: string) => t("sources.read", { date }),
     translatedBy: (translator: string) => t("sources.translatedBy", { translator }),
   };
-  const amount = (v: number) => formatBudgetValue(v, budget.measure, locale);
+  const amount = (v: number) => formatOriginal(v, budget, locale);
   const nameOf = (side: "revenue" | "expenditure", code: string | null) => {
     const c = code ? categoryOf(BUDGET_TAXONOMIES[side], code) : undefined;
     return c ? localized(categoryLabel(c), locale) : t("sources.notPlaced");

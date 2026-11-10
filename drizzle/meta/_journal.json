@@ -211,6 +211,13 @@
       "when": 1794313409563,
       "tag": "0029_act_title_derived",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1794320000768,
+      "tag": "0030_text_translations",
+      "breakpoints": true
     }
   ]
 }

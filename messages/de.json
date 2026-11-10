@@ -836,7 +836,13 @@
       "morePlace": "Weitere Gesetze von {place}",
       "asMarkdown": "Für Maschinen: Markdown",
       "titleDerived": "Dieser Titel stammt von Solon, aus den Schlusszeilen des Erlasses. Der Herausgeber gibt dem Erlass keinen Titel ausser seiner Art.",
-      "contents": "{count, plural, one {Inhalt: # Bestimmung} other {Inhalt: # Bestimmungen}}"
+      "contents": "{count, plural, one {Inhalt: # Bestimmung} other {Inhalt: # Bestimmungen}}",
+      "translatedNote": "Maschinelle Übersetzung zum Lesen ({from} → {to}). Recht ist nur der Originaltext.",
+      "originalNote": "Der Originaltext ({from}).",
+      "showOriginal": "Originaltext zeigen ({from})",
+      "showTranslation": "Übersetzung zeigen ({to})",
+      "translating": "Diese Seite wird übersetzt…",
+      "translationFailed": "Diese Seite konnte gerade nicht übersetzt werden; der verbindliche Text wird gezeigt."
     },
     "kinds": {
       "constitution": "Verfassung",
@@ -1735,7 +1741,8 @@
       "revenue": "Einnahmen",
       "spending": "Ausgaben",
       "balance": "Überschuss (+) oder Defizit (−)",
-      "ofGdp": "des BIP"
+      "ofGdp": "des BIP",
+      "withGdp": "{value} · {share} des BIP"
     },
     "spending": {
       "title": "Wofür das Geld ausgegeben wird",
@@ -1763,7 +1770,8 @@
       "title": "Über die Jahre",
       "caption": "{place}: Einnahmen und Ausgaben, {from}–{to}",
       "revenue": "Einnahmen",
-      "spending": "Ausgaben"
+      "spending": "Ausgaben",
+      "millions": "Millionen {currency}"
     },
     "sources": {
       "title": "Woher diese Zahlen kommen",
@@ -1792,6 +1800,11 @@
       "title": "Öffentlicher Haushalt",
       "text": "Was die Regierung von {place} einnimmt und wofür sie es ausgibt.",
       "open": "Den Haushalt öffnen"
+    },
+    "currency": {
+      "label": "Geld zeigen in",
+      "converted": "Beträge in {to}, umgerechnet aus {from} zum Durchschnittskurs von {year} ({sources}).",
+      "notConverted": "Beträge in {from}: Solon hält keinen Kurs für {year}, um sie in {to} umzurechnen."
     }
   }
 }

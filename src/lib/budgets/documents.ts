@@ -120,6 +120,7 @@ export function budgetOfDocument(doc: BudgetDocument, taxonomies: Taxonomies): B
     revenue: placed(doc, "revenue", taxonomies.revenue),
     expenditure: placed(doc, "expenditure", taxonomies.expenditure),
     balance: doc.totals.balance ?? null,
+    gdp: null,
     lines: doc.lines,
     sources: [
       {

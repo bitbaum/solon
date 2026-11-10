@@ -139,8 +139,16 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
   map: (c, { pack, options, skip }) => {
     if (!pack) throw new Error("figures belong to a pack's places; the source names none");
     const dataset = c.extension.id.toLowerCase();
-    const request = options.requests.find((r) => r.dataset === dataset);
-    if (!request) throw new Error(`dataset ${dataset} is not in the source's options`);
+    // A dataset may be asked for more than once (in two units, say): the cube's own
+    // fixed dimensions say which request it answers.
+    const holds = (dim: string, code: string) => code in (c.dimension[dim]?.category.index ?? {});
+    const request = options.requests.find(
+      (r) =>
+        r.dataset === dataset && Object.entries(r.filters).every(([d, code]) => holds(d, code)),
+    );
+    if (!request) {
+      throw new Error(`dataset ${dataset} with these filters is not in the source's options`);
+    }
     const facts: BatchFactInput[] = [];
     const seen = new Set<string>();
     for (const cell of cellsOf(c)) {

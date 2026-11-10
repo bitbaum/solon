@@ -261,7 +261,7 @@ const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): Sou
       dataset: r.dataset,
       dimension: r.dimension,
       filters: r.filters,
-      series: seriesOf(r).map((s) => ({ ...s, divideBy: 100 })),
+      series: seriesOf(r).map((s) => ({ ...s, divideBy: r.divideBy })),
     })),
   },
   packs: [pack],

@@ -1422,7 +1422,13 @@
       "morePlace": "More laws of {place}",
       "asMarkdown": "For machines: Markdown",
       "titleDerived": "This title was built by Solon from the act's closing lines. The publisher gives the act no title beyond its type.",
-      "contents": "{count, plural, one {Contents: # provision} other {Contents: # provisions}}"
+      "contents": "{count, plural, one {Contents: # provision} other {Contents: # provisions}}",
+      "translatedNote": "Machine translation for reading ({from} → {to}). Only the authentic text is law.",
+      "originalNote": "The authentic text ({from}).",
+      "showOriginal": "Show the authentic text ({from})",
+      "showTranslation": "Show the translation ({to})",
+      "translating": "Translating this page…",
+      "translationFailed": "This page could not be translated just now; the authentic text is shown."
     },
     "kinds": {
       "constitution": "constitution",
@@ -2321,7 +2327,8 @@
       "revenue": "Revenue",
       "spending": "Spending",
       "balance": "Surplus (+) or deficit (−)",
-      "ofGdp": "of GDP"
+      "ofGdp": "of GDP",
+      "withGdp": "{value} · {share} of GDP"
     },
     "spending": {
       "title": "What the money is spent on",
@@ -2349,7 +2356,8 @@
       "title": "Over the years",
       "caption": "{place}: revenue and spending, {from}–{to}",
       "revenue": "Revenue",
-      "spending": "Spending"
+      "spending": "Spending",
+      "millions": "million {currency}"
     },
     "sources": {
       "title": "Where these figures come from",
@@ -2378,6 +2386,11 @@
       "title": "Public budget",
       "text": "What {place}'s government raises and what it spends it on.",
       "open": "Open the budget"
+    },
+    "currency": {
+      "label": "Show money in",
+      "converted": "Amounts in {to}, converted from {from} at {year}'s average rate ({sources}).",
+      "notConverted": "Amounts in {from}: Solon holds no {year} rate to convert them to {to}."
     }
   }
 }

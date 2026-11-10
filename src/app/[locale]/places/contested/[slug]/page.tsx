@@ -5,6 +5,7 @@ import ContestPage from "@/components/places/contest-page";
 import { actKey } from "@/components/law/quoted-words";
 import { loadBudgetsOf } from "@/lib/budgets/read";
 import { summarize } from "@/lib/budgets/summary";
+import { RATES, displayCurrencyOf } from "@/lib/config/money";
 import { db } from "@/lib/db/client";
 import { contestView } from "@/lib/places/contest-view";
 import { findAct } from "@/lib/statistics/read";
@@ -12,6 +13,7 @@ import { findAct } from "@/lib/statistics/read";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; slug: string }>;
+type SearchParams = Promise<{ in?: string }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
@@ -27,7 +29,13 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 /** One claimed place, question by question (design `2026-11-contested-law.md` §4.2). */
-export default async function ContestedPlacePage({ params }: { params: Params }) {
+export default async function ContestedPlacePage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { locale: raw, slug } = await params;
   const locale = toLocale(raw);
   setRequestLocale(locale);
@@ -55,5 +63,15 @@ export default async function ContestedPlacePage({ params }: { params: Params })
     getTranslations({ locale, namespace: "Places" }),
     getTranslations({ locale, namespace: "Budgets" }),
   ]);
-  return <ContestPage view={view} actIds={actIds} money={money} locale={locale} t={t} tb={tb} />;
+  return (
+    <ContestPage
+      view={view}
+      actIds={actIds}
+      money={money}
+      display={{ locale, currency: displayCurrencyOf((await searchParams).in), rates: RATES }}
+      locale={locale}
+      t={t}
+      tb={tb}
+    />
+  );
 }

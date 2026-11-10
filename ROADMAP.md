@@ -46,6 +46,8 @@ authority that decides, and the record says so.
 - [x] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
 - [x] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
 - [x] Thinking a change through with the assistant while drafting it: what it would do, who would gain and who would bear a cost, where something like it is already law (in the law Solon holds, and studies and experience on the web), each claim cited, no side taken {#law-consult}
+- [x] The law in the reader's language: a machine translation, labelled, cached by the hash of the words it translates and checked before it is kept, with the authentic text a click away; titles in lists too {#law-translated}
+- [x] A code printed as a page that links its Word file is read from the file, article by article; held stubs read again with `--stubs` {#law-documents}
 - [ ] Signing a proposal or a support with one's own Bitcoin key from the page (the API takes signatures today; the page offers one click) {#law-sign-on-page}
 - [ ] A conversation under each proposal, the fleet's shared comment thread {#law-discuss}
 - [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}
@@ -88,7 +90,8 @@ any two budgets comparable on the same classifications (design:
 - [x] Eurostat's government finance for 30 countries from 1995, spending by function and group, revenue by kind, the balance, in shares of GDP; every division also a statistic with its map and ranking {#budgets-eurostat}
 - [x] `/budgets` and `/budgets/<place>`: key figures, who pays, what the money is spent on with every division opened into its groups, where it comes from, the years, the sources and the publisher's own lines, and "propose a change"; a budget card on a country's page; the contested places' budget section through the same components {#budgets-pages}
 - [ ] Sub-national budgets (cantons, communes) and Solon organizations' budgets as holders {#budgets-entities}
-- [ ] Amounts in the national currency beside the shares of GDP {#budgets-money}
+- [x] Every amount in the reader's currency (CHF, EUR, USD, GBP, RUB, GEL), converted at the budget year's average rate from official publishers, beside its share of GDP {#budgets-money}
+- [ ] The money code (`src/lib/money/`) moved into a fleet package, so OrangeCat and every product convert the same way {#money-package}
 - [ ] The IMF's Government Finance Statistics for the countries Eurostat does not cover, after its licence is read {#budgets-imf}
 - [ ] A proposal that names categories and amounts, its effect on the balance computed; a page comparing places function by function {#budgets-proposals}
 

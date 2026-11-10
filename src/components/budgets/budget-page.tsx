@@ -1,9 +1,16 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { BUDGET_TAXONOMIES } from "@/lib/config/budgets";
+import { DISPLAY_CURRENCIES } from "@/lib/config/money";
 import { placesConfig } from "@/lib/config/places";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
-import { formatBudgetValue } from "@/lib/budgets/format";
+import {
+  conversionOf,
+  formatBudgetValue,
+  formatShare,
+  ofGdp,
+  type MoneyDisplay,
+} from "@/lib/budgets/format";
 import type { BudgetSection } from "@/lib/budgets/page";
 import { budgetMetricKey } from "@/lib/budgets/scopes";
 import { localized } from "@/lib/places/place-view";
@@ -12,6 +19,7 @@ import BudgetBreakdown from "./budget-breakdown";
 import BudgetHistory from "./budget-history";
 import BudgetSelfReliance from "./budget-self-reliance";
 import BudgetSources from "./budget-sources";
+import CurrencyPicker from "./currency-picker";
 import FigureTiles from "./figure-tiles";
 import type { BudgetsTranslator } from "./translator";
 
@@ -19,8 +27,10 @@ interface BudgetPageProps {
   place: string;
   slug: string;
   sections: readonly BudgetSection[];
+  /** The year asked for in the address, kept when the reader changes currency. */
+  year: number | undefined;
   actIds: ReadonlyMap<string, string>;
-  locale: string;
+  display: MoneyDisplay;
   t: BudgetsTranslator;
 }
 
@@ -36,10 +46,26 @@ const statisticHrefFor = (scope: string) => (code: string) => {
  * One holder's public money: for each scope and basis Solon holds, the key
  * figures, who pays for it, what it is spent on, where it comes from, how it
  * moved over the years and where every figure was read; then the way to
- * propose a change. The same page for every place, whatever it was read from.
+ * propose a change. Money is in the reader's currency, converted at the
+ * budget year's average rate, and the page says from what. The same page for
+ * every place, whatever it was read from.
  */
-export default function BudgetPage({ place, slug, sections, actIds, locale, t }: BudgetPageProps) {
+export default function BudgetPage({
+  place,
+  slug,
+  sections,
+  year,
+  actIds,
+  display,
+  t,
+}: BudgetPageProps) {
+  const { locale } = display;
   const newest = sections[0]?.budget;
+  const href = (currency: string, y = year) =>
+    `/budgets/${slug}?${new URLSearchParams({
+      ...(y ? { year: String(y) } : {}),
+      in: currency,
+    }).toString()}`;
   return (
     <PageLayout
       title={t("title", { place })}
@@ -47,13 +73,29 @@ export default function BudgetPage({ place, slug, sections, actIds, locale, t }:
       description={t("intro", { place })}
     >
       <div className="max-w-4xl space-y-10">
+        <CurrencyPicker
+          label={t("currency.label")}
+          current={display.currency}
+          currencies={DISPLAY_CURRENCIES}
+          hrefFor={(c) => href(c)}
+        />
         {sections.length === 0 && <p className="text-fg-secondary">{t("notHeld", { place })}</p>}
         {sections.map((section) => {
           const { budget } = section;
-          const value = (v: number | undefined | null) =>
-            v === undefined || v === null ? "—" : formatBudgetValue(v, budget.measure, locale);
-          const revenue = budget.revenue.get(BUDGET_TAXONOMIES.revenue.total);
-          const spent = budget.expenditure.get(BUDGET_TAXONOMIES.expenditure.total);
+          const tile = (label: string, v: number | undefined | null): [string, string][] => {
+            if (v === undefined || v === null) return [];
+            const share = ofGdp(v, budget);
+            const text = formatBudgetValue(v, budget, display);
+            return [
+              [
+                label,
+                share === null
+                  ? text
+                  : t("figures.withGdp", { value: text, share: formatShare(share, locale) }),
+              ],
+            ];
+          };
+          const conversion = conversionOf(budget, display);
           const caption = { place, year: budget.year };
           return (
             <section key={`${section.scope.key}-${section.basis}`} className="space-y-6">
@@ -70,13 +112,34 @@ export default function BudgetPage({ place, slug, sections, actIds, locale, t }:
                 <p className="mb-0 text-sm text-fg-tertiary">
                   {localized(section.scope.definition, locale)}
                 </p>
+                {conversion && (
+                  <p className="mb-0 text-sm text-fg-tertiary">
+                    {conversion.converted
+                      ? t("currency.converted", {
+                          to: conversion.to,
+                          from: conversion.from,
+                          year: conversion.year,
+                          sources: conversion.sources
+                            .map(
+                              (key) =>
+                                display.rates.sources.find((s) => s.key === key)?.publisher ?? key,
+                            )
+                            .join(", "),
+                        })
+                      : t("currency.notConverted", {
+                          to: conversion.to,
+                          from: conversion.from,
+                          year: conversion.year,
+                        })}
+                  </p>
+                )}
                 {section.years.length > 1 && (
                   <nav aria-label={t("years")} className="flex flex-wrap gap-x-3 gap-y-1 text-sm">
                     <span className="text-fg-tertiary">{t("years")}:</span>
                     {section.years.map((y) => (
                       <Link
                         key={y}
-                        href={`/budgets/${slug}?year=${y}`}
+                        href={href(display.currency, y)}
                         aria-current={y === budget.year ? "page" : undefined}
                         className={
                           y === budget.year
@@ -92,24 +155,24 @@ export default function BudgetPage({ place, slug, sections, actIds, locale, t }:
               </div>
               <FigureTiles
                 figures={[
-                  ...(revenue !== undefined
-                    ? [[t("figures.revenue"), value(revenue)] as [string, string]]
-                    : []),
-                  ...(spent !== undefined
-                    ? [[t("figures.spending"), value(spent)] as [string, string]]
-                    : []),
-                  ...(budget.balance !== null
-                    ? [[t("figures.balance"), value(budget.balance)] as [string, string]]
-                    : []),
+                  ...tile(
+                    t("figures.revenue"),
+                    budget.revenue.get(BUDGET_TAXONOMIES.revenue.total),
+                  ),
+                  ...tile(
+                    t("figures.spending"),
+                    budget.expenditure.get(BUDGET_TAXONOMIES.expenditure.total),
+                  ),
+                  ...tile(t("figures.balance"), budget.balance),
                 ]}
               />
-              {section.reliance && revenue !== undefined && (
+              {section.reliance && budget.revenue.has(BUDGET_TAXONOMIES.revenue.total) && (
                 <BudgetSelfReliance
                   budget={budget}
                   reliance={section.reliance}
                   holder={place}
-                  revenue={revenue}
-                  locale={locale}
+                  revenue={budget.revenue.get(BUDGET_TAXONOMIES.revenue.total)!}
+                  display={display}
                   t={t}
                 />
               )}
@@ -119,7 +182,7 @@ export default function BudgetPage({ place, slug, sections, actIds, locale, t }:
                 title={t("spending.title")}
                 caption={t("spending.caption", caption)}
                 statisticHref={statisticHrefFor(section.scope.key)}
-                locale={locale}
+                display={display}
                 t={t}
               />
               <BudgetBreakdown
@@ -127,10 +190,10 @@ export default function BudgetPage({ place, slug, sections, actIds, locale, t }:
                 taxonomy={BUDGET_TAXONOMIES.revenue}
                 title={t("income.title")}
                 caption={t("income.caption", caption)}
-                locale={locale}
+                display={display}
                 t={t}
               />
-              <BudgetHistory section={section} place={place} locale={locale} t={t} />
+              <BudgetHistory history={section.history} place={place} locale={locale} t={t} />
               <BudgetSources budget={budget} actIds={actIds} locale={locale} t={t} />
             </section>
           );

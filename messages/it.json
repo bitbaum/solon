@@ -836,7 +836,13 @@
       "morePlace": "Altre leggi di {place}",
       "asMarkdown": "Per le macchine: Markdown",
       "titleDerived": "Questo titolo è stato costruito da Solon dalle ultime righe dell'atto. L'editore non dà all'atto alcun titolo oltre al suo tipo.",
-      "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}"
+      "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}",
+      "translatedNote": "Traduzione automatica per la lettura ({from} → {to}). Solo il testo autentico fa legge.",
+      "originalNote": "Il testo autentico ({from}).",
+      "showOriginal": "Mostrare il testo autentico ({from})",
+      "showTranslation": "Mostrare la traduzione ({to})",
+      "translating": "Traduzione di questa pagina…",
+      "translationFailed": "Questa pagina non ha potuto essere tradotta ora; è mostrato il testo autentico."
     },
     "kinds": {
       "constitution": "costituzione",
@@ -1628,7 +1634,8 @@
       "revenue": "Entrate",
       "spending": "Spese",
       "balance": "Avanzo (+) o disavanzo (−)",
-      "ofGdp": "del PIL"
+      "ofGdp": "del PIL",
+      "withGdp": "{value} · {share} del PIL"
     },
     "spending": {
       "title": "Per cosa si spende il denaro",
@@ -1656,7 +1663,8 @@
       "title": "Negli anni",
       "caption": "{place}: entrate e spese, {from}–{to}",
       "revenue": "Entrate",
-      "spending": "Spese"
+      "spending": "Spese",
+      "millions": "milioni {currency}"
     },
     "sources": {
       "title": "Da dove vengono queste cifre",
@@ -1685,6 +1693,11 @@
       "title": "Bilancio pubblico",
       "text": "Cosa incassa il governo di {place} e per cosa lo spende.",
       "open": "Aprire il bilancio"
+    },
+    "currency": {
+      "label": "Mostrare il denaro in",
+      "converted": "Importi in {to}, convertiti da {from} al cambio medio del {year} ({sources}).",
+      "notConverted": "Importi in {from}: Solon non detiene alcun cambio del {year} per convertirli in {to}."
     }
   }
 }

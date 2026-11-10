@@ -39,7 +39,9 @@
     "law:text": "tsx scripts/law-text.ts",
     "check:places-literals": "node --import tsx scripts/check-places-no-literals.ts",
     "check:law-search": "tsx scripts/check-law-search.ts",
-    "brand": "tsx scripts/brand.mts"
+    "brand": "tsx scripts/brand.mts",
+    "money:rates": "tsx scripts/money-rates.ts",
+    "law:translate": "tsx scripts/law-translate.ts"
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.14",
@@ -79,6 +81,7 @@
     "topojson-simplify": "3.0.3",
     "unpdf": "^1.9.1",
     "us-atlas": "^3.0.1",
+    "word-extractor": "^1.0.4",
     "world-atlas": "^2.0.2",
     "zod": "^4.6.7"
   },

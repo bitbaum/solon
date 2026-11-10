@@ -1,9 +1,6 @@
 /**
  * The metrics budgets are held in, generated from the taxonomies and the
- * requests that read them (./eurostat.ts), never listed by hand. A division
- * (depth 1) and each total carry a `statistic`, so they chart, map and rank
- * on /statistics like any other series; a group feeds the budget pages'
- * drill-down only.
+ * requests that read them (./eurostat.ts), never listed by hand.
  */
 import { categoryLabel } from "@/lib/budgets/taxonomy";
 import type { LocalizedText, MetricInput } from "@/lib/config/places/schema";
@@ -18,12 +15,34 @@ const sentence = (templates: Record<(typeof LOCALES)[number], string>, label: Lo
     LOCALES.map((l) => [l, templates[l].replace("{label}", label[l] ?? label.en ?? "")]),
   ) as LocalizedText;
 
-const SHARE_LABEL = {
-  en: "{label} (share of GDP)",
-  de: "{label} (Anteil am BIP)",
-  fr: "{label} (part du PIB)",
-  it: "{label} (quota del PIL)",
-  ru: "{label} (доля ВВП)",
+const LABEL = {
+  share: {
+    en: "{label} (share of GDP)",
+    de: "{label} (Anteil am BIP)",
+    fr: "{label} (part du PIB)",
+    it: "{label} (quota del PIL)",
+    ru: "{label} (доля ВВП)",
+  },
+  meur: {
+    en: "{label} (million euro)",
+    de: "{label} (Millionen Euro)",
+    fr: "{label} (millions d'euros)",
+    it: "{label} (milioni di euro)",
+    ru: "{label} (млн евро)",
+  },
+};
+
+/**
+ * What a figure may plausibly be: a share of GDP within the economy (a licence
+ * sold, spectrum say, is booked as negative spending in its group), an amount in
+ * million euro within the largest economy Eurostat covers several times over.
+ */
+const PLAUSIBLE = {
+  share: { category: { min: -0.2, max: 1 }, balance: { min: -0.6, max: 0.6 } },
+  meur: {
+    category: { min: -500_000, max: 10_000_000 },
+    balance: { min: -2_000_000, max: 2_000_000 },
+  },
 };
 
 const DEFINITION = {
@@ -59,35 +78,49 @@ const BALANCE_DEFINITION: LocalizedText = {
   ru: "Чистое кредитование (+) или чистое заимствование (−) государственного сектора в процентах ВВП: доходы минус расходы, как их считает статистика государственных финансов Евростата (ЕСС 2010).",
 };
 
+/**
+ * A division (depth 1), each total and the balance carry a `statistic` in
+ * shares of GDP, so they chart, map and rank on /statistics; the amounts in
+ * million euro and the groups feed the budget pages only.
+ */
 export const BUDGET_METRICS: readonly MetricInput[] = EUROSTAT_REQUESTS.flatMap((request) =>
   seriesOf(request).map(({ code, metric }): MetricInput => {
     const category = request.taxonomy.categories.find((c) => c.code === code);
+    const charted = request.measure === "share" && (!category || category.depth <= 1);
     const series = {
       publisher: EUROSTAT_PUBLISHER,
       code: request.dataset,
       url: eurostatBrowserUrl(request.dataset),
       match: { ...request.filters, [request.dimension]: code },
     };
+    const unit = request.measure === "share" ? ("ratio" as const) : ("none" as const);
     if (!category) {
       // The balance: revenue less expenditure, so it may be below zero.
       return {
         key: metric,
-        label: BALANCE_LABEL,
+        label: request.measure === "share" ? BALANCE_LABEL : sentence(LABEL.meur, BALANCE_LABEL),
         valueType: "number",
-        unit: "ratio",
-        plausible: { min: -0.6, max: 0.6 },
-        statistic: { definition: BALANCE_DEFINITION, scope: GENERAL_GOVERNMENT.definition, series },
+        unit,
+        plausible: PLAUSIBLE[request.measure].balance,
+        ...(charted
+          ? {
+              statistic: {
+                definition: BALANCE_DEFINITION,
+                scope: GENERAL_GOVERNMENT.definition,
+                series,
+              },
+            }
+          : {}),
       };
     }
     const label = categoryLabel(category);
     return {
       key: metric,
-      label: sentence(SHARE_LABEL, label),
+      label: sentence(LABEL[request.measure], label),
       valueType: "number",
-      unit: "ratio",
-      // A licence sold (spectrum, say) is booked as negative spending in its group.
-      plausible: { min: -0.2, max: 1 },
-      ...(category.depth <= 1
+      unit,
+      plausible: PLAUSIBLE[request.measure].category,
+      ...(charted
         ? {
             statistic: {
               definition: sentence(DEFINITION[request.taxonomy.side], label),
