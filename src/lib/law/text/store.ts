@@ -36,6 +36,12 @@ export interface VersionToStore {
   source: { key: string; licenceSpdx: string; importerVersion: string };
   /** An identifier the publisher gives the act, added when the act has none of that scheme. */
   identifier?: { scheme: string; value: string };
+  /**
+   * The number the document itself prints (a commune's "Akte Nr."). It becomes the act's systematic number
+   * when the act has none, or has one an earlier reading of the same publisher's documents gave and this
+   * one differs; a number from the publisher's register is the register's and stands.
+   */
+  number?: string | null;
 }
 
 export const dayBefore = (iso: string): string => {
@@ -107,6 +113,38 @@ export async function storeVersion(
           ord: i + j,
         })),
       );
+    }
+    if (version.number) {
+      const current = await tx
+        .select({
+          id: legalActIdentifiers.id,
+          value: legalActIdentifiers.value,
+          sourceKey: sources.sourceKey,
+        })
+        .from(legalActIdentifiers)
+        .innerJoin(sources, eq(sources.id, legalActIdentifiers.sourceId))
+        .where(
+          and(
+            eq(legalActIdentifiers.actId, version.actId),
+            eq(legalActIdentifiers.scheme, "systematic_number"),
+            isNull(legalActIdentifiers.supersededAt),
+          ),
+        );
+      const own = current.every((c) => c.sourceKey === version.source.key);
+      if (current.length === 0 || (own && current.some((c) => c.value !== version.number))) {
+        for (const c of current) {
+          await tx
+            .update(legalActIdentifiers)
+            .set({ supersededAt: new Date() })
+            .where(eq(legalActIdentifiers.id, c.id));
+        }
+        await tx.insert(legalActIdentifiers).values({
+          actId: version.actId,
+          scheme: "systematic_number",
+          value: version.number,
+          sourceId: source!.id,
+        });
+      }
     }
     if (version.identifier) {
       const known = await tx

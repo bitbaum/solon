@@ -27,6 +27,12 @@ describe("a commune's acts, as linked from its own pages", () => {
     <a href="/gemeinde/kontakt">Kontakt</a>
     <a href="/download_file/view/df9e8feb-1f9c-499e-a060-fb32a629f268">Tarifblatt zum Abwasserreglement (gültig ab 01.01.2027)</a>`;
 
+  it("gives an act no number of its own: an id in an address is a handle, not a number a reader can cite", () => {
+    const acts = actsOf(anchorsOf(html, "https://www.planken.li/service/"), config);
+    expect(acts.length).toBeGreaterThan(0);
+    for (const act of acts) expect(act.number ?? null, act.ref).toBeNull();
+  });
+
   it("titles each act by its link, once per document, and leaves forms out", () => {
     const acts = actsOf(anchorsOf(html, "https://www.planken.li/service/"), config);
     expect(acts.map((a) => [a.ref, a.title])).toEqual([
