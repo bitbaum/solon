@@ -6,6 +6,9 @@ import { test, expect } from "@playwright/test";
  * pages. The redirect is made in the proxy from the configuration, so it needs
  * no database and runs against CI's server as well as the live site.
  */
+/** The redirect's target as a URL: a server may answer with a relative Location or an absolute one. */
+const target = (location: string | undefined) => new URL(location ?? "", "http://localhost");
+
 const CASES: [from: string, to: string][] = [
   ["/places/united-states", "/places/united_states"],
   ["/places/united-states/wyoming", "/places/united_states/wyoming"],
@@ -18,11 +21,11 @@ for (const [from, to] of CASES) {
   test(`${from} answers 308 to ${to}`, async ({ request }) => {
     const response = await request.get(from, { maxRedirects: 0 });
     expect(response.status()).toBe(308);
-    expect(new URL(response.headers()["location"]!).pathname).toBe(to);
+    expect(target(response.headers()["location"]).pathname).toBe(to);
   });
 }
 
 test("a query string survives the redirect", async ({ request }) => {
   const response = await request.get("/places/united-states?x=1", { maxRedirects: 0 });
-  expect(new URL(response.headers()["location"]!).search).toBe("?x=1");
+  expect(target(response.headers()["location"]).search).toBe("?x=1");
 });
