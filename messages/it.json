@@ -722,6 +722,8 @@
       "totals": "atti in vigore. {notInForce} elencati come non più in vigore. Testo conservato per {withText}.",
       "authorities": "Autorità",
       "row": "{inForce} in vigore · {notInForce} no",
+      "rowNotStated": "{inForce} in vigore · {notInForce} no · {notStated} stato non indicato dall'editore",
+      "totalsNotStated": "{notStated, plural, one {# altro atto è elencato} other {# altri atti sono elencati}} da editori che non indicano se siano in vigore.",
       "note": "I comuni si aggiungono una raccolta alla volta; quelli conservati finora sono nell'elenco qui sopra.",
       "readLink": "Trovare e leggere un atto →"
     },
@@ -738,6 +740,7 @@
       "noHits": "Nessun risultato.",
       "hits": "{count, plural, one {# atto trovato} other {# atti trovati}}",
       "notInForce": "non in vigore",
+      "statusNotStated": "stato non indicato dall'editore",
       "coverageLink": "Che cosa elenca il registro, contato dai dati →",
       "askLink": "Fare una domanda al diritto →",
       "searchLabel": "Che cosa cerca?",

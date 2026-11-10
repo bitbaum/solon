@@ -38,8 +38,14 @@ export const legalActs = pgTable(
     jurisdictionId: text("jurisdiction_id"),
     /** Key in config ACT_KINDS. */
     kind: text("kind").notNull(),
-    /** What the register said about being in force when it was last read. */
+    /**
+     * What the register said about being in force when it was last read. Only a statement about
+     * the act when `statusStated`; otherwise it is true to keep the act findable and means only
+     * "listed by its authority and not marked withdrawn".
+     */
     inForce: boolean("in_force").notNull(),
+    /** False when the publisher does not say whether the act is in force: pages and counts then say so. */
+    statusStated: boolean("status_stated").notNull().default(true),
     /** The register last listed this act in the run that wrote this row. */
     sourceId: text("source_id").notNull(),
     recordedAt: recordedAt(),

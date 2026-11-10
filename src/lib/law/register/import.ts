@@ -48,6 +48,12 @@ export interface ActRow {
   authority: string;
   kind: string;
   inForce: boolean;
+  /**
+   * False when the register does not say whether the act is in force (the Republic of South
+   * Ossetia's publishers do not): `inForce` is then only "listed and not marked withdrawn",
+   * and every page and count says the status is not stated. Absent means stated.
+   */
+  statusStated?: boolean;
   title: string;
   /** BCP 47 language of the title. */
   locale: string;
@@ -147,7 +153,8 @@ export async function importRegister(
         const newNames: (typeof legalActNames.$inferInsert)[] = [];
         const supersedeNames: string[] = [];
         const supersedeIdentifiers: string[] = [];
-        const changedActs: { id: string; kind: string; inForce: boolean }[] = [];
+        const changedActs: { id: string; kind: string; inForce: boolean; statusStated: boolean }[] =
+          [];
 
         for (const row of rows) {
           listed.add(row.identity.value);
@@ -160,13 +167,23 @@ export async function importRegister(
               jurisdictionId: places.get(row.authority) ?? null,
               kind: row.kind,
               inForce: row.inForce,
+              statusStated: row.statusStated ?? true,
               sourceId,
             });
             addRows(id, row, sourceId, newIdentifiers, newNames);
             continue;
           }
-          if (existing.kind !== row.kind || existing.inForce !== row.inForce) {
-            changedActs.push({ id: existing.actId, kind: row.kind, inForce: row.inForce });
+          if (
+            existing.kind !== row.kind ||
+            existing.inForce !== row.inForce ||
+            existing.statusStated !== (row.statusStated ?? true)
+          ) {
+            changedActs.push({
+              id: existing.actId,
+              kind: row.kind,
+              inForce: row.inForce,
+              statusStated: row.statusStated ?? true,
+            });
           }
           if (existing.title !== row.title) {
             supersedeNames.push(existing.nameId);
@@ -214,7 +231,13 @@ export async function importRegister(
         for (const change of changedActs) {
           await tx
             .update(legalActs)
-            .set({ kind: change.kind, inForce: change.inForce, sourceId, updatedAt: now })
+            .set({
+              kind: change.kind,
+              inForce: change.inForce,
+              statusStated: change.statusStated,
+              sourceId,
+              updatedAt: now,
+            })
             .where(eq(legalActs.id, change.id));
         }
         report.counts = {
@@ -305,6 +328,7 @@ interface KnownAct {
   actId: string;
   kind: string;
   inForce: boolean;
+  statusStated: boolean;
   title: string | undefined;
   nameId: string;
   number: string | undefined;
@@ -321,6 +345,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       actId: legalActs.id,
       kind: legalActs.kind,
       inForce: legalActs.inForce,
+      statusStated: legalActs.statusStated,
       lexfindId: legalActIdentifiers.value,
     })
     .from(legalActs)
@@ -339,6 +364,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       actId: row.actId,
       kind: row.kind,
       inForce: row.inForce,
+      statusStated: row.statusStated,
       title: undefined,
       nameId: "",
       number: undefined,

@@ -492,9 +492,11 @@ Two publishers, each a format reader that names no country:
   posts a page; decrees, documents and treaties, an act found under several categories once.
   1,849 acts on 2026-11-10.
 
-Neither publisher states whether an act is still in force, so every act is recorded `inForce: true`,
-meaning "published by the authority and not marked withdrawn by it"; amendments are acts of their own.
-The texts are the next step. Licence: the President's site allows reproduction with a reference to
+Neither publisher states whether an act is still in force, so every act is recorded with
+`status_stated = false` (migration 0025): the act is listed and findable, its `in_force` column then
+says nothing, and coverage, the act pages, the Markdown and the tools all say "status not stated by the
+publisher" instead of "in force" (`statusLabel`, `AuthorityCoverage.statusNotStated`). Amendments are
+acts of their own. The texts are the next step. Licence: the President's site allows reproduction with a reference to
 the source (quoted on the licence entry); the Parliament's and the Government's sites state none,
 see `docs/research/2026-11-south-ossetia-sources.md` §6.
 

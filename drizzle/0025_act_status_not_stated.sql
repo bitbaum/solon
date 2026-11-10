@@ -1,0 +1,1 @@
+ALTER TABLE "legal_acts" ADD COLUMN "status_stated" boolean DEFAULT true NOT NULL;

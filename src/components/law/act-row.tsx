@@ -4,6 +4,7 @@ import type { ActKind } from "@/lib/config/law";
 import { authorityOf } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
 import type { LawTranslator } from "./coverage-report";
+import { statusLabel } from "./status-label";
 
 /** One act in a list: the title, then where it is from, its number and kind. The one shape every list of acts uses. */
 export default function ActRow({
@@ -33,7 +34,7 @@ export default function ActRow({
           authorityOf(hit.authority)?.name ?? hit.authority,
           hit.systematicNumber,
           t(`kinds.${hit.kind}` as `kinds.${ActKind}`),
-          hit.inForce ? null : t("index.notInForce"),
+          statusLabel(hit, t),
         ]
           .filter(Boolean)
           .join(" · ")}

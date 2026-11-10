@@ -23,7 +23,7 @@ export function actToMarkdown(act: ActView, site: string): string {
       .map((a) => a.key)
       .join(", ")}]`,
     `kind: ${act.kind}`,
-    `in_force: ${act.inForce}`,
+    act.statusStated ? `in_force: ${act.inForce}` : "in_force: not stated by the publisher",
     ...(act.systematicNumber ? [`number: ${JSON.stringify(act.systematicNumber)}`] : []),
     ...(act.officialUrl ? [`publisher_url: ${act.officialUrl}`] : []),
     // The notice the publisher's terms of reuse ask for, carried with every copy.

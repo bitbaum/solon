@@ -1308,6 +1308,8 @@
       "totals": "acts in force. {notInForce} listed as no longer in force. Text held for {withText}.",
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
+      "rowNotStated": "{inForce} in force · {notInForce} not · {notStated} status not stated by the publisher",
+      "totalsNotStated": "{notStated, plural, one {# more act is} other {# more acts are}} listed by publishers that do not say whether they are in force.",
       "note": "Communes are added one collection at a time; those held so far are in the list above.",
       "readLink": "Find and read an act →"
     },
@@ -1324,6 +1326,7 @@
       "noHits": "Nothing found.",
       "hits": "{count, plural, one {# act} other {# acts}} found",
       "notInForce": "not in force",
+      "statusNotStated": "status not stated by the publisher",
       "coverageLink": "What the register lists, counted from the data →",
       "askLink": "Ask the law a question →",
       "searchLabel": "What are you looking for?",

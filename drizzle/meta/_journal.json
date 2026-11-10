@@ -176,6 +176,13 @@
       "when": 1794214309165,
       "tag": "0024_statistic_records_assessment_kind",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794303057342,
+      "tag": "0025_act_status_not_stated",
+      "breakpoints": true
     }
   ]
 }

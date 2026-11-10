@@ -8,6 +8,7 @@ const counts = LAW_AUTHORITIES.map((a) => ({
   name: a.name,
   inForce: 1,
   notInForce: 0,
+  statusNotStated: 0,
   withText: 1,
 }));
 
@@ -74,6 +75,7 @@ describe("an act as Markdown", () => {
         authority: "bfs1701",
         kind: "communal_act",
         inForce: true,
+        statusStated: true,
         title: "Gemeindeordnung",
         systematicNumber: "1.1-1",
         officialUrl: null,

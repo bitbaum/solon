@@ -33,7 +33,7 @@ function PlaceLink({ node, t }: { node: PlaceNode; t: LawTranslator }) {
     >
       <span className="font-medium text-fg-primary">{node.name}</span>
       <span className="shrink-0 text-sm tabular-nums text-fg-tertiary">
-        {t("index.placeActs", { count: node.inForce })}
+        {t("index.placeActs", { count: node.inForce + node.statusNotStated })}
       </span>
     </Link>
   );
