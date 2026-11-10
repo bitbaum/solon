@@ -115,7 +115,7 @@ export async function findActs(
   const { perWord } = expandWords(query, vocabulary ?? (await lawVocabulary(db)));
   const everyWord = perWord.map((w) => sql`(${sql.join(w.spellings.map(titleHolds), sql` OR `)})`);
   const rows = await db.execute(sql`
-    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
+    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce", a.status_stated AS "statusStated",
            n.text AS title, num.value AS "systematicNumber", ou.value AS "officialUrl"
     FROM legal_acts a
     JOIN legal_act_names n ON n.act_id = a.id AND n.kind = 'title' AND n.superseded_at IS NULL

@@ -28,7 +28,7 @@ const register = {
 };
 
 const row = (ref: string, number: string | null): ActRow => ({
-  authority: "li7001",
+  authority: "li7011",
   kind: "communal_act",
   inForce: true,
   title: `Reglement ${key} ${ref}`,

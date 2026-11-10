@@ -492,8 +492,11 @@ Two publishers, each a format reader that names no country:
   posts a page; decrees, documents and treaties, an act found under several categories once.
   1,849 acts on 2026-11-10.
 
-Neither publisher states whether an act is still in force, so every act is recorded `inForce: true`,
-meaning "published by the authority and not marked withdrawn by it"; amendments are acts of their own.
+Neither publisher states whether an act is still in force, so every act is recorded with
+`status_stated = false` (migration 0027): the act is listed and findable, its `in_force` column then
+says nothing, and coverage, the act pages, the Markdown and the tools all say "status not stated by the
+publisher" instead of "in force" (`statusLabel`, `AuthorityCoverage.statusNotStated`). Amendments are
+acts of their own.
 The texts (`text/so-text.ts`, `text/import-so-text.ts`; `law:text presidentruo-text`) are the President's
 decrees from the API, each cut into a preamble, chapters and articles when it has them (a decree is
 numbered points under its preamble: one provision), dated by the day it is signed (the last "6 ноября
