@@ -47,7 +47,13 @@ describe("the place tree", () => {
 
   it("nests the members Solon holds under the union in the tree", () => {
     const eu = placeTree(counts).find((n) => n.key === "eu")!;
-    expect(eu.children.map((c) => c.key).sort()).toEqual(["at", "de", "ee", "lux"]);
+    const union = LAW_AUTHORITIES.find((a) => a.key === "eu")!;
+    // Every member state is an authority; each sits under the union, and nothing else does.
+    const members = LAW_AUTHORITIES.filter(
+      (a) => a.place?.scheme === "iso_3166_1" && union.members!.includes(a.place.value),
+    ).map((a) => a.key);
+    expect(eu.children.map((c) => c.key).sort()).toEqual(members.sort());
+    expect(members).toEqual(expect.arrayContaining(["at", "de", "ee", "lux", "fra", "bel", "grc"]));
   });
 
   it("lists every authority once, under exactly one root", () => {

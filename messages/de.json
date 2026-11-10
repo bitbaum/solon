@@ -818,6 +818,7 @@
       "inForceSince": "In Kraft seit {date}, wie der Herausgeber angibt.",
       "readOn": "Der Herausgeber gibt nicht an, seit wann diese Fassung gilt. Gelesen am {date}.",
       "copy": "Kopie gelesen am {date}.",
+      "copyKeptBy": "Der Wortlaut, wie {keeper} ihn führt, nicht die Ausgabe des Herausgebers.",
       "copyFrom": "Die Seite, von der sie gelesen wurde",
       "copyArchived": "Kopie gelesen am {date} aus der Kopie des Internet Archive vom {captured}, weil die Website des Herausgebers Solons Leser abgewiesen hat. Es ist nicht die Kopie des Herausgebers selbst.",
       "copyArchivedFrom": "Die archivierte Kopie, aus der sie gelesen wurde",

@@ -93,4 +93,10 @@ export const LICENCES = [
   // судебного характера […], а также их официальные переводы" (Civil Code, Art. 1259(6)). Read
   // 2026-11-10 at https://www.consultant.ru/document/cons_doc_LAW_64629/be05678dc42ddc67aae5be9ba9beebd367fb9a3f/.
   { spdx: "LicenseRef-ru-official-act", requiresAttribution: false, shareAlike: false },
+  // Ukraine: "Не охороняються авторським правом: [...] 3) акти органів державної влади, органів
+  // місцевого самоврядування, офіційні документи політичного, законодавчого, адміністративного і
+  // судового характеру (закони, укази, постанови, рішення, державні стандарти тощо), а також їх
+  // проекти та офіційні переклади" (Law No. 2811-IX "On Copyright and Related Rights", Art. 8(1)(3)).
+  // Read 2026-11-10 from WIPO Lex's copy: https://www.wipo.int/wipolex/en/legislation/details/23798
+  { spdx: "LicenseRef-ua-official-act", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];
