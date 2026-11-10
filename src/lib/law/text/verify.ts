@@ -30,6 +30,22 @@ const ENTITIES: Record<string, string> = {
   Ouml: "Ö",
   Uuml: "Ü",
   szlig: "ß",
+  sect: "§",
+  eacute: "é",
+  egrave: "è",
+  agrave: "à",
+  ccedil: "ç",
+  lsquo: "‘",
+  rsquo: "’",
+  ldquo: "“",
+  rdquo: "”",
+  laquo: "«",
+  raquo: "»",
+  ndash: "–",
+  mdash: "—",
+  hellip: "…",
+  euro: "€",
+  deg: "°",
 };
 
 /** The text a reader sees on a page: no scripts, styles or tags, entities decoded. */
@@ -140,6 +156,28 @@ export function divClasses(html: string, top = 10): string {
     .join(" ");
 }
 
+/**
+ * The raw HTML around the first place a long run of missing words begins: the run's first words
+ * are looked for in the page, tags allowed between them, and about `width` characters either side
+ * are returned with the tags kept, so the markup that hides the text can be read.
+ */
+export function htmlAround(html: string, run: string, width = 220): string {
+  const words = run
+    .replace(/^\d+ words: /, "")
+    .split(" ")
+    .slice(0, 3);
+  if (words.length === 0) return "";
+  const pattern = new RegExp(
+    words
+      .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("(?:\\s|<[^>]*>|&[a-z#0-9]+;)+"),
+    "i",
+  );
+  const at = pattern.exec(html)?.index;
+  if (at === undefined) return "";
+  return html.slice(Math.max(0, at - width), at + width).replace(/\s+/g, " ");
+}
+
 export interface VerifyOptions {
   authority: string;
   /** How many acts to read again. */
@@ -158,6 +196,8 @@ export interface VerifiedAct {
   /** Long runs of page words the provisions lack, and the page's div classes. */
   runs?: string[];
   classes?: string;
+  /** The raw HTML around the first long run. */
+  around?: string;
   short: boolean;
   error?: string;
 }
@@ -221,6 +261,10 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
         coverage: cov,
         runs: missingRuns(pageWords, storedWords),
         classes: divClasses(html),
+        around: (() => {
+          const runs = missingRuns(pageWords, storedWords);
+          return runs[0] ? htmlAround(html, runs[0]) : undefined;
+        })(),
         short: cov.ratio < threshold,
       };
       acts.push(act);

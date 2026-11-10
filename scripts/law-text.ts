@@ -132,6 +132,7 @@ async function main(): Promise<number> {
       .slice(0, 3)) {
       console.log(`LOW ${a.title.slice(0, 30)} ${a.url} | classes: ${a.classes}`);
       for (const run of a.runs ?? []) console.log(`  RUN ${run.slice(0, 260)}`);
+      if (a.around) console.log(`  HTML ${a.around.slice(0, 480)}`);
     }
     console.log(
       JSON.stringify({
