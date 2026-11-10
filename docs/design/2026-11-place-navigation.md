@@ -222,15 +222,40 @@ data and the proposal and responsible-office fields on gaps.
 |---|---|---|
 | 1 | This document | The plan, reviewable |
 | 2 | `/places/by/{scheme}/{value}` and `/api/v1/places/atlas` | Stable links and JSON for any place |
-| 3 | `place_ancestors`, the law-authority invariant test, counts on `/places/coverage` | Real row counts; drift fails CI |
-| 4a | Playwright check of the live Wyoming behaviour | The bug confirmed in a browser |
-| 4 | geo-kit behaviour, then the Solon atlas on it (after #458) | G's bug fixed |
-| 5 | sitekit `Breadcrumbs`; the place template with its focused map | Same page at every level |
-| 6 | Law from the place chain | "What applies here" on every page |
-| 7 | Sibling statistics, derived gaps, gaps on any scheme | Compare with siblings |
-| 8 | `place_paths`, hyphenated roots, 308s | One URL per place |
-| 9 | Disputed land: area pages, hatch, claim cards | South Ossetia, Western Sahara |
-| 10 | Per-parent geometry | A world of places stays fast |
+| 3 | One law-count module, from the tables, each count labelled; callers rewired after #458 | The same number everywhere (QA 4) |
+| 4 | `place_ancestors`; invariant: every law authority with a place resolves to one jurisdiction; names from the names table; Playwright check of the live Wyoming behaviour | Drift fails CI; the bug confirmed in a browser (QA 8) |
+| 5 | `place_paths`, hyphenated roots, 308 at every depth | One URL per place (QA 6) |
+| 6 | Regions above countries in the world pack; sitekit `Breadcrumbs` | A chain above the country (QA 7) |
+| 7 | US `municipality` level and its import | Towns under counties (QA 5) |
+| 8 | Sibling statistics loader, derived gaps, gaps on any scheme | Compare with siblings (QA 3) |
+| 9 | Measure the busy page, then fix its cause | A page that settles (QA 9) |
+| 10 | geo-kit select, frame, children, card and hatch; the atlas and every place page on it (after #458) | G's bug fixed; a map on every page (QA 1, 2, 10) |
+| 11 | Disputed land: area pages, hatch, claim cards | South Ossetia, Western Sahara |
+| 12 | Per-parent geometry | A world of places stays fast |
+
+## Acceptance: QA 2026-11-10
+
+A walk of the live site, screenshots kept outside the repo. Each item is a
+generic criterion, never a per-country fix, and names the step that closes it.
+Where a Playwright check on the live paths can state it, that check is part of
+the step (a place is a parameter of the test, not a literal in it).
+
+| # | Finding | Criterion | Step |
+|---|---|---|---|
+| 1 | `/places?in=us` zooms to Wyoming's counties and skips the state level; `?in=li` works | Opening any place frames that place's own outline, then its children; a parent with only some children drawn still frames the parent | 4 (after #458) |
+| 2 | No place page has a map; focus exists only on `/places?in=` | Every place page has the focused map card (own area, children drawn and clickable) | API now (2); card 10 (after #458) |
+| 3 | No place page has a statistics section | Every place page shows its own statistics and its position among siblings, or says which are missing | loader and API 8; card 10 |
+| 4 | Law counts contradict: the list shows 3,748 for a country whose pages say 3,412 (3,412 national plus 336 communal); the list shows 745 for a country whose pages say "No texts yet" | One query module computes counts from the tables, and every count says what it counts: this place, or this place and everything within it | 3 (module now; callers after #458) |
+| 5 | No town level under US counties | A `municipality` level per country pack, `part_of` its state with `overlaps` to the counties it lies in | 7 |
+| 6 | `/places/united-states` redirects to `united_states`, but `/places/united-states/wyoming` is 404 | One canonical hyphenated scheme; every other form answers 308 to it at every depth | 5 |
+| 7 | Breadcrumbs above country level show only "The world" | The chain continues above a country (continent, region, unions) from data in the world pack, rendered by the shared `Breadcrumbs` | 6 |
+| 8 | A municipality page and its law row name the same place differently | Names come from the place's names table; a law authority's label resolves to the place's name and the publisher's own name stays an attributed name | 4 |
+| 9 | The globe has no labels, and the page stays busy for more than 30 s | Measure first (geometry size, blocking fetches, hydration), then fix the cause; labels from the shared map | 9 (measure), 10 (labels, after #458) |
+| 10 | The search zoom barely moves | A search result selects and frames the place exactly as a click does | 10 (after #458) |
+
+Reading of item 7, to be confirmed: the criterion is that nothing above a
+country exists in the chain today. If the intent is only that the first crumb
+is missing a link, step 6 is smaller.
 
 ## Not verified
 
