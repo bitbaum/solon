@@ -477,6 +477,27 @@ dated by the day it applies from.
   names none; a question about Luxembourg or Liechtenstein alone asks their
   law only (`countryOf`, read from config).
 
+### South Ossetia: the register as built (2026-11-10)
+
+The first authority whose place has no ISO code (`rso`, place Wikidata `Q23427`, `topLevel`: it
+stands at the top of its own tree as a country does; its key is not `so`, which is Solothurn's).
+Two publishers, each a format reader that names no country:
+
+- **Parliament** (`parliamentrso.org`, Drupal): `text/drupal-listing.ts` reads a taxonomy term's
+  listing (ten acts a page) and `text/import-so-registers.ts` pages through the three listings
+  (laws, constitutional laws, resolutions) and adds the Constitution's page. `robots.txt` asks every
+  robot for 90 seconds between requests, which the reader honours (`crawlDelayMs`), so the register
+  is about an hour and a half; `--limit` is listing pages and `--term` one listing.
+- **President** (`presidentruo.org`, WordPress): `text/wp-rest.ts` reads the REST API, a hundred
+  posts a page; decrees, documents and treaties, an act found under several categories once.
+  1,849 acts on 2026-11-10.
+
+Neither publisher states whether an act is still in force, so every act is recorded `inForce: true`,
+meaning "published by the authority and not marked withdrawn by it"; amendments are acts of their own.
+The texts are the next step. Licence: the President's site allows reproduction with a reference to
+the source (quoted on the licence entry); the Parliament's and the Government's sites state none,
+see `docs/research/2026-11-south-ossetia-sources.md` §6.
+
 ### Asking the law as built (2026-10-24)
 
 `/law/ask` and `POST /api/law/ask` (design: the retrieval layer). Three steps,

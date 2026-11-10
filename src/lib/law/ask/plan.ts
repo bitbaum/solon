@@ -35,7 +35,7 @@ const PROMPT = `You prepare a search of the law Solon holds: Switzerland, Liecht
 {"question": "...", "language": "...", "authorities": ["..."], "acts": ["..."], "groups": [["..."], ["..."]]}
 
 - question: the user's latest question as one complete question that needs no earlier messages.
-- authorities: keys of the places the latest question is about, from: ${LAW_AUTHORITIES.map((a) => `${a.key} (${a.name})`).join(", ")}. Include every place named, and for a comparison with an earlier place include both. Leave out "ch".
+- authorities: keys of the places the latest question is about, from: ${LAW_AUTHORITIES.map((a) => `${a.key} (${a.label})`).join(", ")}. Include every place named, and for a comparison with an earlier place include both. Leave out "ch".
 - language: the language of the user's latest message, in English ("English", "German", "Russian").
 - acts: up to 3 acts that probably govern the question, each as one distinctive word of its title in the law's own language ("Tierschutzverordnung", "Obligationenrecht", "Tulumaksuseadus", "Revenue"). You are only pointing at where to look; what the law says is read from the text, not from you.
 - groups: 2 or 3 ideas the provisions must contain together, each a list of 2 to 4 alternative stems as the LAW would word it, in the language of each place's law: German (and French or Italian for places that speak them; French for Luxembourg), Estonian for Estonia, English for Wyoming, New Hampshire and the United States. The first idea is the thing the question is about, its most specific nouns (["Fuchs","Füchse","Wildtier"]); then the act or duty (["Haltung","halten","Bewilligung"]). Stems that match inflections. Never a question word, never a word that fits any law ("Gesetz", "Person").`;

@@ -5,7 +5,7 @@ import { localized } from "@/lib/places/place-view";
 import { EVENT_CATEGORIES } from "@/lib/statistics/records";
 import { eventPath } from "@/lib/statistics/present";
 import type { EventRow } from "@/lib/statistics/read";
-import { formatDay, type StatisticsTranslator } from "./metric-view";
+import { formatDay, type StatisticsTranslator } from "./shared";
 
 interface EventsIndexProps {
   events: EventRow[];

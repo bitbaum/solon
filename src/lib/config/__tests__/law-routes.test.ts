@@ -154,4 +154,21 @@ describe("official routes in German", () => {
     const swiss = OFFICIAL_ROUTES.find((r) => r.key === "ch-petition")!;
     expect(localizeRoute(swiss, "de")).toBe(swiss);
   });
+
+  it("gives Liechtenstein's initiatives their six weeks from the Government's announcement, and the referendums their 30 days", () => {
+    const byKey = (k: string) => OFFICIAL_ROUTES.find((r) => r.key === k)!;
+    for (const key of ["li-law-initiative", "li-constitution-initiative"]) {
+      const route = byKey(key);
+      expect(route.window, key).toEqual({ days: 42 });
+      expect(route.alsoRequired?.join(" "), key).toMatch(/Government \(Anmeldung\)/);
+      expect(route.text?.de?.alsoRequired?.join(" "), key).toMatch(/sechs Wochen/);
+      expect(route.text?.de?.cannotChange, key).toMatch(/zwei Jahren/);
+    }
+    for (const key of ["li-law-referendum", "li-constitution-referendum"]) {
+      const route = byKey(key);
+      expect(route.window, key).toEqual({ days: 30 });
+      expect(route.alsoRequired?.join(" "), key).toMatch(/official announcement/);
+      expect(route.text?.de?.alsoRequired?.join(" "), key).toMatch(/amtlichen Kundmachung/);
+    }
+  });
 });

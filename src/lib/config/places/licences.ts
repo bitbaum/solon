@@ -16,6 +16,9 @@ export const LICENCES = [
   { spdx: "CC0-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "PDDL-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "CC-BY-4.0", requiresAttribution: true, shareAlike: false },
+  // Unicode's CLDR (country names in each language) and its permissive licence, which asks for the notice.
+  // https://www.unicode.org/license.txt
+  { spdx: "Unicode-3.0", requiresAttribution: true, shareAlike: false },
   // opendata.swiss "Open use" (terms_open): free use, citing the source recommended.
   // https://opendata.swiss/en/terms-of-use
   { spdx: "LicenseRef-opendata-swiss-open", requiresAttribution: false, shareAlike: false },
@@ -61,4 +64,11 @@ export const LICENCES = [
   // structure, names, identifiers, official figures with their publisher). Admitting the full
   // text of acts is a Register decision still to be taken; no law-text source names this class yet.
   { spdx: "LicenseRef-so-official-facts", requiresAttribution: true, shareAlike: false },
+  // The President of South Ossetia's site: "Все материалы Официального сайта Президента Республики
+  // Южная Осетия могут быть воспроизведены в любых средствах массовой информации, на серверах сети
+  // Интернет или на любых иных носителях без каких-либо ограничений по объему и срокам публикации
+  // … Единственным условием перепечатки и ретрансляции является ссылка на первоисточник."
+  // Read 2026-11-10 through the site's REST API (page "Об использовании информации сайта",
+  // modified 2022-01-03). CC BY's obligation, in the site's own words.
+  { spdx: "LicenseRef-so-president-site-reuse", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];

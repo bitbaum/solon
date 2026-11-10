@@ -2,11 +2,12 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { Range } from "@bitbaum/searchkit";
 import type { ProvisionHit } from "@/lib/law/search";
-import { authorityOf, type PlaceNode } from "@/lib/law/places";
+import type { PlaceNode } from "@/lib/law/places";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
 import ActRow from "./act-row";
 import type { LawTranslator } from "./coverage-report";
 import Excerpt from "./excerpt";
+import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 interface LawIndexProps {
   query: string;
@@ -25,13 +26,14 @@ interface LawIndexProps {
 
 const listClass = "divide-y divide-default rounded-surface border border-default bg-surface-base";
 
-function PlaceLink({ node, t }: { node: PlaceNode; t: LawTranslator }) {
+async function PlaceLink({ node, t }: { node: PlaceNode; t: LawTranslator }) {
+  const names = await readerAuthorityNames();
   return (
     <Link
       href={`/law/place/${node.key}`}
       className="flex min-h-11 items-center justify-between gap-4 px-5 py-2 hover:bg-surface-raised"
     >
-      <span className="font-medium text-fg-primary">{node.name}</span>
+      <span className="font-medium text-fg-primary">{authorityName(names, node.key)}</span>
       <span className="shrink-0 text-sm tabular-nums text-fg-tertiary">
         {t("index.placeActs", { count: node.inForce })}
       </span>
@@ -44,7 +46,7 @@ function PlaceLink({ node, t }: { node: PlaceNode; t: LawTranslator }) {
  * and below it the places, so someone who does not know a word of the law can
  * still start from where they live: the Confederation, their canton, their commune.
  */
-export default function LawIndex({
+export default async function LawIndex({
   query,
   authority,
   searchAction,
@@ -54,9 +56,10 @@ export default function LawIndex({
   places,
   t,
 }: LawIndexProps) {
+  const names = await readerAuthorityNames();
   const searched = hits !== null;
   const nothing = searched && hits.length === 0 && textHits.length === 0;
-  const where = authority ? authorityOf(authority)?.name : null;
+  const where = authority ? authorityName(names, authority) : null;
   return (
     <PageLayout title={t("index.title")} kicker={t("index.kicker")}>
       <div className="max-w-3xl space-y-10">
@@ -161,7 +164,7 @@ export default function LawIndex({
                         <Excerpt text={hit.excerpt} />
                       </span>
                       <span className="mt-1 block text-sm text-fg-tertiary">
-                        {[authorityOf(hit.authority)?.name ?? hit.authority, hit.systematicNumber]
+                        {[authorityName(names, hit.authority), hit.systematicNumber]
                           .filter(Boolean)
                           .join(" · ")}
                       </span>

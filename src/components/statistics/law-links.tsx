@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { localized } from "@/lib/places/place-view";
-import type { MetricViewProps } from "./metric-view";
+import type { MetricViewProps } from "./shared";
 
 /**
  * The law a series is about: each linked act and article with why, where the

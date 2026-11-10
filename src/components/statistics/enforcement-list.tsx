@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
-import type { MetricViewProps } from "./metric-view";
+import type { MetricViewProps } from "./shared";
 
 /**
  * How the law behind a series is enforced, as named sources state it: kept

@@ -26,20 +26,29 @@ export interface FetchOptions {
   backfill?: boolean;
   adapters?: ReadonlyMap<string, Adapter>;
   fetchImpl?: typeof fetch;
-  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 2 s). */
+  /** Wait between one retrieval and the next of the same source; publishers rate-limit bursts (default 1 s). */
   paceMs?: number;
 }
 
 const FETCH_TIMEOUT_MS = 120_000;
 
 export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): Promise<Response> {
-  const init: RequestInit = {};
+  // Say who is asking, as the law reader does, and say what is wanted. The OECD's SDMX API
+  // answered Node's default request (`accept-language: *`) with 500 and the same request with
+  // a plain language and a data type with 200: a gateway rule, not a rate limit (found 2026-11-09).
+  const init: RequestInit = {
+    headers: {
+      "user-agent": "Solon places importer (solon.orangecat.ch)",
+      accept: "text/csv, application/json;q=0.9, */*;q=0.5",
+      "accept-language": "en",
+    },
+  };
   if (request.body !== undefined) {
     init.method = "POST";
-    init.headers = { "content-type": "application/json" };
+    init.headers = { ...init.headers, "content-type": "application/json" };
     init.body = JSON.stringify(request.body);
   }
-  // A server error is retried four times, backing off from a few seconds: some publishers
+  // A server error is retried five times, backing off from a few seconds: some publishers
   // (the OECD's SDMX API, 2026-11-08) answer 500 now and 200 a moment later.
   for (let attempt = 0; ; attempt += 1) {
     const response = await fetchImpl(request.url, {
@@ -56,7 +65,7 @@ export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): 
   }
 }
 
-const RETRIES_ON_SERVER_ERROR = 4;
+const RETRIES_ON_SERVER_ERROR = 5;
 let retryDelayMs = 4_000;
 /** Tests shorten the wait between retries. */
 export const setRetryDelayForTests = (ms: number) => {
@@ -106,7 +115,7 @@ export async function fetchAndImport(db: Database, options: FetchOptions): Promi
     adapters,
     fetchImpl,
   });
-  const paceMs = options.paceMs ?? 2_000;
+  const paceMs = options.paceMs ?? 1_000;
   for (const [i, request] of requests.entries()) {
     if (i > 0 && paceMs > 0) {
       await new Promise((resolve) => setTimeout(resolve, paceMs));

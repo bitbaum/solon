@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   ChallengeError,
@@ -103,6 +105,48 @@ describe("parseLilexProvisions: the text outside the articles", () => {
   it("gives nothing for a chapter heading with an article straight after it, and leaves footnotes out", () => {
     expect(provisions.some((p) => p.heading.startsWith("I. Allgemeine"))).toBe(false);
     expect(provisions.some((p) => p.text.includes("LGBl. 2024"))).toBe(false);
+  });
+});
+
+describe("parseLilexProvisions: articles the publisher styles", () => {
+  // The opening of the ABGB as gesetze.li serves it (act 1003001000, read 2026-11-10): the article under a
+  // heading is `<div class="art" style="margin-top:6.5pt">`, the next one a bare `<div class="art">`.
+  const abgb = parseLilexProvisions(
+    readFileSync(join(__dirname, "fixtures", "lilex-abgb-first-paragraphs.fixture.html"), "utf8"),
+  );
+
+  it("keeps § 1, which stands under a heading and so carries a style attribute", () => {
+    expect(abgb.map((p) => p.path)).toEqual(["par_1", "par_2", "par_3", "par_4", "par_5"]);
+    expect(abgb[0]).toMatchObject({
+      heading: "§ 1",
+      text: "Der Inbegriff der Gesetze, wodurch die Privatrechte und Pflichten der Einwohner des Staates unter sich bestimmt werden, macht das bürgerliche Recht in demselben aus.",
+    });
+  });
+
+  it("keeps a styled article that has a footnote mark and a repealed text", () => {
+    expect(abgb[3]).toMatchObject({ path: "par_4", heading: "§ 4", text: "Aufgehoben" });
+  });
+
+  it("does not take the styled heading blocks for articles", () => {
+    expect(abgb.some((p) => p.heading.includes("Begriff des bürgerlichen Rechtes"))).toBe(false);
+  });
+
+  it("keeps a chapter heading of any kind (tit1m, tit1ue, tits) out of the article above it and out of the provisions", () => {
+    const page =
+      '<div class="art"><a name="par:11"></a>§ 11<div class="abs">Elfter.</div></div><div class="tit1m">I. Hauptstück</div><div class="tit1ue">Übergangsbestimmungen</div><div class="art" style="margin-top:6pt"><a name="par:12"></a>§ 12<div class="abs">Zwölfter.</div></div>';
+    expect(parseLilexProvisions(page).map((p) => [p.path, p.text])).toEqual([
+      ["par_11", "Elfter."],
+      ["par_12", "Zwölfter."],
+    ]);
+  });
+
+  it("reads a styled article of any act the same way", () => {
+    const page =
+      '<div class="tit1"><a name="tit1:1"></a>I.</div><div class="art" style="margin-top:6pt"><a name="art:1"></a>Art. 1<div class="abs">Erster.</div></div><div class="art"><a name="art:2"></a>Art. 2<div class="abs">Zweiter.</div></div>';
+    expect(parseLilexProvisions(page).map((p) => [p.path, p.text])).toEqual([
+      ["art_1", "Erster."],
+      ["art_2", "Zweiter."],
+    ]);
   });
 });
 

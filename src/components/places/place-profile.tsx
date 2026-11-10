@@ -1,4 +1,5 @@
-import type { useTranslations } from "next-intl";
+import type { PlacesTranslator } from "./translator";
+
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { LawChat } from "@/components/law/law-chat";
@@ -9,8 +10,7 @@ import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
 import SourceList from "./source-list";
-
-export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
+import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
 interface PlaceProfileProps {
   view: PlaceView;
@@ -124,7 +124,8 @@ export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProp
           </h2>
           <p className="text-sm text-fg-secondary">
             {view.takesTax === null
-              ? t("tax.noModel", { pack: view.packName })
+              ? // A country of the world pack is its own subject; the pack is the whole world.
+                t("tax.noModel", { pack: view.packKey === WORLD_PACK ? view.name : view.packName })
               : view.takesTax
                 ? t("tax.levies", { pack: view.packName })
                 : t("tax.none")}
