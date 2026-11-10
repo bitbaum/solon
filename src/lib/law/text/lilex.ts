@@ -111,14 +111,17 @@ export async function fetchSystematicIds(
   return parseSystematicIds(html);
 }
 
-const BOUNDARY = /<div class="(?:art|tit\d?|fntext)"|<div class="sacht" style=/g;
+// A heading is `tit`, `tit1`, `tit1m` …: the digit and a letter after it name its level and kind.
+const BOUNDARY = /<div class="(?:art|tit\d?[a-z]*|fntext)"|<div class="sacht" style=/g;
 
 /**
  * The articles and §§ of an act, in order. The anchor `art:2a` becomes the path
  * `art_2a`. An act with no provision of that kind is one provision, `text`.
  */
 export function parseLilexProvisions(html: string): Provision[] {
-  const starts = [...html.matchAll(/<div class="art">/g)].map((m) => m.index!);
+  // The publisher styles an article's block when a heading stands above it (`<div class="art" style="margin-top:6.5pt">`):
+  // those are articles too. Matching only the bare tag dropped every article that follows a heading, § 1 of the ABGB first.
+  const starts = [...html.matchAll(/<div class="art"[^>]*>/g)].map((m) => m.index!);
   const out: { at: number; provision: Provision }[] = [];
   const seen = new Map<string, number>();
   for (const start of starts) {
@@ -193,14 +196,14 @@ function looseText(html: string): { at: number; provision: Provision }[] {
   const first = html.slice(bodyAt, marks[0]!.at);
   const title = /<div class="htit1">([\s\S]*?)<\/div>/.exec(first)?.[1] ?? "";
   const preamble = blockText(
-    first.replace(/<div class="(?:htit\d|vom|tit\d?s?)"[^>]*>[\s\S]*?<\/div>/g, ""),
+    first.replace(/<div class="(?:htit\d|vom|tit\d?[a-z]*)"[^>]*>[\s\S]*?<\/div>/g, ""),
   );
   if (preamble)
     out.push({ at: bodyAt, provision: { path: "", heading: blockText(title), text: preamble } });
   for (const [i, mark] of marks.entries()) {
-    if (!/class="tit\d?"/.test(mark.tag)) continue;
+    if (!/class="tit\d?[a-z]*"/.test(mark.tag)) continue;
     const segment = html.slice(mark.at, marks[i + 1]?.at ?? html.length);
-    const head = /^<div class="tit\d?"[^>]*>([\s\S]*?)<\/div>/.exec(segment);
+    const head = /^<div class="tit\d?[a-z]*"[^>]*>([\s\S]*?)<\/div>/.exec(segment);
     if (!head) continue;
     const text = blockText(segment.slice(head[0].length));
     if (text)
