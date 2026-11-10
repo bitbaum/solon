@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
-import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
+import { cite } from "@/lib/i18n/config-catalog";
 import type { ContestSideView, ContestView } from "@/lib/places/contest-view";
 import QuotedWords, { actKey } from "@/components/law/quoted-words";
 import type { BudgetsTranslator } from "@/components/budgets/translator";
@@ -70,14 +70,6 @@ export default function ContestPage({
     proposeChange: t("contested.proposeChange"),
   };
   const claimant = view.sides.find((s) => s.role === "claims");
-  const propose = proposeHref({
-    category: DEFAULT_CATEGORY,
-    title: t("contested.proposeTitle", { place: view.name }),
-    body: t("contested.proposeBody", {
-      place: view.name,
-      sides: view.sides.map((s) => s.name).join(", "),
-    }),
-  });
   return (
     <PageLayout
       title={t("contested.title", { place: view.name })}
@@ -122,7 +114,7 @@ export default function ContestPage({
                       cell.provisions.map((p) => (
                         <QuotedWords
                           key={p.label}
-                          label={p.label}
+                          label={cite(p.label, locale)}
                           quote={p.quote}
                           provision={p.provision}
                           translator={p.translator}
@@ -155,9 +147,21 @@ export default function ContestPage({
           <p className="mb-4 text-sm text-fg-secondary">
             {t("contested.actIntro", { place: view.name })}
           </p>
-          <Link href={propose} className="btn-primary min-h-11">
-            {t("contested.propose", { place: view.name })}
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {view.sides.flatMap((side, i) =>
+              side.lawAuthority
+                ? [
+                    <Link
+                      key={side.key}
+                      href={`/law/place/${side.lawAuthority}`}
+                      className={i === 0 ? "btn-primary min-h-11" : "btn-secondary min-h-11"}
+                    >
+                      {t("contested.proposeLaw", { side: side.name })}
+                    </Link>,
+                  ]
+                : [],
+            )}
+          </div>
         </section>
 
         <details className="rounded-surface border border-default bg-surface-base p-5 text-sm sm:p-6">

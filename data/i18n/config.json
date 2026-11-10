@@ -312,6 +312,12 @@
   "Church tax rate on wealth (Roman Catholic)": {
     "ru": "Ставка церковного налога на имущество (римско-католическая)"
   },
+  "Citizenship of Georgia shall be acquired by birth or naturalisation. The procedures for acquiring and losing the citizenship of Georgia, the conditions and procedures for granting citizenship of Georgia to a foreign citizen and the conditions for holding citizenship of another state by a citizen of Georgia shall be determined by the organic law.\nThe deprivation of citizenship shall be inadmissible.": {
+    "de": "Die Staatsbürgerschaft Georgiens wird durch Geburt oder Einbürgerung erworben. Die Verfahren für Erwerb und Verlust der Staatsbürgerschaft Georgiens, die Bedingungen und Verfahren für die Verleihung der Staatsbürgerschaft Georgiens an Ausländer und die Bedingungen, unter denen ein Bürger Georgiens die Staatsbürgerschaft eines anderen Staates besitzen darf, bestimmt das organische Gesetz.\nDer Entzug der Staatsbürgerschaft ist unzulässig.",
+    "fr": "La citoyenneté géorgienne s'acquiert par la naissance ou par naturalisation. Les procédures d'acquisition et de perte de la citoyenneté géorgienne, les conditions et procédures d'octroi de la citoyenneté géorgienne à un étranger et les conditions dans lesquelles un citoyen géorgien peut détenir la citoyenneté d'un autre État sont fixées par la loi organique.\nLa déchéance de la citoyenneté est inadmissible.",
+    "it": "La cittadinanza georgiana si acquisisce per nascita o per naturalizzazione. Le procedure di acquisto e di perdita della cittadinanza georgiana, le condizioni e le procedure per la concessione della cittadinanza georgiana a uno straniero e le condizioni alle quali un cittadino georgiano può avere la cittadinanza di un altro Stato sono stabilite dalla legge organica.\nLa privazione della cittadinanza è inammissibile.",
+    "ru": "Гражданство Грузии приобретается по рождению или путём натурализации. Порядок приобретения и утраты гражданства Грузии, условия и порядок предоставления гражданства Грузии иностранному гражданину и условия, при которых гражданин Грузии может иметь гражданство другого государства, определяются органическим законом.\nЛишение гражданства недопустимо."
+  },
   "City district": {
     "ru": "Городской район"
   },
@@ -395,6 +401,72 @@
     "de": "Verfassung der Republik Südossetien, Art. 3 (parliamentrso.org); Wikidata (CC0)",
     "fr": "Constitution de la République d'Ossétie du Sud, art. 3 (parliamentrso.org) ; Wikidata (CC0)",
     "it": "Costituzione della Repubblica dell'Ossezia del Sud, art. 3 (parliamentrso.org); Wikidata (CC0)"
+  },
+  "Constitution, Art. 1": {
+    "de": "Verfassung, Art. 1",
+    "fr": "Constitution, art. 1",
+    "it": "Costituzione, art. 1",
+    "ru": "Конституция, ст. 1"
+  },
+  "Constitution, Art. 14": {
+    "de": "Verfassung, Art. 14",
+    "fr": "Constitution, art. 14",
+    "it": "Costituzione, art. 14",
+    "ru": "Конституция, ст. 14"
+  },
+  "Constitution, Art. 16": {
+    "de": "Verfassung, Art. 16",
+    "fr": "Constitution, art. 16",
+    "it": "Costituzione, art. 16",
+    "ru": "Конституция, ст. 16"
+  },
+  "Constitution, Art. 24": {
+    "de": "Verfassung, Art. 24",
+    "fr": "Constitution, art. 24",
+    "it": "Costituzione, art. 24",
+    "ru": "Конституция, ст. 24"
+  },
+  "Constitution, Art. 3": {
+    "de": "Verfassung, Art. 3",
+    "fr": "Constitution, art. 3",
+    "it": "Costituzione, art. 3",
+    "ru": "Конституция, ст. 3"
+  },
+  "Constitution, Art. 32": {
+    "de": "Verfassung, Art. 32",
+    "fr": "Constitution, art. 32",
+    "it": "Costituzione, art. 32",
+    "ru": "Конституция, ст. 32"
+  },
+  "Constitution, Art. 42": {
+    "de": "Verfassung, Art. 42",
+    "fr": "Constitution, art. 42",
+    "it": "Costituzione, art. 42",
+    "ru": "Конституция, ст. 42"
+  },
+  "Constitution, Art. 45": {
+    "de": "Verfassung, Art. 45",
+    "fr": "Constitution, art. 45",
+    "it": "Costituzione, art. 45",
+    "ru": "Конституция, ст. 45"
+  },
+  "Constitution, Art. 69": {
+    "de": "Verfassung, Art. 69",
+    "fr": "Constitution, art. 69",
+    "it": "Costituzione, art. 69",
+    "ru": "Конституция, ст. 69"
+  },
+  "Constitution, Art. 7": {
+    "de": "Verfassung, Art. 7",
+    "fr": "Constitution, art. 7",
+    "it": "Costituzione, art. 7",
+    "ru": "Конституция, ст. 7"
+  },
+  "Constitution, Art. 70": {
+    "de": "Verfassung, Art. 70",
+    "fr": "Constitution, art. 70",
+    "it": "Costituzione, art. 70",
+    "ru": "Конституция, ст. 70"
   },
   "Country": {
     "ru": "Страна"
@@ -549,6 +621,12 @@
   "Evangelical Reformed": {
     "ru": "Евангелическо-реформатская"
   },
+  "Everyone lawfully staying in Georgia shall have the right to move freely within the territory of the country, to choose a place of residence freely and to leave Georgia freely.\nThese rights may only be restricted in accordance with law, for ensuring national security or public safety, protecting health or administering justice, insofar as is necessary in a democratic society.\nA citizen of Georgia shall be able to enter Georgia freely.": {
+    "de": "Jeder, der sich rechtmässig in Georgien aufhält, hat das Recht, sich im Gebiet des Landes frei zu bewegen, seinen Wohnort frei zu wählen und Georgien frei zu verlassen.\nDiese Rechte dürfen nur nach dem Gesetz eingeschränkt werden, zur Gewährleistung der nationalen oder öffentlichen Sicherheit, zum Schutz der Gesundheit oder für die Rechtspflege, soweit dies in einer demokratischen Gesellschaft notwendig ist.\nEin Bürger Georgiens kann frei nach Georgien einreisen.",
+    "fr": "Toute personne séjournant légalement en Géorgie a le droit de circuler librement sur le territoire du pays, de choisir librement son lieu de résidence et de quitter librement la Géorgie.\nCes droits ne peuvent être restreints que conformément à la loi, pour assurer la sécurité nationale ou publique, protéger la santé ou administrer la justice, dans la mesure nécessaire dans une société démocratique.\nUn citoyen géorgien peut entrer librement en Géorgie.",
+    "it": "Chiunque soggiorni legalmente in Georgia ha il diritto di circolare liberamente nel territorio del paese, di scegliere liberamente il luogo di residenza e di lasciare liberamente la Georgia.\nQuesti diritti possono essere limitati solo secondo la legge, per garantire la sicurezza nazionale o pubblica, tutelare la salute o amministrare la giustizia, nella misura necessaria in una società democratica.\nUn cittadino georgiano può entrare liberamente in Georgia.",
+    "ru": "Каждый, кто законно находится в Грузии, имеет право свободно передвигаться по территории страны, свободно выбирать место жительства и свободно выезжать из Грузии.\nЭти права могут быть ограничены только в соответствии с законом для обеспечения национальной или общественной безопасности, охраны здоровья или осуществления правосудия в той мере, в какой это необходимо в демократическом обществе.\nГражданин Грузии может свободно въезжать в Грузию."
+  },
   "Excise on goods produced in the Republic": {
     "de": "Verbrauchsteuer auf in der Republik hergestellte Waren",
     "fr": "Accises sur les biens produits dans la République",
@@ -637,6 +715,12 @@
     "it": "Servizi generali",
     "ru": "Общие службы"
   },
+  "Georgia is an independent, unified and indivisible state as confirmed by the Referendum of 31 March 1991 held in the entire territory of the country, including the Autonomous Soviet Socialist Republic of Abkhazia and the former Autonomous Region of South Ossetia, and by the Act of Restoration of State Independence of Georgia of 9 April 1991. […] The alienation of the territory of the state of Georgia shall be prohibited.": {
+    "de": "Georgien ist ein unabhängiger, einheitlicher und unteilbarer Staat, wie durch das Referendum vom 31. März 1991, das im gesamten Gebiet des Landes einschliesslich der Autonomen Sozialistischen Sowjetrepublik Abchasien und des ehemaligen Autonomen Gebiets Südossetien abgehalten wurde, und durch den Akt über die Wiederherstellung der staatlichen Unabhängigkeit Georgiens vom 9. April 1991 bestätigt. […] Die Veräusserung des Staatsgebiets Georgiens ist verboten.",
+    "fr": "La Géorgie est un État indépendant, unifié et indivisible, comme l'ont confirmé le référendum du 31 mars 1991 tenu sur l'ensemble du territoire du pays, y compris la République socialiste soviétique autonome d'Abkhazie et l'ancienne région autonome d'Ossétie du Sud, et l'Acte de rétablissement de l'indépendance de l'État de Géorgie du 9 avril 1991. […] L'aliénation du territoire de l'État de Géorgie est interdite.",
+    "it": "La Georgia è uno Stato indipendente, unitario e indivisibile, come confermato dal referendum del 31 marzo 1991 tenuto sull'intero territorio del paese, compresa la Repubblica Socialista Sovietica Autonoma di Abcasia e l'ex Regione Autonoma dell'Ossezia del Sud, e dall'Atto di ripristino dell'indipendenza statale della Georgia del 9 aprile 1991. […] L'alienazione del territorio dello Stato della Georgia è vietata.",
+    "ru": "Грузия является независимым, единым и неделимым государством, что подтверждено референдумом 31 марта 1991 года, проведённым на всей территории страны, включая Абхазскую Автономную Советскую Социалистическую Республику и бывшую Юго-Осетинскую автономную область, и Актом о восстановлении государственной независимости Грузии от 9 апреля 1991 года. […] Отчуждение территории государства Грузия запрещается."
+  },
   "Giving up citizenship": {
     "de": "Die Staatsbürgerschaft aufgeben",
     "fr": "Renoncer à la citoyenneté",
@@ -694,6 +778,12 @@
     "de": "Einnahmen aus Staatseigentum",
     "fr": "Revenus de la propriété de l'État",
     "it": "Entrate dalla proprietà dello Stato"
+  },
+  "Income of a person (summary)": {
+    "de": "Einkommen einer Person (Zusammenfassung)",
+    "fr": "Revenu d'une personne (résumé)",
+    "it": "Reddito di una persona (sintesi)",
+    "ru": "Доход человека (изложение)"
   },
   "Income tariff index": {
     "ru": "Индекс тарифа на доход"
@@ -963,6 +1053,12 @@
   "Per-head tax": {
     "ru": "Подушный налог"
   },
+  "Personal income is subject to a flat tax rate of 20%.": {
+    "de": "Das Einkommen natürlicher Personen unterliegt einem einheitlichen Steuersatz von 20 %.",
+    "fr": "Le revenu des personnes physiques est soumis à un taux d'imposition unique de 20 %.",
+    "it": "Il reddito delle persone fisiche è soggetto a un'aliquota unica del 20%.",
+    "ru": "Доходы физических лиц облагаются по единой ставке 20%."
+  },
   "Personal income tax": {
     "de": "Einkommensteuer natürlicher Personen",
     "fr": "Impôt sur le revenu des personnes physiques",
@@ -995,6 +1091,12 @@
   "Prisons": {
     "it": "Carceri",
     "ru": "Тюрьмы"
+  },
+  "Profit of a company (summary)": {
+    "de": "Gewinn eines Unternehmens (Zusammenfassung)",
+    "fr": "Bénéfice d'une entreprise (résumé)",
+    "it": "Utile di un'impresa (sintesi)",
+    "ru": "Прибыль компании (изложение)"
   },
   "Profit tax of organisations": {
     "de": "Gewinnsteuer der Organisationen",
@@ -1249,6 +1351,24 @@
   "Switzerland": {
     "ru": "Швейцария"
   },
+  "Tax Code, Part Two, Art. 166 para. 3 (value added)": {
+    "de": "Steuergesetzbuch, Teil zwei, Art. 166 Abs. 3 (Mehrwert)",
+    "fr": "Code fiscal, deuxième partie, art. 166 al. 3 (valeur ajoutée)",
+    "it": "Codice tributario, parte seconda, art. 166 co. 3 (valore aggiunto)",
+    "ru": "Налоговый кодекс, часть вторая, ст. 166 п. 3 (добавленная стоимость)"
+  },
+  "Tax Code, Part Two, Art. 228 (income of a person)": {
+    "de": "Steuergesetzbuch, Teil zwei, Art. 228 (Einkommen einer Person)",
+    "fr": "Code fiscal, deuxième partie, art. 228 (revenu d'une personne)",
+    "it": "Codice tributario, parte seconda, art. 228 (reddito di una persona)",
+    "ru": "Налоговый кодекс, часть вторая, ст. 228 (доход человека)"
+  },
+  "Tax Code, Part Two, Art. 286 (profit of a company)": {
+    "de": "Steuergesetzbuch, Teil zwei, Art. 286 (Gewinn eines Unternehmens)",
+    "fr": "Code fiscal, deuxième partie, art. 286 (bénéfice d'une entreprise)",
+    "it": "Codice tributario, parte seconda, art. 286 (utile di un'impresa)",
+    "ru": "Налоговый кодекс, часть вторая, ст. 286 (прибыль компании)"
+  },
   "Tax multiplier": {
     "ru": "Налоговый коэффициент"
   },
@@ -1294,6 +1414,18 @@
     "it": "Istruzione terziaria",
     "ru": "Высшее образование"
   },
+  "The CIT rate is a flat 15%. […] From 1 January 2017, Georgia adopted the Estonian model of CIT, under which retained profits are no longer taxable until they are distributed.": {
+    "de": "Der Körperschaftsteuersatz beträgt einheitlich 15 %. […] Seit dem 1. Januar 2017 wendet Georgien das estnische Modell der Körperschaftsteuer an, nach dem einbehaltene Gewinne erst bei ihrer Ausschüttung besteuert werden.",
+    "fr": "Le taux de l'impôt sur les sociétés est de 15 %, taux unique. […] Depuis le 1er janvier 2017, la Géorgie applique le modèle estonien, selon lequel les bénéfices non distribués ne sont pas imposés tant qu'ils ne sont pas distribués.",
+    "it": "L'aliquota dell'imposta sulle società è unica al 15%. […] Dal 1º gennaio 2017 la Georgia ha adottato il modello estone, in base al quale gli utili non distribuiti non sono tassati finché non vengono distribuiti.",
+    "ru": "Ставка налога на прибыль — единая, 15%. […] С 1 января 2017 года Грузия применяет эстонскую модель налога на прибыль, при которой нераспределённая прибыль не облагается налогом, пока она не распределена."
+  },
+  "The Government, a Member of Parliament, a parliamentary faction, a parliamentary committee, the supreme representative bodies of the Autonomous Republics of Abkhazia and Ajara, and not less than 25 000 voters shall have the right of legislative initiative.": {
+    "de": "Das Recht der Gesetzesinitiative haben die Regierung, ein Mitglied des Parlaments, eine Parlamentsfraktion, ein Parlamentsausschuss, die obersten Vertretungsorgane der Autonomen Republiken Abchasien und Adscharien sowie nicht weniger als 25 000 Wählerinnen und Wähler.",
+    "fr": "Le Gouvernement, un membre du Parlement, une faction parlementaire, une commission parlementaire, les organes représentatifs suprêmes des Républiques autonomes d'Abkhazie et d'Adjarie, et au moins 25 000 électeurs ont le droit d'initiative législative.",
+    "it": "Il Governo, un membro del Parlamento, una fazione parlamentare, una commissione parlamentare, gli organi rappresentativi supremi delle Repubbliche autonome di Abcasia e Agiaria e non meno di 25 000 elettori hanno il diritto di iniziativa legislativa.",
+    "ru": "Правом законодательной инициативы обладают Правительство, член Парламента, парламентская фракция, комитет Парламента, высшие представительные органы Автономных Республик Абхазия и Аджария, а также не менее 25 000 избирателей."
+  },
   "The cantons' tax administrations, each on its own website": {
     "ru": "Налоговые администрации кантонов, каждая на своём сайте"
   },
@@ -1306,6 +1438,12 @@
     "fr": "Les communes du Liechtenstein, chacune sur son propre site",
     "it": "I Comuni del Liechtenstein, ciascuno sul proprio sito",
     "ru": "Коммуны Лихтенштейна, каждая на своём сайте"
+  },
+  "The defence of Georgia shall be every citizen's duty. The procedure for performing military service shall be determined by law.": {
+    "de": "Die Verteidigung Georgiens ist Pflicht jedes Bürgers. Das Verfahren für die Ableistung des Militärdienstes bestimmt das Gesetz.",
+    "fr": "La défense de la Géorgie est le devoir de chaque citoyen. Les modalités du service militaire sont fixées par la loi.",
+    "it": "La difesa della Georgia è dovere di ogni cittadino. Le modalità di prestazione del servizio militare sono stabilite dalla legge.",
+    "ru": "Защита Грузии — обязанность каждого гражданина. Порядок прохождения военной службы определяется законом."
   },
   "The higher tax-free income at pension age, capital gains, dividends and social tax paid by the employer are not included.": {
     "ru": "Повышенный необлагаемый доход в пенсионном возрасте, прирост капитала, дивиденды и социальный налог, уплачиваемый работодателем, не учтены."
@@ -1404,6 +1542,18 @@
     "it": "Il diritto di iniziativa legislativa spetta al Presidente della Repubblica dell'Ossezia del Sud, ai deputati del Parlamento della Repubblica dell'Ossezia del Sud, al Governo della Repubblica dell'Ossezia del Sud, nonché alla Corte costituzionale, alla Corte suprema, al Procuratore generale e alla Commissione elettorale centrale della Repubblica dell'Ossezia del Sud nelle materie di loro competenza.",
     "ru": "Право законодательной инициативы принадлежит Президенту Республики Южная Осетия, депутатам Парламента Республики Южная Осетия, Правительству Республики Южная Осетия, а также Конституционному Суду Республики Южная Осетия, Верховному Суду Республики Южная Осетия, Генеральному прокурору Республики Южная Осетия и Центральной избирательной комиссии Республики Южная Осетия по вопросам их ведения."
   },
+  "The standard VAT rate is 18%": {
+    "de": "Der Normalsatz der Mehrwertsteuer beträgt 18 %",
+    "fr": "Le taux normal de TVA est de 18 %",
+    "it": "L'aliquota IVA ordinaria è del 18%",
+    "ru": "Стандартная ставка НДС — 18%"
+  },
+  "The state territorial arrangement of Georgia shall be revised by a constitutional law of Georgia on the basis of the principle of the separation of powers after the complete restoration of the jurisdiction of Georgia over the entire territory of the country.": {
+    "de": "Die staatliche territoriale Ordnung Georgiens wird nach der vollständigen Wiederherstellung der Hoheitsgewalt Georgiens über das gesamte Gebiet des Landes durch ein Verfassungsgesetz Georgiens auf der Grundlage des Prinzips der Gewaltenteilung neu geregelt.",
+    "fr": "L'organisation territoriale de l'État de Géorgie sera révisée par une loi constitutionnelle de Géorgie, sur la base du principe de la séparation des pouvoirs, après le rétablissement complet de la juridiction de la Géorgie sur l'ensemble du territoire du pays.",
+    "it": "L'ordinamento territoriale dello Stato della Georgia sarà rivisto con una legge costituzionale della Georgia, sulla base del principio della separazione dei poteri, dopo il pieno ripristino della giurisdizione della Georgia sull'intero territorio del paese.",
+    "ru": "Государственное территориальное устройство Грузии пересматривается конституционным законом Грузии на основе принципа разделения властей после полного восстановления юрисдикции Грузии на всей территории страны."
+  },
   "The tax law sets no tax triggered by giving up citizenship or residence.": {
     "de": "Das Steuerrecht kennt keine Steuer, die durch die Aufgabe der Staatsbürgerschaft oder des Wohnsitzes ausgelöst wird.",
     "fr": "La loi fiscale ne prévoit aucun impôt déclenché par la renonciation à la citoyenneté ou à la résidence.",
@@ -1454,6 +1604,12 @@
   },
   "United States": {
     "ru": "Соединённые Штаты"
+  },
+  "Value added (summary)": {
+    "de": "Mehrwert (Zusammenfassung)",
+    "fr": "Valeur ajoutée (résumé)",
+    "it": "Valore aggiunto (sintesi)",
+    "ru": "Добавленная стоимость (изложение)"
   },
   "Value added tax on goods and services sold in the Republic": {
     "de": "Mehrwertsteuer auf in der Republik verkaufte Waren und Dienstleistungen",

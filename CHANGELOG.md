@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Propose a change in Russian, French and Italian.** Writing a change to a law, supporting
+  one and reading how that law is officially changed now works in every language Solon speaks,
+  not only German and English. On a contested place, "propose" opens each side's law to pick
+  the article, instead of a form that asked you to join an unrelated organization, and Georgia's
+  constitution is quoted with a translation into your language. {#contested-propose-law}
+
 - **Every page in your language and one currency.** Money is shown in US dollars unless you
   pick another currency, and your pick holds on every page: budgets, contested places and the
   comparison of structures, where a salary quoted in francs now also shows its equivalent. The

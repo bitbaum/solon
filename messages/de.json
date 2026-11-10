@@ -738,11 +738,8 @@
       "translation": "Übersetzung:",
       "translatedBy": "Übersetzt von {translator}",
       "read": "gelesen am {date}",
-      "actTitle": "Bedingungen vorschlagen",
-      "actIntro": "Ist die Regel einer Seite bei einer Frage besser, oder gibt es Bedingungen, die beide annehmen könnten? Entwerfen Sie sie als Vorschlag: Er belegt Unterstützung, geht an die Stelle, die entscheidet, und ist nie Recht.",
-      "propose": "Bedingungen für {place} vorschlagen",
-      "proposeTitle": "Bedingungen für {place}",
-      "proposeBody": "Welche Regel in {place} gelten soll, Frage für Frage, und warum. Verglichene Seiten: {sides}.",
+      "actTitle": "Eine Änderung vorschlagen",
+      "actIntro": "Halten Sie die Regel einer Seite für besser oder wollen Sie ein Gesetz ändern? Öffnen Sie das Gesetz in Solon, wählen Sie den Artikel und schreiben Sie die Worte, die Sie wollen: Sie werden als Änderung gegenüber dem veröffentlichten Text gezeigt, andere können sie unterstützen, und die Seite sagt, wie dieses Gesetz offiziell geändert wird. Unterstützung hier ist ein Beleg, nie Gesetz.",
       "methodTitle": "Wie dieser Vergleich entsteht",
       "method": "Jede Zeile ist ein Zitat von einer Seite, die jemand geöffnet hat, mit dem Tag der Lektüre; das Original steht neben jeder Übersetzung, und ein Programm liest jede Seite wöchentlich neu und meldet Worte, die fehlen. Die Fragen sind für jeden Ort dieselben. Die Seite, die regiert, steht immer zuerst, dann die beanspruchende. Wo nichts gelesen wurde, sagt die Seite das.",
       "all": "Alle umstrittenen Orte",
@@ -751,7 +748,8 @@
         "title": "Worauf der Staatshaushalt beruht",
         "notRead": "Für {side} wurde noch kein Haushalt gelesen.",
         "open": "Der ganze Haushalt von {side}"
-      }
+      },
+      "proposeLaw": "Eine Änderung am Recht von {side} vorschlagen"
     }
   },
   "AuthError": {

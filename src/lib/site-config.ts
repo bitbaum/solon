@@ -227,7 +227,7 @@ const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics"
  * language here is how its translation becomes required (the parity test reads
  * this list).
  */
-export const AMEND_LOCALES: readonly Locale[] = ["de"];
+export const AMEND_LOCALES: readonly Locale[] = ["de", "fr", "it", "ru"];
 
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 

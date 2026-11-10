@@ -738,11 +738,8 @@
       "translation": "Traduzione:",
       "translatedBy": "Tradotto da {translator}",
       "read": "letto il {date}",
-      "actTitle": "Proporre condizioni",
-      "actIntro": "La regola di una parte vi sembra migliore su una domanda, o vedete condizioni accettabili per entrambe? Redigetele come proposta: attesta un sostegno, va a chi decide e non è mai diritto.",
-      "propose": "Proporre condizioni per {place}",
-      "proposeTitle": "Condizioni per {place}",
-      "proposeBody": "Quale regola dovrebbe valere a {place}, domanda per domanda, e perché. Parti confrontate: {sides}.",
+      "actTitle": "Proporre una modifica",
+      "actIntro": "Pensi che la regola di una parte sia migliore, o vuoi cambiare una legge? Apri la legge in Solon, scegli l'articolo e scrivi le parole che vuoi: sono mostrate come modifica rispetto al testo pubblicato, altri possono sostenerle, e la pagina dice come quella legge viene modificata ufficialmente. Il sostegno qui è una prova, mai una legge.",
       "methodTitle": "Come è fatto questo confronto",
       "method": "Ogni riga è una citazione da una pagina che qualcuno ha aperto, con il giorno della lettura; l'originale sta accanto a ogni traduzione, e un programma rilegge ogni pagina ogni settimana e segnala le parole scomparse. Le domande sono le stesse per ogni luogo. La parte che governa viene sempre per prima, poi quella che rivendica. Dove non è stato letto nulla, la pagina lo dice.",
       "all": "Tutti i luoghi contesi",
@@ -751,7 +748,8 @@
         "title": "Su cosa poggia il bilancio pubblico",
         "notRead": "Per {side} non è ancora stato letto alcun bilancio.",
         "open": "L'intero bilancio di {side}"
-      }
+      },
+      "proposeLaw": "Proporre una modifica al diritto di {side}"
     }
   },
   "AuthError": {
@@ -1039,6 +1037,113 @@
         "save": "Non è stato salvato. Controlla la connessione e riprova.",
         "open": "Questa conversazione non si è aperta. Riprova."
       }
+    }
+  },
+  "Amend": {
+    "metaTitle": "Proporre una modifica",
+    "kicker": "Proporre una modifica",
+    "intro": "Scrivi le parole di questo atto come pensi che dovrebbero essere. Solon mostra la tua modifica rispetto al testo pubblicato e la lega a quel testo preciso, così che non possa mai essere applicata a una formulazione che non hai visto.",
+    "notLaw": "Una proposta qui non è legge. Il sostegno su Solon è la prova che le persone vogliono il cambiamento; la via ufficiale dice cosa serve perché diventi legge.",
+    "signInFirst": "Accedi per presentare la tua proposta. Ciò che hai scritto resta su questa pagina.",
+    "signIn": "Accedi per presentarla",
+    "forkOf": "Stai partendo dalla proposta di qualcun altro. La tua è presentata come alternativa, ed entrambe restano agli atti.",
+    "changeLabel": "Modifica {n}",
+    "chooseProvision": "Articolo",
+    "pickOne": "Scegli un articolo",
+    "operation": "Cosa farne",
+    "ops": {
+      "replace": "Riformularlo",
+      "repeal": "Abrogarlo",
+      "insert": "Aggiungere un nuovo articolo dopo di esso"
+    },
+    "asPublished": "Come pubblicato",
+    "yourWording": "La tua formulazione",
+    "newHeading": "Titolo del nuovo articolo",
+    "newText": "Testo del nuovo articolo",
+    "redline": "La tua modifica, a confronto",
+    "loading": "Lettura dell'articolo…",
+    "loadFailed": "Non è stato possibile leggere l'articolo. Sceglilo di nuovo.",
+    "addChange": "Modificare un altro articolo",
+    "removeChange": "Togliere questa modifica",
+    "title": "Titolo",
+    "titleHint": "Una riga che dice cosa cambia, per esempio «Dimezzare la tassa sui cani».",
+    "rationale": "Perché",
+    "rationaleHint": "A chi giova, quanto costa, cosa risolve. È ciò che convince le persone a sostenerla.",
+    "dictate": "Parla invece di scrivere",
+    "stopDictating": "Ho finito di parlare",
+    "dictationProblems": {
+      "mic": "Qui non si può usare nessun microfono.",
+      "silence": "Non si è sentito nulla.",
+      "unavailable": "Il riconoscimento vocale non è disponibile al momento.",
+      "fileTooLarge": "La registrazione è troppo lunga."
+    },
+    "submit": "Presenta questa proposta",
+    "submitting": "Presentazione…",
+    "problems": {
+      "stale_base": "Il testo pubblicato di {path} è cambiato mentre scrivevi. Scegli di nuovo l'articolo per scrivere sul testo attuale.",
+      "unknown_path": "{path} non è più in questo atto.",
+      "duplicate_path": "{path} è modificato due volte; tieni una sola modifica.",
+      "no_effect": "La tua formulazione di {path} è identica al testo pubblicato.",
+      "unknown_anchor": "L'articolo dopo cui aggiungere non è più in questo atto."
+    },
+    "failed": "Non è stato possibile presentare la proposta: {reason}",
+    "amendment": {
+      "kicker": "Modifica proposta",
+      "to": "A: {act}",
+      "filed": "Revisione {revision}, presentata il {date}",
+      "current": "Scritta sul testo in vigore oggi.",
+      "outdated": "La legge è cambiata da quando questo è stato scritto. Il confronto mostra la modifica rispetto al testo per cui è stata scritta.",
+      "support": "{total, plural, =0 {Nessuno la sostiene ancora} one {# persona la sostiene} other {# persone la sostengono}}",
+      "supportSplit": "{account} con accesso · {signed} hanno firmato con la propria chiave",
+      "supportButton": "Sostieni questa proposta",
+      "withdrawButton": "Ritira il mio sostegno",
+      "youSupport": "Sostieni questa revisione.",
+      "signInToSupport": "Accedi per sostenerla",
+      "supportFailed": "Non è stato possibile registrare il tuo sostegno: {reason}",
+      "notLaw": "Una proposta qui non è legge. Il sostegno su Solon è la prova che le persone vogliono il cambiamento; la via ufficiale dice cosa serve perché diventi legge.",
+      "changes": "Cosa cambia",
+      "replaced": "Riformulato",
+      "repealed": "Abrogato",
+      "inserted": "Nuovo articolo",
+      "rationale": "Perché",
+      "routes": "Come questa legge viene modificata ufficialmente",
+      "noRoute": "Solon non conosce ancora la via ufficiale di questa legge. La proposta è registrata comunque, e la via comparirà qui quando sarà aggiunta la sua fonte.",
+      "routeBar": "{count} firme di {who}",
+      "routeWindowMonths": "entro {months} mesi",
+      "routeWindowDays": "entro {days} giorni",
+      "routeNoBar": "{who}; non è richiesto alcun numero di firme",
+      "routeSource": "Fonte: {provision}, {title}",
+      "fork": "Scrivere un'alternativa",
+      "revisions": "Tutte le revisioni",
+      "revisionRow": "Revisione {revision} · {date} · {support}",
+      "chain": "Ogni proposta e ogni sostegno è una voce di un'unica catena di hash che chiunque può verificare.",
+      "chainLink": "Leggi la catena",
+      "routeShare": "Firme di {who} pari al {percent}% di {of}"
+    },
+    "list": {
+      "metaTitle": "Modifiche proposte alla legge",
+      "title": "Modifiche proposte",
+      "intro": "Le modifiche che le persone hanno proposto alle leggi che Solon conserva, dalle più recenti.",
+      "empty": "Qui nessuno ha ancora proposto modifiche.",
+      "howTo": "Per proporne una, apri un atto e premi «Proporre una modifica» accanto a qualsiasi articolo.",
+      "row": "Revisione {revision} · {support}",
+      "supporters": "{total, plural, =0 {ancora nessun sostenitore} one {# sostenitore} other {# sostenitori}}"
+    },
+    "act": {
+      "propose": "Proporre una modifica",
+      "proposals": "Modifiche proposte a questo atto",
+      "noProposals": "Nessuno ha ancora proposto modifiche a questo atto."
+    },
+    "consult": {
+      "title": "Pensaci bene",
+      "intro": "Chiedi cosa farebbe la tua modifica, chi ci guadagnerebbe e chi ne sopporterebbe il costo, e dove qualcosa di simile è già legge. L'assistente legge la tua bozza così com'è, cita le leggi e gli studi che trova e non prende posizione. Ciò che presenti resta tuo.",
+      "placeholder": "Cosa farebbe questa modifica?",
+      "starters": {
+        "one": "Cosa farebbe questa modifica, e a chi?",
+        "two": "Dove qualcosa di simile è già legge, e com'è andata?",
+        "three": "Come rendere più chiara la formulazione?"
+      },
+      "startersTitle": "Domande per iniziare"
     }
   },
   "Atlas": {

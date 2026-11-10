@@ -1324,11 +1324,8 @@
       "translation": "Translation:",
       "translatedBy": "Translated by {translator}",
       "read": "read {date}",
-      "actTitle": "Propose terms",
-      "actIntro": "Think one side's rule is better on a question, or have terms both could accept? Draft them as a proposal: it is evidence of support, handed to whoever decides, never law.",
-      "propose": "Propose terms for {place}",
-      "proposeTitle": "Terms for {place}",
-      "proposeBody": "Which rule should apply in {place}, question by question, and why. Sides compared: {sides}.",
+      "actTitle": "Propose a change",
+      "actIntro": "Think one side's rule is better, or want a law changed? Open the law in Solon, pick the article and write the words you want: it is shown as a redline against the published text, others can support it, and the page says how that law is officially changed. Support here is evidence, never law.",
       "methodTitle": "How this comparison is made",
       "method": "Every line is a quotation from a page someone opened, with the day it was read; the original is shown beside any translation, and a program re-reads each page every week and flags words that are gone. The questions are the same for every place. The side that governs is shown first, then the claimant, always. Where nothing has been read, the page says so.",
       "all": "Every contested place",
@@ -1337,7 +1334,8 @@
         "title": "What the public budget rests on",
         "notRead": "No budget has been read for {side} yet.",
         "open": "The whole budget of {side}"
-      }
+      },
+      "proposeLaw": "Propose a change to the law of {side}"
     }
   },
   "AuthError": {

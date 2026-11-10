@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { cite } from "@/lib/i18n/config-catalog";
+import { cite, configTranslation } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import type { LocalizedText } from "@/lib/config/places/schema";
 
@@ -48,8 +48,15 @@ export default function QuotedWords({
   labels: QuotedWordsLabels;
 }) {
   // A reader of the quote's own language needs no translation of it.
+  // Words quoted in English (a published translation) are read in the catalog's translation.
   const translation =
-    quote.translation && quote.lang !== locale ? localized(quote.translation, locale) : null;
+    quote.lang === locale
+      ? null
+      : quote.translation
+        ? localized(quote.translation, locale)
+        : quote.lang === "en"
+          ? (configTranslation(quote.text, locale) ?? null)
+          : null;
   return (
     <figure className="min-w-0 space-y-2">
       <figcaption className="text-sm font-semibold text-fg-primary">
