@@ -697,7 +697,11 @@
       "title": "Recht",
       "intro": "Das Recht, das in {place} gilt, das nächste zuerst. Öffnen Sie eines, um es zu lesen und Änderungen vorzuschlagen.",
       "none": "Solon führt das Recht von {place} noch nicht.",
-      "count": "{count, plural, =0 {Noch keine Texte} one {# Erlass in Kraft} other {# Erlasse in Kraft}}",
+      "count": "{count, plural, one {# Erlass in Kraft} other {# Erlasse in Kraft}}",
+      "registered": "{count, plural, one {# Erlass erfasst} other {# Erlasse erfasst}}",
+      "nothing": "Noch keine Erlasse geführt",
+      "textsNotHeld": "Die Texte führt Solon noch nicht.",
+      "moreRegistered": "{count, plural, one {# weiterer Erlass erfasst} other {# weitere Erlasse erfasst}}, Texte noch nicht geführt.",
       "communes": "Gemeinden ({count})"
     },
     "parts": {

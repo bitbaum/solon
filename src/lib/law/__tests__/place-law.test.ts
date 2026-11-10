@@ -30,8 +30,29 @@ describe("the law on a country's page", () => {
 
   it("gives a commune's own page no list of parts, and keeps the nation above it", () => {
     const [commune, nation] = withParts(chainOf("li7001"), held);
-    expect(commune).toEqual({ key: "li7001", name: "Vaduz", acts: 40 });
+    expect(commune).toEqual({ key: "li7001", name: "Vaduz", acts: 40, registered: 40 });
     expect(nation).toMatchObject({ key: "li", acts: 3412 });
     expect(nation!.parts).toBeUndefined();
+  });
+
+  it("counts what the register holds apart from what Solon holds the text of", () => {
+    const registered = new Map([
+      ["rso", 1849],
+      ["li", 3412],
+    ]);
+    const [rso] = withParts(
+      [{ key: "rso", label: "South Ossetia" }],
+      new Map(),
+      undefined,
+      registered,
+    );
+    expect(rso).toMatchObject({ key: "rso", acts: 0, registered: 1849 });
+    const [li] = withParts(chainOf("li"), new Map([["li", 3412]]), undefined, registered);
+    expect(li).toMatchObject({ acts: 3412, registered: 3412 });
+  });
+
+  it("never reports fewer registered than held", () => {
+    const [li] = withParts(chainOf("li"), new Map([["li", 10]]), undefined, new Map([["li", 3]]));
+    expect(li!.registered).toBe(10);
   });
 });

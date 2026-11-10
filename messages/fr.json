@@ -697,7 +697,11 @@
       "title": "Droit",
       "intro": "Le droit qui s'applique à {place}, le plus proche d'abord. Ouvrez-en un pour le lire et proposer des modifications.",
       "none": "Solon ne tient pas encore le droit de {place}.",
-      "count": "{count, plural, =0 {Pas encore de textes} one {# acte en vigueur} other {# actes en vigueur}}",
+      "count": "{count, plural, one {# acte en vigueur} other {# actes en vigueur}}",
+      "registered": "{count, plural, one {# acte recensé} other {# actes recensés}}",
+      "nothing": "Pas encore d'actes",
+      "textsNotHeld": "Solon n'en tient pas encore les textes.",
+      "moreRegistered": "{count, plural, one {# autre acte recensé} other {# autres actes recensés}}, textes pas encore tenus.",
       "communes": "Communes ({count})"
     },
     "parts": {

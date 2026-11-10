@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import type { PlaceLink } from "@/lib/places/place-view";
 import type { PlaceLaw } from "@/lib/law/place-law";
+import { lawRowText } from "@/lib/law/place-law-row";
 import ShareButton from "./share-button";
 import type { PlacesTranslator } from "./translator";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
@@ -105,17 +106,25 @@ export function PlaceLawCard({
   );
 }
 
-/** One authority's law: its name and how many acts in force Solon holds, a way into reading them. */
+/** One authority's law: its name, what Solon holds of it (and what it does not hold yet), a way into reading it. */
 function LawRow({ authority, t }: { authority: PlaceLaw; t: PlacesTranslator }) {
+  const { label, detail } = lawRowText(authority);
   return (
     <li>
       <Link
         href={`/law/place/${authority.key}`}
         className="flex min-h-11 items-center justify-between gap-3 px-5 py-3 hover:bg-surface-raised sm:px-6"
       >
-        <span className="font-medium text-fg-primary">{authority.name}</span>
-        <span className="text-sm text-fg-tertiary">
-          {t("law.count", { count: authority.acts })} →
+        <span className="min-w-0">
+          <span className="block font-medium text-fg-primary">{authority.name}</span>
+          {detail && (
+            <span className="block text-sm text-fg-tertiary">
+              {t(`law.${detail.key}`, { count: detail.count })}
+            </span>
+          )}
+        </span>
+        <span className="shrink-0 text-sm text-fg-tertiary">
+          {t(`law.${label.key}`, { count: label.count })} →
         </span>
       </Link>
     </li>
