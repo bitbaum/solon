@@ -8,8 +8,9 @@
  * - `within`: this place's own and those of every authority within it (the
  *   national law and every canton's and commune's).
  *
- * Both count acts in force whose text Solon holds, from the tables
- * (`loadLawCoverage`). The roll-up follows the tree derived from
+ * Both count acts whose text Solon holds, from the tables (`loadLawCoverage`);
+ * an act whose publisher states no status is counted, and the pages that show
+ * it say its status is not stated. The roll-up follows the tree derived from
  * `LAW_AUTHORITIES` (`chainOf`), so a new country, a territory or a union needs
  * no code. Design: docs/design/2026-11-place-navigation.md, QA item 4.
  */

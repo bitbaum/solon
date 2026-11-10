@@ -68,6 +68,8 @@ export interface PlaceNode {
   name: string;
   level: PlaceLevel;
   inForce: number;
+  /** Acts whose publisher does not say whether they are in force. */
+  statusNotStated: number;
   withText: number;
   children: PlaceNode[];
 }
@@ -81,6 +83,7 @@ export function placeTree(counts: readonly AuthorityCoverage[]): PlaceNode[] {
       name: authority.label,
       level: levelOf(authority),
       inForce: c?.inForce ?? 0,
+      statusNotStated: c?.statusNotStated ?? 0,
       withText: c?.withText ?? 0,
       children: [],
     };
@@ -96,7 +99,7 @@ export function placeTree(counts: readonly AuthorityCoverage[]): PlaceNode[] {
   const sorted = (list: PlaceNode[]): PlaceNode[] =>
     list
       .map((n) => ({ ...n, children: sorted(n.children) }))
-      .filter((n) => n.inForce > 0 || n.children.length > 0)
+      .filter((n) => n.inForce > 0 || n.statusNotStated > 0 || n.children.length > 0)
       .sort((a, b) => a.name.localeCompare(b.name));
   return sorted(roots);
 }
@@ -117,7 +120,7 @@ export async function listPlaceActs(
   const pattern = title ? `%${title.replace(/[\\%_]/g, "\\$&")}%` : null;
   const offset = Math.max(0, input.page - 1) * PLACE_ACTS_PER_PAGE;
   const rows = await db.execute(sql`
-    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce",
+    SELECT a.id, a.authority, a.kind, a.in_force AS "inForce", a.status_stated AS "statusStated",
            n.text AS title, num.value AS "systematicNumber", ou.value AS "officialUrl",
            count(*) OVER ()::int AS total
     FROM legal_acts a

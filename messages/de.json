@@ -736,6 +736,8 @@
       "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
+      "rowNotStated": "{inForce} in Kraft · {notInForce} nicht · {notStated} Status vom Herausgeber nicht angegeben",
+      "totalsNotStated": "{notStated, plural, one {# weiterer Erlass wird} other {# weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
       "note": "Gemeinden kommen Sammlung für Sammlung dazu; die bisher geführten stehen in der Liste oben.",
       "readLink": "Einen Erlass finden und lesen →"
     },
@@ -752,6 +754,7 @@
       "noHits": "Nichts gefunden.",
       "hits": "{count, plural, one {# Erlass} other {# Erlasse}} gefunden",
       "notInForce": "nicht in Kraft",
+      "statusNotStated": "Status vom Herausgeber nicht angegeben",
       "coverageLink": "Was das Register führt, aus den Daten gezählt →",
       "askLink": "Dem Recht eine Frage stellen →",
       "searchLabel": "Was suchen Sie?",

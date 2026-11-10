@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import type { ActKind } from "@/lib/config/law";
 import type { ActSearchHit } from "@/lib/law/register/coverage";
 import type { LawTranslator } from "./coverage-report";
+import { statusLabel } from "./status-label";
 import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 /** One act in a list: the title, then where it is from, its number and kind. The one shape every list of acts uses. */
@@ -34,7 +35,7 @@ export default async function ActRow({
           authorityName(names, hit.authority),
           hit.systematicNumber,
           t(`kinds.${hit.kind}` as `kinds.${ActKind}`),
-          hit.inForce ? null : t("index.notInForce"),
+          statusLabel(hit, t),
         ]
           .filter(Boolean)
           .join(" · ")}
