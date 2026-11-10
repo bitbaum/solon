@@ -238,15 +238,19 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   const shapes = useMemo<MapFeature[]>(() => {
     const base = world ?? [];
     if (!drawn) return base;
+    // Once a country's own places are drawn they are its shape: its coarse outline from the world file
+    // (Natural Earth, a few dozen points for Liechtenstein) is left out, or it shows through as a
+    // second, mismatched border over the places.
+    const outer = country?.feature;
     return [
-      ...base,
+      ...base.filter((f) => f.id !== outer),
       ...drawn.features.features.map((f) => ({
         id: SUB + f.properties.code,
         geometry: f.geometry,
         properties: {},
       })),
     ];
-  }, [world, drawn]);
+  }, [world, drawn, country?.feature]);
 
   const fills = useMemo(() => {
     const out = new Map<string, string>();
@@ -386,7 +390,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       palette={atlasPalette(colours, tokens)}
       dots={dots}
       dotColour={colours.selected}
-      selected={selected ?? country?.feature ?? null}
+      selected={selected ?? (drawn ? null : (country?.feature ?? null))}
       onMap={onMap}
       home={HOME}
       spin={!open}
