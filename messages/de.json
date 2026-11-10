@@ -715,6 +715,35 @@
       "title": "Steuer nach Ort",
       "intro": "Wählen Sie ein Land und geben Sie Ihr Einkommen ein: Jeder Ort darin wird danach eingefärbt, was die Steuer Sie dort kosten würde. Was Sie eingeben, bleibt in diesem Browser-Tab.",
       "back": "Alle Orte"
+    },
+    "contested": {
+      "kicker": "Umstrittenes Recht",
+      "title": "{place}: zwei Rechtsordnungen",
+      "intro": "{place} regiert sich selbst; {claimant} betrachtet es als Teil seines Gebiets. Hier steht, was der eigene Text jeder Seite zu denselben Fragen sagt, zitiert und belegt. Solon sagt nicht, welche Seite recht hat.",
+      "indexTitle": "Umstrittene Orte: das Recht vergleichen",
+      "indexIntro": "Orte, die sich selbst regieren, während ein anderer Staat sie als Teil seines Gebiets betrachtet. Jeder öffnet beide Rechtsordnungen nebeneinander, Frage für Frage, in den eigenen Worten jeder Seite.",
+      "claimedBy": "Beansprucht von {claimant}",
+      "compare": "Sein Recht mit dem von {claimant} vergleichen, Frage für Frage",
+      "progress": "Bisher haben {compared} von {topics} Fragen Worte von beiden Seiten.",
+      "progressShort": "{compared} von {topics} verglichen",
+      "role": {
+        "governs": "Regiert den Ort",
+        "claims": "Betrachtet ihn als Teil seines Gebiets"
+      },
+      "readLaw": "Das Recht von {side} in Solon lesen",
+      "lawNotHeld": "Solon hält das Recht von {side} noch nicht; die Worte unten sind von der jeweils genannten Seite zitiert.",
+      "gap": "Zu dieser Frage wurde für {side} noch nichts gelesen.",
+      "translation": "Übersetzung:",
+      "translatedBy": "Übersetzt von {translator}",
+      "read": "gelesen am {date}",
+      "actTitle": "Bedingungen vorschlagen",
+      "actIntro": "Ist die Regel einer Seite bei einer Frage besser, oder gibt es Bedingungen, die beide annehmen könnten? Entwerfen Sie sie als Vorschlag: Er belegt Unterstützung, geht an die Stelle, die entscheidet, und ist nie Recht.",
+      "propose": "Bedingungen für {place} vorschlagen",
+      "proposeTitle": "Bedingungen für {place}",
+      "proposeBody": "Welche Regel in {place} gelten soll, Frage für Frage, und warum. Verglichene Seiten: {sides}.",
+      "methodTitle": "Wie dieser Vergleich entsteht",
+      "method": "Jede Zeile ist ein Zitat von einer Seite, die jemand geöffnet hat, mit dem Tag der Lektüre; das Original steht neben jeder Übersetzung, und ein Programm liest jede Seite wöchentlich neu und meldet Worte, die fehlen. Die Fragen sind für jeden Ort dieselben. Die Seite, die regiert, steht immer zuerst, dann die beanspruchende. Wo nichts gelesen wurde, sagt die Seite das.",
+      "all": "Alle umstrittenen Orte"
     }
   },
   "AuthError": {

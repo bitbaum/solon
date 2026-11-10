@@ -715,6 +715,35 @@
       "title": "L'imposta per luogo",
       "intro": "Scegli un paese e inserisci il tuo reddito: ogni luogo è colorato secondo quanto ti costerebbe l'imposta. Ciò che inserisci resta in questa scheda del browser.",
       "back": "Tutti i luoghi"
+    },
+    "contested": {
+      "kicker": "Diritto conteso",
+      "title": "{place}: due ordinamenti",
+      "intro": "{place} si governa da sé; {claimant} lo considera parte del suo territorio. Ecco cosa dice il testo di ciascuna parte sulle stesse domande, citato e con le fonti. Solon non dice chi ha ragione.",
+      "indexTitle": "Luoghi contesi: confrontare il diritto",
+      "indexIntro": "Luoghi che si governano da sé mentre un altro Stato li considera parte del suo territorio. Ciascuno apre i due ordinamenti fianco a fianco, domanda per domanda, con le parole di ciascuna parte.",
+      "claimedBy": "Rivendicato da {claimant}",
+      "compare": "Confrontare il suo diritto con quello di {claimant}, domanda per domanda",
+      "progress": "Finora {compared} domande su {topics} hanno parole di entrambe le parti.",
+      "progressShort": "{compared} su {topics} confrontate",
+      "role": {
+        "governs": "Governa il luogo",
+        "claims": "Lo considera parte del suo territorio"
+      },
+      "readLaw": "Leggere il diritto di {side} in Solon",
+      "lawNotHeld": "Solon non detiene ancora il diritto di {side}; le parole qui sotto sono citate dalla pagina indicata sotto ciascuna.",
+      "gap": "Su questa domanda non è ancora stato letto nulla per {side}.",
+      "translation": "Traduzione:",
+      "translatedBy": "Tradotto da {translator}",
+      "read": "letto il {date}",
+      "actTitle": "Proporre condizioni",
+      "actIntro": "La regola di una parte vi sembra migliore su una domanda, o vedete condizioni accettabili per entrambe? Redigetele come proposta: attesta un sostegno, va a chi decide e non è mai diritto.",
+      "propose": "Proporre condizioni per {place}",
+      "proposeTitle": "Condizioni per {place}",
+      "proposeBody": "Quale regola dovrebbe valere a {place}, domanda per domanda, e perché. Parti confrontate: {sides}.",
+      "methodTitle": "Come è fatto questo confronto",
+      "method": "Ogni riga è una citazione da una pagina che qualcuno ha aperto, con il giorno della lettura; l'originale sta accanto a ogni traduzione, e un programma rilegge ogni pagina ogni settimana e segnala le parole scomparse. Le domande sono le stesse per ogni luogo. La parte che governa viene sempre per prima, poi quella che rivendica. Dove non è stato letto nulla, la pagina lo dice.",
+      "all": "Tutti i luoghi contesi"
     }
   },
   "AuthError": {

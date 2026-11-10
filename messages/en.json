@@ -1301,6 +1301,35 @@
       "title": "Tax by place",
       "intro": "Pick a country and enter your income: every place in it is coloured by what tax would cost you there. What you enter stays in this browser tab.",
       "back": "All places"
+    },
+    "contested": {
+      "kicker": "Contested law",
+      "title": "{place}: two sets of law",
+      "intro": "{place} governs itself; {claimant} regards it as part of its territory. Here is what each side's own text says on the same questions, quoted and sourced. Solon does not say which is right.",
+      "indexTitle": "Contested places: compare the law",
+      "indexIntro": "Places that govern themselves while another state regards them as part of its territory. Each opens the two sets of law side by side, question by question, in each side's own words.",
+      "claimedBy": "Claimed by {claimant}",
+      "compare": "Compare its law with {claimant}'s, question by question",
+      "progress": "{compared} of {topics} questions have words from both sides so far.",
+      "progressShort": "{compared} of {topics} compared",
+      "role": {
+        "governs": "Governs the place",
+        "claims": "Regards it as part of its territory"
+      },
+      "readLaw": "Read the law of {side} in Solon",
+      "lawNotHeld": "Solon does not hold the law of {side} yet; the words below are quoted from the page named under each.",
+      "gap": "Nothing has been read for {side} on this question yet.",
+      "translation": "Translation:",
+      "translatedBy": "Translated by {translator}",
+      "read": "read {date}",
+      "actTitle": "Propose terms",
+      "actIntro": "Think one side's rule is better on a question, or have terms both could accept? Draft them as a proposal: it is evidence of support, handed to whoever decides, never law.",
+      "propose": "Propose terms for {place}",
+      "proposeTitle": "Terms for {place}",
+      "proposeBody": "Which rule should apply in {place}, question by question, and why. Sides compared: {sides}.",
+      "methodTitle": "How this comparison is made",
+      "method": "Every line is a quotation from a page someone opened, with the day it was read; the original is shown beside any translation, and a program re-reads each page every week and flags words that are gone. The questions are the same for every place. The side that governs is shown first, then the claimant, always. Where nothing has been read, the page says so.",
+      "all": "Every contested place"
     }
   },
   "AuthError": {

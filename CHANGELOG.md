@@ -8,6 +8,15 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **Contested places: two sets of law, side by side.** `/places/contested` lists every place
+  that governs itself while another state regards it as part of its territory, and each opens
+  the two sets of law question by question, in each side's own words: the original beside a
+  translation, the page it was read on and the day. South Ossetia and Georgia are compared from
+  their constitutions on the territory, citizenship, moving and leaving, and defence; the other
+  places show which questions are still unread. Every page of a claimed place says who claims
+  it again and links to the comparison, and a reader can propose terms for the place. Solon does
+  not say which side is right. {#contested-p1}
+
 - **Easier to find your way.** The header now has four panels of four or five links each (Law,
   Places, Data, Governance) instead of 27 links, with statistics given their own panel. A new
   Find button (also Ctrl or Cmd + K, or "/") searches pages, statistics, places and laws in one
