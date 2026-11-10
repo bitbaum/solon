@@ -3,15 +3,21 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { LawChat } from "@/components/law/law-chat";
 import { compareHref } from "@/lib/places/compare-view";
+import type { PlaceLaw } from "@/lib/law/place-law";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
+import { PlaceLawCard, PlaceTrail } from "./place-head";
 import SourceList from "./source-list";
 
 export type PlacesTranslator = ReturnType<typeof useTranslations<"Places">>;
 
 interface PlaceProfileProps {
   view: PlaceView;
+  /** The law that applies here, nearest first. */
+  law: readonly PlaceLaw[];
+  /** Where the tax map of this place's country opens. */
+  taxHref: string;
   t: PlacesTranslator;
 }
 
@@ -28,11 +34,15 @@ function PlaceName({ place }: { place: PlaceLink }) {
 }
 
 /**
- * One place, as the record has it (design §9): where it sits, whether it
- * levies tax, what else it is called, and the source behind every line. Every
- * word of structure comes from the pack; nothing here knows a country.
+ * One place, at any level — a country, a canton, a commune, a quarter — on a
+ * page of its own that can be shared. Read top-down: where it sits, the law
+ * that applies there, the places inside it, then tax (a summary; the
+ * calculator is its own page), what a resident can do, and the record behind
+ * it all, closed until asked for. Every word of structure comes from the pack;
+ * nothing here knows a country.
  */
-export default function PlaceProfile({ view, t }: PlaceProfileProps) {
+export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProps) {
+  const above = [...view.partOf].reverse();
   const row = (label: string, value: React.ReactNode, key = label) => (
     <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
       <dt className="text-fg-secondary">{label}</dt>
@@ -43,29 +53,52 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
   return (
     <PageLayout
       title={view.name}
-      kicker={t("kicker", { level: view.levelName, pack: view.packName })}
+      kicker={view.levelName}
+      description={
+        above.length > 0
+          ? t("summaryIn", { level: view.levelName, place: above.map((p) => p.name).join(", ") })
+          : undefined
+      }
     >
       <div className="max-w-3xl space-y-10">
-        <p className="flex flex-wrap items-center gap-3 text-sm text-fg-secondary">
-          <span className="rounded-pill border border-default px-3 py-1 text-fg-primary">
-            {t("official")}
-          </span>
-          {t("officialNote")}
-        </p>
+        <PlaceTrail above={view.partOf} name={view.name} t={t} />
 
-        {view.partOf.length > 0 && (
-          <nav aria-label={t("partOf")}>
-            <h2 className="mb-3 font-semibold text-fg-primary">{t("partOf")}</h2>
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-              {view.partOf.map((place, i) => (
-                <li key={`${place.slugPath}-${i}`} className="flex items-center gap-2">
-                  {i > 0 && <span className="text-fg-tertiary">›</span>}
-                  <PlaceName place={place} />
-                  <span className="text-fg-tertiary">({place.levelName})</span>
-                </li>
-              ))}
-            </ol>
-          </nav>
+        <PlaceLawCard law={law} name={view.name} t={t} />
+
+        {view.parts.length > 0 && (
+          <section aria-labelledby="place-parts" className="space-y-6">
+            <h2 id="place-parts" className="headline text-2xl text-fg-primary">
+              {t("parts.title", { place: view.name })}
+            </h2>
+            {view.parts.map((group) => (
+              <div key={group.levelName} className="space-y-3">
+                <h3 className="text-sm font-semibold text-fg-secondary">
+                  {t("parts.level", { level: group.levelName, count: group.places.length })}
+                </h3>
+                <ul className="grid overflow-hidden rounded-surface border border-default bg-surface-base sm:grid-cols-2">
+                  {group.places.map((place, i) => (
+                    <li key={`${place.slugPath}-${i}`} className="-mb-px border-b border-default">
+                      {place.slugPath ? (
+                        <Link
+                          href={placeHref(place.slugPath)}
+                          className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
+                        >
+                          <span>{place.name}</span>
+                          <span aria-hidden className="text-fg-tertiary">
+                            →
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="flex min-h-11 items-center px-5 py-2 text-fg-primary">
+                          {place.name}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </section>
         )}
 
         {view.alsoServedBy.length > 0 && (
@@ -82,8 +115,13 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
           </section>
         )}
 
-        <section className="rounded-surface border border-default bg-surface-base p-6">
-          <h2 className="mb-2 font-semibold text-fg-primary">{t("tax.title")}</h2>
+        <section
+          aria-labelledby="place-tax"
+          className="rounded-surface border border-default bg-surface-base p-5 sm:p-6"
+        >
+          <h2 id="place-tax" className="mb-2 font-semibold text-fg-primary">
+            {t("tax.title")}
+          </h2>
           <p className="text-sm text-fg-secondary">
             {view.takesTax === null
               ? t("tax.noModel", { pack: view.packName })
@@ -92,29 +130,26 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
                 : t("tax.none")}
           </p>
           {view.refinedBy.length > 0 && (
-            <div className="mt-3 text-sm">
-              <p className="mb-1 text-fg-secondary">{t("tax.refinedBy", { place: view.name })}</p>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1">
-                {view.refinedBy.map((place, i) => (
-                  <li key={`${place.slugPath}-${i}`}>
-                    <PlaceName place={place} />
-                  </li>
-                ))}
-              </ul>
+            <p className="mt-2 text-sm text-fg-secondary">
+              {t("tax.dependsOn", { place: view.name })}
+            </p>
+          )}
+          {view.takesTax !== null && (
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+              <Link href={taxHref} className="text-fg-primary hover:underline">
+                {t("tax.open", { pack: view.packName })} →
+              </Link>
+              <Link href={compareHref([view.slugPath])} className="text-fg-primary hover:underline">
+                {t("compareLink")}
+              </Link>
             </div>
           )}
-          <Link
-            href={compareHref([view.slugPath])}
-            className="mt-3 inline-block text-sm text-fg-primary hover:underline"
-          >
-            {t("compareLink")}
-          </Link>
         </section>
 
         {view.actions.length > 0 && (
           <section
             aria-labelledby="place-actions"
-            className="rounded-surface border border-default bg-surface-base p-6"
+            className="rounded-surface border border-default bg-surface-base p-5 sm:p-6"
           >
             <h2 id="place-actions" className="mb-1 font-semibold text-fg-primary">
               {t("actions.title")}
@@ -141,34 +176,47 @@ export default function PlaceProfile({ view, t }: PlaceProfileProps) {
           </div>
         )}
 
-        {(view.otherNames.length > 0 || view.identifiers.length > 0) && (
-          <dl className="space-y-2 rounded-surface border border-default bg-surface-base p-6 text-sm">
-            {view.otherNames.length > 0 &&
-              row(
-                t("otherNames"),
-                view.otherNames.map((n) => (
-                  <span key={`${n.locale}-${n.name}`} className="block" lang={n.locale}>
-                    {n.name} <span className="text-fg-tertiary">({n.locale})</span>
-                  </span>
-                )),
-              )}
-            {view.identifiers.map((id) =>
-              row(
-                id.label,
-                id.url ? (
-                  <a href={id.url} className="font-mono hover:underline" rel="noopener noreferrer">
-                    {id.value}
-                  </a>
-                ) : (
-                  <span className="font-mono">{id.value}</span>
-                ),
-                `${id.label}-${id.value}`,
-              ),
+        <details className="rounded-surface border border-default bg-surface-base p-5 text-sm sm:p-6">
+          <summary className="cursor-pointer font-semibold text-fg-primary">
+            {t("record.title")}
+          </summary>
+          <div className="mt-4 space-y-6">
+            <p className="text-fg-secondary">
+              {t("official")}: {t("officialNote")}
+            </p>
+            {(view.otherNames.length > 0 || view.identifiers.length > 0) && (
+              <dl className="space-y-2">
+                {view.otherNames.length > 0 &&
+                  row(
+                    t("otherNames"),
+                    view.otherNames.map((n) => (
+                      <span key={`${n.locale}-${n.name}`} className="block" lang={n.locale}>
+                        {n.name} <span className="text-fg-tertiary">({n.locale})</span>
+                      </span>
+                    )),
+                  )}
+                {view.identifiers.map((id) =>
+                  row(
+                    id.label,
+                    id.url ? (
+                      <a
+                        href={id.url}
+                        className="font-mono hover:underline"
+                        rel="noopener noreferrer"
+                      >
+                        {id.value}
+                      </a>
+                    ) : (
+                      <span className="font-mono">{id.value}</span>
+                    ),
+                    `${id.label}-${id.value}`,
+                  ),
+                )}
+              </dl>
             )}
-          </dl>
-        )}
-
-        <SourceList sources={view.sources} t={t} />
+            <SourceList sources={view.sources} t={t} />
+          </div>
+        </details>
       </div>
     </PageLayout>
   );

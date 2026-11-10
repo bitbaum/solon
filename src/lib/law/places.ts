@@ -16,7 +16,7 @@ export const authorityOf = (key: string): LawAuthority | undefined =>
   LAW_AUTHORITIES.find((a) => a.key === key);
 
 /** The authority that speaks for a whole country (its `iso_3166_1` place). */
-const countryAuthority = (country: string): LawAuthority | undefined =>
+export const countryAuthority = (country: string): LawAuthority | undefined =>
   LAW_AUTHORITIES.find((a) => a.place?.scheme === "iso_3166_1" && a.place.value === country);
 
 /** The union of countries a country belongs to, whose law applies there above its own: the European Union above Estonia. */

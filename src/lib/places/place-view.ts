@@ -47,12 +47,23 @@ export interface PlaceAction {
   deadline: { monthDay: string; source: string } | null;
 }
 
+/** The places directly inside one, at one level. */
+export interface PlaceParts {
+  levelName: string;
+  places: PlaceLink[];
+}
+
 export interface PlaceView {
   id: string;
   slugPath: string;
   name: string;
   levelName: string;
   packName: string;
+  packKey: string;
+  /** The pack's ISO 3166-1 region, when it is a country. */
+  region: string | null;
+  /** The places directly inside it, by level in the pack's order, each by name. */
+  parts: PlaceParts[];
   /** From the root down to the place's parent. */
   partOf: PlaceLink[];
   /** Places at overlapping levels that serve this one or a place above it. */
@@ -78,6 +89,8 @@ export interface PlaceViewInput {
   instruments: readonly ChainInstrument[];
   /** Places directly inside it whose level stands for its own. */
   refinements?: readonly ChainPlace[];
+  /** Every place directly inside it. */
+  parts?: readonly ChainPlace[];
   /** The latest retrieval of each source that stated something about the place. */
   sources: readonly { sourceKey: string; retrievedAt: Date }[];
   locale: string;
@@ -143,6 +156,15 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     name,
     levelName: levelName(place.levelKey),
     packName: localized(pack.names, locale),
+    packKey: pack.key,
+    region: pack.region ?? null,
+    parts: pack.levels.flatMap((level) => {
+      const places = (input.parts ?? [])
+        .filter((p) => p.levelKey === level.key)
+        .map(link)
+        .sort((a, b) => a.name.localeCompare(b.name, locale));
+      return places.length > 0 ? [{ levelName: localized(level.names, locale), places }] : [];
+    }),
     partOf: chain
       .filter((p) => p.depth !== null && p.depth > 0)
       .sort((a, b) => b.depth! - a.depth!)
