@@ -68,7 +68,7 @@ export default async function LocaleLayout({
   // of them, hence suppressHydrationWarning — which covers this element's own
   // attributes only, not its children.
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} data-brand="solon" suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>
