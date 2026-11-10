@@ -53,3 +53,15 @@ mark by copying it over `solon-mark.svg` and running `pnpm run brand`.
 - **Volute**: the Ionic capital. Reads as a bank or a courthouse.
 - **Double coil / One path in**: an S of two volutes; a coil you walk into.
   Too close to Loki's disc to tell apart at icon size.
+
+## Why there is still a copy in OrangeCat
+
+OrangeCat keeps every studio product's mark in its own registry
+(`src/config/marks/`) for its tiles, banners and project share cards. Loki's
+generator is mirrored there by hand. Its Solon entry was a line-icon balance
+Solon itself had stopped using, which is the drift a copy invites. Today the
+copy is refreshed with one command. The lasting fix is to move the registry
+(the mark files, `markSvg` and the importer) into `@bitbaum/design-tokens`,
+the package that already holds the three products' shared brand. Then Solon,
+OrangeCat and Loki all read one mark, and a new mark is one release. That
+move is not done yet.
