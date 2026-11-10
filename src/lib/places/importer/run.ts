@@ -261,8 +261,9 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         if (dryRun) {
           throw new DryRunDone(applied);
         }
-        // Where places sit is derived from the relations just written (migration 0025).
-        await tx.execute(sql`REFRESH MATERIALIZED VIEW place_ancestors`);
+        // Where places sit is derived from the relations just written (migration 0025). Through a function:
+        // only the view's owner may refresh it, and the importer is not the migrating role (0027).
+        await tx.execute(sql`SELECT place_ancestors_refresh()`);
         report.sourceId = sourceRow!.id;
         return applied;
       })
