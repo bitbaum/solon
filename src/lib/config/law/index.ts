@@ -45,6 +45,8 @@ export const ACT_IDENTIFIER_SCHEMES = [
   "at_gesetzesnummer",
   /** The RIS's NOR number of an act's own document (`NOR40198929`), the one that carries its Langtitel. */
   "at_nor",
+  /** The number an authority gave an act within its year, `<year>/<number>`: `2004/44` is law № 44 of 2004. */
+  "act_number",
   /** Germany's federal portal's abbreviation for an act, the folder it is served from: `bgb`, `gg`, `1-dm-goldm_nzg`. */
   "gii_abbr",
 ] as const;
@@ -795,6 +797,12 @@ export const PARLIAMENTRSO = {
   hosts: ["parliamentrso.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
   licenceSpdx: "LicenseRef-so-official-facts",
+  /**
+   * Whether the texts may be stored: no terms of use and no copyright law of the Republic have been
+   * opened that say so (docs/research/2026-11-south-ossetia-sources.md §6), so only the register is
+   * loaded. Set true, with the provision quoted in the licence entry, when one is.
+   */
+  textsAdmitted: false as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
   /** The three listings under "Законодательство": laws, constitutional laws, resolutions. */
@@ -830,9 +838,13 @@ export const PRESIDENTRUO = {
   postsUrl:
     "https://presidentruo.org/wp-json/wp/v2/posts?categories={category}&per_page=100&page={page}&order=asc&orderby=date&_fields=id,date,link,title",
   termsPageUrl: "https://presidentruo.org/ob-ispolzovanii-informacii-sajta/",
+  /** One post with its text; `{id}` is the post's number. */
+  postUrl: "https://presidentruo.org/wp-json/wp/v2/posts/{id}?_fields=id,date,link,title,content",
   hosts: ["presidentruo.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
   licenceSpdx: "LicenseRef-so-president-site-reuse",
+  /** The site's reuse page allows reproduction with a reference to the source (see the licence entry). */
+  textsAdmitted: true as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
   /** The categories read, in this order; a post found in several keeps the first kind. */

@@ -9,7 +9,7 @@ import { ADAPTERS, type Probe } from "../adapters";
 import { unzipSync, zipSync } from "fflate";
 import { decodeCsvAnyForm, isoFromDottedDate, parseCsv } from "../adapters/csv";
 import { readShapefile } from "../adapters/shapefile";
-import { fiscalYearPeriod } from "../adapters/csv-facts";
+import { csvFactsAdapter, fiscalYearPeriod } from "../adapters/csv-facts";
 import { plannedRetrievals } from "../importer/fetch";
 import { importBatchSchema, type BatchJurisdiction, type ImportBatch } from "../importer/batch";
 import { checkBatch } from "../importer/validate";
@@ -580,6 +580,24 @@ describe("Liechtenstein's tax, kept by hand from its law and its communes' decis
     for (const year of ["2024", "2025"]) {
       expect(new Set(rows.filter((r) => r.tax_year === year).map((r) => r.commune)).size).toBe(11);
     }
+  });
+
+  it("keeps each commune's latest decided surcharge in force until the next decision, so every commune has one on any day since", () => {
+    const inForce = (on: string) =>
+      surcharges.facts.filter((f) => f.validFrom <= on && (f.validTo === null || on < f.validTo));
+    // 2026-11-10 is after the 2025 decisions and before the 2026 ones: the autumn councils have not sat.
+    for (const on of ["2024-06-30", "2025-06-30", "2026-11-10", "2027-03-01"]) {
+      const now = inForce(on);
+      expect(new Set(now.map((f) => f.jurisdiction.value)).size, on).toBe(11);
+      expect(now, `one a commune on ${on}`).toHaveLength(11);
+    }
+    const eschen = (on: string) => inForce(on).find((f) => f.jurisdiction.value === "7007")!.value;
+    expect(eschen("2026-11-10")).toBe(1.6);
+    // Mauren moved from 180 % to 160 %: the older figure still ends where the newer begins.
+    const mauren = (on: string) => inForce(on).find((f) => f.jurisdiction.value === "7008")!.value;
+    expect([mauren("2024-06-30"), mauren("2025-06-30"), mauren("2026-11-10")]).toEqual([
+      1.8, 1.6, 1.6,
+    ]);
   });
 
   /** SteG art. 19 para. 1 a and c, as the act states each piece: a·x − b. */
@@ -1470,5 +1488,47 @@ describe("a place the file still draws apart after it merged", () => {
       },
     } as never) as ImportBatch;
     expect(batch.areas?.map((a) => a.feature)).toEqual(["261", "371"]);
+  });
+});
+
+describe("csv_facts: a figure that stays in force until the source states the next", () => {
+  const table = [
+    { place: "A", year: "2023", pct: "150" },
+    { place: "A", year: "2025", pct: "160" },
+    { place: "A", year: "2024", pct: "155" },
+    { place: "B", year: "2024", pct: "150" },
+  ];
+  const run = (inForceUntilNext: boolean) =>
+    csvFactsAdapter.map(table, {
+      source: {} as never,
+      pack: { key: "p", fiscalYear: { startMonthDay: "01-01" } } as never,
+      options: csvFactsAdapter.options!.parse({
+        place: { scheme: "s", column: "place" },
+        yearColumn: "year",
+        inForceUntilNext,
+        facts: [{ metric: "m", column: "pct", divideBy: 100 }],
+      }),
+      retrieval: { url: null, validFrom: null },
+      skip: () => undefined,
+    }).facts as { jurisdiction: { value: string }; validFrom: string; validTo: string | null }[];
+  const ends = (facts: ReturnType<typeof run>) =>
+    facts.map((f) => `${f.jurisdiction.value} ${f.validFrom} ${f.validTo ?? "open"}`).sort();
+
+  it("ends only the latest year of each place, whatever order the rows come in", () => {
+    expect(ends(run(true))).toEqual([
+      "A 2023-01-01 2024-01-01",
+      "A 2024-01-01 2025-01-01",
+      "A 2025-01-01 open",
+      "B 2024-01-01 open",
+    ]);
+  });
+
+  it("leaves every year closed unless a source asks for it", () => {
+    expect(ends(run(false))).toEqual([
+      "A 2023-01-01 2024-01-01",
+      "A 2024-01-01 2025-01-01",
+      "A 2025-01-01 2026-01-01",
+      "B 2024-01-01 2025-01-01",
+    ]);
   });
 });

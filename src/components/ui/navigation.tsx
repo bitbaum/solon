@@ -32,8 +32,9 @@ import {
  *
  * The header is transparent over a page's photograph and turns solid once
  * the reader scrolls or a panel opens. While it is transparent over a
- * photograph it wears the dark theme whatever the reader chose, because its
- * type sits on the photograph's dark scrim (HEADER_OVER_PHOTO_ROUTES). Small
+ * photograph it follows the theme, over the scrim at the section's top; only
+ * a photograph that stays dark in both themes makes it wear the dark theme
+ * (HEADER_OVER_PHOTO_ROUTES). Small
  * screens get the whole map as a full-screen menu instead.
  */
 export default function Navigation({

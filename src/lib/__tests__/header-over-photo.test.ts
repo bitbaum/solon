@@ -27,25 +27,31 @@ function routeOf(file: string): string {
   return `/${segments.join("/")}`;
 }
 
-/** A `<FullBleed …>` opening tag that carries the bare `under` prop. */
-const UNDER = /<FullBleed\b[^>]*\sunder[\s>]/;
+/** A `<FullBleed …>` opening tag that carries the bare `under` and `alwaysDark` props. */
+const UNDER = /<FullBleed\b[^>]*>/g;
+
+function slidesDarkPhotoUnderHeader(source: string): boolean {
+  return (source.match(UNDER) ?? []).some(
+    (tag) => /\sunder\b/.test(tag) && /\salwaysDark\b/.test(tag),
+  );
+}
 
 describe("HEADER_OVER_PHOTO_ROUTES", () => {
   const found = pages(APP)
-    .filter((f) => UNDER.test(readFileSync(f, "utf8")))
+    .filter((f) => slidesDarkPhotoUnderHeader(readFileSync(f, "utf8")))
     .map(routeOf)
     .sort();
 
-  it("lists exactly the pages that slide a photograph under the header", () => {
+  it("lists exactly the pages that slide an always-dark photograph under the header", () => {
     expect(found.length).toBeGreaterThan(0);
     expect([...HEADER_OVER_PHOTO_ROUTES].sort()).toEqual(found);
   });
 
   it("matches a dynamic segment, and nothing deeper or shallower", () => {
-    expect(isHeaderOverPhoto("/")).toBe(true);
-    expect(isHeaderOverPhoto("/for/cooperatives")).toBe(true);
-    expect(isHeaderOverPhoto("/for")).toBe(false);
-    expect(isHeaderOverPhoto("/for/a/b")).toBe(false);
+    expect(isHeaderOverPhoto("/governance/new-era")).toBe(true);
+    expect(isHeaderOverPhoto("/governance")).toBe(false);
+    expect(isHeaderOverPhoto("/governance/new-era/x")).toBe(false);
+    expect(isHeaderOverPhoto("/")).toBe(false);
     expect(isHeaderOverPhoto("/places")).toBe(false);
   });
 });

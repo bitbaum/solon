@@ -1,5 +1,5 @@
 {
-  "id": "12c26b44-d5f1-44a6-b2fa-ea26d876d24e",
+  "id": "4abb5abe-f961-4039-b088-55e1f604f42e",
   "prevId": "5b218f72-3fc4-4477-95ca-f38b72edad12",
   "version": "7",
   "dialect": "postgresql",
@@ -4092,13 +4092,6 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
-        },
-        "status_stated": {
-          "name": "status_stated",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
         },
         "source_id": {
           "name": "source_id",

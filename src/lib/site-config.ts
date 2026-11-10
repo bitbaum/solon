@@ -259,20 +259,16 @@ export const EVERYDAY_ROUTES = [
 ] as const;
 
 /**
- * Pages that open on a photograph sliding under the header (`<FullBleed
- * under>`). Over a photograph the transparent header wears the dark theme
- * whatever the reader chose: light type on a dark scrim is the only pairing
- * that reads there. Known from the path, so the server renders it right and
- * nothing flashes. A `[slug]` segment matches any one segment.
- * src/lib/__tests__/header-over-photo.test.ts fails when a page passes
- * `under` and is missing here, or is listed and does not.
+ * Pages that open on a photograph that stays dark in both themes (`<FullBleed
+ * under alwaysDark>`: a night photograph with no daylight counterpart). Over
+ * it the transparent header wears the dark theme whatever the reader chose.
+ * Every other page opens on a photograph that follows the theme, and its header
+ * does too. Known from the path, so the server renders it right and nothing
+ * flashes. A `[slug]` segment matches any one segment.
+ * src/lib/__tests__/header-over-photo.test.ts fails when a page passes both
+ * props and is missing here, or is listed and does not.
  */
-export const HEADER_OVER_PHOTO_ROUTES = [
-  "/",
-  "/hire",
-  "/governance/new-era",
-  "/for/[slug]",
-] as const;
+export const HEADER_OVER_PHOTO_ROUTES = ["/governance/new-era"] as const;
 
 export function isHeaderOverPhoto(pathname: string): boolean {
   const parts = pathname.split("/").filter(Boolean);

@@ -25,7 +25,7 @@
  * source can say when a place ended.
  */
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { makeGeometryRef } from "@bitbaum/geo-kit";
 import type { CountryPack, PlacesConfig, Source } from "@/lib/config/places/schema";
 import type { Database, Tx } from "@/lib/db/client";
@@ -261,6 +261,8 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         if (dryRun) {
           throw new DryRunDone(applied);
         }
+        // Where places sit is derived from the relations just written (migration 0025).
+        await tx.execute(sql`REFRESH MATERIALIZED VIEW place_ancestors`);
         report.sourceId = sourceRow!.id;
         return applied;
       })
