@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { coverage, divClasses, missingRuns, visibleText, wordsOf } from "../verify";
+import { coverage, divClasses, htmlAround, missingRuns, visibleText, wordsOf } from "../verify";
 
 describe("verifying held text against the page it came from", () => {
   it("reads a page as its visible words", () => {
@@ -50,5 +50,20 @@ describe("verifying held text against the page it came from", () => {
     expect(
       divClasses('<div class="art"></div><div class="art"></div><div class="anh x"></div>'),
     ).toBe("artx2 anh xx1");
+  });
+
+  it("decodes the entities a page uses for § and quotation marks, so they are not counted as missing", () => {
+    expect(wordsOf(visibleText("&sect; 12 &lsquo;Haus&rsquo; caf&eacute;"))).toEqual([
+      "12",
+      "haus",
+      "café",
+    ]);
+  });
+
+  it("shows the raw markup where a missing run begins", () => {
+    const html =
+      '<div class="x">vorher</div><div class="ab">Liste <b>der</b> Staaten</div><div>nachher</div>';
+    expect(htmlAround(html, "5 words: liste der staaten", 20)).toContain('<div class="ab">Liste');
+    expect(htmlAround(html, "5 words: gibtesnicht", 20)).toBe("");
   });
 });
