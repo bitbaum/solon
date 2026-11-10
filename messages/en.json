@@ -1283,7 +1283,11 @@
       "title": "Law",
       "intro": "The law that applies in {place}, nearest first. Open one to read it and propose changes.",
       "none": "Solon does not hold the law of {place} yet.",
-      "count": "{count, plural, =0 {No texts yet} one {# law in force} other {# laws in force}}",
+      "count": "{count, plural, one {# law in force} other {# laws in force}}",
+      "registered": "{count, plural, one {# act registered} other {# acts registered}}",
+      "nothing": "No laws held yet",
+      "textsNotHeld": "Texts not held yet.",
+      "moreRegistered": "{count, plural, one {# more act registered} other {# more acts registered}}, texts not held yet.",
       "communes": "Communes ({count})"
     },
     "parts": {
