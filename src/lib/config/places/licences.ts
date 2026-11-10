@@ -64,4 +64,11 @@ export const LICENCES = [
   // structure, names, identifiers, official figures with their publisher). Admitting the full
   // text of acts is a Register decision still to be taken; no law-text source names this class yet.
   { spdx: "LicenseRef-so-official-facts", requiresAttribution: true, shareAlike: false },
+  // The President of South Ossetia's site: "Все материалы Официального сайта Президента Республики
+  // Южная Осетия могут быть воспроизведены в любых средствах массовой информации, на серверах сети
+  // Интернет или на любых иных носителях без каких-либо ограничений по объему и срокам публикации
+  // … Единственным условием перепечатки и ретрансляции является ссылка на первоисточник."
+  // Read 2026-11-10 through the site's REST API (page "Об использовании информации сайта",
+  // modified 2022-01-03). CC BY's obligation, in the site's own words.
+  { spdx: "LicenseRef-so-president-site-reuse", requiresAttribution: true, shareAlike: false },
 ] satisfies readonly Licence[];

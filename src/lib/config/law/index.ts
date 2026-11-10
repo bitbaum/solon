@@ -86,6 +86,11 @@ export interface LawAuthority {
   /** The authority whose law also applies wherever this one's does: a commune's canton or country. */
   within?: string;
   /**
+   * Speaks for a whole state authority whose place has no ISO 3166-1 code (a de facto one), so it
+   * stands at the top of its own tree as a country does, under no other authority.
+   */
+  topLevel?: true;
+  /**
    * A union of countries: the ISO 3166-1 codes of its members. Its law applies in each, so it is
    * the layer above every member's own law (the European Union above Estonia and Luxembourg).
    */
@@ -131,6 +136,14 @@ export const LAW_AUTHORITIES: readonly LawAuthority[] = [
   // Other countries: a key that never collides with a canton's (Luxembourg is not Lucerne, `lu`).
   { key: "lux", label: "Luxembourg", place: { scheme: "iso_3166_1", value: "LU" } },
   { key: "ee", label: "Estonia", place: { scheme: "iso_3166_1", value: "EE" } },
+  // A place with no ISO code (`so` is Solothurn's key, so the key is the Republic's own abbreviation): the Republic's own authorities' law, its place the Wikidata item
+  // the Places pack identifies the nation by.
+  {
+    key: "rso",
+    label: "South Ossetia",
+    place: { scheme: "wikidata", value: "Q23427" },
+    topLevel: true,
+  },
   {
     key: "uk",
     label: "United Kingdom",
@@ -755,6 +768,81 @@ export const RIIGITEATAJA = {
     käskkiri: "decree",
     "rahvusvaheline leping": "treaty",
   } as Readonly<Record<string, ActKind>>,
+} as const;
+
+/**
+ * The Republic of South Ossetia's acts as its Parliament publishes them
+ * (parliamentrso.org, a Drupal site): the Constitution as one page, and three
+ * listings of acts by kind (taxonomy terms), each act a page `/node/<id>` whose
+ * body is the text. Read 2026-11-10. robots.txt asks every robot for a
+ * 90-second crawl-delay (it disallows search, admin and system paths, not
+ * these), which the reader honours, so a full register is about an hour and a
+ * half and a full load of texts many runs. The site states no licence and no
+ * status of an act: an act it lists is recorded as published, and amendments
+ * are acts of their own ("О внесении изменений …"), not consolidated texts.
+ * docs/research/2026-11-south-ossetia-sources.md §2.1.
+ */
+export const PARLIAMENTRSO = {
+  key: "parliamentrso",
+  authority: "rso",
+  publisher: "Парламент Республики Южная Осетия (Parliament of the Republic of South Ossetia)",
+  homepage: "https://parliamentrso.org",
+  robotsUrl: "https://parliamentrso.org/robots.txt",
+  /** `{term}` is a taxonomy term, `{page}` the listing page from 0; ten acts a page. */
+  listingUrl: "https://parliamentrso.org/taxonomy/term/{term}?page={page}",
+  /** `{id}` is a node number. */
+  pageUrl: "https://parliamentrso.org/node/{id}",
+  hosts: ["parliamentrso.org"],
+  userAgent: "Solon law reader (solon.orangecat.ch)",
+  licenceSpdx: "LicenseRef-so-official-facts",
+  locale: "ru",
+  textStatus: "authentic" as ActTextStatus,
+  /** The three listings under "Законодательство": laws, constitutional laws, resolutions. */
+  terms: [
+    { term: "2", label: "Законы", kind: "statute" },
+    { term: "1", label: "Конституционные законы", kind: "statute" },
+    { term: "16", label: "Постановления", kind: "decree" },
+  ] as readonly { term: string; label: string; kind: ActKind }[],
+  /** The Constitution, a page of its own that no listing carries (its title as the page's h1). */
+  constitution: {
+    id: "3567",
+    title: "Конституция Республики Южная Осетия",
+    kind: "constitution" as ActKind,
+  },
+} as const;
+
+/**
+ * The President's decrees, treaties and documents from presidentruo.org, a
+ * WordPress site with its REST API open (`/wp-json/wp/v2/posts`), no
+ * crawl-delay; robots.txt disallows only /wp-admin/. Counts as the API stated
+ * on 2026-11-10: decrees 1,832 (category 7), documents 245 (5), treaties 5
+ * (6), the Constitution 1 (14); a post can sit in several. The site's page
+ * "Об использовании информации сайта" (read through the API 2022-01-03 version)
+ * allows reproduction "без каких-либо ограничений по объему и срокам
+ * публикации", the only condition being "ссылка на первоисточник".
+ */
+export const PRESIDENTRUO = {
+  key: "presidentruo",
+  authority: "rso",
+  publisher: "Президент Республики Южная Осетия (President of the Republic of South Ossetia)",
+  homepage: "https://presidentruo.org",
+  /** `{category}`, `{page}` from 1, 100 posts a page. */
+  postsUrl:
+    "https://presidentruo.org/wp-json/wp/v2/posts?categories={category}&per_page=100&page={page}&order=asc&orderby=date&_fields=id,date,link,title",
+  termsPageUrl: "https://presidentruo.org/ob-ispolzovanii-informacii-sajta/",
+  hosts: ["presidentruo.org"],
+  userAgent: "Solon law reader (solon.orangecat.ch)",
+  licenceSpdx: "LicenseRef-so-president-site-reuse",
+  locale: "ru",
+  textStatus: "authentic" as ActTextStatus,
+  /** The categories read, in this order; a post found in several keeps the first kind. */
+  categories: [
+    { category: "7", label: "Указы", kind: "decree" },
+    { category: "5", label: "Документы", kind: "decree" },
+    { category: "6", label: "Договоры", kind: "treaty" },
+    { category: "14", label: "Конституция", kind: "constitution" },
+  ] as readonly { category: string; label: string; kind: ActKind }[],
+  pauseMs: 1000,
 } as const;
 
 /**

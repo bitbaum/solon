@@ -27,7 +27,7 @@ export const unionOf = (country: string): LawAuthority | undefined =>
 export function levelOf(authority: LawAuthority): PlaceLevel {
   if (authority.members) return "union";
   if (authority.within) return "commune";
-  if (authority.place?.scheme === "iso_3166_1") return "country";
+  if (authority.place?.scheme === "iso_3166_1" || authority.topLevel) return "country";
   return authority.place === null ? "shared" : "region";
 }
 
@@ -41,7 +41,7 @@ export function parentOf(key: string): LawAuthority | null {
   if (authority.within) return authorityOf(authority.within) ?? null;
   const level = levelOf(authority);
   if (level === "union") return null;
-  if (level === "country") return unionOf(authority.place!.value) ?? null;
+  if (level === "country") return unionOf(authority.place!.value) ?? null; // no union holds a `topLevel` place
   const country = countryOf(key);
   return (country && countryAuthority(country)) || null;
 }

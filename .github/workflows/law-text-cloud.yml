@@ -16,7 +16,21 @@ on:
       source:
         description: "Whose laws"
         type: choice
-        options: [eurlex, ukleg, ris, gii, gcnh, wyoleg, legilux, riigiteataja, municipal, lexwork]
+        options:
+          [
+            eurlex,
+            ukleg,
+            ris,
+            gii,
+            gcnh,
+            wyoleg,
+            legilux,
+            riigiteataja,
+            parliamentrso,
+            presidentruo,
+            municipal,
+            lexwork,
+          ]
         default: eurlex
       lang:
         description: "Language to read"
