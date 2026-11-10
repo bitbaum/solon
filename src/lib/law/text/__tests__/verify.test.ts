@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { coverage, visibleText, wordsOf } from "../verify";
+import { coverage, divClasses, missingRuns, visibleText, wordsOf } from "../verify";
 
 describe("verifying held text against the page it came from", () => {
   it("reads a page as its visible words", () => {
@@ -27,5 +27,22 @@ describe("verifying held text against the page it came from", () => {
 
   it("treats an empty page as fully covered rather than dividing by zero", () => {
     expect(coverage([], wordsOf("text")).ratio).toBe(1);
+  });
+
+  it("shows a long block that was not kept, not a scatter of missing words", () => {
+    const page = wordsOf(
+      "art 1 zweck anhang eins diese liste nennt die rechtsakte der union nummer eins nummer zwei nummer drei art 2 schluss",
+    );
+    const stored = wordsOf("art 1 zweck art 2 schluss");
+    const runs = missingRuns(page, stored, 5);
+    expect(runs).toHaveLength(1);
+    expect(runs[0]).toMatch(/^\d+ words: anhang eins diese liste/);
+    expect(missingRuns(page, page, 5)).toEqual([]);
+  });
+
+  it("names the div classes a page is built from, commonest first", () => {
+    expect(
+      divClasses('<div class="art"></div><div class="art"></div><div class="anh x"></div>'),
+    ).toBe("artx2 anh xx1");
   });
 });

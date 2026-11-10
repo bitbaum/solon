@@ -86,6 +86,55 @@ export function coverage(page: string[], stored: string[], top = 15): Coverage {
   };
 }
 
+/**
+ * Where the page has text the provisions lack, in the page's own order: the first runs of at least
+ * `min` words in a row that are missing, each as the words themselves. A scattering of missing words
+ * is page furniture or footnotes; a long run is a block of the act that was not kept.
+ */
+export function missingRuns(
+  page: string[],
+  stored: string[],
+  min = 8,
+  take = 3,
+  show = 30,
+): string[] {
+  const left = counted(stored);
+  const gone: boolean[] = page.map((w) => {
+    const n = left.get(w) ?? 0;
+    if (n > 0) {
+      left.set(w, n - 1);
+      return false;
+    }
+    return true;
+  });
+  const runs: string[] = [];
+  let start = -1;
+  for (let i = 0; i <= gone.length; i++) {
+    if (i < gone.length && gone[i]) {
+      if (start < 0) start = i;
+      continue;
+    }
+    if (start >= 0 && i - start >= min && runs.length < take) {
+      runs.push(`${i - start} words: ${page.slice(start, Math.min(i, start + show)).join(" ")}`);
+    }
+    start = -1;
+  }
+  return runs;
+}
+
+/** The commonest `<div class>` names on a page, so a block the cutter does not know shows up. */
+export function divClasses(html: string, top = 10): string {
+  const m = new Map<string, number>();
+  for (const [, name] of html.matchAll(/<div\b[^>]*\bclass="([^"]+)"/g)) {
+    m.set(name!, (m.get(name!) ?? 0) + 1);
+  }
+  return [...m.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, top)
+    .map(([name, n]) => `${name}x${n}`)
+    .join(" ");
+}
+
 export interface VerifyOptions {
   authority: string;
   /** How many acts to read again. */
@@ -101,6 +150,9 @@ export interface VerifiedAct {
   url: string;
   provisions: number;
   coverage?: Coverage;
+  /** Long runs of page words the provisions lack, and the page's div classes. */
+  runs?: string[];
+  classes?: string;
   short: boolean;
   error?: string;
 }
