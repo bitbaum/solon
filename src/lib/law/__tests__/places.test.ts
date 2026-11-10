@@ -76,6 +76,7 @@ describe("an act as Markdown", () => {
         kind: "communal_act",
         inForce: true,
         statusStated: true,
+        titleDerived: false,
         title: "Gemeindeordnung",
         systematicNumber: "1.1-1",
         officialUrl: null,

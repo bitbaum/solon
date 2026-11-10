@@ -55,6 +55,8 @@ export interface ActRow {
    */
   statusStated?: boolean;
   title: string;
+  /** True when the title is Solon's, built from the act's own text because the publisher gives none: shown as such. */
+  titleDerived?: boolean;
   /** BCP 47 language of the title. */
   locale: string;
   /** What names this act in its register: scheme (config ACT_IDENTIFIER_SCHEMES) and value. */
@@ -287,6 +289,7 @@ const nameRow = (actId: string, act: ActRow, sourceId: string) => ({
   locale: act.locale,
   kind: "title",
   text: act.title,
+  derived: act.titleDerived ?? false,
   sourceId,
 });
 const numberRow = (actId: string, value: string, sourceId: string) => ({

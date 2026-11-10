@@ -56,14 +56,32 @@ const DATE = new RegExp(
   "gi",
 );
 
-/** The last "6 ноября 2026 г." in the text's closing lines: the day a decree is signed. */
-export function signedOn(text: string): string | null {
+/** The last "6 ноября 2026 г." in the text's closing lines: the day a decree is signed, as ISO and as printed. */
+export function closingDate(text: string): { iso: string; printed: string } | null {
   const tail = text.slice(-600);
   let last: RegExpExecArray | null = null;
   for (const m of tail.matchAll(DATE)) last = m;
   if (!last) return null;
   const month = MONTHS[last[2]!.toLowerCase()]!;
-  return `${last[3]}-${month}-${last[1]!.padStart(2, "0")}`;
+  return {
+    iso: `${last[3]}-${month}-${last[1]!.padStart(2, "0")}`,
+    printed: last[0].trim(),
+  };
+}
+
+/** The day a decree is signed (ISO), from its closing lines. */
+export const signedOn = (text: string): string | null => closingDate(text)?.iso ?? null;
+
+/**
+ * A title for an act the site titles with a bare type word ("Указ"): the word with the day and number
+ * the act itself prints in its closing lines, as printed ("Указ от 27 апреля 2021 г."). Null when the
+ * act prints no date: nothing is made up.
+ */
+export function titleFromBody(typeWord: string, text: string): string | null {
+  const date = closingDate(text);
+  if (!date) return null;
+  const number = numberOf(text);
+  return `${typeWord} от ${date.printed}${number ? ` № ${number}` : ""}`;
 }
 
 /** The number the authority gave the act, "№494", from the closing lines or the header; null when it prints none. */

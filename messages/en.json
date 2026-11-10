@@ -1430,6 +1430,7 @@
       "askAbout": "Ask the law about this",
       "morePlace": "More laws of {place}",
       "asMarkdown": "For machines: Markdown",
+      "titleDerived": "This title was built by Solon from the act's closing lines. The publisher gives the act no title beyond its type.",
       "contents": "{count, plural, one {Contents: # provision} other {Contents: # provisions}}"
     },
     "kinds": {

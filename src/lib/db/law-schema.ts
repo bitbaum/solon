@@ -118,6 +118,8 @@ export const legalActNames = pgTable(
     /** Key in config ACT_NAME_KINDS. */
     kind: text("kind").notNull(),
     text: text("text").notNull(),
+    /** True when Solon built the title from the act's own text because the publisher gives none. */
+    derived: boolean("derived").notNull().default(false),
     sourceId: text("source_id").notNull(),
     recordedAt: recordedAt(),
     supersededAt: supersededAt(),
