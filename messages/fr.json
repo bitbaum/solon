@@ -469,6 +469,11 @@
       "source": "Le code source"
     }
   },
+  "NotFound": {
+    "kicker": "Introuvable",
+    "title": "Cette page n’existe pas",
+    "lede": "L’adresse est peut-être mal écrite, ou l’acte, le lieu ou la statistique qu’elle désigne n’existe pas (encore) dans Solon. L’un de ces liens peut vous aider."
+  },
   "Credits": {
     "metaTitle": "Crédits photo — Solon",
     "metaDescription": "Qui a pris les photographies de ce site, et sous quelle licence.",

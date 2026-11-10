@@ -469,6 +469,11 @@
       "source": "The source code"
     }
   },
+  "NotFound": {
+    "kicker": "Not found",
+    "title": "We can’t find that page",
+    "lede": "The address may be misspelled, or the law, place or statistic it names may not exist in Solon (yet). These may help instead."
+  },
   "Credits": {
     "metaTitle": "Photo credits — Solon",
     "metaDescription": "Who made the photographs on this site, and under what licence.",
