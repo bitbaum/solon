@@ -1,74 +1,35 @@
 /**
- * Solon's mark lives in ONE file: brand/solon-mark.svg. This script turns it
- * into everything else, so changing the logo is replacing that drawing and
- * running
+ * Solon's mark is the owl in @bitbaum/design-tokens/marks (installed here as
+ * @fleet/design-tokens). This script writes Solon's static assets from it:
  *
- *   pnpm run brand            # data + SVG icons (what CI checks)
+ *   pnpm run brand            # SVG icons and exports (what CI checks)
  *   pnpm run brand -- --png   # also the PNG and ICO rasters (needs Chromium)
  *
  * It writes:
- *   src/lib/brand/mark.ts        the path, as data — <Logo>, the share card
  *   src/app/icon.svg             the favicon (Next's file convention)
  *   public/app-icons/icon.svg    the app icon
  *   public/app-icons/*.png       192, 512, maskable 512   (--png)
  *   src/app/favicon.ico          16 + 32 + 48             (--png)
  *   src/app/apple-icon.png       180, the iOS home screen  (--png)
  *   brand/export/*               mark and tile in ink, white and accent, for
- *                                decks, press and OrangeCat's project listing
+ *                                decks, press and anywhere outside the fleet
  *
- * The drawing must be ONE filled path (the mark is one colour; holes are cut
- * with fill-rule evenodd). Export from any editor as plain SVG with outlined,
- * flattened shapes, merged into a single compound path.
+ * To change the owl, import a new drawing into the package (its `marks:import`
+ * script), release it, raise the dependency here and run this. See brand/README.md.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = join(import.meta.dirname, "..");
-const src = readFileSync(join(root, "brand/solon-mark.svg"), "utf8");
-
-const viewBox = /viewBox="([^"]+)"/
-  .exec(src)?.[1]
-  .trim()
-  .split(/[\s,]+/)
-  .map(Number);
-const paths = [...src.matchAll(/<path\b[^>]*>/g)].map((m) => m[0]);
-if (!viewBox || viewBox.length !== 4) throw new Error("brand/solon-mark.svg: no viewBox");
-if (paths.length !== 1) {
-  throw new Error(
-    `brand/solon-mark.svg: expected one <path>, found ${paths.length}. Merge the shapes into one compound path.`,
-  );
-}
-if (/transform=/.test(src)) throw new Error("brand/solon-mark.svg: flatten transforms first");
-const d = /\sd="([^"]+)"/.exec(paths[0])?.[1];
-if (!d) throw new Error("brand/solon-mark.svg: the path has no d");
-const fillRule = /fill-rule="(evenodd|nonzero)"/.exec(paths[0])?.[1] ?? "nonzero";
-
-writeFileSync(
-  join(root, "src/lib/brand/mark.ts"),
-  `/**
- * GENERATED from brand/solon-mark.svg by \`pnpm run brand\`. Do not edit:
- * change the drawing and run the script.
- */
-
-export const SOLON_MARK = {
-  name: "Solon",
-  viewBox: [${viewBox.join(", ")}] as const,
-  fillRule: "${fillRule}" as "evenodd" | "nonzero",
-  d: "${d}",
-};
-`,
-);
-
-// Imported after mark.ts is written so the icons use the drawing just read.
-const { iconSvg, markSvg, ICON_STYLE } = await import("../src/lib/brand/svg.ts");
+const { iconSvg, markSvg, ICON_INK } = await import("../src/lib/brand/svg.ts");
 
 writeFileSync(join(root, "src/app/icon.svg"), iconSvg());
 writeFileSync(join(root, "public/app-icons/icon.svg"), iconSvg());
 
 const out = join(root, "brand/export");
 mkdirSync(out, { recursive: true });
-const inks = { ink: "#141414", white: "#ffffff", accent: ICON_STYLE.ink };
+const inks = { ink: "#141414", white: "#ffffff", accent: ICON_INK };
 for (const [name, color] of Object.entries(inks)) {
   writeFileSync(join(out, `solon-mark-${name}.svg`), markSvg({ color }));
 }
@@ -123,6 +84,5 @@ if (process.argv.includes("--png")) {
   await browser.close();
 }
 console.log(
-  "brand: wrote mark.ts, icons and exports" +
-    (process.argv.includes("--png") ? " (with rasters)" : ""),
+  "brand: wrote icons and exports" + (process.argv.includes("--png") ? " (with rasters)" : ""),
 );
