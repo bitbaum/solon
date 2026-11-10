@@ -110,16 +110,28 @@ async function main(): Promise<number> {
       sample: flag("limit") ? Number(flag("limit")) : 30,
       onProgress: (message) => console.error(message),
     });
+    // One line an act, the lowest first, then the totals: the workflow shows only the end of the output.
+    const lines = [...report.acts]
+      .sort((x, y) => (x.coverage?.ratio ?? -1) - (y.coverage?.ratio ?? -1))
+      .map((a) =>
+        a.coverage
+          ? `${(a.coverage.ratio * 100).toFixed(1)}% page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
+            `${a.title.slice(0, 40)} | missing: ${a.coverage.missing
+              .slice(0, 8)
+              .map((m) => `${m.word}x${m.count}`)
+              .join(" ")}`
+          : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
+      );
+    console.log(lines.join("\n"));
     console.log(
-      JSON.stringify(
-        {
-          ...report,
-          acts: report.acts.filter((a) => a.short || a.error).slice(0, 30),
-          shortOrFailedShownOf: report.acts.length,
-        },
-        null,
-        2,
-      ),
+      JSON.stringify({
+        authority: report.authority,
+        inForceHtmlVersions: report.inForceHtmlVersions,
+        sampled: report.sampled,
+        meanRatio: Number(report.meanRatio.toFixed(4)),
+        short: report.short,
+        failed: report.failed,
+      }),
     );
     return report.short > 0 || report.failed > 0 ? 1 : 0;
   }
