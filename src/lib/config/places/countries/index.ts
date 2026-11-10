@@ -1,6 +1,7 @@
 import type { CountryPackInput } from "../schema";
 import { estonia } from "./estonia";
 import { liechtenstein } from "./liechtenstein";
+import { southOssetia } from "./south_ossetia";
 import { switzerland } from "./switzerland";
 import { unitedStates } from "./united_states";
 
@@ -14,4 +15,5 @@ export const COUNTRY_PACKS: readonly CountryPackInput[] = [
   liechtenstein,
   estonia,
   unitedStates,
+  southOssetia,
 ];

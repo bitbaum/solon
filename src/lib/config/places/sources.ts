@@ -1247,6 +1247,35 @@ export const SOURCES: readonly SourceInput[] = [
     adapter: "fixture",
     packs: ["united_states"],
   },
+  {
+    // Kept by hand, citing where each line was read (2026-11-10). The five
+    // administrative-territorial units are those of the Constitution of the
+    // Republic of South Ossetia, Art. 3 para. 2 ("состоит из пяти
+    // административно-территориальных единиц: города Цхинвал, Дзауского,
+    // Знаурского, Ленингорского и Цхинвальского районов"), at
+    // https://parliamentrso.org/node/3567; the Russian names are the ones the
+    // authority's statistics office prints
+    // (https://ugosstat.ru/wp-content/uploads/2026/06/spravochnik-za-2025-g.pdf,
+    // table 1.2). Wikidata item numbers and the Ossetian, English, German,
+    // French and Italian names (attributed as names others use) are Wikidata's,
+    // read from https://www.wikidata.org/wiki/Special:EntityData/<item>.json
+    // (CC0). Nothing about who claims, administers or recognises the
+    // territory is stated here: those rows come from their own sources.
+    key: "so-constitution-units",
+    publisher: "Parliament of the Republic of South Ossetia; Wikidata",
+    dataset:
+      "Constitution of the Republic of South Ossetia, Art. 1 and 3 (administrative-territorial units); item numbers and names from Wikidata",
+    homepage: "https://parliamentrso.org/node/3567",
+    licence: "LicenseRef-so-official-facts",
+    attribution: {
+      en: "Constitution of the Republic of South Ossetia, Art. 3 (parliamentrso.org); Wikidata (CC0)",
+      ru: "Конституция Республики Южная Осетия, ст. 3 (parliamentrso.org); Wikidata (CC0)",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit.
+    cadence: "0 6 3 1 *",
+    adapter: "fixture",
+    packs: ["south_ossetia"],
+  },
   worldBankSource("switzerland", "CH"),
   worldBankSource("liechtenstein", "LI"),
   worldBankSource("estonia", "EE"),

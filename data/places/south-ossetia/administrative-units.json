@@ -1,0 +1,290 @@
+{
+  "pack": "south_ossetia",
+  "jurisdictions": [
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "levelKey": "nation",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "Республика Южная Осетия",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Хуссар Ирыстон",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "South Ossetia",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Südossetien",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "script": "Latn",
+          "name": "Ossétie du Sud-Alanie",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "script": "Latn",
+          "name": "Ossezia del Sud",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q79863"
+      },
+      "levelKey": "administrative_unit",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "город Цхинвал",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Цхинвал",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "Tskhinval",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Zchinwali",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "script": "Latn",
+          "name": "Tskhinvali",
+          "nameType": "common"
+        },
+        {
+          "locale": "it",
+          "script": "Latn",
+          "name": "Tskhinvali",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q2995277"
+      },
+      "levelKey": "administrative_unit",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "Дзауский район",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Дзауы район",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "Dzau District",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Rajon Dsau",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q1815665"
+      },
+      "levelKey": "administrative_unit",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "Знаурский район",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Знауыры район",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "Znaur District",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Rajon Snaur",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q1472064"
+      },
+      "levelKey": "administrative_unit",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "Ленингорский район",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Ленингоры район",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "Leningor District",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Rajon Leningor",
+          "nameType": "common"
+        }
+      ]
+    },
+    {
+      "ref": {
+        "scheme": "wikidata",
+        "value": "Q12870952"
+      },
+      "levelKey": "administrative_unit",
+      "names": [
+        {
+          "locale": "ru",
+          "script": "Cyrl",
+          "name": "Цхинвальский район",
+          "nameType": "self"
+        },
+        {
+          "locale": "os",
+          "script": "Cyrl",
+          "name": "Цхинвалы район",
+          "nameType": "common"
+        },
+        {
+          "locale": "en",
+          "script": "Latn",
+          "name": "Tskhinvali District",
+          "nameType": "common"
+        },
+        {
+          "locale": "de",
+          "script": "Latn",
+          "name": "Rajon Zchinwal",
+          "nameType": "common"
+        },
+        {
+          "locale": "fr",
+          "script": "Latn",
+          "name": "District de Tskhinvali",
+          "nameType": "common"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "scheme": "wikidata",
+        "value": "Q79863"
+      },
+      "to": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "wikidata",
+        "value": "Q2995277"
+      },
+      "to": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "wikidata",
+        "value": "Q1815665"
+      },
+      "to": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "wikidata",
+        "value": "Q1472064"
+      },
+      "to": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "relation": "part_of"
+    },
+    {
+      "from": {
+        "scheme": "wikidata",
+        "value": "Q12870952"
+      },
+      "to": {
+        "scheme": "wikidata",
+        "value": "Q23427"
+      },
+      "relation": "part_of"
+    }
+  ]
+}
