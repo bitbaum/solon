@@ -34,13 +34,18 @@ const ENTITIES: Record<string, string> = {
 
 /** The text a reader sees on a page: no scripts, styles or tags, entities decoded. */
 export function visibleText(html: string): string {
-  return html
-    .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&#x([0-9a-f]+);/gi, (_, h: string) => String.fromCodePoint(parseInt(h, 16)))
-    .replace(/&#(\d+);/g, (_, d: string) => String.fromCodePoint(Number(d)))
-    .replace(/&([a-zA-Z]+);/g, (m, name: string) => ENTITIES[name] ?? m);
+  return (
+    html
+      .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, " ")
+      // The notes at the foot of a Liechtenstein page ("eingefügt durch LGBl. …") are the act's amendment
+      // history, which the provisions do not carry on purpose.
+      .replace(/<div class="fntext"[\s\S]*?<\/div>/g, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&#x([0-9a-f]+);/gi, (_, h: string) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&#(\d+);/g, (_, d: string) => String.fromCodePoint(Number(d)))
+      .replace(/&([a-zA-Z]+);/g, (m, name: string) => ENTITIES[name] ?? m)
+  );
 }
 
 /** Lower-case words of two or more letters or digits. */

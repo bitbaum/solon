@@ -40,6 +40,7 @@ on:
             recut,
             recut-eurlex,
             recut-gii,
+            recut-lilex,
             recut-municipal,
             recut-ukleg,
             legilux,

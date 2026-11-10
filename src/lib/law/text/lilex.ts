@@ -119,7 +119,7 @@ const BOUNDARY = /<div class="(?:art|tit\d?|fntext)"|<div class="sacht" style=/g
  */
 export function parseLilexProvisions(html: string): Provision[] {
   const starts = [...html.matchAll(/<div class="art">/g)].map((m) => m.index!);
-  const out: Provision[] = [];
+  const out: { at: number; provision: Provision }[] = [];
   const seen = new Set<string>();
   for (const start of starts) {
     BOUNDARY.lastIndex = start + 1;
@@ -143,10 +143,23 @@ export function parseLilexProvisions(html: string): Provision[] {
       ? afterAnchor.slice(sacht.index! + sacht[0].length)
       : afterAnchor.slice(numberEnd);
     out.push({
-      path,
-      heading: [number, title].filter(Boolean).join(" "),
-      text: blockText(body),
+      at: start,
+      provision: {
+        path,
+        heading: [number, title].filter(Boolean).join(" "),
+        text: blockText(body),
+      },
     });
+  }
+  // The text the articles do not hold: what a promulgation says before its first article, and an
+  // annex, a list or a table under a heading of its own. Without it a page keeps a fraction of
+  // its words (125 of 5,395 on one of Liechtenstein's EEA decisions). Footnotes stay out.
+  if (out.length > 0) {
+    let n = 0;
+    for (const { at, provision } of looseText(html)) {
+      n++;
+      out.push({ at, provision: { ...provision, path: `part_${n}` } });
+    }
   }
   if (out.length === 0) {
     const start = html.indexOf('<div class="htit1"');
@@ -154,8 +167,41 @@ export function parseLilexProvisions(html: string): Provision[] {
       const title = blockText(/<div class="htit1">([\s\S]*?)<\/div>/.exec(html)?.[1] ?? "");
       const notes = html.indexOf('<div class="fntext"');
       const text = blockText(html.slice(start, notes < 0 ? undefined : notes));
-      if (text) out.push({ path: WHOLE_ACT, heading: title, text });
+      if (text) out.push({ at: start, provision: { path: WHOLE_ACT, heading: title, text } });
     }
+  }
+  return out.sort((a, b) => a.at - b.at).map((o) => o.provision);
+}
+
+/**
+ * The text outside the articles, in page order, each as a provision without its path: the
+ * promulgation before the first article (the act's title lines aside), and the body under every
+ * heading that is not an article. A heading with nothing under it before the next article is just a
+ * chapter title and gives nothing.
+ */
+function looseText(html: string): { at: number; provision: Provision }[] {
+  const out: { at: number; provision: Provision }[] = [];
+  const marks = [...html.matchAll(new RegExp(BOUNDARY.source, "g"))].map((m) => ({
+    at: m.index!,
+    tag: m[0],
+  }));
+  if (marks.length === 0) return out;
+  const bodyAt = Math.max(html.indexOf("<body"), 0);
+  const first = html.slice(bodyAt, marks[0]!.at);
+  const title = /<div class="htit1">([\s\S]*?)<\/div>/.exec(first)?.[1] ?? "";
+  const preamble = blockText(
+    first.replace(/<div class="(?:htit\d|vom|tit\d?s?)"[^>]*>[\s\S]*?<\/div>/g, ""),
+  );
+  if (preamble)
+    out.push({ at: bodyAt, provision: { path: "", heading: blockText(title), text: preamble } });
+  for (const [i, mark] of marks.entries()) {
+    if (!/class="tit\d?"/.test(mark.tag)) continue;
+    const segment = html.slice(mark.at, marks[i + 1]?.at ?? html.length);
+    const head = /^<div class="tit\d?"[^>]*>([\s\S]*?)<\/div>/.exec(segment);
+    if (!head) continue;
+    const text = blockText(segment.slice(head[0].length));
+    if (text)
+      out.push({ at: mark.at, provision: { path: "", heading: blockText(head[1]!), text } });
   }
   return out;
 }

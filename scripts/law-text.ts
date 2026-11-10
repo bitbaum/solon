@@ -17,6 +17,7 @@
  *   pnpm run law:text recut [--authority lu] [--limit 2000] [--dry-run]   (cut the held cantonal acts again, from their snapshots)
  *   pnpm run law:text recut-eurlex [--limit 5000] [--dry-run]   (the same for the EU acts held)
  *   pnpm run law:text recut-municipal [--authority ch-ne-neuchatel] [--limit 5000] [--dry-run]   (the same for the communes' PDFs held)
+ *   pnpm run law:text recut-lilex [--limit 5000] [--dry-run]   (the same for Liechtenstein's acts held: the text outside the articles)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text recut-ukleg [--limit 5000] [--dry-run]   (the same for the UK acts held)
  *   pnpm run law:text verify --authority li [--limit 30]   (read a random sample of held HTML acts again and report how much of each page's words the stored text holds)
@@ -30,6 +31,7 @@ import {
   recutCantonalText,
   recutEurLexText,
   recutGiiText,
+  recutLilexText,
   recutPublisherText,
   recutUkLegText,
 } from "@/lib/law/text/recut";
@@ -330,6 +332,7 @@ async function main(): Promise<number> {
     sourceKey === "recut" ||
     sourceKey === "recut-eurlex" ||
     sourceKey === "recut-gii" ||
+    sourceKey === "recut-lilex" ||
     sourceKey === "recut-ukleg" ||
     sourceKey === "recut-municipal"
   ) {
@@ -340,9 +343,11 @@ async function main(): Promise<number> {
           ? recutUkLegText
           : sourceKey === "recut-gii"
             ? recutGiiText
-            : sourceKey === "recut-municipal"
-              ? recutPublisherText
-              : recutEurLexText;
+            : sourceKey === "recut-lilex"
+              ? recutLilexText
+              : sourceKey === "recut-municipal"
+                ? recutPublisherText
+                : recutEurLexText;
     const report = await recut(db, {
       authority: flag("authority"),
       limit: flag("limit") ? Number(flag("limit")) : undefined,
