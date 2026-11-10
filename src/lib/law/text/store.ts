@@ -36,6 +36,12 @@ export interface VersionToStore {
   source: { key: string; licenceSpdx: string; importerVersion: string };
   /** An identifier the publisher gives the act, added when the act has none of that scheme. */
   identifier?: { scheme: string; value: string };
+  /**
+   * The number the document itself prints (a commune's "Akte Nr."). It becomes the act's systematic number
+   * when the act has none, or has one an earlier reading of the same publisher's documents gave and this
+   * one differs; a number from the publisher's register is the register's and stands.
+   */
+  number?: string | null;
 }
 
 export const dayBefore = (iso: string): string => {
@@ -43,6 +49,48 @@ export const dayBefore = (iso: string): string => {
   d.setUTCDate(d.getUTCDate() - 1);
   return d.toISOString().slice(0, 10);
 };
+
+type Tx = Pick<Database, "select" | "update" | "insert">;
+
+/**
+ * Records the number a document prints as the act's systematic number, under the source that read it:
+ * when the act has none, or has one an earlier reading of the same publisher gave and this differs. A
+ * number from a register (another source) stands.
+ */
+export async function recordNumber(
+  tx: Tx,
+  actId: string,
+  number: string,
+  sourceId: string,
+  sourceKey: string,
+): Promise<void> {
+  const current = await tx
+    .select({
+      id: legalActIdentifiers.id,
+      value: legalActIdentifiers.value,
+      sourceKey: sources.sourceKey,
+    })
+    .from(legalActIdentifiers)
+    .innerJoin(sources, eq(sources.id, legalActIdentifiers.sourceId))
+    .where(
+      and(
+        eq(legalActIdentifiers.actId, actId),
+        eq(legalActIdentifiers.scheme, "systematic_number"),
+        isNull(legalActIdentifiers.supersededAt),
+      ),
+    );
+  const own = current.every((c) => c.sourceKey === sourceKey);
+  if (current.length > 0 && !(own && current.some((c) => c.value !== number))) return;
+  for (const c of current) {
+    await tx
+      .update(legalActIdentifiers)
+      .set({ supersededAt: new Date() })
+      .where(eq(legalActIdentifiers.id, c.id));
+  }
+  await tx
+    .insert(legalActIdentifiers)
+    .values({ actId, scheme: "systematic_number", value: number, sourceId });
+}
 
 /** Keeps the bytes and writes the rows, closing the version this one replaces. A dry run writes nothing. */
 export async function storeVersion(
@@ -107,6 +155,9 @@ export async function storeVersion(
           ord: i + j,
         })),
       );
+    }
+    if (version.number) {
+      await recordNumber(tx, version.actId, version.number, source!.id, version.source.key);
     }
     if (version.identifier) {
       const known = await tx

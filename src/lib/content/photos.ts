@@ -1,5 +1,6 @@
 import type { StaticImageData } from "next/image";
 import earthAtNight from "@/assets/images/earth-at-night.webp";
+import earthByDay from "@/assets/images/earth-by-day.webp";
 import landsgemeinde from "@/assets/images/landsgemeinde-glarus.webp";
 import assemblySeated from "@/assets/images/assembly-seated.webp";
 import villageKyburg from "@/assets/images/village-kyburg.webp";
@@ -30,6 +31,7 @@ export interface Photo {
 
 export type PhotoId =
   | "earthAtNight"
+  | "earthByDay"
   | "landsgemeinde"
   | "assemblySeated"
   | "village"
@@ -48,6 +50,15 @@ export const PHOTOS = {
     license: "Public domain",
     licenseUrl: null,
     source: "https://commons.wikimedia.org/wiki/File:ISS-65_Europe,_city_lights_from_space.jpg",
+  },
+  earthByDay: {
+    image: earthByDay,
+    id: "earthByDay",
+    title: "Blue Marble, Eastern Hemisphere (cropped)",
+    author: "NASA, images by Reto Stöckli",
+    license: "Public domain",
+    licenseUrl: null,
+    source: "https://commons.wikimedia.org/wiki/File:Blue_Marble_Eastern_Hemisphere.jpg",
   },
   landsgemeinde: {
     image: landsgemeinde,
@@ -133,9 +144,9 @@ export const PHOTOS = {
  * a section that says so (`alwaysDark` on FullBleed).
  */
 const LIGHT_COUNTERPART: Partial<Record<PhotoId, Photo>> = {
-  earthAtNight: PHOTOS.assemblySeated,
+  earthAtNight: PHOTOS.earthByDay,
   europeFromOrbit: PHOTOS.mountainValley,
-  city: PHOTOS.landsgemeinde,
+  city: PHOTOS.village,
 };
 
 /** The photograph for the light theme, if this one is a night shot with a counterpart. */

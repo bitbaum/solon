@@ -48,12 +48,21 @@ export interface ActRow {
   authority: string;
   kind: string;
   inForce: boolean;
+  /**
+   * False when the register does not say whether the act is in force (the Republic of South
+   * Ossetia's publishers do not): `inForce` is then only "listed and not marked withdrawn",
+   * and every page and count says the status is not stated. Absent means stated.
+   */
+  statusStated?: boolean;
   title: string;
   /** BCP 47 language of the title. */
   locale: string;
   /** What names this act in its register: scheme (config ACT_IDENTIFIER_SCHEMES) and value. */
   identity: { scheme: string; value: string };
-  /** The number its authority gave it (systematic number), when it has one. */
+  /**
+   * The number its authority gave it (systematic number), when this register states one. A register that
+   * states none removes only a number it stated itself earlier: one read from the act's own document stands.
+   */
   systematicNumber: string | null;
   /** Further identifiers the register gives the act. */
   more?: { scheme: string; value: string }[];
@@ -141,13 +150,15 @@ export async function importRegister(
 
         const places = await placeIdsByAuthority(tx);
         const known = await currentActs(tx, register.identityScheme);
+        const registerKey = register.key;
         const listed = new Set<string>();
         const newActs: (typeof legalActs.$inferInsert)[] = [];
         const newIdentifiers: (typeof legalActIdentifiers.$inferInsert)[] = [];
         const newNames: (typeof legalActNames.$inferInsert)[] = [];
         const supersedeNames: string[] = [];
         const supersedeIdentifiers: string[] = [];
-        const changedActs: { id: string; kind: string; inForce: boolean }[] = [];
+        const changedActs: { id: string; kind: string; inForce: boolean; statusStated: boolean }[] =
+          [];
 
         for (const row of rows) {
           listed.add(row.identity.value);
@@ -160,13 +171,23 @@ export async function importRegister(
               jurisdictionId: places.get(row.authority) ?? null,
               kind: row.kind,
               inForce: row.inForce,
+              statusStated: row.statusStated ?? true,
               sourceId,
             });
             addRows(id, row, sourceId, newIdentifiers, newNames);
             continue;
           }
-          if (existing.kind !== row.kind || existing.inForce !== row.inForce) {
-            changedActs.push({ id: existing.actId, kind: row.kind, inForce: row.inForce });
+          if (
+            existing.kind !== row.kind ||
+            existing.inForce !== row.inForce ||
+            existing.statusStated !== (row.statusStated ?? true)
+          ) {
+            changedActs.push({
+              id: existing.actId,
+              kind: row.kind,
+              inForce: row.inForce,
+              statusStated: row.statusStated ?? true,
+            });
           }
           if (existing.title !== row.title) {
             supersedeNames.push(existing.nameId);
@@ -183,7 +204,13 @@ export async function importRegister(
               sourceId,
             });
           }
-          if ((existing.number ?? null) !== (row.systematicNumber ?? null)) {
+          // A register that states no number removes only a number it stated itself: one read from the
+          // act's own document (store.ts, `number`) is not the register's to take away.
+          const mayChange =
+            Boolean(row.systematicNumber) ||
+            existing.numberSourceKey === undefined ||
+            existing.numberSourceKey === registerKey;
+          if (mayChange && (existing.number ?? null) !== (row.systematicNumber ?? null)) {
             if (existing.numberRowId) supersedeIdentifiers.push(existing.numberRowId);
             if (row.systematicNumber) {
               newIdentifiers.push(numberRow(existing.actId, row.systematicNumber, sourceId));
@@ -214,7 +241,13 @@ export async function importRegister(
         for (const change of changedActs) {
           await tx
             .update(legalActs)
-            .set({ kind: change.kind, inForce: change.inForce, sourceId, updatedAt: now })
+            .set({
+              kind: change.kind,
+              inForce: change.inForce,
+              statusStated: change.statusStated,
+              sourceId,
+              updatedAt: now,
+            })
             .where(eq(legalActs.id, change.id));
         }
         report.counts = {
@@ -305,10 +338,13 @@ interface KnownAct {
   actId: string;
   kind: string;
   inForce: boolean;
+  statusStated: boolean;
   title: string | undefined;
   nameId: string;
   number: string | undefined;
   numberRowId: string | undefined;
+  /** The source that gave the number: this register's, or a publisher's reading of the act's own document. */
+  numberSourceKey?: string;
   /** The act's current page at its publisher, so a changed address replaces it. */
   officialUrl?: string;
   officialUrlRowId?: string;
@@ -321,6 +357,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       actId: legalActs.id,
       kind: legalActs.kind,
       inForce: legalActs.inForce,
+      statusStated: legalActs.statusStated,
       lexfindId: legalActIdentifiers.value,
     })
     .from(legalActs)
@@ -339,6 +376,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       actId: row.actId,
       kind: row.kind,
       inForce: row.inForce,
+      statusStated: row.statusStated,
       title: undefined,
       nameId: "",
       number: undefined,
@@ -363,8 +401,10 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
       id: legalActIdentifiers.id,
       actId: legalActIdentifiers.actId,
       value: legalActIdentifiers.value,
+      sourceKey: sources.sourceKey,
     })
     .from(legalActIdentifiers)
+    .innerJoin(sources, eq(sources.id, legalActIdentifiers.sourceId))
     .where(
       and(
         eq(legalActIdentifiers.scheme, "systematic_number"),
@@ -376,6 +416,7 @@ async function currentActs(db: Reader, identityScheme: string): Promise<Map<stri
     if (known) {
       known.number = number.value;
       known.numberRowId = number.id;
+      known.numberSourceKey = number.sourceKey;
     }
   }
   const pages = await db

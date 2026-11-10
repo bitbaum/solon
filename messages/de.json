@@ -153,6 +153,7 @@
   },
   "Photos": {
     "earthAtNight": "Die Städte und Dörfer Europas bei Nacht, aus der Umlaufbahn gesehen, unter dem Leuchten des Horizonts.",
+    "earthByDay": "Die Erde bei Tag aus der Umlaufbahn: das Arabische Meer, Indien und der Golf von Bengalen unter ziehenden Wolken.",
     "landsgemeinde": "Die Landsgemeinde in Glarus: Tausende Bürgerinnen und Bürger auf dem Platz unter den Alpen entscheiden offen über ihre Gesetze.",
     "assemblySeated": "Reihen von Mitgliedern sitzen Seite an Seite an einer Versammlung unter freiem Himmel, Unterlagen in der Hand.",
     "village": "Ein kleines Dorf mit seinem Schloss an einem verschneiten Hang, aus der Luft gesehen.",
@@ -735,6 +736,8 @@
       "totals": "Erlasse in Kraft. {notInForce} als nicht mehr in Kraft geführt. Wortlaut für {withText} gespeichert.",
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
+      "rowNotStated": "{inForce} in Kraft · {notInForce} nicht · {notStated} Status vom Herausgeber nicht angegeben",
+      "totalsNotStated": "{notStated, plural, one {# weiterer Erlass wird} other {# weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
       "note": "Gemeinden kommen Sammlung für Sammlung dazu; die bisher geführten stehen in der Liste oben.",
       "readLink": "Einen Erlass finden und lesen →"
     },
@@ -751,6 +754,7 @@
       "noHits": "Nichts gefunden.",
       "hits": "{count, plural, one {# Erlass} other {# Erlasse}} gefunden",
       "notInForce": "nicht in Kraft",
+      "statusNotStated": "Status vom Herausgeber nicht angegeben",
       "coverageLink": "Was das Register führt, aus den Daten gezählt →",
       "askLink": "Dem Recht eine Frage stellen →",
       "searchLabel": "Was suchen Sie?",

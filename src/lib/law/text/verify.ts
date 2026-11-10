@@ -189,6 +189,26 @@ export const HEADER_CLASSES: Record<string, readonly string[]> = {
   li: ["htit1", "htit2", "vom", "udat", "gezf", "gezr"],
 };
 
+/**
+ * Where the act's own words are on a publisher's page, for pages whose menus, news and footers are
+ * not the act: the markup that opens the body and the one that follows it. Pages of an authority
+ * that is not here are read whole.
+ */
+export const PAGE_REGIONS: Record<string, { from: string; to: string }> = {
+  rso: { from: 'property="content:encoded">', to: '<div class="field field-name-' },
+};
+
+/** The part of a page the act's words are in. */
+export function regionOf(html: string, authority: string): string {
+  const region = PAGE_REGIONS[authority];
+  if (!region) return html;
+  const from = html.indexOf(region.from);
+  if (from < 0) return html;
+  const start = from + region.from.length;
+  const end = html.indexOf(region.to, start);
+  return html.slice(start, end < 0 ? undefined : end);
+}
+
 export interface VerifyOptions {
   authority: string;
   /** How many acts to read again. */
@@ -262,7 +282,9 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       if (!url) throw new Error("the version has no source address");
       const page = await read(url, doFetch, [new URL(url).hostname]);
       const html = new TextDecoder().decode(page.bytes);
-      const pageWords = wordsOf(visibleText(html, HEADER_CLASSES[authority] ?? []));
+      const pageWords = wordsOf(
+        visibleText(regionOf(html, authority), HEADER_CLASSES[authority] ?? []),
+      );
       const storedWords = wordsOf(provisions.map((p) => `${p.heading} ${p.text}`).join(" "));
       const cov = coverage(pageWords, storedWords);
       const act: VerifiedAct = {

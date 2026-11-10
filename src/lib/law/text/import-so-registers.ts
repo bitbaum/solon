@@ -7,9 +7,10 @@
  * a retrieval lists and reports what a later one no longer does, so a run
  * limited to some pages is a smaller listing, never a retraction.
  *
- * Neither publisher states whether an act is still in force. Every act is
- * recorded `inForce: true`, meaning only "published by the authority and not
- * marked withdrawn by it"; the coverage figures for this authority say so.
+ * Neither publisher states whether an act is still in force, so every act is
+ * recorded with `statusStated: false` (its `inForce` then only keeps it
+ * findable: "listed by its authority and not marked withdrawn"); coverage and
+ * the act pages say the status is not stated.
  */
 import { PARLIAMENTRSO, PRESIDENTRUO } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
@@ -76,6 +77,7 @@ export async function registerParliament(
     authority: config.authority,
     kind,
     inForce: true,
+    statusStated: false,
     title,
     locale: config.locale,
     identity: { scheme: "publisher_ref", value: `${config.key}:${id}` },
@@ -159,6 +161,7 @@ export async function registerPresident(
           authority: config.authority,
           kind,
           inForce: true,
+          statusStated: false,
           title: post.title,
           locale: config.locale,
           identity: { scheme: "publisher_ref", value: `${config.key}:${post.id}` },

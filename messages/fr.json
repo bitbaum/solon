@@ -153,6 +153,7 @@
   },
   "Photos": {
     "earthAtNight": "Les villes et villages d'Europe illuminés la nuit, vus depuis l'orbite sous la lueur de l'horizon.",
+    "earthByDay": "La Terre de jour vue depuis l'orbite : la mer d'Arabie, l'Inde et le golfe du Bengale sous des nuages mouvants.",
     "landsgemeinde": "La Landsgemeinde de Glaris : des milliers de citoyennes et citoyens réunis sur la place sous les Alpes, décidant de leurs lois à ciel ouvert.",
     "assemblySeated": "Des rangées de membres assis côte à côte lors d'une assemblée en plein air, documents en main.",
     "village": "Un petit village et son château sur une colline enneigée, vus du ciel.",
@@ -735,6 +736,8 @@
       "totals": "actes en vigueur. {notInForce} listés comme n'étant plus en vigueur. Texte conservé pour {withText}.",
       "authorities": "Autorités",
       "row": "{inForce} en vigueur · {notInForce} non",
+      "rowNotStated": "{inForce} en vigueur · {notInForce} non · {notStated} statut non indiqué par l'éditeur",
+      "totalsNotStated": "{notStated, plural, one {# autre acte est listé} other {# autres actes sont listés}} par des éditeurs qui n'indiquent pas s'ils sont en vigueur.",
       "note": "Les communes s'ajoutent un recueil à la fois ; celles détenues jusqu'ici figurent dans la liste ci-dessus.",
       "readLink": "Trouver et lire un acte →"
     },
@@ -751,6 +754,7 @@
       "noHits": "Rien trouvé.",
       "hits": "{count, plural, one {# acte trouvé} other {# actes trouvés}}",
       "notInForce": "pas en vigueur",
+      "statusNotStated": "statut non indiqué par l'éditeur",
       "coverageLink": "Ce que le registre liste, compté à partir des données →",
       "askLink": "Poser une question au droit →",
       "searchLabel": "Que cherchez-vous ?",

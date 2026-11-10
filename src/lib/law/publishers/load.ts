@@ -15,6 +15,7 @@
  * identity, and the version's source is the copy's address, which names the
  * archive and the day of the capture (`archive-copy.ts`).
  */
+import { numberPrintedIn } from "./document-number";
 import { provisionsOfPdf } from "@/lib/law/text/pdf-provisions";
 import { and, asc, eq, isNull } from "drizzle-orm";
 import { sources } from "@/lib/db/places-schema";
@@ -23,7 +24,7 @@ import type { Database } from "@/lib/db/client";
 import { legalActIdentifiers, legalActs, legalActVersions } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow } from "../register/import";
-import { storeVersion, dayBefore } from "../text/store";
+import { storeVersion, dayBefore, recordNumber } from "../text/store";
 import { archiveCopyOf } from "../archive-copy";
 import { read } from "./http";
 import type { PublisherAdapter, VersionRef } from "./types";
@@ -77,6 +78,23 @@ export async function loadPublisher(
   const doFetch = options.fetchImpl ?? fetch;
   const say = options.onProgress ?? (() => undefined);
   const pause = options.pauseMs ?? 1500;
+  /** An act whose document is unchanged still gets the number that document prints, under the source that read it. */
+  const readNumberOfHeld = async (actId: string, bytes: Uint8Array) => {
+    const [open] = await db
+      .select({ sourceId: legalActVersions.sourceId })
+      .from(legalActVersions)
+      .where(
+        and(
+          eq(legalActVersions.actId, actId),
+          eq(legalActVersions.lang, adapter.locale),
+          isNull(legalActVersions.inForceTo),
+        ),
+      );
+    if (!open || !adapter.numberInDocument) return;
+    const { text } = await provisionsOfPdf(bytes, adapter.locale);
+    const number = numberPrintedIn(text, adapter.numberInDocument);
+    if (number) await recordNumber(db, actId, number, open.sourceId, adapter.key);
+  };
   const report: LoadReport = {
     status: options.dryRun ? "dry_run" : "applied",
     acts: 0,
@@ -100,7 +118,7 @@ export async function loadPublisher(
     title: act.title,
     locale: adapter.locale,
     identity: { scheme: "publisher_ref", value: `${adapter.key}:${act.ref}` },
-    systematicNumber: act.ref,
+    systematicNumber: act.number ?? null,
     more: [{ scheme: "official_url", value: act.pageUrl }],
   }));
   await importRegister(db, {
@@ -186,9 +204,13 @@ export async function loadPublisher(
                 isNull(legalActVersions.inForceTo),
               ),
             );
-          if (open?.sha === sha256Hex(bytes)) continue;
+          if (open?.sha === sha256Hex(bytes)) {
+            // The document is the one already held: it may still print the number the act lacks.
+            if (adapter.numberInDocument) await readNumberOfHeld(act.actId, bytes);
+            continue;
+          }
         }
-        const { provisions, scanned } = await provisionsOfPdf(bytes, adapter.locale, () =>
+        const { provisions, scanned, text } = await provisionsOfPdf(bytes, adapter.locale, () =>
           say(`${document.url}: no text layer, reading by OCR`),
         );
         if (provisions.length === 0) {
@@ -211,6 +233,9 @@ export async function loadPublisher(
             // A copy records the copy's address, which names the archive and the day it was captured.
             url: fetched.url,
             provisions,
+            number: adapter.numberInDocument
+              ? numberPrintedIn(text, adapter.numberInDocument)
+              : null,
             source: {
               key: adapter.key,
               licenceSpdx: adapter.licenceSpdx,

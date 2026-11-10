@@ -130,6 +130,14 @@ describe.skipIf(!RUN)("South Ossetia's registers (real database)", () => {
       );
     expect(official).toBeDefined();
 
+    const flags = await db
+      .select({ inForce: legalActs.inForce, statusStated: legalActs.statusStated })
+      .from(legalActs)
+      .innerJoin(legalActIdentifiers, eq(legalActIdentifiers.actId, legalActs.id))
+      .where(eq(legalActIdentifiers.value, `parliamentrso:${N + 1}`));
+    // Neither publisher says whether an act is in force: the register must not claim it.
+    expect(flags).toEqual([{ inForce: true, statusStated: false }]);
+
     const again = await registerParliament(db, options);
     expect(again.register.counts.actsInserted).toBe(0);
     expect(again.register.counts.namesInserted).toBe(0);

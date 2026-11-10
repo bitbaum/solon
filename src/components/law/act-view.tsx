@@ -12,6 +12,7 @@ import type { AmendmentSummary } from "@/lib/law/amend/store";
 import AmendmentList from "./amendment-list";
 import OfficialRoutes from "./official-routes";
 import PlaceTrail from "./place-trail";
+import { statusLabel } from "./status-label";
 import { authorityName, readerAuthorityNames } from "@/lib/law/authority-names";
 
 interface ActViewProps {
@@ -55,7 +56,7 @@ export default async function ActViewPage({
     authorityName(names, act.authority),
     act.systematicNumber,
     t(`kinds.${act.kind}` as `kinds.${ActKind}`),
-    act.inForce ? null : t("index.notInForce"),
+    statusLabel(act, t),
   ]
     .filter(Boolean)
     .join(" · ");
