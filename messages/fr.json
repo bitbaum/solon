@@ -20,7 +20,7 @@
       "decisions": "Le registre public — et votre rôle.",
       "more": "Tout le reste.",
       "places": "Chaque collectivité, avec la source de chaque donnée.",
-      "law": "Chaque acte que Solon détient, mot pour mot, avec sa source."
+      "law": "Chaque acte que Solon détient, avec sa source."
     },
     "links": {
       "whatYouCanDo": "Ce que vous pouvez faire ici",
@@ -978,8 +978,8 @@
     "worldIntro": "Chaque pays que Solon tient est coloré selon la part de son droit présente ici. Touchez un pays pour l'ouvrir.",
     "lawCount": "{count, plural, =0 {Lieux seulement} one {# acte} other {# actes}}",
     "lawTitle": "Droit",
-    "lawHeld": "{count, plural, one {# acte en vigueur} other {# actes en vigueur}}, mot pour mot, tirés des sources officielles.",
-    "lawNation": "État : {count, plural, one {# acte en vigueur} other {# actes en vigueur}}, mot pour mot, tirés des sources officielles.",
+    "lawHeld": "{count, plural, one {# acte en vigueur} other {# actes en vigueur}}, tirés des sources officielles.",
+    "lawNation": "État : {count, plural, one {# acte en vigueur} other {# actes en vigueur}}, tirés des sources officielles.",
     "lawBelow": "Régions et communes : {count, plural, one {# acte en vigueur} other {# actes en vigueur}}, comptés à part.",
     "lawNone": "Solon ne tient pas encore le droit de {country}.",
     "lawOpen": "Le lire et proposer des modifications",

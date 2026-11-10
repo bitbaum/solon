@@ -20,7 +20,7 @@
       "decisions": "Il registro pubblico — e la vostra parte.",
       "more": "Tutto il resto.",
       "places": "Ogni ente territoriale, con la fonte di ogni dato.",
-      "law": "Ogni atto che Solon conserva, parola per parola, con la sua fonte."
+      "law": "Ogni atto che Solon conserva, con la sua fonte."
     },
     "links": {
       "whatYouCanDo": "Cosa puoi fare qui",
@@ -978,8 +978,8 @@
     "worldIntro": "Ogni paese che Solon raccoglie è colorato secondo quanto del suo diritto è qui. Tocca un paese per aprirlo.",
     "lawCount": "{count, plural, =0 {Solo luoghi} one {# atto} other {# atti}}",
     "lawTitle": "Diritto",
-    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
-    "lawNation": "Stato: {count, plural, one {# atto in vigore} other {# atti in vigore}}, parola per parola, dalle fonti ufficiali.",
+    "lawHeld": "{count, plural, one {# atto in vigore} other {# atti in vigore}}, dalle fonti ufficiali.",
+    "lawNation": "Stato: {count, plural, one {# atto in vigore} other {# atti in vigore}}, dalle fonti ufficiali.",
     "lawBelow": "Regioni e comuni: {count, plural, one {# atto in vigore} other {# atti in vigore}}, contati a parte.",
     "lawNone": "Solon non raccoglie ancora il diritto di {country}.",
     "lawOpen": "Leggerlo e proporre modifiche",

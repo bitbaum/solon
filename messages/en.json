@@ -20,7 +20,7 @@
       "decisions": "The public record — and your part in it.",
       "more": "Everything else.",
       "places": "Every jurisdiction, with the source behind every fact.",
-      "law": "Every law Solon holds, word for word, with its source."
+      "law": "Every law Solon holds, with its source."
     },
     "links": {
       "whatYouCanDo": "What you can do",
@@ -1671,8 +1671,8 @@
     "worldIntro": "Every country Solon holds is shaded by how much of its law is here. Tap any country to open it.",
     "lawCount": "{count, plural, =0 {Places only} one {# law} other {# laws}}",
     "lawTitle": "Law",
-    "lawHeld": "{count, plural, one {# law in force} other {# laws in force}}, word for word, from the official sources.",
-    "lawNation": "Nation: {count, plural, one {# law} other {# laws}} in force, word for word, from the official sources.",
+    "lawHeld": "{count, plural, one {# law in force} other {# laws in force}}, from the official sources.",
+    "lawNation": "Nation: {count, plural, one {# law} other {# laws}} in force, from the official sources.",
     "lawBelow": "Regions and communes: {count, plural, one {# law} other {# laws}} in force, counted separately.",
     "lawNone": "Solon does not hold {country}'s law yet.",
     "lawOpen": "Read it and propose changes",

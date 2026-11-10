@@ -20,7 +20,7 @@
       "decisions": "Das öffentliche Protokoll — und Ihr Teil darin.",
       "more": "Alles Weitere.",
       "places": "Jede Gebietskörperschaft, mit der Quelle hinter jeder Angabe.",
-      "law": "Jeder Erlass, den Solon führt, Wort für Wort, mit seiner Quelle."
+      "law": "Jeder Erlass, den Solon führt, mit seiner Quelle."
     },
     "links": {
       "whatYouCanDo": "Was Sie hier tun können",
@@ -978,8 +978,8 @@
     "worldIntro": "Jedes Land, das Solon führt, ist danach eingefärbt, wie viel seines Rechts hier ist. Tippen Sie auf ein Land, um es zu öffnen.",
     "lawCount": "{count, plural, =0 {Nur Orte} one {# Erlass} other {# Erlasse}}",
     "lawTitle": "Recht",
-    "lawHeld": "{count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, im Wortlaut, aus den amtlichen Quellen.",
-    "lawNation": "Staat: {count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, im Wortlaut, aus den amtlichen Quellen.",
+    "lawHeld": "{count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, aus den amtlichen Quellen.",
+    "lawNation": "Staat: {count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, aus den amtlichen Quellen.",
     "lawBelow": "Regionen und Gemeinden: {count, plural, one {# geltender Erlass} other {# geltende Erlasse}}, getrennt gezählt.",
     "lawNone": "Solon führt das Recht von {country} noch nicht.",
     "lawOpen": "Lesen und Änderungen vorschlagen",
