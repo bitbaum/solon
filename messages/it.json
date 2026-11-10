@@ -477,6 +477,11 @@
       "source": "Il codice sorgente"
     }
   },
+  "NotFound": {
+    "kicker": "Non trovato",
+    "title": "Questa pagina non esiste",
+    "lede": "L’indirizzo potrebbe essere scritto male, oppure l’atto, il luogo o la statistica che indica non esiste (ancora) in Solon. Uno di questi collegamenti può aiutare."
+  },
   "Credits": {
     "metaTitle": "Crediti fotografici — Solon",
     "metaDescription": "Chi ha scattato le fotografie di questo sito, e con quale licenza.",

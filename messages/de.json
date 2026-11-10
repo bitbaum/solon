@@ -477,6 +477,11 @@
       "source": "Der Quellcode"
     }
   },
+  "NotFound": {
+    "kicker": "Nicht gefunden",
+    "title": "Diese Seite gibt es nicht",
+    "lede": "Die Adresse ist vielleicht falsch geschrieben, oder der Erlass, der Ort oder die Statistik, die sie nennt, ist bei Solon (noch) nicht vorhanden. Vielleicht hilft eines dieser Ziele weiter."
+  },
   "Credits": {
     "metaTitle": "Bildnachweise — Solon",
     "metaDescription": "Wer die Fotografien auf dieser Website gemacht hat, und unter welcher Lizenz.",
