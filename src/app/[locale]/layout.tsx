@@ -10,6 +10,7 @@ import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/ui/navigation";
+import { findIndex } from "@/lib/site/find-index";
 import Footer from "@/components/ui/footer";
 import TranslationNotice from "@/components/site/translation-notice";
 import ThemeScript from "@/components/theme/theme-script";
@@ -73,7 +74,7 @@ export default async function LocaleLayout({
       </head>
       <body className="flex min-h-screen flex-col antialiased font-sans">
         <NextIntlClientProvider>
-          <Navigation authEnabled={authEnabled} />
+          <Navigation authEnabled={authEnabled} findEntries={findIndex(locale)} />
           <TranslationNotice />
           {/* No container: sections own their width so a photograph can
               reach the edges of the screen. */}

@@ -10,6 +10,7 @@ import { regionName, worldRegion, worldRegionByCode } from "@/lib/config/world";
 import { db } from "@/lib/db/client";
 import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: { params: Params }) {
  * One place, by its path: /places/<pack>/<segment>/… (design §4.1, §9), at
  * any level. A country or territory Solon holds no places for has a page at
  * /places/<its slug> all the same; one whose places Solon holds is sent to
- * its pack's path.
+ * its pack's path, and one the world pack holds to /places/world/<its slug>.
  */
 export default async function PlacePage({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
@@ -55,7 +56,7 @@ export default async function PlacePage({ params }: { params: Params }) {
   const t = await getTranslations({ locale, namespace: "Places" });
   const view = await load(slugPathOf(slug), locale);
   if (view) {
-    const law = await loadPlaceLaw(db, view.lawAuthorities ?? []);
+    const law = await loadPlaceLaw(db, view.lawAuthorities ?? [], locale);
     const key = countryLawKey(view.region);
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
     return <PlaceProfile view={view} law={law} taxHref={taxHref} t={t} />;
@@ -66,6 +67,12 @@ export default async function PlacePage({ params }: { params: Params }) {
   const pack = region.code ? placesConfig.packs.find((p) => p.region === region.code) : undefined;
   if (pack && pack.key !== region.slug) {
     redirect({ href: `/places/${pack.key}`, locale });
+  }
+  // A country no pack holds in depth is a place of the world pack, under the
+  // same slug; its page there carries its figures. A place another state
+  // claims keeps this page, which says so.
+  if (!pack && !region.claimedBy && (await load(`${WORLD_PACK}/${region.slug}`, locale))) {
+    redirect({ href: `/places/${WORLD_PACK}/${region.slug}`, locale });
   }
   const claimant = region.claimedBy ? worldRegionByCode(region.claimedBy) : undefined;
   const claimantPack = claimant?.code
@@ -82,7 +89,7 @@ export default async function PlacePage({ params }: { params: Params }) {
             }
           : null
       }
-      law={region.code ? await loadCountryLaw(db, region.code) : []}
+      law={region.code ? await loadCountryLaw(db, region.code, locale) : []}
       t={t}
     />
   );

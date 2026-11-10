@@ -2,7 +2,7 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import type { PlaceLaw } from "@/lib/law/place-law";
 import { PlaceLawCard, PlaceTrail } from "./place-head";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
 
 interface WorldRegionPageProps {
   name: string;

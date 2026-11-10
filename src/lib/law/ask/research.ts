@@ -67,7 +67,7 @@ const WEB_SPECS = [
 ];
 
 const label = (hit: ProvisionHit, i: number) =>
-  `[L${i + 1}] ${LAW_AUTHORITIES.find((a) => a.key === hit.authority)?.name ?? hit.authority} — ${hit.title ?? hit.systematicNumber ?? ""} — ${hit.heading}`;
+  `[L${i + 1}] ${LAW_AUTHORITIES.find((a) => a.key === hit.authority)?.label ?? hit.authority} — ${hit.title ?? hit.systematicNumber ?? ""} — ${hit.heading}`;
 
 const instructions = (
   web: boolean,

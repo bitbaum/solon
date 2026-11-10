@@ -152,7 +152,7 @@ describe("Liechtenstein's communes", () => {
       expect(PUBLISHERS[key]).toBe(publisher);
       const authority = LAW_AUTHORITIES.find((a) => a.key === publisher.authority)!;
       expect(authority.place).toEqual({ scheme: "li_municipality", value: number });
-      expect(authority.name).toContain(name);
+      expect(authority.label).toContain(name);
     }
   });
 });

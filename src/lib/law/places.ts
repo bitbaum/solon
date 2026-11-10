@@ -27,7 +27,7 @@ export const unionOf = (country: string): LawAuthority | undefined =>
 export function levelOf(authority: LawAuthority): PlaceLevel {
   if (authority.members) return "union";
   if (authority.within) return "commune";
-  if (authority.place?.scheme === "iso_3166_1") return "country";
+  if (authority.place?.scheme === "iso_3166_1" || authority.topLevel) return "country";
   return authority.place === null ? "shared" : "region";
 }
 
@@ -41,14 +41,14 @@ export function parentOf(key: string): LawAuthority | null {
   if (authority.within) return authorityOf(authority.within) ?? null;
   const level = levelOf(authority);
   if (level === "union") return null;
-  if (level === "country") return unionOf(authority.place!.value) ?? null;
+  if (level === "country") return unionOf(authority.place!.value) ?? null; // no union holds a `topLevel` place
   const country = countryOf(key);
   return (country && countryAuthority(country)) || null;
 }
 
 /** The authorities that sit directly within this one (a country's communes), by name. */
 export const partsOf = (key: string): LawAuthority[] =>
-  LAW_AUTHORITIES.filter((a) => a.within === key).sort((a, b) => a.name.localeCompare(b.name));
+  LAW_AUTHORITIES.filter((a) => a.within === key).sort((a, b) => a.label.localeCompare(b.label));
 
 /** This authority and every one above it: the laws that apply where it does, nearest first. */
 export function chainOf(key: string): LawAuthority[] {
@@ -78,7 +78,7 @@ export function placeTree(counts: readonly AuthorityCoverage[]): PlaceNode[] {
     const c = counts.find((x) => x.key === authority.key);
     return {
       key: authority.key,
-      name: authority.name,
+      name: authority.label,
       level: levelOf(authority),
       inForce: c?.inForce ?? 0,
       withText: c?.withText ?? 0,

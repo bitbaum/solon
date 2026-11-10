@@ -2,7 +2,8 @@ import { Link } from "@/i18n/navigation";
 import type { PlaceLink } from "@/lib/places/place-view";
 import type { PlaceLaw } from "@/lib/law/place-law";
 import ShareButton from "./share-button";
-import type { PlacesTranslator } from "./place-profile";
+import type { PlacesTranslator } from "./translator";
+import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
 /**
  * Where a place sits, from the world down to its parent, and the way to share
@@ -27,23 +28,26 @@ export function PlaceTrail({
               {t("world.title")}
             </Link>
           </li>
-          {above.map((place, i) => (
-            <li key={`${place.slugPath}-${i}`} className="flex items-center gap-2">
-              <span aria-hidden className="text-fg-tertiary">
-                ›
-              </span>
-              {place.slugPath ? (
-                <Link
-                  href={`/places/${place.slugPath}`}
-                  className="text-fg-secondary hover:underline"
-                >
-                  {place.name}
-                </Link>
-              ) : (
-                <span className="text-fg-secondary">{place.name}</span>
-              )}
-            </li>
-          ))}
+          {/* The world pack's root is the world itself, already the first crumb. */}
+          {above
+            .filter((place) => place.slugPath !== WORLD_PACK)
+            .map((place, i) => (
+              <li key={`${place.slugPath}-${i}`} className="flex items-center gap-2">
+                <span aria-hidden className="text-fg-tertiary">
+                  ›
+                </span>
+                {place.slugPath ? (
+                  <Link
+                    href={`/places/${place.slugPath}`}
+                    className="text-fg-secondary hover:underline"
+                  >
+                    {place.name}
+                  </Link>
+                ) : (
+                  <span className="text-fg-secondary">{place.name}</span>
+                )}
+              </li>
+            ))}
         </ol>
       </nav>
       <ShareButton title={name} />

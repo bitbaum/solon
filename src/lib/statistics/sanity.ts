@@ -92,7 +92,10 @@ export function screenSeries(
 }
 
 /** The checks that need the places side by side: what is drawn, and what a ranking compares. */
-export function checkSeries(series: readonly PlaceSeries[]): SanityFinding[] {
+export function checkSeries(
+  series: readonly PlaceSeries[],
+  options: { fixedByLaw?: boolean } = {},
+): SanityFinding[] {
   const findings: SanityFinding[] = [];
   const withPoints = series.filter((s) => s.points.length > 0);
 
@@ -129,7 +132,7 @@ export function checkSeries(series: readonly PlaceSeries[]): SanityFinding[] {
       run += 1;
     }
     const longest = run;
-    if (longest >= CONSTANT_RUN) {
+    if (longest >= CONSTANT_RUN && !options.fixedByLaw) {
       findings.push({
         kind: "constant_series",
         severity: "warn",

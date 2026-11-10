@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ASSESSMENT_RECORDS } from "@/lib/config/statistics/assessments";
 import { EXIT_ASSESSMENTS } from "@/lib/config/statistics/assessments-exit";
 import { HEALTH_ASSESSMENTS } from "@/lib/config/statistics/assessments-health";
+import { PENSION_ASSESSMENTS } from "@/lib/config/statistics/assessments-pension";
 import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { RUBRICS } from "@/lib/config/statistics/rubrics";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
@@ -157,7 +158,10 @@ describe("the shipped codings", () => {
 
   it("are on the current version of a rubric that exists, one per place and rubric", () => {
     expect(codings.length).toBe(
-      ASSESSMENT_RECORDS.length + HEALTH_ASSESSMENTS.length + EXIT_ASSESSMENTS.length,
+      ASSESSMENT_RECORDS.length +
+        HEALTH_ASSESSMENTS.length +
+        EXIT_ASSESSMENTS.length +
+        PENSION_ASSESSMENTS.length,
     );
     const seen = new Set<string>();
     for (const c of codings) {
@@ -218,6 +222,7 @@ describe("dimensions that hold coded features", () => {
     expect(d.layers.de_jure.rubrics).toEqual([
       "compulsion.military_service",
       "compulsion.health_insurance",
+      "compulsion.old_age_pension",
     ]);
     expect(d.layers.de_facto.metrics).toEqual([]);
     expect(d.layers.de_facto.wanted?.en).toBeTruthy();
