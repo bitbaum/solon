@@ -147,6 +147,7 @@ export const zurichCity: PublisherAdapter = {
         if (!page || !page.ref) continue;
         acts.set(page.ref, {
           ref: page.ref,
+          number: page.ref,
           title: page.title,
           kind: kindOf(page.title),
           pageUrl: BASE + link,

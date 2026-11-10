@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { EVERYDAY_ROUTES, PRIMARY_NAV, SITE_LINKS } from "../../src/lib/site-config";
 import * as enums from "../../src/lib/db/enums";
 import en from "../../messages/en.json";
+import de from "../../messages/de.json";
 
 /**
  * What lint, typecheck and unit tests cannot see: how the site actually
@@ -35,6 +36,23 @@ test("an unknown place answers 404", async ({ page }) => {
   for (const href of ["/places/nowhere", "/places/testland/northshire", "/de/places/testland"]) {
     const res = await page.goto(href, { waitUntil: "domcontentloaded" });
     expect(res?.status(), href).toBe(404);
+  }
+});
+
+// An unknown series, law or path answers 404 with a page in the reader's language, inside the site's frame,
+// that says what happened and links on: it was an empty page with only a title (2026-11-10).
+test("an address Solon does not serve answers a readable 404 page", async ({ page }) => {
+  for (const [href, title] of [
+    ["/statistics/not-a-series", en.NotFound.title],
+    ["/de/statistics/not-a-series", de.NotFound.title],
+    ["/not-a-page", en.NotFound.title],
+    ["/de/places/not-a-place", de.NotFound.title],
+  ] as const) {
+    const res = await page.goto(href, { waitUntil: "domcontentloaded" });
+    expect(res?.status(), href).toBe(404);
+    await expect(page.locator("main h1"), href).toHaveText(title);
+    await expect(page.locator("header nav, nav").first(), href).toBeVisible();
+    await expect(page.locator('main a[href$="/law"]').first(), href).toBeVisible();
   }
 });
 
@@ -176,6 +194,10 @@ test.describe("phones", () => {
     // It must cover the screen below the header, not collapse inside it.
     expect(box?.height ?? 0).toBeGreaterThan(400);
     await expect(menu.getByRole("link", { name: "Hire Solon" }).first()).toBeVisible();
+    // The rest of the site is folded by section (only the current one opens),
+    // so the menu fits a phone: a section opens, and its pages are there.
+    await expect(menu.getByRole("link", { name: "Security" })).toBeHidden();
+    await menu.locator("summary").filter({ hasText: "Platform" }).first().click();
     await expect(menu.getByRole("link", { name: "Security" })).toBeVisible();
   });
 });

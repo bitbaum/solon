@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import type { BriefFact } from "@/lib/statistics/brief";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 import ExplainButton from "./explain-button";
 
 const str = (v: string | number | undefined) => (v === undefined ? "" : String(v));
@@ -88,6 +88,8 @@ export function factLine(f: BriefFact, t: StatisticsTranslator): string {
             })
           : "",
       });
+    case "statement":
+      return str(p.text);
     case "empty":
       return t("explain.facts.empty", {
         layer: t(`explain.layers.${str(p.layerKey)}` as "explain.layers.de_jure"),

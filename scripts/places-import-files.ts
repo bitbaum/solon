@@ -1,5 +1,5 @@
 /**
- * Import every Places file kept in this repository whose bytes differ from
+ * Import every Places file kept in this repository whose bytes, or whose adapter's version, differ from
  * the last retrieval of its source applied to this database
  * (src/lib/config/places/repo-files.ts). Run after each merge by
  * `.github/workflows/places-data.yml`, so an edited file reaches the site by
@@ -16,6 +16,8 @@ import { placesConfig } from "@/lib/config/places";
 import { PLACES_REPO_FILES } from "@/lib/config/places/repo-files";
 import { db } from "@/lib/db/client";
 import { sources } from "@/lib/db/places-schema";
+import { ADAPTERS } from "@/lib/places/adapters";
+import { alreadyApplied, type LastApplied } from "@/lib/places/importer/applied";
 import { runImport } from "@/lib/places/importer/run";
 import { defaultSnapshotStore, sha256Hex } from "@/lib/places/importer/snapshots";
 
@@ -29,22 +31,33 @@ function gitSha(): string | null {
   }
 }
 
-/** The sha256 of the last retrieval of this source that was applied, if any. */
-async function lastApplied(sourceKey: string): Promise<string | null> {
+/** The last retrieval of this source that was applied, if any. */
+async function lastApplied(sourceKey: string): Promise<LastApplied | null> {
   const [row] = await db
-    .select({ sha: sources.contentSha256 })
+    .select({ sha256: sources.contentSha256, importerVersion: sources.importerVersion })
     .from(sources)
     .where(eq(sources.sourceKey, sourceKey))
     .orderBy(desc(sources.retrievedAt))
     .limit(1);
-  return row?.sha ?? null;
+  return row ?? null;
+}
+
+/** The version string the importer records for a source's adapter. */
+function currentImporterVersion(sourceKey: string): string {
+  const source = placesConfig.sources.find((s) => s.key === sourceKey);
+  const adapter = source ? ADAPTERS.get(source.adapter) : undefined;
+  if (!adapter)
+    throw new Error(`${sourceKey}: no adapter ${source?.adapter ?? "(no such source)"}`);
+  return `${adapter.key}@${adapter.version}`;
 }
 
 async function main(): Promise<number> {
   let failed = 0;
   for (const { source, file } of PLACES_REPO_FILES) {
     const bytes = readFileSync(file);
-    if ((await lastApplied(source)) === sha256Hex(bytes)) {
+    if (
+      alreadyApplied(await lastApplied(source), sha256Hex(bytes), currentImporterVersion(source))
+    ) {
       console.log(`${source}: unchanged`);
       continue;
     }

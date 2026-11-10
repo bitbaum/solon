@@ -58,7 +58,13 @@ export const DIMENSIONS = defineDimensions(
         en: "Where the law forces a person to take part in a collective arrangement, as against leaving them to join it or not. Each feature is read from the statute itself and placed on a written scale, with the articles it was read from, how sure the reader is and why, and whether a second person has checked it.",
       },
       layers: {
-        de_jure: { rubrics: ["compulsion.military_service", "compulsion.health_insurance"] },
+        de_jure: {
+          rubrics: [
+            "compulsion.military_service",
+            "compulsion.health_insurance",
+            "compulsion.old_age_pension",
+          ],
+        },
         de_facto: {
           wanted: {
             en: "What is done in practice: how many people are actually called up or serve in a replacement service each year, how many refuse and what happens to them, from defence ministries and justice statistics.",
@@ -95,6 +101,44 @@ export const DIMENSIONS = defineDimensions(
       },
       author:
         "An example in Solon's configuration (version 1, 2026-11-09), coded from statutes. Not an index.",
+    },
+    {
+      key: "governance",
+      version: 1,
+      label: {
+        en: "How governance is seen to work",
+        de: "Wie die Regierungsführung wahrgenommen wird",
+        fr: "Comment la gouvernance est perçue",
+        it: "Come è percepito il governo",
+        ru: "Как воспринимается управление",
+      },
+      summary: {
+        en: "Six scores from the World Bank, each a composite of perceptions drawn from household and firm surveys and expert assessments. They say how rules are seen to work, not what the rules are or what a count of events shows, and the World Bank treats them as estimates. They sit beside what the law says and what results so a gap shows rather than averaging away.",
+      },
+      layers: {
+        de_jure: {
+          wanted: {
+            en: "What the law says on the same subjects: constitutional and statutory features coded on written scales, as for compulsion and exit.",
+          },
+        },
+        de_facto: {
+          metrics: [
+            "governance.wgi.rule_of_law",
+            "governance.wgi.regulation",
+            "governance.wgi.effectiveness",
+            "governance.wgi.corruption",
+            "governance.wgi.voice",
+            "governance.wgi.stability",
+          ],
+        },
+        outcome: {
+          wanted: {
+            en: "What follows that can be counted rather than perceived: contract enforcement times, court backlogs and clearance rates, from statistical offices and the World Bank's own enterprise surveys.",
+          },
+        },
+      },
+      author:
+        "An example in Solon's configuration (version 1, 2026-11-09), built from the World Bank's Worldwide Governance Indicators. Not an index.",
     },
   ],
   new Set(placesConfig.metrics.filter((m) => m.statistic && !m.retired).map((m) => m.key)),

@@ -4,9 +4,71 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-10
+
+### Added
+
+- **Easier to find your way.** The header now has four panels of four or five links each (Law,
+  Places, Data, Governance) instead of 27 links, with statistics given their own panel. A new
+  Find button (also Ctrl or Cmd + K, or "/") searches pages, statistics, places and laws in one
+  box. The phone menu folds by section and opens on the one you are in. Every page is still in
+  the footer. {#site-navigation}
+
+- **What is measured, and where it is not.** `/statistics/gaps` sets out, for a topic, what each
+  place's statistical office collects and publishes, crossed with what and under what law, read
+  from the office's own pages; where the same question can be answered in one country and not in
+  another; what must come with a new measure so it is not misread (age and sex, income and
+  education, where people live, type of offence); the objections and their safeguards; and who
+  decides. The first topic is crime by a person's background: Denmark, Sweden, Norway and the
+  Netherlands publish a background the office defines, Germany and Switzerland citizenship, the
+  United Kingdom and the United States an ethnic or racial category, and in France a Constitutional
+  Council decision bars studies that rest on ethnic origin or race. Each page lists what was not
+  read, and a group can propose a position from it. {#stats-gaps}
+
 ## 2026-11-09
 
 ### Added
+
+- **Compulsory provision for old age, coded.** Switzerland (BV Art. 112 and 113: the old-age
+  insurance is obligatory, and so are occupational pensions for employees) and the United States
+  (26 U.S.C. § 3101: a tax of 6.2 percent of wages for old-age, survivors and disability
+  insurance) both stand at 3, a duty to a public scheme with no way out; the US coding is
+  medium confidence until exemptions are read. Estonia is left uncoded until its provisions are
+  read. {#stats-assessments}
+
+- **Research with AI.** `/statistics/research` takes a question about governance, freedom,
+  statistics or the law. An AI reads what Solon holds, for a few rounds: series with their
+  definitions and quality notes, dimensions that keep the law, practice and results apart, how
+  published rankings are made, and the law itself, and the open web where one is configured.
+  Every fact it finds is listed as a numbered source, and the report is written from those
+  alone: each number must be one a source holds, each citation a source that exists, each
+  paragraph must cite, and nothing may pass a verdict on a place or a person. A report that fails
+  the check is not shown; the sources still are. {#stats-research}
+
+- **Every country is a place, and governance is measured for all.** 235 more countries are now
+  places (the countries no country pack holds in depth), each with the World Bank's indicators,
+  and the OECD's tax series for its 38 members. New: six World Bank governance scores (voice and
+  accountability, political stability, government effectiveness, regulatory quality, rule of law,
+  control of corruption), on `/statistics/dimension/governance`, labelled as what they are: a
+  composite of perceptions from 35 sources, estimates rather than definitive ratings. A series a
+  law fixes (a statutory rate) is no longer flagged for staying the same for years. {#places-world} {#stats-wgi}
+
+- **How the rankings are made.** `/statistics/methods` describes nine indexes of freedom and
+  governance the same way: who makes each, what it says it measures, how (experts scoring
+  countries, a composite of other sources, perception surveys, official statistics, coding the
+  law), its parts as the publisher names them, whether its data may be shown here with the
+  terms quoted, what has not been read yet, and the questions worth asking of every index of its
+  kind (who the experts are, whether weights are argued or chosen, whether law and practice are
+  mixed). Each page can be explained by AI from what was read and nothing else. {#stats-methods}
+- **One list of countries.** The law globe, the statistics map and the OECD sources now read
+  country codes from one registry instead of three hand-kept tables. {#places-ssot}
+
+- **A globe you can read.** The atlas now names every country, its subdivisions and its towns
+  (Natural Earth for countries and the world's first-level subdivisions, GeoNames for every
+  place of 1,000 people or more), placed so that no name covers another and appearing as you
+  zoom in. Zooming goes where you point (wheel, pinch, double tap). Subdivisions and towns load
+  a country at a time as you reach them. Tapping any place names and outlines it; a town flies
+  you to it. The sea is blue, the land is the page, in light and dark. {#places-globe}
 
 - **What it costs to leave.** A new dimension, `/statistics/dimension/exit`, codes from the
   statutes whether a citizen can give up their citizenship and whether leaving is taxed.

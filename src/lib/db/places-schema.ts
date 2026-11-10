@@ -23,8 +23,10 @@ import {
   date,
   foreignKey,
   index,
+  integer,
   jsonb,
   numeric,
+  pgMaterializedView,
   pgTable,
   primaryKey,
   text,
@@ -564,6 +566,19 @@ export const facts = pgTable(
       .onUpdate("cascade"),
   ],
 );
+
+/**
+ * Where every state place sits: itself (depth 0) and each place it is part of
+ * today, with how many steps up. A materialized view over the current `part_of`
+ * relations (migration 0025), rebuilt by the importer at the end of every
+ * applied run; it is read, never written, so the rule that Places rows are
+ * never deleted holds. `existing()`: drizzle-kit does not manage it.
+ */
+export const placeAncestors = pgMaterializedView("place_ancestors", {
+  placeId: text("place_id").notNull(),
+  ancestorId: text("ancestor_id").notNull(),
+  depth: integer("depth").notNull(),
+}).existing();
 
 /**
  * A postcode locality and a place it lies in (§8.2). One postcode may span

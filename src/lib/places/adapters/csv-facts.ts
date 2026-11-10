@@ -33,6 +33,13 @@ const csvFactsOptions = z.object({
       }),
     )
     .min(1),
+  /**
+   * For a source that states one figure a year, decided in the autumn for the year after (a commune's tax
+   * surcharge): the latest year's figure for a place stays in force, with no end date, until the source
+   * states the next year's. Without it the latest figure ends on the last day of its year and, between New
+   * Year and the next decision, the place has no figure at all.
+   */
+  inForceUntilNext: z.boolean().default(false),
   /** Rows whose `column` holds anything but `equals` are left out, and reported with `reason`. */
   skipUnless: z
     .array(z.object({ column, equals: z.string(), reason: z.string().min(1) }))
@@ -48,7 +55,7 @@ export const fiscalYearPeriod = (year: number, startMonthDay: string) => ({
 
 export const csvFactsAdapter: Adapter<Rows, CsvFactsOptions> = {
   key: "csv_facts",
-  version: "2",
+  version: "3",
   decode: decodeCsv,
   schema: rows,
   options: csvFactsOptions,
@@ -91,6 +98,16 @@ export const csvFactsAdapter: Adapter<Rows, CsvFactsOptions> = {
           value: value / fact.divideBy,
         });
       }
+    }
+    if (options.inForceUntilNext) {
+      // The latest year of each place's figure, per metric and variant, has no end.
+      const latest = new Map<string, BatchFactInput>();
+      for (const fact of facts) {
+        const key = JSON.stringify([fact.jurisdiction, fact.metricKey, fact.variant]);
+        const held = latest.get(key);
+        if (!held || fact.validFrom > held.validFrom) latest.set(key, fact);
+      }
+      for (const fact of latest.values()) fact.validTo = null;
     }
     return { pack: pack.key, jurisdictions: [], relations: [], facts };
   },

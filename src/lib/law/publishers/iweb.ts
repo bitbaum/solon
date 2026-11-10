@@ -156,7 +156,7 @@ export function actsOfRows(rows: readonly Row[], base: string): ListedAct[] {
     const number = words(String(row._nummer ?? row.nummer ?? ""));
     const ref = number || (/(\d+)\/?$/.exec(new URL(pageUrl).pathname)?.[1] ?? pageUrl);
     if (acts.has(ref)) continue;
-    acts.set(ref, { ref, title, kind: kindOf(title), pageUrl });
+    acts.set(ref, { ref, number: number || null, title, kind: kindOf(title), pageUrl });
   }
   return [...acts.values()];
 }

@@ -49,9 +49,16 @@ const worldbankOptions = z.object({
 });
 type WorldbankOptions = z.infer<typeof worldbankOptions>;
 
+/**
+ * The World Bank's source id for an indicator: the Worldwide Governance
+ * Indicators (`GOV_WGI_…`) are source 3, everything else the World Development
+ * Indicators, the API's default.
+ */
+const sourceOf = (code: string) => (code.startsWith("GOV_WGI_") ? "&source=3" : "");
+
 /** The request for one indicator, every year from `fromYear` to `today`'s year. */
 export const worldbankUrl = (country: string, code: string, fromYear: number, today: string) =>
-  `${API}/country/${country}/indicator/${code}?format=json&per_page=1000&date=${fromYear}:${today.slice(0, 4)}`;
+  `${API}/country/${country}/indicator/${code}?format=json&per_page=1000${sourceOf(code)}&date=${fromYear}:${today.slice(0, 4)}`;
 
 /** The page of the indicator the World Bank publishes for people, for "show the source series". */
 export const worldbankIndicatorPage = (code: string, country: string) =>
