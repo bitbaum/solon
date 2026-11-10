@@ -6,7 +6,7 @@
  * the source, the map is the producer, this page is a consumer — so there is
  * no local copy of either list for the page to drift from.
  */
-import { developmentProfileFromMap, loadDevelopmentProfile } from "bip-kit";
+import { developmentProfileFromMap, loadDevelopmentProfile } from "@bitbaum/bip-kit";
 
 export const FLEET_MAP_URL = "https://loki.orangecat.ch/api/fleet/map";
 export const FLEET_SLUG = "solon";

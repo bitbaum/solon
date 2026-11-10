@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { ArticleBody } from "bip-kit/react";
-import "bip-kit/styles.css";
+import { ArticleBody } from "@bitbaum/bip-kit/react";
+import "@bitbaum/bip-kit/styles.css";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { toLocale } from "@/i18n/routing";
