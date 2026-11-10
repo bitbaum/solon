@@ -74,7 +74,7 @@ export function placeTree(counts: readonly AuthorityCoverage[]): PlaceNode[] {
     const c = counts.find((x) => x.key === authority.key);
     return {
       key: authority.key,
-      name: authority.name,
+      name: authority.label,
       level: levelOf(authority),
       inForce: c?.inForce ?? 0,
       withText: c?.withText ?? 0,

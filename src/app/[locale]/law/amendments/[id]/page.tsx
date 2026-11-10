@@ -10,7 +10,7 @@ import { entryHref } from "@/lib/auth/entry-href";
 import { db } from "@/lib/db/client";
 import { redline } from "@/lib/law/amend/changes";
 import { loadAmendment, supportsNow } from "@/lib/law/amend/store";
-import { authorityOf } from "@/lib/law/places";
+import { authorityName, loadAuthorityNames } from "@/lib/law/authority-names";
 import { loadActView } from "@/lib/law/view";
 
 export const dynamic = "force-dynamic";
@@ -51,7 +51,7 @@ export default async function AmendmentPage({ params }: { params: Params }) {
   const changed = amendment.amended.filter((p) => p.status !== "unchanged");
   const day = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium" });
   const actName = act?.title ?? act?.systematicNumber ?? amendment.actId;
-  const place = authorityOf(amendment.authority)?.name ?? amendment.authority;
+  const place = authorityName(await loadAuthorityNames(locale), amendment.authority);
 
   return (
     <PageLayout title={latest.title} kicker={t("kicker")}>

@@ -50,11 +50,12 @@ Shared types now live in `components/statistics/shared.ts` and `components/place
 
 ## Debt, in the order to pay it
 
-1. **Law authorities are a second list of places.** `LAW_AUTHORITIES` hand-writes 35 names
-   ("Confederation", "Zürich") and points to a place by identifier. The place already has the
-   name in every language. Target: the authority keeps only what is law's (publisher,
-   attribution, `within`, `members`) keyed by place identifier; its name and level are read from
-   Places. The globe already derives its outlines this way.
+1. **Law authorities were a second list of places.** Done 2026-11-10: pages name an authority by
+   its place, read from Places in the reader's language (`src/lib/law/authority-names.ts`);
+   a country with no place yet is named by `Intl`, the two authorities with no single place
+   from messages, and two places of one name are told apart by their level. The config keeps an
+   English `label` for logs, the API and prompts. Still to do: `within` and the level are
+   hand-written where Places could supply them.
 2. **A page's name is written twice**: in `Site.links` and again in each page's metadata. Target:
    the page's `generateMetadata` reads its `Site.links` entry.
 3. **Translation coverage is uneven.** `/places`, `/compare`, `/structures` and `/statistics` are

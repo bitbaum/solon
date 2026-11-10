@@ -49,7 +49,7 @@ export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
     return {
       feature: globeId(feature),
       key,
-      name: authority?.name ?? key,
+      name: authority?.label ?? key,
       ...(isCountry ? { region: authority!.place!.value } : {}),
       acts,
       ...(pack ? { pack, drawn: drawn.has(pack) } : {}),

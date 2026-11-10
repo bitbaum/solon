@@ -56,7 +56,7 @@ export default async function PlacePage({ params }: { params: Params }) {
   const t = await getTranslations({ locale, namespace: "Places" });
   const view = await load(slugPathOf(slug), locale);
   if (view) {
-    const law = await loadPlaceLaw(db, view.lawAuthorities ?? []);
+    const law = await loadPlaceLaw(db, view.lawAuthorities ?? [], locale);
     const key = countryLawKey(view.region);
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
     return <PlaceProfile view={view} law={law} taxHref={taxHref} t={t} />;
@@ -89,7 +89,7 @@ export default async function PlacePage({ params }: { params: Params }) {
             }
           : null
       }
-      law={region.code ? await loadCountryLaw(db, region.code) : []}
+      law={region.code ? await loadCountryLaw(db, region.code, locale) : []}
       t={t}
     />
   );

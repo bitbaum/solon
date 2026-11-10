@@ -4,6 +4,7 @@
  * each with how many acts in force Solon holds the text of.
  */
 import type { Database } from "@/lib/db/client";
+import { authorityName, loadAuthorityNames } from "./authority-names";
 import { chainOf, countryAuthority } from "./places";
 import { loadLawCoverage } from "./register/coverage";
 
@@ -18,18 +19,28 @@ export interface PlaceLaw {
 export async function loadPlaceLaw(
   db: Database,
   authorities: readonly string[],
+  locale: string,
 ): Promise<PlaceLaw[]> {
   if (authorities.length === 0) return [];
   const nearest = authorities.map((key) => chainOf(key)).sort((a, b) => b.length - a.length)[0]!;
   const coverage = await loadLawCoverage(db);
   const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
-  return nearest.map((a) => ({ key: a.key, name: a.name, acts: held.get(a.key) ?? 0 }));
+  const names = await loadAuthorityNames(locale);
+  return nearest.map((a) => ({
+    key: a.key,
+    name: authorityName(names, a.key),
+    acts: held.get(a.key) ?? 0,
+  }));
 }
 
 /** The law of a whole country, by its ISO 3166-1 code, when Solon has an authority for it. */
-export async function loadCountryLaw(db: Database, region: string): Promise<PlaceLaw[]> {
+export async function loadCountryLaw(
+  db: Database,
+  region: string,
+  locale: string,
+): Promise<PlaceLaw[]> {
   const authority = countryAuthority(region);
-  return authority ? loadPlaceLaw(db, [authority.key]) : [];
+  return authority ? loadPlaceLaw(db, [authority.key], locale) : [];
 }
 
 /** The key the atlas opens a country under (`/places?in=`), by its ISO 3166-1 code. */
