@@ -175,7 +175,7 @@ describe.skipIf(!RUN)("United States, imported", () => {
       wyoming,
     );
     expect(
-      await findPlaceByIdentifier(db, { scheme: "us_state_fips", value: "55" }, ON),
+      await findPlaceByIdentifier(db, { scheme: "us_state_fips", value: "03" }, ON),
     ).toBeNull();
   });
 
