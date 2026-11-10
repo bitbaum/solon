@@ -33,6 +33,40 @@ export const CONTEST_TOPICS = defineContestTopics([
     },
   },
   {
+    key: "lawmaking",
+    label: {
+      en: "Who may propose a law",
+      de: "Wer ein Gesetz vorschlagen darf",
+      fr: "Qui peut proposer une loi",
+      it: "Chi può proporre una legge",
+      ru: "Кто может предложить закон",
+    },
+    question: {
+      en: "Who has the right to put a bill before the legislature, and can citizens do it themselves?",
+      de: "Wer darf dem Parlament einen Gesetzesentwurf vorlegen, und können Bürgerinnen und Bürger das selbst tun?",
+      fr: "Qui a le droit de soumettre un projet de loi au parlement, et les citoyens peuvent-ils le faire eux-mêmes ?",
+      it: "Chi ha il diritto di presentare un progetto di legge al parlamento, e i cittadini possono farlo da sé?",
+      ru: "Кто вправе внести законопроект в парламент и могут ли граждане сделать это сами?",
+    },
+  },
+  {
+    key: "taxes",
+    label: {
+      en: "Taxes",
+      de: "Steuern",
+      fr: "Impôts",
+      it: "Imposte",
+      ru: "Налоги",
+    },
+    question: {
+      en: "At what rates are a person's income, a company's profit and a sale taxed?",
+      de: "Zu welchen Sätzen werden das Einkommen einer Person, der Gewinn eines Unternehmens und ein Verkauf besteuert?",
+      fr: "À quels taux sont imposés le revenu d'une personne, le bénéfice d'une entreprise et une vente ?",
+      it: "Con quali aliquote sono tassati il reddito di una persona, l'utile di un'impresa e una vendita?",
+      ru: "По каким ставкам облагаются доход человека, прибыль компании и продажа?",
+    },
+  },
+  {
     key: "citizenship",
     label: {
       en: "Citizenship",
@@ -103,6 +137,7 @@ const SO_CONSTITUTION = {
     "право беспрепятственного возвращения в Республику Южная Осетия",
     "Защита Отечества - священный долг каждого гражданина Республики Южная Осетия",
     "обязан защищать интересы государства",
+    "Право законодательной инициативы принадлежит Президенту Республики Южная Осетия, депутатам Парламента Республики Южная Осетия",
   ],
 };
 
@@ -123,13 +158,75 @@ const GE_CONSTITUTION = {
     "Article 32. Citizenship of Georgia",
     "the conditions for holding citizenship of another state by a citizen of Georgia shall be determined by the organic law",
     "The deprivation of citizenship shall be inadmissible",
+    "Article 45. Law making and procedures for decision-making",
+    "and not less than 25 000 voters shall have the right of legislative initiative",
     "Article 70. Defence Forces",
     "The procedure for performing military service shall be determined by law",
   ],
 };
 
+const SO_TAX_CODE_PAGE = {
+  publisher:
+    "Парламент Республики Южная Осетия: Налоговый кодекс Республики Южная Осетия. Часть вторая (the Parliament's page for the Tax Code, Part Two), as read",
+  url: "https://parliamentrso.org/node/5469",
+  read: READ,
+  expect: ["Налоговый кодекс Республики Южная Осетия. Часть вторая", "Текст кодекса скачать тут"],
+};
+
+/**
+ * The code's text is a Word file the page links ("Текст кодекса скачать тут"), read by
+ * converting it with LibreOffice (sha256 230b30c4…6672 on 2026-11-10). The weekly check
+ * cannot read a Word file, so it checks the page that links it.
+ */
+const SO_TAX_CODE_FILE = {
+  publisher:
+    "Парламент Республики Южная Осетия: Налоговый кодекс Республики Южная Осетия, часть вторая, the Word file the page links, as read",
+  url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/nalogovyy_kodeks_respubliki_yuzhnaya_osetiya_ch.2_ispr_parl_0.doc",
+  read: READ,
+  unchecked: true as const,
+};
+
+const SO_BUDGET_2023 = {
+  publisher:
+    "Парламент Республики Южная Осетия: Закон «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the law approving the 2023 budget's execution), as read",
+  url: "https://parliamentrso.org/node/4876",
+  read: READ,
+  expect: [
+    "Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год",
+    "по доходам в сумме 9 108 338,6 тыс. рублей",
+    "9 234 425,6 тыс. рублей",
+    "Приложение №1, 2",
+  ],
+};
+
+/** Appendix 1, the revenue lines, a spreadsheet the law's page links (sha256 6344138c…2c4a on 2026-11-10). */
+const SO_BUDGET_2023_APPENDIX = {
+  publisher:
+    "Парламент Республики Южная Осетия: Приложение 1 к Закону «Об исполнении Государственного бюджета Республики Южная Осетия за 2023 год» (the revenue lines, a spreadsheet), as read",
+  url: "https://parliamentrso.org/sites/default/files/sites/default/files/source_images/prilozhenie_1_2.xlsx",
+  read: READ,
+  unchecked: true as const,
+};
+
+const PWC = (path: string, expect: string[]) => ({
+  publisher: `PwC Worldwide Tax Summaries: Georgia (reviewed 2 September 2026), a summary of the law and not the law, as read`,
+  url: `https://taxsummaries.pwc.com/georgia/${path}`,
+  read: READ,
+  expect,
+});
+const GE_PIT = PWC("individual/taxes-on-personal-income", [
+  "Personal income is subject to a flat tax rate of 20%",
+]);
+const GE_CIT = PWC("corporate/taxes-on-corporate-income", [
+  "The CIT rate is a flat 15%",
+  "Georgia adopted the Estonian model of CIT, under which retained profits are no longer taxable until they are distributed",
+]);
+const GE_VAT = PWC("corporate/other-taxes", ["The standard VAT rate is 18%"]);
+
 /** The South Ossetian Constitution as Solon's register holds it: the Parliament's node 3567. */
 const soAct = { authority: "rso", scheme: "publisher_ref", value: "parliamentrso:3567" };
+/** The Tax Code, Part Two, as Solon's register holds it: the Parliament's node 5469. */
+const soTaxCode = { authority: "rso", scheme: "publisher_ref", value: "parliamentrso:5469" };
 const GE_TRANSLATOR = "Constitute Project (English translation; the authentic text is in Georgian)";
 
 export const CONTESTS = defineContests(CONTEST_TOPICS, [
@@ -179,6 +276,115 @@ export const CONTESTS = defineContests(CONTEST_TOPICS, [
           text: "The state territorial arrangement of Georgia shall be revised by a constitutional law of Georgia on the basis of the principle of the separation of powers after the complete restoration of the jurisdiction of Georgia over the entire territory of the country.",
           lang: "en",
           evidence: [GE_CONSTITUTION],
+        },
+      },
+      {
+        topic: "lawmaking",
+        side: "rso",
+        label: "Constitution, Art. 69",
+        act: soAct,
+        provision: "art_69",
+        quote: {
+          text: "Право законодательной инициативы принадлежит Президенту Республики Южная Осетия, депутатам Парламента Республики Южная Осетия, Правительству Республики Южная Осетия, а также Конституционному Суду Республики Южная Осетия, Верховному Суду Республики Южная Осетия, Генеральному прокурору Республики Южная Осетия и Центральной избирательной комиссии Республики Южная Осетия по вопросам их ведения.",
+          lang: "ru",
+          translation: {
+            en: "The right of legislative initiative belongs to the President of the Republic of South Ossetia, to the deputies of the Parliament of the Republic of South Ossetia, to the Government of the Republic of South Ossetia, and to the Constitutional Court, the Supreme Court, the Prosecutor General and the Central Electoral Commission of the Republic of South Ossetia on matters within their competence.",
+          },
+          evidence: [SO_CONSTITUTION],
+        },
+      },
+      {
+        topic: "lawmaking",
+        side: "georgia",
+        label: "Constitution, Art. 45",
+        act: null,
+        provision: null,
+        translator: GE_TRANSLATOR,
+        quote: {
+          text: "The Government, a Member of Parliament, a parliamentary faction, a parliamentary committee, the supreme representative bodies of the Autonomous Republics of Abkhazia and Ajara, and not less than 25 000 voters shall have the right of legislative initiative.",
+          lang: "en",
+          evidence: [GE_CONSTITUTION],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "rso",
+        label: "Tax Code, Part Two, Art. 228 (income of a person)",
+        act: soTaxCode,
+        provision: null,
+        quote: {
+          text: "1. Налоговая ставка устанавливается в размере 12 процентов, если иное не предусмотрено настоящей статьей.",
+          lang: "ru",
+          translation: {
+            en: "1. The tax rate is set at 12 percent, unless this article provides otherwise.",
+          },
+          evidence: [SO_TAX_CODE_FILE, SO_TAX_CODE_PAGE],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "rso",
+        label: "Tax Code, Part Two, Art. 286 (profit of a company)",
+        act: soTaxCode,
+        provision: null,
+        quote: {
+          text: "1. Налоговая ставка устанавливается в размере 20 процентов, за исключением случаев, предусмотренных пунктами 2 - 6 настоящей статьи.",
+          lang: "ru",
+          translation: {
+            en: "1. The tax rate is set at 20 percent, except in the cases provided by paragraphs 2 to 6 of this article.",
+          },
+          evidence: [SO_TAX_CODE_FILE, SO_TAX_CODE_PAGE],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "rso",
+        label: "Tax Code, Part Two, Art. 166 para. 3 (value added)",
+        act: soTaxCode,
+        provision: null,
+        quote: {
+          text: "3. Налогообложение производится по налоговой ставке 10 процентов в случаях, не указанных в пунктах 1, 2 и 4 настоящей статьи.",
+          lang: "ru",
+          translation: {
+            en: "3. Tax is charged at the rate of 10 percent in the cases not named in paragraphs 1, 2 and 4 of this article.",
+          },
+          evidence: [SO_TAX_CODE_FILE, SO_TAX_CODE_PAGE],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "georgia",
+        label: "Income of a person (summary)",
+        act: null,
+        provision: null,
+        quote: {
+          text: "Personal income is subject to a flat tax rate of 20%.",
+          lang: "en",
+          evidence: [GE_PIT],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "georgia",
+        label: "Profit of a company (summary)",
+        act: null,
+        provision: null,
+        quote: {
+          text: "The CIT rate is a flat 15%. […] From 1 January 2017, Georgia adopted the Estonian model of CIT, under which retained profits are no longer taxable until they are distributed.",
+          lang: "en",
+          evidence: [GE_CIT],
+        },
+      },
+      {
+        topic: "taxes",
+        side: "georgia",
+        label: "Value added (summary)",
+        act: null,
+        provision: null,
+        quote: {
+          text: "The standard VAT rate is 18%",
+          lang: "en",
+          evidence: [GE_VAT],
         },
       },
       {
@@ -266,12 +472,99 @@ export const CONTESTS = defineContests(CONTEST_TOPICS, [
         },
       },
     ],
+    ledgers: [
+      {
+        side: "rso",
+        year: 2023,
+        currency: "RUB",
+        unit: 1000,
+        revenue: 9108338.64705,
+        expenditure: 9234425.6,
+        lines: [
+          {
+            label: {
+              en: "Taxes and other own revenue",
+              de: "Steuern und andere eigene Einnahmen",
+              fr: "Impôts et autres recettes propres",
+              it: "Imposte e altre entrate proprie",
+              ru: "Налоговые и неналоговые доходы",
+            },
+            amount: 1707844.89695,
+            kind: "own",
+          },
+          {
+            label: {
+              en: "Financial aid for social and economic development",
+              de: "Finanzhilfe für die soziale und wirtschaftliche Entwicklung",
+              fr: "Aide financière au développement social et économique",
+              it: "Aiuto finanziario allo sviluppo sociale ed economico",
+              ru: "Финансовая помощь на социально-экономическое развитие",
+            },
+            amount: 6226347.16,
+            kind: "received",
+            from: {
+              en: "Russian Federation",
+              de: "Russische Föderation",
+              fr: "Fédération de Russie",
+              it: "Federazione Russa",
+              ru: "Российская Федерация",
+            },
+          },
+          {
+            label: {
+              en: "Financial aid for public investment",
+              de: "Finanzhilfe für öffentliche Investitionen",
+              fr: "Aide financière aux investissements publics",
+              it: "Aiuto finanziario agli investimenti pubblici",
+              ru: "Финансовая помощь на бюджетные инвестиции",
+            },
+            amount: 1164146.5901,
+            kind: "received",
+            from: {
+              en: "Russian Federation",
+              de: "Russische Föderation",
+              fr: "Fédération de Russie",
+              it: "Federazione Russa",
+              ru: "Российская Федерация",
+            },
+          },
+          {
+            label: {
+              en: "Grants from non-state organisations",
+              de: "Zuwendungen nichtstaatlicher Organisationen",
+              fr: "Dons d'organisations non étatiques",
+              it: "Contributi di organizzazioni non statali",
+              ru: "Безвозмездные поступления от негосударственных организаций",
+            },
+            amount: 10000,
+            kind: "received",
+            from: {
+              en: "Non-state organisations",
+              de: "Nichtstaatliche Organisationen",
+              fr: "Organisations non étatiques",
+              it: "Organizzazioni non statali",
+              ru: "Негосударственные организации",
+            },
+          },
+        ],
+        label: "Law on the execution of the State Budget for 2023, Art. 1 and Appendix 1",
+        act: { authority: "rso", scheme: "publisher_ref", value: "parliamentrso:4876" },
+        quote: {
+          text: "Утвердить отчет об исполнении Государственного бюджета Республики Южная Осетия за 2023 год по доходам в сумме 9 108 338,6 тыс. рублей, по расходам в сумме 9 234 425,6 тыс. рублей с превышением расходов над доходами (дефицит Государственного бюджета) в сумме 126 087,0 тыс. рублей",
+          lang: "ru",
+          translation: {
+            en: "To approve the report on the execution of the State Budget of the Republic of South Ossetia for 2023, with revenue of 9,108,338.6 thousand roubles and expenditure of 9,234,425.6 thousand roubles, expenditure exceeding revenue (a deficit of the State Budget) by 126,087.0 thousand roubles",
+          },
+          evidence: [SO_BUDGET_2023, SO_BUDGET_2023_APPENDIX],
+        },
+      },
+    ],
     open: {
-      en: "Both sides are quoted from their constitutions only. Each leaves the detail to statutes that were not read: citizenship (South Ossetia's constitutional law on citizenship; Georgia's organic law), and military service on both sides. Georgia's text is the Constitute Project's English translation: the authentic Georgian text is published on matsne.gov.ge, which refused Solon's reader on the day this was read. What each side's law says about acts, documents and property issued under the other's has not been read; it is the next question to add.",
-      de: "Beide Seiten werden nur aus ihren Verfassungen zitiert. Beide überlassen die Einzelheiten Gesetzen, die nicht gelesen wurden: die Staatsbürgerschaft (Südossetiens Verfassungsgesetz über die Staatsbürgerschaft; Georgiens Organgesetz) und auf beiden Seiten den Militärdienst. Georgiens Text ist die englische Übersetzung des Constitute Project: der verbindliche georgische Text erscheint auf matsne.gov.ge, das Solons Leseprogramm am Tag der Lektüre abwies. Was das Recht jeder Seite über Akte, Dokumente und Eigentum sagt, die nach dem Recht der anderen entstanden sind, wurde nicht gelesen; es ist die nächste Frage.",
-      fr: "Les deux côtés ne sont cités que d'après leur constitution. Chacune renvoie le détail à des lois qui n'ont pas été lues : la citoyenneté (la loi constitutionnelle sud-ossète sur la citoyenneté ; la loi organique géorgienne) et, des deux côtés, le service militaire. Le texte géorgien est la traduction anglaise du Constitute Project : le texte géorgien authentique est publié sur matsne.gov.ge, qui a refusé le lecteur de Solon le jour de la lecture. Ce que le droit de chaque côté dit des actes, documents et biens établis sous le droit de l'autre n'a pas été lu ; c'est la prochaine question.",
-      it: "Entrambe le parti sono citate solo dalle loro costituzioni. Ciascuna rinvia i dettagli a leggi non lette: la cittadinanza (la legge costituzionale sudossetina sulla cittadinanza; la legge organica georgiana) e, da entrambe le parti, il servizio militare. Il testo georgiano è la traduzione inglese del Constitute Project: il testo georgiano autentico è pubblicato su matsne.gov.ge, che ha rifiutato il lettore di Solon il giorno della lettura. Ciò che il diritto di ciascuna parte dice degli atti, dei documenti e dei beni nati sotto il diritto dell'altra non è stato letto; è la prossima domanda.",
-      ru: "Обе стороны процитированы только по их конституциям. Каждая оставляет подробности законам, которые не прочитаны: о гражданстве (конституционный закон Южной Осетии о гражданстве; органический закон Грузии) и о воинской службе с обеих сторон. Текст Грузии — английский перевод Constitute Project: подлинный текст на грузинском опубликован на matsne.gov.ge, который в день чтения отказал программе Solon. Что право каждой стороны говорит об актах, документах и собственности, оформленных по праву другой, не прочитано; это следующий вопрос.",
+      en: "South Ossetia is quoted from its constitution, its Tax Code (Part Two) and its law on the 2023 budget, all as its Parliament publishes them. Georgia is quoted from the Constitute Project's English translation of its constitution, and its tax rates from PwC's summary, which is not the law: the authentic Georgian texts are on matsne.gov.ge, which refused Solon's reader on the day this was read. Not read yet: the statutes each constitution leaves the detail to (citizenship, military service), each side's budget in later years, Georgia's state budget, and what each side's law says about documents and property made under the other's. Solon's own copy of the South Ossetian Tax Code holds only the page that links the code's Word file; reading that file into the register is work in progress.",
+      de: "Südossetien wird aus seiner Verfassung, seinem Steuergesetzbuch (zweiter Teil) und seinem Gesetz über den Haushalt 2023 zitiert, jeweils wie sein Parlament sie veröffentlicht. Georgien wird aus der englischen Übersetzung seiner Verfassung durch das Constitute Project zitiert und seine Steuersätze aus der Zusammenfassung von PwC, die nicht das Gesetz ist: die verbindlichen georgischen Texte stehen auf matsne.gov.ge, das Solons Leseprogramm am Tag der Lektüre abwies. Noch nicht gelesen: die Gesetze, denen jede Verfassung die Einzelheiten überlässt (Staatsbürgerschaft, Militärdienst), die Haushalte späterer Jahre, Georgiens Staatshaushalt und was das Recht jeder Seite über Dokumente und Eigentum sagt, die nach dem Recht der anderen entstanden sind. Solons eigene Kopie des südossetischen Steuergesetzbuchs enthält nur die Seite, die auf dessen Word-Datei verweist; diese Datei in das Register einzulesen, ist in Arbeit.",
+      fr: "L'Ossétie du Sud est citée d'après sa constitution, son code des impôts (deuxième partie) et sa loi sur le budget 2023, tels que son parlement les publie. La Géorgie est citée d'après la traduction anglaise de sa constitution par le Constitute Project, et ses taux d'imposition d'après le résumé de PwC, qui n'est pas la loi : les textes géorgiens authentiques sont sur matsne.gov.ge, qui a refusé le lecteur de Solon le jour de la lecture. Pas encore lus : les lois auxquelles chaque constitution renvoie le détail (citoyenneté, service militaire), les budgets des années suivantes, le budget de l'État géorgien, et ce que le droit de chaque côté dit des documents et biens établis sous le droit de l'autre. La copie de Solon du code des impôts sud-ossète ne contient que la page qui renvoie au fichier Word du code ; lire ce fichier dans le registre est en cours.",
+      it: "L'Ossezia del Sud è citata dalla sua costituzione, dal suo codice tributario (seconda parte) e dalla sua legge sul bilancio 2023, come li pubblica il suo parlamento. La Georgia è citata dalla traduzione inglese della sua costituzione del Constitute Project, e le sue aliquote dal riassunto di PwC, che non è la legge: i testi georgiani autentici sono su matsne.gov.ge, che ha rifiutato il lettore di Solon il giorno della lettura. Non ancora letti: le leggi a cui ciascuna costituzione rinvia i dettagli (cittadinanza, servizio militare), i bilanci degli anni successivi, il bilancio dello Stato georgiano, e ciò che il diritto di ciascuna parte dice di documenti e beni nati sotto il diritto dell'altra. La copia di Solon del codice tributario sudossetino contiene solo la pagina che rimanda al file Word del codice; leggere quel file nel registro è in corso.",
+      ru: "Южная Осетия процитирована по её Конституции, Налоговому кодексу (часть вторая) и закону об исполнении бюджета за 2023 год — так, как их публикует её Парламент. Грузия процитирована по английскому переводу её Конституции, сделанному Constitute Project, а её налоговые ставки — по обзору PwC, который не является законом: подлинные грузинские тексты опубликованы на matsne.gov.ge, который в день чтения отказал программе Solon. Пока не прочитаны: законы, которым каждая конституция оставляет подробности (гражданство, воинская служба), бюджеты следующих лет, государственный бюджет Грузии, а также что право каждой стороны говорит о документах и собственности, оформленных по праву другой. Собственная копия Налогового кодекса Южной Осетии в Solon содержит только страницу со ссылкой на файл Word; чтение этого файла в реестр — в работе.",
     },
   },
 ]);

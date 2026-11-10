@@ -1,6 +1,8 @@
 # Contested law: one place, two sets of law, side by side
 
 _Design, 2026-11-10. Status: P1 is built (marked **[built]**); the rest is the plan.
+What makes it a working product (proposals, safety, hand-over) is
+`2026-11-from-comparison-to-change.md`.
 Builds on `2026-09-places-and-jurisdictions.md` §7 (disputed places as assertions
 between authorities), `2026-11-freedom-framework.md` (rules, practice, outcome;
 rubrics; no labels) and `2026-11-global-law-and-exit.md` (exit, comparison,
@@ -151,9 +153,14 @@ Read on 2026-11-10:
   authentic text is P2.
 
 Compared, both sides quoted: the territory each claims (SO Art. 3; GE Art. 1,
-Art. 7), citizenship and holding another (SO Art. 16; GE Art. 32), losing it
-(the same articles), moving and leaving (SO Art. 24; GE Art. 14), the duty to
-defend (SO Art. 42; GE Art. 70).
+Art. 7), who may propose a law (SO Art. 69; GE Art. 45), citizenship and
+holding another (SO Art. 16; GE Art. 32), losing it (the same articles), moving
+and leaving (SO Art. 24; GE Art. 14), the duty to defend (SO Art. 42; GE
+Art. 70). Taxes: South Ossetia's Tax Code, Part Two (Arts. 166, 228, 286, read
+from the Word file its Parliament links), against PwC's summary of Georgia's
+rates, cited as a summary and not the law. Money: South Ossetia's law on the
+2023 budget's execution (Art. 1 and Appendix 1), as a ledger whose lines must
+add up to the total the law states.
 
 What it already shows a reader, from the texts alone: both constitutions forbid
 taking citizenship away; South Ossetia's allows dual citizenship in the

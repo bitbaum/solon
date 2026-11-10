@@ -11,11 +11,13 @@ one to read for the detail. Fixes get the same weight as features.
 - **Contested places: two sets of law, side by side.** `/places/contested` lists every place
   that governs itself while another state regards it as part of its territory, and each opens
   the two sets of law question by question, in each side's own words: the original beside a
-  translation, the page it was read on and the day. South Ossetia and Georgia are compared from
-  their constitutions on the territory, citizenship, moving and leaving, and defence; the other
-  places show which questions are still unread. Every page of a claimed place says who claims
-  it again and links to the comparison, and a reader can propose terms for the place. Solon does
-  not say which side is right. {#contested-p1}
+  translation, the page it was read on and the day. South Ossetia and Georgia are compared on
+  the territory, who may propose a law, taxes, citizenship, moving and leaving, and defence, and
+  South Ossetia's 2023 budget is shown as its own law states it: 81% of its revenue was aid from
+  the Russian Federation, and its own revenue covered 18.5% of what it spent. Every held article
+  has "propose a change", and South Ossetia's official route is stated: a bill reaches its
+  Parliament through any one deputy. Solon does not say which side is right.
+  {#contested-p1} {#contested-ledger} {#contested-route}
 
 - **Easier to find your way.** The header now has four panels of four or five links each (Law,
   Places, Data, Governance) instead of 27 links, with statistics given their own panel. A new

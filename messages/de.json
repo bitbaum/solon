@@ -743,7 +743,24 @@
       "proposeBody": "Welche Regel in {place} gelten soll, Frage für Frage, und warum. Verglichene Seiten: {sides}.",
       "methodTitle": "Wie dieser Vergleich entsteht",
       "method": "Jede Zeile ist ein Zitat von einer Seite, die jemand geöffnet hat, mit dem Tag der Lektüre; das Original steht neben jeder Übersetzung, und ein Programm liest jede Seite wöchentlich neu und meldet Worte, die fehlen. Die Fragen sind für jeden Ort dieselben. Die Seite, die regiert, steht immer zuerst, dann die beanspruchende. Wo nichts gelesen wurde, sagt die Seite das.",
-      "all": "Alle umstrittenen Orte"
+      "all": "Alle umstrittenen Orte",
+      "proposeChange": "Eine Änderung dieses Artikels vorschlagen",
+      "money": {
+        "title": "Worauf der Staatshaushalt beruht",
+        "question": "Wie viel hat jede Seite selbst eingenommen, wie viel hat sie erhalten und von wem, und was hat sie ausgegeben?",
+        "year": "{side}, {year}",
+        "caption": "Einnahmen des Staatshaushalts von {side} im Jahr {year}, insgesamt {total}, nach Herkunft",
+        "own": "Eigene Einnahmen",
+        "from": "{from}",
+        "revenue": "Einnahmen",
+        "spent": "Ausgaben",
+        "ownCovered": "Durch eigene Einnahmen gedeckte Ausgaben",
+        "receivedShare": "Von anderen erhaltene Einnahmen",
+        "withoutTitle": "Gleich viel ausgeben ohne das Erhaltene",
+        "without": "Damit {side} allein aus eigenen Einnahmen gleich viel ausgeben könnte, müssten diese das {multiple}-Fache betragen; oder die Ausgaben müssten um {cut} sinken; oder eine Mischung aus beidem.",
+        "notForecast": "Rechnung mit den eigenen Zahlen des Haushaltsgesetzes, keine Prognose: Sie sagt nichts darüber, was die Wirtschaft unter anderen Regeln einbringen könnte oder was stattdessen ausgegeben würde.",
+        "notRead": "Für {side} wurde noch kein Haushalt gelesen."
+      }
     }
   },
   "AuthError": {
