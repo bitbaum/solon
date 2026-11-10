@@ -3,6 +3,7 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 import { toLocale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
+import OfficialRoutes from "@/components/law/official-routes";
 import Redline from "@/components/law/redline";
 import SupportButton from "@/components/law/support-button";
 import { auth } from "@/lib/auth";
@@ -119,61 +120,7 @@ export default async function AmendmentPage({ params }: { params: Params }) {
           </section>
         )}
 
-        <section className="space-y-4" aria-labelledby="routes">
-          <h2 id="routes" className="headline text-2xl text-fg-primary">
-            {t("routes")}
-          </h2>
-          {amendment.routes.length === 0 ? (
-            <p className="text-fg-secondary">{t("noRoute")}</p>
-          ) : (
-            <ul className="space-y-4">
-              {amendment.routes.map((route) => (
-                <li key={route.key} className={`${card} space-y-2`}>
-                  <h3 className="font-medium text-fg-primary">{route.name}</h3>
-                  <p className="text-sm text-fg-secondary">
-                    {route.signatures === null
-                      ? t("routeNoBar", { who: route.whoMaySign })
-                      : "count" in route.signatures
-                        ? t("routeBar", {
-                            count: format.number(route.signatures.count),
-                            who: route.whoMaySign,
-                          })
-                        : t("routeShare", {
-                            percent: route.signatures.percent,
-                            of: route.signatures.of,
-                            who: route.whoMaySign,
-                          })}
-                    {route.window &&
-                      ` ${
-                        "months" in route.window
-                          ? t("routeWindowMonths", { months: route.window.months })
-                          : t("routeWindowDays", { days: route.window.days })
-                      }`}
-                  </p>
-                  {route.alsoRequired && route.alsoRequired.length > 0 && (
-                    <ul className="list-disc space-y-1 pl-5 text-sm text-fg-secondary">
-                      {route.alsoRequired.map((requirement) => (
-                        <li key={requirement}>{requirement}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <p className="text-sm text-fg-secondary">{route.outcome}</p>
-                  {route.cannotChange && (
-                    <p className="text-sm text-fg-tertiary">{route.cannotChange}</p>
-                  )}
-                  <p className="text-xs text-fg-tertiary">
-                    <a href={route.source.url} className="underline" rel="noopener">
-                      {t("routeSource", {
-                        provision: route.source.provision,
-                        title: route.source.title,
-                      })}
-                    </a>
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        <OfficialRoutes routes={amendment.routes} locale={locale} />
 
         <section className="space-y-3" aria-labelledby="revisions">
           <h2 id="revisions" className="headline text-2xl text-fg-primary">

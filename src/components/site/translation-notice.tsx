@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, toLocale } from "@/i18n/routing";
 import { isTranslatedRoute } from "@/lib/site-config";
 
 /**
@@ -14,7 +14,8 @@ export default function TranslationNotice() {
   const pathname = usePathname();
   const t = useTranslations("Notice");
 
-  if (locale === routing.defaultLocale || isTranslatedRoute(pathname)) return null;
+  if (locale === routing.defaultLocale || isTranslatedRoute(pathname, toLocale(locale)))
+    return null;
 
   return (
     <div className="border-b border-subtle bg-surface-raised">
