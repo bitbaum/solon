@@ -1,30 +1,31 @@
 import { looksLikeSilence, speechChain, speechConfigured, transcribe } from "@bitbaum/ai-kit";
 import { allowAssistantRequest } from "@/lib/chat/rate-limit";
-import { auth } from "@/lib/auth";
 import { selfOriginOf } from "@/lib/auth/actor";
 
+/** Dictation is as public as the law chat it serves: bounded by origin, size and a per-address rate. */
+const MAX_BYTES = 8 * 1024 * 1024;
+
+/**
+ * Failures answer with a status and a `code`, never a sentence: the words a
+ * person reads are chatkit's localized dictation problems, chosen from the
+ * status (401/403 signIn, 429 busy, 413 fileTooLarge, else unavailable). A
+ * server sentence here would reach a Russian reader in English.
+ */
+const fail = (code: string, status: number, headers?: HeadersInit) =>
+  Response.json({ code }, { status, headers });
+
 export async function POST(req: Request) {
-  if (req.headers.get("origin") !== selfOriginOf(req))
-    return Response.json({ error: "Origin not allowed" }, { status: 403 });
-  const session = await auth();
-  if (!session) return Response.json({ error: "Sign in to dictate." }, { status: 401 });
-  if (!speechConfigured(process.env))
-    return Response.json(
-      { error: "Dictation is not configured. Please type your question." },
-      { status: 503 },
-    );
-  if (!allowAssistantRequest(session.actorId, "dictation"))
-    return Response.json(
-      { error: "Please wait before dictating again, or type your question." },
-      { status: 429 },
-    );
+  if (req.headers.get("origin") !== selfOriginOf(req)) return fail("origin", 403);
+  if (!speechConfigured(process.env)) return fail("not-configured", 503);
+  const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (!allowAssistantRequest(address, "dictation"))
+    return fail("rate-limited", 429, { "Retry-After": "600" });
   const size = Number(req.headers.get("content-length"));
-  if (!size || size > 8 * 1024 * 1024)
-    return Response.json({ error: "Please use a shorter recording." }, { status: 413 });
+  if (!size || size > MAX_BYTES) return fail("too-large", 413);
   const form = await req.formData().catch(() => null);
   const audio = form?.get("audio");
-  if (!(audio instanceof Blob) || !audio.size || audio.size > 8 * 1024 * 1024)
-    return Response.json({ error: "An audio recording is required." }, { status: 400 });
+  if (!(audio instanceof Blob) || !audio.size || audio.size > MAX_BYTES)
+    return fail("audio-required", 400);
   const locale = form?.get("locale");
   try {
     const result = await transcribe({
@@ -40,9 +41,6 @@ export async function POST(req: Request) {
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {
-    return Response.json(
-      { error: "Dictation failed. Try again or type your question." },
-      { status: 503 },
-    );
+    return fail("transcription-failed", 503);
   }
 }
