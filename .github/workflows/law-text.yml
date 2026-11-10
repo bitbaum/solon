@@ -47,6 +47,8 @@ on:
             riigiteataja,
             parliamentrso,
             presidentruo,
+            parliamentrso-text,
+            presidentruo-text,
             eurlex,
             ukleg,
             ris,
@@ -202,7 +204,7 @@ jobs:
             exit 0
           fi
           case "$SOURCE" in
-            ukleg|gcnh|wyoleg|legilux|riigiteataja|parliamentrso|presidentruo) LOCK="paced" ;;
+            ukleg|gcnh|wyoleg|legilux|riigiteataja|parliamentrso|presidentruo|parliamentrso-text|presidentruo-text) LOCK="paced" ;;
             *) LOCK="heavy" ;;
           esac
           exec 9>"/tmp/solon-law-load-$LOCK.lock"

@@ -23,7 +23,8 @@ export type BriefKind =
   | "caution"
   | "coded"
   | "gap"
-  | "empty";
+  | "empty"
+  | "statement";
 
 export interface BriefFact {
   /** `F1`, `F2` …: what an explanation cites and the page anchors. */

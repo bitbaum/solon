@@ -1,4 +1,7 @@
 import type { Rounding } from "@/lib/tax-model";
+import { alpha3Of } from "@/lib/config/world/countries";
+import { COUNTRY_PACKS } from "./countries";
+import { OECD_MEMBERS, oecdKey, worldBankKey, worldCountries } from "./world";
 import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
 
@@ -192,8 +195,8 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
     : [],
 );
 
-const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
-  key: `oecd-tax-${iso2.toLowerCase()}`,
+const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceInput => ({
+  key: oecdKey(iso2),
   publisher: "OECD",
   dataset: "OECD Tax Database, Revenue Statistics and Government at a Glance",
   homepage: "https://www.oecd.org/en/data/datasets/oecd-tax-database.html",
@@ -206,14 +209,14 @@ const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
     ru: "Налоговая база данных ОЭСР (CC BY 4.0)",
   },
   // Yearly tables, revised through the year.
-  cadence: "0 4 10 * *",
+  cadence,
   adapter: "oecd_sdmx",
   options: {
     place: { scheme: "iso_3166_1", value: iso2 },
     fromYear: 2000,
     series: OECD_SERIES.map(({ flow, key, measure, match, metric, divideBy }) => ({
       flow,
-      key: key.replace("{iso3}", iso3),
+      key: key.replace("{iso3}", alpha3Of(iso2)),
       measure,
       match,
       metric,
@@ -223,21 +226,21 @@ const oecdSource = (pack: string, iso2: string, iso3: string): SourceInput => ({
   packs: [pack],
 });
 
-const worldBankSource = (pack: string, country: string): SourceInput => ({
-  key: `worldbank-wdi-${country.toLowerCase()}`,
+const worldBankSource = (pack: string, country: string, cadence = "0 4 9 * *"): SourceInput => ({
+  key: worldBankKey(country),
   publisher: "World Bank",
-  dataset: "World Development Indicators",
+  dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",
   licence: "CC-BY-4.0",
   attribution: {
-    en: "World Bank, World Development Indicators (CC BY 4.0)",
-    de: "Weltbank, World Development Indicators (CC BY 4.0)",
-    fr: "Banque mondiale, World Development Indicators (CC BY 4.0)",
-    it: "Banca mondiale, World Development Indicators (CC BY 4.0)",
-    ru: "Всемирный банк, World Development Indicators (CC BY 4.0)",
+    en: "World Bank, World Development Indicators and Worldwide Governance Indicators, 2026 Update (www.govindicators.org) (CC BY 4.0)",
+    de: "Weltbank, World Development Indicators und Worldwide Governance Indicators, Aktualisierung 2026 (www.govindicators.org) (CC BY 4.0)",
+    fr: "Banque mondiale, World Development Indicators et Worldwide Governance Indicators, mise à jour 2026 (www.govindicators.org) (CC BY 4.0)",
+    it: "Banca mondiale, World Development Indicators e Worldwide Governance Indicators, aggiornamento 2026 (www.govindicators.org) (CC BY 4.0)",
+    ru: "Всемирный банк, World Development Indicators и Worldwide Governance Indicators, обновление 2026 (www.govindicators.org) (CC BY 4.0)",
   },
   // Monthly: the World Bank revises its indicators several times a year.
-  cadence: "0 4 9 * *",
+  cadence,
   adapter: "worldbank_indicators",
   options: {
     place: { scheme: "iso_3166_1", value: country },
@@ -247,6 +250,10 @@ const worldBankSource = (pack: string, country: string): SourceInput => ({
   },
   packs: [pack],
 });
+
+/** The `i`-th source of a day: the same day of the month, `every` minutes later each, from 04:00. */
+const staggered = (i: number, day: number, every = 1) =>
+  `${(i * every) % 60} ${4 + Math.floor((i * every) / 60)} ${day} * *`;
 
 export const SOURCES: readonly SourceInput[] = [
   {
@@ -995,6 +1002,8 @@ export const SOURCES: readonly SourceInput[] = [
     options: {
       place: { scheme: "li_municipality", column: "commune" },
       yearColumn: "tax_year",
+      // A council keeps or changes the surcharge each autumn; until then the last decision stands.
+      inForceUntilNext: true,
       facts: [{ metric: "tax.multiplier", column: "surcharge_percent", divideBy: 100 }],
     },
     packs: ["liechtenstein"],
@@ -1281,7 +1290,43 @@ export const SOURCES: readonly SourceInput[] = [
   worldBankSource("estonia", "EE"),
   worldBankSource("united_states", "US"),
   // Liechtenstein is not an OECD member; the Tax Database has no figures for it.
-  oecdSource("switzerland", "CH", "CHE"),
-  oecdSource("estonia", "EE", "EST"),
-  oecdSource("united_states", "US", "USA"),
+  oecdSource("switzerland", "CH"),
+  oecdSource("estonia", "EE"),
+  oecdSource("united_states", "US"),
+  ...worldSources(),
 ];
+
+/**
+ * The world pack's sources: the country names and codes, the World Bank's
+ * indicators for every country no pack holds, and the OECD's tax series for
+ * those of them that are OECD members. Computed from the country registry, so
+ * a country is never a line to remember.
+ */
+function worldSources(): SourceInput[] {
+  const held = new Set(COUNTRY_PACKS.flatMap((p) => (p.region ? [p.region] : [])));
+  const countries = worldCountries(held);
+  return [
+    {
+      // Written by `scripts/places-world-countries.ts` from the country registry, itself
+      // generated from Natural Earth 1:10m admin 0 (public domain), with each country's name in
+      // five languages from Unicode CLDR. Nothing to fetch: handed in by `places:import`.
+      key: "world-country-registry",
+      publisher: "Natural Earth; Unicode CLDR",
+      dataset: "Countries by ISO 3166-1 code (Natural Earth 1:10m) and their names (CLDR)",
+      homepage: "https://www.naturalearthdata.com/about/terms-of-use/",
+      licence: "Unicode-3.0",
+      attribution: {
+        en: "Country codes: Natural Earth (public domain). Country names: Unicode CLDR, © Unicode, Inc.",
+      },
+      cadence: "0 6 6 1 *",
+      adapter: "fixture",
+      packs: ["world"],
+    },
+    // Spread over the morning, so no publisher sees a burst: the World Bank is asked one country a
+    // minute, the OECD one every two.
+    ...countries.map((a2, i) => worldBankSource("world", a2, staggered(i, 9))),
+    ...countries
+      .filter((a2) => OECD_MEMBERS.includes(a2))
+      .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),
+  ];
+}

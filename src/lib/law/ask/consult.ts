@@ -42,7 +42,7 @@ export interface ProposalAct {
   authority: string;
 }
 
-const authorityName = (key: string) => LAW_AUTHORITIES.find((a) => a.key === key)?.name ?? key;
+const authorityName = (key: string) => LAW_AUTHORITIES.find((a) => a.key === key)?.label ?? key;
 
 /** The proposal as text: the act, each change with its current and proposed words, the reason. */
 export function describeProposal(proposal: Proposal, act: ProposalAct): string {

@@ -4,23 +4,29 @@
  * `world-atlas` package), by ISO 3166-1 numeric code; US states are the
  * Census Bureau's (through `us-atlas`), by FIPS code.
  *
- * A place Solon holds law for is one line here; a test fails when a country
- * or state authority has none, so a new country cannot be left off the globe.
+ * A country is drawn from its authority's place code, so a new country authority is on
+ * the globe by itself; a US state needs its FIPS code here, and a test fails when one has none.
  */
+import { numericOf } from "@/lib/config/world/countries";
+import { LAW_AUTHORITIES } from "./index";
+
 export type GlobeLayer = "countries" | "states";
 
-export const GLOBE_FEATURES: Readonly<Record<string, { layer: GlobeLayer; id: string }>> = {
-  ch: { layer: "countries", id: "756" },
-  li: { layer: "countries", id: "438" },
-  lux: { layer: "countries", id: "442" },
-  ee: { layer: "countries", id: "233" },
-  uk: { layer: "countries", id: "826" },
-  at: { layer: "countries", id: "040" },
-  de: { layer: "countries", id: "276" },
-  us: { layer: "countries", id: "840" },
-  "us-wy": { layer: "states", id: "56" },
-  "us-nh": { layer: "states", id: "33" },
-};
+/** US states by FIPS code: the Census Bureau's outlines are keyed by it, which the country registry does not hold. */
+const STATE_FEATURES: Readonly<Record<string, string>> = { "us-wy": "56", "us-nh": "33" };
+
+/**
+ * Every country authority by its country's ISO numeric code, read from the
+ * country registry (src/lib/config/world/countries.ts), and the US states above.
+ */
+export const GLOBE_FEATURES: Readonly<Record<string, { layer: GlobeLayer; id: string }>> =
+  Object.fromEntries([
+    ...LAW_AUTHORITIES.flatMap((a) => {
+      const n3 = a.place?.scheme === "iso_3166_1" ? numericOf(a.place.value) : null;
+      return n3 ? [[a.key, { layer: "countries" as const, id: n3 }]] : [];
+    }),
+    ...Object.entries(STATE_FEATURES).map(([key, id]) => [key, { layer: "states" as const, id }]),
+  ]);
 
 /** The id a feature is drawn under on the globe: its layer, then its code. */
 export const globeId = (feature: { layer: GlobeLayer; id: string }) =>

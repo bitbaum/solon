@@ -5,7 +5,7 @@ import { localized } from "@/lib/places/place-view";
 import { pointOf, type Rubric } from "@/lib/statistics/assessments";
 import type { AssessmentRow } from "@/lib/statistics/read";
 import { Sources } from "./event-parts";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 /** The pages a coding rests on, as links: Solon's own law page where it holds the act, else the publisher's. */
 function ProvisionLinks({ row }: { row: AssessmentRow }) {

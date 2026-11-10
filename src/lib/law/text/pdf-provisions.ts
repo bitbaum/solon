@@ -11,12 +11,12 @@ export async function provisionsOfPdf(
   bytes: Uint8Array,
   lang: string,
   onScanned?: () => void,
-): Promise<{ provisions: Provision[]; scanned: boolean }> {
+): Promise<{ provisions: Provision[]; scanned: boolean; text: string }> {
   let text = cleanPdfText(await documentText(bytes, "pdf"));
   const scanned = text.replace(/\s+/g, "").length < 200;
   if (scanned) {
     onScanned?.();
     text = cleanPdfText(await ocrPdfText(bytes, lang));
   }
-  return { provisions: parseCantonalProvisions(text), scanned };
+  return { provisions: parseCantonalProvisions(text), scanned, text };
 }

@@ -23,8 +23,10 @@ import {
   date,
   foreignKey,
   index,
+  integer,
   jsonb,
   numeric,
+  pgMaterializedView,
   pgTable,
   primaryKey,
   text,
@@ -485,6 +487,50 @@ export const jurisdictionRelations = pgTable(
 );
 
 /**
+ * Every path a place's page has ever had (design:
+ * docs/design/2026-11-place-navigation.md, "URLs"). One canonical path per
+ * target; the others answer with a redirect to it. A path points at a
+ * jurisdiction or at an area, never both, and being the primary key it is
+ * unique across the two. Never deleted; only `canonical` may change.
+ */
+export const placePaths = pgTable(
+  "place_paths",
+  {
+    path: text("path").primaryKey(),
+    jurisdictionId: text("jurisdiction_id"),
+    areaId: text("area_id"),
+    canonical: boolean("canonical").notNull(),
+    recordedAt: recordedAt(),
+  },
+  (t) => [
+    uniqueIndex("place_paths_one_canonical_jurisdiction")
+      .on(t.jurisdictionId)
+      .where(sql`${t.canonical} AND ${t.jurisdictionId} IS NOT NULL`),
+    uniqueIndex("place_paths_one_canonical_area")
+      .on(t.areaId)
+      .where(sql`${t.canonical} AND ${t.areaId} IS NOT NULL`),
+    index("place_paths_jurisdiction_id_idx").on(t.jurisdictionId),
+    index("place_paths_area_id_idx").on(t.areaId),
+    check("place_paths_one_target", sql`(${t.jurisdictionId} IS NULL) <> (${t.areaId} IS NULL)`),
+    check("place_paths_shape", sql`${t.path} ~ '^[^/]+(/[^/]+)*$'`),
+    foreignKey({
+      columns: [t.jurisdictionId],
+      foreignColumns: [jurisdictions.id],
+      name: "place_paths_jurisdiction_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+    foreignKey({
+      columns: [t.areaId],
+      foreignColumns: [areas.id],
+      name: "place_paths_area_id_fkey",
+    })
+      .onDelete("restrict")
+      .onUpdate("cascade"),
+  ],
+);
+
+/**
  * A measured value of a place for a period: a tax multiplier, a tariff, a
  * population. Bitemporal: the current view takes, per key, the row whose
  * `superseded_at` is null. A correction supersedes; it never overwrites.
@@ -564,6 +610,19 @@ export const facts = pgTable(
       .onUpdate("cascade"),
   ],
 );
+
+/**
+ * Where every state place sits: itself (depth 0) and each place it is part of
+ * today, with how many steps up. A materialized view over the current `part_of`
+ * relations (migration 0025), rebuilt by the importer at the end of every
+ * applied run; it is read, never written, so the rule that Places rows are
+ * never deleted holds. `existing()`: drizzle-kit does not manage it.
+ */
+export const placeAncestors = pgMaterializedView("place_ancestors", {
+  placeId: text("place_id").notNull(),
+  ancestorId: text("ancestor_id").notNull(),
+  depth: integer("depth").notNull(),
+}).existing();
 
 /**
  * A postcode locality and a place it lies in (§8.2). One postcode may span

@@ -8,7 +8,7 @@ import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statis
 import type { PlaceSeries } from "@/lib/statistics/read";
 import AxisBuilder from "./axis-builder";
 import AxisPanel, { type AxisPanelProps } from "./axis-panel";
-import { unitLabel, type StatisticsTranslator } from "./metric-view";
+import { unitLabel, type StatisticsTranslator } from "./shared";
 
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];
@@ -99,6 +99,17 @@ export default function StatisticsIndex({
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-fg-primary">{t("index.dimensionsTitle")}</h2>
             <p className="max-w-3xl text-fg-secondary">{t("index.dimensionsIntro")}</p>
+            <p className="mb-0 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+              <Link href="/statistics/methods" className="text-fg-primary underline">
+                {t("methods.title")}
+              </Link>
+              <Link href="/statistics/gaps" className="text-fg-primary underline">
+                {t("gaps.title")}
+              </Link>
+              <Link href="/statistics/research" className="text-fg-primary underline">
+                {t("research.title")}
+              </Link>
+            </p>
           </div>
           <ul className="grid gap-4 md:grid-cols-2">
             {dimensions.map((d) => (

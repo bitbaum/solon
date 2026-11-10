@@ -1,5 +1,5 @@
 import type { SanityFinding } from "@/lib/statistics/sanity";
-import type { StatisticsTranslator } from "./metric-view";
+import type { StatisticsTranslator } from "./shared";
 
 const years = (list: number[]) =>
   list.length > 6 ? `${list.slice(0, 5).join(", ")} … ${list.at(-1)}` : list.join(", ");

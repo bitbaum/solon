@@ -1,7 +1,6 @@
 {
   "Meta": {
-    "title": "Solon — Una governance che ogni gruppo può gestire",
-    "description": "Proposte, votazioni e conti, visibili a ogni membro — per aziende, comuni, associazioni e comunità."
+    "title": "Solon — Una governance che ogni gruppo può gestire"
   },
   "Site": {
     "sections": {
@@ -11,7 +10,8 @@
       "decisions": "Decisioni",
       "more": "Altro",
       "places": "Luoghi",
-      "law": "Diritto"
+      "law": "Diritto",
+      "data": "Dati"
     },
     "sectionDesc": {
       "useCases": "Ogni gruppo decide. Trovate il vostro.",
@@ -20,7 +20,8 @@
       "decisions": "Il registro pubblico — e la vostra parte.",
       "more": "Tutto il resto.",
       "places": "Ogni ente territoriale, con la fonte di ogni dato.",
-      "law": "Ogni atto che Solon conserva, con la sua fonte."
+      "law": "Ogni atto che Solon conserva, con la sua fonte.",
+      "data": "Serie, classifiche e metodi, con la fonte dietro ogni cifra."
     },
     "links": {
       "whatYouCanDo": "Cosa puoi fare qui",
@@ -68,7 +69,10 @@
       "lawCoverage": "Che cosa conserva Solon",
       "lawAmendments": "Modifiche proposte",
       "statistics": "Statistiche",
-      "statisticsEvents": "Eventi giuridici"
+      "statisticsEvents": "Eventi giuridici",
+      "statisticsMethods": "Come sono fatte le classifiche",
+      "statisticsGaps": "Cosa viene misurato, e cosa no",
+      "statisticsResearch": "Ricerca con l'IA"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -116,7 +120,10 @@
       "lawCoverage": "Quali atti conserva Solon, contati dai dati",
       "lawAmendments": "Le modifiche proposte al diritto, con la redline e i sostegni",
       "statistics": "Il diritto accanto ai numeri: serie nel tempo, ognuna con la sua fonte e la sua legge",
-      "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove"
+      "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove",
+      "statisticsMethods": "Chi fa ogni indice, come, e cosa chiedergli.",
+      "statisticsGaps": "Cosa raccoglie ogni ufficio, e dove la stessa domanda non ha risposta.",
+      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti."
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },
@@ -134,7 +141,8 @@
     "themeDark": "Scuro",
     "themeSystem": "Come il dispositivo",
     "overview": "Panoramica",
-    "featured": "In evidenza"
+    "featured": "In evidenza",
+    "find": "Cerca"
   },
   "Footer": {
     "tagline": "Governance per qualsiasi gruppo di persone. Beta — in funzione, non ancora rilasciato.",
@@ -145,6 +153,7 @@
   },
   "Photos": {
     "earthAtNight": "Le città e i paesi d'Europa illuminati di notte, visti dall'orbita sotto il bagliore dell'orizzonte.",
+    "earthByDay": "La Terra di giorno vista dall'orbita: il Mar Arabico, l'India e il Golfo del Bengala sotto nuvole in movimento.",
     "landsgemeinde": "La Landsgemeinde di Glarona: migliaia di cittadine e cittadini riuniti in piazza sotto le Alpi, che decidono le proprie leggi all'aperto.",
     "assemblySeated": "File di membri seduti fianco a fianco a un'assemblea all'aperto, con i documenti in mano.",
     "village": "Un piccolo villaggio con il suo castello su un pendio innevato, visto dall'alto.",
@@ -468,6 +477,11 @@
       "record": "Il registro in tempo reale",
       "source": "Il codice sorgente"
     }
+  },
+  "NotFound": {
+    "kicker": "Non trovato",
+    "title": "Questa pagina non esiste",
+    "lede": "L’indirizzo potrebbe essere scritto male, oppure l’atto, il luogo o la statistica che indica non esiste (ancora) in Solon. Uno di questi collegamenti può aiutare."
   },
   "Credits": {
     "metaTitle": "Crediti fotografici — Solon",
@@ -838,9 +852,13 @@
       "zoomIn": "Ingrandire",
       "zoomOut": "Ridurre",
       "home": "Tornare alla Terra intera",
-      "credit": "Contorni: Natural Earth e US Census Bureau, pubblico dominio. Toccate un luogo ombreggiato per leggerne il diritto.",
+      "credit": "Contorni e nomi: Natural Earth e US Census Bureau, pubblico dominio; località: GeoNames, CC BY 4.0. Trascinate per ruotare, scorrete o pizzicate per zoomare, toccate due volte per ingrandire, toccate un luogo per vederne il nome o uno ombreggiato per leggerne il diritto.",
       "title": "Ogni luogo, il suo diritto",
       "body": "I luoghi ombreggiati sono quelli di cui Solon conserva il diritto, più scuri quando ce n'è di più. Girate il globo, toccate un luogo e leggetene il diritto articolo per articolo."
+    },
+    "authority": {
+      "intercantonal": "I cantoni insieme",
+      "eu": "Unione europea"
     }
   },
   "LostPassword": {
@@ -1365,6 +1383,170 @@
         "thin_scatter": "troppi pochi punti per uno schema",
         "scatter_years": "punti di anni molto lontani"
       }
+    },
+    "methods": {
+      "metaTitle": "Come sono fatte le classifiche",
+      "metaDescription": "Classifiche e valutazioni di governo e libertà: chi le fa, cosa misurano, come, e se i loro dati possono essere mostrati.",
+      "kicker": "Metodi",
+      "title": "Come sono fatte le classifiche",
+      "intro": "Ogni indice di libertà o di governo è la scelta di qualcuno su cosa contare e come pesarlo. Qui ognuno è descritto allo stesso modo: chi lo fa, cosa dice di misurare, come, di cosa è fatto, se i suoi dati possono essere mostrati qui, e le domande da porgli. Nulla del metodo di un editore è completato a memoria: ciò che non è stato letto è indicato come tale.",
+      "colName": "Indice",
+      "colPublisher": "Editore",
+      "colKind": "Come",
+      "colLicence": "I suoi dati qui",
+      "kinds": {
+        "expert_scoring": "Esperti valutano i paesi",
+        "composite": "Combina altre fonti",
+        "perception": "Sondaggi di percezione",
+        "official_statistics": "Statistiche ufficiali",
+        "coded_from_law": "Codificato dal diritto"
+      },
+      "layers": {
+        "de_jure": "Ciò che dice la legge",
+        "de_facto": "Ciò che accade",
+        "outcome": "Ciò che ne risulta",
+        "perception": "Come è percepito"
+      },
+      "verdicts": {
+        "loadable": "Può essere mostrato",
+        "unclear": "Licenza incerta",
+        "permission": "Serve un permesso",
+        "not_loadable": "Non può essere mostrato"
+      },
+      "claims": "Cosa dice di misurare",
+      "about": "Cosa guarda",
+      "components": "Di cosa è fatto",
+      "noComponents": "Le sue parti non sono ancora state lette.",
+      "coverage": "Copertura",
+      "drawsOn": "Attinge da",
+      "licenceTitle": "I suoi dati possono essere mostrati qui?",
+      "terms": "Le condizioni dell'editore, citate",
+      "unreadTitle": "Non ancora letto",
+      "unreadIntro": "Lasciato aperto invece che completato a memoria.",
+      "questionsTitle": "Domande da porgli",
+      "questions": {
+        "experts": "Chi sono gli esperti, quanti valutano ogni paese, e quanto divergono? Un voto di poche persone è un'opinione con un numero.",
+        "composite": "Quali fonti combina, e una di esse conta due volte?",
+        "weights": "I pesi sono motivati o semplicemente scelti? Su Solon potete impostare i vostri.",
+        "perception": "La percezione di chi: imprese, residenti, esperti all'estero?",
+        "official": "I paesi contano allo stesso modo? Definizione e perimetro contano più dei decimali.",
+        "coded": "La scala è scritta, e un secondo lettore codificherebbe lo stesso testo allo stesso modo?",
+        "layer": "Mescola ciò che dice la legge e ciò che accade? Solon li tiene separati perché un divario si veda.",
+        "inputs": "Le sue fonti hanno scelte e licenze proprie, elencate sopra.",
+        "licence": "Le sue cifre non possono essere mostrate qui. Leggetele presso l'editore e pesatele con le domande sopra.",
+        "unread": "Una parte del suo funzionamento non è ancora stata letta."
+      },
+      "sources": "Da dove viene questa descrizione",
+      "checked": "verificato da un programma",
+      "forPeople": "letto da una persona; un programma non può leggere questa pagina",
+      "homepage": "La pagina dell'editore",
+      "ownTitle": "Le misure proprie di Solon",
+      "ownIntro": "Le dimensioni di Solon separano diritto, pratica e risultati e codificano i tratti del diritto su scale scritte; ogni codifica mostra il suo articolo, la sua affidabilità e se una seconda persona l'ha verificata.",
+      "back": "Tutti i metodi",
+      "open": "Apri"
+    },
+    "research": {
+      "metaTitle": "Ricerca con l'IA",
+      "metaDescription": "Ponete una domanda su governo, libertà o statistica: un'IA legge le serie, le dimensioni, le descrizioni dei metodi e il diritto di Solon e scrive un rapporto in cui ogni cifra e citazione è verificata.",
+      "kicker": "Ricerca",
+      "title": "Ricerca con l'IA",
+      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti.",
+      "questionLabel": "La vostra domanda",
+      "placeholder": "Per esempio: come si confronta il carico fiscale dell'Estonia con quello della Svizzera, e cosa dice il diritto sull'aliquota massima?",
+      "ask": "Ricerca",
+      "asking": "Ricerca in corso…",
+      "steps": {
+        "search": "Lettura",
+        "write": "Stesura del rapporto"
+      },
+      "tools": {
+        "search_catalog": "Cerco nel catalogo",
+        "read_series": "Leggo la serie",
+        "read_dimension": "Leggo la dimensione",
+        "read_method": "Leggo come è fatto",
+        "search_law": "Cerco nel diritto",
+        "web_search": "Cerco sul web",
+        "web_read": "Leggo la pagina"
+      },
+      "sourcesTitle": "Fonti trovate",
+      "reportTitle": "Rapporto",
+      "aiLabel": "Scritto da un'IA dalle fonti elencate. Ogni numero e ogni citazione è stato verificato rispetto a esse; il ragionamento no. Verificatelo sulle fonti.",
+      "cited": "Si basa su",
+      "rateLimited": "Attendete qualche minuto prima di chiedere di nuovo.",
+      "unavailable": "La ricerca non è disponibile in questo momento.",
+      "failed": "La ricerca non ha potuto essere completata, o il rapporto non ha potuto essere verificato rispetto alle sue fonti, e quindi non viene mostrato. Le fonti trovate sono elencate.",
+      "examplesTitle": "Oppure provate",
+      "examples": {
+        "a": "Come si confrontano Estonia e Svizzera sulle imposte, nel diritto e in ciò che si riscuote?",
+        "b": "Quanto costa lasciare un paese, per legge, nei luoghi che Solon ha codificato?",
+        "c": "Come è fatto il punteggio Stato di diritto della Banca mondiale, e cosa chiedergli?"
+      }
+    },
+    "gaps": {
+      "metaTitle": "Cosa viene misurato, e cosa no",
+      "metaDescription": "Cosa raccolgono e pubblicano gli uffici di statistica, luogo per luogo; dove la stessa domanda ha risposta in un paese e non in un altro; e cosa dovrebbe accompagnare una nuova misura.",
+      "kicker": "Lacune",
+      "title": "Cosa viene misurato, e cosa no",
+      "intro": "Gli uffici di statistica decidono cosa raccogliere e pubblicare, per ragioni giuridiche, storiche, pratiche o politiche: la stessa domanda può quindi avere risposta in un paese e non in un altro. Qui ogni tema è presentato allo stesso modo: cosa dice una fonte letta che si raccoglie, incrociato con cosa, sotto quale diritto, dove la risposta manca, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Solon descrive e propone; non valuta gli uffici e non caratterizza le persone.",
+      "open": "Apri",
+      "back": "Tutti i temi",
+      "stance": "Solon riporta ciò che dicono le pagine di ciascun ufficio e ciò che non è stato letto. Una lacuna può essere una legge scelta da un paese; una differenza in una tabella non è una spiegazione. Nulla qui descrive un ufficio o un gruppo di persone.",
+      "purposesTitle": "A cosa serve la risposta",
+      "matrixTitle": "Cosa pubblica ogni luogo",
+      "matrixIntro": "Una riga per luogo e per ripartizione, da pagine lette. «Non letto» significa che Solon non ha guardato, non che nulla sia pubblicato.",
+      "colPlace": "Luogo",
+      "status": {
+        "published": "Pubblicato",
+        "restricted": "Accessibile ai ricercatori",
+        "not_collected": "Non raccolto",
+        "barred_by_law": "Vietato dalla legge"
+      },
+      "crossedWith": "Incrociato con",
+      "crossing": {
+        "age": "età",
+        "sex": "sesso",
+        "region": "regione",
+        "income": "reddito",
+        "education": "istruzione",
+        "offence_type": "tipo di reato"
+      },
+      "notRead": "Non letto",
+      "detailsTitle": "Il dettaglio, e dove è stato letto",
+      "frame": "Il diritto o la politica:",
+      "unread": "Non letto:",
+      "byPerson": "letto da una persona",
+      "byProgram": "verificato ogni settimana da un programma",
+      "gapsTitle": "Dove la risposta differisce",
+      "gapLine": "{place} è «{status}» per «{variant}», che {others} pubblicano.",
+      "gapNote": "Una differenza tra luoghi è una domanda, non una colpa. Dove una legge vieta una categoria, cambiarla spetta ai legislatori di quel paese; Solon può esporre cosa si guadagnerebbe, cosa si rischierebbe e cosa dovrebbe accompagnarla.",
+      "companionsTitle": "Cosa dovrebbe accompagnarla",
+      "companionsIntro": "Una ripartizione senza questi elementi invita a leggere male. Sono ciò che permette di mettere alla prova una spiegazione, non solo di mostrare una differenza.",
+      "cautionsTitle": "Cautele nella lettura",
+      "risksTitle": "Obiezioni, e cosa risponde",
+      "risksIntro": "I rischi del raccogliere e pubblicare sono reali, e gli uffici che oggi pubblicano hanno risposte; entrambi sono esposti.",
+      "risk": "Rischio:",
+      "safeguard": "Salvaguardia:",
+      "decidesTitle": "Chi decide",
+      "decides": "Se un paese raccoglie o pubblica una misura lo decidono i suoi legislatori e il suo ufficio, nel quadro della sua costituzione. Un gruppo su Solon può adottare una posizione, o chiedere una misura a un ufficio, con una proposta.",
+      "propose": "Proponi una posizione",
+      "proposeTitle": "Posizione su ciò che viene misurato: {topic}",
+      "proposeBody": "Chiediamo al nostro ufficio di statistica di considerare la misura descritta in {url}, con gli elementi di accompagnamento e le salvaguardie ivi elencati."
+    }
+  },
+  "Find": {
+    "button": "Cerca",
+    "title": "Trova tutto",
+    "placeholder": "Trova una pagina, una cifra, un paese, una città, una legge…",
+    "none": "Nessun risultato. Provate con meno lettere, o chiedete a Solon.",
+    "hint": "↑ ↓ per spostarsi, Invio per aprire, Esc per chiudere",
+    "groups": {
+      "pages": "Pagine",
+      "series": "Cifre",
+      "dimension": "Dimensioni",
+      "method": "Come sono fatte le classifiche",
+      "gaps": "Cosa viene misurato",
+      "places": "Luoghi",
+      "law": "Diritto"
     }
   }
 }
