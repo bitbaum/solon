@@ -502,10 +502,10 @@ decrees from the API, each cut into a preamble, chapters and articles when it ha
 numbered points under its preamble: one provision), dated by the day it is signed (the last "6 ноября
 2026 г." of its closing lines, else the day the site dated the post, counted in the report as a date
 fallback) and numbered `<year>/<number>` (`act_number`) when the closing lines print one; the early decrees
-(2012) print none and get none. The Parliament's reader is built and tested on its pages (the date is its
-own date field) but refuses to store texts while `PARLIAMENTRSO.textsAdmitted` is false: no terms or
-copyright law of the Republic admitting it have been opened (research note §6). The President's
-site allows reproduction with a reference to the source, quoted on the licence entry.
+(2012) print none and get none. The Parliament's reader dates an act by the page's own date field. Texts of
+both publishers are admitted: the President's site allows reproduction with a reference to the source, and
+the Republic's law on copyright says laws and other official documents are not objects of copyright (Art. 8,
+law of 12 December 2012 № 64), both quoted on the licence entries.
 
 ### Asking the law as built (2026-10-24)
 

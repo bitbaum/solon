@@ -2,6 +2,7 @@
  * Everything the page of one statistic shows, read once, so the live page
  * and a saved view render from the same loader.
  */
+import { searchesFor } from "@/lib/config/statistics/searches";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { numericOf } from "@/lib/config/statistics/world";
@@ -99,10 +100,15 @@ export async function loadMetricPage(
     ...screened.findings.filter((f) => f.places.some((n) => shown.some((s) => s.name === n))),
     ...checkSeries(shown, { fixedByLaw: metric.statistic?.fixedByLaw === true }),
   ];
+  // A place asked for with no figures: where Solon looked for one (config/statistics/searches.ts).
+  const searches = searchesFor(metric.key, query.places).filter(
+    (r) => !all.some((s) => s.code.toUpperCase() === r.place && s.points.length > 0),
+  );
   return {
     metric,
     all,
     shown,
+    searches,
     years,
     acts,
     events,

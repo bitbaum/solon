@@ -1,61 +1,20 @@
 /**
- * The mark as standalone `<svg>` markup, for everything that cannot render
- * React: the static icons the generator writes, the share card, the test
- * that holds those files to the drawing. React surfaces render <Logo>, which
- * draws the same path.
+ * The owl as standalone `<svg>` markup, for everything that cannot render
+ * React: the static icons `pnpm run brand` writes, and the test that holds
+ * those files to the mark. Drawn by the package's own helpers, so Solon's
+ * icons have the same proportions as OrangeCat's and Loki's.
  */
-
+import { ICON_STYLE, iconSvg as tile, markSvg as draw } from "@fleet/design-tokens/marks";
 import { SOLON_MARK } from "./mark";
 
-/**
- * How Solon's icons look: the mark in the public accent on the near-black
- * tile every fleet app icon sits on. These are literals because favicons and
- * PNGs cannot read CSS; they mirror `--public-accent` and `--surface-public`
- * in @fleet/design-tokens.
- */
-export const ICON_STYLE = {
-  ink: "#ff5c00",
-  canvas: "#0a0a0a",
-  /** Corner radius as a share of the tile's side. */
-  radius: 0.22,
-  /** How much of the tile the mark fills. */
-  inset: 0.82,
-  /** Maskable icons keep the mark inside the centre safe zone. */
-  maskableInset: 0.64,
-} as const;
+export { ICON_STYLE };
 
-export interface MarkSvgOptions {
-  size?: number;
-  color?: string;
-  /** A square tile of this colour behind the mark. */
-  background?: string;
-  radius?: number;
-  inset?: number;
-}
+/** The colour Solon's icon wears: the public accent (`--public-accent`), stored with the mark. */
+export const ICON_INK = SOLON_MARK.mark.iconInk ?? ICON_STYLE.ink;
 
-const n = (v: number) => String(Number(v.toFixed(3)));
+/** The mark alone, in one colour, as an SVG file. */
+export const markSvg = (options: { color?: string } = {}): string =>
+  `${draw(SOLON_MARK.mark, options)}\n`;
 
-export function markSvg(options: MarkSvgOptions = {}): string {
-  const { size, color = "currentColor", background, radius = 0, inset = 1 } = options;
-  const [, , w] = SOLON_MARK.viewBox;
-  const dims = size === undefined ? "" : ` width="${size}" height="${size}"`;
-  const tile = background
-    ? `<rect width="${w}" height="${w}" rx="${n(w * radius)}" fill="${background}"/>`
-    : "";
-  const path = `<path fill="${color}" fill-rule="${SOLON_MARK.fillRule}" d="${SOLON_MARK.d}"/>`;
-  const body =
-    inset === 1
-      ? path
-      : `<g transform="translate(${n(w / 2)} ${n(w / 2)}) scale(${n(inset)}) translate(${n(-w / 2)} ${n(-w / 2)})">${path}</g>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${SOLON_MARK.viewBox.join(" ")}"${dims}>${tile}${body}</svg>\n`;
-}
-
-/** The app icon: the mark on its tile. */
-export function iconSvg(maskable = false): string {
-  return markSvg({
-    color: ICON_STYLE.ink,
-    background: ICON_STYLE.canvas,
-    radius: maskable ? 0 : ICON_STYLE.radius,
-    inset: maskable ? ICON_STYLE.maskableInset : ICON_STYLE.inset,
-  });
-}
+/** The app icon: the mark on its tile (maskable: full bleed, inside the safe zone). */
+export const iconSvg = (maskable = false): string => `${tile(SOLON_MARK.mark, { maskable })}\n`;

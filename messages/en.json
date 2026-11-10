@@ -1283,7 +1283,11 @@
       "title": "Law",
       "intro": "The law that applies in {place}, nearest first. Open one to read it and propose changes.",
       "none": "Solon does not hold the law of {place} yet.",
-      "count": "{count, plural, =0 {No texts yet} one {# law in force} other {# laws in force}}",
+      "count": "{count, plural, one {# law in force} other {# laws in force}}",
+      "registered": "{count, plural, one {# act registered} other {# acts registered}}",
+      "nothing": "No laws held yet",
+      "textsNotHeld": "Texts not held yet.",
+      "moreRegistered": "{count, plural, one {# more act registered} other {# more acts registered}}, texts not held yet.",
       "communes": "Communes ({count})"
     },
     "parts": {
@@ -1770,6 +1774,15 @@
       "apply": "Show",
       "chartCaption": "{metric}, {unit}, by year. Source: {publisher}.",
       "noSeries": "No figures for the places chosen.",
+      "searchTitle": "No figure found for {place}",
+      "searchIntro": "Read on {date}. None of these holds a figure for this series for {place}, and Solon has loaded none.",
+      "searchOpen": "Open what was read",
+      "searchResult": {
+        "series_empty": "Has the series, with no value:",
+        "not_published": "Does not publish it:",
+        "not_covered": "Does not cover {place}:",
+        "related": "Publishes a nearby figure instead:"
+      },
       "timelineCaption": "The law and events over the same years. A mark is the day a version of a linked act took effect, or a recorded event.",
       "timelineEmpty": "No version of a linked act took effect in these years, and no event is recorded.",
       "versionInForce": "{act}: a new version in force",

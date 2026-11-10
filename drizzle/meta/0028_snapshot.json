@@ -1,5 +1,5 @@
 {
-  "id": "b287c737-e692-4c18-b9da-382275bb01da",
+  "id": "1988c8a0-e090-4e4a-8b20-b6117f7fbc62",
   "prevId": "ed622add-8dee-4e36-b158-706af0ac1237",
   "version": "7",
   "dialect": "postgresql",
@@ -52,24 +52,24 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "agent_api_keys_member_id_fkey": {
           "name": "agent_api_keys_member_id_fkey",
           "tableFrom": "agent_api_keys",
-          "tableTo": "members",
           "columnsFrom": [
             "member_id"
           ],
+          "tableTo": "members",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -151,24 +151,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "audit_events_organization_id_fkey": {
           "name": "audit_events_organization_id_fkey",
           "tableFrom": "audit_events",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -310,9 +310,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "members_organization_id_bitcoin_address_key": {
           "name": "members_organization_id_bitcoin_address_key",
@@ -331,24 +331,24 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "members_organization_id_fkey": {
           "name": "members_organization_id_fkey",
           "tableFrom": "members",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -492,9 +492,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "organizations_claimed_project_key": {
           "name": "organizations_claimed_project_key",
@@ -507,9 +507,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "organizations_orangecat_group_key": {
           "name": "organizations_orangecat_group_key",
@@ -522,9 +522,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -634,37 +634,37 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "policies_organization_id_fkey": {
           "name": "policies_organization_id_fkey",
           "tableFrom": "policies",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "policies_approved_by_session_id_fkey": {
           "name": "policies_approved_by_session_id_fkey",
           "tableFrom": "policies",
-          "tableTo": "voting_sessions",
           "columnsFrom": [
             "approved_by_session_id"
           ],
+          "tableTo": "voting_sessions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "set null"
         }
       },
       "compositePrimaryKeys": {},
@@ -792,28 +792,28 @@
         "proposals_organization_id_fkey": {
           "name": "proposals_organization_id_fkey",
           "tableFrom": "proposals",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "proposals_proposer_member_id_fkey": {
           "name": "proposals_proposer_member_id_fkey",
           "tableFrom": "proposals",
-          "tableTo": "members",
           "columnsFrom": [
             "proposer_member_id"
           ],
+          "tableTo": "members",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -876,24 +876,24 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "treasury_sources_organization_id_fkey": {
           "name": "treasury_sources_organization_id_fkey",
           "tableFrom": "treasury_sources",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -982,37 +982,37 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "votes_session_id_fkey": {
           "name": "votes_session_id_fkey",
           "tableFrom": "votes",
-          "tableTo": "voting_sessions",
           "columnsFrom": [
             "session_id"
           ],
+          "tableTo": "voting_sessions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "votes_member_id_fkey": {
           "name": "votes_member_id_fkey",
           "tableFrom": "votes",
-          "tableTo": "members",
           "columnsFrom": [
             "member_id"
           ],
+          "tableTo": "members",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -1156,24 +1156,24 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "voting_sessions_proposal_id_fkey": {
           "name": "voting_sessions_proposal_id_fkey",
           "tableFrom": "voting_sessions",
-          "tableTo": "proposals",
           "columnsFrom": [
             "proposal_id"
           ],
+          "tableTo": "proposals",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -1279,9 +1279,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "accounts_provider_account_uidx": {
           "name": "accounts_provider_account_uidx",
@@ -1300,24 +1300,24 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "accounts_user_id_users_id_fk": {
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1410,34 +1410,34 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "passkeys_user_id_users_id_fk": {
           "name": "passkeys_user_id_users_id_fk",
           "tableFrom": "passkeys",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "passkeys_credential_id_unique": {
           "name": "passkeys_credential_id_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "credential_id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1511,34 +1511,34 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "sessions_user_id_users_id_fk": {
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "sessions_token_unique": {
           "name": "sessions_token_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1606,9 +1606,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "two_factors_secret_idx": {
           "name": "two_factors_secret_idx",
@@ -1621,24 +1621,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "two_factors_user_id_users_id_fk": {
           "name": "two_factors_user_id_users_id_fk",
           "tableFrom": "two_factors",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1718,10 +1718,10 @@
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1783,9 +1783,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -1873,9 +1873,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "area_assertions_jurisdiction_id_idx": {
           "name": "area_assertions_jurisdiction_id_idx",
@@ -1888,63 +1888,63 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "area_assertions_jurisdiction_id_fkey": {
           "name": "area_assertions_jurisdiction_id_fkey",
           "tableFrom": "area_assertions",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "area_assertions_area_id_fkey": {
           "name": "area_assertions_area_id_fkey",
           "tableFrom": "area_assertions",
-          "tableTo": "areas",
           "columnsFrom": [
             "area_id"
           ],
+          "tableTo": "areas",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "area_assertions_asserted_by_id_fkey": {
           "name": "area_assertions_asserted_by_id_fkey",
           "tableFrom": "area_assertions",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "asserted_by_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "area_assertions_source_id_fkey": {
           "name": "area_assertions_source_id_fkey",
           "tableFrom": "area_assertions",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2015,15 +2015,15 @@
         "areas_source_id_fkey": {
           "name": "areas_source_id_fkey",
           "tableFrom": "areas",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2170,9 +2170,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "facts_one_current_per_key": {
           "name": "facts_one_current_per_key",
@@ -2191,8 +2191,8 @@
             },
             {
               "expression": "coalesce(\"variant\", '')",
-              "asc": true,
               "isExpression": true,
+              "asc": true,
               "nulls": "last"
             },
             {
@@ -2203,64 +2203,64 @@
             }
           ],
           "isUnique": true,
-          "where": "\"facts\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"facts\".\"superseded_at\" IS NULL",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "facts_jurisdiction_id_fkey": {
           "name": "facts_jurisdiction_id_fkey",
           "tableFrom": "facts",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "facts_metric_key_fkey": {
           "name": "facts_metric_key_fkey",
           "tableFrom": "facts",
-          "tableTo": "place_metrics",
           "columnsFrom": [
             "metric_key"
           ],
+          "tableTo": "place_metrics",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "facts_source_id_fkey": {
           "name": "facts_source_id_fkey",
           "tableFrom": "facts",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "facts_corrected_by_proposal_id_fkey": {
           "name": "facts_corrected_by_proposal_id_fkey",
           "tableFrom": "facts",
-          "tableTo": "proposals",
           "columnsFrom": [
             "corrected_by_proposal_id"
           ],
+          "tableTo": "proposals",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2384,50 +2384,50 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "instruments_jurisdiction_id_fkey": {
           "name": "instruments_jurisdiction_id_fkey",
           "tableFrom": "instruments",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "instruments_kind_fkey": {
           "name": "instruments_kind_fkey",
           "tableFrom": "instruments",
-          "tableTo": "place_instrument_kinds",
           "columnsFrom": [
             "kind"
           ],
+          "tableTo": "place_instrument_kinds",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "instruments_source_id_fkey": {
           "name": "instruments_source_id_fkey",
           "tableFrom": "instruments",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2519,16 +2519,16 @@
             },
             {
               "expression": "coalesce(\"valid_from\", '-infinity'::date)",
-              "asc": true,
               "isExpression": true,
+              "asc": true,
               "nulls": "last"
             }
           ],
           "isUnique": true,
-          "where": "\"jurisdiction_identifiers\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"jurisdiction_identifiers\".\"superseded_at\" IS NULL",
+          "concurrently": false
         },
         "jurisdiction_identifiers_jurisdiction_id_idx": {
           "name": "jurisdiction_identifiers_jurisdiction_id_idx",
@@ -2541,50 +2541,50 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "jurisdiction_identifiers_jurisdiction_id_fkey": {
           "name": "jurisdiction_identifiers_jurisdiction_id_fkey",
           "tableFrom": "jurisdiction_identifiers",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_identifiers_scheme_fkey": {
           "name": "jurisdiction_identifiers_scheme_fkey",
           "tableFrom": "jurisdiction_identifiers",
-          "tableTo": "place_identifier_schemes",
           "columnsFrom": [
             "scheme"
           ],
+          "tableTo": "place_identifier_schemes",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_identifiers_source_id_fkey": {
           "name": "jurisdiction_identifiers_source_id_fkey",
           "tableFrom": "jurisdiction_identifiers",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2688,50 +2688,50 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "jurisdiction_names_jurisdiction_id_fkey": {
           "name": "jurisdiction_names_jurisdiction_id_fkey",
           "tableFrom": "jurisdiction_names",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_names_used_by_id_fkey": {
           "name": "jurisdiction_names_used_by_id_fkey",
           "tableFrom": "jurisdiction_names",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "used_by_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_names_source_id_fkey": {
           "name": "jurisdiction_names_source_id_fkey",
           "tableFrom": "jurisdiction_names",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -2825,10 +2825,10 @@
             }
           ],
           "isUnique": true,
-          "where": "\"jurisdiction_relations\".\"relation\" = 'part_of' AND \"jurisdiction_relations\".\"valid_to\" IS NULL AND \"jurisdiction_relations\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"jurisdiction_relations\".\"relation\" = 'part_of' AND \"jurisdiction_relations\".\"valid_to\" IS NULL AND \"jurisdiction_relations\".\"superseded_at\" IS NULL",
+          "concurrently": false
         },
         "jurisdiction_relations_from_id_relation_idx": {
           "name": "jurisdiction_relations_from_id_relation_idx",
@@ -2847,9 +2847,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "jurisdiction_relations_to_id_relation_idx": {
           "name": "jurisdiction_relations_to_id_relation_idx",
@@ -2868,50 +2868,50 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "jurisdiction_relations_from_id_fkey": {
           "name": "jurisdiction_relations_from_id_fkey",
           "tableFrom": "jurisdiction_relations",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "from_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_relations_to_id_fkey": {
           "name": "jurisdiction_relations_to_id_fkey",
           "tableFrom": "jurisdiction_relations",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "to_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdiction_relations_source_id_fkey": {
           "name": "jurisdiction_relations_source_id_fkey",
           "tableFrom": "jurisdiction_relations",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3009,9 +3009,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "jurisdictions_slug_path_key": {
           "name": "jurisdictions_slug_path_key",
@@ -3024,52 +3024,52 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "jurisdictions_country_pack_fkey": {
           "name": "jurisdictions_country_pack_fkey",
           "tableFrom": "jurisdictions",
-          "tableTo": "place_country_packs",
           "columnsFrom": [
             "country_pack"
           ],
+          "tableTo": "place_country_packs",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdictions_level_fkey": {
           "name": "jurisdictions_level_fkey",
           "tableFrom": "jurisdictions",
-          "tableTo": "place_levels",
           "columnsFrom": [
             "country_pack",
             "level_key"
           ],
+          "tableTo": "place_levels",
           "columnsTo": [
             "pack_key",
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "jurisdictions_organization_id_fkey": {
           "name": "jurisdictions_organization_id_fkey",
           "tableFrom": "jurisdictions",
-          "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organizations",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3248,15 +3248,15 @@
         "place_import_runs_source_id_fkey": {
           "name": "place_import_runs_source_id_fkey",
           "tableFrom": "place_import_runs",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3329,15 +3329,15 @@
         "place_levels_pack_key_fkey": {
           "name": "place_levels_pack_key_fkey",
           "tableFrom": "place_levels",
-          "tableTo": "place_country_packs",
           "columnsFrom": [
             "pack_key"
           ],
+          "tableTo": "place_country_packs",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {
@@ -3438,10 +3438,10 @@
             }
           ],
           "isUnique": true,
-          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"jurisdiction_id\" IS NOT NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"jurisdiction_id\" IS NOT NULL",
+          "concurrently": false
         },
         "place_paths_one_canonical_area": {
           "name": "place_paths_one_canonical_area",
@@ -3454,10 +3454,10 @@
             }
           ],
           "isUnique": true,
-          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"area_id\" IS NOT NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"place_paths\".\"canonical\" AND \"place_paths\".\"area_id\" IS NOT NULL",
+          "concurrently": false
         },
         "place_paths_jurisdiction_id_idx": {
           "name": "place_paths_jurisdiction_id_idx",
@@ -3470,9 +3470,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "place_paths_area_id_idx": {
           "name": "place_paths_area_id_idx",
@@ -3485,37 +3485,37 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "place_paths_jurisdiction_id_fkey": {
           "name": "place_paths_jurisdiction_id_fkey",
           "tableFrom": "place_paths",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "place_paths_area_id_fkey": {
           "name": "place_paths_area_id_fkey",
           "tableFrom": "place_paths",
-          "tableTo": "areas",
           "columnsFrom": [
             "area_id"
           ],
+          "tableTo": "areas",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3635,16 +3635,16 @@
             },
             {
               "expression": "coalesce(\"valid_from\", '-infinity'::date)",
-              "asc": true,
               "isExpression": true,
+              "asc": true,
               "nulls": "last"
             }
           ],
           "isUnique": true,
-          "where": "\"place_postcodes\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"place_postcodes\".\"superseded_at\" IS NULL",
+          "concurrently": false
         },
         "place_postcodes_pack_key_postcode_idx": {
           "name": "place_postcodes_pack_key_postcode_idx",
@@ -3663,9 +3663,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "place_postcodes_jurisdiction_id_idx": {
           "name": "place_postcodes_jurisdiction_id_idx",
@@ -3678,50 +3678,50 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "place_postcodes_pack_key_fkey": {
           "name": "place_postcodes_pack_key_fkey",
           "tableFrom": "place_postcodes",
-          "tableTo": "place_country_packs",
           "columnsFrom": [
             "pack_key"
           ],
+          "tableTo": "place_country_packs",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "place_postcodes_jurisdiction_id_fkey": {
           "name": "place_postcodes_jurisdiction_id_fkey",
           "tableFrom": "place_postcodes",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "place_postcodes_source_id_fkey": {
           "name": "place_postcodes_source_id_fkey",
           "tableFrom": "place_postcodes",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3810,9 +3810,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -3893,10 +3893,10 @@
             }
           ],
           "isUnique": true,
-          "where": "\"legal_act_identifiers\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"legal_act_identifiers\".\"superseded_at\" IS NULL",
+          "concurrently": false
         },
         "legal_act_identifiers_scheme_value_idx": {
           "name": "legal_act_identifiers_scheme_value_idx",
@@ -3915,37 +3915,37 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "legal_act_identifiers_act_id_fkey": {
           "name": "legal_act_identifiers_act_id_fkey",
           "tableFrom": "legal_act_identifiers",
-          "tableTo": "legal_acts",
           "columnsFrom": [
             "act_id"
           ],
+          "tableTo": "legal_acts",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "legal_act_identifiers_source_id_fkey": {
           "name": "legal_act_identifiers_source_id_fkey",
           "tableFrom": "legal_act_identifiers",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -3987,13 +3987,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "derived": {
-          "name": "derived",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "source_id": {
           "name": "source_id",
@@ -4039,38 +4032,38 @@
             }
           ],
           "isUnique": true,
-          "where": "\"legal_act_names\".\"superseded_at\" IS NULL",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"legal_act_names\".\"superseded_at\" IS NULL",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "legal_act_names_act_id_fkey": {
           "name": "legal_act_names_act_id_fkey",
           "tableFrom": "legal_act_names",
-          "tableTo": "legal_acts",
           "columnsFrom": [
             "act_id"
           ],
+          "tableTo": "legal_acts",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "legal_act_names_source_id_fkey": {
           "name": "legal_act_names_source_id_fkey",
           "tableFrom": "legal_act_names",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4170,37 +4163,37 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "legal_act_versions_act_id_fkey": {
           "name": "legal_act_versions_act_id_fkey",
           "tableFrom": "legal_act_versions",
-          "tableTo": "legal_acts",
           "columnsFrom": [
             "act_id"
           ],
+          "tableTo": "legal_acts",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "legal_act_versions_source_id_fkey": {
           "name": "legal_act_versions_source_id_fkey",
           "tableFrom": "legal_act_versions",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4283,37 +4276,37 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "legal_acts_jurisdiction_id_fkey": {
           "name": "legal_acts_jurisdiction_id_fkey",
           "tableFrom": "legal_acts",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "legal_acts_source_id_fkey": {
           "name": "legal_acts_source_id_fkey",
           "tableFrom": "legal_acts",
-          "tableTo": "sources",
           "columnsFrom": [
             "source_id"
           ],
+          "tableTo": "sources",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4381,39 +4374,39 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "legal_provisions_search_idx": {
           "name": "legal_provisions_search_idx",
           "columns": [
             {
               "expression": "to_tsvector('simple', \"heading\" || ' ' || \"text\")",
-              "asc": true,
               "isExpression": true,
+              "asc": true,
               "nulls": "last"
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "gin",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "legal_provisions_version_id_fkey": {
           "name": "legal_provisions_version_id_fkey",
           "tableFrom": "legal_provisions",
-          "tableTo": "legal_act_versions",
           "columnsFrom": [
             "version_id"
           ],
+          "tableTo": "legal_act_versions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4482,9 +4475,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "law_amendment_events_prev_hash_key": {
           "name": "law_amendment_events_prev_hash_key",
@@ -4497,9 +4490,9 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "law_amendment_events_amendment_idx": {
           "name": "law_amendment_events_amendment_idx",
@@ -4518,9 +4511,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -4637,37 +4630,37 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "law_amendment_revisions_amendment_id_fkey": {
           "name": "law_amendment_revisions_amendment_id_fkey",
           "tableFrom": "law_amendment_revisions",
-          "tableTo": "law_amendments",
           "columnsFrom": [
             "amendment_id"
           ],
+          "tableTo": "law_amendments",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "law_amendment_revisions_base_version_id_fkey": {
           "name": "law_amendment_revisions_base_version_id_fkey",
           "tableFrom": "law_amendment_revisions",
-          "tableTo": "legal_act_versions",
           "columnsFrom": [
             "base_version_id"
           ],
+          "tableTo": "legal_act_versions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4755,24 +4748,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "law_amendment_supports_revision_id_fkey": {
           "name": "law_amendment_supports_revision_id_fkey",
           "tableFrom": "law_amendment_supports",
-          "tableTo": "law_amendment_revisions",
           "columnsFrom": [
             "revision_id"
           ],
+          "tableTo": "law_amendment_revisions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4848,9 +4841,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "law_amendments_authority_idx": {
           "name": "law_amendments_authority_idx",
@@ -4863,24 +4856,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "law_amendments_act_id_fkey": {
           "name": "law_amendments_act_id_fkey",
           "tableFrom": "law_amendments",
-          "tableTo": "legal_acts",
           "columnsFrom": [
             "act_id"
           ],
+          "tableTo": "legal_acts",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -4943,37 +4936,37 @@
             }
           ],
           "isUnique": true,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "proposal_evidence_proposal_id_fkey": {
           "name": "proposal_evidence_proposal_id_fkey",
           "tableFrom": "proposal_evidence",
-          "tableTo": "proposals",
           "columnsFrom": [
             "proposal_id"
           ],
+          "tableTo": "proposals",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "proposal_evidence_view_sha256_fkey": {
           "name": "proposal_evidence_view_sha256_fkey",
           "tableFrom": "proposal_evidence",
-          "tableTo": "statistic_views",
           "columnsFrom": [
             "view_sha256"
           ],
+          "tableTo": "statistic_views",
           "columnsTo": [
             "sha256"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -5060,9 +5053,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "statistic_records_metric_idx": {
           "name": "statistic_records_metric_idx",
@@ -5075,37 +5068,37 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "statistic_records_metric_key_fkey": {
           "name": "statistic_records_metric_key_fkey",
           "tableFrom": "statistic_records",
-          "tableTo": "place_metrics",
           "columnsFrom": [
             "metric_key"
           ],
+          "tableTo": "place_metrics",
           "columnsTo": [
             "key"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         },
         "statistic_records_jurisdiction_id_fkey": {
           "name": "statistic_records_jurisdiction_id_fkey",
           "tableFrom": "statistic_records",
-          "tableTo": "jurisdictions",
           "columnsFrom": [
             "jurisdiction_id"
           ],
+          "tableTo": "jurisdictions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
@@ -5303,11 +5296,10 @@
     }
   },
   "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
   "views": {
     "public.place_ancestors": {
+      "name": "place_ancestors",
+      "schema": "public",
       "columns": {
         "place_id": {
           "name": "place_id",
@@ -5328,12 +5320,13 @@
           "notNull": true
         }
       },
-      "name": "place_ancestors",
-      "schema": "public",
-      "isExisting": true,
-      "materialized": true
+      "materialized": true,
+      "isExisting": true
     }
   },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
   "_meta": {
     "columns": {},
     "schemas": {},

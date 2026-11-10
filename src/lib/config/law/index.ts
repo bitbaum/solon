@@ -796,13 +796,13 @@ export const PARLIAMENTRSO = {
   pageUrl: "https://parliamentrso.org/node/{id}",
   hosts: ["parliamentrso.org"],
   userAgent: "Solon law reader (solon.orangecat.ch)",
-  licenceSpdx: "LicenseRef-so-official-facts",
+  licenceSpdx: "LicenseRef-so-official-act",
   /**
-   * Whether the texts may be stored: no terms of use and no copyright law of the Republic have been
-   * opened that say so (docs/research/2026-11-south-ossetia-sources.md §6), so only the register is
-   * loaded. Set true, with the provision quoted in the licence entry, when one is.
+   * Whether the texts may be stored: yes, the Republic's own law on copyright says laws and other
+   * official documents are not objects of copyright (Art. 8 of the law of 12 December 2012 № 64,
+   * quoted on the licence entry; docs/research/2026-11-south-ossetia-sources.md §6).
    */
-  textsAdmitted: false as boolean,
+  textsAdmitted: true as boolean,
   locale: "ru",
   textStatus: "authentic" as ActTextStatus,
   /** The three listings under "Законодательство": laws, constitutional laws, resolutions. */

@@ -2,8 +2,8 @@
  * South Ossetia's texts through the real importer into a real database,
  * against stand-ins built from the pages read on 2026-11-10: a decree of the
  * President dated by its closing lines and numbered from them, a rerun that
- * fetches nothing, a dry run that writes nothing, and the Parliament's texts
- * refused while no terms admit them.
+ * fetches nothing, a dry run that writes nothing, and a law of the Parliament
+ * dated by its own field and numbered from its header.
  *
  * Runs only with INTEGRATION=1 against a migrated database.
  */
@@ -91,10 +91,35 @@ async function versionsOf(identity: string) {
 }
 
 describe.skipIf(!RUN)("South Ossetia's texts (real database)", () => {
-  it("refuses to store the Parliament's texts while no terms admit them", async () => {
-    await expect(
-      importSoText(db, "parliamentrso", { snapshots, pauseMs: 0, fetchImpl: parliament, limit: 1 }),
-    ).rejects.toThrow(/no licence or terms admit storing/);
+  it("stores a law of the Parliament under its own date and header number, and reports a page that is no act", async () => {
+    await registerParliament(db, { snapshots, pauseMs: 0, fetchImpl: parliament, term: "2" });
+    const report = await importSoText(db, "parliamentrso", {
+      snapshots,
+      pauseMs: 0,
+      fetchImpl: parliament,
+      ids: [String(N + 1), String(N + 2)],
+    });
+    const failed = report.failures.filter((f) => f.act === String(N + 2));
+    expect(failed).toHaveLength(1);
+    expect(failed[0]!.reason).toMatch(/not an act page/);
+    const versions = await versionsOf(`parliamentrso:${N + 1}`);
+    expect(versions).toHaveLength(1);
+    expect(versions[0]).toMatchObject({ basis: "publisher", format: "html" });
+    expect(String(versions[0]!.from)).toBe("2004-02-18");
+    const provisions = await db
+      .select({ path: legalProvisions.path })
+      .from(legalProvisions)
+      .where(eq(legalProvisions.versionId, versions[0]!.id))
+      .orderBy(asc(legalProvisions.ord));
+    expect(provisions.map((p) => p.path)).toEqual(["preamble", "ch_i", "art_1", "art_2", "art_3"]);
+    const [number] = await db
+      .select({ value: legalActIdentifiers.value })
+      .from(legalActIdentifiers)
+      .innerJoin(legalActVersions, eq(legalActVersions.actId, legalActIdentifiers.actId))
+      .where(
+        and(eq(legalActIdentifiers.scheme, "act_number"), eq(legalActVersions.id, versions[0]!.id)),
+      );
+    expect(number?.value).toBe("2004/44");
   });
 
   const mine = { snapshots, pauseMs: 0, fetchImpl: president, ids: [String(N + 11)] };

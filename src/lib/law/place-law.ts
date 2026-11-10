@@ -13,6 +13,8 @@ export interface PlaceLaw {
   name: string;
   /** Acts in force whose text Solon holds. */
   acts: number;
+  /** Acts the register holds that are in force or whose status the publisher does not state. */
+  registered: number;
   /**
    * On the nearest authority only: the authorities within it (a country's
    * communes), each with its own count, so a country page reaches every one.
@@ -30,8 +32,11 @@ export async function loadPlaceLaw(
   const nearest = authorities.map((key) => chainOf(key)).sort((a, b) => b.length - a.length)[0]!;
   const coverage = await loadLawCoverage(db);
   const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
+  const registered = new Map(
+    coverage.authorities.map((a) => [a.key, a.inForce + a.statusNotStated]),
+  );
   const names = await loadAuthorityNames(locale);
-  return withParts(nearest, held, (a) => authorityName(names, a.key));
+  return withParts(nearest, held, (a) => authorityName(names, a.key), registered);
 }
 
 /**
@@ -43,18 +48,23 @@ export function withParts(
   chain: readonly { key: string; label: string }[],
   held: ReadonlyMap<string, number>,
   nameOf: (authority: { key: string; label: string }) => string = (a) => a.label,
+  registered: ReadonlyMap<string, number> = held,
 ): PlaceLaw[] {
+  const count = (key: string) => {
+    const acts = held.get(key) ?? 0;
+    return { acts, registered: Math.max(registered.get(key) ?? 0, acts) };
+  };
   return chain.map((a, i) => {
     const parts =
       i === 0
         ? partsOf(a.key)
-            .map((p) => ({ key: p.key, name: nameOf(p), acts: held.get(p.key) ?? 0 }))
+            .map((p) => ({ key: p.key, name: nameOf(p), ...count(p.key) }))
             .sort((x, y) => x.name.localeCompare(y.name))
         : [];
     return {
       key: a.key,
       name: nameOf(a),
-      acts: held.get(a.key) ?? 0,
+      ...count(a.key),
       ...(parts.length > 0 ? { parts } : {}),
     };
   });

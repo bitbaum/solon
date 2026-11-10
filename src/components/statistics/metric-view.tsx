@@ -4,6 +4,7 @@ import { getPathname, Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
+import type { StatisticSearch } from "@/lib/config/statistics/searches";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
 import { chartValue, eventPath, latestPoint, seriesPageFor } from "@/lib/statistics/present";
@@ -15,6 +16,7 @@ import MetricMap, { type MapValue } from "./metric-map";
 import QualityPanel from "./quality-panel";
 import ExplainPanel from "./explain-panel";
 import SanityPanel from "./sanity-panel";
+import SearchRecord from "./search-record";
 import { buildBrief } from "@/lib/statistics/brief";
 import type { SanityFinding } from "@/lib/statistics/sanity";
 import LawLinks from "./law-links";
@@ -204,12 +206,36 @@ export default function MetricView(props: MetricViewProps) {
             })}
           />
         ) : (
-          <p className="rounded-surface border border-default bg-surface-base p-6 text-fg-secondary">
-            {t("metric.noSeries")}{" "}
-            <a href={statistic.series.url} className="underline" rel="noopener">
-              {t("metric.sourceSeries")}
-            </a>
-          </p>
+          <div className="space-y-4">
+            <p className="rounded-surface border border-default bg-surface-base p-6 text-fg-secondary">
+              {t("metric.noSeries")}{" "}
+              <a href={statistic.series.url} className="underline" rel="noopener">
+                {t("metric.sourceSeries")}
+              </a>
+            </p>
+            {(props.searches ?? []).map((record) => {
+              const place = localized(record.placeName, locale);
+              return (
+                <SearchRecord
+                  key={record.place}
+                  view={{
+                    title: t("metric.searchTitle", { place }),
+                    intro: t("metric.searchIntro", {
+                      date: formatDay(record.checkedOn, locale),
+                      place,
+                    }),
+                    openLabel: t("metric.searchOpen"),
+                    rows: record.looked.map((l) => ({
+                      publisher: l.publisher,
+                      result: t(`metric.searchResult.${l.result}`, { place }),
+                      note: localized(l.note, locale),
+                      url: l.url,
+                    })),
+                  }}
+                />
+              );
+            })}
+          </div>
         )}
 
         {timeline.length > 0 && years.from !== null && years.to !== null ? (

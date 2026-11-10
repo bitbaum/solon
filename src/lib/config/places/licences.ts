@@ -71,4 +71,11 @@ export const LICENCES = [
   // Read 2026-11-10 through the site's REST API (page "Об использовании информации сайта",
   // modified 2022-01-03). CC BY's obligation, in the site's own words.
   { spdx: "LicenseRef-so-president-site-reuse", requiresAttribution: true, shareAlike: false },
+  // South Ossetia's own laws and other official documents are not objects of copyright: Law of the
+  // Republic "Об авторском праве и смежных правах" (adopted 12 December 2012, № 64), Art. 8: "Не
+  // являются объектами авторского права: 1) официальные документы (законы, судебные решения, иные
+  // тексты законодательного, административного и судебного характера), а также их официальные
+  // переводы". Read 2026-11-10 at https://parliamentrso.org/node/3256. The same class as the Swiss,
+  // Liechtenstein and Estonian ones.
+  { spdx: "LicenseRef-so-official-act", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];
