@@ -187,6 +187,54 @@ Germany's 167 acts without text; Estonia's 418; Fribourg's 8, Zürich's 17,
 Chur's 2 and Schaffhausen's 1 acts; the reasons are known for Fribourg's (a
 bot check, and acts with no PDF on their page) and not yet for the others.
 
+### Liechtenstein, finished: the first country with every level {#li-done}
+
+Liechtenstein is the country every later one is built on, and the first where a proposal made on
+Solon can become real law (the Landtag and the people decide; Solon is evidence of support, handed
+on, never law itself). So "done" is a list that is checked on production, not a feeling. A line is
+ticked only when it has been checked and the check is named.
+
+Law, at every level
+- [x] The nation: 3,412 of 3,412 acts with text from gesetze.li, read again every week
+- [x] The eleven communes' own regulations (337 acts; Triesenberg's from the Internet Archive's
+      dated copy, labelled as such)
+- [ ] Text accuracy: a random sample of 30 acts holds at least 99% of its pages' words, on two
+      samples in a row, footnotes and act headers aside (`law:text verify --authority li`). Now:
+      95.8% on one sample; the remaining gap is mostly act headers; the check ignores headers next
+- [ ] The communes' PDFs checked the same way (the check reads HTML only): how many were read from
+      a text layer and how many by OCR, and the OCR ones read by a person
+- [ ] Every act the register lists is held, and none held is gone from the publisher (one held
+      address answers 404 today)
+- [ ] Earlier versions and what changed between them, from the day Solon first read each act; the
+      publisher gives no effective dates, and the page says so
+
+Reading, in German first
+- [ ] Every page of the law, the places and the proposal flow in German, with no "not translated"
+      notice, written in Liechtenstein's own legal vocabulary and read by a native speaker
+- [ ] The country page shows law per level (nation, then each commune with its own count); the two
+      counts the atlas and the Law page show agree and say which is which
+- [ ] The atlas shows Liechtenstein as its own places, one outline, communes named, phone first
+
+Changing the law
+- [x] The official routes recorded and cited to the article: initiative and referendum for a law
+      and for the Constitution, and the municipal assembly's
+- [ ] The routes shown on the act page and on the propose page, in German, before anyone files
+- [ ] The whole flow tried end to end on production by a person: find an act, propose a change to
+      an article, see it as a redline pinned to the text, support it, see the route's bar beside
+      Solon's count, and read that it is not law
+- [ ] How a proposal that reaches the bar is handed on to the Landtag or the Government, written
+      with the people who will receive it (a decision for them, not for Solon)
+
+Statistics
+- [ ] A named list of series for Liechtenstein, each with its publisher and date. Today none loads:
+      the World Bank's API answers the box HTTP 403, so no World Bank series has ever loaded
+- [ ] The tax model's rates read against the published tariff, with the article
+
+Keeping it true
+- [ ] The weekly sync demonstrably reads the nation and every commune, and a failure is reported,
+      not silent
+- [ ] Every claim on the pages ("word for word", counts, dates) is read from the data or verified
+
 ### Every organization on its own pages
 
 Most app pages still read the oldest organization. Solon governs many, so every
