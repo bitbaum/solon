@@ -35,12 +35,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale: toLocale(locale), namespace: "Meta" });
+  // What Solon is, said once: the home page's hero; search results and shared links repeat it.
+  const hero = await getTranslations({ locale: toLocale(locale), namespace: "Home.hero" });
+  const description = hero("lede");
   return {
     metadataBase: new URL(SITE_URL),
     title: t("title"),
-    description: t("description"),
+    description,
     icons: [{ rel: "icon", url: "/favicon.ico" }],
-    openGraph: { title: "Solon", description: t("description"), url: SITE_URL, siteName: "Solon" },
+    openGraph: { title: "Solon", description, url: SITE_URL, siteName: "Solon" },
     alternates: {
       languages: Object.fromEntries(
         routing.locales.map((l) => [l, l === routing.defaultLocale ? "/" : `/${l}`]),

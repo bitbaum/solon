@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import en from "../../messages/en.json";
 
 /**
  * The web app manifest. Without it Android and desktop browsers never offer
@@ -8,10 +9,10 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Solon — Governance any group can run",
+    name: en.Meta.title,
     short_name: "Solon",
-    description:
-      "Proposals, votes and the books, where every member can see them — for companies, towns, associations and communities.",
+    // The home page's hero, as everywhere Solon describes itself.
+    description: en.Home.hero.lede,
     start_url: "/",
     scope: "/",
     display: "standalone",
