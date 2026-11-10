@@ -20,12 +20,35 @@ export interface GlobePlace {
   name: string;
   /** For a country, its ISO 3166-1 code, so a page names it in the reader's language. */
   region?: string;
-  /** Acts in force whose text Solon holds, within this place. */
+  /** Acts in force whose text Solon holds, within this place and everything under it (the shade, the total). */
   acts: number;
+  /** Of `acts`, the authority's own: a country's national law, as its Law page counts it. */
+  own: number;
+  /** Of `acts`, those of the authorities under it that are not its own: cantons, communes. */
+  below: number;
   /** The Places country it is, when Solon holds its places. */
   pack?: string;
   /** Its places have boundaries, so the atlas draws them. */
   drawn?: boolean;
+}
+
+/**
+ * What Solon holds for one place on the globe: its own authority's acts, and
+ * for a country those of every authority within it. `own + below = acts`, so a
+ * card can say which is which and agree with the Law page of the authority.
+ */
+export function globeActs(
+  held: ReadonlyMap<string, number>,
+  key: string,
+): { acts: number; own: number; below: number } {
+  const authority = authorityOf(key);
+  const own = held.get(key) ?? 0;
+  if (authority?.place?.scheme !== "iso_3166_1") return { acts: own, own, below: 0 };
+  const below = [...held].reduce(
+    (sum, [k, n]) => sum + (k !== key && countryOf(k) === authority.place!.value ? n : 0),
+    0,
+  );
+  return { acts: own + below, own, below };
 }
 
 export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
@@ -37,12 +60,7 @@ export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
   return Object.entries(GLOBE_FEATURES).map(([key, feature]) => {
     const authority = authorityOf(key);
     const isCountry = authority?.place?.scheme === "iso_3166_1";
-    const acts = isCountry
-      ? [...held].reduce(
-          (sum, [k, n]) => sum + (countryOf(k) === authority!.place!.value ? n : 0),
-          0,
-        )
-      : (held.get(key) ?? 0);
+    const counted = globeActs(held, key);
     const pack = isCountry
       ? placesConfig.packs.find((p) => p.region === authority!.place!.value)?.key
       : undefined;
@@ -51,7 +69,7 @@ export async function loadGlobePlaces(db: Database): Promise<GlobePlace[]> {
       key,
       name: authority?.name ?? key,
       ...(isCountry ? { region: authority!.place!.value } : {}),
-      acts,
+      ...counted,
       ...(pack ? { pack, drawn: drawn.has(pack) } : {}),
     };
   });
