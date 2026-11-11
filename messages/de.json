@@ -69,6 +69,7 @@
       "lawCoverage": "Was Solon führt",
       "lawAmendments": "Änderungsvorschläge",
       "statistics": "Statistik",
+      "statisticsWhy": "Warum Gesetze und Zahlen",
       "statisticsEvents": "Rechtsereignisse",
       "statisticsMethods": "Wie Ranglisten entstehen",
       "statisticsGaps": "Was gemessen wird und was nicht",
@@ -121,6 +122,7 @@
       "lawCoverage": "Welche Erlasse Solon führt, aus den Daten gezählt",
       "lawAmendments": "Änderungen, die jemand am Recht vorgeschlagen hat, mit Redline und Unterstützung",
       "statistics": "Das Recht neben den Zahlen: Reihen über die Zeit, jede mit ihrer Quelle und ihrem Gesetz",
+      "statisticsWhy": "Warum Solon das Recht jedes Orts neben seine Statistik stellt, und was davon schon läuft",
       "statisticsEvents": "Was mit dem Recht eines Ortes geschah: was sich änderte, wie, wer wo stand",
       "statisticsMethods": "Wer jeden Index macht, wie, und was man ihn fragen sollte.",
       "statisticsGaps": "Was jedes Amt erhebt und wo dieselbe Frage keine Antwort hat.",
@@ -500,6 +502,12 @@
     "changelogTitle": "Änderungen — Solon",
     "roadmapDescription": "Wohin Solon geht, in der Reihenfolge, in der es dorthin geht — gelesen aus dem massgeblichen Verzeichnis der Flotte.",
     "changelogDescription": "Was sich in Solon für die Menschen geändert hat, die es nutzen, Neuestes zuerst — gelesen aus dem massgeblichen Verzeichnis der Flotte."
+  },
+  "Status": {
+    "available": "Jetzt verfügbar",
+    "inDevelopment": "In Entwicklung",
+    "planned": "Geplant",
+    "researched": "Recherchiert, noch nicht geladen"
   },
   "Places": {
     "kicker": "{level} · {pack}",
@@ -1188,7 +1196,9 @@
       "mic": "Das Mikrofon ist blockiert. Erlaube es für diese Seite und versuche es erneut.",
       "silence": "Nichts gehört. Versuche es nochmals, etwas näher am Mikrofon.",
       "unavailable": "Spracheingabe ist gerade nicht verfügbar. Tippe stattdessen oder versuche es später.",
-      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren."
+      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren.",
+      "signIn": "Melden Sie sich an, um die Spracheingabe zu nutzen.",
+      "busy": "Die Spracheingabe ist gerade ausgelastet. Versuchen Sie es gleich noch einmal."
     },
     "app": {
       "chats": "Gespräche",
@@ -1781,6 +1791,109 @@
       "propose": "Eine Haltung vorschlagen",
       "proposeTitle": "Haltung zu dem, was gemessen wird: {topic}",
       "proposeBody": "Wir bitten unser statistisches Amt, das unter {url} beschriebene Mass zu prüfen, mit den dort genannten Begleitgrössen und Schutzvorkehrungen."
+    },
+    "why": {
+      "metaTitle": "Warum Gesetze und Zahlen, für jeden Ort",
+      "metaDescription": "Warum Solon das Recht jedes Orts neben seine Statistik stellt, zeigt, was nicht gemessen wird, und jede Quelle nennt – damit Menschen gemeinsam entscheiden.",
+      "kicker": "Statistik",
+      "title": "Gesetze und Zahlen, für jeden Ort",
+      "intro": "Das Recht eines Orts sagt, wie er regiert wird. Seine Statistik sagt, wie es ihm geht. Solon hält beides nebeneinander, für jeden Ort, den es lesen kann, und zeigt, was ein Ort nicht misst. Es arbeitet darauf hin zu zeigen, welche Messgrössen und welche Politik andere Orte für dasselbe Problem gewählt haben, damit Menschen gemeinsam entscheiden können, was sie ändern wollen.",
+      "why": {
+        "title": "Warum beides",
+        "body": "Das Gesetz allein zeigt Absichten; Zahlen allein zeigen Ergebnisse ohne Ursache daneben. Zusammen lässt sich eine Gesetzesänderung neben das stellen, was danach geschah, und die Wahl eines Orts neben die eines anderen. Beides wird so aufbewahrt, wie es veröffentlicht wurde, die Quelle einen Klick entfernt."
+      },
+      "gaps": {
+        "title": "Was gemessen wird, und was nicht",
+        "body": "Statistikämter wählen, was sie erheben, aus rechtlichen, historischen, praktischen oder politischen Gründen. So kann ein Land eine Frage aus eigenen Zahlen beantworten, ein anderes nicht. Solon zeigt, wer was veröffentlicht, gekreuzt womit und nach welchem Gesetz, und was eine neue Messgrösse begleiten müsste, damit sie nicht falsch gelesen wird. Es bewertet keine Ämter und beschreibt keine Gruppen von Menschen.",
+        "sources": "Zum Beispiel veröffentlicht <denmark>Statistics Denmark</denmark>, wie viele Personen wegen Straftaten verurteilt wurden, nach Herkunftsland, Geschlecht und Alter, mit Zahlen von 2000 bis 2025; Frankreichs <france>Verfassungsrat</france> hat entschieden, dass Studien nicht auf ethnischer Herkunft oder Rasse beruhen dürfen."
+      },
+      "trends": {
+        "title": "Entwicklungen, und was andere Orte taten",
+        "body": "Eine Reihe zeigt, wie sich eine Zahl über die Jahre bewegt hat. Eine Gesetzesänderung wird als Ereignis festgehalten: was sich änderte, wie es dazu kam, wer wie abstimmte und was darüber behauptet wurde, getrennt von dem, was geschah. Beides nebeneinander, über Orte hinweg, lässt eine Gruppe sehen, was andere versucht haben."
+      },
+      "items": {
+        "lawByPlace": {
+          "name": "Das Recht jedes Orts",
+          "body": "Erlasse, wie ihre Herausgeber sie veröffentlichen, mit dem Tag, an dem sie gelesen wurden, und einem Hash, der die Kopie belegt, für die Orte, die Solon bisher gelesen hat."
+        },
+        "statisticsSeries": {
+          "name": "Statistik über die Zeit",
+          "body": "Reihen der Weltbank, der OECD und von Eurostat, jede mit ihrer Definition, ihrem Geltungsbereich und dem Tag, an dem sie gelesen wurde."
+        },
+        "publicBudgets": {
+          "name": "Öffentliche Haushalte",
+          "body": "Was Regierungen einnehmen und wofür sie es ausgeben, aus Budgetgesetzen und Statistikämtern, nach einer internationalen Klassifikation, damit Orte vergleichbar sind."
+        },
+        "measurementGaps": {
+          "name": "Was gemessen wird, und wo nicht",
+          "body": "Thema für Thema: welche Ämter eine Messgrösse veröffentlichen, gekreuzt womit und nach welchem Gesetz, und was eine neue begleiten müsste. Bisher ein Thema: Kriminalität nach Herkunft einer Person."
+        },
+        "placeGapReport": {
+          "name": "Was ein Ort nicht misst, und wie man anfängt",
+          "body": "Für einen Ort: was er nicht misst, vergleichbare Orte, die es tun, das zuständige Amt und ein Vorschlag, den Menschen aufgreifen können, um danach zu fragen."
+        },
+        "lawEvents": {
+          "name": "Änderungen des Rechts, und wie es dazu kam",
+          "body": "Was sich änderte, die Schritte und Abstimmungen und was darüber behauptet wurde, getrennt von dem, was geschah."
+        },
+        "trendMarkers": {
+          "name": "Gesetzesänderungen auf der Linie",
+          "body": "Jede Gesetzesänderung auf der Reihe eingezeichnet, die sie betrifft, im Jahr, ab dem sie galt."
+        },
+        "policyByTrend": {
+          "name": "Was andere Orte bei einer Entwicklung taten",
+          "body": "Neben einer Reihe die Gesetzesänderungen, die andere Orte machten, als sich ihre Zahlen gleich bewegten, und was folgte, ohne zu sagen, was richtig war."
+        },
+        "aiResearch": {
+          "name": "Recherche mit KI",
+          "body": "Stellen Sie eine Frage: Eine KI liest, was Solon hält, und schreibt einen Bericht, dessen Zahlen und Zitate gegen das Gelesene geprüft werden. Sie kennt nur, was Solon hält."
+        },
+        "groupMeasures": {
+          "name": "Eigene Messgrössen einer Gruppe, per Abstimmung",
+          "body": "Eine Gruppe wählt, welche Messgrössen zählen und wie stark, als Regel, über die ihre Mitglieder abstimmen."
+        }
+      },
+      "example": {
+        "kicker": "Beispiel",
+        "title": "Südossetien",
+        "status": "Südossetien verwaltet sich selbst und ist nicht Mitglied der Vereinten Nationen. Georgien betrachtet es als Teil seines Staatsgebiets. Solon hält beides fest und sagt nicht, welche Seite recht hat.",
+        "why": "Wenige Herausgeber ausserhalb berichten darüber; das meiste, was man wissen kann, stammt von seinen eigenen Behörden, und Solon hält es als deren Darstellung fest. Es zeigt, was Solon tut, wo die Quellen dünn sind: festhalten, was veröffentlicht ist, sagen, von wem es stammt, und markieren, was fehlt.",
+        "sources": "Georgiens <geostat>Statistikamt</geostat> erklärt, dass seine Zahlen ab 1994 das Gebiet nicht abdecken, das es Region Zchinwali nennt. Südossetiens eigenes <ugosstat>Statistikamt</ugosstat> veröffentlicht jedes Jahr und jedes Quartal einen Sammelband; die Ausgabe 2025 erschien am 24. Juni 2026.",
+        "items": {
+          "law": {
+            "name": "Sein Recht",
+            "body": "Die Erlasse, die sein Parlament und sein Präsident veröffentlichen, jeder mit dem eigenen Datum des Herausgebers. Der Herausgeber sagt nicht, ob ein Erlass noch gilt, und Solon sagt das."
+          },
+          "budget": {
+            "name": "Sein Staatshaushalt",
+            "body": "Der Haushalt 2023, wie ihn das Gesetz über seinen Vollzug angibt, nach der internationalen Klassifikation eingeordnet, damit er vergleichbar ist: Etwa vier Fünftel der Einnahmen kamen von der Russischen Föderation."
+          },
+          "statistics": {
+            "name": "Die Zahlen seines Statistikamts",
+            "body": "Bevölkerung, registrierte Straftaten, BIP und Staatshaushalt, aus dem Sammelband 2025 gelesen, mit den eigenen Vorbehalten des Amts: Die Bevölkerung ist eine Schätzung, fortgeschrieben aus der eigenen Volkszählung von 2015, das BIP eine Näherung, weil dem Amt nach eigener Aussage die Daten für eine vollständige Berechnung fehlen."
+          },
+          "gaps": {
+            "name": "Was es nicht misst",
+            "body": "Im Sammelband 2025 werden Personen, die Straftaten begangen haben, nach Geschlecht, Alter und Beschäftigung gezählt, nicht nach Staatsangehörigkeit, Geburtsort oder Herkunft, der Aufschlüsselung, die Dänemark veröffentlicht. Georgiens Statistikamt veröffentlicht keine Bevölkerungszahl, und keine andere Zählung von ausserhalb wurde gefunden."
+          },
+          "next": {
+            "name": "Was als Nächstes käme",
+            "body": "Eine Seite für Südossetien mit diesen Lücken, vergleichbaren Orten, die sie messen, dem zuständigen Amt und dem, was eine neue Messgrösse begleiten müsste (Alter und Geschlecht immer, kleine Zahlen weggelassen), als Vorschlag, den Menschen dort aufgreifen können."
+          }
+        },
+        "note": "Recherchiert, noch nicht geladen: Die Zahlen und Lücken oben wurden beim Herausgeber gelesen und mit jeder Adresse und jedem Datum in Solons <note>Recherchenotiz</note> festgehalten. Sie stehen noch nicht auf Solons Seiten."
+      },
+      "honest": {
+        "title": "Wie Solon ehrlich bleibt",
+        "body": "Zahlen werden so aufbewahrt, wie sie veröffentlicht wurden, mit dem Tag, an dem sie gelesen wurden; eine Revision kommt hinzu und überschreibt nichts. „Nicht gelesen“ heisst, Solon hat nicht nachgesehen, nicht, dass es nichts gibt. Ranglisten anderer werden beschrieben, nicht als Urteil verwendet. Eine KI darf eine Seite erklären, aber nur aus den dort aufgeführten Fakten, und ihre Antwort wird daran geprüft, bevor Sie sie sehen.",
+        "link": "Wie die Ranglisten entstehen"
+      },
+      "decide": {
+        "title": "Damit Menschen gemeinsam entscheiden",
+        "body": "Nichts davon sagt jemandem, was zu tun ist. Auf Solon kann eine Gruppe ihre eigenen Messgrössen und Gewichte per Abstimmung wählen, ein Statistikamt per Vorschlag um eine Messgrösse bitten und eine Gesetzesänderung neben den Zahlen vorschlagen, die dazu Anlass gaben.",
+        "cta": "Etwas vorschlagen",
+        "secondary": "Zur Statistik"
+      }
     }
   },
   "Find": {

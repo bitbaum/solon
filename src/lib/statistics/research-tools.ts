@@ -18,6 +18,7 @@ import { buildBrief } from "./brief";
 import { buildDimensionBrief } from "./dimension-brief";
 import { loadDimensionPage } from "./dimension-page";
 import { factText } from "./explain";
+import { topicHref } from "./gaps";
 import { buildGapsBrief } from "./gaps-brief";
 import { buildMethodBrief } from "./method-brief";
 import { loadMetricPage } from "./metric-page";
@@ -213,7 +214,7 @@ export function researchTools(deps: {
           summary: `${facts.length} facts about ${topic.key}`,
           sources: facts.map((f) => ({
             text: factText(f),
-            href: f.href ?? `${SITE}/statistics/gaps/${topic.key}`,
+            href: f.href ?? `${SITE}${topicHref(topic.key)}`,
           })),
         };
       }

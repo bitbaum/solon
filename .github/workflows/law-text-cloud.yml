@@ -118,6 +118,8 @@ jobs:
           echo "::add-mask::$local_url"
           {
             echo "DATABASE_URL=$local_url"
+            echo "BOX_IP=$IP"
+            echo "BOX_DB_PORT=$port"
             echo "PLACES_SNAPSHOT_DIR=$RUNNER_TEMP/snapshots"
             echo "BOX_SNAPSHOT_DIR=${snaps:-/opt/solon/shared/places-snapshots}"
           } >> "$GITHUB_ENV"
@@ -148,11 +150,45 @@ jobs:
           [ "$SOURCE" = "eurlex" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
           [ "$SOURCE" = "ukleg" ] && [ -n "$YEAR" ] && auth="$auth --year $YEAR"
           [ "$SOURCE" = "ukleg" ] && [ -n "$TYPES" ] && auth="$auth --type $TYPES"
+          SSH="ssh -i $HOME/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40"
+          # The tunnel is up when the runner's port accepts a connection. A box whose sshd is away for
+          # a while (a restart, a firewall change) takes the tunnel with it: open it again, waiting
+          # up to ten minutes for the box to come back.
+          tunnel_up() { (exec 3<>/dev/tcp/127.0.0.1/15432) 2>/dev/null; }
+          ensure_tunnel() {
+            for try in $(seq 1 20); do
+              tunnel_up && return 0
+              pkill -f "15432:127.0.0.1" 2>/dev/null || true
+              $SSH -f -N -o ExitOnForwardFailure=yes -L "15432:127.0.0.1:$BOX_DB_PORT" "ubuntu@$BOX_IP" 2>/dev/null && tunnel_up && { echo "tunnel re-opened"; return 0; }
+              echo "tunnel down, box not answering (try $try of 20)"; sleep 30
+            done
+            return 1
+          }
+          # Snapshots belong with the box's others the moment a batch has stored them, so a late
+          # failure loses nothing. Content-named, so copying again is harmless.
+          copy_snapshots() {
+            [ "$DRY" = "true" ] && return 0
+            [ -d "$PLACES_SNAPSHOT_DIR" ] && [ -n "$(ls -A "$PLACES_SNAPSHOT_DIR")" ] || return 0
+            for try in 1 2 3 4 5 6; do
+              rsync -a --ignore-existing -e "ssh -i $HOME/.ssh/id -o BatchMode=yes" "$PLACES_SNAPSHOT_DIR"/ "ubuntu@$BOX_IP:$BOX_SNAPSHOT_DIR/" 2>/dev/null && return 0
+              sleep 30
+            done
+            echo "snapshots not copied after a batch; the closing step tries again"
+          }
           rc=0; last=-1
           for batch in $(seq 1 "$BATCHES"); do
-            rc=0
-            pnpm run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' > batch.log || rc=$?
-            tail -n 80 batch.log
+            for attempt in 1 2 3; do
+              ensure_tunnel || { echo "the box's database is unreachable"; exit 1; }
+              rc=0
+              pnpm run law:text "$SOURCE" --lang "$LANGUAGE" --limit "$LIMIT" $auth $flag 2>&1 | grep -vE 'postgres(ql)?://' > batch.log || rc=$?
+              tail -n 80 batch.log
+              [ "$rc" -eq 0 ] && break
+              # A lost connection is retried: loads are resumable, so the batch carries on where it stopped.
+              grep -qE 'Connection terminated|ECONNRESET|ECONNREFUSED|EPIPE' batch.log || break
+              echo "connection lost in batch $batch (attempt $attempt of 3)"
+            done
+            copy_snapshots
+            [ "$rc" -eq 0 ] || break
             [ "$DRY" = "true" ] && break
             left=$(grep -oE '"remaining(Acts)?": [0-9]+' batch.log | tail -1 | grep -oE '[0-9]+' || true)
             [ "${left:-0}" -gt 0 ] || break

@@ -4,6 +4,7 @@ import { ogFonts, ogText } from "@fleet/design-tokens/og";
 
 import { toLocale } from "@/i18n/routing";
 import { SOLON_MARK } from "@/lib/brand/mark";
+import { ICON_INK } from "@/lib/brand/svg";
 
 /**
  * Social preview card, generated at request time by Next's file convention,
@@ -23,7 +24,9 @@ export const contentType = "image/png";
 // by hand — the one place in the repo where a literal is unavoidable. Keep in
 // sync with tokens.css; design:check cannot see bare consts like these.
 const INK = "#0A0A0A"; // --surface-public: 0 0% 4%
-const ORANGE = "#FF5C00"; // --public-accent
+// Solon's accent on this always-dark card is the mark's own ink, read from the
+// package, so the card follows the brand without a second literal.
+const ACCENT = ICON_INK;
 const MUTED = "#A6A6A6"; // --text-secondary: 0 0% 65%
 
 // The faces ship with the design-tokens package, so rendering fetches nothing;
@@ -53,7 +56,7 @@ export default async function OGImage({ params }: { params: Promise<{ locale: st
       <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
         {/* The mark, from the same generated data as the header and the icons. */}
         <svg width={56} height={56} viewBox={SOLON_MARK.viewBox.join(" ")}>
-          <path fill={ORANGE} fillRule={SOLON_MARK.fillRule} d={SOLON_MARK.d} />
+          <path fill={ACCENT} fillRule={SOLON_MARK.fillRule} d={SOLON_MARK.d} />
         </svg>
         <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: "0.24em", color: "#FFFFFF" }}>
           SOLON
@@ -85,7 +88,7 @@ export default async function OGImage({ params }: { params: Promise<{ locale: st
 
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <div
-          style={{ width: 64, height: 5, borderRadius: 999, background: ORANGE, display: "flex" }}
+          style={{ width: 64, height: 5, borderRadius: 999, background: ACCENT, display: "flex" }}
         />
         <div style={{ fontSize: 24, color: MUTED }}>solon.orangecat.ch</div>
       </div>
