@@ -343,10 +343,32 @@
     "law": {
       "kicker": "Le droit, ouvert",
       "title": "Chaque mot du droit, ouvert à tous.",
-      "body": "Solon détient le texte de chaque acte fédéral et cantonal en vigueur en Suisse, de chaque acte du Liechtenstein, du Luxembourg et de l'Estonie, les lois du Wyoming et les règles d'un nombre croissant de communes — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou proposez une modification de n'importe quel article.",
+      "body": "Solon détient le texte du droit suisse, de la Confédération et des cantons jusqu'à un nombre croissant de communes, et celui de toujours plus de pays, d'États et de l'Union européenne — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou proposez une modification de n'importe quel article.",
       "next": "Sur le globe, chaque lieu est ombré selon la part de son droit que Solon détient. D'autres lieux s'ajoutent : le système est construit une fois, chaque nouveau pays n'est que ses données.",
       "find": "Trouver une loi",
       "ask": "Interroger le droit"
+    },
+    "data": {
+      "kicker": "Des lois et des chiffres",
+      "title": "Comment un lieu est gouverné. Comment il se porte.",
+      "body": "À côté du droit de chaque lieu, Solon garde les statistiques et les budgets que publient ses offices, au fil des années, chaque chiffre avec sa source et ce qu'il couvre. Sujet par sujet, il montre où un lieu mesure ce qu'un autre ne mesure pas, et ce qui devrait accompagner une nouvelle mesure.",
+      "note": "Suggérer quelles mesures un lieu pourrait commencer, et quelles politiques d'autres lieux ont choisies face à la même tendance, est prévu et pas encore construit.",
+      "why": "Pourquoi des lois et des chiffres",
+      "stats": "Voir les statistiques",
+      "points": {
+        "governed": {
+          "name": "Comment il est gouverné",
+          "body": "Son droit, tel que son éditeur l'a publié, et les voies officielles pour le changer."
+        },
+        "doing": {
+          "name": "Comment il se porte",
+          "body": "Ses statistiques et son budget au fil des années, chaque chiffre avec sa source et le jour où il a été lu."
+        },
+        "missing": {
+          "name": "Ce qu'il ne mesure pas",
+          "body": "Là où des lieux comparables publient un chiffre qu'il ne publie pas, ce que Solon n'a pas lu étant marqué comme non lu."
+        }
+      }
     },
     "roots": {
       "kicker": "D'où viennent les idées",
@@ -656,6 +678,7 @@
       "rank": "{rank, number}e sur {count, number} en partant du plus bas : {amount} de plus que le lieu le moins cher",
       "cheapest": "Le moins cher des {count, number} lieux de la carte",
       "open": "Ouvrir le lieu",
+      "openPlace": "Ouvrir {place}",
       "close": "Fermer",
       "addCompare": "Ajouter à la comparaison",
       "inCompare": "Dans la comparaison",
@@ -855,7 +878,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Couverture du droit",
-      "metaDescription": "Quels actes de la Suisse, du Liechtenstein et du Luxembourg Solon détient, par autorité, comptés à partir des données.",
+      "metaDescription": "Quels actes Solon détient, par autorité, comptés à partir des données.",
       "kicker": "Droit",
       "title": "Ce que Solon détient",
       "intro": "Compté à partir des données, lu chez l'éditeur le {date} : les actes de chaque autorité, et pour combien Solon détient le texte.",
@@ -864,13 +887,13 @@
       "authorities": "Autorités",
       "row": "{inForce} en vigueur · {notInForce} non",
       "rowNotStated": "{inForce} en vigueur · {notInForce} non · {notStated} statut non indiqué par l'éditeur",
-      "totalsNotStated": "{notStated, plural, one {# autre acte est listé} other {# autres actes sont listés}} par des éditeurs qui n'indiquent pas s'ils sont en vigueur.",
+      "totalsNotStated": "{notStated} {count, plural, one {autre acte est listé} other {autres actes sont listés}} par des éditeurs qui n'indiquent pas s'ils sont en vigueur.",
       "note": "Les communes s'ajoutent un recueil à la fois ; celles détenues jusqu'ici figurent dans la liste ci-dessus.",
       "readLink": "Trouver et lire un acte →"
     },
     "index": {
       "metaTitle": "Trouver un acte",
-      "metaDescription": "Trouver un acte de la Suisse ou du Liechtenstein par son titre ou son numéro, et le lire tel que son éditeur l'a écrit.",
+      "metaDescription": "Trouver un acte par son titre ou son numéro, dans tout lieu dont Solon détient le droit, et le lire tel que son éditeur l'a écrit.",
       "kicker": "Droit",
       "title": "Trouver un acte",
       "intro": "Cherchez dans toutes les lois que Solon détient : Confédération, cantons et communes. Écrivez en mots simples ce que vous cherchez, ou partez de votre lieu de domicile.",
@@ -1059,6 +1082,31 @@
       "withinSixMonths": "Dans les six mois suivant la fin de l’exercice, approuvés par l’assemblée générale ordinaire"
     }
   },
+  "AskSolon": {
+    "title": "Demander à Solon",
+    "description": "Comprenez les règles, comparez les façons de décider ou transformez une idée en brouillon de proposition.",
+    "status": "Lecture des règles de gouvernance",
+    "starters": {
+      "one": "Qui peut décider de quoi ?",
+      "two": "Comparer les profils de gouvernance",
+      "three": "Aide-moi à rédiger une proposition"
+    },
+    "startersTitle": "Rendre la prochaine décision plus claire.",
+    "placeholder": "Posez une question sur une décision, ou rédigez une proposition…",
+    "draftsNote": "Les brouillons ne sont pas des décisions.",
+    "signInLink": "Se connecter pour demander à Solon",
+    "methods": "Lire les règles de vote",
+    "record": "Lire le registre des décisions",
+    "errors": {
+      "failed": "Solon n’a pas pu répondre. Réessayez.",
+      "signIn": "Connectez-vous pour demander à Solon. Vous reviendrez ici.",
+      "tooLong": "Cette conversation est trop longue. Commencez-en une nouvelle.",
+      "rateLimited": "Veuillez patienter quelques minutes avant de poser une autre question.",
+      "unavailable": "L’IA de Solon n’est pas disponible pour le moment. Vous pouvez quand même lire les règles ou rédiger une proposition ci-dessous.",
+      "noAnswer": "La réponse n’est pas arrivée. Réessayez.",
+      "interrupted": "La réponse a été interrompue. Réessayez."
+    }
+  },
   "Chat": {
     "copy": "Copier",
     "copied": "Copié",
@@ -1082,6 +1130,19 @@
     "confirmRecording": "Terminé — utiliser ce que j’ai dit",
     "listening": "Je vous écoute…",
     "transcribing": "Transcription en cours…",
+    "attach": "Joindre un fichier texte",
+    "attachRemove": "Retirer {name}",
+    "attachMenu": {
+      "title": "Ajouter au message",
+      "close": "Fermer",
+      "files": "Fichier texte"
+    },
+    "attachNotes": {
+      "wrongType": "{name} : joignez un fichier texte (txt, md, csv ou json). Les images et les PDF ne sont pas lus ici.",
+      "textTooLarge": "{name} est trop long (au plus {k}k caractères).",
+      "unreadable": "Impossible de lire {name}.",
+      "tooMany": "Jusqu’à {max} fichiers."
+    },
     "queue": "Mettre un message en attente…",
     "dismiss": "Masquer",
     "retryTake": "Réessayer",
@@ -1710,7 +1771,7 @@
       "metaDescription": "Posez une question sur la gouvernance, la liberté ou les statistiques : une IA lit les séries, dimensions, descriptions de méthodes et le droit de Solon, et écrit un rapport dont chaque chiffre et chaque citation sont vérifiés.",
       "kicker": "Recherche",
       "title": "Recherche avec l'IA",
-      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources.",
+      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources. Elle ne connaît que ce que Solon détient : là où Solon n'a pas de chiffres pour un lieu, elle n'en a pas non plus.",
       "questionLabel": "Votre question",
       "placeholder": "Par exemple : comment la charge fiscale de l'Estonie se compare-t-elle à celle de la Suisse, et que dit le droit du taux maximal ?",
       "ask": "Rechercher",
@@ -1750,6 +1811,8 @@
       "intro": "Les offices statistiques décident de ce qu'ils collectent et publient, pour des raisons juridiques, historiques, pratiques ou politiques : la même question peut donc avoir une réponse dans un pays et pas dans un autre. Chaque sujet est présenté de la même façon : ce qu'une source lue dit être collecté, croisé avec quoi, sous quel droit, où la réponse manque, et ce qui devrait accompagner une nouvelle mesure pour qu'elle ne soit pas mal lue. Solon décrit et propose ; il ne note pas les offices et ne caractérise pas les personnes.",
       "open": "Ouvrir",
       "back": "Tous les sujets",
+      "soFar": "{count, plural, one {# sujet pour l'instant.} other {# sujets pour l'instant.}} Prévus ensuite : l'écart fiscal, l'application de la loi sur la détention de drogue et les taux d'élucidation par infraction.",
+      "why": "Pourquoi Solon signale ce qui n'est pas mesuré",
       "stance": "Solon dit ce que disent les pages de chaque office et ce qui n'a pas été lu. Une lacune peut être une loi choisie par un pays ; une différence dans un tableau n'est pas une explication. Rien ici ne décrit un office ou un groupe de personnes.",
       "purposesTitle": "À quoi sert la réponse",
       "matrixTitle": "Ce que chaque lieu publie",

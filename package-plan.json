@@ -82,6 +82,9 @@
       "verification": "Real adapter is intercepted only for synthetic local browser tests; production delivery remains unverified."
     }
   },
+  "experience": {
+    "ceiling": {}
+  },
   "productOwned": {
     "domain": "Governance, legal sources, evidence and law-specific prompts remain Solon domain behavior."
   }

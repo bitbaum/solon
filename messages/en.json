@@ -343,10 +343,32 @@
     "law": {
       "kicker": "The law, open",
       "title": "Every word of the law, open to everyone.",
-      "body": "Solon holds the text of every federal and cantonal act in force in Switzerland, every act of Liechtenstein, Luxembourg and Estonia, Wyoming's statutes, and a growing number of communes' rules — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or propose a change to any article.",
+      "body": "Solon holds the text of the law of Switzerland, from the Confederation and the cantons to a growing number of communes, and of more and more countries, states and the European Union — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or propose a change to any article.",
       "next": "Every place is shaded on the globe by how much of its law Solon holds. More places are being added: the system is built once, and each new country is its data.",
       "find": "Find a law",
       "ask": "Ask the law"
+    },
+    "data": {
+      "kicker": "Laws and numbers",
+      "title": "How a place is governed. How it is doing.",
+      "body": "Beside each place's law, Solon keeps the statistics and budgets its offices publish, over the years, each with its source and what it covers. Topic by topic, it shows where one place measures what another does not, and what would have to come with a new measure.",
+      "note": "Suggesting which measures a place could start, and which policies other places used for the same trend, is planned and not built yet.",
+      "why": "Why laws and numbers",
+      "stats": "See the statistics",
+      "points": {
+        "governed": {
+          "name": "How it is governed",
+          "body": "Its law, as its publisher published it, and the official ways that law is changed."
+        },
+        "doing": {
+          "name": "How it is doing",
+          "body": "Its statistics and its budget over the years, each figure with its source and the day it was read."
+        },
+        "missing": {
+          "name": "What it does not measure",
+          "body": "Where comparable places publish a figure it does not, with what Solon has not read marked as not read."
+        }
+      }
     },
     "roots": {
       "kicker": "Where the ideas come from",
@@ -1237,6 +1259,7 @@
       "rank": "Number {rank, number} of {count, number} from the lowest: {amount} more than the lowest place",
       "cheapest": "The lowest of {count, number} places on the map",
       "open": "Open the place",
+      "openPlace": "Open {place}",
       "close": "Close",
       "addCompare": "Add to comparison",
       "inCompare": "In the comparison",
@@ -1436,7 +1459,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Law coverage",
-      "metaDescription": "Which laws of Switzerland, Liechtenstein and Luxembourg Solon holds, per authority, counted from the data.",
+      "metaDescription": "Which laws Solon holds, per authority, counted from the data.",
       "kicker": "Law",
       "title": "What Solon holds",
       "intro": "Counted from the data, read from the publisher on {date}: each authority's acts, and for how many Solon holds the text.",
@@ -1445,13 +1468,13 @@
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
       "rowNotStated": "{inForce} in force · {notInForce} not · {notStated} status not stated by the publisher",
-      "totalsNotStated": "{notStated, plural, one {# more act is} other {# more acts are}} listed by publishers that do not say whether they are in force.",
+      "totalsNotStated": "{notStated} {count, plural, one {more act is} other {more acts are}} listed by publishers that do not say whether they are in force.",
       "note": "Communes are added one collection at a time; those held so far are in the list above.",
       "readLink": "Find and read an act →"
     },
     "index": {
       "metaTitle": "Find a law",
-      "metaDescription": "Find an act of Switzerland or Liechtenstein by its title or number, and read it as its publisher wrote it.",
+      "metaDescription": "Find an act by its title or number in any place whose law Solon holds, and read it as its publisher wrote it.",
       "kicker": "Law",
       "title": "Find a law",
       "intro": "Search every law Solon holds, from the Confederation, the cantons and the communes. Type what you are looking for in plain words, or start from the place you live.",
@@ -1640,6 +1663,31 @@
       "withinSixMonths": "Within six months of the financial year's end, approved at the annual general meeting"
     }
   },
+  "AskSolon": {
+    "title": "Ask Solon",
+    "description": "Understand the rules, compare ways to decide, or turn an idea into a proposal draft.",
+    "status": "Reading the governance rules",
+    "starters": {
+      "one": "Who can decide what?",
+      "two": "Compare the governance profiles",
+      "three": "Help me draft a proposal"
+    },
+    "startersTitle": "Make the next decision clearer.",
+    "placeholder": "Ask about a decision, or draft a proposal…",
+    "draftsNote": "Drafts are not decisions.",
+    "signInLink": "Sign in to ask Solon",
+    "methods": "Read the voting rules",
+    "record": "Read the decision record",
+    "errors": {
+      "failed": "Solon could not answer. Try again.",
+      "signIn": "Sign in to ask Solon. You will come back here.",
+      "tooLong": "This conversation is too long. Start a new one.",
+      "rateLimited": "Please wait a few minutes before asking again.",
+      "unavailable": "Solon's AI is not available just now. You can still read the rules or draft a proposal below.",
+      "noAnswer": "The answer did not arrive. Try again.",
+      "interrupted": "The answer was interrupted. Try again."
+    }
+  },
   "Chat": {
     "copy": "Copy",
     "copied": "Copied",
@@ -1663,6 +1711,19 @@
     "confirmRecording": "Done — use what I said",
     "listening": "Listening…",
     "transcribing": "Transcribing…",
+    "attach": "Attach a text file",
+    "attachRemove": "Remove {name}",
+    "attachMenu": {
+      "title": "Add to message",
+      "close": "Close",
+      "files": "Text file"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: attach a text file (txt, md, csv or json). Pictures and PDFs are not read here.",
+      "textTooLarge": "{name} is too long (max {k}k characters).",
+      "unreadable": "Could not read {name}.",
+      "tooMany": "Up to {max} files."
+    },
     "queue": "Queue a message…",
     "dismiss": "Dismiss",
     "retryTake": "Try again",
@@ -2291,7 +2352,7 @@
       "metaDescription": "Ask a question about governance, freedom or statistics: an AI reads Solon's series, dimensions, method descriptions and law, and writes a report whose every figure and citation is checked against what it read.",
       "kicker": "Research",
       "title": "Research with AI",
-      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources.",
+      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources. It knows only what Solon holds: where Solon has no figures for a place, neither does it.",
       "questionLabel": "Your question",
       "placeholder": "For example: How does Estonia's tax burden compare with Switzerland's, and what does the law say about the top rate?",
       "ask": "Research this",
@@ -2331,6 +2392,8 @@
       "intro": "Statistical offices decide what to collect and what to publish, for reasons that are legal, historical, practical or political, so the same question can be answerable in one country and not in another. Here each topic is laid out the same way: what a source that was read says is collected, crossed with what, under what law, where the answer is missing, and what would have to come with a new measure so it is not misread. Solon describes and proposes; it does not rate offices or characterise people.",
       "open": "Open",
       "back": "All topics",
+      "soFar": "{count, plural, one {# topic so far.} other {# topics so far.}} Planned next: the tax gap, enforcement of drug-possession law, and clearance rates by offence.",
+      "why": "Why Solon marks what is not measured",
       "stance": "Solon states what each office's own pages say and what was not read. A gap may be a law a country chose; a difference in a table is not an explanation. Nothing here describes an office or a group of people.",
       "purposesTitle": "What answering it is for",
       "matrixTitle": "What each place publishes",

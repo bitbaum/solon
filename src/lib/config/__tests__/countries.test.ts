@@ -12,8 +12,9 @@ function namedCountries(): Map<string, string> {
     if (a.place?.scheme === "iso_3166_1") named.set(a.place.value, `law authority ${a.key}`);
   for (const p of placesConfig.packs) if (p.region) named.set(p.region, `pack ${p.key}`);
   for (const s of placesConfig.sources) {
-    const place = (s.options as { place?: { scheme: string; value: string } } | undefined)?.place;
-    if (place?.scheme === "iso_3166_1") named.set(place.value, `source ${s.key}`);
+    // A source whose place is read from a column (a table of one country's figures) states no value here.
+    const place = (s.options as { place?: { scheme: string; value?: string } } | undefined)?.place;
+    if (place?.scheme === "iso_3166_1" && place.value) named.set(place.value, `source ${s.key}`);
   }
   for (const r of STATISTIC_RECORDS) {
     const place = (r.body as { place?: { scheme: string; value: string } }).place;

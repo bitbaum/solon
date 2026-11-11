@@ -41,6 +41,14 @@ export function GapsIndex({
           </li>
         ))}
       </ul>
+      <p className="mt-6 max-w-3xl text-sm text-fg-secondary">
+        {t("gaps.soFar", { count: topics.length })}
+      </p>
+      <p className="mt-2 text-sm">
+        <Link href="/statistics/why" className="text-fg-primary underline">
+          {t("gaps.why")}
+        </Link>
+      </p>
     </PageLayout>
   );
 }

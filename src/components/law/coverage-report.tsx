@@ -40,6 +40,8 @@ export default async function LawCoverageReport({ coverage, t }: LawCoverageRepo
           {totals.statusNotStated > 0 ? (
             <p className="mt-2 text-sm text-fg-secondary">
               {t("coverage.totalsNotStated", {
+                // The plural chooses on the number; the sentence prints it as every count here is printed.
+                count: totals.statusNotStated,
                 notStated: totals.statusNotStated.toLocaleString("en-CH"),
               })}
             </p>
