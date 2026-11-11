@@ -15,6 +15,11 @@ export const PLACES_REPO_FILES: readonly { source: string; file: string }[] = [
   { source: "li-income-tax", file: "data/places/liechtenstein/income-tax.json" },
   { source: "li-communal-surcharges", file: "data/places/liechtenstein/communal-surcharges.csv" },
   { source: "li-communal-tax-steps", file: "data/places/liechtenstein/tax-steps.csv" },
+  {
+    source: "li-government-expenditure",
+    file: "data/places/liechtenstein/government-expenditure.csv",
+  },
+  { source: "li-fiscal-ratio", file: "data/places/liechtenstein/fiscal-ratio.csv" },
   { source: "ee-ehak-units", file: "data/places/estonia/administrative-units.json" },
   { source: "so-constitution-units", file: "data/places/south-ossetia/administrative-units.json" },
   { source: "ee-income-tax", file: "data/places/estonia/income-tax.json" },

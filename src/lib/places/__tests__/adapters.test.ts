@@ -1532,3 +1532,35 @@ describe("csv_facts: a figure that stays in force until the source states the ne
     ]);
   });
 });
+
+describe("Liechtenstein's public finances, kept by hand from the Amt für Statistik's tables", () => {
+  const dir = join(__dirname, "../../../../data/places/liechtenstein");
+  const read = (source: string, file: string) =>
+    mapSource(source, new Uint8Array(readFileSync(join(dir, file))));
+  const spending = read("li-government-expenditure", "government-expenditure.csv");
+  const fiscal = read("li-fiscal-ratio", "fiscal-ratio.csv");
+  const at = (batch: typeof spending, metric: string, year: number) =>
+    batch.facts.find((f) => f.metricKey === metric && f.validFrom.startsWith(`${year}-`))?.value;
+
+  it("passes the batch check against the pack", () => {
+    expect(checkBatch(spending, placesConfig, "li-government-expenditure").problems).toEqual([]);
+    expect(checkBatch(fiscal, placesConfig, "li-fiscal-ratio").problems).toEqual([]);
+  });
+
+  it("states the country's figure as the office prints it, as a ratio", () => {
+    // Finanzstatistik 2024: "blieb im Jahr 2024 gegenüber dem Vorjahr unverändert bei 21.6%".
+    expect(at(spending, "economy.government.expenditure", 2024)).toBeCloseTo(0.216, 4);
+    expect(at(spending, "economy.government.expenditure", 2012)).toBeCloseTo(0.315, 4);
+    // Steuern, Abgaben: "Die Fiskalquote erreichte im Jahr 2024 einen Wert von 20.1%, [...] im Vorjahr 21.6%".
+    expect(at(fiscal, "tax.revenue.general", 2024)).toBeCloseTo(0.201, 4);
+    expect(at(fiscal, "tax.revenue.general", 2023)).toBeCloseTo(0.216, 4);
+  });
+
+  it("holds a year each, for the country alone", () => {
+    expect(spending.facts.map((f) => f.jurisdiction)).toEqual(
+      spending.facts.map(() => ({ scheme: "iso_3166_1", value: "LI" })),
+    );
+    expect(new Set(spending.facts.map((f) => f.validFrom)).size).toBe(spending.facts.length);
+    expect(new Set(fiscal.facts.map((f) => f.validFrom)).size).toBe(fiscal.facts.length);
+  });
+});
