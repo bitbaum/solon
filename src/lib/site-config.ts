@@ -124,6 +124,7 @@ export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
     key: "data",
     children: [
       { key: "statistics", href: "/statistics" },
+      { key: "statisticsWhy", href: "/statistics/why" },
       { key: "budgets", href: "/budgets" },
       { key: "statisticsEvents", href: "/statistics/events" },
       { key: "statisticsMethods", href: "/statistics/methods" },

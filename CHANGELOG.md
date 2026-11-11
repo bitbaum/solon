@@ -18,6 +18,13 @@ one to read for the detail. Fixes get the same weight as features.
   the people it applies to can change its law, from the commune up to the country, each with its
   bar and the provision that sets it, and lists the laws that took effect there in the past year.
   {#place-change}
+- **Why laws and numbers.** A new page, `/statistics/why`, says why Solon keeps each place's law
+  beside its statistics: to see how a place is governed and how it is doing, to mark what a place
+  does not measure, and to let groups decide together. Each thing it names says whether it is
+  available now or planned; per-place gap reports and "what other places did about a trend" are
+  planned, not built. South Ossetia is the worked example: its law and its 2023 budget are on
+  Solon, its statistics office's figures and gaps are researched but not yet loaded. In all five
+  languages. {#stats-why}
 
 ### Fixed
 
