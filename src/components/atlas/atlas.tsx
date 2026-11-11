@@ -6,7 +6,10 @@ import { geoCentroid } from "d3-geo";
 import {
   cameraFor,
   cameraForBounds,
+  createFocus,
   type Camera,
+  type FocusController,
+  type FocusView,
   type MapController,
   type MapFeature,
 } from "@bitbaum/geo-kit/map";
@@ -32,6 +35,14 @@ import MapSearch from "@/components/places/map-search";
 import SourceList from "@/components/places/source-list";
 import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
+import {
+  BEYOND,
+  SUB,
+  focusCamera,
+  focusChildren,
+  focusParent,
+  type FocusInputs,
+} from "./focus-tree";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
 import { COUNTRIES } from "@/lib/config/world/countries";
 import {
@@ -64,12 +75,8 @@ import {
 const HOME: Camera = { center: [8, 40], k: 1 };
 /** Roughly a street's width around an address, so the map zooms to it rather than the whole place. */
 const ADDRESS_SPAN = 0.004;
-/** A country fills most of the map, however small (Liechtenstein stops short of one valley). */
-const COUNTRY_ZOOM = { fill: 0.85, most: 120 };
 /** A country with this many places or fewer lists them all, open; a larger one keeps the list closed. */
 const PLACE_LIST_OPEN = 30;
-/** A country's own places are drawn under this prefix, apart from the world's shapes. */
-const SUB = "sub:";
 
 interface AtlasProps {
   /**
@@ -284,6 +291,32 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   const fly = (camera: Camera | null) => {
     if (camera) map.current?.flyTo(camera);
   };
+  // Which place the map is about is geo-kit's rule (`createFocus`): choosing a place frames its own
+  // outline, never a child's, and draws what it is part of faintly. The tree below only says where
+  // each outline is, read from what is loaded when a choice is made.
+  const treeState = useRef<FocusInputs>({
+    world: new Map(),
+    country: null,
+    drawn: null,
+  });
+  const [focusView, setFocusView] = useState<FocusView | null>(null);
+  const focus = useRef<FocusController | null>(null);
+  useEffect(() => {
+    focus.current = createFocus(
+      {
+        home: HOME,
+        cameraOf: (id) => focusCamera(treeState.current, id),
+        childrenOf: (id) => focusChildren(treeState.current, id),
+        parentOf: (id) => focusParent(treeState.current, id),
+      },
+      (next) => {
+        setFocusView(next);
+        setSelected(next.selected);
+        if (next.camera) map.current?.flyTo(next.camera);
+      },
+    );
+  }, []);
+  const choose = (id: string | null) => focus.current?.choose(id);
   const [view, setView] = useState<"map" | "list">("map");
   const [notice, setNotice] = useState<string | null>(null);
   const [tray, setTray] = useState<MapPlace[]>([]);
@@ -304,33 +337,36 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         router.push(`/places?in=${place.key}`);
         return;
       }
-      setSelected(null);
       setNotice(null);
       setView("map");
       setOpen(place.key);
-      const shape = worldById.get(place.feature);
-      if (shape) fly(cameraFor(shape.geometry, ATLAS_LIMITS, COUNTRY_ZOOM));
+      // The tree reads the country that is opening, not the one the last render held.
+      treeState.current = { ...treeState.current, country: place.feature, drawn: null };
+      choose(place.feature);
     },
-    [mode, router, worldById],
+    [mode, router],
   );
 
   // Facing the country asked for in the address, once both the map and the country are known.
   const faced = useRef(false);
+  useEffect(() => {
+    treeState.current = {
+      ...treeState.current,
+      world: worldById,
+      country: country?.feature ?? null,
+      drawn,
+    };
+  }, [worldById, country?.feature, drawn]);
   const onMap = useCallback((controller: MapController | null) => {
     map.current = controller;
   }, []);
   useEffect(() => {
     if (faced.current || !country || !world || !map.current) return;
     faced.current = true;
-    const shape = worldById.get(country.feature);
-    const camera = shape ? cameraFor(shape.geometry, ATLAS_LIMITS, COUNTRY_ZOOM) : null;
-    if (camera) map.current.flyTo(camera);
+    choose(country.feature);
   });
-
-  // Once its places arrive, frame them rather than the country's outline (which may include islands far away).
-  useEffect(() => {
-    if (drawn) map.current?.flyTo(cameraForBounds(drawn.bounds, ATLAS_LIMITS, 0.9));
-  }, [drawn]);
+  // What the focus tree reads, kept current. Its places arriving moves nothing: the camera stays on
+  // the place that was chosen, whatever happens to be drawn inside it.
 
   const openA2 = drawn ? (country?.region ?? null) : null;
   const shapes = useMemo<MapFeature[]>(() => {
@@ -343,12 +379,12 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       .map((f) => ({ ...f, layer: 1 }));
     const base = [...countries, ...subdivisions, ...rest.map((f) => ({ ...f, layer: 2 }))];
     if (!drawn) return base;
-    // Once a country's own places are drawn they are its shape: its coarse outline from the world file
-    // (Natural Earth, a few dozen points for Liechtenstein) is left out, or it shows through as a
-    // second, mismatched border over the places.
-    const outer = country?.feature;
+    // The country's coarse outline from the world file (Natural Earth, a few dozen points for
+    // Liechtenstein) stays as plain land under its own places, so no gap shows where the two do not
+    // meet. It is never outlined as the selection (see `selected` below): that would be a second,
+    // mismatched border over the places.
     return [
-      ...base.filter((f) => f.id !== outer),
+      ...base,
       ...drawn.features.features.map((f) => ({
         id: SUB + f.properties.code,
         geometry: f.geometry,
@@ -356,7 +392,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         layer: 3,
       })),
     ];
-  }, [world, drawn, admin1, openA2, country?.feature]);
+  }, [world, drawn, admin1, openA2]);
 
   const fills = useMemo(() => {
     const out = new Map<string, string>();
@@ -464,8 +500,8 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       setSelected(null);
       return;
     }
-    if (id.startsWith(SUB)) {
-      setSelected(id);
+    if (id.startsWith(SUB) || id.startsWith(BEYOND)) {
+      choose(id);
       return;
     }
     // A subdivision answers for its country.
@@ -510,14 +546,11 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     if (town) fly({ center: town.at, k: Math.max(cam.camera.k * 1.5, zoomOfLevel(town.z + 2, r)) });
   };
 
-  const showBounds = (feature: string, bounds: Bounds | undefined) => {
+  const showPlace = (place: MapPlace) => {
     setNotice(null);
-    setSelected(SUB + feature);
     setView("map");
-    if (bounds) fly(cameraForBounds(bounds, ATLAS_LIMITS, 0.6));
+    choose(SUB + place.feature);
   };
-  const showPlace = (place: MapPlace) =>
-    showBounds(place.feature, drawn?.areas.get(place.feature)?.bounds);
   const showAddress = (hit: AddressHit) => {
     const [x, y] = hit.position;
     const holder = [...(drawn?.areas ?? [])].find(
@@ -533,14 +566,24 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       setNotice(tm("addressOutside", { address: hit.label }));
       return;
     }
-    showBounds(holder[0], [x - ADDRESS_SPAN, y - ADDRESS_SPAN, x + ADDRESS_SPAN, y + ADDRESS_SPAN]);
+    setNotice(null);
+    setView("map");
+    choose(SUB + holder[0]);
+    // The address, not the whole place, is what was asked for: the one choice that frames closer.
+    fly(
+      cameraForBounds(
+        [x - ADDRESS_SPAN, y - ADDRESS_SPAN, x + ADDRESS_SPAN, y + ADDRESS_SPAN],
+        ATLAS_LIMITS,
+        0.6,
+      ),
+    );
   };
 
   const backToWorld = () => {
     setOpen(null);
-    setSelected(null);
     setNotice(null);
-    fly(HOME);
+    treeState.current = { ...treeState.current, country: null, drawn: null };
+    choose(null);
   };
 
   const limit = REGISTER_POLICY_DEFAULTS.compareLimit;
@@ -610,6 +653,15 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     // Inside an open country its places carry the colour; a wash over the whole country would hide it.
     return open ? { ...p, selectedFill: undefined } : p;
   }, [colours, tokens, open]);
+  // What the chosen place is part of, drawn faintly round it (geo-kit's `context`, nearest first).
+  const contextOutlines = useMemo(
+    () =>
+      (focusView?.context ?? []).flatMap((id) => {
+        const shape = worldById.get(id);
+        return shape ? [shape.geometry] : [];
+      }),
+    [focusView, worldById],
+  );
   const ready = colours && tokens && palette && world && !broken;
   const canvas = ready ? (
     <AtlasCanvas
@@ -621,7 +673,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       names={placeNames}
       nameColour={tokens.text}
       nameHalo={tokens.page}
-      selected={selected ?? (drawn ? null : (country?.feature ?? null))}
+      // A country with its own places drawn is not outlined itself: its coarse edge would be a second
+      // border over theirs. Its places, and the one chosen among them, carry the outline.
+      selected={drawn && selected === country?.feature ? null : selected}
+      context={contextOutlines}
       onMap={onMap}
       home={HOME}
       spin={!open}
@@ -666,7 +721,26 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     .filter((p) => (layer === "tax" ? p.drawn : p.acts > 0 || p.pack))
     .sort((a, b) => b.acts - a.acts);
   const countryPage = pageOf(country);
-  const selectedPlace = selected ? placeByFeature.get(selected.slice(SUB.length)) : undefined;
+  const selectedPlace = selected?.startsWith(SUB)
+    ? placeByFeature.get(selected.slice(SUB.length))
+    : undefined;
+  // A place with no outline, only a dot (South Ossetia): chosen like any other, it offers its page.
+  const selectedDot = selected?.startsWith(BEYOND)
+    ? WORLD.find((r) => `${BEYOND}${r.slug}` === selected)
+    : undefined;
+  const card = selectedPlace
+    ? {
+        name: selectedPlace.name,
+        parentName: selectedPlace.parentName,
+        href: `/places/${selectedPlace.slugPath}`,
+      }
+    : selectedDot
+      ? {
+          name: regionName(selectedDot, locale),
+          parentName: null,
+          href: `/places/${selectedDot.slug}`,
+        }
+      : null;
   const pageLink = country && countryPage && (
     <Link href={countryPage} className="btn-primary min-h-11 w-full justify-center">
       {t("pageOpen", { country: country.name })}
@@ -978,7 +1052,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                   />
                 </div>
               )}
-              {layer === "places" && selectedPlace && (
+              {layer === "places" && card && (
                 <div className="absolute inset-x-3 bottom-3 sm:right-auto sm:w-80">
                   <section
                     aria-labelledby="atlas-place-title"
@@ -987,10 +1061,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <h2 id="atlas-place-title" className="font-semibold text-fg-primary">
-                          {selectedPlace.name}
+                          {card.name}
                         </h2>
-                        {selectedPlace.parentName && (
-                          <p className="text-sm text-fg-tertiary">{selectedPlace.parentName}</p>
+                        {card.parentName && (
+                          <p className="text-sm text-fg-tertiary">{card.parentName}</p>
                         )}
                       </div>
                       <button
@@ -1002,11 +1076,8 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                         <span aria-hidden>×</span>
                       </button>
                     </div>
-                    <Link
-                      href={`/places/${selectedPlace.slugPath}`}
-                      className="btn-primary min-h-11"
-                    >
-                      {tm("open")}
+                    <Link href={card.href} className="btn-primary min-h-11">
+                      {tm("openPlace", { place: card.name })}
                     </Link>
                   </section>
                 </div>

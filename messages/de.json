@@ -656,6 +656,7 @@
       "rank": "Platz {rank, number} von {count, number} ab der tiefsten Steuer: {amount} mehr als der günstigste Ort",
       "cheapest": "Der günstigste von {count, number} Orten auf der Karte",
       "open": "Ort öffnen",
+      "openPlace": "{place} öffnen",
       "close": "Schliessen",
       "addCompare": "Zum Vergleich hinzufügen",
       "inCompare": "Im Vergleich",

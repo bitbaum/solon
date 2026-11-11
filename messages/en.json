@@ -1237,6 +1237,7 @@
       "rank": "Number {rank, number} of {count, number} from the lowest: {amount} more than the lowest place",
       "cheapest": "The lowest of {count, number} places on the map",
       "open": "Open the place",
+      "openPlace": "Open {place}",
       "close": "Close",
       "addCompare": "Add to comparison",
       "inCompare": "In the comparison",
