@@ -31,6 +31,8 @@ import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { countryPlaceId, loadProfileFigures } from "@/lib/places/profile-figures";
+import { recentChanges } from "@/lib/law/recent";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +69,12 @@ const profileOf = (region: WorldRegion | undefined, locale: Locale) =>
   region
     ? loadWorldProfile(db, region, locale, worldRegionByCode, (r) => regionName(r, locale))
     : Promise.resolve(null);
+
+/** A country's figures where Solon holds its place, by its country code. */
+async function figuresOfRegion(code: string | null | undefined, locale: Locale) {
+  const id = code ? await countryPlaceId(db, code) : null;
+  return id ? loadProfileFigures(db, placesConfig, id, locale) : [];
+}
 
 /** A country or territory Solon holds no places for, by its one-segment path. */
 const regionOf = (slug: string[]) =>
@@ -147,6 +155,13 @@ export default async function PlacePage({ params }: { params: Params }) {
         budget={budget}
         profile={profile}
         hero={hero}
+        figures={await loadProfileFigures(db, placesConfig, view.id, locale)}
+        recent={await recentChanges(
+          db,
+          law.map((a) => a.key),
+          today(),
+        )}
+        locale={locale}
         t={t}
       />
     );
@@ -179,6 +194,13 @@ export default async function PlacePage({ params }: { params: Params }) {
       budget={await budgetLink(region, locale)}
       law={law}
       profile={profile}
+      figures={await figuresOfRegion(region.code, locale)}
+      recent={await recentChanges(
+        db,
+        law.map((a) => a.key),
+        today(),
+      )}
+      locale={locale}
       hero={placeHero({
         keys: [`world:${region.slug}`],
         title: name,

@@ -17,18 +17,23 @@ export default async function OfficialRoutes({
   routes,
   locale,
   headingId = "routes",
+  heading = true,
 }: {
   routes: readonly OfficialRoute[];
   locale: Locale;
   headingId?: string;
+  /** False where the page around it already names the section (a place's profile). */
+  heading?: boolean;
 }) {
   const t = await getTranslations({ locale, namespace: "Amend.amendment" });
   const format = await getFormatter({ locale });
   return (
-    <section className="space-y-4" aria-labelledby={headingId}>
-      <h2 id={headingId} className="headline text-2xl text-fg-primary">
-        {t("routes")}
-      </h2>
+    <section className="space-y-4" aria-labelledby={heading ? headingId : undefined}>
+      {heading && (
+        <h2 id={headingId} className="headline text-2xl text-fg-primary">
+          {t("routes")}
+        </h2>
+      )}
       {routes.length === 0 ? (
         <p className="text-fg-secondary">{t("noRoute")}</p>
       ) : (

@@ -678,3 +678,7 @@ export const routesFor = (authority: string, kind: string): OfficialRoute[] =>
   OFFICIAL_ROUTES.filter(
     (r) => r.authority === authority && (r.appliesTo as readonly string[]).includes(kind),
   );
+
+/** Every route that changes an authority's law, whatever the kind of act. */
+export const routesOfAuthority = (authority: string): OfficialRoute[] =>
+  OFFICIAL_ROUTES.filter((r) => r.authority === authority);

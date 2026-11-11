@@ -4,6 +4,26 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-11
+
+### Added
+
+- **What a place is like, measured.** A country's page now shows the few figures a reader would
+  act on: what the state takes in tax and spends, how it is governed (voice and accountability,
+  rule of law, control of corruption, government effectiveness, from the World Bank), and how safe
+  it is. Each gives the latest value and its year, where it stands among the countries reporting
+  that year, how it moved over fifteen years, and its source. A figure Solon does not hold for a
+  place is left out, never guessed. {#place-figures}
+- **How the law is changed here, and what changed.** A place's page now sets out the official ways
+  the people it applies to can change its law, from the commune up to the country, each with its
+  bar and the provision that sets it, and lists the laws that took effect there in the past year.
+  {#place-change}
+
+### Fixed
+
+- **Russian place pages read correctly** where a sentence named the place after a preposition
+  ("для Россия"), and the law card no longer calls every place below a country a "commune".
+
 ## 2026-11-10
 
 ### Added

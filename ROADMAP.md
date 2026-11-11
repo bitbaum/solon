@@ -87,6 +87,9 @@ substance; it never says which side is right (design:
 - [x] Photographs for the places inside countries: every ISO 3166-2 subdivision, Swiss canton (through a crosswalk from its FSO number) and commune, US state and county Wikidata holds; the places inside a place as tiles {#place-photos-subdivisions}
 - [x] Solon serves place photographs from its own store, read once from Wikimedia, so none fails to load and none waits on Wikimedia twice {#place-photo-store}
 - [x] One page shape for every place: the hero with its main action, the law and what a reader can do beside the place at a glance; the world index grouped by kind of place {#place-page-shape}
+- [x] A place's figures on its profile, chosen in config and shown only where held: what the state takes and spends, how it is governed, how safe it is, each with its position among countries, its trend and its source {#place-figures}
+- [x] A place's profile says how its law is changed by the people it applies to, from the nearest authority up, and what in that law changed over the past year {#place-change}
+- [ ] Official routes for every country whose constitution Solon holds, read from it with the provision cited {#place-routes-world}
 - [ ] A proposal on an act whose text Solon does not hold: the change asked for in words, pinned to the act's official publication, supported and counted like any other {#amend-without-text}
 - [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}
 - [ ] The deputies, from the Parliament's own page, and the hand-over: the redline, the count per electorate and the log hash, sent to deputies who choose to receive them, their answer recorded {#contested-handover}

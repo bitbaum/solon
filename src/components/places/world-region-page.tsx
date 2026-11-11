@@ -6,6 +6,11 @@ import ContestNote, { type ContestNoteProps } from "./contest-note";
 import CountryProfile from "./country-profile";
 import type { WorldProfileView } from "@/lib/places/world-profile";
 import { PlaceLawCard } from "./place-head";
+import PlaceFigures from "./place-figures";
+import { PlaceRecentChanges, PlaceRoutes, routesAlong } from "./place-change";
+import type { RecentChange } from "@/lib/law/recent";
+import type { Locale } from "@/i18n/routing";
+import type { ProfileFigureView } from "@/lib/places/profile-figures";
 import type { PlacesTranslator } from "./translator";
 
 interface WorldRegionPageProps {
@@ -19,6 +24,11 @@ interface WorldRegionPageProps {
   profile: WorldProfileView | null;
   /** The top of the page: its photograph, name, headline facts and main action. */
   hero: React.ReactNode;
+  /** Its figures, where it has any (config: PROFILE_FIGURES). */
+  figures?: readonly ProfileFigureView[];
+  /** What changed in its law over the past year. */
+  recent?: { total: number; changes: readonly RecentChange[] } | null;
+  locale?: Locale;
   t: PlacesTranslator;
 }
 
@@ -34,6 +44,9 @@ export default function WorldRegionPage({
   law,
   profile,
   hero,
+  figures = [],
+  recent = null,
+  locale = "en",
   t,
 }: WorldRegionPageProps) {
   return (
@@ -42,6 +55,15 @@ export default function WorldRegionPage({
         {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
+
+        <PlaceFigures figures={figures} place={name} locale={locale} t={t} />
+
+        {/* Async parts are mounted only when they have something to show. */}
+        {routesAlong(law).length > 0 && <PlaceRoutes law={law} locale={locale} t={t} />}
+
+        {recent && recent.changes.length > 0 && (
+          <PlaceRecentChanges recent={recent} law={law} place={name} locale={locale} t={t} />
+        )}
 
         {budget && <BudgetLinkCard {...budget} />}
 

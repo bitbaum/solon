@@ -1303,7 +1303,7 @@
       "nothing": "No laws held yet",
       "textsNotHeld": "Texts not held yet.",
       "moreRegistered": "{count, plural, one {# more act registered} other {# more acts registered}}, texts not held yet.",
-      "communes": "Communes ({count})"
+      "below": "Below it ({count})"
     },
     "parts": {
       "title": "Places in {place}",
@@ -1392,7 +1392,31 @@
       "source": "Facts from <wikidata>Wikidata</wikidata>, read {date}; membership from the <un>United Nations' list</un>. Each kind of place says what it does, not whether its claim is right.",
       "rule": "Proclaimed states are listed by one rule: Wikidata classes them as micronations, not dissolved, with an article in at least 30 Wikipedias."
     },
-    "photoCredit": "Photo: {author} · {license}"
+    "photoCredit": "Photo: {author} · {license}",
+    "figures": {
+      "title": "Measured",
+      "intro": "Where {place} stands on figures published for nearly every country. Each opens its series and its source.",
+      "groups": {
+        "state": "What the state takes and spends",
+        "governance": "How it is governed, as measured",
+        "safety": "Safety"
+      },
+      "position": "Higher than {percent}% of {count} other countries in {year}",
+      "trend": "{label} since {from}",
+      "source": "{publisher}, {year}",
+      "highest": "Highest of {count} countries in {year}",
+      "lowest": "Lowest of {count} countries in {year}"
+    },
+    "change": {
+      "title": "How its law is changed",
+      "intro": "The official ways for the people it applies to, not only its legislature, to change the law here, from the provisions that set them."
+    },
+    "recent": {
+      "title": "What changed lately",
+      "intro": "{count, plural, one {# law} other {# laws}} of {place} and the places above it took effect in the past twelve months. The newest:",
+      "new": "New, in force since {date}",
+      "amended": "Amended, in force since {date}"
+    }
   },
   "AuthError": {
     "metaTitle": "Sign-in didn’t finish",
