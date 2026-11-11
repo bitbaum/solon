@@ -7,6 +7,7 @@ import type { Locale } from "@/i18n/routing";
 import { archiveCopyOf } from "@/lib/law/archive-copy";
 import { authorityOf } from "@/lib/law/places";
 import type { ActTranslation } from "@/lib/law/act-translation";
+import { newHeadings } from "@/lib/law/heading-path";
 import { PROVISIONS_PER_PAGE, type ActView } from "@/lib/law/view";
 import type { LawTranslator } from "./coverage-report";
 import type { AmendmentSummary } from "@/lib/law/amend/store";
@@ -219,8 +220,17 @@ export default async function ActViewPage({
             <h2 className="font-semibold text-fg-primary">
               {t("act.provisionCount", { count: version.provisionCount })}
             </h2>
-            {provisions.map((provision) => (
+            {provisions.map((provision, i) => (
               <article key={provision.path} id={provision.path} className="space-y-2">
+                {/* The chapter headings the publisher prints above this article (in the act's own language). */}
+                {newHeadings(
+                  act.provisions[i - 1]?.headingPath,
+                  act.provisions[i]?.headingPath ?? [],
+                ).map((heading) => (
+                  <p key={heading} className="text-sm uppercase text-fg-secondary">
+                    {heading}
+                  </p>
+                ))}
                 <h3 className="font-medium text-fg-primary">{provision.heading}</h3>
                 <p className="whitespace-pre-line text-fg-secondary">{provision.text}</p>
                 <Link

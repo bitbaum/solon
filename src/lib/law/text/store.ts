@@ -152,6 +152,7 @@ export async function storeVersion(
           path: p.path,
           heading: p.heading,
           text: p.text,
+          headingPath: p.headingPath ?? [],
           ord: i + j,
         })),
       );

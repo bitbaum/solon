@@ -26,6 +26,8 @@ export interface Provision {
   path: string;
   heading: string;
   text: string;
+  /** The chapter and section headings above it, outermost first; absent when the source has none. */
+  headingPath?: string[];
 }
 
 type Fetch = typeof fetch;

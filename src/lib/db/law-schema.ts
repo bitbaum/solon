@@ -14,6 +14,7 @@ import {
   foreignKey,
   integer,
   index,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -200,6 +201,11 @@ export const legalProvisions = pgTable(
     /** As the act heads it: "Art. 270b Anfechtung des Anfangsmietzinses". */
     heading: text("heading").notNull(),
     text: text("text").notNull(),
+    /** The chapter and section headings above it, outermost first. Empty when the source has none. */
+    headingPath: jsonb("heading_path")
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
     /** Position in the act, from 0. */
     ord: integer("ord").notNull(),
   },
