@@ -18,6 +18,7 @@ const place = (
   countryPack: "testland",
   levelKey,
   slugPath,
+  canonicalPath: slugPath,
   depth,
   names: [{ locale: "en", script: null, name, nameType: "self" }],
 });
@@ -78,7 +79,12 @@ describe("placeView", () => {
     const v = view(testland);
     expect(v.partOf.map((p) => p.name)).toEqual(["Testland", "Northshire", "Millbrook"]);
     expect(v.alsoServedBy).toEqual([
-      { name: "Weavers' Guild", levelName: "Guild", slugPath: "testland/weavers-guild" },
+      {
+        name: "Weavers' Guild",
+        levelName: "Guild",
+        slugPath: "testland/weavers-guild",
+        canonicalPath: "testland/weavers-guild",
+      },
     ]);
     expect(v.levelName).toBe("Hamlet");
     expect(view(testland, "de").levelName).toBe("Weiler");
@@ -133,14 +139,24 @@ describe("placeActions", () => {
         kind: "testland_moot",
         label: "Am Thing sprechen",
         url: "https://north.invalid/moot",
-        offeredBy: { name: "Northshire", levelName: "Grafschaft", slugPath: "testland/northshire" },
+        offeredBy: {
+          name: "Northshire",
+          levelName: "Grafschaft",
+          slugPath: "testland/northshire",
+          canonicalPath: "testland/northshire",
+        },
         deadline: { monthDay: "03-31", source: "https://north.invalid/dates" },
       },
       {
         kind: "testland_toll",
         label: "Pay the toll",
         url: "https://realm.invalid/toll",
-        offeredBy: { name: "Testland", levelName: "Reich", slugPath: "testland" },
+        offeredBy: {
+          name: "Testland",
+          levelName: "Reich",
+          slugPath: "testland",
+          canonicalPath: "testland",
+        },
         deadline: null,
       },
     ]);

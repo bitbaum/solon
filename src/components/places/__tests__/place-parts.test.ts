@@ -32,8 +32,20 @@ describe("the places inside a place", () => {
   it("shows cantons as photographs, found by their FSO number through the crosswalk", () => {
     const html = render(
       viewWith([
-        { name: "Zürich", levelName: "Canton", slugPath: "switzerland/zh", refs: ["bfs_canton:1"] },
-        { name: "Jura", levelName: "Canton", slugPath: "switzerland/ju", refs: ["bfs_canton:26"] },
+        {
+          name: "Zürich",
+          levelName: "Canton",
+          slugPath: "switzerland/zh",
+          canonicalPath: "switzerland/zh",
+          refs: ["bfs_canton:1"],
+        },
+        {
+          name: "Jura",
+          levelName: "Canton",
+          slugPath: "switzerland/ju",
+          canonicalPath: "switzerland/ju",
+          refs: ["bfs_canton:26"],
+        },
       ]),
     );
     expect(html.match(/<img src="\/api\/place-photo\/960\//g)).toHaveLength(2);
@@ -43,9 +55,15 @@ describe("the places inside a place", () => {
   it("keeps a plain list where most places have no photograph", () => {
     const html = render(
       viewWith([
-        { name: "Nowhere", levelName: "Canton", slugPath: "x/a", refs: [] },
-        { name: "Elsewhere", levelName: "Canton", slugPath: "x/b", refs: [] },
-        { name: "Zürich", levelName: "Canton", slugPath: "x/zh", refs: ["bfs_canton:1"] },
+        { name: "Nowhere", levelName: "Canton", slugPath: "x/a", canonicalPath: "x/a", refs: [] },
+        { name: "Elsewhere", levelName: "Canton", slugPath: "x/b", canonicalPath: "x/b", refs: [] },
+        {
+          name: "Zürich",
+          levelName: "Canton",
+          slugPath: "x/zh",
+          canonicalPath: "x/zh",
+          refs: ["bfs_canton:1"],
+        },
       ]),
     );
     expect(html).not.toContain("<img");

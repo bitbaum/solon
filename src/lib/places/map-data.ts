@@ -19,6 +19,7 @@ import { loadFacts, type ChainFact, type ChainName } from "./chain";
 import { taxPackView, yearsBefore } from "./compare";
 import { GEOGRAPHY_FILE_PATH, geographyFileHref, parseGeometryRef } from "./geography";
 import type { MapData, MapPlace } from "./map-view";
+import { canonicalPathSql } from "./paths";
 import { loadRetrievals } from "./place-page";
 import { displayName, localized, placeSources } from "./place-view";
 
@@ -68,6 +69,7 @@ async function drawnPlaces(db: Database, pack: CountryPack, on: string) {
       id: jurisdictions.id,
       levelKey: jurisdictions.levelKey,
       slugPath: jurisdictions.slugPath,
+      canonicalPath: canonicalPathSql,
     })
     .from(areas)
     .innerJoin(areaAssertions, eq(areaAssertions.areaId, areas.id))
@@ -75,8 +77,16 @@ async function drawnPlaces(db: Database, pack: CountryPack, on: string) {
     .where(and(eq(jurisdictions.countryPack, pack.key), drawnOn(on)));
   return rows.flatMap((row) => {
     const ref = parseGeometryRef(row.geometryRef);
-    return ref && row.levelKey && row.slugPath
-      ? [{ ...row, levelKey: row.levelKey, slugPath: row.slugPath, ref }]
+    return ref && row.levelKey && row.slugPath && row.canonicalPath
+      ? [
+          {
+            ...row,
+            levelKey: row.levelKey,
+            slugPath: row.slugPath,
+            canonicalPath: row.canonicalPath,
+            ref,
+          },
+        ]
       : [];
   });
 }
@@ -307,6 +317,7 @@ export async function loadMapData(
       return {
         feature: p.ref.featureId,
         slugPath: p.slugPath,
+        canonicalPath: p.canonicalPath,
         name: nameOf(p.id),
         parentName: parent ? nameOf(parent) : null,
         groups: chainOf(p.id).flatMap(groupOf),

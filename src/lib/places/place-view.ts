@@ -19,6 +19,8 @@ export interface PlaceLink {
   name: string;
   levelName: string;
   slugPath: string | null;
+  /** The path its page has; what its link is built from. */
+  canonicalPath: string | null;
   /** Its identifiers as `scheme:value`, for a place inside this one (its photograph, its tile). */
   refs?: string[];
 }
@@ -161,6 +163,7 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     name: displayName(p.names, locale, pack.defaultLocales),
     levelName: levelName(p.levelKey),
     slugPath: p.slugPath,
+    canonicalPath: p.canonicalPath,
   });
   const name = displayName(place.names, locale, pack.defaultLocales);
   const partRefs = new Map<string, string[]>();
@@ -258,6 +261,7 @@ export function placeActions(
           name: displayName(by.names, locale, pack.defaultLocales),
           levelName: level ? localized(level.names, locale) : "",
           slugPath: by.slugPath,
+          canonicalPath: by.canonicalPath,
         },
         deadline:
           deadline && deadlineSource ? { monthDay: deadline, source: deadlineSource } : null,

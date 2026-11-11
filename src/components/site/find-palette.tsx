@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import type { FindEntry } from "@/lib/site/find-index";
 import { SITE_LINKS } from "@/lib/site-config";
+import { placeHref } from "@/lib/places/place-href";
 
 interface Result {
   id: string;
@@ -99,6 +100,7 @@ export default function FindPalette({
         ...(
           places.places as {
             slugPath: string;
+            canonicalPath: string;
             name: string;
             levelName: string;
             parentName: string | null;
@@ -110,7 +112,7 @@ export default function FindPalette({
             group: "places",
             title: p.name,
             description: [p.levelName, p.parentName].filter(Boolean).join(" · "),
-            href: `/places/${p.slugPath}`,
+            href: placeHref(p.canonicalPath),
           })),
         ...(acts.acts as { id: string; title: string | null; systematicNumber: string | null }[])
           .slice(0, 6)
