@@ -1082,6 +1082,19 @@
     "confirmRecording": "Готово — использовать сказанное",
     "listening": "Слушаю…",
     "transcribing": "Расшифровка…",
+    "attach": "Прикрепить текстовый файл",
+    "attachRemove": "Убрать {name}",
+    "attachMenu": {
+      "title": "Добавить к сообщению",
+      "close": "Закрыть",
+      "files": "Текстовый файл"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: прикрепите текстовый файл (txt, md, csv или json). Изображения и PDF здесь не читаются.",
+      "textTooLarge": "{name} слишком длинный (не более {k} тыс. символов).",
+      "unreadable": "Не удалось прочитать {name}.",
+      "tooMany": "Не более {max} файлов."
+    },
     "queue": "Отложить сообщение…",
     "dismiss": "Скрыть",
     "retryTake": "Попробовать снова",

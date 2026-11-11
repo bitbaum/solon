@@ -1663,6 +1663,19 @@
     "confirmRecording": "Done — use what I said",
     "listening": "Listening…",
     "transcribing": "Transcribing…",
+    "attach": "Attach a text file",
+    "attachRemove": "Remove {name}",
+    "attachMenu": {
+      "title": "Add to message",
+      "close": "Close",
+      "files": "Text file"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: attach a text file (txt, md, csv or json). Pictures and PDFs are not read here.",
+      "textTooLarge": "{name} is too long (max {k}k characters).",
+      "unreadable": "Could not read {name}.",
+      "tooMany": "Up to {max} files."
+    },
     "queue": "Queue a message…",
     "dismiss": "Dismiss",
     "retryTake": "Try again",

@@ -11,6 +11,7 @@ import {
   type ChatTransport,
   type ThinkingStep,
 } from "@bitbaum/chatkit/react";
+import { textAttachmentsOf } from "@/lib/chat/attachments";
 import type { LawChatEvent } from "@/lib/chat/events";
 import type { Proposal } from "@/lib/law/ask/consult";
 import type { AskScope } from "@/lib/law/ask/scope";
@@ -48,7 +49,12 @@ export function lawTransport(
     const response = await fetch("/api/law/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, scope, proposal: proposal?.() ?? undefined }),
+      body: JSON.stringify({
+        messages,
+        scope,
+        proposal: proposal?.() ?? undefined,
+        attachments: textAttachmentsOf(turn.attachments),
+      }),
       signal: turn.signal,
     });
     if (!response.ok) {

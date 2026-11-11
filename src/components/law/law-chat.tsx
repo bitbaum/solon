@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { localConversationStore } from "@bitbaum/chatkit";
 import { ChatApp } from "@bitbaum/chatkit/react";
+import { chatComposer } from "@/components/chat/composer-config";
 import { useChatLabels } from "@/components/chat/use-chat-labels";
 import { Link } from "@/i18n/navigation";
 import type { Proposal } from "@/lib/law/ask/consult";
@@ -78,12 +79,7 @@ export function LawChat({
         starters={starters ?? [t("starters.one"), t("starters.two"), t("starters.three")]}
         startersTitle={startersTitle ?? t("startersTitle")}
         placeholder={placeholder ?? t("placeholder")}
-        composer={{
-          voice: { transcribeUrl: "/api/transcribe" },
-          // /api/law/ask reads words, not files.
-          attach: false,
-          labels: labels.composer,
-        }}
+        composer={chatComposer(labels)}
         thread={{
           labels: labels.thread,
           share: { title: name },

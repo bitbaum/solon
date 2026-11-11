@@ -2,6 +2,7 @@ import { complete, completeStream, freeChain, usableChain } from "@bitbaum/ai-ki
 import { sseResponse } from "@bitbaum/ai-kit/sse";
 import { z } from "zod";
 import { selfOriginOf } from "@/lib/auth/actor";
+import { ATTACHMENT_BODY_BYTES, attachmentsSchema, withAttachments } from "@/lib/chat/attachments";
 import { readJsonBounded } from "@/lib/chat/body";
 import type { LawChatEvent } from "@/lib/chat/events";
 import { allowAssistantRequest } from "@/lib/chat/rate-limit";
@@ -38,13 +39,15 @@ const Body = z.object({
     .optional(),
   /** Asked while drafting a change: think it through (consult.ts). */
   proposal: proposalSchema.optional(),
+  /** Text files attached to the last question; read as context. */
+  attachments: attachmentsSchema,
 });
 
 /** Public: the law is public. Bounded by origin, size and a per-address rate. */
 export async function POST(req: Request) {
   if (req.headers.get("origin") !== selfOriginOf(req))
     return Response.json({ error: "Request origin was not recognized." }, { status: 403 });
-  const read = await readJsonBounded(req);
+  const read = await readJsonBounded(req, ATTACHMENT_BODY_BYTES);
   if (!read.ok)
     return Response.json({ error: "Send a shorter question." }, { status: read.status });
   const parsed = Body.safeParse(read.body);
@@ -59,7 +62,11 @@ export async function POST(req: Request) {
       { error: "Please wait a few minutes before asking again." },
       { status: 429, headers: { "Retry-After": "600" } },
     );
-  const { messages: turns, proposal } = parsed.data;
+  const { proposal, attachments } = parsed.data;
+  // The files travel with the last question only, as context after it.
+  const turns = parsed.data.messages.map((m, i, all) =>
+    i === all.length - 1 ? { ...m, content: withAttachments(m.content, attachments) } : m,
+  );
   let { scope } = parsed.data;
   // The act being changed, as the database knows it; its place is always searched.
   let act: ProposalAct | null = null;

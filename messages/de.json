@@ -1189,6 +1189,19 @@
     "confirmRecording": "Fertig — das Gesagte übernehmen",
     "listening": "Ich höre zu…",
     "transcribing": "Wird transkribiert…",
+    "attach": "Textdatei anhängen",
+    "attachRemove": "{name} entfernen",
+    "attachMenu": {
+      "title": "Zur Nachricht hinzufügen",
+      "close": "Schliessen",
+      "files": "Textdatei"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: Hängen Sie eine Textdatei an (txt, md, csv oder json). Bilder und PDFs werden hier nicht gelesen.",
+      "textTooLarge": "{name} ist zu lang (höchstens {k}k Zeichen).",
+      "unreadable": "{name} konnte nicht gelesen werden.",
+      "tooMany": "Bis zu {max} Dateien."
+    },
     "queue": "Nachricht vormerken…",
     "dismiss": "Ausblenden",
     "retryTake": "Nochmals versuchen",

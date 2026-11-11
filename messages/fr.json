@@ -1082,6 +1082,19 @@
     "confirmRecording": "Terminé — utiliser ce que j’ai dit",
     "listening": "Je vous écoute…",
     "transcribing": "Transcription en cours…",
+    "attach": "Joindre un fichier texte",
+    "attachRemove": "Retirer {name}",
+    "attachMenu": {
+      "title": "Ajouter au message",
+      "close": "Fermer",
+      "files": "Fichier texte"
+    },
+    "attachNotes": {
+      "wrongType": "{name} : joignez un fichier texte (txt, md, csv ou json). Les images et les PDF ne sont pas lus ici.",
+      "textTooLarge": "{name} est trop long (au plus {k}k caractères).",
+      "unreadable": "Impossible de lire {name}.",
+      "tooMany": "Jusqu’à {max} fichiers."
+    },
     "queue": "Mettre un message en attente…",
     "dismiss": "Masquer",
     "retryTake": "Réessayer",
