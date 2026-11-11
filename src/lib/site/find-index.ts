@@ -11,6 +11,7 @@ import { DIMENSIONS } from "@/lib/config/statistics/dimensions";
 import { GAPS } from "@/lib/config/statistics/gaps";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { localized } from "@/lib/places/place-view";
+import { topicHref } from "@/lib/statistics/gaps";
 import { metricPath, statisticMetrics } from "@/lib/statistics/present";
 
 export interface FindEntry {
@@ -48,7 +49,7 @@ export function findIndex(locale: string): FindEntry[] {
       group: "gaps" as const,
       title: localized(t.label, locale),
       description: clip(localized(t.question, locale)),
-      href: `/statistics/gaps/${t.key}`,
+      href: topicHref(t.key),
     })),
   ];
 }

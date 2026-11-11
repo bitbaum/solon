@@ -1,5 +1,6 @@
 "use client";
 
+import type { DictationProblem } from "@bitbaum/chatkit";
 import { useDictation } from "@bitbaum/chatkit/react";
 
 interface DictateButtonProps {
@@ -10,7 +11,7 @@ interface DictateButtonProps {
   /** Said while a take is running. */
   stopLabel: string;
   /** What went wrong, in the reader's words: no microphone, nothing heard, no service, too large. */
-  problems: Record<"mic" | "silence" | "unavailable" | "fileTooLarge", string>;
+  problems: Record<DictationProblem, string>;
 }
 
 /**
@@ -53,7 +54,6 @@ export default function DictateButton({ onText, label, stopLabel, problems }: Di
       {dictation.problem && (
         <span role="status" className="text-xs text-fg-tertiary">
           {problems[dictation.problem]}
-          {dictation.problemDetail ? ` ${dictation.problemDetail}` : ""}
         </span>
       )}
     </span>

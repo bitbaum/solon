@@ -141,3 +141,28 @@ export function gapsOf(topic: string, coverage: readonly Coverage[]): GapRow[] {
 
 export const publishedWith = (c: Coverage, crossing: (typeof CROSSINGS)[number]) =>
   c.status === "published" && c.crossings.includes(crossing);
+
+/**
+ * A topic's address: its key with dots and underscores as hyphens
+ * (`crime.by_background` → `crime-by-background`). A dot in the path makes the
+ * language middleware treat it as a file (`src/proxy.ts` skips any path with a
+ * dot), so the unprefixed English page of a dotted key answered 404.
+ */
+export const topicSlug = (key: string) => key.replace(/[._]/g, "-");
+
+/** The path of a topic's page, without a language. */
+export const topicHref = (key: string) => `/statistics/gaps/${topicSlug(key)}`;
+
+/** The topic a path segment names: its slug, or its key (links already shared). */
+export function findTopic<T extends { key: string }>(
+  topics: readonly T[],
+  segment: string,
+): T | undefined {
+  let s = segment;
+  try {
+    s = decodeURIComponent(segment);
+  } catch {
+    // a malformed escape is not a topic; compare it as it came
+  }
+  return topics.find((t) => topicSlug(t.key) === s) ?? topics.find((t) => t.key === s);
+}
