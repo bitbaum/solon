@@ -39,10 +39,49 @@ const evidenceSchema = z.object({
   unchecked: z.literal(true).optional(),
 });
 
-const placeSchema = z.object({
+export const placeSchema = z.object({
   scheme: z.literal("iso_3166_1"),
   value: z.string().regex(/^[A-Z]{2}$/),
 });
+
+/**
+ * What it would take to collect and publish a measure: a proposal is Solon's own statement of a
+ * possibility, signed as such, never a finding about an office or a law. It names who would be
+ * asked (an entry of the offices registry) and what must come with the figure so it is not misread.
+ */
+export const proposalSchema = z.object({
+  /** What would be collected and published, in a sentence. */
+  collect: localizedTextSchema,
+  /** What must accompany it so it is not misread (the topic's companions that apply here). */
+  accompany: z.array(localizedTextSchema).default([]),
+  /** The office that would be asked, a key of the offices registry. */
+  office: z
+    .string()
+    .regex(/^[a-z0-9_.-]+$/)
+    .optional(),
+  author: z.string().min(1),
+});
+export type Proposal = z.infer<typeof proposalSchema>;
+
+/**
+ * The institution that is responsible for a place's statistics, and its official channels. Only an
+ * institution's own channel is stored (an address, a general e-mail or telephone line a page of the
+ * office names as its contact), never a named person; each value must be in the words the cited
+ * page is expected to hold, so `statistics:verify` fails when the page stops saying it.
+ */
+export const OFFICE_CONTACT_KINDS = ["page", "email", "phone", "postal"] as const;
+export const officeSchema = z.object({
+  key: z.string().regex(/^[a-z0-9_.-]+$/),
+  place: placeSchema,
+  name: z.string().min(1),
+  /** What it is, in the words of its own page (its mandate), only where a page says so. */
+  role: localizedTextSchema.optional(),
+  contacts: z
+    .array(z.object({ kind: z.enum(OFFICE_CONTACT_KINDS), value: z.string().min(1) }))
+    .min(1),
+  evidence: z.array(evidenceSchema).min(1),
+});
+export type Office = z.infer<typeof officeSchema>;
 
 export const topicSchema = z.object({
   key: z.string().regex(/^[a-z0-9_.]+$/),
@@ -61,6 +100,8 @@ export const topicSchema = z.object({
   risks: z.array(z.object({ risk: localizedTextSchema, safeguard: localizedTextSchema })),
   /** What would let an explanation be tested, not only a difference shown. */
   companions: z.array(localizedTextSchema),
+  /** What collecting it generally would take, where an office does not yet. */
+  proposal: proposalSchema.optional(),
   author: z.string().min(1),
 });
 export type Topic = z.infer<typeof topicSchema>;
@@ -79,6 +120,13 @@ export const coverageSchema = z.object({
   frame: localizedTextSchema.optional(),
   /** What about it was not read, so nobody fills it in from memory. */
   unread: z.array(z.string().min(1)).default([]),
+  /** The office responsible for this place's figures, a key of the offices registry. */
+  office: z
+    .string()
+    .regex(/^[a-z0-9_.-]+$/)
+    .optional(),
+  /** For a place that does not publish it: what collecting it here would take. */
+  proposal: proposalSchema.optional(),
   /** Pages read, each with the words relied on. */
   evidence: z.array(evidenceSchema).min(1),
 });
@@ -92,9 +140,44 @@ export interface GapRow {
   publishedElsewhere: string[];
 }
 
-export function defineGaps(input: { topics: readonly unknown[]; coverage: readonly unknown[] }) {
+export function defineGaps(input: {
+  topics: readonly unknown[];
+  coverage: readonly unknown[];
+  offices?: readonly unknown[];
+}) {
   const topics = input.topics.map((t) => topicSchema.parse(t));
   const coverage = input.coverage.map((c) => coverageSchema.parse(c));
+  const offices = (input.offices ?? []).map((o) => officeSchema.parse(o));
+  const officeKeys = new Map<string, Office>();
+  for (const o of offices) {
+    if (officeKeys.has(o.key)) throw new Error(`the office "${o.key}" is declared twice`);
+    officeKeys.set(o.key, o);
+    for (const c of o.contacts) {
+      if (c.kind === "page") continue;
+      // The page is expected to say the contact in its own words, so a changed address is noticed.
+      const said = o.evidence.some((e) => e.expect.some((w) => w.includes(c.value)));
+      if (!said) {
+        throw new Error(
+          `${o.key}: the ${c.kind} "${c.value}" is not among the words a cited page is expected to hold`,
+        );
+      }
+    }
+    for (const e of o.evidence) {
+      if (!e.unchecked && e.expect.length === 0) {
+        throw new Error(`${o.key}: ${e.url} must name the words it relies on`);
+      }
+    }
+  }
+  const officeOf = (id: string, key: string | undefined, place: z.infer<typeof placeSchema>) => {
+    if (!key) return;
+    const office = officeKeys.get(key);
+    if (!office) throw new Error(`${id}: the office "${key}" is not in the registry`);
+    if (office.place.scheme !== place.scheme || office.place.value !== place.value) {
+      throw new Error(
+        `${id}: the office "${key}" belongs to ${office.place.value}, not ${place.value}`,
+      );
+    }
+  };
   const keys = new Set(topics.map((t) => t.key));
   if (keys.size !== topics.length) throw new Error("a topic is declared twice");
   const seen = new Set<string>();
@@ -107,6 +190,8 @@ export function defineGaps(input: { topics: readonly unknown[]; coverage: readon
     if (!topic.variants.some((v) => v.key === c.variant)) {
       throw new Error(`${id}: "${c.variant}" is not a variant of ${topic.key}`);
     }
+    officeOf(id, c.office, c.place);
+    officeOf(id, c.proposal?.office, c.place);
     if (c.status === "barred_by_law" && !c.frame) {
       throw new Error(`${id}: a bar in law must quote the law that bars it (frame)`);
     }
@@ -118,7 +203,7 @@ export function defineGaps(input: { topics: readonly unknown[]; coverage: readon
       }
     }
   }
-  return { topics, coverage };
+  return { topics, coverage, offices };
 }
 
 /**

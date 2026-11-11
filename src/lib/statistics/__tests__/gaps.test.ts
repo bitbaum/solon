@@ -148,3 +148,72 @@ describe("a topic's address", () => {
     expect(findTopic(GAPS.topics, "%E0%A4%A")).toBeUndefined();
   });
 });
+
+describe("offices and proposals", () => {
+  const office = (extra = {}) => ({
+    key: "dk.stat",
+    place: { scheme: "iso_3166_1", value: "DK" },
+    name: "Stat",
+    contacts: [
+      { kind: "page", value: "https://example.org/contact" },
+      { kind: "email", value: "info@example.org" },
+    ],
+    evidence: [{ ...ev, expect: ["info@example.org"] }],
+    ...extra,
+  });
+  const proposal = { collect: { en: "Publish X." }, author: "Solon's configuration" };
+
+  it("links a line to an office of its own place, and to a proposal that names one", () => {
+    const g = defineGaps({
+      topics: [{ ...topic, proposal }],
+      offices: [office()],
+      coverage: [
+        line("DK", "a", "not_collected", {
+          office: "dk.stat",
+          proposal: { ...proposal, office: "dk.stat" },
+        }),
+      ],
+    });
+    expect(g.coverage[0]!.office).toBe("dk.stat");
+    expect(g.topics[0]!.proposal?.collect.en).toBe("Publish X.");
+  });
+
+  it("refuses an office that is not in the registry, or belongs to another place", () => {
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        offices: [],
+        coverage: [line("DK", "a", "published", { office: "gone" })],
+      }),
+    ).toThrow(/not in the registry/);
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        offices: [office()],
+        coverage: [line("SE", "a", "published", { office: "dk.stat" })],
+      }),
+    ).toThrow(/belongs to DK, not SE/);
+  });
+
+  it("refuses an e-mail or telephone no cited page is expected to say", () => {
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        coverage: [],
+        offices: [office({ evidence: [{ ...ev, expect: ["something else"] }] })],
+      }),
+    ).toThrow(/not among the words/);
+  });
+
+  it("refuses an office declared twice", () => {
+    expect(() =>
+      defineGaps({ topics: [topic], coverage: [], offices: [office(), office()] }),
+    ).toThrow(/twice/);
+  });
+
+  it("holds Statistics Denmark as the first office, with its general channels", () => {
+    const dk = GAPS.offices.find((o) => o.key === "dk.statistics-denmark");
+    expect(dk?.contacts.map((c) => c.kind)).toEqual(["page", "email", "phone", "postal"]);
+    expect(GAPS.coverage.find((c) => c.place.value === "DK")?.office).toBe("dk.statistics-denmark");
+  });
+});

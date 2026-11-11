@@ -26,6 +26,8 @@ async function main(): Promise<number> {
     ...GAPS.coverage.map(
       (c) => ({ key: `gap:${c.topic}:${c.place.value}:${c.variant}`, body: c }) as never,
     ),
+    // The pages each responsible office's contact is read from: a changed address fails the check.
+    ...GAPS.offices.map((o) => ({ key: `office:${o.key}`, body: o }) as never),
     // The words each side of a contested place is quoted in (design 2026-11-contested-law.md §4.3).
     ...CONTESTS.map((c) => ({ key: `contest:${c.place}`, body: c }) as never),
     // The budget laws budgets were read from (design 2026-11-budgets.md).
