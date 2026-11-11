@@ -16,7 +16,9 @@ import { jurisdictions, placePaths } from "@/lib/db/places-schema";
 import type { GeometryStore } from "../importer/geometry-store";
 import { runImport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
+import { loadAtlasPlace } from "../atlas-place";
 import { resolvePlacePath } from "../paths";
+import { loadPlacePage } from "../place-page";
 import { withTestland } from "./fixtures/testland/config";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -77,6 +79,26 @@ describe.skipIf(!RUN)("South Ossetia, imported", () => {
       expect(canonical, place.slugPath!).toHaveLength(1);
       expect(canonical[0]!.path.split("/")[0]).toBe("south-ossetia");
       expect(mine.filter((p) => !p.canonical).map((p) => p.path)).toEqual([place.slugPath]);
+    }
+  });
+
+  it("answers the underscored form of the nation and of each unit with its hyphenated path, for the page and the atlas", async () => {
+    const places = await db
+      .select({ slugPath: jurisdictions.slugPath })
+      .from(jurisdictions)
+      .where(eq(jurisdictions.countryPack, "south_ossetia"));
+    for (const { slugPath } of places) {
+      const old = slugPath!;
+      const canonical = old.replace(/^south_ossetia/, "south-ossetia");
+      expect(canonical).not.toBe(old);
+      for (const asked of [old, canonical]) {
+        expect((await loadPlacePage(db, config, asked, "2026-11-08", "en"))?.canonicalPath).toBe(
+          canonical,
+        );
+        expect((await loadAtlasPlace(db, config, asked, "2026-11-08", "en"))?.canonicalPath).toBe(
+          canonical,
+        );
+      }
     }
   });
 });

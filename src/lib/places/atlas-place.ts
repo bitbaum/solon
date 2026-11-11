@@ -12,10 +12,11 @@
 import { and, eq, inArray } from "drizzle-orm";
 import type { CountryPack, PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
-import { areaAssertions, areas, jurisdictions } from "@/lib/db/places-schema";
+import { areaAssertions, areas } from "@/lib/db/places-schema";
 import { loadChain, loadRefinements, type ChainPlace } from "./chain";
 import { geographyFileHref, parseGeometryRef } from "./geography";
 import { drawnOn } from "./map-data";
+import { findPlace, type Located } from "./paths";
 import { displayName, localized } from "./place-view";
 
 /** Where a place's outline is: a feature in a boundary file, which the browser verifies by its hash. */
@@ -120,11 +121,8 @@ export async function loadAtlasPlace(
   slugPath: string,
   on: string,
   locale: string,
-): Promise<AtlasPlace | null> {
-  const [place] = await db
-    .select({ id: jurisdictions.id, countryPack: jurisdictions.countryPack })
-    .from(jurisdictions)
-    .where(and(eq(jurisdictions.slugPath, slugPath), eq(jurisdictions.origin, "state")));
+): Promise<(AtlasPlace & Located) | null> {
+  const place = await findPlace(db, config, slugPath);
   const pack = config.packs.find((p) => p.key === place?.countryPack);
   if (!place || !pack) {
     return null;
@@ -154,5 +152,6 @@ export async function loadAtlasPlace(
       return ref ? [[r.id, ref] as const] : [];
     }),
   );
-  return view({ config, on, locale, chain, parts, areas: refs });
+  const atlas = view({ config, on, locale, chain, parts, areas: refs });
+  return atlas && { ...atlas, canonicalPath: place.canonicalPath };
 }

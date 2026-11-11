@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 /**
  * One place for the map: what it is part of, its own outline, the places
  * directly inside it and theirs. `?place=` is its path (`united_states/wyoming`,
- * with or without the leading `/places/`), `?locale=` and `?on=` as for the search.
+ * with or without the leading `/places/`; a path the place once had answers 308 to its canonical one), `?locale=` and `?on=` as for the search.
  */
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -31,7 +31,13 @@ export async function GET(request: Request) {
   if (!atlas) {
     return NextResponse.json({ error: `no place at ${path}` }, { status: 404 });
   }
-  return NextResponse.json(atlas, {
+  if (atlas.canonicalPath !== path) {
+    const to = new URL(request.url);
+    to.searchParams.set("place", atlas.canonicalPath);
+    return NextResponse.redirect(to, 308);
+  }
+  const { canonicalPath: _, ...body } = atlas;
+  return NextResponse.json(body, {
     headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" },
   });
 }

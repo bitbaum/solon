@@ -29,6 +29,11 @@ export async function GET(request: Request, ctx: { params: Promise<{ slug: strin
   if (!view) {
     return NextResponse.json({ error: `no place at ${slugPath}` }, { status: 404 });
   }
-  const { id: _, ...place } = view;
+  if (view.canonicalPath !== slugPath) {
+    const to = new URL(request.url);
+    to.pathname = `/api/v1/places/${view.canonicalPath}`;
+    return NextResponse.redirect(to, 308);
+  }
+  const { id: _, canonicalPath: __, ...place } = view;
   return NextResponse.json({ on, ...place, path: `/places/${view.slugPath}` });
 }

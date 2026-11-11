@@ -6,7 +6,8 @@
  */
 import { and, eq } from "drizzle-orm";
 import type { Database } from "@/lib/db/client";
-import { placePaths } from "@/lib/db/places-schema";
+import type { PlacesConfig } from "@/lib/config/places/schema";
+import { jurisdictions, placePaths } from "@/lib/db/places-schema";
 
 export type PathTarget = { kind: "jurisdiction"; id: string } | { kind: "area"; id: string };
 
@@ -48,4 +49,35 @@ export async function resolvePlacePath(db: Database, path: string): Promise<Reso
       ),
     );
   return canonical ? { target, canonical: canonical.path, isCanonical: false } : null;
+}
+
+/** What a loader adds to its view: the one path the page has, whichever path asked. */
+export interface Located {
+  canonicalPath: string;
+}
+
+/**
+ * The state place a path names, through `place_paths`: the one lookup behind a
+ * place page, `/api/v1/places/[...slug]` and `/api/v1/places/atlas`. A path the
+ * place once had names it all the same; `canonicalPath` is the path to answer
+ * 308 with when it differs from the one asked for. A path of an area, of a
+ * place of another origin or of a pack the config does not hold names no place.
+ */
+export async function findPlace(
+  db: Database,
+  config: Pick<PlacesConfig, "packs">,
+  path: string,
+): Promise<{ id: string; countryPack: string; canonicalPath: string } | null> {
+  const resolved = await resolvePlacePath(db, path);
+  if (resolved?.target.kind !== "jurisdiction") {
+    return null;
+  }
+  const [place] = await db
+    .select({ id: jurisdictions.id, countryPack: jurisdictions.countryPack })
+    .from(jurisdictions)
+    .where(and(eq(jurisdictions.id, resolved.target.id), eq(jurisdictions.origin, "state")));
+  if (!place?.countryPack || !config.packs.some((p) => p.key === place.countryPack)) {
+    return null;
+  }
+  return { id: place.id, countryPack: place.countryPack, canonicalPath: resolved.canonical };
 }

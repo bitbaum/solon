@@ -1,7 +1,7 @@
 import { cache } from "react";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { redirect } from "@/i18n/navigation";
+import { getPathname, redirect } from "@/i18n/navigation";
 import { toLocale, type Locale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
@@ -131,6 +131,10 @@ export default async function PlacePage({ params }: { params: Params }) {
   const t = await getTranslations({ locale, namespace: "Places" });
   const view = await load(slugPathOf(slug), locale);
   if (view) {
+    // A path the place once had, or its pack root spelt with underscores: one URL per place.
+    if (view.canonicalPath !== slugPathOf(slug)) {
+      permanentRedirect(getPathname({ href: `/places/${view.canonicalPath}`, locale }));
+    }
     const law = await loadPlaceLaw(db, view.lawAuthorities ?? [], locale);
     const key = countryLawKey(view.region);
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
