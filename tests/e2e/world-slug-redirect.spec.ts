@@ -1,31 +1,22 @@
 import { test, expect } from "@playwright/test";
 
 /**
- * A world slug of a country Solon holds places for answers 308 to the pack's
- * path, at every depth: two addresses for one place showed two contradicting
- * pages. The redirect is made in the proxy from the configuration, so it needs
- * no database and runs against CI's server as well as the live site.
+ * The hyphenated root is a place's canonical path (`place_paths`), so it must
+ * never answer 308 to the underscored form: that was a loop on the live site
+ * once the page began redirecting the underscored form to the hyphenated one.
+ * Runs against CI's server as well as the live site, with or without data.
  */
-/** The redirect's target as a URL: a server may answer with a relative Location or an absolute one. */
-const target = (location: string | undefined) => new URL(location ?? "", "http://localhost");
-
-const CASES: [from: string, to: string][] = [
-  ["/places/united-states", "/places/united_states"],
-  ["/places/united-states/wyoming", "/places/united_states/wyoming"],
-  ["/places/united-states/wyoming/albany-county", "/places/united_states/wyoming/albany-county"],
-  ["/places/south-ossetia", "/places/south_ossetia"],
-  ["/de/places/united-states/wyoming", "/de/places/united_states/wyoming"],
+const PATHS = [
+  "/places/united-states",
+  "/places/united-states/wyoming",
+  "/places/south-ossetia",
+  "/de/places/united-states/wyoming",
 ];
 
-for (const [from, to] of CASES) {
-  test(`${from} answers 308 to ${to}`, async ({ request }) => {
-    const response = await request.get(from, { maxRedirects: 0 });
-    expect(response.status()).toBe(308);
-    expect(target(response.headers()["location"]).pathname).toBe(to);
+for (const path of PATHS) {
+  test(`${path} is never sent to an underscored path`, async ({ request }) => {
+    const response = await request.get(path, { maxRedirects: 0 });
+    const location = response.headers()["location"] ?? "";
+    expect(location, `${response.status()}`).not.toMatch(/\/places\/(united|south)_/);
   });
 }
-
-test("a query string survives the redirect", async ({ request }) => {
-  const response = await request.get("/places/united-states?x=1", { maxRedirects: 0 });
-  expect(target(response.headers()["location"]).search).toBe("?x=1");
-});

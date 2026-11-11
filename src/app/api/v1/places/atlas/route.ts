@@ -3,6 +3,7 @@ import { toLocale } from "@/i18n/routing";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { loadAtlasPlace } from "@/lib/places/atlas-place";
+import { movedTo } from "@/lib/places/paths";
 
 export const dynamic = "force-dynamic";
 
@@ -32,9 +33,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: `no place at ${path}` }, { status: 404 });
   }
   if (atlas.canonicalPath !== path) {
-    const to = new URL(request.url);
-    to.searchParams.set("place", atlas.canonicalPath);
-    return NextResponse.redirect(to, 308);
+    const to = new URLSearchParams(params);
+    to.set("place", atlas.canonicalPath);
+    return movedTo(`/api/v1/places/atlas?${to}`);
   }
   const { canonicalPath: _, ...body } = atlas;
   return NextResponse.json(body, {
