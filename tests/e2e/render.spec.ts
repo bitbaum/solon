@@ -29,6 +29,22 @@ test.describe("every page renders", () => {
   }
 });
 
+// The gaps index's only link answered 404 in English: a topic key's dot made the path look like a
+// file to the language middleware, which `/de/…` did not hit (2026-11-10). Follow every topic link.
+test("every gaps topic opens from the gaps index, in English and German", async ({ page }) => {
+  for (const index of ["/statistics/gaps", "/de/statistics/gaps"]) {
+    await page.goto(index, { waitUntil: "domcontentloaded" });
+    const hrefs = await page
+      .locator('main a[href*="/statistics/gaps/"]')
+      .evaluateAll((as) => as.map((a) => a.getAttribute("href") ?? ""));
+    expect(hrefs.length, index).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      const res = await page.goto(href, { waitUntil: "domcontentloaded" });
+      expect(res?.status(), href).toBe(200);
+    }
+  }
+});
+
 // A place the running config has no pack for is not found, never an error:
 // production carries no country pack yet, and the CI database holds Testland,
 // which only the tests' config knows.
