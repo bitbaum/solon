@@ -877,7 +877,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Copertura del diritto",
-      "metaDescription": "Quali atti della Svizzera, del Liechtenstein e del Lussemburgo conserva Solon, per autorità, contati dai dati.",
+      "metaDescription": "Quali atti conserva Solon, per autorità, contati dai dati.",
       "kicker": "Diritto",
       "title": "Che cosa conserva Solon",
       "intro": "Contato dai dati, letto presso l'editore il {date}: gli atti di ogni autorità e per quanti Solon conserva il testo.",
@@ -892,7 +892,7 @@
     },
     "index": {
       "metaTitle": "Trovare un atto",
-      "metaDescription": "Trovare un atto della Svizzera o del Liechtenstein per titolo o numero e leggerlo come lo ha scritto il suo editore.",
+      "metaDescription": "Trovare un atto per titolo o numero in qualsiasi luogo di cui Solon conserva il diritto, e leggerlo come lo ha scritto il suo editore.",
       "kicker": "Diritto",
       "title": "Trovare un atto",
       "intro": "Cerchi in tutte le leggi che Solon conserva: Confederazione, cantoni e comuni. Scriva con parole semplici ciò che cerca, oppure parta dal luogo in cui abita.",
@@ -1745,7 +1745,7 @@
       "metaDescription": "Ponete una domanda su governo, libertà o statistica: un'IA legge le serie, le dimensioni, le descrizioni dei metodi e il diritto di Solon e scrive un rapporto in cui ogni cifra e citazione è verificata.",
       "kicker": "Ricerca",
       "title": "Ricerca con l'IA",
-      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti.",
+      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti. Conosce solo ciò che Solon detiene: dove Solon non ha dati per un luogo, non ne ha neanche lei.",
       "questionLabel": "La vostra domanda",
       "placeholder": "Per esempio: come si confronta il carico fiscale dell'Estonia con quello della Svizzera, e cosa dice il diritto sull'aliquota massima?",
       "ask": "Ricerca",
@@ -1785,6 +1785,8 @@
       "intro": "Gli uffici di statistica decidono cosa raccogliere e pubblicare, per ragioni giuridiche, storiche, pratiche o politiche: la stessa domanda può quindi avere risposta in un paese e non in un altro. Qui ogni tema è presentato allo stesso modo: cosa dice una fonte letta che si raccoglie, incrociato con cosa, sotto quale diritto, dove la risposta manca, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Solon descrive e propone; non valuta gli uffici e non caratterizza le persone.",
       "open": "Apri",
       "back": "Tutti i temi",
+      "soFar": "{count, plural, one {# tema finora.} other {# temi finora.}} Previsti in seguito: il divario fiscale, l'applicazione della legge sul possesso di droga e i tassi di risoluzione per reato.",
+      "why": "Perché Solon segnala ciò che non è misurato",
       "stance": "Solon riporta ciò che dicono le pagine di ciascun ufficio e ciò che non è stato letto. Una lacuna può essere una legge scelta da un paese; una differenza in una tabella non è una spiegazione. Nulla qui descrive un ufficio o un gruppo di persone.",
       "purposesTitle": "A cosa serve la risposta",
       "matrixTitle": "Cosa pubblica ogni luogo",

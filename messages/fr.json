@@ -877,7 +877,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Couverture du droit",
-      "metaDescription": "Quels actes de la Suisse, du Liechtenstein et du Luxembourg Solon détient, par autorité, comptés à partir des données.",
+      "metaDescription": "Quels actes Solon détient, par autorité, comptés à partir des données.",
       "kicker": "Droit",
       "title": "Ce que Solon détient",
       "intro": "Compté à partir des données, lu chez l'éditeur le {date} : les actes de chaque autorité, et pour combien Solon détient le texte.",
@@ -892,7 +892,7 @@
     },
     "index": {
       "metaTitle": "Trouver un acte",
-      "metaDescription": "Trouver un acte de la Suisse ou du Liechtenstein par son titre ou son numéro, et le lire tel que son éditeur l'a écrit.",
+      "metaDescription": "Trouver un acte par son titre ou son numéro, dans tout lieu dont Solon détient le droit, et le lire tel que son éditeur l'a écrit.",
       "kicker": "Droit",
       "title": "Trouver un acte",
       "intro": "Cherchez dans toutes les lois que Solon détient : Confédération, cantons et communes. Écrivez en mots simples ce que vous cherchez, ou partez de votre lieu de domicile.",
@@ -1745,7 +1745,7 @@
       "metaDescription": "Posez une question sur la gouvernance, la liberté ou les statistiques : une IA lit les séries, dimensions, descriptions de méthodes et le droit de Solon, et écrit un rapport dont chaque chiffre et chaque citation sont vérifiés.",
       "kicker": "Recherche",
       "title": "Recherche avec l'IA",
-      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources.",
+      "intro": "Posez une question sur la gouvernance, la liberté, les statistiques ou le droit. Une IA lit ce que Solon détient (des séries avec leurs définitions et notes de qualité, des dimensions qui séparent droit, pratique et résultats, la façon dont les classements publiés sont faits, le droit lui-même) et écrit un court rapport. Chaque chiffre et chaque citation est vérifié par rapport aux sources lues avant que vous le voyiez ; le raisonnement ne l'est pas, lisez donc les sources. Elle ne connaît que ce que Solon détient : là où Solon n'a pas de chiffres pour un lieu, elle n'en a pas non plus.",
       "questionLabel": "Votre question",
       "placeholder": "Par exemple : comment la charge fiscale de l'Estonie se compare-t-elle à celle de la Suisse, et que dit le droit du taux maximal ?",
       "ask": "Rechercher",
@@ -1785,6 +1785,8 @@
       "intro": "Les offices statistiques décident de ce qu'ils collectent et publient, pour des raisons juridiques, historiques, pratiques ou politiques : la même question peut donc avoir une réponse dans un pays et pas dans un autre. Chaque sujet est présenté de la même façon : ce qu'une source lue dit être collecté, croisé avec quoi, sous quel droit, où la réponse manque, et ce qui devrait accompagner une nouvelle mesure pour qu'elle ne soit pas mal lue. Solon décrit et propose ; il ne note pas les offices et ne caractérise pas les personnes.",
       "open": "Ouvrir",
       "back": "Tous les sujets",
+      "soFar": "{count, plural, one {# sujet pour l'instant.} other {# sujets pour l'instant.}} Prévus ensuite : l'écart fiscal, l'application de la loi sur la détention de drogue et les taux d'élucidation par infraction.",
+      "why": "Pourquoi Solon signale ce qui n'est pas mesuré",
       "stance": "Solon dit ce que disent les pages de chaque office et ce qui n'a pas été lu. Une lacune peut être une loi choisie par un pays ; une différence dans un tableau n'est pas une explication. Rien ici ne décrit un office ou un groupe de personnes.",
       "purposesTitle": "À quoi sert la réponse",
       "matrixTitle": "Ce que chaque lieu publie",

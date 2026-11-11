@@ -1458,7 +1458,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Law coverage",
-      "metaDescription": "Which laws of Switzerland, Liechtenstein and Luxembourg Solon holds, per authority, counted from the data.",
+      "metaDescription": "Which laws Solon holds, per authority, counted from the data.",
       "kicker": "Law",
       "title": "What Solon holds",
       "intro": "Counted from the data, read from the publisher on {date}: each authority's acts, and for how many Solon holds the text.",
@@ -1473,7 +1473,7 @@
     },
     "index": {
       "metaTitle": "Find a law",
-      "metaDescription": "Find an act of Switzerland or Liechtenstein by its title or number, and read it as its publisher wrote it.",
+      "metaDescription": "Find an act by its title or number in any place whose law Solon holds, and read it as its publisher wrote it.",
       "kicker": "Law",
       "title": "Find a law",
       "intro": "Search every law Solon holds, from the Confederation, the cantons and the communes. Type what you are looking for in plain words, or start from the place you live.",
@@ -2326,7 +2326,7 @@
       "metaDescription": "Ask a question about governance, freedom or statistics: an AI reads Solon's series, dimensions, method descriptions and law, and writes a report whose every figure and citation is checked against what it read.",
       "kicker": "Research",
       "title": "Research with AI",
-      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources.",
+      "intro": "Ask a question about governance, freedom, statistics or the law. An AI reads what Solon holds (series with their definitions and quality notes, dimensions that keep the law, practice and results apart, how published rankings are made, the law itself) and writes a short report. Every figure and citation in it is checked against the sources it read before you see it; the reasoning is not, so read the sources. It knows only what Solon holds: where Solon has no figures for a place, neither does it.",
       "questionLabel": "Your question",
       "placeholder": "For example: How does Estonia's tax burden compare with Switzerland's, and what does the law say about the top rate?",
       "ask": "Research this",
@@ -2366,6 +2366,8 @@
       "intro": "Statistical offices decide what to collect and what to publish, for reasons that are legal, historical, practical or political, so the same question can be answerable in one country and not in another. Here each topic is laid out the same way: what a source that was read says is collected, crossed with what, under what law, where the answer is missing, and what would have to come with a new measure so it is not misread. Solon describes and proposes; it does not rate offices or characterise people.",
       "open": "Open",
       "back": "All topics",
+      "soFar": "{count, plural, one {# topic so far.} other {# topics so far.}} Planned next: the tax gap, enforcement of drug-possession law, and clearance rates by offence.",
+      "why": "Why Solon marks what is not measured",
       "stance": "Solon states what each office's own pages say and what was not read. A gap may be a law a country chose; a difference in a table is not an explanation. Nothing here describes an office or a group of people.",
       "purposesTitle": "What answering it is for",
       "matrixTitle": "What each place publishes",
