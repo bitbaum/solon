@@ -129,12 +129,14 @@ async function main(): Promise<number> {
         a.coverage
           ? `${(a.coverage.ratio * 100).toFixed(1)}% bag ` +
             `${a.sequence ? `${(a.sequence.ratio * 100).toFixed(1)}% in order, longest missing run ${a.sequence.longestMissing.words}` : "order not compared"}` +
-            `${a.wordForWord ? " WORD-FOR-WORD" : ""} page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
+            `${a.wordForWord ? " WORD-FOR-WORD" : a.sequence?.afterTitleBlock ? ` WORD-FOR-WORD-AFTER-${a.sequence.leading}-WORD-TITLE-BLOCK` : ""} page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
             `${a.title.slice(0, 40)} | missing: ${a.coverage.missing
               .slice(0, 8)
               .map((m) => `${m.word}x${m.count}`)
               .join(" ")}`
-          : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
+          : a.scanned
+            ? `SCANNED (not compared) ${a.title.slice(0, 40)}`
+            : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
       );
     console.log(lines.join("\n"));
     // What the three lowest pages hold that the provisions do not, and how those pages are built.
@@ -154,6 +156,8 @@ async function main(): Promise<number> {
         meanRatio: Number(report.meanRatio.toFixed(4)),
         short: report.short,
         wordForWord: report.wordForWord,
+        scanned: report.scanned,
+        afterTitleBlock: report.afterTitleBlock,
         failed: report.failed,
       }),
     );
