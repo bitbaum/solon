@@ -197,14 +197,13 @@ export function parseCantonalProvisions(raw: string, title = ""): Provision[] {
       ? { end: prevStart, note: prev }
       : { end: Math.max(lineStart, floor), note: "" };
   });
-  // An act begins at its first article. When the first heading found is a later one
-  // ("3. Art. 3" after sections numbered "1." and "2."), what comes before it is law
-  // the cutter did not recognise: it is kept as one provision, never dropped.
-  const firstNumber = /\d+/.exec(headings[0]!.label)?.[0];
+  // What comes before the first article is kept as one provision when it is more than a title, never
+  // dropped: the enacting formula and legal basis ("Gestützt auf Art. 7 …, erlässt der Gemeinderat …"), the title page,
+  // and, when the first heading found is a later one ("3. Art. 3" after sections numbered "1." and
+  // "2."), law the cutter did not recognise.
   const before = text.slice(0, ends[0]!.end).trim();
-  if (firstNumber && firstNumber !== "1" && before.length > 200) {
-    out.push({ path: "before_first", heading: title, text: before });
-  }
+  // A few lines are the act's title, held as the act's own title; a formula or a basis is longer.
+  if (before.length > 200) out.push({ path: "before_first", heading: title, text: before });
   headings.forEach((heading, i) => {
     const path = `${heading.sign}_${heading.label
       .replace(/^\S+\s*/, "")
