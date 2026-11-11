@@ -1082,6 +1082,31 @@
       "withinSixMonths": "Entro sei mesi dalla chiusura dell’esercizio, approvati dall’assemblea generale ordinaria"
     }
   },
+  "AskSolon": {
+    "title": "Chiedi a Solon",
+    "description": "Capisci le regole, confronta i modi di decidere o trasforma un’idea in una bozza di proposta.",
+    "status": "Lettura delle regole di governance",
+    "starters": {
+      "one": "Chi può decidere cosa?",
+      "two": "Confronta i profili di governance",
+      "three": "Aiutami a scrivere una proposta"
+    },
+    "startersTitle": "Rendere più chiara la prossima decisione.",
+    "placeholder": "Chiedi di una decisione, o scrivi una proposta…",
+    "draftsNote": "Le bozze non sono decisioni.",
+    "signInLink": "Accedi per chiedere a Solon",
+    "methods": "Leggi le regole di voto",
+    "record": "Leggi il registro delle decisioni",
+    "errors": {
+      "failed": "Solon non ha potuto rispondere. Riprova.",
+      "signIn": "Accedi per chiedere a Solon. Tornerai qui.",
+      "tooLong": "Questa conversazione è troppo lunga. Iniziane una nuova.",
+      "rateLimited": "Attendi qualche minuto prima di chiedere di nuovo.",
+      "unavailable": "L’IA di Solon non è disponibile al momento. Puoi comunque leggere le regole o scrivere una proposta qui sotto.",
+      "noAnswer": "La risposta non è arrivata. Riprova.",
+      "interrupted": "La risposta è stata interrotta. Riprova."
+    }
+  },
   "Chat": {
     "copy": "Copia",
     "copied": "Copiato",
