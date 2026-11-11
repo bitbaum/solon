@@ -678,6 +678,7 @@
       "rank": "{rank, number}e sur {count, number} en partant du plus bas : {amount} de plus que le lieu le moins cher",
       "cheapest": "Le moins cher des {count, number} lieux de la carte",
       "open": "Ouvrir le lieu",
+      "openPlace": "Ouvrir {place}",
       "close": "Fermer",
       "addCompare": "Ajouter à la comparaison",
       "inCompare": "Dans la comparaison",

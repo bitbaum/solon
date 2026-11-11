@@ -678,6 +678,7 @@
       "rank": "{rank, number}-е из {count, number} от самого низкого: на {amount} больше, чем в самом дешёвом месте",
       "cheapest": "Самое дешёвое из {count, number} мест на карте",
       "open": "Открыть место",
+      "openPlace": "Открыть: {place}",
       "close": "Закрыть",
       "addCompare": "Добавить в сравнение",
       "inCompare": "В сравнении",

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { GeoProjection } from "d3-geo";
+import { geoPath, type GeoProjection } from "d3-geo";
+import type { Geometry } from "geojson";
 import {
   createMap,
   shapesFromFeatures,
@@ -44,6 +45,8 @@ export interface AtlasCanvasProps {
   nameColour?: string;
   nameHalo?: string;
   selected: string | null;
+  /** The outlines of what the chosen place is part of, drawn faintly round it so it is seen in its setting. */
+  context?: readonly Geometry[];
   /** Called with the map once it is made and sized (so the page can fly it), and null when it goes. */
   onMap: (map: MapController | null) => void;
   home: Camera;
@@ -136,6 +139,21 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
         ? { onSelectLabel: (id: string) => live.current.onSelectLabel?.(id) }
         : {}),
       over: (ctx, _basis, projection) => {
+        const { context } = live.current;
+        if (context && context.length > 0) {
+          const path = geoPath(projection, ctx);
+          ctx.save();
+          ctx.strokeStyle = live.current.palette.border;
+          ctx.globalAlpha = 0.6;
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([5, 4]);
+          for (const geometry of context) {
+            ctx.beginPath();
+            path(geometry);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
         // Tell the page where the map rests, once it has rested a moment.
         const cam = controller.camera();
         const radius = projection.scale() / cam.k;
@@ -158,6 +176,8 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
           ctx.lineWidth = 3;
           ctx.strokeStyle = live.current.nameHalo ?? "transparent";
           ctx.fillStyle = live.current.nameColour ?? "currentColor";
+          // Names already written this frame: one that would land on another is left for a closer zoom.
+          const written: [number, number, number, number][] = [];
           for (const { text, point, bounds } of names.values()) {
             const at = pointAt(point, projection);
             const a = at && projection([bounds[0], bounds[1]]);
@@ -166,6 +186,18 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
             // Only where the whole name fits inside its place, so names never pile up.
             if (Math.abs(b[0] - a[0]) < ctx.measureText(text).width + LABEL_PAD) continue;
             if (Math.abs(b[1] - a[1]) < 12 + LABEL_PAD) continue;
+            const half = ctx.measureText(text).width / 2 + 2;
+            const box: [number, number, number, number] = [
+              at[0] - half,
+              at[1] - 8,
+              at[0] + half,
+              at[1] + 8,
+            ];
+            if (
+              written.some((w) => box[0] < w[2] && box[2] > w[0] && box[1] < w[3] && box[3] > w[1])
+            )
+              continue;
+            written.push(box);
             ctx.strokeText(text, at[0], at[1]);
             ctx.fillText(text, at[0], at[1]);
           }
@@ -214,7 +246,7 @@ export default function AtlasCanvas(props: AtlasCanvasProps) {
   useEffect(() => map.current?.setFills(fills), [fills]);
   useEffect(() => map.current?.setPalette(palette), [palette]);
   useEffect(() => map.current?.setSelected(selected), [selected]);
-  useEffect(() => map.current?.invalidate(), [dots, props.names]);
+  useEffect(() => map.current?.invalidate(), [dots, props.names, props.context]);
   useEffect(
     () => map.current?.setLabels(props.labels ?? [], props.labelStyles ?? undefined),
     [props.labels, props.labelStyles],

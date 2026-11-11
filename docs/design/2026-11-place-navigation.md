@@ -233,6 +233,17 @@ data and the proposal and responsible-office fields on gaps.
 | 11 | Disputed land: area pages, hatch, claim cards | South Ossetia, Western Sahara |
 | 12 | Per-parent geometry | A world of places stays fast |
 
+Step 10, atlas part (landed with the geo-kit 0.8.0 atlas PR): `/places` uses
+geo-kit's `createFocus`; `src/components/atlas/focus-tree.ts` only says where
+each outline is. A chosen country is framed by its own outline (the United
+States whole, though only Wyoming's counties are drawn), a chosen drawn place
+by its own bounds with the country drawn faintly round it, and the card offers
+"Open ‹place›". A place with no outline, only a dot (South Ossetia), is
+selected and offers its page, but the camera stays: `createFocus` frames by
+`childrenCameraOf` only when the place has children, so a point camera for an
+outline-less place is a geo-kit change, not a Solon one. Still open: place
+pages' own map card, per-parent geometry, the hatch for claimed land.
+
 ## Acceptance: QA 2026-11-10
 
 A walk of the live site, screenshots kept outside the repo. Each item is a

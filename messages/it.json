@@ -678,6 +678,7 @@
       "rank": "{rank, number}° su {count, number} partendo dal più basso: {amount} in più del luogo più conveniente",
       "cheapest": "Il più conveniente dei {count, number} luoghi sulla mappa",
       "open": "Apri il luogo",
+      "openPlace": "Apri {place}",
       "close": "Chiudi",
       "addCompare": "Aggiungi al confronto",
       "inCompare": "Nel confronto",
