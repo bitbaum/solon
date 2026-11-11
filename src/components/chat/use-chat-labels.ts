@@ -58,6 +58,8 @@ export function useChatLabels(): ChatLabels {
         silence: t("dictation.silence"),
         unavailable: t("dictation.unavailable"),
         fileTooLarge: t("dictation.fileTooLarge"),
+        signIn: t("dictation.signIn"),
+        busy: t("dictation.busy"),
       },
     },
     app: {
