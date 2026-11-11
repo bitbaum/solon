@@ -1066,6 +1066,9 @@ export const SOURCES: readonly SourceInput[] = [
     attribution: {
       en: "Office of Statistics of Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
       de: "Amt für Statistik Liechtenstein, Finanzstatistik 2024",
+      fr: "Office de la statistique du Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      it: "Ufficio di statistica del Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      ru: "Статистическое управление Лихтенштейна (Amt für Statistik), Finanzstatistik 2024",
     },
     // Nothing to fetch: the file is handed in (`places:import`) after each edit; the office
     // publishes a year's figures in the autumn after it.
@@ -1099,6 +1102,9 @@ export const SOURCES: readonly SourceInput[] = [
     attribution: {
       en: "Office of Statistics of Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
       de: "Amt für Statistik Liechtenstein, Steuern, Abgaben 2025",
+      fr: "Office de la statistique du Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      it: "Ufficio di statistica del Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      ru: "Статистическое управление Лихтенштейна (Amt für Statistik), Steuern, Abgaben 2025",
     },
     cadence: "0 6 3 1 *",
     adapter: "csv_facts",
