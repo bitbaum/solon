@@ -856,7 +856,7 @@
       "authorities": "Autorités",
       "row": "{inForce} en vigueur · {notInForce} non",
       "rowNotStated": "{inForce} en vigueur · {notInForce} non · {notStated} statut non indiqué par l'éditeur",
-      "totalsNotStated": "{notStated, plural, one {# autre acte est listé} other {# autres actes sont listés}} par des éditeurs qui n'indiquent pas s'ils sont en vigueur.",
+      "totalsNotStated": "{notStated} {count, plural, one {autre acte est listé} other {autres actes sont listés}} par des éditeurs qui n'indiquent pas s'ils sont en vigueur.",
       "note": "Les communes s'ajoutent un recueil à la fois ; celles détenues jusqu'ici figurent dans la liste ci-dessus.",
       "readLink": "Trouver et lire un acte →"
     },

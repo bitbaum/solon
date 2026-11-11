@@ -856,7 +856,7 @@
       "authorities": "Autorità",
       "row": "{inForce} in vigore · {notInForce} no",
       "rowNotStated": "{inForce} in vigore · {notInForce} no · {notStated} stato non indicato dall'editore",
-      "totalsNotStated": "{notStated, plural, one {# altro atto è elencato} other {# altri atti sono elencati}} da editori che non indicano se siano in vigore.",
+      "totalsNotStated": "{notStated} {count, plural, one {altro atto è elencato} other {altri atti sono elencati}} da editori che non indicano se siano in vigore.",
       "note": "I comuni si aggiungono una raccolta alla volta; quelli conservati finora sono nell'elenco qui sopra.",
       "readLink": "Trovare e leggere un atto →"
     },
