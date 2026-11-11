@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
-import { Faq } from "bip-kit/react";
-import "bip-kit/styles.css";
+import { Faq } from "@bitbaum/bip-kit/react";
+import "@bitbaum/bip-kit/styles.css";
 import PageLayout from "@/components/ui/page-layout";
 import { toLocale } from "@/i18n/routing";
 import { faqSections } from "@/lib/content/reading";

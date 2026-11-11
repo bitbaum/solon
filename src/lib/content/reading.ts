@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseFaq } from "bip-kit";
-import { readCollection, readEntry } from "bip-kit/node";
+import { parseFaq } from "@bitbaum/bip-kit";
+import { readCollection, readEntry } from "@bitbaum/bip-kit/node";
 
 /**
  * The deep side's long-form pages, read from `content/`: markdown files

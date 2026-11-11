@@ -1,5 +1,5 @@
-import { DevelopmentPage } from "bip-kit/react";
-import "bip-kit/styles.css";
+import { DevelopmentPage } from "@bitbaum/bip-kit/react";
+import "@bitbaum/bip-kit/styles.css";
 import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { FLEET_PROFILE_URL, loadSolonProfile } from "@/lib/development-records";

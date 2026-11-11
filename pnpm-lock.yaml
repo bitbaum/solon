@@ -20,6 +20,9 @@ importers:
       '@bitbaum/ai-kit':
         specifier: ^1.24.0
         version: 1.24.0(react@19.3.1)
+      '@bitbaum/bip-kit':
+        specifier: ^0.6.1
+        version: 0.6.1(react@19.3.1)
       '@bitbaum/chartkit':
         specifier: ^0.7.0
         version: 0.7.0(react@19.3.1)
@@ -56,9 +59,6 @@ importers:
       better-auth:
         specifier: ^1.7.14
         version: 1.7.14(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.13)(@types/pg@8.23.1)(kysely@0.29.6)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.64.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))
-      bip-kit:
-        specifier: ^0.6.1
-        version: 0.6.1(react@19.3.1)
       bs58check:
         specifier: ^4.0.0
         version: 4.0.0
@@ -416,6 +416,22 @@ packages:
       react: '>=18'
     peerDependenciesMeta:
       react:
+        optional: true
+
+  '@bitbaum/bip-kit@0.6.1':
+    resolution: {integrity: sha512-bDcAeO3+X+Dh+TVKioYWoYBdk3bgSFJSUMR4Af5K2qemRXjN4bfPrSUQWWDH7s2UlOIf297Ot28/0WPij7wVvQ==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      katex: '>=0.16'
+      mermaid: '>=10'
+      react: '>=18'
+      shiki: '>=1'
+    peerDependenciesMeta:
+      katex:
+        optional: true
+      mermaid:
+        optional: true
+      shiki:
         optional: true
 
   '@bitbaum/chartkit@0.7.0':
@@ -2391,22 +2407,6 @@ packages:
       zod: ^4.0.0
     peerDependenciesMeta:
       zod:
-        optional: true
-
-  bip-kit@0.6.1:
-    resolution: {integrity: sha512-lwWnRDCuhrO5YzBeaASjQwVoyIcDwGqEH3cskqa2ylIgyPagtVE6+ppDze+rkEBzVmKkUXREW5ydXOr2Kw3Oow==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      katex: '>=0.16'
-      mermaid: '>=10'
-      react: '>=18'
-      shiki: '>=1'
-    peerDependenciesMeta:
-      katex:
-        optional: true
-      mermaid:
-        optional: true
-      shiki:
         optional: true
 
   bl@4.1.0:
@@ -5115,6 +5115,10 @@ snapshots:
     transitivePeerDependencies:
       - canvas
 
+  '@bitbaum/bip-kit@0.6.1(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
+
   '@bitbaum/chartkit@0.7.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
@@ -6668,10 +6672,6 @@ snapshots:
       set-cookie-parser: 3.1.3
     optionalDependencies:
       zod: 4.6.7
-
-  bip-kit@0.6.1(react@19.3.1):
-    dependencies:
-      react: 19.3.1
 
   bl@4.1.0:
     dependencies:

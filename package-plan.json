@@ -24,7 +24,7 @@
       ]
     },
     "publishing": {
-      "package": "bip-kit",
+      "package": "@bitbaum/bip-kit",
       "bindings": [
         {
           "file": "src/components/site/development-records.tsx",
