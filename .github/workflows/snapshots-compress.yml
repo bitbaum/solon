@@ -1,0 +1,69 @@
+name: Snapshots compress
+
+# By hand: gzip the source snapshots written before the store compressed them
+# (src/lib/places/importer/snapshots-compress.ts). They were 17 GB on a disk
+# every site shares (2026-11-11). Runs on the box from a fresh checkout of
+# main. Each file is compressed aside, read back and checked against the
+# sha256 in its name before the plain copy goes; rerunning changes nothing.
+#
+# It refuses to write unless the LIVE app (its public release receipt) is
+# already on code that reads a compressed snapshot: converting first would
+# leave the running site unable to read its own sources.
+#
+# dry_run=true (default) reports the saving and writes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only report what would change"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Run it on the box
+        env:
+          SSH_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          SHA: ${{ github.sha }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          IP=167.233.22.31
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id && chmod 600 ~/.ssh/id
+          ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
+            "SHA=$SHA DRY=$DRY bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
+          set -euo pipefail
+          WD=$(mktemp -d /tmp/solon-snapshots.XXXXXX)
+          trap 'rm -rf "$WD"' EXIT
+          git clone -q https://github.com/bitbaum/solon "$WD/repo"
+          cd "$WD/repo" && git checkout -q "$SHA"
+          if [ "$DRY" != "true" ]; then
+            live=$(curl -fsS --max-time 20 https://solon.orangecat.ch/.well-known/fleet-release.json \
+              | sed -n 's/.*"commit": *"\([0-9a-f]\{40\}\)".*/\1/p' | head -n 1)
+            [ -n "$live" ] || { echo "cannot read the live commit; nothing written"; exit 1; }
+            git show "$live:src/lib/places/importer/snapshots.ts" 2>/dev/null | grep -q GZIP_SUFFIX \
+              || { echo "the live app ($live) cannot read a compressed snapshot yet; nothing written"; exit 1; }
+          fi
+          PNPM="corepack pnpm"; $PNPM --version >/dev/null 2>&1 || PNPM="npx --yes pnpm@11"
+          $PNPM install --frozen-lockfile >install.log 2>&1 || { echo "install failed:"; tail -n 20 install.log; exit 1; }
+          envf=/opt/solon/shared/.env; [ -f "$envf" ] || envf=/opt/solon/app/.env
+          set -a
+          eval "$(grep -E '^PLACES_SNAPSHOT_DIR=' "$envf" || true)"
+          set +a
+          export PLACES_SNAPSHOT_DIR="${PLACES_SNAPSHOT_DIR:-/opt/solon/shared/places-snapshots}"
+          flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
+          # Lowest priority: this reads and rewrites 17 GB beside 21 live sites.
+          nice -n 19 ionice -c 3 $PNPM run snapshots:compress $flag 2>&1 | tail -n 40
+          df -h / | tail -n 1
+          REMOTE
+          rm -f ~/.ssh/id
+          while IFS= read -r line; do echo "::notice::$line"; done < out.txt
+          exit "${status:-0}"
