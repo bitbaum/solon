@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
-import { dueOn, dueSources } from "../schedule";
+import { dueOn, dueSources, firstLoads } from "../schedule";
 
 describe("dueOn", () => {
   it("reads the day fields and leaves the time of day to the timer", () => {
@@ -46,5 +46,24 @@ describe("dueSources", () => {
     );
     expect(keys).toContain("bfs-communes-snapshot");
     expect(keys).toContain("bfs-communes-mutations");
+  });
+});
+
+describe("firstLoads", () => {
+  const fetchable = (s: { adapter: string }) => s.adapter !== "fixture";
+  const today = "2026-11-11";
+
+  it("loads sources never loaded, a few a day, in registry order, skipping those due today", () => {
+    const picked = firstLoads(placesConfig, new Set(), today, fetchable, 5);
+    expect(picked).toHaveLength(5);
+    const order = placesConfig.sources.map((s) => s.key);
+    const at = picked.map((s) => order.indexOf(s.key));
+    expect([...at].sort((a, b) => a - b)).toEqual(at);
+    expect(picked.every((s) => fetchable(s) && !dueOn(s.cadence, today))).toBe(true);
+  });
+
+  it("leaves a loaded source to its cadence", () => {
+    const loaded = new Set(placesConfig.sources.map((s) => s.key));
+    expect(firstLoads(placesConfig, loaded, today, fetchable)).toEqual([]);
   });
 });

@@ -36,7 +36,15 @@ this design keeps.
    applied on 2026-03-01" has one answer.
 4. **Language belongs to the version.** Switzerland's federal acts are authentic
    in German, French and Italian; some cantons are bilingual; Liechtenstein
-   publishes in German. A version is one language. We do not translate.
+   publishes in German. A version is one language, and no translation is ever
+   stored as a version. Readers read in their own language all the same
+   (owner's decision, 2026-11-10: a page half in a language the reader cannot
+   read is not usable): a version in the reader's language when the publisher
+   has one, else a machine translation shown labelled as such, with the
+   authentic text one click away. Translations are a cache of their own
+   (`text_translations`, keyed by the sha256 of the words they translate,
+   `src/lib/law/translate.ts`), checked before they are kept (one per passage,
+   every number kept), never the law.
 5. **Where it applies is derived, not stored.** An act applies in the place
    that enacted it and in every place inside it. A cantonal act applies in
    the canton's communes; a federal act everywhere in the pack. The chain from
@@ -492,17 +500,20 @@ Two publishers, each a format reader that names no country:
   posts a page; decrees, documents and treaties, an act found under several categories once.
   1,849 acts on 2026-11-10.
 
-Neither publisher states whether an act is still in force, so every act is recorded `inForce: true`,
-meaning "published by the authority and not marked withdrawn by it"; amendments are acts of their own.
+Neither publisher states whether an act is still in force, so every act is recorded with
+`status_stated = false` (migration 0027): the act is listed and findable, its `in_force` column then
+says nothing, and coverage, the act pages, the Markdown and the tools all say "status not stated by the
+publisher" instead of "in force" (`statusLabel`, `AuthorityCoverage.statusNotStated`). Amendments are
+acts of their own.
 The texts (`text/so-text.ts`, `text/import-so-text.ts`; `law:text presidentruo-text`) are the President's
 decrees from the API, each cut into a preamble, chapters and articles when it has them (a decree is
 numbered points under its preamble: one provision), dated by the day it is signed (the last "6 ноября
 2026 г." of its closing lines, else the day the site dated the post, counted in the report as a date
 fallback) and numbered `<year>/<number>` (`act_number`) when the closing lines print one; the early decrees
-(2012) print none and get none. The Parliament's reader is built and tested on its pages (the date is its
-own date field) but refuses to store texts while `PARLIAMENTRSO.textsAdmitted` is false: no terms or
-copyright law of the Republic admitting it have been opened (research note §6). The President's
-site allows reproduction with a reference to the source, quoted on the licence entry.
+(2012) print none and get none. The Parliament's reader dates an act by the page's own date field. Texts of
+both publishers are admitted: the President's site allows reproduction with a reference to the source, and
+the Republic's law on copyright says laws and other official documents are not objects of copyright (Art. 8,
+law of 12 December 2012 № 64), both quoted on the licence entries.
 
 ### Asking the law as built (2026-10-24)
 

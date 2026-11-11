@@ -132,6 +132,7 @@ export const estonia: CountryPackInput = {
     "ee-ehak-units",
     "worldbank-wdi-ee",
     "oecd-tax-ee",
+    "eurostat-gov-ee",
     "ee-income-tax",
     "ee-maaamet-municipality-boundaries",
   ],

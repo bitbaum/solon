@@ -99,6 +99,7 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   // One indicator of each statistics source (the adapters' own tests read the rest).
   ["worldbank-wdi-ch", "../worldbank/ch-ne-con-govt-zs.json"],
   ["oecd-tax-ch", "../oecd/oecd-che-ts-pit.csv"],
+  ["eurostat-gov-ch", "../eurostat/gov_10a_exp-ch.json"],
 ];
 
 /**

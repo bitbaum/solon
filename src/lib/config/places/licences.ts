@@ -16,6 +16,15 @@ export const LICENCES = [
   { spdx: "CC0-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "PDDL-1.0", requiresAttribution: false, shareAlike: false },
   { spdx: "CC-BY-4.0", requiresAttribution: true, shareAlike: false },
+  // Eurostat: "Reuse of statistical data, metadata, publications, and other dissemination
+  // tools published on this website for commercial or non-commercial purposes is
+  // authorised provided the source is acknowledged" (read 2026-11-10).
+  // https://ec.europa.eu/eurostat/web/main/help/copyright-notice
+  { spdx: "LicenseRef-eurostat-reuse", requiresAttribution: true, shareAlike: false },
+  // Bank of Russia: "Все материалы сайта Банка России могут быть воспроизведены [...] без
+  // каких-либо ограничений по объему и срокам публикации"; the one condition is a link to the
+  // source ("ссылки на источник"). Read 2026-11-10. https://www.cbr.ru/about/
+  { spdx: "LicenseRef-cbr-reuse", requiresAttribution: true, shareAlike: false },
   // Unicode's CLDR (country names in each language) and its permissive licence, which asks for the notice.
   // https://www.unicode.org/license.txt
   { spdx: "Unicode-3.0", requiresAttribution: true, shareAlike: false },
@@ -71,4 +80,29 @@ export const LICENCES = [
   // Read 2026-11-10 through the site's REST API (page "Об использовании информации сайта",
   // modified 2022-01-03). CC BY's obligation, in the site's own words.
   { spdx: "LicenseRef-so-president-site-reuse", requiresAttribution: true, shareAlike: false },
+  // South Ossetia's own laws and other official documents are not objects of copyright: Law of the
+  // Republic "Об авторском праве и смежных правах" (adopted 12 December 2012, № 64), Art. 8: "Не
+  // являются объектами авторского права: 1) официальные документы (законы, судебные решения, иные
+  // тексты законодательного, административного и судебного характера), а также их официальные
+  // переводы". Read 2026-11-10 at https://parliamentrso.org/node/3256. The same class as the Swiss,
+  // Liechtenstein and Estonian ones.
+  { spdx: "LicenseRef-so-official-act", requiresAttribution: false, shareAlike: false },
+  // Russia: "Не являются объектами авторских прав: 1) официальные документы государственных органов
+  // и органов местного самоуправления муниципальных образований, в том числе законы, другие
+  // нормативные акты, судебные решения, иные материалы законодательного, административного и
+  // судебного характера […], а также их официальные переводы" (Civil Code, Art. 1259(6)). Read
+  // 2026-11-10 at https://www.consultant.ru/document/cons_doc_LAW_64629/be05678dc42ddc67aae5be9ba9beebd367fb9a3f/.
+  { spdx: "LicenseRef-ru-official-act", requiresAttribution: false, shareAlike: false },
+  // Ukraine: "Не охороняються авторським правом: [...] 3) акти органів державної влади, органів
+  // місцевого самоврядування, офіційні документи політичного, законодавчого, адміністративного і
+  // судового характеру (закони, укази, постанови, рішення, державні стандарти тощо), а також їх
+  // проекти та офіційні переклади" (Law No. 2811-IX "On Copyright and Related Rights", Art. 8(1)(3)).
+  // Read 2026-11-10 from WIPO Lex's copy: https://www.wipo.int/wipolex/en/legislation/details/23798
+  { spdx: "LicenseRef-ua-official-act", requiresAttribution: false, shareAlike: false },
+  // The words of a country's law, wherever its own provision is not recorded yet. Laws are
+  // published for everyone to be bound by them; the Berne Convention (Art. 2(4)) leaves official
+  // texts to each country, and countries put them outside copyright. Decided by the owner on
+  // 2026-11-10: a law's text is never held back for want of a recorded provision; where the plan
+  // (data/law/plan.json) records one, it is cited instead of this entry.
+  { spdx: "LicenseRef-official-law", requiresAttribution: false, shareAlike: false },
 ] satisfies readonly Licence[];

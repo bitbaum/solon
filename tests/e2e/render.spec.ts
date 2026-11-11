@@ -46,6 +46,7 @@ test("an address Solon does not serve answers a readable 404 page", async ({ pag
     ["/statistics/not-a-series", en.NotFound.title],
     ["/de/statistics/not-a-series", de.NotFound.title],
     ["/not-a-page", en.NotFound.title],
+    ["/budgets/not-a-place", en.NotFound.title],
     ["/de/places/not-a-place", de.NotFound.title],
   ] as const) {
     const res = await page.goto(href, { waitUntil: "domcontentloaded" });
@@ -54,6 +55,25 @@ test("an address Solon does not serve answers a readable 404 page", async ({ pag
     await expect(page.locator("header nav, nav").first(), href).toBeVisible();
     await expect(page.locator('main a[href$="/law"]').first(), href).toBeVisible();
   }
+});
+
+// A place asked for in a series that has no figure for it says where Solon looked, not only "No figures":
+// Liechtenstein's government consumption is empty at the World Bank and absent elsewhere (2026-11-10).
+test("a series with no figure for the place asked for says where Solon looked", async ({
+  page,
+}) => {
+  await page.goto("/statistics/economy-government-consumption?p=LI", {
+    waitUntil: "domcontentloaded",
+  });
+  await expect(
+    page.getByRole("heading", {
+      name: en.Statistics.metric.searchTitle.replace("{place}", "Liechtenstein"),
+    }),
+  ).toBeVisible();
+  for (const publisher of ["World Bank", "Amt für Statistik", "Eurostat", "OECD"]) {
+    await expect(page.getByText(publisher, { exact: false }).first(), publisher).toBeVisible();
+  }
+  await expect(page.locator('a[href^="https://data.worldbank.org/"]').first()).toBeVisible();
 });
 
 // Every value the database stores as a code: OPEN, SIMPLE_MAJORITY, HUMANS_ONLY.

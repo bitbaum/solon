@@ -48,7 +48,9 @@ export default async function AmendmentPage({ params }: { params: Params }) {
   const act = await loadActView(db, { id: amendment.actId, lang: "de", page: 1 });
   const latest = amendment.revisions.at(-1)!;
   const session = await auth().catch(() => null);
-  const supports = session ? await supportsNow(db, latest.id, `actor:${session.actorId}`) : false;
+  const supports = session
+    ? await supportsNow(db, latest.id, amendment.id, { via: "account", actorId: session.actorId })
+    : false;
   const changed = amendment.amended.filter((p) => p.status !== "unchanged");
   const day = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium" });
   const actName = act?.title ?? act?.systematicNumber ?? amendment.actId;

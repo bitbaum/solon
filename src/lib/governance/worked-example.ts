@@ -27,6 +27,8 @@ import type { BallotOption, WeightedBallot } from "@/lib/domain/methods/types";
 
 /** A member's stated appetite for each option, 0–5. Everything derives from this. */
 export interface Preference {
+  /** A stable key, so a page can name the group in the reader's language. */
+  key: string;
   /** Display label. Members are groups of like-minded voters, not real people. */
   label: string;
   /** How many members hold this preference. Each carries voting weight 1. */
@@ -52,16 +54,19 @@ export const FUND_QUESTION = "How should the shared fund be spent this quarter?"
  */
 export const FUND_PREFERENCES: readonly Preference[] = [
   {
+    key: "daily",
     label: "Three members who use the building daily",
     count: 3,
     ratings: { roof: 5, tooling: 2, reserve: 1, apprenticeship: 0 },
   },
   {
+    key: "train",
     label: "Two members who train newcomers",
     count: 2,
     ratings: { apprenticeship: 5, tooling: 4, reserve: 1, roof: 0 },
   },
   {
+    key: "work",
     label: "Two members who do the work itself",
     count: 2,
     ratings: { tooling: 5, apprenticeship: 2, reserve: 1, roof: 0 },

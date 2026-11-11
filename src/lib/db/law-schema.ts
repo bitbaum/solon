@@ -38,8 +38,14 @@ export const legalActs = pgTable(
     jurisdictionId: text("jurisdiction_id"),
     /** Key in config ACT_KINDS. */
     kind: text("kind").notNull(),
-    /** What the register said about being in force when it was last read. */
+    /**
+     * What the register said about being in force when it was last read. Only a statement about
+     * the act when `statusStated`; otherwise it is true to keep the act findable and means only
+     * "listed by its authority and not marked withdrawn".
+     */
     inForce: boolean("in_force").notNull(),
+    /** False when the publisher does not say whether the act is in force: pages and counts then say so. */
+    statusStated: boolean("status_stated").notNull().default(true),
     /** The register last listed this act in the run that wrote this row. */
     sourceId: text("source_id").notNull(),
     recordedAt: recordedAt(),
@@ -112,6 +118,8 @@ export const legalActNames = pgTable(
     /** Key in config ACT_NAME_KINDS. */
     kind: text("kind").notNull(),
     text: text("text").notNull(),
+    /** True when Solon built the title from the act's own text because the publisher gives none. */
+    derived: boolean("derived").notNull().default(false),
     sourceId: text("source_id").notNull(),
     recordedAt: recordedAt(),
     supersededAt: supersededAt(),
@@ -210,4 +218,28 @@ export const legalProvisions = pgTable(
       .onDelete("restrict")
       .onUpdate("cascade"),
   ],
+);
+
+/**
+ * Translations of the law's words for readers of another language: a cache
+ * keyed by the sha256 of the publisher's words and the language asked for, so
+ * the same words are translated once, and words the publisher changes are
+ * translated afresh. A translation is never the law and is never stored as an
+ * act or a version; pages show it labelled, with the authentic words a click
+ * away (design: docs/design/2026-10-law-as-data.md, principle 2).
+ */
+export const textTranslations = pgTable(
+  "text_translations",
+  {
+    id: text("id").primaryKey().$defaultFn(uuid),
+    /** sha256 of the publisher's words, hex. */
+    sourceSha256: text("source_sha256").notNull(),
+    sourceLang: text("source_lang").notNull(),
+    targetLang: text("target_lang").notNull(),
+    text: text("text").notNull(),
+    /** Who translated: the model, as `provider/model`. */
+    translator: text("translator").notNull(),
+    recordedAt: recordedAt(),
+  },
+  (t) => [uniqueIndex("text_translations_source_target_key").on(t.sourceSha256, t.targetLang)],
 );

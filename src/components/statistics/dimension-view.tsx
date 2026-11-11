@@ -2,6 +2,7 @@ import { BarChart, LineChart } from "@bitbaum/chartkit/react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { DIMENSION_LAYERS } from "@/lib/statistics/dimensions";
 import type { loadDimensionPage } from "@/lib/statistics/dimension-page";
@@ -61,7 +62,10 @@ export default function DimensionView({
     >
       <div className="max-w-5xl space-y-12">
         <p className="mb-0 text-sm text-fg-tertiary">
-          {t("dimension.author", { version: dimension.version, author: dimension.author })}
+          {t("dimension.author", {
+            version: dimension.version,
+            author: cite(dimension.author, locale),
+          })}
         </p>
 
         <SanityPanel findings={sanity} t={t} />

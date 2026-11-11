@@ -5,6 +5,7 @@
  * timeline marks an amendment without anyone entering it twice.
  */
 import { sql } from "drizzle-orm";
+import { rowsOf } from "@/lib/db/rows";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
@@ -59,9 +60,6 @@ export interface LinkedAct {
   /** The days a version of the act took effect, oldest first. */
   versions: string[];
 }
-
-const rowsOf = <T>(result: unknown): T[] =>
-  ((result as { rows?: T[] }).rows ?? (result as T[])) as T[];
 
 /** The latest row of each record, where that row asserts it. */
 export async function currentRecords(
@@ -274,7 +272,8 @@ export async function linkedActs(
   return out;
 }
 
-async function findAct(db: Database, act: ActRef): Promise<string | null> {
+/** Solon's id of the act a reference names, when the register holds it. */
+export async function findAct(db: Database, act: ActRef): Promise<string | null> {
   const rows = rowsOf<{ id: string }>(
     await db.execute(sql`
       SELECT a.id FROM legal_acts a

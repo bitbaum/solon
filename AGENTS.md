@@ -129,6 +129,27 @@ warning) and every page can offer an AI explanation (`brief.ts`, `explain.ts`): 
 only the page's numbered facts, and an answer with a number or citation not in them is dropped.
 A check that warns on correct data is a bug: remove or narrow it, do not add a caveat. `/statistics/research` (`research.ts`, `research-tools.ts`) lets a model read Solon's data and law with read-only tools: every fact a tool returns is a numbered source, and the report is checked with the same rules.
 
+## Budgets
+
+Budgets (`/budgets`, design `docs/design/2026-11-budgets.md`) are one model over two
+inputs. The taxonomies in `src/lib/config/budgets/` (COFOG for spending, ESA 2010 for
+revenue) are the single source: they generate the `budget.<scope>.<side>.<code>` metrics and
+the Eurostat sources (`eurostat_json` adapter, one per country, run like every Places source:
+`pnpm run places:fetch eurostat-gov-<cc>`). A budget read from a law is a document under
+`src/lib/config/budgets/documents/`, its lines as printed and each placed on a category; its
+lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
+`Budget` and holds the arithmetic; pages and the contested places use only its components.
+
+## Money and language
+
+Money on any page is in the reader's currency: `src/lib/money/` converts at a year's average
+rate from `data/money/rates.json` (`pnpm run money:rates`, official publishers only) and never
+borrows another year's rate. The law reads in the reader's language: a version in it when the
+publisher has one, else a cached machine translation labelled as such
+(`src/lib/law/translate.ts`, `text_translations`), with the authentic text a click away.
+`pnpm run law:translate --authority <key>` translates an authority's titles ahead of readers;
+texts are translated when a page is first read.
+
 ## CI
 
 `.github/workflows/ci.yml` runs two jobs on every push/PR to `main`:
@@ -222,6 +243,14 @@ fleet's choice for i18n (fleet `STACK.md`; evig, hirnli and four others use it).
   pages lose the notice. An official route's words per language live on the
   route (`OfficialRoute.text`, `src/lib/config/law/routes.ts`); English is the
   fallback.
+- Words in the configuration (a rubric, a budget line, a source's attribution,
+  who published a series) are written once, in English, beside their source.
+  Their other languages live in `data/i18n/config.json`, keyed by the English
+  words, and `localized()` / `cite()` read it (`src/lib/i18n/`). A changed
+  English text has no translation until one is written, so a stale one is
+  never shown. `pnpm run i18n:config` lists what is missing (`--json` prints a
+  skeleton to fill), and `src/lib/i18n/__tests__/config-texts.test.ts` fails
+  while any text a translated page shows lacks a language.
 - German uses Swiss spelling (ss, never ß).
 
 **The one habit that matters:** never assemble a sentence by concatenation.

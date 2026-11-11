@@ -1,26 +1,40 @@
 import type { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { MoneyDisplay } from "@/lib/budgets/format";
 import type { StructureValue } from "@/lib/config/structures";
+import { convert, formatWithEquivalent, latestCommonYear } from "@/lib/money";
 import type { CheckedCitation, StructureCell, StructureTable } from "@/lib/structures/view";
 
 type T = Awaited<ReturnType<typeof getTranslations<"Structures">>>;
 
 interface StructureComparisonProps {
   table: StructureTable;
-  locale: string;
+  /** The reader's language and the currency they read money in. */
+  display: MoneyDisplay;
   t: T;
 }
 
 const cardClass = "min-w-0 rounded-surface border border-default bg-surface-base p-4";
 
-function formatValue(value: StructureValue, locale: string, t: T): string {
+function formatValue(value: StructureValue, display: MoneyDisplay, t: T): string {
+  const { locale } = display;
   switch (value.kind) {
-    case "amount":
-      return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: value.currency,
-        maximumFractionDigits: 0,
-      }).format(value.amount);
+    case "amount": {
+      // Set by law in its own currency; the reader's beside it, at the newest year's average rate.
+      const year = latestCommonYear(display.rates, value.currency, display.currency);
+      const converted =
+        year === null
+          ? null
+          : (convert(display.rates, value.amount, value.currency, display.currency, year)?.amount ??
+            null);
+      return formatWithEquivalent(
+        value.amount,
+        value.currency,
+        converted,
+        display.currency,
+        locale,
+      );
+    }
     case "rate": {
       const rate = new Intl.NumberFormat(locale, {
         style: "percent",
@@ -50,11 +64,11 @@ function Citation({ cite, t }: { cite: CheckedCitation; t: T }) {
   );
 }
 
-function Cell({ cell, t, locale }: { cell: StructureCell | null; t: T; locale: string }) {
+function Cell({ cell, t, display }: { cell: StructureCell | null; t: T; display: MoneyDisplay }) {
   if (!cell) return <p className="mb-0 text-fg-tertiary">{t("missing")}</p>;
   return (
     <>
-      <p className="mb-0 font-medium text-fg-primary">{formatValue(cell.value, locale, t)}</p>
+      <p className="mb-0 font-medium text-fg-primary">{formatValue(cell.value, display, t)}</p>
       <details className="text-sm">
         <summary className="cursor-pointer text-fg-secondary">
           {t("source", { count: cell.cites.length })}
@@ -74,7 +88,7 @@ function Cell({ cell, t, locale }: { cell: StructureCell | null; t: T; locale: s
  * §1): one section per row, every structure in the same place in each, a
  * missing fact shown as missing, and no score.
  */
-export default function StructureComparison({ table, locale, t }: StructureComparisonProps) {
+export default function StructureComparison({ table, display, t }: StructureComparisonProps) {
   const kindName = (key: string) => t(`kinds.${key}` as Parameters<T>[0]);
   const placeName = (place: string) => t(`places.${place}` as Parameters<T>[0]);
   return (
@@ -116,7 +130,7 @@ export default function StructureComparison({ table, locale, t }: StructureCompa
                   <p className="mb-0 text-sm text-fg-tertiary">
                     {kindName(column.key)} · {placeName(column.place)}
                   </p>
-                  <Cell cell={cell} t={t} locale={locale} />
+                  <Cell cell={cell} t={t} display={display} />
                 </li>
               );
             })}

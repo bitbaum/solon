@@ -17,6 +17,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider, createTranslator } from "next-intl";
 import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import PlaceProfile from "@/components/places/place-profile";
+import { placeViewHero } from "@/components/places/place-page-hero";
 import en from "../../../../messages/en.json";
 import de from "../../../../messages/de.json";
 import { placesConfig } from "@/lib/config/places";
@@ -52,7 +53,13 @@ async function renderPlacePage(slugPath: string, locale: "en" | "de"): Promise<s
     createElement(
       NextIntlClientProvider,
       { locale, messages } as ComponentProps<typeof NextIntlClientProvider>,
-      createElement(PlaceProfile, { view: view!, law: [], taxHref: "/places/tax", t }),
+      createElement(PlaceProfile, {
+        view: view!,
+        law: [],
+        taxHref: "/places/tax",
+        hero: placeViewHero({ view: view!, country: null, profile: null, law: [], t }),
+        t,
+      }),
     ),
   );
 }

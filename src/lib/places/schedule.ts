@@ -46,3 +46,24 @@ export function dueOn(cadence: string, isoDate: string): boolean {
 /** The sources due on `isoDate`, in registry order (later sources may build on earlier ones). */
 export const dueSources = (config: PlacesConfig, isoDate: string): Source[] =>
   config.sources.filter((source) => dueOn(source.cadence, isoDate));
+
+/**
+ * Sources a daily run loads for the first time, whatever their cadence: a
+ * source added after its day of the month would otherwise wait for it, and a
+ * source never loaded would never catch up. At most `limit` a day, in
+ * registry order, so a batch of new sources (a country each) arrives over a
+ * few days and no publisher sees a burst. `loaded` holds the keys of sources
+ * with an applied run.
+ */
+export const FIRST_LOADS_PER_RUN = 40;
+
+export const firstLoads = (
+  config: PlacesConfig,
+  loaded: ReadonlySet<string>,
+  isoDate: string,
+  fetchable: (source: Source) => boolean,
+  limit = FIRST_LOADS_PER_RUN,
+): Source[] =>
+  config.sources
+    .filter((s) => fetchable(s) && !loaded.has(s.key) && !dueOn(s.cadence, isoDate))
+    .slice(0, limit);

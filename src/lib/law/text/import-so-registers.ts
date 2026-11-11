@@ -7,9 +7,10 @@
  * a retrieval lists and reports what a later one no longer does, so a run
  * limited to some pages is a smaller listing, never a retraction.
  *
- * Neither publisher states whether an act is still in force. Every act is
- * recorded `inForce: true`, meaning only "published by the authority and not
- * marked withdrawn by it"; the coverage figures for this authority say so.
+ * Neither publisher states whether an act is still in force, so every act is
+ * recorded with `statusStated: false` (its `inForce` then only keeps it
+ * findable: "listed by its authority and not marked withdrawn"); coverage and
+ * the act pages say the status is not stated.
  */
 import { PARLIAMENTRSO, PRESIDENTRUO } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
@@ -17,6 +18,7 @@ import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { importRegister, type ActRow, type RegisterReport } from "../register/import";
 import { parseListing, type ListedNode } from "./drupal-listing";
 import { parsePosts, type WpPost } from "./wp-rest";
+import { linesOf, postText, titleFromBody } from "./so-text";
 import { crawlDelayMs } from "./ukleg";
 
 export interface SoRegisterOptions {
@@ -76,6 +78,7 @@ export async function registerParliament(
     authority: config.authority,
     kind,
     inForce: true,
+    statusStated: false,
     title,
     locale: config.locale,
     identity: { scheme: "publisher_ref", value: `${config.key}:${id}` },
@@ -155,11 +158,30 @@ export async function registerPresident(
       trace.push({ category, page, ids: posts.map((p) => p.id) });
       for (const post of posts) {
         if (rows.has(post.id)) continue;
+        let title = post.title;
+        let titleDerived = false;
+        if (title.split(/\s+/).filter(Boolean).length <= 1) {
+          // A post titled with a bare type word has no title of its own: read what the act itself prints.
+          const read = await doFetch(config.postUrl.replace("{id}", post.id), {
+            headers: { "user-agent": config.userAgent, accept: "application/json" },
+            signal: AbortSignal.timeout(60_000),
+          });
+          const derived = read.ok
+            ? titleFromBody(post.title, postText(await read.json()).text)
+            : null;
+          if (derived) {
+            title = derived;
+            titleDerived = true;
+          }
+          await sleep(pauseMs);
+        }
         rows.set(post.id, {
           authority: config.authority,
           kind,
           inForce: true,
-          title: post.title,
+          statusStated: false,
+          title,
+          titleDerived,
           locale: config.locale,
           identity: { scheme: "publisher_ref", value: `${config.key}:${post.id}` },
           systematicNumber: null,

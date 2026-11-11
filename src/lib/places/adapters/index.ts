@@ -3,6 +3,7 @@ import { csvFactsAdapter } from "./csv-facts";
 import { csvInstrumentsAdapter } from "./csv-instruments";
 import { csvPostcodesAdapter } from "./csv-postcodes";
 import { estvSimpleRatesAdapter, estvTaxScalesAdapter } from "./estv-tax-export";
+import { eurostatJsonAdapter } from "./eurostat-json";
 import { fixtureAdapter } from "./fixture";
 import { geojsonTiersAdapter } from "./geojson-tiers";
 import { oecdSdmxAdapter } from "./oecd-sdmx";
@@ -25,6 +26,7 @@ export const ADAPTERS: ReadonlyMap<string, Adapter> = new Map(
     shapefileAreasAdapter,
     worldbankIndicatorsAdapter,
     oecdSdmxAdapter,
+    eurostatJsonAdapter,
   ].map((adapter) => [adapter.key, adapter as Adapter]),
 );
 

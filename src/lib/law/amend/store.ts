@@ -32,7 +32,8 @@ import {
 } from "./changes";
 import { routesFor, type OfficialRoute } from "@/lib/config/law/routes";
 import { GENESIS, amendmentMessage, eventHash, revisionHash, type RevisionContent } from "./hash";
-import { countSupport, supporterRef, type SupportCount, type SupportKind } from "./support";
+import { namesOn } from "./pseudonym";
+import { countSupport, type SupportCount, type SupportKind } from "./support";
 
 /** A refusal the caller can show as it is: what was wrong, never a stack. */
 export class AmendmentError extends Error {
@@ -132,19 +133,26 @@ export interface FileInput {
 export const FILINGS_PER_HOUR = 20;
 
 /** Refuses an author who has filed too much in the last hour. */
-async function ensureWithinRate(db: Reader, author: string): Promise<void> {
-  const [row] = await db
-    .select({ n: count() })
-    .from(lawAmendmentRevisions)
-    .where(
-      and(
-        eq(lawAmendmentRevisions.author, author),
-        gte(lawAmendmentRevisions.recordedAt, new Date(Date.now() - 60 * 60 * 1000)),
-      ),
-    );
-  if ((row?.n ?? 0) >= FILINGS_PER_HOUR) {
+/**
+ * Filings in the last hour, per person, held in this process only. The public
+ * record names a person differently on every proposal, so it cannot count
+ * their filings; nor is a lasting list of who filed when kept to count them.
+ */
+const filings = new Map<string, number[]>();
+
+function ensureWithinRate(actor: Actor, now = Date.now()): void {
+  const who = actor.via === "key" ? `btc:${actor.address}` : `actor:${actor.actorId}`;
+  const hour = now - 60 * 60 * 1000;
+  for (const [key, times] of filings) {
+    const recent = times.filter((t) => t > hour);
+    if (recent.length === 0) filings.delete(key);
+    else filings.set(key, recent);
+  }
+  const recent = filings.get(who) ?? [];
+  if (recent.length >= FILINGS_PER_HOUR) {
     throw new AmendmentError(429, `at most ${FILINGS_PER_HOUR} filings an hour; try again later`);
   }
+  filings.set(who, [...recent, now]);
 }
 
 /** Validates the words a person typed, before anything is read or written. */
@@ -206,8 +214,8 @@ export async function fileAmendment(db: Database, input: FileInput) {
       address: input.actor.via === "key" ? input.actor.address : "",
     }),
   );
-  const author = supporterRef(input.actor);
-  await ensureWithinRate(db, author);
+  const [author] = namesOn(input.actor, input.id);
+  ensureWithinRate(input.actor);
   return db.transaction(async (tx) => {
     if (input.forkOf) {
       const [parent] = await tx
@@ -273,10 +281,10 @@ export async function reviseAmendment(
     .where(eq(lawAmendments.id, input.amendmentId))
     .limit(1);
   if (!amendment) throw new AmendmentError(404, "no such amendment");
-  if (amendment.author !== supporterRef(input.actor)) {
+  if (!namesOn(input.actor, amendment.id).includes(amendment.author)) {
     throw new AmendmentError(403, "only its author revises an amendment; anyone may fork it");
   }
-  await ensureWithinRate(db, amendment.author);
+  ensureWithinRate(input.actor);
   const { content, contentHash } = await prepareRevision(db, {
     actId: amendment.actId,
     lang: input.lang,
@@ -356,21 +364,23 @@ export async function recordSupport(
       address: input.actor.via === "key" ? input.actor.address : "",
     }),
   );
-  const supporter = supporterRef(input.actor);
+  const names = namesOn(input.actor, input.amendmentId);
   return db.transaction(async (tx) => {
     // A row that changes nothing is refused, not written: supporting twice, or
     // withdrawing what was never given, would only lengthen the record.
     const [latest] = await tx
-      .select({ kind: lawAmendmentSupports.kind })
+      .select({ kind: lawAmendmentSupports.kind, supporter: lawAmendmentSupports.supporter })
       .from(lawAmendmentSupports)
       .where(
         and(
           eq(lawAmendmentSupports.revisionId, revision.id),
-          eq(lawAmendmentSupports.supporter, supporter),
+          inArray(lawAmendmentSupports.supporter, names),
         ),
       )
       .orderBy(desc(lawAmendmentSupports.recordedAt))
       .limit(1);
+    // One person keeps one name on a revision: an earlier row's, else their pseudonym.
+    const supporter = latest?.supporter ?? names[0];
     if ((latest?.kind ?? "withdraw") === input.kind) {
       throw new AmendmentError(
         409,
@@ -640,7 +650,8 @@ export async function provisionsInForce(db: Reader, actId: string, lang: string)
 export async function supportsNow(
   db: Reader,
   revisionId: string,
-  supporter: string,
+  amendmentId: string,
+  actor: Actor,
 ): Promise<boolean> {
   const [latest] = await db
     .select({ kind: lawAmendmentSupports.kind })
@@ -648,7 +659,7 @@ export async function supportsNow(
     .where(
       and(
         eq(lawAmendmentSupports.revisionId, revisionId),
-        eq(lawAmendmentSupports.supporter, supporter),
+        inArray(lawAmendmentSupports.supporter, namesOn(actor, amendmentId)),
       ),
     )
     .orderBy(desc(lawAmendmentSupports.recordedAt))

@@ -2,8 +2,8 @@
  * South Ossetia's texts through the real importer into a real database,
  * against stand-ins built from the pages read on 2026-11-10: a decree of the
  * President dated by its closing lines and numbered from them, a rerun that
- * fetches nothing, a dry run that writes nothing, and the Parliament's texts
- * refused while no terms admit them.
+ * fetches nothing, a dry run that writes nothing, and a law of the Parliament
+ * dated by its own field and numbered from its header.
  *
  * Runs only with INTEGRATION=1 against a migrated database.
  */
@@ -38,15 +38,30 @@ const parliament: typeof fetch = async (input) => {
   const url = String(input);
   if (url.includes("taxonomy/term/2?page=0")) {
     return new Response(
-      `<div class="view-content">${row(N + 1, "Закон РЮО «О местном самоуправлении»")}${row(N + 2, "Закон РЮО «Пустая страница»")}</div>`,
+      `<div class="view-content">${row(N + 1, "Закон РЮО «О местном самоуправлении»")}${row(N + 2, "Закон РЮО «Пустая страница»")}${row(N + 3, "Налоговый кодекс Республики Южная Осетия. Часть вторая")}</div>`,
     );
   }
   if (url.includes("taxonomy/term/")) return new Response("<div></div>");
   if (url.endsWith(`/node/${N + 1}`))
     return new Response(fixture("parliamentrso-node-5546.fixture.html"));
   if (url.endsWith(`/node/${N + 2}`)) return new Response("<html>maintenance</html>");
+  // A code printed as a page that links its Word files: the Tax Code's real page.
+  if (url.endsWith(`/node/${N + 3}`))
+    return new Response(fixture("parliamentrso-node-5469.fixture.html"));
+  if (url.endsWith("nalogovyy_kodeks_respubliki_yuzhnaya_osetiya_ch.2_ispr_parl_0.doc"))
+    return new Response(readFileSync(join(__dirname, "fixtures", "so-code-cut.doc")));
+  if (url.endsWith("perechen_nalogovyy_kodeks_respubliki_yuzhnaya_osetiya.doc"))
+    return new Response("the contents, never to be read as the code", { status: 500 });
   return new Response("", { status: 404 });
 };
+
+/** The same code's page as it was before its link was there: only the words, a stub. */
+const stubbed: typeof fetch = async (input) =>
+  String(input).endsWith(`/node/${N + 3}`)
+    ? new Response(
+        fixture("parliamentrso-node-5469.fixture.html").replace(/<a href="[^"]+\.doc">/g, "<a>"),
+      )
+    : parliament(input);
 
 const decree = fixture("presidentruo-post-89961.fixture.json");
 const president: typeof fetch = async (input) => {
@@ -91,10 +106,72 @@ async function versionsOf(identity: string) {
 }
 
 describe.skipIf(!RUN)("South Ossetia's texts (real database)", () => {
-  it("refuses to store the Parliament's texts while no terms admit them", async () => {
-    await expect(
-      importSoText(db, "parliamentrso", { snapshots, pauseMs: 0, fetchImpl: parliament, limit: 1 }),
-    ).rejects.toThrow(/no licence or terms admit storing/);
+  it("stores a law of the Parliament under its own date and header number, and reports a page that is no act", async () => {
+    await registerParliament(db, { snapshots, pauseMs: 0, fetchImpl: parliament, term: "2" });
+    const report = await importSoText(db, "parliamentrso", {
+      snapshots,
+      pauseMs: 0,
+      fetchImpl: parliament,
+      ids: [String(N + 1), String(N + 2)],
+    });
+    const failed = report.failures.filter((f) => f.act === String(N + 2));
+    expect(failed).toHaveLength(1);
+    expect(failed[0]!.reason).toMatch(/not an act page/);
+    const versions = await versionsOf(`parliamentrso:${N + 1}`);
+    expect(versions).toHaveLength(1);
+    expect(versions[0]).toMatchObject({ basis: "publisher", format: "html" });
+    expect(String(versions[0]!.from)).toBe("2004-02-18");
+    const provisions = await db
+      .select({ path: legalProvisions.path })
+      .from(legalProvisions)
+      .where(eq(legalProvisions.versionId, versions[0]!.id))
+      .orderBy(asc(legalProvisions.ord));
+    expect(provisions.map((p) => p.path)).toEqual(["preamble", "ch_i", "art_1", "art_2", "art_3"]);
+    const [number] = await db
+      .select({ value: legalActIdentifiers.value })
+      .from(legalActIdentifiers)
+      .innerJoin(legalActVersions, eq(legalActVersions.actId, legalActIdentifiers.actId))
+      .where(
+        and(eq(legalActIdentifiers.scheme, "act_number"), eq(legalActVersions.id, versions[0]!.id)),
+      );
+    expect(number?.value).toBe("2004/44");
+  });
+
+  it("reads a code from the Word file its page links as the text, not the page or its contents", async () => {
+    // Held first as the page alone (its link not yet there): a stub of a few words.
+    await importSoText(db, "parliamentrso", {
+      snapshots,
+      pauseMs: 0,
+      fetchImpl: stubbed,
+      ids: [String(N + 3)],
+    });
+    expect((await versionsOf(`parliamentrso:${N + 3}`)).map((v) => v.format)).toEqual(["html"]);
+    // Held acts are not read again, unless asked for the stubs.
+    const skipped = await importSoText(db, "parliamentrso", {
+      snapshots,
+      pauseMs: 0,
+      fetchImpl: parliament,
+      ids: [String(N + 3)],
+    });
+    expect(skipped.stored).toBe(0);
+    const report = await importSoText(db, "parliamentrso", {
+      snapshots,
+      pauseMs: 0,
+      fetchImpl: parliament,
+      ids: [String(N + 3)],
+      stubs: true,
+    });
+    expect(report.failures).toEqual([]);
+    expect(report.fromDocuments).toBe(1);
+    const versions = await versionsOf(`parliamentrso:${N + 3}`);
+    const served = versions.find((v) => v.format === "doc")!;
+    const provisions = await db
+      .select({ path: legalProvisions.path, text: legalProvisions.text })
+      .from(legalProvisions)
+      .where(eq(legalProvisions.versionId, served.id))
+      .orderBy(asc(legalProvisions.ord));
+    expect(provisions.map((p) => p.path)).toEqual(expect.arrayContaining(["art_1", "art_2"]));
+    expect(provisions.find((p) => p.path === "art_2")?.text).toContain("12 процентов");
   });
 
   const mine = { snapshots, pauseMs: 0, fetchImpl: president, ids: [String(N + 11)] };

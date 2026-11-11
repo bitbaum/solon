@@ -54,6 +54,16 @@ describe("official routes", () => {
   });
 });
 
+describe("South Ossetia's route", () => {
+  it("goes through a deputy: citizens hold no right of legislative initiative, so no count of signatures applies", () => {
+    const [route] = routesFor("rso", "statute");
+    expect(route?.key).toBe("rso-deputy-initiative");
+    expect(route?.venue).toBe("legislature");
+    expect(route?.signatures).toBeNull();
+    expect(routesFor("rso", "constitution")).toEqual([]);
+  });
+});
+
 const isLiechtenstein = (r: OfficialRoute) => /^li(\d{4})?$/.test(r.authority);
 const LI_ROUTES = OFFICIAL_ROUTES.filter(isLiechtenstein);
 

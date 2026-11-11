@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import type { MetricViewProps } from "./shared";
 
@@ -43,7 +44,7 @@ export default function LawLinks({
                 <p className="mb-0 text-xs text-fg-tertiary">
                   {a.link.evidence.map((e) => (
                     <span key={e.url} className="block">
-                      {t("metric.checked", { date: e.read, publisher: e.publisher })}
+                      {t("metric.checked", { date: e.read, publisher: cite(e.publisher, locale) })}
                     </span>
                   ))}
                 </p>
@@ -75,7 +76,7 @@ export default function LawLinks({
                     <span className="text-sm text-fg-secondary">
                       {t("metric.notHeld")}{" "}
                       <a href={a.link.evidence[0]!.url} className="underline" rel="noopener">
-                        {a.link.evidence[0]!.publisher}
+                        {cite(a.link.evidence[0]!.publisher, locale)}
                       </a>
                     </span>
                   )}

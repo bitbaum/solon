@@ -36,7 +36,8 @@ export function useChatLabels(): ChatLabels {
       failed: t("failed"),
       loading: t("loading"),
       replies: t("replies"),
-      thoughtFor: t("thoughtFor"),
+      // A template: chatkit fills in {time} itself.
+      thoughtFor: t.raw("thoughtFor") as string,
       thought: t("thought"),
       thinking: t("thinking"),
     },

@@ -12,12 +12,14 @@
  * act took effect, and a text is the one printed with its amendments (if any)
  * as separate acts, not a consolidated reading.
  */
-import { and, eq, isNull, like } from "drizzle-orm";
-import { PARLIAMENTRSO, PRESIDENTRUO } from "@/lib/config/law";
+import { and, eq, isNull, like, sql } from "drizzle-orm";
+import { PARLIAMENTRSO, PRESIDENTRUO, type ActTextFormat } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
+import { rowsOf } from "@/lib/db/rows";
 import { legalActIdentifiers, legalActVersions, legalActs } from "@/lib/db/law-schema";
 import type { SnapshotStore } from "@/lib/places/importer/snapshots";
 import { reasonOf } from "./import-riigiteataja";
+import { STUB_CHARS, attachedDocumentUrl, documentFormat, documentText } from "./attached";
 import { storeVersion } from "./store";
 import { cutProvisions, linesOf, numberOf, parseNode, postText, signedOn } from "./so-text";
 import { crawlDelayMs } from "./ukleg";
@@ -31,6 +33,11 @@ export interface SoTextOptions {
   limit?: number;
   /** Read only the acts with these publisher ids (a node or post number); absent: every act the register holds. */
   ids?: readonly string[];
+  /**
+   * Read again the acts held only as a page that links the act's document (a code printed as
+   * "the text of the code, download here"): their versions hold under `STUB_CHARS` characters.
+   */
+  stubs?: boolean;
   dryRun?: boolean;
   today?: string;
   fetchImpl?: typeof fetch;
@@ -48,6 +55,8 @@ export interface SoTextReport {
   remaining: number;
   /** Acts whose date was not printed in the act and fell back to the day it was read or the site's. */
   dateFallbacks: number;
+  /** Acts whose text was read from the document their page links. */
+  fromDocuments: number;
   failures: { act: string; reason: string }[];
   failureReasons: Record<string, number>;
   stoppedBecause?: string;
@@ -80,6 +89,7 @@ export async function importSoText(
     provisions: 0,
     remaining: 0,
     dateFallbacks: 0,
+    fromDocuments: 0,
     failures: [],
     failureReasons: {},
   };
@@ -125,6 +135,24 @@ export async function importSoText(
         )
     ).map((r) => r.actId),
   );
+  // With `stubs`, an act held only as the page that links its document is read again.
+  // With `stubs`, an act held only as the page that links its document is read again. Its new
+  // version is dated by the day it is read, as any changed text is (refresh.ts): the stub stays
+  // the record of what was held until then.
+  const restubbed = new Set<string>();
+  if (options.stubs) {
+    const stubs = await db.execute(sql`
+      SELECT v.act_id FROM legal_act_versions v
+      JOIN legal_acts a ON a.id = v.act_id
+      JOIN legal_provisions p ON p.version_id = v.id
+      WHERE a.authority = ${config.authority} AND v.lang = ${config.locale} AND v.in_force_to IS NULL
+      GROUP BY v.act_id
+      HAVING sum(length(p.text)) < ${STUB_CHARS}`);
+    for (const row of rowsOf<{ act_id: string }>(stubs)) {
+      held.delete(row.act_id);
+      restubbed.add(row.act_id);
+    }
+  }
   const todo = acts
     .filter((a) => !options.ids || options.ids.includes(a.identity.slice(prefix.length)))
     .filter((a) => {
@@ -162,8 +190,10 @@ export async function importSoText(
         signal: AbortSignal.timeout(60_000),
       });
       if (!res.ok) throw new Error(`the act answered ${res.status}`);
-      const bytes = new Uint8Array(await res.arrayBuffer());
+      let bytes = new Uint8Array(await res.arrayBuffer());
       const raw = new TextDecoder().decode(bytes);
+      let storedUrl = url;
+      let format: ActTextFormat = publisher === "parliamentrso" ? "html" : "json";
 
       let text: string;
       let day: string | null;
@@ -173,6 +203,24 @@ export async function importSoText(
         if (!node) throw new Error("not an act page");
         text = linesOf(node.bodyHtml);
         day = node.enacted;
+        // A page that is only the door to the act's document: the act is in the document.
+        const document =
+          text.length < STUB_CHARS
+            ? attachedDocumentUrl(node.bodyHtml, url, config.hosts, PARLIAMENTRSO.documentLinks)
+            : null;
+        if (document) {
+          await sleep(pauseMs);
+          const doc = await doFetch(document, {
+            headers: { "user-agent": config.userAgent },
+            signal: AbortSignal.timeout(120_000),
+          });
+          if (!doc.ok) throw new Error(`the act's document answered ${doc.status}`);
+          bytes = new Uint8Array(await doc.arrayBuffer());
+          text = await documentText(bytes);
+          storedUrl = document;
+          format = documentFormat(document);
+          report.fromDocuments++;
+        }
       } else {
         const post = postText(JSON.parse(raw));
         text = post.text;
@@ -184,6 +232,10 @@ export async function importSoText(
         day = today;
         dateBasis = "retrieved";
         report.dateFallbacks++;
+      }
+      if (restubbed.has(act.actId)) {
+        day = today;
+        dateBasis = "retrieved";
       }
       const provisions = cutProvisions(text);
       if (provisions.length === 0) throw new Error("no text in the act");
@@ -197,9 +249,9 @@ export async function importSoText(
           inForceFrom: day,
           dateBasis,
           status: config.textStatus,
-          format: publisher === "parliamentrso" ? "html" : "json",
+          format,
           bytes,
-          url,
+          url: storedUrl,
           provisions,
           source: {
             key: config.key,

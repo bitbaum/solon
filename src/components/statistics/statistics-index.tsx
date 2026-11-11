@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statistics/present";
 import type { PlaceSeries } from "@/lib/statistics/read";
@@ -71,14 +72,14 @@ export default function StatisticsIndex({
                     caption={t("index.latestCaption", {
                       metric: label,
                       unit,
-                      publisher: statistic.series.publisher,
+                      publisher: cite(statistic.series.publisher, locale),
                     })}
                   />
                 ) : (
                   <p className="text-sm text-fg-secondary">
-                    {t("index.empty", { publisher: statistic.series.publisher })}{" "}
+                    {t("index.empty", { publisher: cite(statistic.series.publisher, locale) })}{" "}
                     <a href={statistic.series.url} className="underline" rel="noopener">
-                      {statistic.series.publisher}
+                      {cite(statistic.series.publisher, locale)}
                     </a>
                   </p>
                 )}

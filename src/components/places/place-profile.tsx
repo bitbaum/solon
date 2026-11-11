@@ -1,14 +1,24 @@
 import type { PlacesTranslator } from "./translator";
 
 import { Link } from "@/i18n/navigation";
-import PageLayout from "@/components/ui/page-layout";
+import ProfileFrame from "./profile-frame";
 import { LawChat } from "@/components/law/law-chat";
 import { compareHref } from "@/lib/places/compare-view";
 import type { PlaceLaw } from "@/lib/law/place-law";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import ActionList from "./action-list";
 import CalendarButton from "./calendar-button";
-import { PlaceLawCard, PlaceTrail } from "./place-head";
+import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
+import ContestNote, { type ContestNoteProps } from "./contest-note";
+import CountryProfile from "./country-profile";
+import type { WorldProfileView } from "@/lib/places/world-profile";
+import { PlaceLawCard } from "./place-head";
+import PlaceFigures from "./place-figures";
+import { PlaceRecentChanges, PlaceRoutes, routesAlong } from "./place-change";
+import type { RecentChange } from "@/lib/law/recent";
+import type { Locale } from "@/i18n/routing";
+import type { ProfileFigureView } from "@/lib/places/profile-figures";
+import PlaceParts from "./place-parts";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
@@ -18,6 +28,19 @@ interface PlaceProfileProps {
   law: readonly PlaceLaw[];
   /** Where the tax map of this place's country opens. */
   taxHref: string;
+  /** When the world list says another state claims the place's country: who, and its comparison. */
+  contest?: ContestNoteProps | null;
+  /** The way into the country's public budget, on a country's own page when Solon holds one. */
+  budget?: BudgetLink | null;
+  /** A country's profile, on the country's own page. */
+  profile?: WorldProfileView | null;
+  /** The top of the page: its photograph, name, headline facts and main action. */
+  hero: React.ReactNode;
+  /** Its figures, where it has any (config: PROFILE_FIGURES). */
+  figures?: readonly ProfileFigureView[];
+  /** What changed in its law over the past year. */
+  recent?: { total: number; changes: readonly RecentChange[] } | null;
+  locale?: Locale;
   t: PlacesTranslator;
 }
 
@@ -41,8 +64,19 @@ function PlaceName({ place }: { place: PlaceLink }) {
  * it all, closed until asked for. Every word of structure comes from the pack;
  * nothing here knows a country.
  */
-export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProps) {
-  const above = [...view.partOf].reverse();
+export default function PlaceProfile({
+  view,
+  law,
+  taxHref,
+  contest = null,
+  budget = null,
+  profile = null,
+  hero,
+  figures = [],
+  recent = null,
+  locale = "en",
+  t,
+}: PlaceProfileProps) {
   const row = (label: string, value: React.ReactNode, key = label) => (
     <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
       <dt className="text-fg-secondary">{label}</dt>
@@ -51,55 +85,24 @@ export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProp
   );
 
   return (
-    <PageLayout
-      title={view.name}
-      kicker={view.levelName}
-      description={
-        above.length > 0
-          ? t("summaryIn", { level: view.levelName, place: above.map((p) => p.name).join(", ") })
-          : undefined
-      }
-    >
-      <div className="max-w-3xl space-y-10">
-        <PlaceTrail above={view.partOf} name={view.name} t={t} />
+    <ProfileFrame hero={hero} aside={profile ? <CountryProfile profile={profile} t={t} /> : null}>
+      <>
+        {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
 
-        {view.parts.length > 0 && (
-          <section aria-labelledby="place-parts" className="space-y-6">
-            <h2 id="place-parts" className="headline text-2xl text-fg-primary">
-              {t("parts.title", { place: view.name })}
-            </h2>
-            {view.parts.map((group) => (
-              <div key={group.levelName} className="space-y-3">
-                <h3 className="text-sm font-semibold text-fg-secondary">
-                  {t("parts.level", { level: group.levelName, count: group.places.length })}
-                </h3>
-                <ul className="grid overflow-hidden rounded-surface border border-default bg-surface-base sm:grid-cols-2">
-                  {group.places.map((place, i) => (
-                    <li key={`${place.slugPath}-${i}`} className="-mb-px border-b border-default">
-                      {place.slugPath ? (
-                        <Link
-                          href={placeHref(place.slugPath)}
-                          className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
-                        >
-                          <span>{place.name}</span>
-                          <span aria-hidden className="text-fg-tertiary">
-                            →
-                          </span>
-                        </Link>
-                      ) : (
-                        <span className="flex min-h-11 items-center px-5 py-2 text-fg-primary">
-                          {place.name}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </section>
+        <PlaceFigures figures={figures} place={view.name} locale={locale} t={t} />
+
+        {/* Async parts are mounted only when they have something to show. */}
+        {routesAlong(law).length > 0 && <PlaceRoutes law={law} locale={locale} t={t} />}
+
+        {recent && recent.changes.length > 0 && (
+          <PlaceRecentChanges recent={recent} law={law} place={view.name} locale={locale} t={t} />
         )}
+
+        {budget && <BudgetLinkCard {...budget} />}
+
+        {view.parts.length > 0 && <PlaceParts view={view} t={t} />}
 
         {view.alsoServedBy.length > 0 && (
           <section>
@@ -218,7 +221,7 @@ export default function PlaceProfile({ view, law, taxHref, t }: PlaceProfileProp
             <SourceList sources={view.sources} t={t} />
           </div>
         </details>
-      </div>
-    </PageLayout>
+      </>
+    </ProfileFrame>
   );
 }

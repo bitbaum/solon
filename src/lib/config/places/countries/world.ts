@@ -1,13 +1,14 @@
 import { COUNTRIES } from "@/lib/config/world/countries";
 import type { CountryPackInput } from "../schema";
-import { OECD_MEMBERS, oecdKey, worldBankKey } from "../world";
+import { EUROSTAT_GOV_COUNTRIES } from "@/lib/config/budgets/eurostat";
+import { OECD_MEMBERS, eurostatKey, oecdKey, worldBankKey } from "../world";
 
 /**
  * The world: every country as a nation, and nothing deeper. A country gets a
  * pack of its own when Solon holds its subdivisions, law or tax in depth, and
  * leaves this one (`scripts/places-world-countries.ts` regenerates the data).
  * Its figures are the World Bank's for every country and the OECD's tax series
- * for the OECD's members: sources computed from the country registry in
+ * for the OECD's members, Eurostat's government finance for the countries it covers: sources computed from the country registry in
  * ../world.ts, never listed by hand.
  *
  * The pack's sources are listed lazily by `worldPack` so that it can see which
@@ -49,6 +50,7 @@ export function worldPack(held: ReadonlySet<string>): CountryPackInput {
       "world-country-registry",
       ...countries.map(worldBankKey),
       ...countries.filter((a2) => OECD_MEMBERS.includes(a2)).map(oecdKey),
+      ...countries.filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES).map(eurostatKey),
     ],
     instrumentKinds: [],
   };
