@@ -225,6 +225,13 @@
       "when": 1794342155443,
       "tag": "0031_place_photo_bytes",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1794343155443,
+      "tag": "0032_drop_file_path_act_numbers",
+      "breakpoints": true
     }
   ]
 }
