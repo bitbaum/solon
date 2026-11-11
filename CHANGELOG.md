@@ -36,8 +36,6 @@ one to read for the detail. Fixes get the same weight as features.
 - **Russian place pages read correctly** where a sentence named the place after a preposition
   ("для Россия"), and the law card no longer calls every place below a country a "commune".
 
-### Fixed
-
 - **One Bitcoin key is one seat.** A key answers to three address forms (legacy, native segwit,
   wrapped segwit), and the founding-seat check compared only the form that was claimed. A key
   already seated under one form could take a second seat in the same organization under another.
