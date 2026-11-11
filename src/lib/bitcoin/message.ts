@@ -130,6 +130,12 @@ export interface VerifyResult {
   valid: boolean;
   /** Address recovered from the signature, when recoverable. */
   recoveredAddress?: string;
+  /**
+   * Every standard address the recovered key answers to, when the signature is
+   * valid. One key verifies under up to three address strings, so "has this
+   * KEY been seen" must be asked of all of them, never of the claimed one.
+   */
+  keyAddresses?: string[];
   reason?: string;
 }
 
@@ -182,7 +188,9 @@ export function verifyMessage(
     return {
       valid,
       recoveredAddress: candidates[0],
-      ...(valid ? {} : { reason: "recovered key does not derive the claimed address" }),
+      ...(valid
+        ? { keyAddresses: candidates }
+        : { reason: "recovered key does not derive the claimed address" }),
     };
   } catch (e) {
     return { valid: false, reason: e instanceof Error ? e.message : "recovery failed" };
