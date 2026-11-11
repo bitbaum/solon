@@ -3,7 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import DictateButton from "@/components/ui/dictate-button";
+import { TextBox } from "@/components/chat/text-box";
 import {
   provisionHash,
   redline,
@@ -82,7 +82,6 @@ function toChange(draft: DraftChange): Change | null {
  */
 export default function AmendForm(props: AmendFormProps) {
   const t = useTranslations("Amend");
-  const chat = useTranslations("Chat");
   const router = useRouter();
   const storageKey = `solon:amend:${props.act.id}:${props.forkOf ?? ""}`;
   const first = useMemo(
@@ -199,18 +198,6 @@ export default function AmendForm(props: AmendFormProps) {
 
   const headingOf = (path: string | null) =>
     props.contents.find((c) => c.path === path)?.heading ?? path ?? "";
-  const dictationProps = {
-    label: t("dictate"),
-    stopLabel: t("stopDictating"),
-    problems: {
-      mic: chat("dictation.mic"),
-      silence: chat("dictation.silence"),
-      unavailable: chat("dictation.unavailable"),
-      fileTooLarge: chat("dictation.fileTooLarge"),
-      signIn: chat("dictation.signIn"),
-      busy: chat("dictation.busy"),
-    },
-  };
 
   return (
     <div className="space-y-8">
@@ -327,32 +314,13 @@ export default function AmendForm(props: AmendFormProps) {
                   value={draft.heading}
                   onChange={(e) => update(draft.key, { heading: e.target.value })}
                 />
-                {draft.op === "insert" && (
-                  <label
-                    className="block text-sm font-medium text-fg-primary"
-                    htmlFor={`t-${draft.key}`}
-                  >
-                    {t("newText")}
-                  </label>
-                )}
-                <textarea
+                <TextBox
                   id={`t-${draft.key}`}
-                  aria-label={draft.op === "insert" ? t("newText") : t("yourWording")}
-                  className="field min-h-40 py-3"
+                  label={draft.op === "insert" ? t("newText") : undefined}
+                  ariaLabel={draft.op === "insert" ? t("newText") : t("yourWording")}
+                  rows={8}
                   value={draft.text}
-                  onChange={(e) => update(draft.key, { text: e.target.value })}
-                />
-                <DictateButton
-                  {...dictationProps}
-                  onText={(said) =>
-                    setDrafts((all) =>
-                      all.map((d) =>
-                        d.key === draft.key
-                          ? { ...d, text: d.text ? `${d.text} ${said}` : said }
-                          : d,
-                      ),
-                    )
-                  }
+                  onValueChange={(text) => update(draft.key, { text })}
                 />
               </div>
             )}
@@ -395,22 +363,14 @@ export default function AmendForm(props: AmendFormProps) {
           <p className="mt-1.5 text-xs text-fg-tertiary">{t("titleHint")}</p>
         </div>
         <div>
-          <label className="block text-sm font-medium text-fg-primary" htmlFor="am-why">
-            {t("rationale")}
-          </label>
-          <textarea
+          <TextBox
             id="am-why"
-            className="field mt-2 min-h-32 py-3"
+            label={t("rationale")}
+            rows={5}
             value={rationale}
-            onChange={(e) => setRationale(() => e.target.value)}
+            onValueChange={(text) => setRationale(() => text)}
+            hint={t("rationaleHint")}
           />
-          <div className="mt-1.5 flex items-center justify-between gap-4">
-            <p className="text-xs text-fg-tertiary">{t("rationaleHint")}</p>
-            <DictateButton
-              {...dictationProps}
-              onText={(said) => setRationale((r) => (r ? `${r} ${said}` : said))}
-            />
-          </div>
         </div>
       </div>
 

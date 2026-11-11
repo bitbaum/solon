@@ -1,5 +1,6 @@
 "use client";
 
+import { TextBox } from "@/components/chat/text-box";
 import { readEventStream } from "@bitbaum/ai-kit/sse";
 import { useRef, useState } from "react";
 import type { ResearchEvent } from "@/lib/statistics/research-events";
@@ -116,17 +117,14 @@ export default function ResearchView({ locale, texts }: { locale: string; texts:
           if (question.trim().length >= 8 && !busy) void run(question.trim());
         }}
       >
-        <label className="flex flex-col gap-1 text-sm text-fg-secondary">
-          {texts.questionLabel}
-          <textarea
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            maxLength={500}
-            rows={3}
-            placeholder={texts.placeholder}
-            className="field w-full"
-          />
-        </label>
+        <TextBox
+          label={texts.questionLabel}
+          value={question}
+          onValueChange={setQuestion}
+          maxLength={500}
+          rows={3}
+          placeholder={texts.placeholder}
+        />
         <button
           type="submit"
           disabled={busy || question.trim().length < 8}

@@ -150,6 +150,20 @@ publisher has one, else a cached machine translation labelled as such
 `pnpm run law:translate --authority <key>` translates an authority's titles ahead of readers;
 texts are translated when a page is first read.
 
+## Chat and text boxes
+
+- Every chat is chatkit's `ChatApp` or `Composer`, with the microphone and the
+  paperclip on. Turning either off needs `// experience-exempt: <reason>` on the line.
+- Every text box people type into is `TextBox` (chatkit's `DictationField`,
+  `src/components/chat/text-box.tsx`), never a bare `<textarea>`. A file that
+  must have one says why in a first-line `// experience-exempt: <reason>`.
+- Never print a server's error text. Routes answer with a status and a `code`;
+  chatkit names the problem from the status, in the reader's language.
+- Every label is in `messages/*.json` for ru, de, fr, it and en. A test fails
+  when a chat label falls back to chatkit's English default.
+- The fleet experience audit (`.github/workflows/experience.yml`) fails over
+  the ceiling in `package-plan.json`, which is zero. Do not raise it.
+
 ## CI
 
 `.github/workflows/ci.yml` runs two jobs on every push/PR to `main`:

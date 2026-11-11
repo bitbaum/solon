@@ -68,6 +68,35 @@ export default function Home({ params }: { params: Promise<{ locale: string }> }
         </div>
       </section>
 
+      <section className="border-t border-subtle band py-section">
+        <div className="section-shell">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+            <div className="min-w-0">
+              <div className="kicker">{t("data.kicker")}</div>
+              <h2 className="headline-caps mt-5 text-4xl sm:text-5xl">{t("data.title")}</h2>
+              <p className="mt-6 text-lg text-fg-secondary">{t("data.body")}</p>
+              <p className="mt-6 text-sm text-fg-tertiary">{t("data.note")}</p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Link href="/statistics/why" className="btn-frame">
+                  {t("data.why")}
+                </Link>
+                <Link href="/statistics" className="btn-frame">
+                  {t("data.stats")}
+                </Link>
+              </div>
+            </div>
+            <dl className="min-w-0 self-start divide-y divide-subtle border-y border-subtle">
+              {(["governed", "doing", "missing"] as const).map((key) => (
+                <div key={key} className="py-6">
+                  <dt className="font-semibold text-fg-primary">{t(`data.points.${key}.name`)}</dt>
+                  <dd className="mt-2 text-fg-secondary">{t(`data.points.${key}.body`)}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
       <FullBleed photo={PHOTOS.landsgemeinde} position="center 65%" daylight>
         <div className="max-w-3xl">
           <div className="kicker">{t("roots.kicker")}</div>

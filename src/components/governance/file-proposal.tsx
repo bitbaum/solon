@@ -1,5 +1,6 @@
 "use client";
 
+import { TextBox } from "@/components/chat/text-box";
 import { useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { proposalMessage } from "@/lib/bitcoin/message";
@@ -191,16 +192,13 @@ export default function FileProposal({
         <MethodPicker methods={ALL_METHODS} value={method} onChange={(m) => setMethod(m)} />
         {needsOptions && (
           <div className="mt-4">
-            <label className="block text-sm font-medium text-fg-primary" htmlFor="p-options">
-              The choices, one per line
-            </label>
-            <textarea
+            <TextBox
               id="p-options"
+              label="The choices, one per line"
               rows={4}
               value={optionText}
-              onChange={(e) => setOptionText(e.target.value)}
+              onValueChange={setOptionText}
               placeholder={"Solar roof\nHeat pump\nInsulation"}
-              className="field mt-2 py-3"
             />
             {options ? (
               <p className="mt-1.5 text-xs text-fg-tertiary">
@@ -229,16 +227,13 @@ export default function FileProposal({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="p-body">
-          Why?
-        </label>
-        <textarea
+        <TextBox
           id="p-body"
+          label="Why?"
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onValueChange={setBody}
           rows={6}
           placeholder="Why this, and what changes if members agree."
-          className="field mt-2 py-3"
         />
         {memberAddress && (
           <p className="mt-1.5 text-xs text-fg-tertiary">
