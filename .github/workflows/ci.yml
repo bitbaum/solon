@@ -170,8 +170,14 @@ jobs:
           AUTH_SECRET: ci-render-check-secret-not-a-real-one
           AUTH_URL: http://localhost:3000
 
+      # --with-deps runs apt-get; when the runner cannot reach Ubuntu's archive (2026-11-11:
+      # security.ubuntu.com unreachable, every integration job failed here before a test ran),
+      # install the browser alone: the runner image already carries Chrome's system libraries,
+      # and a missing one fails the render checks below, visibly, not silently.
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: |
+          pnpm exec playwright install --with-deps chromium \
+            || { echo "::warning::apt failed; installing Chromium without system deps"; pnpm exec playwright install chromium; }
 
       - name: Render checks (Playwright, Chromium)
         env:
