@@ -69,6 +69,7 @@
       "lawCoverage": "Che cosa conserva Solon",
       "lawAmendments": "Modifiche proposte",
       "statistics": "Statistiche",
+      "statisticsWhy": "Perché leggi e numeri",
       "statisticsEvents": "Eventi giuridici",
       "statisticsMethods": "Come sono fatte le classifiche",
       "statisticsGaps": "Cosa viene misurato, e cosa no",
@@ -121,6 +122,7 @@
       "lawCoverage": "Quali atti conserva Solon, contati dai dati",
       "lawAmendments": "Le modifiche proposte al diritto, con la redline e i sostegni",
       "statistics": "Il diritto accanto ai numeri: serie nel tempo, ognuna con la sua fonte e la sua legge",
+      "statisticsWhy": "Perché Solon affianca il diritto di ogni luogo alle sue statistiche, e cosa è già attivo",
       "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove",
       "statisticsMethods": "Chi fa ogni indice, come, e cosa chiedergli.",
       "statisticsGaps": "Cosa raccoglie ogni ufficio, e dove la stessa domanda non ha risposta.",
@@ -500,6 +502,12 @@
     "changelogTitle": "Novità — Solon",
     "roadmapDescription": "Dove va Solon, nell'ordine in cui ci va — letto dal registro di riferimento della flotta.",
     "changelogDescription": "Cosa è cambiato in Solon per chi lo usa, dal più recente — letto dal registro di riferimento della flotta."
+  },
+  "Status": {
+    "available": "Disponibile",
+    "inDevelopment": "In sviluppo",
+    "planned": "Previsto",
+    "researched": "Ricercato, non ancora caricato"
   },
   "Places": {
     "kicker": "{level} · {pack}",
@@ -1796,6 +1804,109 @@
       "propose": "Proponi una posizione",
       "proposeTitle": "Posizione su ciò che viene misurato: {topic}",
       "proposeBody": "Chiediamo al nostro ufficio di statistica di considerare la misura descritta in {url}, con gli elementi di accompagnamento e le salvaguardie ivi elencati."
+    },
+    "why": {
+      "metaTitle": "Perché leggi e numeri, per ogni luogo",
+      "metaDescription": "Perché Solon affianca il diritto di ogni luogo alle sue statistiche, segnala ciò che non è misurato e cita ogni fonte, per decidere insieme.",
+      "kicker": "Statistiche",
+      "title": "Leggi e numeri, per ogni luogo",
+      "intro": "Il diritto di un luogo dice come è governato. Le sue statistiche dicono come sta. Solon tiene entrambi fianco a fianco, per ogni luogo che riesce a leggere, e segnala ciò che un luogo non misura. Lavora per mostrare quali misure e quali politiche altri luoghi hanno scelto per lo stesso problema, così che le persone possano decidere insieme cosa cambiare.",
+      "why": {
+        "title": "Perché entrambi",
+        "body": "La legge da sola mostra intenzioni; i numeri da soli mostrano risultati senza una causa accanto. Insieme, una modifica della legge si può mettere accanto a ciò che è seguito, e le scelte di un luogo accanto a quelle di un altro. Ognuno è conservato come l'ha pubblicato il suo editore, con la fonte a un clic."
+      },
+      "gaps": {
+        "title": "Cosa viene misurato, e cosa no",
+        "body": "Gli uffici statistici scelgono cosa rilevare, per ragioni giuridiche, storiche, pratiche o politiche, così una domanda a cui un paese risponde con i propri dati resta senza risposta in un altro. Solon mostra chi pubblica cosa, incrociato con cosa e in base a quale legge, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Non dà voti agli uffici e non descrive gruppi di persone.",
+        "sources": "Per esempio, <denmark>Statistics Denmark</denmark> pubblica quante persone sono state riconosciute colpevoli di reati, per paese d'origine, sesso ed età, con dati dal 2000 al 2025; il <france>Consiglio costituzionale</france> francese ha deciso che gli studi non possono basarsi sull'origine etnica o sulla razza."
+      },
+      "trends": {
+        "title": "Le tendenze, e cosa hanno fatto altri luoghi",
+        "body": "Una serie mostra come un dato si è mosso negli anni. Una modifica della legge è registrata come un evento: cosa è cambiato, come ci si è arrivati, chi ha votato come e cosa se ne è detto, tenuto separato da ciò che è accaduto. Mettere le due cose fianco a fianco, tra luoghi diversi, permette a un gruppo di vedere cosa hanno tentato altri."
+      },
+      "items": {
+        "lawByPlace": {
+          "name": "Il diritto di ogni luogo",
+          "body": "Gli atti come li pubblicano i loro editori, con il giorno in cui sono stati letti e un'impronta che prova la copia, per i luoghi che Solon ha letto finora."
+        },
+        "statisticsSeries": {
+          "name": "Le statistiche nel tempo",
+          "body": "Serie della Banca mondiale, dell'OCSE e di Eurostat, ognuna con la sua definizione, ciò che copre e il giorno in cui è stata letta."
+        },
+        "publicBudgets": {
+          "name": "I bilanci pubblici",
+          "body": "Cosa incassano i governi e per cosa lo spendono, dalle leggi di bilancio e dagli uffici statistici, secondo una classificazione internazionale perché i luoghi siano confrontabili."
+        },
+        "measurementGaps": {
+          "name": "Cosa viene misurato, e dove no",
+          "body": "Tema per tema: quali uffici pubblicano una misura, incrociata con cosa e in base a quale legge, e cosa dovrebbe accompagnarne una nuova. Per ora un tema: la criminalità secondo l'origine di una persona."
+        },
+        "placeGapReport": {
+          "name": "Le misure che mancano a un luogo, e come cominciare",
+          "body": "Per un luogo: cosa non misura, i luoghi comparabili che lo fanno, l'ufficio responsabile e una proposta che le persone possono riprendere per chiederla."
+        },
+        "lawEvents": {
+          "name": "Le modifiche della legge, e come sono avvenute",
+          "body": "Cosa è cambiato, i passaggi e i voti, e cosa se ne è detto, tenuto separato da ciò che è accaduto."
+        },
+        "trendMarkers": {
+          "name": "Le modifiche della legge sulla linea",
+          "body": "Ogni modifica della legge tracciata sulla serie che riguarda, nell'anno in cui si è applicata."
+        },
+        "policyByTrend": {
+          "name": "Cosa hanno fatto altri luoghi di fronte a una tendenza",
+          "body": "Accanto a una serie, le modifiche della legge fatte da altri luoghi quando i loro dati si muovevano allo stesso modo, e cosa è seguito, senza dire quale fosse giusta."
+        },
+        "aiResearch": {
+          "name": "Ricerca con l'IA",
+          "body": "Fai una domanda: un'IA legge ciò che Solon contiene e scrive un rapporto in cui ogni dato e ogni citazione sono verificati rispetto a ciò che ha letto. Conosce solo ciò che Solon contiene."
+        },
+        "groupMeasures": {
+          "name": "Le misure proprie di un gruppo, per voto",
+          "body": "Un gruppo sceglie quali misure contano, e quanto, come una regola su cui votano i suoi membri."
+        }
+      },
+      "example": {
+        "kicker": "Esempio",
+        "title": "Ossezia del Sud",
+        "status": "L'Ossezia del Sud si amministra da sé e non è membro delle Nazioni Unite. La Georgia la considera parte del proprio territorio. Solon registra entrambe le cose e non dice chi ha ragione.",
+        "why": "Pochi editori esterni se ne occupano, quindi gran parte di ciò che si può sapere viene dalle sue stesse autorità, e Solon lo registra come la loro versione. Mostra cosa fa Solon dove le fonti sono scarse: conservare ciò che è pubblicato, dire di chi è e segnalare ciò che manca.",
+        "sources": "L'<geostat>ufficio statistico</geostat> della Georgia dichiara che, dal 1994, i suoi dati non coprono il territorio, che chiama regione di Tskhinvali. L'<ugosstat>ufficio statistico</ugosstat> dell'Ossezia del Sud pubblica una raccolta ogni anno e ogni trimestre; l'edizione 2025 è stata pubblicata il 24 giugno 2026.",
+        "items": {
+          "law": {
+            "name": "Il suo diritto",
+            "body": "Gli atti che pubblicano il suo Parlamento e il suo Presidente, ciascuno con la data dell'editore. L'editore non dice se un atto è ancora in vigore, e Solon lo dice."
+          },
+          "budget": {
+            "name": "Il suo bilancio statale",
+            "body": "Il bilancio 2023 come lo indica la legge sulla sua esecuzione, collocato secondo la classificazione internazionale perché sia confrontabile: circa quattro quinti delle entrate venivano dalla Federazione Russa."
+          },
+          "statistics": {
+            "name": "I dati del suo ufficio statistico",
+            "body": "Popolazione, reati registrati, PIL e bilancio statale, letti dalla raccolta 2025 con le riserve dell'ufficio stesso: la popolazione è una stima proiettata dal suo censimento del 2015, e il PIL un'approssimazione, perché l'ufficio dice di non avere i dati per calcolarlo per intero."
+          },
+          "gaps": {
+            "name": "Cosa non misura",
+            "body": "Nella raccolta 2025 le persone che hanno commesso reati sono contate per sesso, età e occupazione, non per cittadinanza, luogo di nascita od origine, la suddivisione che pubblica la Danimarca. L'ufficio statistico della Georgia non pubblica alcun dato sulla popolazione, e non è stato trovato nessun altro conteggio dall'esterno."
+          },
+          "next": {
+            "name": "Cosa verrebbe dopo",
+            "body": "Una pagina per l'Ossezia del Sud che elenca queste lacune, i luoghi comparabili che le misurano, l'ufficio responsabile e cosa dovrebbe accompagnare una nuova misura (età e sesso sempre, numeri piccoli omessi), come proposta che le persone sul posto possono riprendere."
+          }
+        },
+        "note": "Ricercato, non ancora caricato: i dati e le lacune qui sopra sono stati letti presso l'editore e annotati, con ogni indirizzo e ogni data, nella <note>nota di ricerca</note> di Solon. Non sono ancora sulle pagine di Solon."
+      },
+      "honest": {
+        "title": "Come Solon resta onesto",
+        "body": "I dati sono conservati come pubblicati, con il giorno in cui sono stati letti; una revisione si aggiunge, senza mai sovrascrivere. «Non letto» significa che Solon non ha guardato, non che non esista nulla. Le classifiche fatte da altri sono descritte, non usate come verdetti. Un'IA può spiegare una pagina, ma solo dai fatti elencati lì, e la sua risposta è verificata rispetto a essi prima che tu la veda.",
+        "link": "Come sono fatte le classifiche"
+      },
+      "decide": {
+        "title": "Perché le persone decidano insieme",
+        "body": "Niente di tutto questo dice a qualcuno cosa fare. Su Solon un gruppo può scegliere le proprie misure e i propri pesi per voto, chiedere una misura a un ufficio statistico con una proposta, e proporre una modifica a una legge accanto ai numeri che l'hanno motivata.",
+        "cta": "Proponi qualcosa",
+        "secondary": "Apri le statistiche"
+      }
     }
   },
   "Find": {
