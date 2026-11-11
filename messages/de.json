@@ -1188,6 +1188,31 @@
       "withinSixMonths": "Innert sechs Monaten nach Ablauf des Geschäftsjahres, genehmigt an der ordentlichen Generalversammlung"
     }
   },
+  "AskSolon": {
+    "title": "Solon fragen",
+    "description": "Verstehen Sie die Regeln, vergleichen Sie Entscheidungsverfahren oder machen Sie aus einer Idee einen Vorschlagsentwurf.",
+    "status": "Die Governance-Regeln werden gelesen",
+    "starters": {
+      "one": "Wer darf was entscheiden?",
+      "two": "Die Governance-Profile vergleichen",
+      "three": "Hilf mir, einen Vorschlag zu entwerfen"
+    },
+    "startersTitle": "Die nächste Entscheidung klarer machen.",
+    "placeholder": "Fragen Sie nach einer Entscheidung oder entwerfen Sie einen Vorschlag…",
+    "draftsNote": "Entwürfe sind keine Beschlüsse.",
+    "signInLink": "Anmelden, um Solon zu fragen",
+    "methods": "Die Abstimmungsregeln lesen",
+    "record": "Das Beschlussprotokoll lesen",
+    "errors": {
+      "failed": "Solon konnte nicht antworten. Versuchen Sie es erneut.",
+      "signIn": "Melden Sie sich an, um Solon zu fragen. Danach kommen Sie hierher zurück.",
+      "tooLong": "Dieses Gespräch ist zu lang. Beginnen Sie ein neues.",
+      "rateLimited": "Bitte warten Sie einige Minuten, bevor Sie erneut fragen.",
+      "unavailable": "Die KI von Solon ist gerade nicht verfügbar. Sie können die Regeln trotzdem lesen oder unten einen Vorschlag entwerfen.",
+      "noAnswer": "Die Antwort ist nicht angekommen. Versuchen Sie es erneut.",
+      "interrupted": "Die Antwort wurde unterbrochen. Versuchen Sie es erneut."
+    }
+  },
   "Chat": {
     "copy": "Kopieren",
     "copied": "Kopiert",

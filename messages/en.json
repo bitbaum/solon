@@ -1662,6 +1662,31 @@
       "withinSixMonths": "Within six months of the financial year's end, approved at the annual general meeting"
     }
   },
+  "AskSolon": {
+    "title": "Ask Solon",
+    "description": "Understand the rules, compare ways to decide, or turn an idea into a proposal draft.",
+    "status": "Reading the governance rules",
+    "starters": {
+      "one": "Who can decide what?",
+      "two": "Compare the governance profiles",
+      "three": "Help me draft a proposal"
+    },
+    "startersTitle": "Make the next decision clearer.",
+    "placeholder": "Ask about a decision, or draft a proposal…",
+    "draftsNote": "Drafts are not decisions.",
+    "signInLink": "Sign in to ask Solon",
+    "methods": "Read the voting rules",
+    "record": "Read the decision record",
+    "errors": {
+      "failed": "Solon could not answer. Try again.",
+      "signIn": "Sign in to ask Solon. You will come back here.",
+      "tooLong": "This conversation is too long. Start a new one.",
+      "rateLimited": "Please wait a few minutes before asking again.",
+      "unavailable": "Solon's AI is not available just now. You can still read the rules or draft a proposal below.",
+      "noAnswer": "The answer did not arrive. Try again.",
+      "interrupted": "The answer was interrupted. Try again."
+    }
+  },
   "Chat": {
     "copy": "Copy",
     "copied": "Copied",
