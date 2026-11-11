@@ -21,6 +21,12 @@ function GithubIcon({ className }: { className?: string }) {
   );
 }
 
+export const metadata = {
+  title: "About Solon",
+  description:
+    "Why Solon exists and who runs it: governance anyone can check, and the law and statistics of each place, side by side.",
+};
+
 export default function AboutPage() {
   return (
     <PageLayout
@@ -42,7 +48,17 @@ export default function AboutPage() {
             <p className="mb-4">
               Solon is the governance pillar of a three-product stack, and it practices what it
               ships: its first production organization governs the stack itself, with AI agents from
-              the sibling products registered as voting members and humans holding the red lines.
+              the sibling products registered as voting members. Which decisions only people may
+              vote on is each organization&apos;s own rule, changed only by a vote under the rule it
+              already has.
+            </p>
+            <p className="mb-4">
+              Solon also keeps the law and the statistics of each place it can read, side by side,
+              and marks what a place does not measure, so a group can see how a place is governed
+              and how it is doing before it decides.{" "}
+              <Link href="/statistics/why" className="underline underline-offset-4">
+                Why laws and numbers
+              </Link>
             </p>
             <p>
               The aim is a community that can show its books, recount its votes, and keep the door
@@ -62,12 +78,12 @@ export default function AboutPage() {
           <PrincipleCard
             title="Verify, don't trust"
             description="Every decision is published with its votes, rules, and signatures so anyone can recount the tally independently."
-            icon={<Vote className="w-8 h-8 text-bitcoin" />}
+            icon={<Vote className="w-8 h-8 text-accent" />}
           />
           <PrincipleCard
             title="Append-only record"
             description="Audit events are never updated or deleted — no code path exists that could rewrite history."
-            icon={<Eye className="w-8 h-8 text-bitcoin" />}
+            icon={<Eye className="w-8 h-8 text-accent" />}
           />
         </div>
 
