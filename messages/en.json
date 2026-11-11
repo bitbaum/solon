@@ -1667,7 +1667,9 @@
       "mic": "The microphone is blocked. Allow it for this site and try again.",
       "silence": "Nothing was heard. Try again, a little closer to the mic.",
       "unavailable": "Voice input is not available right now. Type instead, or try again later.",
-      "fileTooLarge": "That recording is too large to transcribe here."
+      "fileTooLarge": "That recording is too large to transcribe here.",
+      "signIn": "Sign in to use voice input.",
+      "busy": "Voice input is busy right now. Try again in a moment."
     },
     "app": {
       "chats": "Chats",

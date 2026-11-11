@@ -1081,7 +1081,9 @@
       "mic": "Il microfono è bloccato. Consentilo per questo sito e riprova.",
       "silence": "Non è stato sentito nulla. Riprova, un po’ più vicino al microfono.",
       "unavailable": "L’inserimento vocale non è disponibile al momento. Scrivi oppure riprova più tardi.",
-      "fileTooLarge": "Questa registrazione è troppo grande per essere trascritta qui."
+      "fileTooLarge": "Questa registrazione è troppo grande per essere trascritta qui.",
+      "signIn": "Accedi per usare la dettatura.",
+      "busy": "La dettatura è molto richiesta in questo momento. Riprova tra un attimo."
     },
     "app": {
       "chats": "Conversazioni",
