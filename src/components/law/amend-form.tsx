@@ -82,6 +82,7 @@ function toChange(draft: DraftChange): Change | null {
  */
 export default function AmendForm(props: AmendFormProps) {
   const t = useTranslations("Amend");
+  const chat = useTranslations("Chat");
   const router = useRouter();
   const storageKey = `solon:amend:${props.act.id}:${props.forkOf ?? ""}`;
   const first = useMemo(
@@ -202,10 +203,12 @@ export default function AmendForm(props: AmendFormProps) {
     label: t("dictate"),
     stopLabel: t("stopDictating"),
     problems: {
-      mic: t("dictationProblems.mic"),
-      silence: t("dictationProblems.silence"),
-      unavailable: t("dictationProblems.unavailable"),
-      fileTooLarge: t("dictationProblems.fileTooLarge"),
+      mic: chat("dictation.mic"),
+      silence: chat("dictation.silence"),
+      unavailable: chat("dictation.unavailable"),
+      fileTooLarge: chat("dictation.fileTooLarge"),
+      signIn: chat("dictation.signIn"),
+      busy: chat("dictation.busy"),
     },
   };
 

@@ -3,7 +3,7 @@ import { GAPS } from "@/lib/config/statistics/gaps";
 import { countryOf } from "@/lib/config/world/countries";
 import { buildGapsBrief } from "../gaps-brief";
 import { checkExplanation } from "../explain";
-import { defineGaps, gapsOf } from "../gaps";
+import { defineGaps, findTopic, gapsOf, topicHref, topicSlug } from "../gaps";
 
 const topic = {
   key: "t.x",
@@ -122,5 +122,29 @@ describe("the shipped registry", () => {
     expect(checkExplanation(`France is an enemy of statistics [${denmark}].`, facts).ok).toBe(
       false,
     );
+  });
+});
+
+describe("a topic's address", () => {
+  it("has no dot, so the English page is not mistaken for a file", () => {
+    for (const t of GAPS.topics) {
+      expect(topicHref(t.key)).not.toContain(".");
+      expect(topicHref(t.key)).toMatch(/^\/statistics\/gaps\/[a-z0-9-]+$/);
+    }
+    expect(topicSlug("crime.by_background")).toBe("crime-by-background");
+  });
+
+  it("is one per topic", () => {
+    const slugs = GAPS.topics.map((t) => topicSlug(t.key));
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("finds the topic by its slug and by its key, as links already shared name it", () => {
+    const [first] = GAPS.topics;
+    expect(findTopic(GAPS.topics, topicSlug(first.key))).toBe(first);
+    expect(findTopic(GAPS.topics, first.key)).toBe(first);
+    expect(findTopic(GAPS.topics, first.key.replace(".", "%2E"))).toBe(first);
+    expect(findTopic(GAPS.topics, "no-such-topic")).toBeUndefined();
+    expect(findTopic(GAPS.topics, "%E0%A4%A")).toBeUndefined();
   });
 });

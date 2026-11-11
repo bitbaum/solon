@@ -3,7 +3,7 @@ import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
-import { gapsOf, type Coverage, type Topic } from "@/lib/statistics/gaps";
+import { gapsOf, topicHref, type Coverage, type Topic } from "@/lib/statistics/gaps";
 import type { StatisticsTranslator } from "./shared";
 
 const name = (a2: string, locale: string) => {
@@ -40,10 +40,7 @@ export function GapsIndex({
                 {localized(topic.question, locale)}
               </span>
             </span>
-            <Link
-              href={`/statistics/gaps/${topic.key}`}
-              className="btn-secondary min-h-11 shrink-0"
-            >
+            <Link href={topicHref(topic.key)} className="btn-secondary min-h-11 shrink-0">
               {t("gaps.open")}
             </Link>
           </li>
