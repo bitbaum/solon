@@ -343,10 +343,32 @@
     "law": {
       "kicker": "Il diritto, aperto",
       "title": "Ogni parola del diritto, aperta a tutti.",
-      "body": "Solon conserva il testo di ogni atto federale e cantonale in vigore in Svizzera, di ogni atto del Liechtenstein, del Lussemburgo e dell'Estonia, le leggi del Wyoming e le regole di un numero crescente di comuni — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o proponete una modifica a qualsiasi articolo.",
+      "body": "Solon conserva il testo del diritto svizzero, dalla Confederazione e dai cantoni a un numero crescente di comuni, e quello di sempre più paesi, stati e dell'Unione europea — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o proponete una modifica a qualsiasi articolo.",
       "next": "Sul globo ogni luogo è ombreggiato secondo quanto del suo diritto conserva Solon. Si aggiungono altri luoghi: il sistema è costruito una volta, ogni nuovo paese sono i suoi dati.",
       "find": "Trovare una legge",
       "ask": "Interrogare il diritto"
+    },
+    "data": {
+      "kicker": "Leggi e numeri",
+      "title": "Come è governato un luogo. Come sta.",
+      "body": "Accanto al diritto di ogni luogo, Solon conserva le statistiche e i bilanci che pubblicano i suoi uffici, negli anni, ogni dato con la sua fonte e ciò che copre. Tema per tema, mostra dove un luogo misura ciò che un altro non misura, e cosa dovrebbe accompagnare una nuova misura.",
+      "note": "Suggerire quali misure un luogo potrebbe avviare, e quali politiche altri luoghi hanno scelto di fronte alla stessa tendenza, è previsto e non ancora realizzato.",
+      "why": "Perché leggi e numeri",
+      "stats": "Vedi le statistiche",
+      "points": {
+        "governed": {
+          "name": "Come è governato",
+          "body": "Il suo diritto, come l'ha pubblicato il suo editore, e le vie ufficiali per cambiarlo."
+        },
+        "doing": {
+          "name": "Come sta",
+          "body": "Le sue statistiche e il suo bilancio negli anni, ogni dato con la sua fonte e il giorno in cui è stato letto."
+        },
+        "missing": {
+          "name": "Cosa non misura",
+          "body": "Dove luoghi comparabili pubblicano un dato che esso non pubblica, con ciò che Solon non ha letto segnato come non letto."
+        }
+      }
     },
     "roots": {
       "kicker": "Da dove vengono le idee",
