@@ -127,7 +127,9 @@ async function main(): Promise<number> {
       .sort((x, y) => (x.coverage?.ratio ?? -1) - (y.coverage?.ratio ?? -1))
       .map((a) =>
         a.coverage
-          ? `${(a.coverage.ratio * 100).toFixed(1)}% page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
+          ? `${(a.coverage.ratio * 100).toFixed(1)}% bag ` +
+            `${a.sequence ? `${(a.sequence.ratio * 100).toFixed(1)}% in order, longest missing run ${a.sequence.longestMissing.words}` : "order not compared"}` +
+            `${a.wordForWord ? " WORD-FOR-WORD" : ""} page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
             `${a.title.slice(0, 40)} | missing: ${a.coverage.missing
               .slice(0, 8)
               .map((m) => `${m.word}x${m.count}`)
@@ -151,6 +153,7 @@ async function main(): Promise<number> {
         sampled: report.sampled,
         meanRatio: Number(report.meanRatio.toFixed(4)),
         short: report.short,
+        wordForWord: report.wordForWord,
         failed: report.failed,
       }),
     );

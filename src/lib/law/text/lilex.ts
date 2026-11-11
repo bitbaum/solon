@@ -111,6 +111,9 @@ export async function fetchSystematicIds(
   return parseSystematicIds(html);
 }
 
+/** The link from a word to its footnote at the foot of the page; not part of the text. */
+const FOOTNOTE_MARK = /<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g;
+
 // A heading is `tit`, `tit1`, `tit1m` …: the digit and a letter after it name its level and kind.
 const BOUNDARY = /<div class="(?:art|tit\d?[a-z]*|fntext)"|<div class="sacht" style=/g;
 
@@ -124,11 +127,12 @@ export function parseLilexProvisions(html: string): Provision[] {
   const starts = [...html.matchAll(/<div class="art"[^>]*>/g)].map((m) => m.index!);
   const out: { at: number; provision: Provision }[] = [];
   const seen = new Map<string, number>();
+  const headings = headingsOf(html);
   for (const start of starts) {
     BOUNDARY.lastIndex = start + 1;
     const end = BOUNDARY.exec(html)?.index ?? html.length;
     // Footnote marks are links to the notes at the end of the page; not part of the text.
-    const block = html.slice(start, end).replace(/<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g, "");
+    const block = html.slice(start, end).replace(FOOTNOTE_MARK, "");
     const anchor = /<a name="((?:art|par):[^"]+)"><\/a>/.exec(block)?.[1];
     if (!anchor) continue;
     // An announcement of several EEA decisions numbers each decision's articles from 1, so one page
@@ -154,6 +158,7 @@ export function parseLilexProvisions(html: string): Provision[] {
         path,
         heading: [number, title].filter(Boolean).join(" "),
         text: blockText(body),
+        headingPath: pathAt(headings, start),
       },
     });
   }
@@ -177,6 +182,28 @@ export function parseLilexProvisions(html: string): Provision[] {
     }
   }
   return out.sort((a, b) => a.at - b.at).map((o) => o.provision);
+}
+
+/** The chapter headings of a page (`tit1`, `tit2`, `tit3` …) in page order, each with its level. */
+function headingsOf(html: string): { at: number; level: number; text: string }[] {
+  return [...html.matchAll(/<div class="tit(\d?)[a-z]*"[^>]*>([\s\S]*?)<\/div>/g)]
+    .map((m) => ({
+      at: m.index!,
+      level: Number(m[1] || 1),
+      text: blockText(m[2]!.replace(FOOTNOTE_MARK, "")),
+    }))
+    .filter((h) => h.text);
+}
+
+/** The headings in force at `at`: a heading replaces the one of its level and ends the deeper ones. */
+function pathAt(headings: { at: number; level: number; text: string }[], at: number): string[] {
+  const held = new Map<number, string>();
+  for (const h of headings) {
+    if (h.at >= at) break;
+    for (const level of held.keys()) if (level >= h.level) held.delete(level);
+    held.set(h.level, h.text);
+  }
+  return [...held.entries()].sort((a, b) => a[0] - b[0]).map(([, text]) => text);
 }
 
 /**

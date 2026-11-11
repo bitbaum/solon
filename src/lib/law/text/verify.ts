@@ -14,6 +14,7 @@ import type { Database } from "@/lib/db/client";
 import { legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
 import { read } from "../publishers/http";
+import { newHeadings } from "../heading-path";
 
 const ENTITIES: Record<string, string> = {
   amp: "&",
@@ -49,7 +50,16 @@ const ENTITIES: Record<string, string> = {
 };
 
 /** The text a reader sees on a page: no scripts, styles or tags, entities decoded. */
-export function visibleText(html: string, ignoreClasses: readonly string[] = []): string {
+export function visibleText(
+  html: string,
+  ignoreClasses: readonly string[] = [],
+  furnitureTables?: RegExp,
+): string {
+  if (furnitureTables) {
+    html = html.replace(/<table\b[\s\S]*?<\/table>/gi, (table) =>
+      furnitureTables.test(table) ? " " : table,
+    );
+  }
   const ignored = ignoreClasses.length
     ? new RegExp(`<div class="(?:${ignoreClasses.join("|")})"[^>]*>[\\s\\S]*?</div>`, "g")
     : null;
@@ -59,7 +69,11 @@ export function visibleText(html: string, ignoreClasses: readonly string[] = [])
       // The notes at the foot of a Liechtenstein page ("eingefügt durch LGBl. …") are the act's amendment
       // history, which the provisions do not carry on purpose.
       .replace(/<div class="fntext"[\s\S]*?<\/div>/g, " ")
+      // The mark that points at a footnote ("<a href="#fn3"><sup>3</sup></a>") is not a word of the text.
+      .replace(/<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g, " ")
       .replace(/<!--[\s\S]*?-->/g, " ")
+      // A tag inside a word ("CO<sub>2</sub>") does not split it; a block tag does.
+      .replace(/<\/?(?:sub|sup|i|b|em|strong|u|span|small|abbr|font)\b[^>]*>/gi, "")
       .replace(/<[^>]+>/g, " ")
       .replace(/&#x([0-9a-f]+);/gi, (_, h: string) => String.fromCodePoint(parseInt(h, 16)))
       .replace(/&#(\d+);/g, (_, d: string) => String.fromCodePoint(Number(d)))
@@ -77,6 +91,119 @@ const counted = (words: string[]): Map<string, number> => {
   for (const w of words) m.set(w, (m.get(w) ?? 0) + 1);
   return m;
 };
+
+/** The words the provisions hold, in the act's order: each heading path where it first appears, then heading and text. */
+export function storedWordsOf(
+  provisions: readonly { heading: string; text: string; headingPath?: string[] }[],
+): string[] {
+  const parts: string[] = [];
+  let previous: string[] | undefined;
+  // A heading that has a body is held as a provision of its own: it is not a path word again.
+  const held = new Set<string>();
+  for (const p of provisions) {
+    const path = p.headingPath ?? [];
+    for (const h of newHeadings(previous, path)) if (!held.has(h)) parts.push(h);
+    previous = path;
+    held.add(p.heading);
+    parts.push(p.heading, p.text);
+  }
+  return wordsOf(parts.join(" "));
+}
+
+export interface Sequence {
+  /** Page words found in the stored text in the same order (longest common subsequence). */
+  inOrder: number;
+  /** inOrder / page words. */
+  ratio: number;
+  /** The longest stretch of page words with no match in order, and where it starts. */
+  longestMissing: { words: number; at: number; text: string };
+  /** Every page word is held, in the page's order. */
+  wordForWord: boolean;
+}
+
+/**
+ * How much of the page the stored text holds in the page's order. A Myers diff over the words:
+ * quick when the two are alike, and gives up (null) when they differ by more than `maxEdits`
+ * words, so a very different text is never called word for word.
+ */
+export function sequence(page: string[], stored: string[], maxEdits = 6000): Sequence | null {
+  const ids = new Map<string, number>();
+  const id = (w: string) => ids.get(w) ?? (ids.set(w, ids.size), ids.size - 1);
+  const a = page.map(id);
+  const b = stored.map(id);
+  const n = a.length;
+  const m = b.length;
+  const max = Math.min(n + m, maxEdits);
+  const offset = max + 1;
+  let v = new Int32Array(2 * max + 3);
+  const trace: Int32Array[] = [];
+  let found = -1;
+  for (let d = 0; d <= max && found < 0; d++) {
+    trace.push(v.slice());
+    for (let k = -d; k <= d; k += 2) {
+      let x =
+        k === -d || (k !== d && v[offset + k - 1]! < v[offset + k + 1]!)
+          ? v[offset + k + 1]!
+          : v[offset + k - 1]! + 1;
+      let y = x - k;
+      while (x < n && y < m && a[x] === b[y]) {
+        x++;
+        y++;
+      }
+      v[offset + k] = x;
+      if (x >= n && y >= m) {
+        found = d;
+        break;
+      }
+    }
+  }
+  if (found < 0) return null;
+  // Walk back through the trace: a page word matched on a diagonal is kept, one deleted from the page is missing.
+  const kept = new Array<boolean>(n).fill(false);
+  let x = n;
+  let y = m;
+  for (let d = found; d > 0; d--) {
+    const vd = trace[d]!;
+    const k = x - y;
+    const down = k === -d || (k !== d && vd[offset + k - 1]! < vd[offset + k + 1]!);
+    const pk = down ? k + 1 : k - 1;
+    const px = vd[offset + pk]!;
+    const py = px - pk;
+    while (x > (down ? px : px + 1) && y > (down ? py + 1 : py)) {
+      x--;
+      y--;
+      kept[x] = true;
+    }
+    x = px;
+    y = py;
+  }
+  while (x > 0 && y > 0) {
+    x--;
+    y--;
+    kept[x] = true;
+  }
+  let inOrder = 0;
+  let best = { words: 0, at: 0 };
+  let run = 0;
+  for (let i = 0; i <= n; i++) {
+    if (i < n && !kept[i]) {
+      run++;
+      if (run > best.words) best = { words: run, at: i - run + 1 };
+      continue;
+    }
+    if (i < n) inOrder++;
+    run = 0;
+  }
+  return {
+    inOrder,
+    ratio: n === 0 ? 1 : inOrder / n,
+    longestMissing: {
+      ...best,
+      text: page.slice(best.at, best.at + Math.min(best.words, 30)).join(" "),
+    },
+    wordForWord: inOrder === n,
+  };
+}
 
 export interface Coverage {
   pageWords: number;
@@ -185,6 +312,14 @@ export function htmlAround(html: string, run: string, width = 220): string {
  * The blocks of a publisher's page that are the act's header, not its provisions: its title, its date
  * and the signatures of the promulgation are held as the act's title and dates, not as provisions.
  */
+/**
+ * Tables that are a publisher's masthead, not the act: the gazette's number, year and date line.
+ * A table is furniture when its text matches.
+ */
+export const FURNITURE_TABLES: Record<string, RegExp> = {
+  li: /Liechtensteinisches\s+Landesgesetzblatt/i,
+};
+
 export const HEADER_CLASSES: Record<string, readonly string[]> = {
   li: ["htit1", "htit2", "vom", "udat", "gezf", "gezr"],
 };
@@ -236,12 +371,16 @@ export interface VerifiedAct {
   url: string;
   provisions: number;
   coverage?: Coverage;
+  /** The same words compared in the page's order; null when the two differ too much to align. */
+  sequence?: Sequence | null;
   /** Long runs of page words the provisions lack, and the page's div classes. */
   runs?: string[];
   classes?: string;
   /** The raw HTML around the first long run. */
   around?: string;
   short: boolean;
+  /** Every word of the page is held, in order: checked, not assumed. */
+  wordForWord?: boolean;
   error?: string;
 }
 
@@ -251,6 +390,8 @@ export interface VerifyReport {
   sampled: number;
   meanRatio: number;
   short: number;
+  /** Acts whose every page word is held in the page's order. */
+  wordForWord: number;
   failed: number;
   acts: VerifiedAct[];
 }
@@ -286,9 +427,14 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
   const acts: VerifiedAct[] = [];
   for (const row of picked) {
     const provisions = await db
-      .select({ heading: legalProvisions.heading, text: legalProvisions.text })
+      .select({
+        heading: legalProvisions.heading,
+        text: legalProvisions.text,
+        headingPath: legalProvisions.headingPath,
+      })
       .from(legalProvisions)
-      .where(eq(legalProvisions.versionId, row.versionId));
+      .where(eq(legalProvisions.versionId, row.versionId))
+      .orderBy(legalProvisions.ord);
     const title = provisions[0]?.heading.slice(0, 80) ?? row.actId;
     const url = row.url ?? "";
     try {
@@ -297,15 +443,22 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       const raw = new TextDecoder().decode(page.bytes);
       const html = row.format === "json" ? JSON_BODIES[authority]!(JSON.parse(raw)) : raw;
       const pageWords = wordsOf(
-        visibleText(regionOf(html, authority), HEADER_CLASSES[authority] ?? []),
+        visibleText(
+          regionOf(html, authority),
+          HEADER_CLASSES[authority] ?? [],
+          FURNITURE_TABLES[authority],
+        ),
       );
-      const storedWords = wordsOf(provisions.map((p) => `${p.heading} ${p.text}`).join(" "));
+      const storedWords = storedWordsOf(provisions);
       const cov = coverage(pageWords, storedWords);
+      const seq = sequence(pageWords, storedWords);
       const act: VerifiedAct = {
         title,
         url,
         provisions: provisions.length,
         coverage: cov,
+        sequence: seq,
+        wordForWord: seq?.wordForWord ?? false,
         runs: missingRuns(pageWords, storedWords),
         classes: divClasses(html),
         around: (() => {
@@ -315,7 +468,9 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
         short: cov.ratio < threshold,
       };
       acts.push(act);
-      say(`${(cov.ratio * 100).toFixed(1)}% ${title}`);
+      say(
+        `${(cov.ratio * 100).toFixed(1)}% bag, ${seq ? (seq.ratio * 100).toFixed(1) + "% in order, longest missing run " + seq.longestMissing.words : "order not compared"}${act.wordForWord ? ", word for word" : ""} ${title}`,
+      );
     } catch (error) {
       acts.push({
         title,
@@ -335,6 +490,7 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       ? checked.reduce((sum, a) => sum + a.coverage!.ratio, 0) / checked.length
       : 0,
     short: acts.filter((a) => a.short).length,
+    wordForWord: acts.filter((a) => a.wordForWord).length,
     failed: acts.filter((a) => a.error).length,
     acts,
   };
