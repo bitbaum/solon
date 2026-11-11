@@ -36,8 +36,8 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3(react@19.3.1)
       '@fleet/design-tokens':
-        specifier: npm:@bitbaum/design-tokens@^1.6.1
-        version: '@bitbaum/design-tokens@1.6.1'
+        specifier: npm:@bitbaum/design-tokens@^1.7.1
+        version: '@bitbaum/design-tokens@1.7.1'
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
         version: 1.32.2(supports-color@7.2.0)(zod@4.6.7)
@@ -418,8 +418,8 @@ packages:
     peerDependencies:
       react: '>=18'
 
-  '@bitbaum/design-tokens@1.6.1':
-    resolution: {integrity: sha512-KrOXhL0RZUx5SadzP+jlo0n0FU3gAGbOq30dXwWGT7vTovC7T2TUmEkzBb2UMUHapXOiLnDooGFcV+x/dGAQOg==}
+  '@bitbaum/design-tokens@1.7.1':
+    resolution: {integrity: sha512-ejJOZyaN043LTTXkokpCR8kwU6wBt4SNxepUY0cnFX/1ilZRdZwkxnB+vlSlz75DtrMc1pF3KjyOt8C3o5rIqA==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -5021,7 +5021,7 @@ snapshots:
       pdfjs-dist: 6.5.438
       react: 19.3.1
 
-  '@bitbaum/design-tokens@1.6.1': {}
+  '@bitbaum/design-tokens@1.7.1': {}
 
   '@bitbaum/geo-kit@0.8.0(d3-geo@3.1.2)(topojson-client@3.1.0)':
     optionalDependencies:
