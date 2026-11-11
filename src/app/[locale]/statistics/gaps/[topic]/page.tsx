@@ -8,17 +8,18 @@ import { placesConfig } from "@/lib/config/places";
 import { GAPS } from "@/lib/config/statistics/gaps";
 import { SITE } from "@/lib/law/site";
 import { localized } from "@/lib/places/place-view";
+import { findTopic, topicHref, topicSlug } from "@/lib/statistics/gaps";
 import { buildGapsBrief } from "@/lib/statistics/gaps-brief";
 
 type Params = Promise<{ locale: string; topic: string }>;
 
 export function generateStaticParams() {
-  return GAPS.topics.map((t) => ({ topic: t.key }));
+  return GAPS.topics.map((t) => ({ topic: topicSlug(t.key) }));
 }
 
 export async function generateMetadata({ params }: { params: Params }) {
-  const { locale: raw, topic: key } = await params;
-  const topic = GAPS.topics.find((x) => x.key === key);
+  const { locale: raw, topic: segment } = await params;
+  const topic = findTopic(GAPS.topics, segment);
   if (!topic) return {};
   const locale = toLocale(raw);
   const t = await getTranslations({ locale, namespace: "Statistics.gaps" });
@@ -29,14 +30,14 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 export default async function GapsTopicPage({ params }: { params: Params }) {
-  const { locale: raw, topic: key } = await params;
+  const { locale: raw, topic: segment } = await params;
   const locale = toLocale(raw);
   setRequestLocale(locale);
-  const topic = GAPS.topics.find((x) => x.key === key);
+  const topic = findTopic(GAPS.topics, segment);
   if (!topic) notFound();
   const t = await getTranslations({ locale, namespace: "Statistics" });
   const names = new Intl.DisplayNames([locale], { type: "region" });
-  const selfUrl = `${SITE}${getPathname({ href: `/statistics/gaps/${key}`, locale })}`;
+  const selfUrl = `${SITE}${getPathname({ href: topicHref(topic.key), locale })}`;
   return (
     <GapsTopic
       topic={topic}
@@ -50,7 +51,7 @@ export default async function GapsTopicPage({ params }: { params: Params }) {
           facts={buildGapsBrief(topic, GAPS.coverage, (a2) => names.of(a2) ?? a2)}
           locale={locale}
           t={t}
-          subject={{ kind: "gaps", topic: key }}
+          subject={{ kind: "gaps", topic: topic.key }}
         />
       }
     />
