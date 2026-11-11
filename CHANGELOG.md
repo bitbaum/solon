@@ -21,6 +21,11 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **New sources load without waiting for their day.** A source added after its day of the month
+  waited for the next one, and the World Bank's figures for the countries Solon holds only as
+  places of the world have not loaded yet. The daily run now loads up to forty sources that were
+  never loaded, whatever their day, so every country's figures arrive within a week; one that fails
+  is tried again a week later.
 - **Russian place pages read correctly** where a sentence named the place after a preposition
   ("для Россия"), and the law card no longer calls every place below a country a "commune".
 
