@@ -120,6 +120,12 @@ export const countryPackSchema = z.object({
     .string()
     .regex(/^[A-Z]{2}$/)
     .optional(),
+  /**
+   * The country's own place id, for one with no ISO 3166-1 code (South Ossetia: its Wikidata item).
+   * It is how a statement about the country (a statistics gap, a law) finds its pack; a pack with a
+   * `region` is found by that.
+   */
+  nation: z.object({ scheme: registryKey, value: z.string().min(1) }).optional(),
   fiscalYear: z.object({
     startMonthDay: z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, "MM-DD"),
   }),
@@ -432,6 +438,11 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
     }
     if (pack.region !== undefined && regionNames.of(pack.region) === undefined) {
       problems.push(`pack "${pack.key}": "${pack.region}" is not an ISO 3166-1 region`);
+    }
+    if (pack.nation && !pack.identifierSchemes.includes(pack.nation.scheme)) {
+      problems.push(
+        `pack "${pack.key}": its nation is identified by "${pack.nation.scheme}", which it does not list`,
+      );
     }
     problems.push(...levelProblems(pack));
     for (const key of pack.identifierSchemes.filter((k) => !schemes.has(k))) {

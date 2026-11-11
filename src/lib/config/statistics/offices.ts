@@ -24,4 +24,23 @@ export const OFFICES = [
       },
     ],
   },
+  {
+    key: "so.state-statistics-office",
+    place: { scheme: "wikidata", value: "Q23427" },
+    name: "Управление государственной статистики Республики Южная Осетия",
+    contacts: [
+      { kind: "page", value: "https://ugosstat.ru/kontakty/" },
+      { kind: "phone", value: "+7 (850 2) 45 23 64" },
+    ],
+    evidence: [
+      {
+        // The page's own HTML carries no body text; the same text is in the site's REST content.
+        publisher:
+          "Управление государственной статистики РЮО: Контакты (the page's text, from the site's REST content)",
+        url: "https://ugosstat.ru/wp-json/wp/v2/pages/665?_fields=id,link,title,content",
+        read: "2026-11-11",
+        expect: ["+7 (850 2) 45 23 64"],
+      },
+    ],
+  },
 ] as const;

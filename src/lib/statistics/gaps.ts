@@ -39,10 +39,27 @@ const evidenceSchema = z.object({
   unchecked: z.literal(true).optional(),
 });
 
-export const placeSchema = z.object({
-  scheme: z.literal("iso_3166_1"),
-  value: z.string().regex(/^[A-Z]{2}$/),
-});
+/**
+ * A place as the place pages identify it: an ISO 3166-1 code where there is one, otherwise the
+ * place's Wikidata item (a country with no ISO code, such as South Ossetia).
+ */
+export const GAP_PLACE_SCHEMES = {
+  iso_3166_1: /^[A-Z]{2}$/,
+  wikidata: /^Q[0-9]+$/,
+} as const;
+export const placeSchema = z
+  .object({
+    scheme: z.enum(["iso_3166_1", "wikidata"]),
+    value: z.string(),
+  })
+  .refine((p) => GAP_PLACE_SCHEMES[p.scheme].test(p.value), {
+    message: "the value does not fit the place's identifier scheme",
+  });
+export type GapPlace = z.infer<typeof placeSchema>;
+
+/** One string for a place: an ISO code as it is, another scheme as `scheme:value`. */
+export const placeId = (p: GapPlace): string =>
+  p.scheme === "iso_3166_1" ? p.value : `${p.scheme}:${p.value}`;
 
 /**
  * What it would take to collect and publish a measure: a proposal is Solon's own statement of a
@@ -174,7 +191,7 @@ export function defineGaps(input: {
     if (!office) throw new Error(`${id}: the office "${key}" is not in the registry`);
     if (office.place.scheme !== place.scheme || office.place.value !== place.value) {
       throw new Error(
-        `${id}: the office "${key}" belongs to ${office.place.value}, not ${place.value}`,
+        `${id}: the office "${key}" belongs to ${placeId(office.place)}, not ${placeId(place)}`,
       );
     }
   };
@@ -184,7 +201,7 @@ export function defineGaps(input: {
   for (const c of coverage) {
     const topic = topics.find((t) => t.key === c.topic);
     if (!topic) throw new Error(`coverage names the unknown topic "${c.topic}"`);
-    const id = `${c.topic}:${c.place.value}:${c.variant}`;
+    const id = `${c.topic}:${placeId(c.place)}:${c.variant}`;
     if (seen.has(id)) throw new Error(`${id} is covered twice`);
     seen.add(id);
     if (!topic.variants.some((v) => v.key === c.variant)) {
@@ -215,10 +232,15 @@ export function gapsOf(topic: string, coverage: readonly Coverage[]): GapRow[] {
   const rows: GapRow[] = [];
   for (const variant of new Set(here.map((c) => c.variant))) {
     const of = here.filter((c) => c.variant === variant);
-    const published = of.filter((c) => c.status === "published").map((c) => c.place.value);
+    const published = of.filter((c) => c.status === "published").map((c) => placeId(c.place));
     if (published.length === 0) continue;
     for (const c of of.filter((x) => x.status !== "published")) {
-      rows.push({ variant, place: c.place.value, status: c.status, publishedElsewhere: published });
+      rows.push({
+        variant,
+        place: placeId(c.place),
+        status: c.status,
+        publishedElsewhere: published,
+      });
     }
   }
   return rows;

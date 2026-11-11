@@ -3,7 +3,8 @@ import { GAPS } from "@/lib/config/statistics/gaps";
 import { countryOf } from "@/lib/config/world/countries";
 import { buildGapsBrief } from "../gaps-brief";
 import { checkExplanation } from "../explain";
-import { defineGaps, findTopic, gapsOf, topicHref, topicSlug } from "../gaps";
+import { gapPlaceName, solonPlaceIds } from "../gap-places";
+import { defineGaps, findTopic, gapsOf, placeId, topicHref, topicSlug } from "../gaps";
 
 const topic = {
   key: "t.x",
@@ -96,7 +97,10 @@ describe("where the gaps are", () => {
 describe("the shipped registry", () => {
   it("names real countries, and every line says what it rests on", () => {
     for (const c of GAPS.coverage) {
-      expect(countryOf(c.place.value), `${c.place.value}`).toBeDefined();
+      // An ISO code is a real country; any other id must be one a country pack names.
+      const id = placeId(c.place);
+      if (c.place.scheme === "iso_3166_1") expect(countryOf(c.place.value), id).toBeDefined();
+      else expect(gapPlaceName(id, "en"), id).not.toBe(id);
       expect(c.evidence.length).toBeGreaterThan(0);
     }
   });
@@ -109,8 +113,7 @@ describe("the shipped registry", () => {
   });
 
   it("gives an AI only what was read: it cannot answer with a figure no line holds", () => {
-    const names = new Intl.DisplayNames(["en"], { type: "region" });
-    const facts = buildGapsBrief(GAPS.topics[0]!, GAPS.coverage, (a) => names.of(a) ?? a);
+    const facts = buildGapsBrief(GAPS.topics[0]!, GAPS.coverage, (id) => gapPlaceName(id, "en"));
     expect(facts.map((f) => f.params.text).join("\n")).toContain("Denmark");
     const denmark = facts.find((f) => String(f.params.text).startsWith("Denmark"))!.id;
     expect(checkExplanation(`Denmark lists 80 countries of origin [${denmark}].`, facts).ok).toBe(
@@ -215,5 +218,38 @@ describe("offices and proposals", () => {
     const dk = GAPS.offices.find((o) => o.key === "dk.statistics-denmark");
     expect(dk?.contacts.map((c) => c.kind)).toEqual(["page", "email", "phone", "postal"]);
     expect(GAPS.coverage.find((c) => c.place.value === "DK")?.office).toBe("dk.statistics-denmark");
+  });
+});
+
+describe("places a gap line can be about", () => {
+  it("takes an ISO code or a Wikidata item, and refuses a value that does not fit its scheme", () => {
+    const ok = (place: object) =>
+      defineGaps({ topics: [topic], coverage: [{ ...line("DK", "a", "published"), place }] });
+    expect(() => ok({ scheme: "wikidata", value: "Q23427" })).not.toThrow();
+    expect(() => ok({ scheme: "wikidata", value: "DK" })).toThrow();
+    expect(() => ok({ scheme: "iso_3166_1", value: "Q23427" })).toThrow();
+    expect(() => ok({ scheme: "geonames", value: "1" })).toThrow();
+  });
+
+  it("names a place through the shared model: an ISO code by CLDR, a Wikidata item by its country pack", () => {
+    expect(placeId({ scheme: "iso_3166_1", value: "DK" })).toBe("DK");
+    expect(placeId({ scheme: "wikidata", value: "Q23427" })).toBe("wikidata:Q23427");
+    expect(gapPlaceName("DK", "en")).toBe("Denmark");
+    expect(gapPlaceName("wikidata:Q23427", "en")).toBe("South Ossetia");
+    expect(gapPlaceName("wikidata:Q23427", "ru")).toBe("Южная Осетия");
+    expect(gapPlaceName("wikidata:Q1", "en")).toBe("wikidata:Q1");
+    expect(solonPlaceIds()).toContain("wikidata:Q23427");
+    expect(solonPlaceIds()).toContain("LI");
+  });
+
+  it("lists South Ossetia as a gap against the places that publish, with its office and proposal", () => {
+    const rows = gapsOf("crime.by_background", GAPS.coverage);
+    const so = rows.find((r) => r.place === "wikidata:Q23427");
+    expect(so?.variant).toBe("composite_background");
+    expect(so?.publishedElsewhere).toContain("DK");
+    const line = GAPS.coverage.find((c) => c.place.scheme === "wikidata")!;
+    expect(line.office).toBe("so.state-statistics-office");
+    expect(line.proposal?.office).toBe("so.state-statistics-office");
+    expect(line.evidence.every((e) => e.unchecked || e.expect.length > 0)).toBe(true);
   });
 });

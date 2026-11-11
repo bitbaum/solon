@@ -190,8 +190,9 @@ Each is a statement about what a page says or does not say, with the URL and dat
    "Республика Южная Осетия — Государство Алания, г. Цхинвал, ул. Героев, 16" and
    "Тел.: +7 (850 2) 45 23 64". That is the institution's own address and general telephone, no
    person; it is the channel to register as the office's contact. No e-mail is stated there. Named
-   persons and mobile numbers appear in the compendium and are not to be stored. The office entry
-   waits for the gap place reference to accept a Wikidata place (Q23427).
+   persons and mobile numbers appear in the compendium and are not to be stored. The office is registered
+   (`so.state-statistics-office`, page and telephone only; the Cyrillic address is not held, as the
+   REST text cannot be checked for it by `statistics:verify`).
 
 ## 6. Licence and what this note does not claim
 
