@@ -343,10 +343,32 @@
     "law": {
       "kicker": "The law, open",
       "title": "Every word of the law, open to everyone.",
-      "body": "Solon holds the text of every federal and cantonal act in force in Switzerland, every act of Liechtenstein, Luxembourg and Estonia, Wyoming's statutes, and a growing number of communes' rules — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or propose a change to any article.",
+      "body": "Solon holds the text of the law of Switzerland, from the Confederation and the cantons to a growing number of communes, and of more and more countries, states and the European Union — each as its publisher published it, with a hash that proves the copy. Search it in plain words, ask it a question, or propose a change to any article.",
       "next": "Every place is shaded on the globe by how much of its law Solon holds. More places are being added: the system is built once, and each new country is its data.",
       "find": "Find a law",
       "ask": "Ask the law"
+    },
+    "data": {
+      "kicker": "Laws and numbers",
+      "title": "How a place is governed. How it is doing.",
+      "body": "Beside each place's law, Solon keeps the statistics and budgets its offices publish, over the years, each with its source and what it covers. Topic by topic, it shows where one place measures what another does not, and what would have to come with a new measure.",
+      "note": "Suggesting which measures a place could start, and which policies other places used for the same trend, is planned and not built yet.",
+      "why": "Why laws and numbers",
+      "stats": "See the statistics",
+      "points": {
+        "governed": {
+          "name": "How it is governed",
+          "body": "Its law, as its publisher published it, and the official ways that law is changed."
+        },
+        "doing": {
+          "name": "How it is doing",
+          "body": "Its statistics and its budget over the years, each figure with its source and the day it was read."
+        },
+        "missing": {
+          "name": "What it does not measure",
+          "body": "Where comparable places publish a figure it does not, with what Solon has not read marked as not read."
+        }
+      }
     },
     "roots": {
       "kicker": "Where the ideas come from",

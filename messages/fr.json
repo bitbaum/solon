@@ -343,10 +343,32 @@
     "law": {
       "kicker": "Le droit, ouvert",
       "title": "Chaque mot du droit, ouvert à tous.",
-      "body": "Solon détient le texte de chaque acte fédéral et cantonal en vigueur en Suisse, de chaque acte du Liechtenstein, du Luxembourg et de l'Estonie, les lois du Wyoming et les règles d'un nombre croissant de communes — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou proposez une modification de n'importe quel article.",
+      "body": "Solon détient le texte du droit suisse, de la Confédération et des cantons jusqu'à un nombre croissant de communes, et celui de toujours plus de pays, d'États et de l'Union européenne — chacun tel que son éditeur l'a publié, avec une empreinte qui prouve la copie. Cherchez en mots simples, posez une question ou proposez une modification de n'importe quel article.",
       "next": "Sur le globe, chaque lieu est ombré selon la part de son droit que Solon détient. D'autres lieux s'ajoutent : le système est construit une fois, chaque nouveau pays n'est que ses données.",
       "find": "Trouver une loi",
       "ask": "Interroger le droit"
+    },
+    "data": {
+      "kicker": "Des lois et des chiffres",
+      "title": "Comment un lieu est gouverné. Comment il se porte.",
+      "body": "À côté du droit de chaque lieu, Solon garde les statistiques et les budgets que publient ses offices, au fil des années, chaque chiffre avec sa source et ce qu'il couvre. Sujet par sujet, il montre où un lieu mesure ce qu'un autre ne mesure pas, et ce qui devrait accompagner une nouvelle mesure.",
+      "note": "Suggérer quelles mesures un lieu pourrait commencer, et quelles politiques d'autres lieux ont choisies face à la même tendance, est prévu et pas encore construit.",
+      "why": "Pourquoi des lois et des chiffres",
+      "stats": "Voir les statistiques",
+      "points": {
+        "governed": {
+          "name": "Comment il est gouverné",
+          "body": "Son droit, tel que son éditeur l'a publié, et les voies officielles pour le changer."
+        },
+        "doing": {
+          "name": "Comment il se porte",
+          "body": "Ses statistiques et son budget au fil des années, chaque chiffre avec sa source et le jour où il a été lu."
+        },
+        "missing": {
+          "name": "Ce qu'il ne mesure pas",
+          "body": "Là où des lieux comparables publient un chiffre qu'il ne publie pas, ce que Solon n'a pas lu étant marqué comme non lu."
+        }
+      }
     },
     "roots": {
       "kicker": "D'où viennent les idées",

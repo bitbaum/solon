@@ -343,10 +343,32 @@
     "law": {
       "kicker": "Das Recht, offen",
       "title": "Jedes Wort des Rechts, offen für alle.",
-      "body": "Solon führt den Wortlaut jedes geltenden Erlasses des Bundes und der Kantone, jedes Erlasses Liechtensteins, Luxemburgs und Estlands, die Gesetze Wyomings und die Regeln von immer mehr Gemeinden — jeweils so, wie der Herausgeber sie veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder schlagen Sie zu jedem Artikel eine Änderung vor.",
+      "body": "Solon führt den Wortlaut des Schweizer Rechts, vom Bund und den Kantonen bis zu immer mehr Gemeinden, und des Rechts von immer mehr Ländern, Staaten und der Europäischen Union — jeweils so, wie der Herausgeber es veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder schlagen Sie zu jedem Artikel eine Änderung vor.",
       "next": "Auf dem Globus ist jeder Ort danach schattiert, wie viel seines Rechts Solon führt. Weitere Orte kommen dazu: Das System ist einmal gebaut, jedes neue Land sind seine Daten.",
       "find": "Einen Erlass finden",
       "ask": "Das Recht fragen"
+    },
+    "data": {
+      "kicker": "Gesetze und Zahlen",
+      "title": "Wie ein Ort regiert wird. Wie es ihm geht.",
+      "body": "Neben dem Recht jedes Orts hält Solon die Statistik und die Haushalte, die seine Ämter veröffentlichen, über die Jahre, jede Zahl mit ihrer Quelle und ihrem Geltungsbereich. Thema für Thema zeigt es, wo ein Ort misst, was ein anderer nicht misst, und was eine neue Messgrösse begleiten müsste.",
+      "note": "Vorzuschlagen, welche Messgrössen ein Ort beginnen könnte und welche Politik andere Orte bei derselben Entwicklung wählten, ist geplant und noch nicht gebaut.",
+      "why": "Warum Gesetze und Zahlen",
+      "stats": "Zur Statistik",
+      "points": {
+        "governed": {
+          "name": "Wie er regiert wird",
+          "body": "Sein Recht, wie der Herausgeber es veröffentlicht hat, und die offiziellen Wege, es zu ändern."
+        },
+        "doing": {
+          "name": "Wie es ihm geht",
+          "body": "Seine Statistik und sein Haushalt über die Jahre, jede Zahl mit ihrer Quelle und dem Tag, an dem sie gelesen wurde."
+        },
+        "missing": {
+          "name": "Was er nicht misst",
+          "body": "Wo vergleichbare Orte eine Zahl veröffentlichen, die er nicht veröffentlicht, und was Solon nicht gelesen hat, als nicht gelesen markiert."
+        }
+      }
     },
     "roots": {
       "kicker": "Woher die Ideen kommen",
