@@ -1050,6 +1050,66 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["liechtenstein"],
   },
   {
+    // Kept by hand from the Amt für Statistik's own table, so that the series the OECD
+    // and the World Bank do not carry for Liechtenstein is the office's: Staatsquote,
+    // the expenditure of general government (Land, communes and public social
+    // insurance, consolidated) in per cent of GDP, 2011–2024 (Finanzstatistik 2024,
+    // table 6.0, read 2026-11-11). The office marks GDP for 2023 and 2024 provisional.
+    // https://www.statistikportal.li/de/themen/staat-und-politik/oeffentliche-finanzen
+    key: "li-government-expenditure",
+    publisher: "Amt für Statistik, Liechtenstein",
+    dataset:
+      "Finanzstatistik 2024, Tabelle 6.0: Ausgaben des Staates in Prozent des BIP (Staatsquote)",
+    homepage:
+      "https://www.statistikportal.li/statistikportal/publications/501-oeffentliche-finanzen/2024/01/1/501.2024.01.1_02_finanzstatistik-2024-tabellen.xlsx",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Office of Statistics of Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      de: "Amt für Statistik Liechtenstein, Finanzstatistik 2024",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit; the office
+    // publishes a year's figures in the autumn after it.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "iso_3166_1", column: "country" },
+      yearColumn: "year",
+      facts: [
+        {
+          metric: "economy.government.expenditure",
+          column: "government_expenditure_percent",
+          divideBy: 100,
+        },
+      ],
+    },
+    packs: ["liechtenstein"],
+  },
+  {
+    // Kept by hand from the Amt für Statistik's own table: Fiskalquote, the tax revenue of
+    // Land and communes plus compulsory social insurance contributions (ESVG) in per cent
+    // of GDP, 1998–2024 (Steuern, Abgaben 2025, table 1.1.1, read 2026-11-11). The office
+    // calls GDP for 2023 provisional and for 2024 an estimate.
+    // https://www.statistikportal.li/de/themen/staat-und-politik/steuern-abgaben
+    key: "li-fiscal-ratio",
+    publisher: "Amt für Statistik, Liechtenstein",
+    dataset: "Steuern, Abgaben 2025, Tabelle 1.1.1: Fiskalquote",
+    homepage:
+      "https://www.statistikportal.li/statistikportal/publications/502-steuern-abgaben/2025/01/1/502.2025.01_01_steuern-abgaben-2025-tabellen.xlsx",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Office of Statistics of Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      de: "Amt für Statistik Liechtenstein, Steuern, Abgaben 2025",
+    },
+    cadence: "0 6 3 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "iso_3166_1", column: "country" },
+      yearColumn: "year",
+      facts: [{ metric: "tax.revenue.general", column: "fiscal_ratio_percent", divideBy: 100 }],
+    },
+    packs: ["liechtenstein"],
+  },
+  {
     // Confirmed 2026-10-22: the same directory as swisstopo-postcode-localities
     // (same URL and terms) lists Liechtenstein's 13 postcodes in 20 rows, each
     // with its commune's number (7001–7011) and no canton. This source reads

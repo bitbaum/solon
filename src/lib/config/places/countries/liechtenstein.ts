@@ -182,6 +182,8 @@ export const liechtenstein: CountryPackInput = {
     "li-income-tax",
     "li-communal-surcharges",
     "li-communal-tax-steps",
+    "li-government-expenditure",
+    "li-fiscal-ratio",
   ],
   instrumentKinds: ["tax_return", "tax_payment", "tax_deadline_extension"],
   taxModel: liechtensteinIncomeTax,
