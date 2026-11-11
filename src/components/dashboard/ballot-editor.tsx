@@ -1,5 +1,6 @@
 "use client";
 
+import { TextBox } from "@/components/chat/text-box";
 import type { BallotOption, MethodId } from "@/lib/domain/methods/types";
 import {
   addToRanking,
@@ -99,17 +100,14 @@ export default function BallotEditor({
         </div>
         {current === "object" && (
           <div>
-            <label className={fieldLabel} htmlFor="objection-rationale">
-              What is the objection? The group has to be able to resolve it.
-            </label>
-            <textarea
+            <TextBox
               id="objection-rationale"
+              label="What is the objection? The group has to be able to resolve it."
               rows={3}
               value={b.rationale ?? ""}
-              onChange={(e) =>
-                onChange(() => ({ method, response: "object", rationale: e.target.value }))
+              onValueChange={(rationale) =>
+                onChange(() => ({ method, response: "object", rationale }))
               }
-              className="mt-1 w-full px-3 py-2 rounded-control border border-default text-sm bg-surface-base"
             />
           </div>
         )}
