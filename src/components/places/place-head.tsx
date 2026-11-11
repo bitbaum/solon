@@ -80,7 +80,7 @@ export function PlaceLawCard({
           authority.parts.length > 0 && (
             <div key={`${authority.key}-parts`} className="border-t border-default">
               <h3 className="px-5 pt-4 text-sm font-semibold text-fg-secondary sm:px-6">
-                {t("law.communes", { count: authority.parts.length })}
+                {t("law.below", { count: authority.parts.length })}
               </h3>
               <ul className="mt-2 divide-y divide-default border-t border-default">
                 {authority.parts.map((part) => (

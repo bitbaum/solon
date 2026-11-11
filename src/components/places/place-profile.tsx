@@ -13,6 +13,11 @@ import ContestNote, { type ContestNoteProps } from "./contest-note";
 import CountryProfile from "./country-profile";
 import type { WorldProfileView } from "@/lib/places/world-profile";
 import { PlaceLawCard } from "./place-head";
+import PlaceFigures from "./place-figures";
+import { PlaceRecentChanges, PlaceRoutes, routesAlong } from "./place-change";
+import type { RecentChange } from "@/lib/law/recent";
+import type { Locale } from "@/i18n/routing";
+import type { ProfileFigureView } from "@/lib/places/profile-figures";
 import PlaceParts from "./place-parts";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
@@ -31,6 +36,11 @@ interface PlaceProfileProps {
   profile?: WorldProfileView | null;
   /** The top of the page: its photograph, name, headline facts and main action. */
   hero: React.ReactNode;
+  /** Its figures, where it has any (config: PROFILE_FIGURES). */
+  figures?: readonly ProfileFigureView[];
+  /** What changed in its law over the past year. */
+  recent?: { total: number; changes: readonly RecentChange[] } | null;
+  locale?: Locale;
   t: PlacesTranslator;
 }
 
@@ -62,6 +72,9 @@ export default function PlaceProfile({
   budget = null,
   profile = null,
   hero,
+  figures = [],
+  recent = null,
+  locale = "en",
   t,
 }: PlaceProfileProps) {
   const row = (label: string, value: React.ReactNode, key = label) => (
@@ -77,6 +90,15 @@ export default function PlaceProfile({
         {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={view.name} t={t} />
+
+        <PlaceFigures figures={figures} place={view.name} locale={locale} t={t} />
+
+        {/* Async parts are mounted only when they have something to show. */}
+        {routesAlong(law).length > 0 && <PlaceRoutes law={law} locale={locale} t={t} />}
+
+        {recent && recent.changes.length > 0 && (
+          <PlaceRecentChanges recent={recent} law={law} place={view.name} locale={locale} t={t} />
+        )}
 
         {budget && <BudgetLinkCard {...budget} />}
 

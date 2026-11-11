@@ -114,6 +114,23 @@ One page shape for every place, with or without a photograph:
   past 120.
 - **The world index** opens on the Earth and groups every place by what it
   does, the UN's members first.
+- **Below the law, three sections a reader acts on**, each shown only where
+  Solon holds it, never filled in:
+  - *Measured* (`src/lib/config/places/profile-figures.ts`): a few figures,
+    chosen in config. What the state takes and spends (OECD where the country
+    reports to it; the World Bank's government consumption, under its own
+    label, elsewhere), how it is governed (four of the World Bank's governance
+    indicators), how safe it is (homicides). Each shows the latest value and
+    year, where it stands among the countries reporting that year (left out
+    below 20 of them; the ends said as "highest" and "lowest"), its last 15
+    years as a sparkline, and its series and source. Chartkit's meter and
+    sparkline; nothing drawn by hand.
+  - *How its law is changed*: the official routes of every authority from the
+    place up (commune, canton, country), the same card an act's page shows.
+  - *What changed lately*: the acts of those authorities whose current text
+    took effect in the past twelve months by the publisher's own date (a copy
+    dated the day Solon read it says nothing about when the law changed),
+    newest first, with how many there were.
 
 ## The map
 

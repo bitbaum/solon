@@ -717,7 +717,7 @@
       "nothing": "Ancora nessun atto",
       "textsNotHeld": "I testi non sono ancora raccolti.",
       "moreRegistered": "{count, plural, one {# altro atto registrato} other {# altri atti registrati}}, testi non ancora raccolti.",
-      "communes": "Comuni ({count})"
+      "below": "Al di sotto ({count})"
     },
     "parts": {
       "title": "Luoghi di {place}",
@@ -806,7 +806,31 @@
       "source": "Dati da <wikidata>Wikidata</wikidata>, letti il {date}; appartenenza dall'<un>elenco delle Nazioni Unite</un>. Ogni tipo di luogo dice cosa fa, non se la sua rivendicazione è fondata.",
       "rule": "Gli Stati proclamati sono elencati secondo un'unica regola: Wikidata li classifica come micronazioni, non disciolte, con una voce in almeno 30 Wikipedie."
     },
-    "photoCredit": "Foto: {author} · {license}"
+    "photoCredit": "Foto: {author} · {license}",
+    "figures": {
+      "title": "Misurato",
+      "intro": "Dove si colloca {place} su dati pubblicati per quasi ogni paese. Ognuno apre la sua serie e la sua fonte.",
+      "groups": {
+        "state": "Cosa preleva e spende lo Stato",
+        "governance": "Come è governato, misurato",
+        "safety": "Sicurezza"
+      },
+      "position": "Più alto che in {percent}% di {count} altri paesi nel {year}",
+      "trend": "{label} dal {from}",
+      "source": "{publisher}, {year}",
+      "highest": "Il più alto di {count} paesi nel {year}",
+      "lowest": "Il più basso di {count} paesi nel {year}"
+    },
+    "change": {
+      "title": "Come si cambia il suo diritto",
+      "intro": "Le vie ufficiali con cui le persone a cui si applica, non solo il legislatore, possono cambiare il diritto qui, secondo le disposizioni che le stabiliscono."
+    },
+    "recent": {
+      "title": "Cosa è cambiato di recente",
+      "intro": "{count, plural, one {# atto} other {# atti}} di {place} e dei luoghi di cui fa parte sono entrati in vigore negli ultimi dodici mesi. I più recenti:",
+      "new": "Nuovo, in vigore dal {date}",
+      "amended": "Modificato, in vigore dal {date}"
+    }
   },
   "AuthError": {
     "metaTitle": "Accesso non completato",

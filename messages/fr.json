@@ -717,7 +717,7 @@
       "nothing": "Pas encore d'actes",
       "textsNotHeld": "Solon n'en tient pas encore les textes.",
       "moreRegistered": "{count, plural, one {# autre acte recensé} other {# autres actes recensés}}, textes pas encore tenus.",
-      "communes": "Communes ({count})"
+      "below": "En dessous ({count})"
     },
     "parts": {
       "title": "Lieux de {place}",
@@ -806,7 +806,31 @@
       "source": "Données de <wikidata>Wikidata</wikidata>, lues le {date} ; adhésion selon la <un>liste des Nations unies</un>. Chaque catégorie de lieu dit ce qu'il fait, non si sa revendication est fondée.",
       "rule": "Les États proclamés sont listés selon une seule règle : Wikidata les classe comme micronations, non dissoutes, avec un article dans au moins 30 Wikipédias."
     },
-    "photoCredit": "Photo : {author} · {license}"
+    "photoCredit": "Photo : {author} · {license}",
+    "figures": {
+      "title": "Mesuré",
+      "intro": "Où se situe {place} sur des chiffres publiés pour presque chaque pays. Chacun ouvre sa série et sa source.",
+      "groups": {
+        "state": "Ce que l'État prélève et dépense",
+        "governance": "Comment il est gouverné, mesuré",
+        "safety": "Sécurité"
+      },
+      "position": "Plus élevé que dans {percent} % de {count} autres pays en {year}",
+      "trend": "{label} depuis {from}",
+      "source": "{publisher}, {year}",
+      "highest": "Le plus élevé de {count} pays en {year}",
+      "lowest": "Le plus bas de {count} pays en {year}"
+    },
+    "change": {
+      "title": "Comment son droit est modifié",
+      "intro": "Les voies officielles par lesquelles les personnes auxquelles il s'applique, et pas seulement le législateur, peuvent modifier le droit ici, d'après les dispositions qui les fixent."
+    },
+    "recent": {
+      "title": "Ce qui a changé récemment",
+      "intro": "{count, plural, one {# acte} other {# actes}} de {place} et des lieux dont il relève sont entrés en vigueur au cours des douze derniers mois. Les plus récents :",
+      "new": "Nouveau, en vigueur depuis le {date}",
+      "amended": "Modifié, en vigueur depuis le {date}"
+    }
   },
   "AuthError": {
     "metaTitle": "La connexion n’a pas abouti",

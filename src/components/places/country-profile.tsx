@@ -65,10 +65,11 @@ export default function CountryProfile({
           ))}
         </dl>
       )}
-      {profile.authority && (
+      {/* The routes themselves are on the page beside it; only their absence is said here. */}
+      {profile.authority && (!profile.constitution || profile.routes === 0) && (
         <p className="mb-0 mt-4 border-t border-default pt-4 text-sm text-fg-secondary">
           {profile.constitution ? null : <>{t("profile.noConstitution")} </>}
-          {t("profile.routes", { count: profile.routes })}
+          {profile.routes === 0 && t("profile.routes", { count: 0 })}
         </p>
       )}
       <p className="mb-0 mt-4 text-xs text-fg-tertiary">
