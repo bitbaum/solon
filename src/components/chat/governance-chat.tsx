@@ -5,8 +5,10 @@ import { readEventStream } from "@bitbaum/ai-kit/sse";
 import { useLocale } from "next-intl";
 import { localConversationStore } from "@bitbaum/chatkit";
 import { ChatApp, ChatTurnError, type ChatTransport } from "@bitbaum/chatkit/react";
+import { textAttachmentsOf } from "@/lib/chat/attachments";
 import type { ChatEvent } from "@/lib/chat/events";
 import { Link, useRouter } from "@/i18n/navigation";
+import { chatComposer } from "./composer-config";
 import { useChatLabels } from "./use-chat-labels";
 
 const FAILED = "Solon could not answer. Try again.";
@@ -36,7 +38,11 @@ export function GovernanceChat({ signedIn }: { signedIn: boolean }) {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale, messages }),
+        body: JSON.stringify({
+          locale,
+          messages,
+          attachments: textAttachmentsOf(turn.attachments),
+        }),
         signal: turn.signal,
       });
       if (!response.ok) {
@@ -77,12 +83,7 @@ export function GovernanceChat({ signedIn }: { signedIn: boolean }) {
         ]}
         startersTitle="Make the next decision clearer."
         placeholder="Ask about a decision, or draft a proposal…"
-        composer={{
-          voice: { transcribeUrl: "/api/transcribe" },
-          // /api/chat reads words, not files.
-          attach: false,
-          labels: labels.composer,
-        }}
+        composer={chatComposer(labels)}
         thread={{
           labels: labels.thread,
           share: { title: "Ask Solon" },
