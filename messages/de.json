@@ -886,7 +886,7 @@
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
       "rowNotStated": "{inForce} in Kraft · {notInForce} nicht · {notStated} Status vom Herausgeber nicht angegeben",
-      "totalsNotStated": "{notStated, plural, one {# weiterer Erlass wird} other {# weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
+      "totalsNotStated": "{notStated} {count, plural, one {weiterer Erlass wird} other {weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
       "note": "Gemeinden kommen Sammlung für Sammlung dazu; die bisher geführten stehen in der Liste oben.",
       "readLink": "Einen Erlass finden und lesen →"
     },

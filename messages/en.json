@@ -1467,7 +1467,7 @@
       "authorities": "Authorities",
       "row": "{inForce} in force · {notInForce} not",
       "rowNotStated": "{inForce} in force · {notInForce} not · {notStated} status not stated by the publisher",
-      "totalsNotStated": "{notStated, plural, one {# more act is} other {# more acts are}} listed by publishers that do not say whether they are in force.",
+      "totalsNotStated": "{notStated} {count, plural, one {more act is} other {more acts are}} listed by publishers that do not say whether they are in force.",
       "note": "Communes are added one collection at a time; those held so far are in the list above.",
       "readLink": "Find and read an act →"
     },
