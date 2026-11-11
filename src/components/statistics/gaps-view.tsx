@@ -3,16 +3,11 @@ import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
 import { localized } from "@/lib/places/place-view";
-import { gapsOf, topicHref, type Coverage, type Topic } from "@/lib/statistics/gaps";
+import { gapPlaceName } from "@/lib/statistics/gap-places";
+import { gapsOf, placeId, topicHref, type Coverage, type Topic } from "@/lib/statistics/gaps";
 import type { StatisticsTranslator } from "./shared";
 
-const name = (a2: string, locale: string) => {
-  try {
-    return new Intl.DisplayNames([locale], { type: "region" }).of(a2) ?? a2;
-  } catch {
-    return a2;
-  }
-};
+const name = gapPlaceName;
 
 /** /statistics/gaps: the topics where what is measured differs between places. */
 export function GapsIndex({
@@ -83,11 +78,11 @@ export function GapsTopic({
   t: StatisticsTranslator;
 }) {
   const here = coverage.filter((c) => c.topic === topic.key);
-  const places = [...new Set([...here.map((c) => c.place.value), ...solonPlaces])].sort((a, b) =>
+  const places = [...new Set([...here.map((c) => placeId(c.place)), ...solonPlaces])].sort((a, b) =>
     name(a, locale).localeCompare(name(b, locale), locale),
   );
   const cell = (place: string, variant: string) =>
-    here.find((c) => c.place.value === place && c.variant === variant);
+    here.find((c) => placeId(c.place) === place && c.variant === variant);
   const gaps = gapsOf(topic.key, coverage);
   const card = "space-y-3 rounded-surface border border-default bg-surface-base p-5";
   return (
@@ -170,9 +165,9 @@ export function GapsTopic({
           <h2 className="text-xl font-semibold text-fg-primary">{t("gaps.detailsTitle")}</h2>
           <ul className="space-y-4">
             {here.map((c) => (
-              <li key={`${c.place.value}-${c.variant}`} className={card}>
+              <li key={`${placeId(c.place)}-${c.variant}`} className={card}>
                 <h3 className="font-medium text-fg-primary">
-                  {name(c.place.value, locale)} ·{" "}
+                  {name(placeId(c.place), locale)} ·{" "}
                   {localized(topic.variants.find((v) => v.key === c.variant)!.label, locale)}
                 </h3>
                 <p className="mb-0 text-sm text-fg-secondary">{c.publisher}</p>

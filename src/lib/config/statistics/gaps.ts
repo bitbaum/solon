@@ -342,6 +342,46 @@ export const GAPS = defineGaps({
         ),
       ],
     },
+    {
+      topic: "crime.by_background",
+      place: { scheme: "wikidata", value: "Q23427" },
+      variant: "composite_background",
+      status: "not_collected",
+      office: "so.state-statistics-office",
+      crossings: ["age", "sex"],
+      publisher:
+        "Управление государственной статистики Республики Южная Осетия (State Statistics Office of the Republic of South Ossetia)",
+      summary: {
+        en: "The 2025 statistical compendium reports registered crimes taken on record by the Ministry of Internal Affairs, and a table of offenders by sex, age at the offence and occupation. It has no breakdown by citizenship, country of birth or origin.",
+      },
+      unread: [
+        "Whether the Ministry of Internal Affairs records an offender's citizenship or birthplace and does not publish it",
+        "The compendia of earlier years and the quarterly compendia (read: the 2025 annual compendium only)",
+        "Whether other publications of the Office or the Ministry carry such a table",
+      ],
+      evidence: [
+        ev(
+          "Управление государственной статистики РЮО: Статистический сборник за 2025 год (PDF; a program cannot read its words)",
+          "https://ugosstat.ru/wp-content/uploads/2026/06/spravochnik-za-2025-g.pdf",
+          [],
+          true,
+        ),
+      ],
+      proposal: {
+        collect: {
+          en: "Publish the offenders table also by citizenship and country of birth, taken from records the Ministry of Internal Affairs already keeps where it keeps them, as tables with small cells suppressed (the territory's population is under 60,000, so cells are small).",
+        },
+        accompany: [
+          {
+            en: "The definition of each group, and that the figures are registered offences, not who offends.",
+          },
+          { en: "Age and sex always, with the occupation breakdown the Office already publishes." },
+        ],
+        office: "so.state-statistics-office",
+        author:
+          "Solon's configuration (2026-11-11). A possibility stated for discussion; not a recommendation to the Office and not a finding about it.",
+      },
+    },
   ],
   offices: OFFICES,
 });

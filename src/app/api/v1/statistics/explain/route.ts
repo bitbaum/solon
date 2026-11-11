@@ -12,6 +12,7 @@ import { loadDimensionPage } from "@/lib/statistics/dimension-page";
 import { explain } from "@/lib/statistics/explain-run";
 import { loadMetricPage } from "@/lib/statistics/metric-page";
 import { GAPS } from "@/lib/config/statistics/gaps";
+import { gapPlaceName } from "@/lib/statistics/gap-places";
 import { buildGapsBrief } from "@/lib/statistics/gaps-brief";
 import { METHODOLOGIES } from "@/lib/config/statistics/methodologies";
 import { buildMethodBrief } from "@/lib/statistics/method-brief";
@@ -99,8 +100,7 @@ async function factsFor(subject: Subject) {
   if (subject.kind === "gaps") {
     const topic = GAPS.topics.find((t) => t.key === subject.topic);
     if (!topic) return null;
-    const names = new Intl.DisplayNames(["en"], { type: "region" });
-    return buildGapsBrief(topic, GAPS.coverage, (a2) => names.of(a2) ?? a2);
+    return buildGapsBrief(topic, GAPS.coverage, (id) => gapPlaceName(id, "en"));
   }
   if (subject.kind === "method") {
     const m = METHODOLOGIES.find((x) => x.key === subject.method);
