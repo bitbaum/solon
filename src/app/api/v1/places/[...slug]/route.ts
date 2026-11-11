@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { toLocale } from "@/i18n/routing";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
+import { movedTo } from "@/lib/places/paths";
 import { loadPlacePage } from "@/lib/places/place-page";
 
 export const dynamic = "force-dynamic";
@@ -30,9 +31,8 @@ export async function GET(request: Request, ctx: { params: Promise<{ slug: strin
     return NextResponse.json({ error: `no place at ${slugPath}` }, { status: 404 });
   }
   if (view.canonicalPath !== slugPath) {
-    const to = new URL(request.url);
-    to.pathname = `/api/v1/places/${view.canonicalPath}`;
-    return NextResponse.redirect(to, 308);
+    const search = new URL(request.url).search;
+    return movedTo(`/api/v1/places/${view.canonicalPath}${search}`);
   }
   const { id: _, canonicalPath: __, ...place } = view;
   return NextResponse.json({ on, ...place, path: `/places/${view.slugPath}` });

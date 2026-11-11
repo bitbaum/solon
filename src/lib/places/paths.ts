@@ -81,3 +81,10 @@ export async function findPlace(
   }
   return { id: place.id, countryPack: place.countryPack, canonicalPath: resolved.canonical };
 }
+
+/**
+ * A 308 to a path on this site. Relative, so it holds behind a proxy, where
+ * `request.url` names the server's own address and not the one the reader used.
+ */
+export const movedTo = (location: string) =>
+  new Response(null, { status: 308, headers: { Location: location } });
