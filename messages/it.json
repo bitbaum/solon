@@ -1074,6 +1074,19 @@
     "confirmRecording": "Fatto — usa quello che ho detto",
     "listening": "Ti ascolto…",
     "transcribing": "Trascrizione in corso…",
+    "attach": "Allega un file di testo",
+    "attachRemove": "Rimuovi {name}",
+    "attachMenu": {
+      "title": "Aggiungi al messaggio",
+      "close": "Chiudi",
+      "files": "File di testo"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: allega un file di testo (txt, md, csv o json). Immagini e PDF qui non vengono letti.",
+      "textTooLarge": "{name} è troppo lungo (al massimo {k}k caratteri).",
+      "unreadable": "Impossibile leggere {name}.",
+      "tooMany": "Fino a {max} file."
+    },
     "queue": "Metti in coda un messaggio…",
     "dismiss": "Nascondi",
     "retryTake": "Riprova",
