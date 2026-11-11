@@ -60,6 +60,18 @@ export default function CountryProfile({
                 ) : (
                   f.value
                 )}
+                {f.source && (
+                  <>
+                    {" "}
+                    <a
+                      href={f.source.url}
+                      className="text-xs text-fg-tertiary underline"
+                      rel="noopener noreferrer"
+                    >
+                      ({f.source.title})
+                    </a>
+                  </>
+                )}
               </dd>
             </div>
           ))}
