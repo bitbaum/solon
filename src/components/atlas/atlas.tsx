@@ -44,6 +44,7 @@ import {
   type FocusInputs,
 } from "./focus-tree";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
+import { packHref, placeHref } from "@/lib/places/place-href";
 import { COUNTRIES } from "@/lib/config/world/countries";
 import {
   BEYOND_UN,
@@ -154,10 +155,20 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   /** The page of a country Solon holds, by its law place: its pack's path, else its world slug. */
   const pageOf = useCallback((place: GlobePlace | null) => {
     if (!place) return null;
-    if (place.pack) return `/places/${place.pack}`;
+    if (place.pack) return packHref(place.pack);
     const region = place.region ? worldRegionByCode(place.region) : undefined;
-    return region ? `/places/${region.slug}` : null;
+    return region ? placeHref(region.slug) : null;
   }, []);
+  // A world region's page: its pack's root when Solon holds the country's places (the globe says), else its world slug.
+  const regionHref = useCallback(
+    (region: WorldRegion) => {
+      const held = region.code
+        ? places.find((p) => p.region === region.code && p.pack)?.pack
+        : undefined;
+      return held ? packHref(held) : placeHref(region.slug);
+    },
+    [places],
+  );
 
   // The world's outlines.
   const stateIds = useMemo(
@@ -515,7 +526,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     }
     // A country Solon holds nothing for yet: its own page says so, and can be shared.
     const region = regionByFeature.get(countryFeature);
-    if (region) router.push(`/places/${region.slug}`);
+    if (region) router.push(regionHref(region));
     // Outside every list, it is still named and outlined, so a tap always answers.
     else setSelected(id);
   };
@@ -732,13 +743,13 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     ? {
         name: selectedPlace.name,
         parentName: selectedPlace.parentName,
-        href: `/places/${selectedPlace.slugPath}`,
+        href: placeHref(selectedPlace.canonicalPath),
       }
     : selectedDot
       ? {
           name: regionName(selectedDot, locale),
           parentName: null,
-          href: `/places/${selectedDot.slug}`,
+          href: regionHref(selectedDot),
         }
       : null;
   const pageLink = country && countryPage && (
@@ -872,7 +883,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                   .map((place) => (
                     <li key={place.slugPath}>
                       <Link
-                        href={`/places/${place.slugPath}`}
+                        href={placeHref(place.canonicalPath)}
                         className="flex min-h-11 items-center px-5 py-3 text-fg-primary hover:bg-surface-raised"
                       >
                         {place.name}
@@ -941,7 +952,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
               {list.map((r) => (
                 <li key={r.slug}>
                   <Link
-                    href={`/places/${r.slug}`}
+                    href={regionHref(r)}
                     className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
                   >
                     <span>{regionName(r, locale)}</span>

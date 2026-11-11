@@ -3,6 +3,7 @@ import { placePhoto } from "@/lib/places/place-photo";
 import type { PlaceView } from "@/lib/places/place-view";
 import PlaceTile from "./place-tile";
 import type { PlacesTranslator } from "./translator";
+import { placeHref } from "@/lib/places/place-href";
 
 /** Past this many, a level's places are a list: a wall of two thousand communes is no way in. */
 const MAX_TILES = 120;
@@ -26,7 +27,7 @@ export default function PlaceParts({ view, t }: { view: PlaceView; t: PlacesTran
         const tiles =
           places.length <= MAX_TILES &&
           places.filter((p) => p.photo).length * 2 >= places.length &&
-          places.every((p) => p.slugPath);
+          places.every((p) => p.canonicalPath);
         return (
           <div key={group.levelName} className="space-y-3">
             <h3 className="text-sm font-semibold text-fg-secondary">
@@ -37,7 +38,7 @@ export default function PlaceParts({ view, t }: { view: PlaceView; t: PlacesTran
                 {places.map((place, i) => (
                   <li key={`${place.slugPath}-${i}`} className="min-w-0">
                     <PlaceTile
-                      href={`/places/${place.slugPath}`}
+                      href={placeHref(place.canonicalPath!)}
                       photo={place.photo}
                       name={place.name}
                     />
@@ -48,9 +49,9 @@ export default function PlaceParts({ view, t }: { view: PlaceView; t: PlacesTran
               <ul className="grid overflow-hidden rounded-surface border border-default bg-surface-base sm:grid-cols-2">
                 {places.map((place, i) => (
                   <li key={`${place.slugPath}-${i}`} className="-mb-px border-b border-default">
-                    {place.slugPath ? (
+                    {place.canonicalPath ? (
                       <Link
-                        href={`/places/${place.slugPath}`}
+                        href={placeHref(place.canonicalPath!)}
                         className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
                       >
                         <span>{place.name}</span>

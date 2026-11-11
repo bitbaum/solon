@@ -22,11 +22,14 @@ import type { Database } from "@/lib/db/client";
 import { jurisdictionNames, jurisdictionRelations, jurisdictions } from "@/lib/db/places-schema";
 import type { ChainName } from "./chain";
 import { foldName, foldedSql } from "./fold";
+import { canonicalPathSql } from "./paths";
 import { displayName, localized } from "./place-view";
 import { resolvePostcode, type PostcodeLocality } from "./postcodes";
 
 export interface PlaceHit {
   slugPath: string;
+  /** The path its page has; what its link is built from. */
+  canonicalPath: string;
   name: string;
   levelName: string;
   packName: string;
@@ -144,6 +147,7 @@ async function placeHits(
       countryPack: jurisdictions.countryPack,
       levelKey: jurisdictions.levelKey,
       slugPath: jurisdictions.slugPath,
+      canonicalPath: canonicalPathSql,
     })
     .from(jurisdictions)
     .where(and(inArray(jurisdictions.id, [...ids]), eq(jurisdictions.origin, "state")));
@@ -182,13 +186,14 @@ async function placeHits(
 
   for (const place of places) {
     const pack = config.packs.find((p) => p.key === place.countryPack);
-    if (!pack || !place.slugPath) {
+    if (!pack || !place.slugPath || !place.canonicalPath) {
       continue;
     }
     const level = pack.levels.find((l) => l.key === place.levelKey);
     const parentId = parentOf.get(place.id);
     hits.set(place.id, {
       slugPath: place.slugPath,
+      canonicalPath: place.canonicalPath,
       name: displayName(namesOf(place.id), locale, pack.defaultLocales),
       levelName: level ? localized(level.names, locale) : (place.levelKey ?? ""),
       packName: localized(pack.names, locale),

@@ -4,7 +4,7 @@
  * once had names it still, so `isCanonical` is false and the caller answers
  * with a 308 to `canonical`.
  */
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import type { Database } from "@/lib/db/client";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import { jurisdictions, placePaths } from "@/lib/db/places-schema";
@@ -50,6 +50,16 @@ export async function resolvePlacePath(db: Database, path: string): Promise<Reso
     );
   return canonical ? { target, canonical: canonical.path, isCanonical: false } : null;
 }
+
+/**
+ * The canonical path of the place a query selects from `jurisdictions`, as a
+ * column: what every link to a place is built from (`placeHref`), so that
+ * following it never answers 308. Null for a place with no path.
+ */
+export const canonicalPathSql = sql<string | null>`(
+  SELECT ${placePaths.path} FROM ${placePaths}
+  WHERE ${placePaths.jurisdictionId} = ${jurisdictions.id} AND ${placePaths.canonical}
+)`;
 
 /** What a loader adds to its view: the one path the page has, whichever path asked. */
 export interface Located {

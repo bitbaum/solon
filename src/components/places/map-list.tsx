@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { formatMoney, type ColumnEstimate } from "@/lib/places/compare-view";
 import type { MapPlace } from "@/lib/places/map-view";
+import { placeHref } from "@/lib/places/place-href";
 
 export interface MapRow {
   place: MapPlace;
@@ -69,7 +70,7 @@ export default function MapList({
           <li key={place.feature} className="flex items-center gap-4 px-5 py-3">
             <div className="min-w-0 flex-1">
               <Link
-                href={`/places/${place.slugPath}`}
+                href={placeHref(place.canonicalPath)}
                 className="font-medium text-fg-primary hover:underline"
               >
                 {place.name}

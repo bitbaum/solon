@@ -37,6 +37,7 @@ const place = (
   countryPack: "testland",
   levelKey,
   slugPath,
+  canonicalPath: slugPath,
   depth,
   names: [{ locale: "en", script: null, name, nameType: "self" }],
 });

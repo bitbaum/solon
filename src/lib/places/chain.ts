@@ -7,7 +7,7 @@
  * the municipality). One recursive query; every relation and fact is taken as
  * it stood on `on`, as currently recorded.
  */
-import { and, eq, inArray, isNull, lte, or, gt, sql } from "drizzle-orm";
+import { and, eq, getTableColumns, inArray, isNull, lte, or, gt, sql } from "drizzle-orm";
 import type { Database, Tx } from "@/lib/db/client";
 import {
   facts,
@@ -17,6 +17,7 @@ import {
   jurisdictions,
 } from "@/lib/db/places-schema";
 import type { Fact as EvaluatorFact, Tariff } from "@/lib/tax-model";
+import { canonicalPathSql } from "./paths";
 import type { NameType } from "./vocabulary";
 
 export interface ChainName {
@@ -31,6 +32,8 @@ export interface ChainPlace {
   countryPack: string | null;
   levelKey: string | null;
   slugPath: string | null;
+  /** The path its page has: what a link to it is built from. */
+  canonicalPath: string | null;
   /** 0 for the place itself, then 1, 2, … up the hierarchy; null for overlapping places. */
   depth: number | null;
   names: ChainName[];
@@ -98,7 +101,10 @@ export async function loadChain(
     );
   const ids = [...new Set([...depthOf.keys(), ...overlapping.map((r) => r.id)])];
 
-  const places = await db.select().from(jurisdictions).where(inArray(jurisdictions.id, ids));
+  const places = await db
+    .select({ ...getTableColumns(jurisdictions), canonicalPath: canonicalPathSql })
+    .from(jurisdictions)
+    .where(inArray(jurisdictions.id, ids));
   const names = await db
     .select({
       jurisdictionId: jurisdictionNames.jurisdictionId,
@@ -123,6 +129,7 @@ export async function loadChain(
       countryPack: place.countryPack,
       levelKey: place.levelKey,
       slugPath: place.slugPath,
+      canonicalPath: place.canonicalPath,
       depth: depthOf.get(place.id) ?? null,
       names: names
         .filter((n) => n.jurisdictionId === place.id)
@@ -186,6 +193,7 @@ export async function loadRefinements(
       countryPack: jurisdictions.countryPack,
       levelKey: jurisdictions.levelKey,
       slugPath: jurisdictions.slugPath,
+      canonicalPath: canonicalPathSql,
     })
     .from(jurisdictionRelations)
     .innerJoin(jurisdictions, eq(jurisdictions.id, jurisdictionRelations.fromId))
