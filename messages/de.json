@@ -855,7 +855,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Abdeckung des Rechts",
-      "metaDescription": "Welche Erlasse der Schweiz, Liechtensteins und Luxemburgs Solon führt, je Behörde, aus den Daten gezählt.",
+      "metaDescription": "Welche Erlasse Solon führt, je Behörde, aus den Daten gezählt.",
       "kicker": "Recht",
       "title": "Was Solon führt",
       "intro": "Aus den Daten gezählt, am {date} beim Herausgeber gelesen: die Erlasse jeder Behörde und für wie viele Solon den Wortlaut führt.",
@@ -870,7 +870,7 @@
     },
     "index": {
       "metaTitle": "Erlass finden",
-      "metaDescription": "Einen Erlass der Schweiz oder Liechtensteins nach Titel oder Nummer finden und im Wortlaut des Herausgebers lesen.",
+      "metaDescription": "Einen Erlass nach Titel oder Nummer finden, an jedem Ort, dessen Recht Solon führt, und im Wortlaut des Herausgebers lesen.",
       "kicker": "Recht",
       "title": "Erlass finden",
       "intro": "Suchen Sie in allen Gesetzen, die Solon führt: Bund, Kantone und Gemeinden. Schreiben Sie in einfachen Worten, was Sie suchen, oder beginnen Sie bei Ihrem Wohnort.",
@@ -1710,7 +1710,7 @@
       "metaDescription": "Stellen Sie eine Frage zu Regierungsführung, Freiheit oder Statistik: Eine KI liest Solons Reihen, Dimensionen, Methodenbeschreibungen und das Recht und schreibt einen Bericht, dessen Zahlen und Verweise gegen das Gelesene geprüft sind.",
       "kicker": "Recherche",
       "title": "Recherche mit KI",
-      "intro": "Stellen Sie eine Frage zu Regierungsführung, Freiheit, Statistik oder Recht. Eine KI liest, was Solon führt (Reihen mit Definitionen und Qualitätshinweisen, Dimensionen, die Recht, Praxis und Ergebnis trennen, wie veröffentlichte Ranglisten entstehen, das Recht selbst) und schreibt einen kurzen Bericht. Jede Zahl und jeder Verweis darin wird gegen die gelesenen Quellen geprüft, bevor Sie ihn sehen; die Argumentation nicht, lesen Sie also die Quellen.",
+      "intro": "Stellen Sie eine Frage zu Regierungsführung, Freiheit, Statistik oder Recht. Eine KI liest, was Solon führt (Reihen mit Definitionen und Qualitätshinweisen, Dimensionen, die Recht, Praxis und Ergebnis trennen, wie veröffentlichte Ranglisten entstehen, das Recht selbst) und schreibt einen kurzen Bericht. Jede Zahl und jeder Verweis darin wird gegen die gelesenen Quellen geprüft, bevor Sie ihn sehen; die Argumentation nicht, lesen Sie also die Quellen. Sie kennt nur, was Solon führt: Wo Solon für einen Ort keine Zahlen hat, hat auch sie keine.",
       "questionLabel": "Ihre Frage",
       "placeholder": "Zum Beispiel: Wie verhält sich Estlands Steuerlast zu der der Schweiz, und was sagt das Recht zum Spitzensatz?",
       "ask": "Recherchieren",
@@ -1750,6 +1750,8 @@
       "intro": "Statistische Ämter entscheiden, was sie erheben und veröffentlichen, aus rechtlichen, historischen, praktischen oder politischen Gründen; dieselbe Frage kann deshalb in einem Land beantwortbar sein und in einem anderen nicht. Hier ist jedes Thema gleich dargestellt: was laut einer gelesenen Quelle erhoben wird, wonach aufgeschlüsselt, unter welchem Recht, wo die Antwort fehlt und was ein neues Mass begleiten müsste, damit es nicht missverstanden wird. Solon beschreibt und schlägt vor; es bewertet keine Ämter und charakterisiert keine Menschen.",
       "open": "Öffnen",
       "back": "Alle Themen",
+      "soFar": "{count, plural, one {Bisher # Thema.} other {Bisher # Themen.}} Als Nächstes geplant: die Steuerlücke, die Durchsetzung des Verbots von Drogenbesitz und die Aufklärungsquoten nach Delikt.",
+      "why": "Warum Solon markiert, was nicht gemessen wird",
       "stance": "Solon nennt, was die Seiten des jeweiligen Amtes sagen und was nicht gelesen wurde. Eine Lücke kann ein Gesetz sein, das ein Land gewählt hat; ein Unterschied in einer Tabelle ist keine Erklärung. Nichts hier beschreibt ein Amt oder eine Gruppe von Menschen.",
       "purposesTitle": "Wozu die Antwort dient",
       "matrixTitle": "Was jeder Ort veröffentlicht",

@@ -101,6 +101,9 @@ export default function StatisticsIndex({
             <h2 className="text-2xl font-semibold text-fg-primary">{t("index.dimensionsTitle")}</h2>
             <p className="max-w-3xl text-fg-secondary">{t("index.dimensionsIntro")}</p>
             <p className="mb-0 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+              <Link href="/statistics/why" className="text-fg-primary underline">
+                {t("why.title")}
+              </Link>
               <Link href="/statistics/methods" className="text-fg-primary underline">
                 {t("methods.title")}
               </Link>
