@@ -37,6 +37,12 @@ is a cat whose face is one of Duchamp's discs, Loki is the disc itself, Solon
 is an owl with two of them. Two eyes because Solon looks at a question from
 both sides: the law as written and what happened, one place against another.
 
+Solon is monochrome, like the rest of the fleet's marks: near-black on the
+light theme, near-white on the dark one. The site sets `data-brand="solon"` on
+`<html>` and the design-tokens package supplies the accent; nothing here holds
+a colour of its own, so changing it is a change in the package and a version
+bump. `export/solon-mark-accent.svg` is the mark in the package's icon ink.
+
 ## Where to take it from
 
 | Need                              | File                                         |

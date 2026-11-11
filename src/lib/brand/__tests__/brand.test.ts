@@ -20,6 +20,16 @@ describe("Solon's mark has one source", () => {
     expect(SOLON_MARK.d).toBe(markFor("solon")!.shapes[0]!.d);
   });
 
+  it("is drawn in the pack's ink, not OrangeCat's orange", () => {
+    expect(read("src/app/icon.svg")).not.toMatch(/ff5c00/i);
+    expect(read("brand/export/solon-mark-accent.svg")).not.toMatch(/ff5c00/i);
+    expect(read("src/app/[locale]/opengraph-image.tsx")).not.toMatch(/ff5c00/i);
+  });
+
+  it("sets the brand theme, so the accent and its label are Solon's", () => {
+    expect(read("src/app/[locale]/layout.tsx")).toContain('data-brand="solon"');
+  });
+
   it("the favicon and the app icon are the mark on its tile", () => {
     expect(read("src/app/icon.svg")).toBe(iconSvg());
     expect(read("public/app-icons/icon.svg")).toBe(iconSvg());

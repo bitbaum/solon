@@ -69,6 +69,7 @@
       "lawCoverage": "What Solon holds",
       "lawAmendments": "Proposed changes",
       "statistics": "Statistics",
+      "statisticsWhy": "Why laws and numbers",
       "statisticsEvents": "Law events",
       "statisticsMethods": "How rankings are made",
       "statisticsGaps": "What is measured, and where not",
@@ -121,6 +122,7 @@
       "lawCoverage": "Which laws Solon holds, counted from the data",
       "lawAmendments": "Changes anyone has proposed to the law, with a redline and their support",
       "statistics": "The law beside the numbers: series over time, each linked to its source and its law",
+      "statisticsWhy": "Why Solon keeps each place's law beside its statistics, and what of it is live",
       "statisticsEvents": "What happened to the law of a place: what changed, how, who stood where",
       "statisticsMethods": "Who makes each index, how, and what to ask of it.",
       "statisticsGaps": "What each office collects, and where the same question has no answer.",
@@ -504,7 +506,8 @@
   "Status": {
     "available": "Available now",
     "inDevelopment": "In development",
-    "planned": "Planned"
+    "planned": "Planned",
+    "researched": "Researched, not yet loaded"
   },
   "Capabilities": {
     "founding": {
@@ -2369,6 +2372,109 @@
       "propose": "Propose a position",
       "proposeTitle": "Position on what is measured: {topic}",
       "proposeBody": "We ask our statistical office to consider the measure described at {url}, with the companions and safeguards listed there."
+    },
+    "why": {
+      "metaTitle": "Why laws and numbers, for each place",
+      "metaDescription": "Why Solon keeps each place's law beside its statistics, marks what is not measured and shows every source, so people can decide together.",
+      "kicker": "Statistics",
+      "title": "Laws and numbers, for each place",
+      "intro": "A place's law says how it is governed. Its statistics say how it is doing. Solon keeps both side by side for each place it can read and marks what a place does not measure. It is working towards showing which measures and which policies other places used for the same problem, so that people can decide together what to change.",
+      "why": {
+        "title": "Why both",
+        "body": "The law alone shows intentions; numbers alone show results with no cause beside them. Together, a change in the law can be set beside what followed, and one place's choices beside another's. Each is kept as its publisher published it, with the source one click away."
+      },
+      "gaps": {
+        "title": "What is measured, and what is not",
+        "body": "Statistical offices choose what to collect, for legal, historical, practical or political reasons, so a question one country can answer from its own figures another cannot. Solon lays out who publishes what, crossed with what and under what law, and what would have to come with a new measure so that it is not misread. It does not rate offices or describe groups of people.",
+        "sources": "For example, <denmark>Statistics Denmark</denmark> publishes how many people were found guilty of crimes, by country of origin, sex and age, with figures from 2000 to 2025; France's <france>Constitutional Council</france> has decided that studies may not rest on ethnic origin or race."
+      },
+      "trends": {
+        "title": "Trends, and what other places did",
+        "body": "A series shows how a figure moved over the years. A change to the law is recorded as an event: what changed, how it came about, who voted how, and what was claimed about it, kept apart from what happened. Setting the two side by side, across places, is what lets a group see what others tried."
+      },
+      "items": {
+        "lawByPlace": {
+          "name": "The law of each place",
+          "body": "Acts as their publishers publish them, with the day they were read and a hash that proves the copy, for the places Solon has read so far."
+        },
+        "statisticsSeries": {
+          "name": "Statistics over time",
+          "body": "Series from the World Bank, the OECD and Eurostat, each with its definition, what it covers and the day it was read."
+        },
+        "publicBudgets": {
+          "name": "Public budgets",
+          "body": "What governments raise and what they spend it on, from budget laws and statistics offices, on one international classification so that places can be compared."
+        },
+        "measurementGaps": {
+          "name": "What is measured, and where it is not",
+          "body": "Topic by topic: which offices publish a measure, crossed with what and under what law, and what would have to come with a new one. One topic so far: crime by a person's background."
+        },
+        "placeGapReport": {
+          "name": "A place's missing measures, and how to start",
+          "body": "For one place: what it does not measure, the comparable places that do, the office responsible, and a proposal people can take up to ask for it."
+        },
+        "lawEvents": {
+          "name": "Changes to the law, and how they came about",
+          "body": "What changed, the steps and the votes, and what was claimed about it, kept apart from what happened."
+        },
+        "trendMarkers": {
+          "name": "Changes to the law on the line",
+          "body": "Each change to the law drawn on the series it is about, at the year it applied."
+        },
+        "policyByTrend": {
+          "name": "What other places did about a trend",
+          "body": "Beside a series, the changes to the law that other places made when their figures moved the same way, and what followed, without saying which was right."
+        },
+        "aiResearch": {
+          "name": "Research with AI",
+          "body": "Ask a question: an AI reads what Solon holds and writes a report whose every figure and citation is checked against what it read. It knows only what Solon holds."
+        },
+        "groupMeasures": {
+          "name": "A group's own measures, by vote",
+          "body": "A group chooses which measures count and how much, as a policy its members vote on."
+        }
+      },
+      "example": {
+        "kicker": "Worked example",
+        "title": "South Ossetia",
+        "status": "South Ossetia governs itself and is not a member of the United Nations. Georgia regards it as part of its territory. Solon records both and does not say which is right.",
+        "why": "Few publishers outside it cover it, so most of what can be known comes from its own authorities, and Solon records it as their account. It shows what Solon does where the record is thin: keep what is published, say whose it is, and mark what is missing.",
+        "sources": "Georgia's <geostat>statistics office</geostat> states that, from 1994, its figures do not cover the territory, which it calls the Tskhinvali region. South Ossetia's own <ugosstat>statistics office</ugosstat> publishes a compendium every year and every quarter; the 2025 edition was posted on 24 June 2026.",
+        "items": {
+          "law": {
+            "name": "Its law",
+            "body": "The acts its Parliament and its President publish, each with the publisher's own date. The publisher does not state whether an act is still in force, and Solon says so."
+          },
+          "budget": {
+            "name": "Its state budget",
+            "body": "The 2023 budget as the law on its execution states it, placed on the international classification so that it can be compared: about four-fifths of the revenue came from the Russian Federation."
+          },
+          "statistics": {
+            "name": "Its statistics office's figures",
+            "body": "Population, registered crime, GDP and the state budget, read from the 2025 compendium with the office's own caveats: the population is an estimate carried forward from its own 2015 census, and GDP an approximation, because the office says it lacks the data to calculate it fully."
+          },
+          "gaps": {
+            "name": "What it does not measure",
+            "body": "In the 2025 compendium, people found to have committed offences are counted by sex, age and occupation, not by citizenship, birthplace or origin, the breakdown Denmark publishes. Georgia's statistics office publishes no count of the population, and no other count from outside the territory was found."
+          },
+          "next": {
+            "name": "What would come next",
+            "body": "A page for South Ossetia listing these gaps, the comparable places that measure them, the office responsible, and what would have to come with a new measure (age and sex always, small counts left out), as a proposal people there can take up."
+          }
+        },
+        "note": "Researched, not yet loaded: the figures and gaps above were read from the publisher and written down, with every address and day, in Solon's <note>research note</note>. They are not on Solon's pages yet."
+      },
+      "honest": {
+        "title": "How Solon keeps itself honest",
+        "body": "Figures are kept as published, with the day they were read; a revision is added, never written over. “Not read” means Solon has not looked, not that nothing exists. Rankings made by others are described, not used as verdicts. An AI may explain a page, but only from the facts listed on it, and its answer is checked against them before you see it.",
+        "link": "How the rankings are made"
+      },
+      "decide": {
+        "title": "So that people can decide together",
+        "body": "None of this tells anyone what to do. On Solon a group can choose its own measures and weights by vote, ask a statistics office for a measure by proposal, and propose a change to a law beside the numbers that prompted it.",
+        "cta": "Propose something",
+        "secondary": "Open the statistics"
+      }
     }
   },
   "Find": {
