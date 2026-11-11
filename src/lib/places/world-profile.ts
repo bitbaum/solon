@@ -11,6 +11,7 @@ import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { routesFor } from "@/lib/config/law/routes";
 import { countryAuthority } from "@/lib/law/places";
 import type { WorldRegion } from "@/lib/config/world";
+import { FACT_OVERRIDES, type FactOverride } from "@/lib/config/world/overrides";
 import { WORLD_PROFILES_FILE, kindOf, type PlaceKind } from "@/lib/config/world/kinds";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
@@ -65,6 +66,19 @@ export interface ProfileFact {
     | "website";
   value: string;
   href?: string;
+  /** Set when the value is Solon's own, from the place's law, and not Wikidata's. */
+  source?: { title: string; url: string };
+}
+
+/** Pure: the codes of a fact, the cited override of the place when there is one, else Wikidata's. */
+export function applyOverrides(
+  place: string,
+  fact: FactOverride["fact"],
+  wikidata: readonly string[],
+  overrides: readonly FactOverride[] = FACT_OVERRIDES,
+): { value: readonly string[]; source?: FactOverride["source"] } {
+  const hit = overrides.find((o) => o.place === place && o.fact === fact);
+  return hit ? { value: hit.value, source: hit.source } : { value: wikidata };
 }
 
 export interface WorldProfileView {
@@ -112,8 +126,13 @@ export async function loadWorldProfile(
       .filter(Boolean)
       .join(", ");
   const facts: ProfileFact[] = [];
-  const add = (key: ProfileFact["key"], value: string | null | undefined, href?: string) => {
-    if (value) facts.push({ key, value, ...(href ? { href } : {}) });
+  const add = (
+    key: ProfileFact["key"],
+    value: string | null | undefined,
+    href?: string,
+    source?: FactOverride["source"],
+  ) => {
+    if (value) facts.push({ key, value, ...(href ? { href } : {}), ...(source ? { source } : {}) });
   };
   const unSince = region.code ? (file.un[region.code] ?? null) : null;
   if (unSince) add("unSince", date(unSince));
@@ -127,8 +146,20 @@ export async function loadWorldProfile(
     );
   }
   if (p.areaKm2 !== null) add("area", `${number.format(p.areaKm2)} km²`);
-  add("languages", p.languages.map((l) => languages.of(l) ?? l).join(", "));
-  add("currency", p.currencies.map((c) => currencies.of(c) ?? c).join(", "));
+  const spoken = applyOverrides(region.slug, "languages", p.languages);
+  add(
+    "languages",
+    spoken.value.map((l) => languages.of(l) ?? l).join(", "),
+    undefined,
+    spoken.source,
+  );
+  const money = applyOverrides(region.slug, "currencies", p.currencies);
+  add(
+    "currency",
+    money.value.map((c) => currencies.of(c) ?? c).join(", "),
+    undefined,
+    money.source,
+  );
   add("government", list(p.government));
   add("headOfState", list(p.headOfState));
   add("headOfGovernment", list(p.headOfGovernment));
