@@ -195,13 +195,21 @@ async function placeId(scheme: string, value: string): Promise<string> {
 }
 
 describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
-  it("imports the register's snapshots, its mergers, the city's quarters and the multipliers", async () => {
-    for (const [sourceKey, file] of RETRIEVALS) {
-      const report = await importFixture(sourceKey, file);
-      expect(report.problems, file).toEqual([]);
-      expect(report.status, file).toBe("applied");
-    }
-  });
+  // Measured in CI: 1.4 s on a quiet runner (run 43052241295), over 5 s on a loaded one
+  // (run 43054633059, same code path; the commit between them changed only page copy).
+  // It is the first test in the file and runs every import against a cold database, so
+  // it is sized at 30 s, a ceiling for a loaded runner, not a figure to grow into.
+  it(
+    "imports the register's snapshots, its mergers, the city's quarters and the multipliers",
+    { timeout: 30_000 },
+    async () => {
+      for (const [sourceKey, file] of RETRIEVALS) {
+        const report = await importFixture(sourceKey, file);
+        expect(report.problems, file).toEqual([]);
+        expect(report.status, file).toBe("applied");
+      }
+    },
+  );
 
   it("changes nothing when a scheduled run brings the same state again", async () => {
     // The first two are backfill: a schedule never refetches the past.
