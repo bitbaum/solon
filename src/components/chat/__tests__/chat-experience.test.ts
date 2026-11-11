@@ -22,13 +22,17 @@ const flat = (value: unknown, prefix = ""): Record<string, string> =>
     : { [prefix]: String(value) };
 
 /** A translator over one locale's `Chat` namespace; a missing key throws, as next-intl would fall back. */
-const translator =
-  (locale: string): Translate =>
-  (key, values = {}) => {
-    const text = flat(messages(locale).Chat)[key];
+const translator = (locale: string): Translate => {
+  const strings = flat(messages(locale).Chat);
+  const raw = (key: string) => {
+    const text = strings[key];
     if (text === undefined) throw new Error(`Chat.${key} is missing in ${locale}`);
-    return text.replace(/\{(\w+)\}/g, (_, name: string) => String(values[name] ?? ""));
+    return text;
   };
+  const t = (key: string, values: Record<string, string | number> = {}) =>
+    raw(key).replace(/\{(\w+)\}/g, (_, name: string) => String(values[name] ?? ""));
+  return Object.assign(t, { raw });
+};
 
 describe("every chat has the fleet's composer, in the reader's language", () => {
   const en = flat(messages("en").Chat);

@@ -20,7 +20,9 @@ export interface ChatLabels {
   app: Partial<ChatAppLabels>;
 }
 
-export type Translate = (key: string, values?: Record<string, string | number>) => string;
+export type Translate = ((key: string, values?: Record<string, string | number>) => string) & {
+  raw: (key: string) => unknown;
+};
 
 /** The chat words from a translator over the `Chat` namespace; the hook below binds it to next-intl, a test to the message files. */
 export function buildChatLabels(t: Translate): ChatLabels {
