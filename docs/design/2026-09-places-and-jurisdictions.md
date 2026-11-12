@@ -1080,6 +1080,23 @@ last call, which fires the timer's failure alert once per failure.
 `?source=<key>` runs one source now and waits. It calls no model. Backfills
 stay manual, from a checkout.
 
+**What a run skips** (2026-11-12). A retrieval whose bytes are those the
+source last applied, read by the same importer, is recorded as an applied run
+marked `unchanged` and goes no further: no parse, no transaction, no registry
+sync. "The same importer" is `<adapter>@<version>#<hash of the source's options
+and packs>` (`src/lib/places/importer/applied.ts`), so a new metric or a changed
+divisor reads the same bytes again. An adapter whose retrievals are parts of the
+source (`independentRetrievals`: one indicator, one series) compares each
+address with its own last reading; any other compares with the source's latest
+reading of any address, so going back to an earlier edition re-applies it. An
+adapter that publishes a file beside its rows (`publishesFiles`: boundaries) is
+always read again. The ancestors view (`place_ancestors`) is rebuilt only when an
+import moved a place (places or `part_of` relations changed), because a
+non-concurrent refresh locks the view against page reads; the queue worker also
+rebuilds it once a day, for relations whose validity starts or ends on a later
+date. Facts are compared only for the metrics a batch states, and written a
+thousand rows a statement.
+
 Why: the route did all the work inside the request, and the timer's `curl`
 stops at 300 seconds. The World Bank's indicators were one source a country
 (235 sources, ten requests each, all due on the 9th); none had loaded. They are

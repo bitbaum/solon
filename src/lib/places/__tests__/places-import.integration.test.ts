@@ -34,6 +34,7 @@ import {
 import { evaluate, taxingLevels } from "@/lib/tax-model";
 import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import type { ImportBatch } from "../importer/batch";
+import { ADAPTERS } from "../adapters";
 import { runImport } from "../importer/run";
 import { loadPlacePage } from "../place-page";
 import type { SnapshotStore } from "../importer/snapshots";
@@ -545,5 +546,52 @@ describe.runIf(RUN)("Testland, through the importer", () => {
         ),
       );
     expect(history.map((h) => h.quality)).toContain("provisional");
+  });
+
+  it("does not read again bytes it applied last, until the importer changes", async () => {
+    const read = (adapters?: typeof ADAPTERS) =>
+      runImport(db, {
+        config: testland,
+        sourceKey: "testland-register",
+        retrieval: {
+          bytes: encode(testlandBatch()),
+          url: "https://register.testland.invalid/2025.json",
+          retrievedAt: new Date(),
+        },
+        snapshots,
+        gitSha: null,
+        adapters,
+      });
+    const held = async () =>
+      (
+        await db
+          .select({ id: sources.id })
+          .from(sources)
+          .where(eq(sources.sourceKey, "testland-register"))
+      ).length;
+    const first = await read();
+    expect(first.status).toBe("applied");
+    const rows = await held();
+
+    const again = await read();
+    expect(again).toMatchObject({ status: "applied", unchanged: true, sourceId: first.sourceId });
+    expect(Object.values(again.counts).every((n) => n === 0)).toBe(true);
+    expect(await held()).toBe(rows);
+    const [run] = await db
+      .select({ report: placeImportRuns.report })
+      .from(placeImportRuns)
+      .where(eq(placeImportRuns.id, again.runId));
+    expect(run!.report).toMatchObject({ unchanged: true });
+
+    // The same bytes, read by a new version of the adapter: read again.
+    const fixture = ADAPTERS.get("fixture")!;
+    const bumped = new Map(ADAPTERS).set("fixture", {
+      ...fixture,
+      version: `${fixture.version}+1`,
+    });
+    const reread = await read(bumped);
+    expect(reread.status).toBe("applied");
+    expect(reread.unchanged).toBeUndefined();
+    expect(await held()).toBe(rows + 1);
   });
 });

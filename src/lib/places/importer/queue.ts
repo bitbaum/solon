@@ -17,6 +17,7 @@ import { rowsOf } from "@/lib/db/rows";
 import { ADAPTERS } from "../adapters";
 import { importQueue, type SourceRuns } from "../schedule";
 import { fetchAndImport } from "./fetch";
+import { refreshAncestors } from "./run";
 import type { GeometryStore } from "./geometry-store";
 import type { SnapshotStore } from "./snapshots";
 
@@ -71,9 +72,19 @@ const fetchable = (source: { adapter: string }) =>
 export const pendingSources = async (db: Database, config: PlacesConfig, now = new Date()) =>
   importQueue(config, await sourceRuns(db), now, fetchable);
 
+// The day this process last rebuilt the ancestors view.
+const state = globalThis as unknown as { solonAncestorsDay?: string };
+
 export async function drainQueue(db: Database, options: QueueOptions): Promise<QueueReport> {
   const now = options.now ?? (() => new Date());
   const started = now().getTime();
+  // An import rebuilds the ancestors view only when it moved a place; a relation that starts or
+  // ends on a later day moves one without any import, so the view is also rebuilt once a day.
+  const today = now().toISOString().slice(0, 10);
+  if (state.solonAncestorsDay !== today) {
+    await refreshAncestors(db);
+    state.solonAncestorsDay = today;
+  }
   const fetchSource = options.fetchSource ?? fetchAndImport;
   const queue = await pendingSources(db, options.config, now());
   const report: QueueReport = { queued: queue.length, ran: [] };

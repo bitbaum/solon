@@ -24,6 +24,10 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Fixed
 
+- **Place pages no longer wait on an import.** Each import of figures rebuilt the index of where
+  places sit, which holds every page that reads it until it is done, though figures move no place.
+  It is now rebuilt only when places or their borders changed, and once a day. An import whose
+  publisher's file had not changed since the last one stops at once instead of reading it again.
 - **Every country's figures can now load.** The governance, spending and safety figures on country
   pages had loaded for four countries only: the scheduled import did all its work inside one
   request that is cut off after five minutes, and asked the World Bank for one country at a time,

@@ -149,6 +149,7 @@ export function buildTopology(
 export const shapefileAreasAdapter: Adapter<Uint8Array, ShapefileAreasOptions> = {
   key: "shapefile_areas",
   version: "1",
+  publishesFiles: true,
   decode: (bytes) => bytes,
   schema: z.instanceof(Uint8Array),
   options: shapefileAreasOptions,

@@ -17,7 +17,7 @@ import { PLACES_REPO_FILES } from "@/lib/config/places/repo-files";
 import { db } from "@/lib/db/client";
 import { sources } from "@/lib/db/places-schema";
 import { ADAPTERS } from "@/lib/places/adapters";
-import { alreadyApplied, type LastApplied } from "@/lib/places/importer/applied";
+import { alreadyApplied, importerVersion, type LastApplied } from "@/lib/places/importer/applied";
 import { runImport } from "@/lib/places/importer/run";
 import { defaultSnapshotStore, sha256Hex } from "@/lib/places/importer/snapshots";
 
@@ -42,13 +42,13 @@ async function lastApplied(sourceKey: string): Promise<LastApplied | null> {
   return row ?? null;
 }
 
-/** The version string the importer records for a source's adapter. */
+/** The version string the importer records for a source: its adapter, and a hash of its options. */
 function currentImporterVersion(sourceKey: string): string {
   const source = placesConfig.sources.find((s) => s.key === sourceKey);
   const adapter = source ? ADAPTERS.get(source.adapter) : undefined;
-  if (!adapter)
+  if (!source || !adapter)
     throw new Error(`${sourceKey}: no adapter ${source?.adapter ?? "(no such source)"}`);
-  return `${adapter.key}@${adapter.version}`;
+  return importerVersion(adapter, source);
 }
 
 async function main(): Promise<number> {
