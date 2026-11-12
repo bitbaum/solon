@@ -5,6 +5,7 @@ import {
   ASSISTANT_WINDOW_MS,
   checkAssistantRequest,
   createAssistantLimiter,
+  sharedConfigured,
   toHeaders,
   type SharedWindows,
 } from "../rate-limit";
@@ -19,6 +20,8 @@ function sharedMemory() {
   };
   return { windows, keys };
 }
+
+const quiet = () => vi.spyOn(console, "warn").mockImplementation(() => undefined);
 
 it("limits bursts per person and operation, then permits another window", async () => {
   const id = crypto.randomUUID();
@@ -117,5 +120,92 @@ describe("the assistants' limiter", () => {
     expect((await check("b", "research", now + 30_000)).allowed).toBe(true);
     expect(calls.n).toBe(2);
     warn.mockRestore();
+  });
+
+  it("remembers a refusal, so a caller who keeps knocking costs the store nothing", async () => {
+    const { windows, keys } = sharedMemory();
+    const check = createAssistantLimiter(windows);
+    const start = 1_000_000;
+    for (let i = 0; i < 4; i++) await check("a", "research", start);
+    const first = await check("a", "research", start + 1000);
+    expect(first.allowed).toBe(false);
+    expect(keys).toHaveLength(5);
+    for (let i = 0; i < 100; i++) {
+      const again = await check("a", "research", start + 2000 + i);
+      expect(again.allowed).toBe(false);
+      expect(again.resetAt).toBe(first.resetAt);
+    }
+    expect(keys).toHaveLength(5);
+    // The window opens when the store said it would, and the store decides again.
+    expect((await check("a", "research", first.resetAt)).allowed).toBe(true);
+    expect(keys).toHaveLength(6);
+  });
+
+  it("decides from memory when the shared store does not answer in time", async () => {
+    const warn = quiet();
+    const calls = { n: 0 };
+    const hanging: SharedWindows = () => {
+      calls.n++;
+      return new Promise(() => undefined);
+    };
+    const check = createAssistantLimiter(hanging, { deadlineMs: 20 });
+    const now = 1_000_000;
+    const begun = Date.now();
+    expect((await check("a", "research", now)).allowed).toBe(true);
+    expect(Date.now() - begun).toBeLessThan(1000);
+    expect(warn.mock.calls[0][0]).toContain("deadline");
+    for (let i = 0; i < 3; i++) await check("a", "research", now);
+    expect((await check("a", "research", now)).allowed).toBe(false);
+    expect(calls.n).toBe(1);
+    warn.mockRestore();
+  });
+
+  it("backs off from when the store failed, not from when the request came", async () => {
+    const warn = quiet();
+    const calls = { n: 0 };
+    const slow: SharedWindows = () => {
+      calls.n++;
+      return new Promise((_, reject) => setTimeout(() => reject(new Error("refused")), 60));
+    };
+    const check = createAssistantLimiter(slow, { deadlineMs: 5_000 });
+    const now = 1_000_000;
+    await check("a", "research", now);
+    expect(calls.n).toBe(1);
+    // Thirty seconds after the request arrived is less than thirty after it failed.
+    await check("b", "research", now + 30_000 + 10);
+    expect(calls.n).toBe(1);
+    await check("b", "research", now + 30_000 + 5_000);
+    expect(calls.n).toBe(2);
+    warn.mockRestore();
+  });
+
+  it("never logs the query or its parameters", async () => {
+    const warn = quiet();
+    const failing: SharedWindows = () =>
+      Promise.reject(
+        Object.assign(new Error("Failed query: select ... params: 203.0.113.7"), {
+          cause: { code: "ECONNREFUSED" },
+        }),
+      );
+    await createAssistantLimiter(failing)("203.0.113.7", "law", 1_000_000);
+    expect(warn).toHaveBeenCalledTimes(1);
+    const line = String(warn.mock.calls[0][0]);
+    expect(line).toContain("ECONNREFUSED");
+    expect(line).not.toContain("203.0.113");
+    warn.mockRestore();
+  });
+
+  it("separates keys by secret, and stores nothing shared without one", async () => {
+    const seen = (secret: string) => {
+      const { windows, keys } = sharedMemory();
+      return createAssistantLimiter(windows, { secret })("203.0.113.7", "law", 1_000_000).then(
+        () => keys[0],
+      );
+    };
+    expect(await seen("one")).not.toBe(await seen("two"));
+    expect(sharedConfigured({ DATABASE_URL: "postgres://x" })).toBe(false);
+    expect(sharedConfigured({ AUTH_SECRET: "s" })).toBe(false);
+    expect(sharedConfigured({ DATABASE_URL: "postgres://x", AUTH_SECRET: "s" })).toBe(true);
+    expect(sharedConfigured({ DATABASE_URL: "postgres://x", BETTER_AUTH_SECRET: "s" })).toBe(true);
   });
 });
