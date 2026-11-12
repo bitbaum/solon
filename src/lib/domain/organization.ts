@@ -22,6 +22,7 @@ import { mandateEnd } from "./mandate";
 import { bodyProblem, descriptionProblem, nameProblem, slugProblem } from "./organization-rules";
 import { fetchOrangeCatGroup } from "@/lib/orangecat-group";
 import { normalizePlace, type LegalRecord, type Place } from "@/lib/collective-kinds";
+import { recordPersonTag } from "@/lib/domain/person-seat";
 import { DEFAULT_COLLECTIVE_KIND, type CollectiveKindId, type LegalStatus } from "@/lib/db/enums";
 
 /**
@@ -330,6 +331,9 @@ export async function createOrganization(
 
       return { org, founder };
     });
+
+    // Which person founded it, for the admissions that come after.
+    await recordPersonTag(result.founder.id, result.org.id, input.actorId);
 
     return {
       created: true,

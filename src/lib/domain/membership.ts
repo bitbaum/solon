@@ -10,6 +10,7 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { registrationMessage, verifyMessage } from "@/lib/bitcoin/message";
+import { recordPersonTag } from "@/lib/domain/person-seat";
 import { founderRule, genesisVerdict, genesisRefusalCopy } from "./founder";
 
 export interface RegisterMemberInput {
@@ -183,6 +184,9 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
       });
       return created;
     });
+    // Which person this is, for the admissions that come after. Best-effort:
+    // it never fails the seat, and the backfill picks up one it missed.
+    await recordPersonTag(member.id, org.id, input.actorId);
     return { registered: true, verified: true, genesis: true, memberId: member.id };
   } catch (e) {
     const taken = e instanceof Error && e.message === "GENESIS_TAKEN";

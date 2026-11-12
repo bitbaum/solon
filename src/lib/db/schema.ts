@@ -240,6 +240,16 @@ export const members = pgTable(
     ocUsername: text("oc_username"),
     avatarUrl: text("avatar_url"),
     /**
+     * Which PERSON holds this seat, as an opaque tag from OrangeCat
+     * (src/lib/orangecat-person.ts). One person on OrangeCat can hold several
+     * identities, each its own account; two seats in an organization carry the
+     * same tag exactly when one person holds both, and the index below refuses
+     * the second. The tag is keyed to this organization: it says nothing about
+     * who the person is or about their seats anywhere else. Null when the
+     * account cannot be told apart (not an OrangeCat person's account).
+     */
+    personTag: text("person_tag"),
+    /**
      * Whether the member's own page lists each ballot they cast. Off by
      * default: a closed session publishes its ballots anyway, but gathering one
      * person's every vote under their name is a profile they should choose to
@@ -276,6 +286,13 @@ export const members = pgTable(
       t.organizationId,
       t.bitcoinAddress,
     ),
+    // One person, one human seat per organization. A retired seat does not
+    // block the person from being seated again. A SUSPENDED one does: it is
+    // still their seat, and a suspension must not be dodged by being seated
+    // under another identity.
+    uniqueIndex("members_organization_id_person_tag_key")
+      .on(t.organizationId, t.personTag)
+      .where(sql`person_tag IS NOT NULL AND member_type = 'HUMAN' AND status <> 'RETIRED'`),
     check(
       "members_credential_check",
       sql`${t.bitcoinAddress} IS NOT NULL OR ${t.ocActorId} IS NOT NULL`,
