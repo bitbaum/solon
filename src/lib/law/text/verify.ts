@@ -14,7 +14,7 @@ import type { Database } from "@/lib/db/client";
 import { legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schema";
 import { sources } from "@/lib/db/places-schema";
 import { read } from "../publishers/http";
-import { newHeadings } from "../heading-path";
+import { headingsAbove } from "../heading-path";
 import { cleanPdfText, documentText } from "./cantonal";
 
 const ENTITIES: Record<string, string> = {
@@ -95,18 +95,17 @@ const counted = (words: string[]): Map<string, number> => {
 
 /** The words the provisions hold, in the act's order: each heading path where it first appears, then heading and text. */
 export function storedWordsOf(
-  provisions: readonly { heading: string; text: string; headingPath?: string[] }[],
+  provisions: readonly { path?: string; heading: string; text: string; headingPath?: string[] }[],
 ): string[] {
   const parts: string[] = [];
-  let previous: string[] | undefined;
-  // A heading that has a body is held as a provision of its own: it is not a path word again.
-  const held = new Set<string>();
+  let previous: (typeof provisions)[number] | undefined;
   for (const p of provisions) {
-    const path = p.headingPath ?? [];
-    for (const h of newHeadings(previous, path)) if (!held.has(h)) parts.push(h);
-    previous = path;
-    held.add(p.heading);
-    parts.push(p.heading, p.text);
+    parts.push(
+      ...headingsAbove(previous && { path: "", ...previous }, { path: "", ...p }),
+      p.heading,
+      p.text,
+    );
+    previous = p;
   }
   return wordsOf(parts.join(" "));
 }
@@ -471,6 +470,7 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
   for (const row of picked) {
     const provisions = await db
       .select({
+        path: legalProvisions.path,
         heading: legalProvisions.heading,
         text: legalProvisions.text,
         headingPath: legalProvisions.headingPath,
