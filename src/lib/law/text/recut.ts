@@ -137,10 +137,6 @@ export async function recutPublisherText(
         sourceKey: adapter.key,
         importerVersion: PUBLISHER_IMPORTER_VERSION,
         authorities: [adapter.authority],
-        alsoCurrent: [
-          `${PUBLISHER_IMPORTER_VERSION}+ocr`,
-          `${PUBLISHER_IMPORTER_VERSION}+ocr+archive`,
-        ],
         cut: async (bytes) => (await provisionsOfPdf(bytes, adapter.locale)).provisions,
       },
     );
@@ -171,12 +167,9 @@ async function recutTexts(
     failures: [],
   };
   const authorities = reader.authorities;
-  // A version read from an archive copy keeps that mark (importerVersion "…+archive").
-  const current = [
-    reader.importerVersion,
-    `${reader.importerVersion}+archive`,
-    ...(reader.alsoCurrent ?? []),
-  ];
+  // Current: this reader's version, with any mark of how the text was read ("…+archive" from an
+  // archive copy, "…+ocr" from a scan read by OCR), which this cut cannot redo and keeps.
+  const current = [reader.importerVersion, ...(reader.alsoCurrent ?? [])];
   const todo = await db
     .select({
       versionId: legalActVersions.id,
@@ -195,6 +188,7 @@ async function recutTexts(
         isNull(legalActVersions.inForceTo),
         eq(sources.sourceKey, reader.sourceKey),
         notInArray(sources.importerVersion, current),
+        sql`NOT starts_with(${sources.importerVersion}, ${`${reader.importerVersion}+`})`,
         inArray(legalActs.authority, authorities),
       ),
     );
@@ -231,9 +225,8 @@ async function recutTexts(
         await tx
           .update(sources)
           .set({
-            importerVersion: row.importerVersion?.endsWith("+archive")
-              ? `${reader.importerVersion}+archive`
-              : reader.importerVersion,
+            // The reader's version, keeping every mark of how the text was read (+archive, +ocr).
+            importerVersion: (row.importerVersion ?? "").replace(/^[^+]*/, reader.importerVersion),
           })
           .where(eq(sources.id, row.sourceId));
       });
