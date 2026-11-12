@@ -126,6 +126,13 @@ export const countryPackSchema = z.object({
    * `region` is found by that.
    */
   nation: z.object({ scheme: registryKey, value: z.string().min(1) }).optional(),
+  /**
+   * It holds a place only until a pack of the place's own states it (the world pack, which holds
+   * every country no other pack holds): the importer then moves the place to that pack, keeping its
+   * id, its figures and its old path, which redirects. Its batches leave alone a place another
+   * pack now holds, and the places under it.
+   */
+  yields: z.literal(true).optional(),
   fiscalYear: z.object({
     startMonthDay: z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, "MM-DD"),
   }),
@@ -522,12 +529,12 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
   return problems;
 }
 
-/** Parse and cross-check a config, or throw naming every problem. */
 /** The source a stored row's key names: by its key, or by one it was recorded under before. */
 export function findSource(config: PlacesConfig, key: string): Source | undefined {
   return config.sources.find((s) => s.key === key || s.formerKeys?.includes(key));
 }
 
+/** Parse and cross-check a config, or throw naming every problem. */
 export function definePlacesConfig(input: PlacesConfigInput): PlacesConfig {
   const parsed = placesConfigSchema.parse(input);
   // A pack's sources are the sources that name it, in registry order.

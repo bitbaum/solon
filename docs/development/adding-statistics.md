@@ -142,7 +142,13 @@ A coding reads one feature of a law onto a written scale.
 ## 5. Add a country
 
 A country is a pack and its sources (see `docs/design/2026-09-places-and-jurisdictions.md`).
-For the statistics: add its ISO 3166-1 numeric code to
+Every country is already a place of the world pack; adding a pack of its own
+takes it over. Write the pack (`src/lib/config/places/countries/<key>.ts`, with
+its `region`) and run `pnpm run places:world-countries` (`verify` fails until
+you do). The first import of the pack's own register moves the country and the
+places it restates into the pack: same rows, so its figures stay, and its old
+`/places/world/...` path redirects. What the world pack held under it that the
+pack does not restate ends that day. For the statistics: add its ISO 3166-1 numeric code to
 `src/lib/config/statistics/world.ts` (a test fails if a pack's country is
 missing). The World Bank's source already reads every country; add it to
 `OECD_MEMBERS` (`src/lib/config/places/world.ts`) or `EUROSTAT_GOV_COUNTRIES`
