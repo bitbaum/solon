@@ -67,7 +67,8 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ```bash
 pnpm run dev          # next dev (localhost:3000)
 pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + test — run before every commit
+pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + check:cycles + test:coverage — run before every commit
+pnpm run test         # the same tests without the coverage report, for a quick loop
 ```
 
 `pnpm run verify` is the single source of truth for "is this change clean?" CI's
