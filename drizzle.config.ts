@@ -23,6 +23,7 @@ export default defineConfig({
     "./src/lib/db/law-schema.ts",
     "./src/lib/db/amendments-schema.ts",
     "./src/lib/db/statistics-schema.ts",
+    "./src/lib/db/rate-limit-schema.ts",
   ],
   out: "./drizzle",
   dialect: "postgresql",

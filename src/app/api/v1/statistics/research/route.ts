@@ -4,7 +4,7 @@ import { z } from "zod";
 import { toLocale } from "@/i18n/routing";
 import { selfOriginOf } from "@/lib/auth/actor";
 import { readJsonBounded } from "@/lib/chat/body";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { gather, writeReport } from "@/lib/statistics/research";
@@ -36,11 +36,11 @@ export async function POST(req: Request) {
   const chain = usableChain(freeChain("SOLON"), process.env);
   if (!chain.length)
     return Response.json({ error: "The assistant is not available just now." }, { status: 503 });
-  const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!allowAssistantRequest(address, "research"))
+  const limit = await checkAssistantRequest(clientIp(req.headers), "research");
+  if (!limit.allowed)
     return Response.json(
       { error: "Please wait a few minutes before asking again." },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
   const { question } = parsed.data;
   const locale = toLocale(parsed.data.locale);

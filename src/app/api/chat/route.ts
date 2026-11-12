@@ -6,7 +6,7 @@ import { selfOriginOf } from "@/lib/auth/actor";
 import type { ChatEvent } from "@/lib/chat/events";
 import { ATTACHMENT_BODY_BYTES, attachmentsSchema, withAttachments } from "@/lib/chat/attachments";
 import { readJsonBounded } from "@/lib/chat/body";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, toHeaders } from "@/lib/chat/rate-limit";
 import { governancePrompt } from "@/lib/chat/prompt";
 
 const Body = z.object({
@@ -50,10 +50,11 @@ export async function POST(req: Request) {
       },
       { status: 503 },
     );
-  if (!allowAssistantRequest(session.actorId, "chat"))
+  const limit = await checkAssistantRequest(session.actorId, "chat");
+  if (!limit.allowed)
     return Response.json(
       { error: "Please wait a few minutes before asking again." },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
   return sseResponse<ChatEvent>(
     async (emit, signal) => {
