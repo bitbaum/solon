@@ -9,6 +9,7 @@ import { rowsOf } from "@/lib/db/rows";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
+import { figureSource } from "./source";
 import type { NameType } from "@/lib/places/vocabulary";
 import {
   BODY_SCHEMAS,
@@ -35,8 +36,11 @@ export interface PlaceSeries {
   name: string;
   slugPath: string | null;
   points: SeriesPoint[];
-  /** The retrieval the latest value came from. */
-  source: { key: string; url: string | null; retrievedAt: string };
+  /**
+   * The retrieval the latest value came from, who published it and the page a reader checks it
+   * on (`figureSource`): a place a country's own office reports is credited to that office.
+   */
+  source: { key: string; url: string | null; retrievedAt: string; publisher: string; page: string };
 }
 
 export interface CurrentRecord {
@@ -146,12 +150,27 @@ export async function loadSeries(
   }
   const ids = [...new Set(facts.map((f) => f.jurisdiction_id))];
   const places = await placeLabels(db, config, ids, locale);
+  const metric = config.metrics.find((m) => m.key === metricKey)!;
+  const sourceOf = (
+    f: { source_key: string; url: string | null; retrieved_at: Date | string },
+    code: string,
+  ): PlaceSeries["source"] => ({
+    key: f.source_key,
+    url: f.url,
+    retrievedAt: new Date(f.retrieved_at).toISOString().slice(0, 10),
+    ...figureSource(config, metric, f.source_key, code),
+  });
   const byPlace = new Map<string, PlaceSeries>();
   for (const f of facts) {
     const place = places.get(f.jurisdiction_id)!;
     let series = byPlace.get(f.jurisdiction_id);
     if (!series) {
-      series = { jurisdictionId: f.jurisdiction_id, ...place, points: [], source: sourceOf(f) };
+      series = {
+        jurisdictionId: f.jurisdiction_id,
+        ...place,
+        points: [],
+        source: sourceOf(f, place.code),
+      };
       byPlace.set(f.jurisdiction_id, series);
     }
     series.points.push({
@@ -159,16 +178,10 @@ export async function loadSeries(
       value: Number(f.value),
       quality: f.quality,
     });
-    series.source = sourceOf(f); // ordered by period, so the last is the latest value's
+    series.source = sourceOf(f, place.code); // ordered by period, so the last is the latest value's
   }
   return [...byPlace.values()].sort((a, b) => a.name.localeCompare(b.name, locale));
 }
-
-const sourceOf = (f: { source_key: string; url: string | null; retrieved_at: Date | string }) => ({
-  key: f.source_key,
-  url: f.url,
-  retrievedAt: new Date(f.retrieved_at).toISOString().slice(0, 10),
-});
 
 /** Names and codes of places, for charts: the place's own name in the reader's language. */
 export async function placeLabels(

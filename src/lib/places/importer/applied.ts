@@ -41,3 +41,11 @@ export function importerVersion(
     .slice(0, 12);
   return `${adapter.key}@${adapter.version}#${hash}`;
 }
+
+/**
+ * The version recorded on a retrieval whose figures were not all applied (a batch of figures
+ * alone leaves out places not held here yet). It never equals an importer's version, so the next
+ * run reads the same bytes again instead of skipping them as applied, and the figures arrive
+ * once their place does.
+ */
+export const partialVersion = (version: string): string => `${version}+partial`;

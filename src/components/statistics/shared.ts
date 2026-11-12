@@ -6,6 +6,8 @@
 import type { useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import type { Metric } from "@/lib/config/places/schema";
+import { cite } from "@/lib/i18n/config-catalog";
+import { publishersOf } from "@/lib/statistics/present";
 import type { EventRow, LinkedAct, PlaceSeries } from "@/lib/statistics/read";
 import type { EnforcementBody } from "@/lib/statistics/records";
 import type { StatisticSearch } from "@/lib/config/statistics/searches";
@@ -52,4 +54,15 @@ export function formatDay(day: string, locale: string): string {
 /** The unit a chart names: per cent for a ratio, "per 100,000" for a rate, none otherwise. */
 export function unitLabel(metric: Pick<Metric, "unit">, t: StatisticsTranslator): string {
   return metric.unit === "ratio" || metric.unit === "per_100k" ? t(`units.${metric.unit}`) : "";
+}
+
+/** The publishers of the series shown, as the reader's language lists them ("A and B"). */
+export function publishersText(
+  metric: Metric,
+  shown: readonly PlaceSeries[],
+  locale: string,
+): string {
+  return new Intl.ListFormat(locale, { type: "conjunction" }).format(
+    publishersOf(metric, shown).map((p) => cite(p, locale)),
+  );
 }

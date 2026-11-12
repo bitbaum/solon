@@ -99,6 +99,7 @@ export const BUDGET_METRICS: readonly MetricInput[] = EUROSTAT_REQUESTS.flatMap(
       code: request.dataset,
       url: eurostatBrowserUrl(request.dataset),
       match: { ...request.filters, [request.dimension]: code },
+      read: "eurostat_json" as const,
     };
     const unit = request.measure === "share" ? ("ratio" as const) : ("none" as const);
     if (!category) {

@@ -3,7 +3,12 @@
  * loader reads the database, this decides what a reader sees, so a made-up
  * country renders from its pack alone.
  */
-import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
+import {
+  findSource,
+  type LocalizedText,
+  type PlacesConfig,
+  type Source,
+} from "@/lib/config/places/schema";
 import { configTranslation } from "@/lib/i18n/config-catalog";
 import { taxingLevels } from "@/lib/tax-model";
 import {
@@ -270,25 +275,30 @@ export function placeActions(
   });
 }
 
-/** The registered sources behind these retrievals, in the reader's language. */
+/**
+ * The registered sources behind these retrievals, in the reader's language: one entry a source,
+ * dated by its latest retrieval, however many keys its figures were read under (an unchanged
+ * figure keeps the key it was first read under).
+ */
 export function placeSources(
   config: PlacesConfig,
   retrievals: readonly { sourceKey: string; retrievedAt: Date }[],
   locale: string,
 ): PlaceSource[] {
-  return retrievals.flatMap(({ sourceKey, retrievedAt }) => {
-    const source = config.sources.find((s) => s.key === sourceKey);
-    return source
-      ? [
-          {
-            publisher: source.publisher,
-            dataset: source.dataset,
-            homepage: source.homepage,
-            licence: source.licence,
-            attribution: source.attribution ? localized(source.attribution, locale) : null,
-            retrievedAt: retrievedAt.toISOString().slice(0, 10),
-          },
-        ]
-      : [];
-  });
+  const latest = new Map<string, { source: Source; retrievedAt: Date }>();
+  for (const { sourceKey, retrievedAt } of retrievals) {
+    const source = findSource(config, sourceKey);
+    const seen = source ? latest.get(source.key) : undefined;
+    if (source && (!seen || retrievedAt > seen.retrievedAt)) {
+      latest.set(source.key, { source, retrievedAt });
+    }
+  }
+  return [...latest.values()].map(({ source, retrievedAt }) => ({
+    publisher: source.publisher,
+    dataset: source.dataset,
+    homepage: source.homepage,
+    licence: source.licence,
+    attribution: source.attribution ? localized(source.attribution, locale) : null,
+    retrievedAt: retrievedAt.toISOString().slice(0, 10),
+  }));
 }

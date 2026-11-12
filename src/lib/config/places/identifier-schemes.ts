@@ -5,9 +5,12 @@ import type { IdentifierSchemeInput } from "./schema";
  * (§4.3). `reserved` schemes can only be carried by a state authority; the
  * database refuses them on a founded or proposed place.
  */
+/** The scheme a country is known by: what national statistics name their countries with. */
+export const COUNTRY_SCHEME = "iso_3166_1";
+
 export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
   {
-    key: "iso_3166_1",
+    key: COUNTRY_SCHEME,
     label: { en: "ISO 3166-1 country code", de: "Ländercode ISO 3166-1" },
     pattern: "[A-Z]{2}",
     wikidataProperty: "P297",

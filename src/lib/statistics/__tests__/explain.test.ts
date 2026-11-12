@@ -22,7 +22,13 @@ const series = (name: string, code: string, pts: [number, number][]): PlaceSerie
   name,
   slugPath: null,
   points: pts.map(([year, value]) => ({ year, value, quality: "normal" as const })),
-  source: { key: "oecd_sdmx", url: null, retrievedAt: "2026-11-09" },
+  source: {
+    key: "oecd_sdmx",
+    url: null,
+    retrievedAt: "2026-11-09",
+    publisher: "OECD",
+    page: "https://example.org/series",
+  },
 });
 
 const facts: BriefFact[] = buildBrief(

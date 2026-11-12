@@ -152,7 +152,12 @@ export const countryPackSchema = z.object({
       provider: z.string().min(1),
     })
     .optional(),
-  sources: z.array(sourceKey),
+  /**
+   * The sources that hold figures or places of this pack, computed from each source's `packs`
+   * (definePlacesConfig): a source names its packs once, and the pack's list follows. A pack may
+   * still write the list, but only as the sources themselves say it.
+   */
+  sources: z.array(sourceKey).default([]),
   instrumentKinds: z.array(registryKey).default([]),
   /** The country's income tax as data; validated against its levels and the metric catalog. */
   taxModel: z
@@ -199,19 +204,36 @@ export const metricSchema = z.object({
   statistic: z
     .object({
       definition: localizedTextSchema,
-      series: z.object({
-        publisher: z.string().min(1),
-        /** The publisher's own code for the series. */
-        code: z.string().min(1),
-        /** The publisher's page for the series, for people. */
-        url: z.url({ protocol: /^https$/ }),
-        /** Within a dataset of several measures (an SDMX dataflow), the one read. */
-        measure: z.string().min(1).optional(),
-        /** The SDMX data key for one country, with `{iso3}` where its code goes. */
-        key: z.string().min(1).optional(),
-        /** Columns a row must carry to belong to this series, where a dataflow holds several under one measure. */
-        match: z.record(z.string(), z.string()).optional(),
-      }),
+      series: z
+        .object({
+          publisher: z.string().min(1),
+          /** The publisher's own code for the series. */
+          code: z.string().min(1),
+          /** The publisher's page for the series, for people. */
+          url: z.url({ protocol: /^https$/ }),
+          /** Within a dataset of several measures (an SDMX dataflow), the one read. */
+          measure: z.string().min(1).optional(),
+          /** The SDMX data key for one country, with `{iso3}` where its code goes. */
+          key: z.string().min(1).optional(),
+          /** Columns a row must carry to belong to this series, where a dataflow holds several under one measure. */
+          match: z.record(z.string(), z.string()).optional(),
+          /**
+           * The adapter that reads this series for every country it covers. The World Bank's and
+           * the OECD's sources are built from the metrics that name them (sources.ts), so a new
+           * statistic there is its metric alone; Eurostat's are built from the budget taxonomies.
+           * A figure is credited to this series where this adapter read it, else to the source
+           * that supplied it (a country's own statistics office).
+           */
+          read: z.enum(["worldbank_indicators", "oecd_sdmx", "eurostat_json"]),
+          /** The World Bank's database id for the series, when it is not the World Development Indicators (3: governance). */
+          database: z.number().int().positive().optional(),
+        })
+        .refine((s) => s.read !== "oecd_sdmx" || (s.measure !== undefined && s.key !== undefined), {
+          message: "an OECD series names its measure and its data key",
+        })
+        .refine((s) => s.database === undefined || s.read === "worldbank_indicators", {
+          message: "only a World Bank series names a database",
+        }),
       /**
        * What the figures cover, in one sentence a reader sees beside every
        * chart: which levels of government, which part of the country. A number
@@ -232,6 +254,11 @@ export type Metric = z.infer<typeof metricSchema>;
 
 export const sourceSchema = z.object({
   key: sourceKey,
+  /**
+   * Keys this source was recorded under before (one source a country, folded into one for every
+   * country): rows already held under them are still this source's. Read through `findSource`.
+   */
+  formerKeys: z.array(sourceKey).optional(),
   publisher: z.string().min(1),
   dataset: z.string().min(1),
   homepage: z.url(),
@@ -456,6 +483,14 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
     }
     problems.push(...taxModelProblems(pack, metrics));
   }
+  const formerKeys = config.sources.flatMap((s) => s.formerKeys ?? []);
+  for (const key of formerKeys) {
+    if (sources.has(key)) problems.push(`former source key "${key}" is a current source's key`);
+  }
+  for (const key of new Set(formerKeys)) {
+    if (formerKeys.indexOf(key) !== formerKeys.lastIndexOf(key))
+      problems.push(`former source key "${key}" is claimed by two sources`);
+  }
   for (const source of config.sources) {
     if (!licences.has(source.licence)) {
       problems.push(
@@ -482,9 +517,29 @@ export function placesConfigProblems(config: PlacesConfig): string[] {
 }
 
 /** Parse and cross-check a config, or throw naming every problem. */
+/** The source a stored row's key names: by its key, or by one it was recorded under before. */
+export function findSource(config: PlacesConfig, key: string): Source | undefined {
+  return config.sources.find((s) => s.key === key || s.formerKeys?.includes(key));
+}
+
 export function definePlacesConfig(input: PlacesConfigInput): PlacesConfig {
-  const config = placesConfigSchema.parse(input);
-  const problems = placesConfigProblems(config);
+  const parsed = placesConfigSchema.parse(input);
+  // A pack's sources are the sources that name it, in registry order.
+  const problems: string[] = [];
+  const config: PlacesConfig = {
+    ...parsed,
+    packs: parsed.packs.map((pack) => {
+      const sources = parsed.sources.filter((s) => s.packs.includes(pack.key)).map((s) => s.key);
+      const written = [...pack.sources].sort();
+      if (written.length > 0 && written.join() !== [...sources].sort().join()) {
+        problems.push(
+          `pack "${pack.key}": lists sources ${written.join(", ")} but the sources that name it are ${sources.join(", ") || "none"}; name the pack on the source instead`,
+        );
+      }
+      return { ...pack, sources };
+    }),
+  };
+  problems.push(...placesConfigProblems(config));
   if (problems.length > 0) {
     throw new Error(`Places config is invalid:\n- ${problems.join("\n- ")}`);
   }

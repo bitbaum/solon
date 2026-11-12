@@ -1103,6 +1103,31 @@ stops at 300 seconds. The World Bank's indicators were one source a country
 one source now (`worldbank-wdi-world`): the API's `country/all`, one request an
 indicator.
 
+**One source a publisher** (2026-11-12). The OECD and Eurostat followed: one
+source each (`oecd-tax-world`, `eurostat-gov-world`), asking for every country
+they cover in one request a series (SDMX's `+`-joined reference areas,
+JSON-stat's repeated `geo`): three sources and 17 requests read every
+national figure, where there were 73 sources and 350 requests. A metric names its reader (`series.read`, and
+`database` for a World Bank series outside the WDI); the publisher's source is
+generated from the metrics that name it, so a new statistic is its metric and
+nothing else. A pack's `sources` is computed from the sources that name the
+pack; a written list that differs is a configuration error. A source whose key
+changes keeps the old one in `formerKeys`, and everything that reads a stored
+row's source (`findSource`: a page's source list, coverage, a figure's credit)
+resolves it, so what was read under `oecd-tax-ch` stays the OECD's. A figure is
+credited to its metric's series where that reader read it, else to the source
+that supplied it (Liechtenstein's tax revenue is its statistics office's):
+`figureSource` (`src/lib/statistics/source.ts`), resolved once per place by the
+series loader, so every chart, caption and source line reads the same answer. A
+config test fails when two sources could state one statistic for the same
+country, since the facts diff keys a figure on place, metric and period. A
+batch of figures alone leaves out, and reports once per place, figures for a
+country not held here, so one country not yet loaded never stops the others;
+the retrieval is then recorded with a `+partial` importer version, so the next
+run reads it again rather than skipping it as applied. Any other unknown place
+still fails the run. A source of many countries reports gaps once a series: the
+countries asked for that it holds no value for (`adapters/gaps.ts`).
+
 **Areas and their file** (built 2026-10-01): a batch may carry `areas` and one
 `geometry` (level, edition, TopoJSON text). The check refuses areas without a
 file, a file without a collection named after the level, and areas naming a

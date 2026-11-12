@@ -229,6 +229,21 @@ describe("budgets from imported facts", () => {
     expect(b2023.balance).toBe(0.008);
   });
 
+  it("lists a source once, at its latest reading, whatever key a figure was read under", () => {
+    const [b] = budgetsFromFacts([
+      // Unchanged since the per-country source read it; revised under the publisher's one source.
+      row("budget.gg.expenditure.total", 2023, 0.322),
+      {
+        ...row("budget.gg.revenue.total", 2023, 0.33),
+        sourceKey: "eurostat-gov-world",
+        retrievedAt: "2026-12-11",
+      },
+    ]);
+    expect(b!.sources).toEqual([
+      expect.objectContaining({ kind: "facts", key: "eurostat-gov-world", read: "2026-12-11" }),
+    ]);
+  });
+
   it("says when the publisher gives a division but no breakdown of it", () => {
     const b2023 = budgets.find((b) => b.year === 2023)!;
     expect(breakdown(b2023, COFOG, "GF07").noBreakdown).toBe(true);

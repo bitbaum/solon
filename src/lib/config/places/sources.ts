@@ -1,6 +1,7 @@
 import type { Rounding } from "@/lib/tax-model";
 import { alpha3Of } from "@/lib/config/world/countries";
 import { COUNTRY_PACKS } from "./countries";
+import { COUNTRY_SCHEME } from "./identifier-schemes";
 import {
   EUROSTAT_FROM_YEAR,
   EUROSTAT_GOV_COUNTRIES,
@@ -8,14 +9,14 @@ import {
   EUROSTAT_REQUESTS,
   seriesOf,
 } from "@/lib/config/budgets/eurostat";
+import { COUNTRIES } from "@/lib/config/world/countries";
+import { WORLD_PACK } from "./countries/world";
 import {
+  EUROSTAT_KEY,
+  OECD_KEY,
   OECD_MEMBERS,
-  WORLD_BANK_WORLD_KEY,
+  WORLD_BANK_KEY,
   WORLD_SUBDIVISIONS_KEY,
-  eurostatKey,
-  oecdKey,
-  worldBankKey,
-  worldCountries,
 } from "./world";
 import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
@@ -171,15 +172,18 @@ const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code
  * the access path, format and licence, then record them here.
  */
 /**
- * The World Bank's indicators for one country: every metric whose statistic
- * names a World Development Indicators series, so the series code lives once,
- * on the metric. A percentage becomes a ratio; a rate stays as published.
+ * The World Bank's indicators: every live metric whose statistic names the
+ * World Bank's reader, so the series code lives once, on the metric. A
+ * percentage becomes a ratio; a rate stays as published.
  */
 const WDI_INDICATORS = METRICS.flatMap((metric) =>
-  !("retired" in metric) && metric.statistic?.series.publisher.startsWith("World Bank")
+  !("retired" in metric) && metric.statistic?.series.read === "worldbank_indicators"
     ? [
         {
           code: metric.statistic.series.code,
+          ...(metric.statistic.series.database
+            ? { database: metric.statistic.series.database }
+            : {}),
           metric: metric.key,
           divideBy: metric.unit === "ratio" ? 100 : 1,
         },
@@ -188,13 +192,14 @@ const WDI_INDICATORS = METRICS.flatMap((metric) =>
 );
 
 /**
- * The OECD's series for one country, from every metric whose statistic names
- * an OECD dataflow, a measure and a data key (`{iso3}` stands for the
- * country's code). The key lives on the metric because every dataflow orders
- * its dimensions its own way.
+ * The OECD's series: every live metric whose statistic names the OECD's
+ * reader, with its dataflow, measure and data key (`{iso3}` stands for the
+ * countries' codes). The key lives on the metric because every dataflow
+ * orders its dimensions its own way.
  */
 const OECD_SERIES = METRICS.flatMap((metric) =>
-  metric.statistic?.series.publisher.startsWith("OECD") &&
+  !("retired" in metric) &&
+  metric.statistic?.series.read === "oecd_sdmx" &&
   metric.statistic.series.measure &&
   metric.statistic.series.key
     ? [
@@ -210,8 +215,25 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
     : [],
 );
 
-const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceInput => ({
-  key: oecdKey(iso2),
+/**
+ * The packs a national-statistics source writes to: the world pack first (its
+ * batches are checked against it), then every pack that holds one of the
+ * countries in depth. A country's figures land on its place wherever that
+ * place lives, found by its ISO 3166-1 code.
+ */
+const packsOf = (countries: readonly string[]): string[] => [
+  WORLD_PACK,
+  ...COUNTRY_PACKS.flatMap((p) =>
+    p.key !== WORLD_PACK && p.region && countries.includes(p.region) ? [p.key] : [],
+  ),
+];
+const country = (a2: string) => ({ scheme: COUNTRY_SCHEME, value: a2 });
+
+/** The OECD's series for every member, one request a series (their codes joined with "+"). */
+const oecdSource = (members: readonly string[]): SourceInput => ({
+  key: OECD_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: members.map((a2) => `oecd-tax-${a2.toLowerCase()}`),
   publisher: "OECD",
   dataset: "OECD Tax Database, Revenue Statistics and Government at a Glance",
   homepage: "https://www.oecd.org/en/data/datasets/oecd-tax-database.html",
@@ -224,29 +246,32 @@ const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceI
     ru: "Налоговая база данных ОЭСР (CC BY 4.0)",
   },
   // Yearly tables, revised through the year.
-  cadence,
+  cadence: "0 4 10 * *",
   adapter: "oecd_sdmx",
   options: {
-    place: { scheme: "iso_3166_1", value: iso2 },
+    countries: members.map((a2) => ({ code: alpha3Of(a2), place: country(a2) })),
     fromYear: 2000,
     series: OECD_SERIES.map(({ flow, key, measure, match, metric, divideBy }) => ({
       flow,
-      key: key.replace("{iso3}", alpha3Of(iso2)),
+      key: key.replace("{iso3}", members.map(alpha3Of).join("+")),
       measure,
       match,
       metric,
       divideBy,
     })),
   },
-  packs: [pack],
+  packs: packsOf(members),
 });
 
 /**
- * Eurostat's government finance for one country: every category of the
- * budget taxonomies, in per cent of GDP (src/lib/config/budgets/eurostat.ts).
+ * Eurostat's government finance for every country it covers: every category
+ * of the budget taxonomies, in per cent of GDP (src/lib/config/budgets/eurostat.ts),
+ * one request a dataset.
  */
-const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): SourceInput => ({
-  key: eurostatKey(iso2),
+const eurostatSource = (countries: readonly string[]): SourceInput => ({
+  key: EUROSTAT_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: countries.map((a2) => `eurostat-gov-${a2.toLowerCase()}`),
   publisher: EUROSTAT_PUBLISHER,
   dataset: "Government finance statistics: main aggregates and expenditure by function (COFOG)",
   homepage: "https://ec.europa.eu/eurostat/web/government-finance-statistics",
@@ -259,11 +284,10 @@ const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): Sou
     ru: "Евростат, статистика государственных финансов (gov_10a_main, gov_10a_exp)",
   },
   // Yearly tables, notified in April and October.
-  cadence,
+  cadence: "0 4 11 * *",
   adapter: "eurostat_json",
   options: {
-    place: { scheme: "iso_3166_1", value: iso2 },
-    geo: EUROSTAT_GOV_COUNTRIES[iso2]!,
+    geos: countries.map((a2) => ({ code: EUROSTAT_GOV_COUNTRIES[a2]!, place: country(a2) })),
     fromYear: EUROSTAT_FROM_YEAR,
     requests: EUROSTAT_REQUESTS.map((r) => ({
       dataset: r.dataset,
@@ -272,17 +296,14 @@ const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): Sou
       series: seriesOf(r).map((s) => ({ ...s, divideBy: r.divideBy })),
     })),
   },
-  packs: [pack],
+  packs: packsOf(countries),
 });
 
-const worldBankSource = (
-  pack: string,
-  /** One country by its code, or many read in one request per indicator. */
-  countries: string | readonly string[],
-  key = typeof countries === "string" ? worldBankKey(countries) : WORLD_BANK_WORLD_KEY,
-  cadence = "0 4 9 * *",
-): SourceInput => ({
-  key,
+/** The World Bank's indicators for every country, one request an indicator (`country/all`). */
+const worldBankSource = (countries: readonly string[]): SourceInput => ({
+  key: WORLD_BANK_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: countries.map((a2) => `worldbank-wdi-${a2.toLowerCase()}`),
   publisher: "World Bank",
   dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",
@@ -295,26 +316,15 @@ const worldBankSource = (
     ru: "Всемирный банк, World Development Indicators и Worldwide Governance Indicators, обновление 2026 (www.govindicators.org) (CC BY 4.0)",
   },
   // Monthly: the World Bank revises its indicators several times a year.
-  cadence,
+  cadence: "0 4 9 * *",
   adapter: "worldbank_indicators",
   options: {
-    ...(typeof countries === "string"
-      ? { place: { scheme: "iso_3166_1", value: countries }, country: countries }
-      : {
-          countries: countries.map((a2) => ({
-            code: a2,
-            place: { scheme: "iso_3166_1", value: a2 },
-          })),
-        }),
+    countries: countries.map((a2) => ({ code: a2, place: country(a2) })),
     fromYear: 1990,
     indicators: WDI_INDICATORS,
   },
-  packs: [pack],
+  packs: packsOf(countries),
 });
-
-/** The `i`-th source of a day: the same day of the month, `every` minutes later each, from 04:00. */
-const staggered = (i: number, day: number, every = 1) =>
-  `${(i * every) % 60} ${4 + Math.floor((i * every) / 60)} ${day} * *`;
 
 export const SOURCES: readonly SourceInput[] = [
   {
@@ -1412,28 +1422,21 @@ export const SOURCES: readonly SourceInput[] = [
     adapter: "fixture",
     packs: ["south_ossetia"],
   },
-  worldBankSource("switzerland", "CH"),
-  worldBankSource("liechtenstein", "LI"),
-  worldBankSource("estonia", "EE"),
-  worldBankSource("united_states", "US"),
-  // Liechtenstein is not an OECD member; the Tax Database has no figures for it.
-  oecdSource("switzerland", "CH"),
-  oecdSource("estonia", "EE"),
-  oecdSource("united_states", "US"),
-  eurostatSource("switzerland", "CH"),
-  eurostatSource("estonia", "EE"),
+  // National statistics, each publisher one source for every country it covers, wherever that
+  // country's places live: a new country is a line in the country registry, a new series a line
+  // on its metric.
+  worldBankSource(COUNTRIES.map((c) => c.a2)),
+  oecdSource(COUNTRIES.map((c) => c.a2).filter((a2) => OECD_MEMBERS.includes(a2))),
+  eurostatSource(COUNTRIES.map((c) => c.a2).filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES)),
   ...worldSources(),
 ];
 
 /**
- * The world pack's sources: the country names and codes, the World Bank's
- * indicators for every country no pack holds, and the OECD's tax series for
- * those of them that are OECD members. Computed from the country registry, so
- * a country is never a line to remember.
+ * The world pack's own sources: the country names and codes, and the
+ * subdivisions of every country. The national statistics (World Bank, OECD,
+ * Eurostat) are one source each for every country, built above.
  */
 function worldSources(): SourceInput[] {
-  const held = new Set(COUNTRY_PACKS.flatMap((p) => (p.region ? [p.region] : [])));
-  const countries = worldCountries(held);
   return [
     {
       // Written by `scripts/places-world-countries.ts` from the country registry, itself
@@ -1471,14 +1474,5 @@ function worldSources(): SourceInput[] {
       adapter: "fixture",
       packs: ["world"],
     },
-    // The World Bank answers for every country at once: one source, one request an indicator.
-    // The OECD is asked a country at a time.
-    worldBankSource("world", countries),
-    ...countries
-      .filter((a2) => OECD_MEMBERS.includes(a2))
-      .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),
-    ...countries
-      .filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES)
-      .map((a2, i) => eurostatSource("world", a2, staggered(i, 11, 2))),
   ];
 }

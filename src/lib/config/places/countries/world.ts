@@ -1,31 +1,18 @@
-import { COUNTRIES } from "@/lib/config/world/countries";
 import type { CountryPackInput } from "../schema";
-import { EUROSTAT_GOV_COUNTRIES } from "@/lib/config/budgets/eurostat";
-import {
-  OECD_MEMBERS,
-  WORLD_BANK_WORLD_KEY,
-  WORLD_SUBDIVISIONS_KEY,
-  eurostatKey,
-  oecdKey,
-} from "../world";
 
 /**
  * The world: every country as a nation, and under it its ISO 3166-2
  * subdivisions by name and code alone. A country gets a
  * pack of its own when Solon holds its places, law or tax in depth, and
  * leaves this one (`scripts/places-world-countries.ts` regenerates the data).
- * Its figures are the World Bank's for every country and the OECD's tax series
- * for the OECD's members, Eurostat's government finance for the countries it covers: sources computed from the country registry in
- * ../world.ts, never listed by hand.
- *
- * The pack's sources are listed lazily by `worldPack` so that it can see which
- * countries the other packs hold without importing them (they import the config).
+ * Its sources are the ones that name it (sources.ts): the country list, the
+ * subdivisions, and the national statistics, which read every country
+ * wherever its places live.
  */
 /** The world pack's key, and its root place's path: every country no other pack holds sits under it. */
 export const WORLD_PACK = "world";
 
-export function worldPack(held: ReadonlySet<string>): CountryPackInput {
-  const countries = COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => c.a2);
+export function worldPack(): CountryPackInput {
   return {
     key: WORLD_PACK,
     names: {
@@ -92,13 +79,6 @@ export function worldPack(held: ReadonlySet<string>): CountryPackInput {
       },
     ],
     identifierSchemes: ["world_root", "iso_3166_1", "iso_3166_2", "wikidata"],
-    sources: [
-      "world-country-registry",
-      WORLD_SUBDIVISIONS_KEY,
-      WORLD_BANK_WORLD_KEY,
-      ...countries.filter((a2) => OECD_MEMBERS.includes(a2)).map(oecdKey),
-      ...countries.filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES).map(eurostatKey),
-    ],
     instrumentKinds: [],
   };
 }

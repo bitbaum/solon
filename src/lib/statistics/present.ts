@@ -17,14 +17,11 @@ export const findStatistic = (config: PlacesConfig, key: string): Metric | undef
 export const chartValue = (metric: Pick<Metric, "unit">, value: number): number =>
   metric.unit === "ratio" ? Math.round(value * 10000) / 100 : Math.round(value * 1000) / 1000;
 
-/** The publisher's own page for the series, narrowed to one place where the publisher can. */
-export function seriesPageFor(metric: Metric, placeCode: string | null): string {
-  const url = new URL(metric.statistic!.series.url);
-  if (placeCode && url.hostname === "data.worldbank.org") {
-    url.searchParams.set("locations", placeCode);
-  }
-  return url.toString();
-}
+/** The publishers of the series shown, each once: the metric's own when nothing is shown. */
+export const publishersOf = (metric: Metric, shown: readonly PlaceSeries[]): string[] =>
+  shown.length === 0
+    ? [metric.statistic!.series.publisher]
+    : [...new Set(shown.map((s) => s.source.publisher))];
 
 /** The places a query names (`places=CH,EE`), kept only where the metric has a series. */
 export function pickPlaces(

@@ -5,11 +5,11 @@ import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
 import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
-import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statistics/present";
+import { chartValue, latestPoint, metricPath } from "@/lib/statistics/present";
 import type { PlaceSeries } from "@/lib/statistics/read";
 import AxisBuilder from "./axis-builder";
 import AxisPanel, { type AxisPanelProps } from "./axis-panel";
-import { unitLabel, type StatisticsTranslator } from "./shared";
+import { publishersText, unitLabel, type StatisticsTranslator } from "./shared";
 
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];
@@ -53,7 +53,7 @@ export default function StatisticsIndex({
                       label: s.name,
                       value: chartValue(metric, p.value),
                       note: t("index.latestNote", { year: p.year }),
-                      href: seriesPageFor(metric, s.code),
+                      href: s.source.page,
                     },
                   ]
                 : [];
@@ -72,7 +72,7 @@ export default function StatisticsIndex({
                     caption={t("index.latestCaption", {
                       metric: label,
                       unit,
-                      publisher: cite(statistic.series.publisher, locale),
+                      publisher: publishersText(metric, series, locale),
                     })}
                   />
                 ) : (

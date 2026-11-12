@@ -54,7 +54,8 @@ import {
   type ImportBatch,
 } from "./batch";
 import { defaultGeometryStore, type GeometryStore } from "./geometry-store";
-import { alreadyApplied, importerVersion } from "./applied";
+import { COUNTRY_SCHEME } from "@/lib/config/places/identifier-schemes";
+import { alreadyApplied, importerVersion, partialVersion } from "./applied";
 import { sha256Hex, type SnapshotStore } from "./snapshots";
 import { checkBatch } from "./validate";
 
@@ -134,6 +135,8 @@ class DryRunDone extends Error {
 interface ApplyOutcome {
   counts: ChangeCounts;
   missingFromSource: string[];
+  /** Figures left out because their place is not held (a batch of figures only). */
+  unresolved: { row: string; reason: string }[];
 }
 
 const noChanges = (): ChangeCounts =>
@@ -355,6 +358,12 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         if (HIERARCHY_CHANGES.some((kind) => applied.counts[kind] > 0)) {
           await refreshAncestors(tx);
         }
+        if (applied.unresolved.length > 0) {
+          await tx
+            .update(sources)
+            .set({ importerVersion: partialVersion(version) })
+            .where(eq(sources.id, sourceRow!.id));
+        }
         report.sourceId = sourceRow!.id;
         return applied;
       })
@@ -366,6 +375,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
       });
     report.counts = outcome.counts;
     report.missingFromSource = outcome.missingFromSource;
+    report.skipped.push(...outcome.unresolved);
     report.status = dryRun ? "dry_run" : "applied";
   } catch (error) {
     report.status = "failed";
@@ -770,11 +780,37 @@ async function applyBatch(
   }
 
   // --- Facts: per period; a changed value supersedes, it never overwrites. ---
+  // A batch of figures alone (a publisher's series for every country) states nothing about
+  // places: a figure for a country not held here is left out and reported, so one country not
+  // yet loaded never stops the others, and the retrieval is read again on the next run (see
+  // `partialVersion`). Any other unknown place is still a problem that fails the run: a mistyped
+  // commune number in a hand-kept table must not pass as applied. A batch that also states
+  // places keeps the rule that every figure's place is known.
+  const factsOnly =
+    batch.jurisdictions.length === 0 &&
+    batch.relations.length === 0 &&
+    batch.postcodes.length === 0 &&
+    batch.areas.length === 0 &&
+    batch.instruments.length === 0;
+  const notHeld = new Map<string, number>();
+  const placedFacts = factsOnly
+    ? batch.facts.filter((f) => {
+        const key = refKey(f.jurisdiction);
+        if (ids.has(key) || f.jurisdiction.scheme !== COUNTRY_SCHEME) return true;
+        notHeld.set(key, (notHeld.get(key) ?? 0) + 1);
+        return false;
+      })
+    : batch.facts;
+  // One line a place, however many of its figures were left out.
+  const unresolved = [...notHeld].map(([place, n]) => ({
+    row: place,
+    reason: `no place here is known by this identifier; ${n} figure${n === 1 ? "" : "s"} left out`,
+  }));
   // Read only the metrics this batch states: a place holds figures from many sources, and one
   // indicator for every country must not load every country's every series to compare.
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
-  const factIds = [...new Set(batch.facts.map((f) => idOf(f.jurisdiction, `fact ${f.metricKey}`)))];
-  const factMetrics = [...new Set(batch.facts.map((f) => f.metricKey))];
+  const factIds = [...new Set(placedFacts.map((f) => idOf(f.jurisdiction, `fact ${f.metricKey}`)))];
+  const factMetrics = [...new Set(placedFacts.map((f) => f.metricKey))];
   const currentFacts: (typeof facts.$inferSelect)[] = [];
   for (const ids of batches(factIds)) {
     currentFacts.push(
@@ -799,7 +835,7 @@ async function applyBatch(
   const haveFacts = new Map(currentFacts.map((r) => [factKey(r), r]));
   const supersededFacts: string[] = [];
   const newFacts: (typeof facts.$inferInsert)[] = [];
-  for (const fact of batch.facts) {
+  for (const fact of placedFacts) {
     const row = {
       jurisdictionId: idOf(fact.jurisdiction, `fact ${fact.metricKey}`),
       metricKey: fact.metricKey,
@@ -925,7 +961,7 @@ async function applyBatch(
     .filter((r) => !inBatch.has(r.jurisdictionId))
     .map((r) => r.slugPath ?? r.jurisdictionId);
 
-  return { counts, missingFromSource };
+  return { counts, missingFromSource, unresolved };
 }
 
 /** The pack's current hierarchy, checked against its level declarations. */

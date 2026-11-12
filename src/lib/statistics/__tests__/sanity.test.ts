@@ -12,7 +12,13 @@ const series = (
   name,
   slugPath: null,
   points: values.map(([year, value]) => ({ year, value, quality: "normal" as const })),
-  source: { key: source, url: null, retrievedAt: "2026-11-09" },
+  source: {
+    key: source,
+    url: null,
+    retrievedAt: "2026-11-09",
+    publisher: "P",
+    page: "https://example.org",
+  },
 });
 const run = (from: number, to: number, f: (y: number) => number): [number, number][] =>
   Array.from({ length: to - from + 1 }, (_, i) => [from + i, f(from + i)]);
