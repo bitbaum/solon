@@ -395,6 +395,8 @@ export interface VerifyOptions {
   threshold?: number;
   fetchImpl?: typeof fetch;
   onProgress?: (message: string) => void;
+  /** Between two reads of a publisher's pages; a second by default, so a sample is never a burst. */
+  pauseMs?: number;
 }
 
 export interface VerifiedAct {
@@ -467,7 +469,9 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
     .limit(sample);
 
   const acts: VerifiedAct[] = [];
-  for (const row of picked) {
+  const pause = options.pauseMs ?? 1000;
+  for (const [i, row] of picked.entries()) {
+    if (i > 0 && pause > 0) await new Promise((resolve) => setTimeout(resolve, pause));
     const provisions = await db
       .select({
         path: legalProvisions.path,

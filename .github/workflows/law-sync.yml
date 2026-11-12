@@ -46,10 +46,11 @@ jobs:
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
             "SHA=$SHA bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -uo pipefail
-          # One load at a time on the box: a second waits here for the first to finish,
-          # so two big loads never share its memory (two at once ran it out, 2026-11-08).
-          exec 9>/tmp/solon-law-load.lock
-          flock 9
+          # One heavy load at a time on the box, this sync included: it takes the same lock as a
+          # heavy load dispatched by hand (law-text.yml), so two never share its memory (two at
+          # once ran it out, 2026-11-08). After two hours' wait it leaves this week's sync be.
+          exec 9>/tmp/solon-law-load-heavy.lock
+          flock -w 7200 9 || { echo "a heavy load held the box for two hours: this week's sync did not run"; exit 0; }
           WD=$(mktemp -d /tmp/solon-law-sync.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
           git clone -q https://github.com/bitbaum/solon "$WD/repo"
