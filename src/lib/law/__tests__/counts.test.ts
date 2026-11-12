@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { LAW_AUTHORITIES } from "@/lib/config/law";
-import { countOf, rollUp } from "../counts";
+import { LAW_AUTHORITIES, countryOf } from "@/lib/config/law";
+import { countOf, heldOf, rollUp } from "../counts";
 import { globeActs } from "../globe";
 import { chainOf } from "../places";
 
@@ -58,9 +58,30 @@ describe("law counts", () => {
     const held = new Map(LAW_AUTHORITIES.map((a, i) => [a.key, (i * 13) % 50]));
     const counts = rollUp(held);
     for (const a of LAW_AUTHORITIES.filter((x) => x.place?.scheme === "iso_3166_1")) {
-      const old = globeActs(held, a.key);
-      expect(countOf(counts, a.key, "own"), a.key).toBe(old.own);
-      expect(countOf(counts, a.key, "within"), a.key).toBe(old.acts);
+      // The globe's own sum before it read counts.ts: every authority in the country, by its code.
+      const below = [...held].reduce(
+        (sum, [k, n]) => sum + (k !== a.key && countryOf(k) === a.place!.value ? n : 0),
+        0,
+      );
+      const own = held.get(a.key) ?? 0;
+      expect(globeActs(counts, a.key), a.key).toEqual({ acts: own + below, own, below });
     }
+  });
+
+  it("builds every count from the acts whose text is held", () => {
+    // The register lists more acts in force than Solon holds the text of; the count is of texts held.
+    const row = (key: string, inForce: number, withText: number) => ({
+      key,
+      name: key,
+      inForce,
+      notInForce: 0,
+      statusNotStated: 0,
+      withText,
+    });
+    const held = heldOf({ authorities: [row("li", 3_500, 3_412), row("li7001", 40, 30)] });
+    expect([...held]).toEqual([
+      ["li", 3_412],
+      ["li7001", 30],
+    ]);
   });
 });

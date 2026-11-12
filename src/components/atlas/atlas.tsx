@@ -497,10 +497,12 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       if (!region) return "";
       const place = byFeature.get(featureOfA2.get(region.a2) ?? "");
       const name = `${region.names[locale] ?? region.name}, ${countryName(region.a2)}`;
-      return place && place.acts > 0 ? tg("held", { name, count: place.acts }) : name;
+      return place && place.own > 0 ? tg("held", { name, count: place.own }) : name;
     }
     const place = byFeature.get(id);
-    if (place && place.acts > 0) return tg("held", { name: place.name, count: place.acts });
+    // The figure printed is the place's own law, as its place page and Law page print it; the
+    // shade is everything within it.
+    if (place && place.own > 0) return tg("held", { name: place.name, count: place.own });
     const region = regionByFeature.get(id);
     return region ? regionName(region, locale) : (place?.name ?? countryName(a2OfFeature.get(id)));
   };
@@ -730,7 +732,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   }
   const held = named
     .filter((p) => (layer === "tax" ? p.drawn : p.acts > 0 || p.pack))
-    .sort((a, b) => b.acts - a.acts);
+    .sort((a, b) => b.own - a.own || b.acts - a.acts);
   const countryPage = pageOf(country);
   const selectedPlace = selected?.startsWith(SUB)
     ? placeByFeature.get(selected.slice(SUB.length))
@@ -978,7 +980,11 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
               className="flex min-h-11 w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
             >
               <span className="font-medium text-fg-primary">{p.name}</span>
-              <span className="text-sm text-fg-tertiary">{t("lawCount", { count: p.acts })}</span>
+              <span className="text-sm text-fg-tertiary">
+                {p.own === 0 && p.below > 0
+                  ? t("lawBelow", { count: p.below })
+                  : t("lawCount", { count: p.own })}
+              </span>
             </button>
           </li>
         ))}

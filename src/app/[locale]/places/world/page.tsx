@@ -36,7 +36,8 @@ export default async function WorldPage({ params }: { params: Params }) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Places" });
   const globe = await loadGlobePlaces(db);
-  const acts = new Map(globe.flatMap((p) => (p.region ? [[p.region, p.acts] as const] : [])));
+  // Each country's own law: the figure its page prints (`counts.ts`), not the total with its communes.
+  const acts = new Map(globe.flatMap((p) => (p.region ? [[p.region, p.own] as const] : [])));
   const rows = WORLD.map((region) => {
     const pack = region.code ? placesConfig.packs.find((p) => p.region === region.code) : undefined;
     return {
