@@ -6,6 +6,7 @@
  * explanation may draw on (explain.ts): a sentence in an explanation that
  * does not rest on a fact here is refused.
  */
+import { UNITS } from "@/lib/config/places/units";
 import type { Metric } from "@/lib/config/places/schema";
 import { localized } from "@/lib/places/place-view";
 import { chartValue, eventPath, metricPath } from "./present";
@@ -54,8 +55,9 @@ export function valueText(
   per100k = "per 100,000",
 ): string {
   const shown = chartValue(metric, value).toLocaleString(locale);
-  if (metric.unit === "ratio") return `${shown}%`;
-  if (metric.unit === "per_100k") return `${shown} ${per100k}`;
+  const rule = UNITS[metric.unit];
+  if (rule.percent) return `${shown}%`;
+  if (rule.label === "per_100k") return `${shown} ${per100k}`;
   return shown;
 }
 
@@ -69,7 +71,7 @@ export function deltaOf(
   const d = Math.abs(chartValue(metric, to) - chartValue(metric, from));
   return {
     delta: (Math.round(d * 1000) / 1000).toLocaleString(locale),
-    pp: metric.unit === "ratio" ? 1 : 0,
+    pp: UNITS[metric.unit].percent ? 1 : 0,
   };
 }
 

@@ -19,6 +19,7 @@ import {
   WORLD_SUBDIVISIONS_KEY,
 } from "./world";
 import { METRICS } from "./metrics";
+import { UNITS } from "./units";
 import type { SourceInput } from "./schema";
 
 /** The calculator rounds taxable income down to CHF 100 before a tariff applies… */
@@ -185,7 +186,7 @@ const WDI_INDICATORS = METRICS.flatMap((metric) =>
             ? { database: metric.statistic.series.database }
             : {}),
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],
@@ -209,7 +210,7 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
           measure: metric.statistic.series.measure,
           match: metric.statistic.series.match ?? {},
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],

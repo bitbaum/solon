@@ -1,3 +1,4 @@
+import { UNITS } from "@/lib/config/places/units";
 import { BarChart } from "@bitbaum/chartkit/react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -70,7 +71,7 @@ export default function AxisPanel({
           const figure =
             only?.value != null && metric
               ? `${chartValue(metric, only.value).toLocaleString(locale)}${
-                  metric.unit === "ratio" ? " %" : ""
+                  UNITS[metric.unit].percent ? " %" : ""
                 } (${only.year})`
               : undefined;
           return {
