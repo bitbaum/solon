@@ -145,7 +145,7 @@ export async function loadSeriesFor(
   { latestOnly = false }: { latestOnly?: boolean } = {},
 ): Promise<Map<string, PlaceSeries[]>> {
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
-  const keys = metricKeys.filter((k) => metrics.has(k));
+  const keys = [...new Set(metricKeys)].filter((k) => metrics.has(k));
   const out = new Map<string, PlaceSeries[]>(keys.map((k) => [k, []]));
   if (keys.length === 0) return out;
   const bands = sql.join(

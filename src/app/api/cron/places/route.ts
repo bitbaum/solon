@@ -19,6 +19,8 @@ export const dynamic = "force-dynamic";
 
 /** How long one worker keeps starting sources; the next hour's call takes what is left. */
 const WORKER_BUDGET_MS = 50 * 60_000;
+/** Longer than any import may run, on the box or from a runner through the tunnel. */
+const ABANDONED_AFTER_MS = 8 * 3_600_000;
 /** The timer calls hourly; failures are reported once, over a little more than that. */
 const REPORT_WINDOW_MS = 65 * 60_000;
 
@@ -85,8 +87,10 @@ export async function POST(request: Request) {
   }
 
   const busy = Boolean(state.solonImportWorker);
-  // A run older than two budgets was left open by a process that stopped: report it, back off.
-  if (!busy) await closeAbandonedRuns(db, 2 * WORKER_BUDGET_MS);
+  // A run still open after longer than any process here may live (a worker's budget, a load a
+  // workflow runs, which GitHub stops at six hours) was left by a process that stopped: report it,
+  // back off. Any other process's run, however long, is younger than that.
+  await closeAbandonedRuns(db, ABANDONED_AFTER_MS);
   const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
   const runs = await sourceRuns(db);
   const pending = (await pendingSources(db, placesConfig, new Date(), runs)).map((s) => s.key);

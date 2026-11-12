@@ -32,17 +32,11 @@ import { countryPlaceId, loadProfileFigures } from "@/lib/places/profile-figures
 import { recentChanges } from "@/lib/law/recent";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
-/**
- * Rendered on a place's first visit and kept for an hour (ISR), so a page's queries run about
- * once an hour per place and language, not once per view: nothing on it depends on who reads it.
- * An hour is how stale a figure can be after an import, whichever process wrote it. Nothing is
- * rendered at build: the build has no database, and there are thousands of places.
- */
-export const revalidate = 3600;
-
-export function generateStaticParams() {
-  return [];
-}
+// Rendered on every visit. ISR was tried and left (2026-11-12): Next keeps every rendered URL on
+// the server's disk, a few thousand places in five languages and any made-up path besides, with
+// no bound. What a view costs is cut instead: one-query lookups, the law counts of the place's
+// own authorities, every statistic in one query.
+export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; slug: string[] }>;
 

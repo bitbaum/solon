@@ -48,9 +48,10 @@ jobs:
           set -uo pipefail
           # One heavy load at a time on the box, this sync included: it takes the same lock as a
           # heavy load dispatched by hand (law-text.yml), so two never share its memory (two at
-          # once ran it out, 2026-11-08). After two hours' wait it leaves this week's sync be.
+          # once ran it out, 2026-11-08). After 45 minutes' wait it leaves this week's sync be, so
+          # a sync that starts keeps most of its job's time.
           exec 9>/tmp/solon-law-load-heavy.lock
-          flock -w 7200 9 || { echo "a heavy load held the box for two hours: this week's sync did not run"; exit 0; }
+          flock -w 2700 9 || { echo "a heavy load held the box for 45 minutes: this week's sync did not run"; exit 0; }
           WD=$(mktemp -d /tmp/solon-law-sync.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
           git clone -q https://github.com/bitbaum/solon "$WD/repo"

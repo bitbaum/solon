@@ -1,10 +1,13 @@
 /**
  * Asking Wikidata, politely: one place for the user agent, the waits and the
- * query service's answer shape, for every script that reads it. A 429 or 503
+ * query service's answer shape, for every script that reads it. A 429, or a
+ * 500, 502, 503 or 504 (the service's answer to an overloaded or timed-out
+ * query), is tried again; a bad query (400) fails at once. A 429 or 503
  * waits as long as the server asks (at most two minutes), eight times.
  */
 const USER_AGENT = "SolonWikidataReader/1.0 (https://solon.orangecat.ch; places and law)";
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const RETRIED = new Set([429, 500, 502, 503, 504]);
 
 export async function politeJson(url: string, accept = "application/json"): Promise<unknown> {
   for (let attempt = 1; ; attempt++) {
@@ -13,7 +16,7 @@ export async function politeJson(url: string, accept = "application/json"): Prom
       signal: AbortSignal.timeout(180_000),
     });
     if (r.ok) return r.json();
-    if ((r.status !== 429 && r.status !== 503) || attempt >= 8)
+    if (!RETRIED.has(r.status) || attempt >= 8)
       throw new Error(`${url.slice(0, 120)}: HTTP ${r.status}`);
     const asked = Number(r.headers.get("retry-after"));
     await sleep(

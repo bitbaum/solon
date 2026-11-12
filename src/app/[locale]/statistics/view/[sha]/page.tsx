@@ -51,11 +51,13 @@ export default async function SavedViewPage({ params }: { params: Params }) {
     const metrics = new Map(
       placesConfig.metrics.filter((m) => m.statistic && !m.retired).map((m) => [m.key, m]),
     );
+    // Scored as the index scores it: each place's latest plausible value.
     const byMetric = await loadSeriesFor(
       db,
       placesConfig,
       definition.components.map((c) => c.metric),
       locale,
+      { latestOnly: true },
     );
     const url = `${SITE}${getPathname({ href: viewPath(sha), locale })}`;
     return (

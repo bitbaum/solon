@@ -69,6 +69,11 @@ export interface SourceRuns {
 export const RETRY_AFTER_MS = 24 * 3_600_000;
 export const RETRY_SLOWLY_AFTER_MS = 7 * RETRY_AFTER_MS;
 export const FAILURES_BEFORE_SLOW = 3;
+/**
+ * A queue that runs once a day (a runner's) starts at about the same time each day, a few minutes
+ * either way: a wait counted to the minute would miss the next day's run and wait for the one after.
+ */
+const RETRY_SLACK_MS = 2 * 3_600_000;
 
 /**
  * The sources a run should fetch now, in registry order (later sources may
@@ -92,7 +97,7 @@ export function importQueue(
     if (state.latest.status === "failed") {
       const wait =
         state.failuresInARow >= FAILURES_BEFORE_SLOW ? RETRY_SLOWLY_AFTER_MS : RETRY_AFTER_MS;
-      return now.getTime() - state.latest.at.getTime() >= wait;
+      return now.getTime() - state.latest.at.getTime() >= wait - RETRY_SLACK_MS;
     }
     const due = lastDue(source.cadence, today);
     return due !== null && state.latest.at.toISOString().slice(0, 10) < due;

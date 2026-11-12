@@ -160,6 +160,11 @@ export async function importRegister(
       report.status = "applied";
       report.sourceId = last.id;
       report.unchanged = true;
+      // What it no longer lists is still reported each run: one query, no transaction.
+      const listed = new Set(rows.map((r) => r.identity.value));
+      report.missingFromSource = (
+        await statedBefore(db, register.identityScheme, register.key)
+      ).filter((value) => !listed.has(value)).length;
     } else {
       try {
         const snapshotKey = await options.snapshots.put(sha, options.bytes);

@@ -48,7 +48,6 @@ one to read for the detail. Fixes get the same weight as features.
   and the City of San Marino showed their country's profile, photograph and budget, and a shared
   link to the US state of Georgia showed the country Georgia's card. A place's country is now its
   own ISO country code, never its name.
-- **Place pages open faster**: each is rendered once an hour, not on every visit.
 - **The statistics page reads every statistic at once**: four queries instead of 136, and a new
   statistic adds none. A place ranked on it shows its latest plausible figure, as its chart does.
 - **The World Bank's figures are read from a machine it answers.** It refuses Solon's server, so

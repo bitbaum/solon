@@ -16,6 +16,10 @@ on:
     workflows: [Deploy]
     types: [completed]
     branches: [main]
+  # Weekly, the import whatever changed: a file applied while some of its places were not held
+  # yet (`+partial`) is read again, as is one whose import failed.
+  schedule:
+    - cron: "23 5 * * 1"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -36,7 +40,7 @@ jobs:
   # Places data and no photograph, and then nothing here clones, installs or reads anything. A run
   # by hand does both.
   changes:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -56,6 +60,10 @@ jobs:
           set -euo pipefail
           both() { echo "data=true" >> "$GITHUB_OUTPUT"; echo "photos=true" >> "$GITHUB_OUTPUT"; echo "$1"; exit 0; }
           [ "$EVENT" = workflow_dispatch ] && both "run by hand: both jobs"
+          if [ "$EVENT" = schedule ]; then
+            echo "data=true" >> "$GITHUB_OUTPUT"; echo "photos=false" >> "$GITHUB_OUTPUT"
+            echo "weekly: the import, for anything left partial or failed"; exit 0
+          fi
           # The commit this workflow last succeeded for after a deploy: what has been loaded. A run
           # that failed does not count, so its changes are tried again by the next deploy's run; a
           # dispatch (perhaps a dry run) does not count either.

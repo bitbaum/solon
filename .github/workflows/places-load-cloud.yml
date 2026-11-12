@@ -35,8 +35,10 @@ on:
 permissions:
   contents: read
 
+# One cloud load at a time, whatever it loads: the daily queue and a fetch dispatched by hand
+# would otherwise both read and write the same source.
 concurrency:
-  group: places-cloud-${{ inputs.source || 'queue' }}
+  group: places-cloud
   cancel-in-progress: false
 
 jobs:
