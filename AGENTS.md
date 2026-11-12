@@ -67,12 +67,17 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ```bash
 pnpm run dev          # next dev (localhost:3000)
 pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + test — run before every commit
+pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + test:coverage — run before every commit
 ```
 
 `pnpm run verify` is the single source of truth for "is this change clean?" CI's
 `verify` job calls it verbatim, then adds the vendored-drift check and the build
 (see CI below), so green `verify` locally is necessary but not the whole of CI.
+
+Its tests run with coverage (`test:coverage`). The thresholds in `vitest.config.ts`
+are a floor set just below what the suite measured when they were set: raise them
+when you add tests, and never lower them to get a build through. `pnpm run test`
+is the same suite without the measurement, for a quick run.
 
 ## Drizzle / database
 
