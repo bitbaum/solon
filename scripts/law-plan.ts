@@ -17,10 +17,10 @@ import type { Candidate, LawPlan } from "@/lib/law/plan/schema";
 import { lawPlanSchema } from "@/lib/law/plan/schema";
 import { inForceByCountry, mergeSeed, nameKey, type ConstituteEntry } from "@/lib/law/plan/seed";
 import { planStatus, planTotals } from "@/lib/law/plan/status";
+import { sparql as wikidataQuery } from "@/lib/wikidata/query";
 
 const USER_AGENT = "Solon law reader (solon.orangecat.ch)";
 const CONSTITUTE_INDEX = "https://www.constituteproject.org/service/constitutions";
-const WIKIDATA = "https://query.wikidata.org/sparql";
 
 /** Readers Solon already has for a country's national law, by the plan's field. */
 const NATIONAL_READERS = new Map([
@@ -34,28 +34,16 @@ const NATIONAL_READERS = new Map([
   ["RU", { register: "pravo-gov-ru", texts: null }],
 ]);
 
-async function sparql<T>(query: string): Promise<T[]> {
-  const url = `${WIKIDATA}?query=${encodeURIComponent(query)}`;
-  const response = await fetch(url, {
-    headers: { accept: "application/sparql-results+json", "user-agent": USER_AGENT },
-    signal: AbortSignal.timeout(120_000),
-  });
-  if (!response.ok) throw new Error(`Wikidata: HTTP ${response.status}`);
-  const body = (await response.json()) as {
-    results: { bindings: Record<string, { value: string }>[] };
-  };
-  return body.results.bindings.map(
-    (b) => Object.fromEntries(Object.entries(b).map(([k, v]) => [k, v.value])) as T,
-  );
-}
+/** A SPARQL query's rows, typed as the query's variables (the shared, polite client). */
+const sparql = async <T>(query: string): Promise<T[]> => (await wikidataQuery(query)) as T[];
 
 async function seed(): Promise<number> {
-  const index = (await (
-    await fetch(CONSTITUTE_INDEX, {
-      headers: { "user-agent": USER_AGENT },
-      signal: AbortSignal.timeout(60_000),
-    })
-  ).json()) as ConstituteEntry[];
+  const answer = await fetch(CONSTITUTE_INDEX, {
+    headers: { "user-agent": USER_AGENT },
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!answer.ok) throw new Error(`Constitute's index: HTTP ${answer.status}`);
+  const index = (await answer.json()) as ConstituteEntry[];
 
   const english = new Intl.DisplayNames(["en"], { type: "region" });
   const namesByKey = new Map<string, string>();
