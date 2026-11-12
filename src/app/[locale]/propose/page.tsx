@@ -39,6 +39,21 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
   if (!member) {
     return (
       <Shell>
+        {draft?.title && (
+          // The link carried a suggestion; it survives sign-in and joining, and
+          // the page used not to say so. A person who pressed "Govern it with
+          // Solon" saw a blank gate and could not tell their words were kept.
+          <div
+            className="mb-6 rounded-surface border border-default bg-surface-base p-4"
+            role="status"
+          >
+            <p className="kicker">Your suggestion</p>
+            <p className="mt-2 text-base font-medium text-fg-primary">{draft.title}</p>
+            <p className="mt-2 text-sm text-fg-secondary">
+              It is kept. The form opens with it filled in once you are a member.
+            </p>
+          </div>
+        )}
         <p className="text-sm leading-relaxed text-fg-secondary">
           Only members can make a suggestion, so everyone can see who asked for what. You are not a
           member of {org.name} yet.
