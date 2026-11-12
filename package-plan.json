@@ -71,6 +71,15 @@
           "symbols": ["ChatScreen", "Composer", "ChatThread"]
         }
       ]
+    },
+    "limits": {
+      "package": "@bitbaum/limitkit",
+      "bindings": [
+        {
+          "file": "src/lib/chat/rate-limit.ts",
+          "symbols": ["slidingWindow", "MemoryStore", "clientIp", "toHeaders"]
+        }
+      ]
     }
   },
   "migration": {

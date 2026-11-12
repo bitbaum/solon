@@ -1,5 +1,5 @@
 import { looksLikeSilence, speechChain, speechConfigured, transcribe } from "@bitbaum/ai-kit";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { selfOriginOf } from "@/lib/auth/actor";
 
 /** Dictation is as public as the law chat it serves: bounded by origin, size and a per-address rate. */
@@ -17,9 +17,8 @@ const fail = (code: string, status: number, headers?: HeadersInit) =>
 export async function POST(req: Request) {
   if (req.headers.get("origin") !== selfOriginOf(req)) return fail("origin", 403);
   if (!speechConfigured(process.env)) return fail("not-configured", 503);
-  const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!allowAssistantRequest(address, "dictation"))
-    return fail("rate-limited", 429, { "Retry-After": "600" });
+  const limit = await checkAssistantRequest(clientIp(req.headers), "dictation");
+  if (!limit.allowed) return fail("rate-limited", 429, toHeaders(limit));
   const size = Number(req.headers.get("content-length"));
   if (!size || size > MAX_BYTES) return fail("too-large", 413);
   const form = await req.formData().catch(() => null);

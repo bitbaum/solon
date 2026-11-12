@@ -1,4 +1,4 @@
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { handleMcpRequest } from "@/lib/mcp/server";
 
@@ -11,15 +11,15 @@ export const maxDuration = 60;
  * bounded per address. Stateless Streamable HTTP, so only POST is served.
  */
 export async function POST(request: Request) {
-  const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!allowAssistantRequest(address, "mcp"))
+  const limit = await checkAssistantRequest(clientIp(request.headers), "mcp");
+  if (!limit.allowed)
     return Response.json(
       {
         jsonrpc: "2.0",
         error: { code: -32000, message: "Too many requests; wait a few minutes." },
         id: null,
       },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
   return handleMcpRequest(request, db);
 }

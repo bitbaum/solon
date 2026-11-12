@@ -19,6 +19,7 @@ import * as placesSchema from "./places-schema";
 import * as lawSchema from "./law-schema";
 import * as amendmentsSchema from "./amendments-schema";
 import * as statisticsSchema from "./statistics-schema";
+import * as rateLimitSchema from "./rate-limit-schema";
 
 const schema = {
   ...governanceSchema,
@@ -26,6 +27,7 @@ const schema = {
   ...lawSchema,
   ...amendmentsSchema,
   ...statisticsSchema,
+  ...rateLimitSchema,
 };
 type Db = ReturnType<typeof drizzle<typeof schema>>;
 

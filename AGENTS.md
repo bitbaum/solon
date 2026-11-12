@@ -162,6 +162,10 @@ texts are translated when a page is first read.
   must have one says why in a first-line `// experience-exempt: <reason>`.
 - Never print a server's error text. Routes answer with a status and a `code`;
   chatkit names the problem from the status, in the reader's language.
+- The assistants' rate limit is `@bitbaum/limitkit`'s decision over windows
+  held in Postgres (`src/lib/chat/rate-limit.ts`, table `rate_limit_windows`),
+  so it survives a deploy and is one allowance across instances. Solon's part
+  is the numbers per bucket; a new route takes a bucket there, never its own counter.
 - Every label is in `messages/*.json` for ru, de, fr, it and en. A test fails
   when a chat label falls back to chatkit's English default.
 - The fleet experience audit (`.github/workflows/experience.yml`) fails over
