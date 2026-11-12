@@ -1,12 +1,16 @@
 /**
- * Whether a file kept in the repository has already been applied: its bytes are those of the source's last
- * retrieval AND the adapter that read it is the version that read that retrieval. A file whose bytes did not
- * change is still read again when its adapter did (a new option, a fixed mapping), or the fix would reach
- * production only the next time somebody edited the data.
+ * Whether a retrieval has already been applied: its bytes are those of the
+ * source's last applied retrieval from the same address AND it was read by
+ * the same importer. "The same importer" is the adapter's key and version and
+ * a hash of the source's options and packs: a new metric, a changed divisor or
+ * a fixed mapping reads the same bytes again, or the fix would reach
+ * production only the next time the publisher changed a figure.
  */
+import { createHash } from "node:crypto";
+
 export interface LastApplied {
   sha256: string;
-  /** `${adapter.key}@${adapter.version}`, as the importer records it. */
+  /** As `importerVersion` writes it. */
   importerVersion: string;
 }
 
@@ -16,4 +20,24 @@ export function alreadyApplied(
   importerVersion: string,
 ): boolean {
   return last !== null && last.sha256 === sha256 && last.importerVersion === importerVersion;
+}
+
+/** JSON with sorted keys, so equal options hash equal whatever order config writes them in. */
+const canonical = (value: unknown): string =>
+  JSON.stringify(value, (_key, v: unknown) =>
+    v && typeof v === "object" && !Array.isArray(v)
+      ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)))
+      : v,
+  );
+
+/** `<adapter>@<version>#<12 hex of the options and packs>`: what read a retrieval, recorded on its `sources` row. */
+export function importerVersion(
+  adapter: { key: string; version: string },
+  source: { options?: unknown; packs: readonly string[] },
+): string {
+  const hash = createHash("sha256")
+    .update(canonical({ options: source.options ?? null, packs: source.packs }))
+    .digest("hex")
+    .slice(0, 12);
+  return `${adapter.key}@${adapter.version}#${hash}`;
 }

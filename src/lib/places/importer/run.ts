@@ -25,7 +25,7 @@
  * source can say when a place ended.
  */
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { makeGeometryRef } from "@bitbaum/geo-kit";
 import type { CountryPack, PlacesConfig, Source } from "@/lib/config/places/schema";
 import type { Database, Tx } from "@/lib/db/client";
@@ -54,6 +54,7 @@ import {
   type ImportBatch,
 } from "./batch";
 import { defaultGeometryStore, type GeometryStore } from "./geometry-store";
+import { alreadyApplied, importerVersion } from "./applied";
 import { sha256Hex, type SnapshotStore } from "./snapshots";
 import { checkBatch } from "./validate";
 
@@ -112,6 +113,11 @@ export interface ImportReport {
   /** Rows the adapter left out on purpose, with why. */
   skipped: { row: string; reason: string }[];
   problems: string[];
+  /**
+   * The bytes are those of the source's last applied retrieval from the same address, read by
+   * the same importer: nothing was parsed or written, and the run counts as applied.
+   */
+  unchanged?: boolean;
 }
 
 class RunFailed extends Error {
@@ -150,6 +156,41 @@ const canonical = (value: unknown): string =>
       : v,
   );
 
+/** The kinds of change that move a place, after which the ancestors view is rebuilt. */
+const HIERARCHY_CHANGES: readonly ChangeKind[] = [
+  "placesInserted",
+  "placesUpdated",
+  "relationsInserted",
+  "relationsEnded",
+  "relationsSuperseded",
+];
+
+/** Rebuilds `place_ancestors`, through the function its owner defined (migration 0028). */
+export async function refreshAncestors(db: Database | Tx): Promise<void> {
+  await db.execute(sql`SELECT place_ancestors_refresh()`);
+}
+
+/** Writes a run's outcome onto its row in `place_import_runs`. */
+async function recordRun(db: Database, report: ImportReport): Promise<void> {
+  await db
+    .update(placeImportRuns)
+    .set({
+      status: report.status,
+      sourceId: report.sourceId,
+      report: {
+        ...(report.unchanged ? { unchanged: true } : {}),
+        contentSha256: report.contentSha256,
+        counts: report.counts,
+        quarantined: report.quarantined,
+        missingFromSource: report.missingFromSource,
+        skipped: report.skipped,
+        problems: report.problems,
+      },
+      finishedAt: new Date(),
+    })
+    .where(eq(placeImportRuns.id, report.runId));
+}
+
 export async function runImport(db: Database, options: ImportOptions): Promise<ImportReport> {
   const { config, sourceKey, retrieval, snapshots, dryRun = false } = options;
   const adapters = options.adapters ?? ADAPTERS;
@@ -186,7 +227,43 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
 
     const sha = sha256Hex(retrieval.bytes);
     report.contentSha256 = sha;
+    const version = importerVersion(adapter, source);
+    // Kept even when nothing else is: the bytes behind every recorded reading stay readable.
     const snapshotKey = await snapshots.put(sha, retrieval.bytes);
+    // Bytes already applied, by the same importer: say so and stop. Most scheduled fetches
+    // find their publisher's figures as they were; parsing, diffing and writing them again
+    // cost a transaction, a registry sync and a refresh of the places' ancestors each time.
+    if (!dryRun && !adapter.publishesFiles) {
+      const [last] = await db
+        .select({
+          id: sources.id,
+          url: sources.url,
+          sha256: sources.contentSha256,
+          importerVersion: sources.importerVersion,
+        })
+        .from(sources)
+        .where(
+          and(
+            eq(sources.sourceKey, sourceKey),
+            // An adapter whose retrievals are parts compares each with its own last reading;
+            // one whose retrievals are editions compares with the source's latest of any.
+            adapter.independentRetrievals
+              ? retrieval.url === null
+                ? isNull(sources.url)
+                : eq(sources.url, retrieval.url)
+              : undefined,
+          ),
+        )
+        .orderBy(desc(sources.retrievedAt))
+        .limit(1);
+      if (last && last.url === retrieval.url && alreadyApplied(last, sha, version)) {
+        report.status = "applied";
+        report.sourceId = last.id;
+        report.unchanged = true;
+        await recordRun(db, report);
+        return report;
+      }
+    }
 
     const decoded = adapter.decode
       ? adapter.decode(retrieval.bytes)
@@ -250,7 +327,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
             url: retrieval.url,
             contentSha256: sha,
             snapshotKey,
-            importerVersion: `${adapter.key}@${adapter.version}`,
+            importerVersion: version,
             licenceSpdx: source.licence,
           })
           .returning();
@@ -270,9 +347,14 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         if (dryRun) {
           throw new DryRunDone(applied);
         }
-        // Where places sit is derived from the relations just written (migration 0025). Through a function:
-        // only the view's owner may refresh it, and the importer is not the migrating role (0027).
-        await tx.execute(sql`SELECT place_ancestors_refresh()`);
+        // Where places sit is derived from the relations just written (migration 0025), so the view
+        // is rebuilt when they or the places changed, and only then: a batch of figures moves no
+        // place. (A relation that starts or ends on a later day is caught by the daily rebuild in
+        // the import queue.) Through a function: only the view's owner may refresh it, and the
+        // importer is not the migrating role (0027).
+        if (HIERARCHY_CHANGES.some((kind) => applied.counts[kind] > 0)) {
+          await refreshAncestors(tx);
+        }
         report.sourceId = sourceRow!.id;
         return applied;
       })
@@ -294,22 +376,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         : [error instanceof Error ? describeDbError(error) : String(error)];
   }
 
-  await db
-    .update(placeImportRuns)
-    .set({
-      status: report.status,
-      sourceId: report.sourceId,
-      report: {
-        contentSha256: report.contentSha256,
-        counts: report.counts,
-        quarantined: report.quarantined,
-        missingFromSource: report.missingFromSource,
-        skipped: report.skipped,
-        problems: report.problems,
-      },
-      finishedAt: new Date(),
-    })
-    .where(eq(placeImportRuns.id, report.runId));
+  await recordRun(db, report);
   return report;
 }
 
@@ -703,15 +770,26 @@ async function applyBatch(
   }
 
   // --- Facts: per period; a changed value supersedes, it never overwrites. ---
+  // Read only the metrics this batch states: a place holds figures from many sources, and one
+  // indicator for every country must not load every country's every series to compare.
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
   const factIds = [...new Set(batch.facts.map((f) => idOf(f.jurisdiction, `fact ${f.metricKey}`)))];
-  const currentFacts =
-    factIds.length === 0
-      ? []
-      : await tx
-          .select()
-          .from(facts)
-          .where(and(inArray(facts.jurisdictionId, factIds), isNull(facts.supersededAt)));
+  const factMetrics = [...new Set(batch.facts.map((f) => f.metricKey))];
+  const currentFacts: (typeof facts.$inferSelect)[] = [];
+  for (const ids of batches(factIds)) {
+    currentFacts.push(
+      ...(await tx
+        .select()
+        .from(facts)
+        .where(
+          and(
+            inArray(facts.jurisdictionId, ids),
+            inArray(facts.metricKey, factMetrics),
+            isNull(facts.supersededAt),
+          ),
+        )),
+    );
+  }
   const factKey = (r: {
     jurisdictionId: string;
     metricKey: string;
@@ -719,6 +797,8 @@ async function applyBatch(
     validFrom: string;
   }) => canonical([r.jurisdictionId, r.metricKey, r.variant, r.validFrom]);
   const haveFacts = new Map(currentFacts.map((r) => [factKey(r), r]));
+  const supersededFacts: string[] = [];
+  const newFacts: (typeof facts.$inferInsert)[] = [];
   for (const fact of batch.facts) {
     const row = {
       jurisdictionId: idOf(fact.jurisdiction, `fact ${fact.metricKey}`),
@@ -747,12 +827,19 @@ async function applyBatch(
       if (same) {
         continue;
       }
-      await tx.update(facts).set({ supersededAt: now }).where(eq(facts.id, have.id));
-      counts.factsSuperseded += 1;
+      supersededFacts.push(have.id);
     }
-    await tx.insert(facts).values({ ...row, sourceId, method: "imported" });
-    counts.factsInserted += 1;
+    newFacts.push({ ...row, sourceId, method: "imported" });
   }
+  // The old row first, then its successor: one current figure per place, metric and period.
+  for (const ids of batches(supersededFacts)) {
+    await tx.update(facts).set({ supersededAt: now }).where(inArray(facts.id, ids));
+  }
+  counts.factsSuperseded += supersededFacts.length;
+  for (const rows of batches(newFacts)) {
+    await tx.insert(facts).values(rows);
+  }
+  counts.factsInserted += newFacts.length;
 
   // --- Postcodes: the source's whole directory; what it no longer states is superseded. ---
   const currentPostcodes = await tx

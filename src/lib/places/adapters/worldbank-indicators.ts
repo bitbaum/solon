@@ -92,6 +92,8 @@ export const worldbankIndicatorPage = (code: string, country: string) =>
 export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
   key: "worldbank_indicators",
   version: "1",
+  // One request per indicator or series: each is its own part of the source.
+  independentRetrievals: true,
   schema: response,
   options: worldbankOptions,
   retrievals: (options, today) =>

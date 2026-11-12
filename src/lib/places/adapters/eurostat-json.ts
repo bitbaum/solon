@@ -123,6 +123,8 @@ export function cellsOf(
 export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
   key: "eurostat_json",
   version: "1",
+  // One request per indicator or series: each is its own part of the source.
+  independentRetrievals: true,
   schema: cube,
   options: eurostatOptions,
   retrievals: (options) =>

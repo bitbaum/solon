@@ -72,6 +72,8 @@ export function qualityOfObsStatus(code: string | undefined): FactQuality {
 export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
   key: "oecd_sdmx",
   version: "1",
+  // One request per indicator or series: each is its own part of the source.
+  independentRetrievals: true,
   decode: decodeCsv,
   schema: rows,
   options: oecdOptions,
