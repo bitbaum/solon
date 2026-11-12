@@ -36,6 +36,7 @@
     "geography:world": "tsx scripts/build-world-geography.ts",
     "check:cycles": "madge --circular --extensions ts,tsx --ts-config tsconfig.json src",
     "places:world-countries": "tsx scripts/places-world-countries.ts",
+    "places:world-subdivisions": "tsx scripts/places-world-subdivisions.ts",
     "statistics:verify": "tsx scripts/statistics-verify.ts",
     "law:register": "tsx scripts/law-register.ts",
     "law:text": "tsx scripts/law-text.ts",

@@ -89,6 +89,7 @@ substance; it never says which side is right (design:
 - [x] One page shape for every place: the hero with its main action, the law and what a reader can do beside the place at a glance; the world index grouped by kind of place {#place-page-shape}
 - [x] A place's figures on its profile, chosen in config and shown only where held: what the state takes and spends, how it is governed, how safe it is, each with its position among countries, its trend and its source {#place-figures}
 - [x] A place's profile says how its law is changed by the people it applies to, from the nearest authority up, and what in that law changed over the past year {#place-change}
+- [x] The places inside every country: every subdivision with an ISO 3166-2 code, from Wikidata, under its region where it has one, each with a page of its own {#world-subdivisions}
 - [ ] Official routes for every country whose constitution Solon holds, read from it with the provision cited {#place-routes-world}
 - [ ] A proposal on an act whose text Solon does not hold: the change asked for in words, pinned to the act's official publication, supported and counted like any other {#amend-without-text}
 - [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}

@@ -59,3 +59,4 @@ public/geography/
 data/world/profiles.json
 src/lib/config/world/extras.json
 data/world/photos.json
+data/places/world/subdivisions.json

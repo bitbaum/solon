@@ -133,6 +133,15 @@ interface ApplyOutcome {
 const noChanges = (): ChangeCounts =>
   Object.fromEntries(CHANGE_KINDS.map((kind) => [kind, 0])) as ChangeCounts;
 
+/**
+ * Rows a thousand at a time: Postgres takes at most 65,535 parameters a
+ * statement, and five thousand places with five names each are well past it
+ * (the world's subdivisions, 2026-11-12).
+ */
+function* batches<T>(rows: readonly T[], size = 1000): Generator<T[]> {
+  for (let i = 0; i < rows.length; i += size) yield rows.slice(i, i + size);
+}
+
 /** JSON with sorted keys, so equal values compare equal. */
 const canonical = (value: unknown): string =>
   JSON.stringify(value, (_key, v: unknown) =>
@@ -536,9 +545,9 @@ async function applyBatch(
   }
   const newIdentifiers = wantedIdentifiers.filter((r) => !haveIdentifierKeys.has(identifierKey(r)));
   if (newIdentifiers.length > 0) {
-    await tx
-      .insert(jurisdictionIdentifiers)
-      .values(newIdentifiers.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newIdentifiers.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionIdentifiers).values(rows);
+    }
     counts.identifiersInserted += newIdentifiers.length;
   }
 
@@ -613,7 +622,9 @@ async function applyBatch(
   }
   const newNames = wantedNames.filter((r) => !haveNameKeys.has(nameKey(r)));
   if (newNames.length > 0) {
-    await tx.insert(jurisdictionNames).values(newNames.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newNames.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionNames).values(rows);
+    }
     counts.namesInserted += newNames.length;
   }
 
@@ -685,7 +696,9 @@ async function applyBatch(
   }
   const newRelations = wantedRelations.filter((r) => !haveByKey.has(relationKey(r)));
   if (newRelations.length > 0) {
-    await tx.insert(jurisdictionRelations).values(newRelations.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newRelations.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionRelations).values(rows);
+    }
     counts.relationsInserted += newRelations.length;
   }
 
@@ -917,7 +930,9 @@ async function applyInstruments(
     counts.instrumentsSuperseded += 1;
   }
   if (wanted.size > 0) {
-    await tx.insert(instruments).values([...wanted.values()].map((r) => ({ ...r, sourceId })));
+    for (const rows of batches([...wanted.values()].map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(instruments).values(rows);
+    }
     counts.instrumentsInserted += wanted.size;
   }
 }

@@ -11,6 +11,7 @@ import {
 import {
   OECD_MEMBERS,
   WORLD_BANK_WORLD_KEY,
+  WORLD_SUBDIVISIONS_KEY,
   eurostatKey,
   oecdKey,
   worldBankKey,
@@ -1447,6 +1448,26 @@ function worldSources(): SourceInput[] {
         en: "Country codes: Natural Earth (public domain). Country names: Unicode CLDR, © Unicode, Inc.",
       },
       cadence: "0 6 6 1 *",
+      adapter: "fixture",
+      packs: ["world"],
+    },
+    {
+      // Written by `scripts/places-world-subdivisions.ts` from Wikidata (CC0): every item with
+      // an ISO 3166-2 code (P300), under the country its code names, with its names in five
+      // languages and its item number. Nothing to fetch: handed in by `places:import`.
+      key: WORLD_SUBDIVISIONS_KEY,
+      publisher: "Wikidata",
+      dataset: "Subdivisions by ISO 3166-2 code (P300), their names and item numbers",
+      homepage: "https://www.wikidata.org/wiki/Property:P300",
+      licence: "CC0-1.0",
+      attribution: {
+        en: "Wikidata (CC0)",
+        de: "Wikidata (CC0)",
+        fr: "Wikidata (CC0)",
+        it: "Wikidata (CC0)",
+        ru: "Wikidata (CC0)",
+      },
+      cadence: "0 6 7 1 *",
       adapter: "fixture",
       packs: ["world"],
     },

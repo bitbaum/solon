@@ -7,6 +7,7 @@ import type { PlaceLaw } from "@/lib/law/place-law";
 import { placePhoto } from "@/lib/places/place-photo";
 import type { PlaceLink, PlaceView } from "@/lib/places/place-view";
 import type { WorldProfileView } from "@/lib/places/world-profile";
+import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
 /**
  * The top of every place's page: where it sits, its kind, its name, the
@@ -77,7 +78,8 @@ export function placeViewHero({
   law: readonly PlaceLaw[];
   t: PlacesTranslator;
 }) {
-  const above = [...view.partOf].reverse();
+  // Nearest first; the world itself goes without saying, as in the trail.
+  const above = [...view.partOf].reverse().filter((p) => p.slugPath !== WORLD_PACK);
   return placeHero({
     keys: [...(country ? [`world:${country}`] : []), ...view.refs],
     title: view.name,

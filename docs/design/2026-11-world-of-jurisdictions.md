@@ -59,6 +59,42 @@ law of every country (`docs/design/2026-11-law-of-every-country.md`), so
 their law is read the same way. Liberland's constitution is read from its
 own repository (`liberland/constitution` on GitHub).
 
+## The places inside every country
+
+`pnpm run places:world-subdivisions` writes `data/places/world/subdivisions.json`,
+imported by the `world-subdivisions` source after the deploy like every file
+under `data/places`: every subdivision Wikidata gives an ISO 3166-2 code (P300),
+in every country no pack holds in depth. On 2026-11-12, 4,759 places in 194
+countries, named in five languages, each with its Wikidata item.
+
+- **Which.** A code whose statement Wikidata marks ended or deprecated is left
+  out, and so is an item marked dissolved; a code two items carry goes to the
+  one with more Wikipedia articles, and an item two codes still name keeps the
+  first (the generator reports the rest, to be settled on Wikidata). A place
+  with no English name is left out, because its path is built from it.
+- **Neutral by the same rule as the world list.** A place with its own page in
+  the world list is not also a subdivision: any item that is itself a world
+  entry (Greenland, Hong Kong, the French overseas collectivities), and the
+  codes in `SUBDIVISIONS_WITH_OWN_PAGE` (`src/lib/config/places/world.ts`):
+  Taiwan, Abkhazia, Transnistria and Kosovo, which ISO lists under the state
+  that regards them as its territory. Each keeps its own page, which says so.
+- **Where each sits.** Under its nearest ancestor that also carries a code of
+  the same country, by Wikidata's "located in" (P131) followed any number of
+  steps, else under its country (`src/lib/places/nesting.ts`). A French
+  department sits in its region, an Italian province in its region. Two
+  equally near ancestors that do not lie in each other (Brčko District, placed
+  in both of Bosnia's entities) mean the place lies in both: it sits under what
+  they share. The world pack has three tiers below a country; the nine places
+  ISO lists deeper hang from their ancestor one tier up.
+- **What a reader sees.** A country's page lists its subdivisions, as
+  photographs where most have one (the photographs are already indexed by ISO
+  3166-2 code), and each subdivision has a page of its own with the law above
+  it.
+- **Cost.** Three queries for the list, one for the nesting, twenty for the
+  names; the import takes ten seconds. The importer now inserts a thousand
+  rows a statement, because five thousand places with five names each passed
+  Postgres's limit of 65,535 parameters in one.
+
 ## Photographs
 
 Every place's page opens on its photograph, and a link to it shared anywhere
