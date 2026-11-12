@@ -1,15 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { rollUp } from "../counts";
 import { globeActs } from "../globe";
 
 const communes = Array.from({ length: 11 }, (_, i) => `li${7001 + i}`);
 
 describe("what the globe says a country holds", () => {
-  const held = new Map<string, number>([
-    ["li", 3412],
-    ...communes.map((key, i) => [key, i === 0 ? 37 : 30] as const),
-    ["ch", 100],
-    ["zg", 50],
-  ]);
+  const held = rollUp(
+    new Map<string, number>([
+      ["li", 3412],
+      ...communes.map((key, i) => [key, i === 0 ? 37 : 30] as const),
+      ["ch", 100],
+      ["zg", 50],
+    ]),
+  );
 
   it("counts a country's own law apart from what lies below it", () => {
     const { own, below, acts } = globeActs(held, "li");
@@ -27,6 +30,6 @@ describe("what the globe says a country holds", () => {
   });
 
   it("holds nothing for a place nothing is held for", () => {
-    expect(globeActs(new Map(), "li")).toEqual({ acts: 0, own: 0, below: 0 });
+    expect(globeActs(rollUp(new Map()), "li")).toEqual({ acts: 0, own: 0, below: 0 });
   });
 });

@@ -16,7 +16,7 @@
  */
 import type { Database } from "@/lib/db/client";
 import { chainOf } from "./places";
-import { loadLawCoverage } from "./register/coverage";
+import { loadLawCoverage, type LawCoverage } from "./register/coverage";
 
 /** What a number of laws counts. A bare number is never shown: say which. */
 export type CountScope = "own" | "within";
@@ -60,8 +60,14 @@ export function rollUp(held: ReadonlyMap<string, number>): Map<string, LawCount>
   return out;
 }
 
+/**
+ * What a count counts, said once: per authority, the acts in force whose text
+ * Solon holds. Every surface that prints a number of laws builds it from this.
+ */
+export const heldOf = (coverage: Pick<LawCoverage, "authorities">): Map<string, number> =>
+  new Map(coverage.authorities.map((a) => [a.key, a.withText]));
+
 /** Every authority's counts, read from the database in one coverage query. */
 export async function loadLawCounts(db: Database): Promise<Map<string, LawCount>> {
-  const coverage = await loadLawCoverage(db);
-  return rollUp(new Map(coverage.authorities.map((a) => [a.key, a.withText])));
+  return rollUp(heldOf(await loadLawCoverage(db)));
 }

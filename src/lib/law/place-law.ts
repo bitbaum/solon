@@ -5,6 +5,7 @@
  */
 import type { Database } from "@/lib/db/client";
 import { authorityName, loadAuthorityNames } from "./authority-names";
+import { heldOf } from "./counts";
 import { chainOf, countryAuthority, partsOf } from "./places";
 import { loadLawCoverage } from "./register/coverage";
 
@@ -33,7 +34,7 @@ export async function loadPlaceLaw(
   // Only the authorities the page shows: the chain, and the parts of its nearest.
   const shown = [...nearest.map((a) => a.key), ...partsOf(nearest[0]!.key).map((p) => p.key)];
   const coverage = await loadLawCoverage(db, { authorities: shown });
-  const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
+  const held = heldOf(coverage);
   const registered = new Map(
     coverage.authorities.map((a) => [a.key, a.inForce + a.statusNotStated]),
   );
