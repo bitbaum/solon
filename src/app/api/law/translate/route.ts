@@ -3,7 +3,7 @@ import { z } from "zod";
 import { locales } from "@/i18n/routing";
 import { selfOriginOf } from "@/lib/auth/actor";
 import { readJsonBounded } from "@/lib/chat/body";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { passagesOf } from "@/lib/law/act-translation";
 import { translateMissing } from "@/lib/law/translate";
@@ -31,11 +31,11 @@ export async function POST(req: Request) {
   const chain = usableChain(freeChain("SOLON"), process.env);
   if (!chain.length)
     return Response.json({ error: "Translation is not available just now." }, { status: 503 });
-  const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!allowAssistantRequest(address, "translate"))
+  const limit = await checkAssistantRequest(clientIp(req.headers), "translate");
+  if (!limit.allowed)
     return Response.json(
       { error: "Please wait a few minutes before asking again." },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
 
   const { act: id, page, to } = parsed.data;

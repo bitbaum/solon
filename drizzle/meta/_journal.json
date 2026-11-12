@@ -239,6 +239,13 @@
       "when": 1794344155443,
       "tag": "0033_provision_heading_path",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1794455974216,
+      "tag": "0034_rate_limit_windows",
+      "breakpoints": true
     }
   ]
 }
