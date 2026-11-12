@@ -1,7 +1,7 @@
 import { COUNTRIES } from "@/lib/config/world/countries";
 import type { CountryPackInput } from "../schema";
 import { EUROSTAT_GOV_COUNTRIES } from "@/lib/config/budgets/eurostat";
-import { OECD_MEMBERS, eurostatKey, oecdKey, worldBankKey } from "../world";
+import { OECD_MEMBERS, WORLD_BANK_WORLD_KEY, eurostatKey, oecdKey } from "../world";
 
 /**
  * The world: every country as a nation, and nothing deeper. A country gets a
@@ -48,7 +48,7 @@ export function worldPack(held: ReadonlySet<string>): CountryPackInput {
     identifierSchemes: ["world_root", "iso_3166_1"],
     sources: [
       "world-country-registry",
-      ...countries.map(worldBankKey),
+      WORLD_BANK_WORLD_KEY,
       ...countries.filter((a2) => OECD_MEMBERS.includes(a2)).map(oecdKey),
       ...countries.filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES).map(eurostatKey),
     ],

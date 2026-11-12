@@ -52,6 +52,8 @@ export const OECD_MEMBERS: readonly string[] = [
 ];
 
 export const worldBankKey = (a2: string) => `worldbank-wdi-${a2.toLowerCase()}`;
+/** The one source that reads the World Bank's indicators for every country no pack holds. */
+export const WORLD_BANK_WORLD_KEY = "worldbank-wdi-world";
 export const oecdKey = (a2: string) => `oecd-tax-${a2.toLowerCase()}`;
 export const eurostatKey = (a2: string) => `eurostat-gov-${a2.toLowerCase()}`;
 

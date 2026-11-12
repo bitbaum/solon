@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
-import { dueOn, dueSources, firstLoads } from "../schedule";
+import { dueOn, dueSources, importQueue, lastDue, type SourceRuns } from "../schedule";
 
 describe("dueOn", () => {
   it("reads the day fields and leaves the time of day to the timer", () => {
@@ -49,21 +49,47 @@ describe("dueSources", () => {
   });
 });
 
-describe("firstLoads", () => {
+describe("importQueue", () => {
   const fetchable = (s: { adapter: string }) => s.adapter !== "fixture";
-  const today = "2026-11-11";
+  const now = new Date("2026-11-12T05:00:00Z");
+  const source = placesConfig.sources.find((s) => fetchable(s) && s.cadence === "0 4 2 * *")!;
+  const queued = (runs: Map<string, SourceRuns>) =>
+    importQueue(placesConfig, runs, now, fetchable).some((s) => s.key === source.key);
+  const at = (iso: string) => new Date(iso);
 
-  it("loads sources never loaded, a few a day, in registry order, skipping those due today", () => {
-    const picked = firstLoads(placesConfig, new Set(), today, fetchable, 5);
-    expect(picked).toHaveLength(5);
-    const order = placesConfig.sources.map((s) => s.key);
-    const at = picked.map((s) => order.indexOf(s.key));
-    expect([...at].sort((a, b) => a - b)).toEqual(at);
-    expect(picked.every((s) => fetchable(s) && !dueOn(s.cadence, today))).toBe(true);
+  it("finds the last day a cadence names", () => {
+    expect(lastDue("0 4 2 * *", "2026-11-12")).toBe("2026-11-02");
+    expect(lastDue("0 4 12 * *", "2026-11-12")).toBe("2026-11-12");
+    expect(lastDue("0 6 5 1 *", "2026-11-12")).toBe("2026-01-05");
   });
 
-  it("leaves a loaded source to its cadence", () => {
-    const loaded = new Set(placesConfig.sources.map((s) => s.key));
-    expect(firstLoads(placesConfig, loaded, today, fetchable)).toEqual([]);
+  it("queues a source never loaded, in registry order, and no hand-kept file", () => {
+    const queue = importQueue(placesConfig, new Map(), now, fetchable);
+    const order = placesConfig.sources.filter(fetchable).map((s) => s.key);
+    expect(queue.map((s) => s.key)).toEqual(order);
+  });
+
+  it("leaves a source that loaded on or after its day, and queues one that loaded before it", () => {
+    const applied = (iso: string) =>
+      new Map([
+        [source.key, { latest: { status: "applied" as const, at: at(iso) }, failuresInARow: 0 }],
+      ]);
+    expect(queued(applied("2026-11-02T04:31:00Z"))).toBe(false);
+    expect(queued(applied("2026-11-07T10:00:00Z"))).toBe(false);
+    expect(queued(applied("2026-10-02T04:31:00Z"))).toBe(true);
+  });
+
+  it("tries a failed source again a day later, and a week later after three in a row", () => {
+    const failed = (iso: string, inARow: number) =>
+      new Map([
+        [
+          source.key,
+          { latest: { status: "failed" as const, at: at(iso) }, failuresInARow: inARow },
+        ],
+      ]);
+    expect(queued(failed("2026-11-12T01:00:00Z", 1))).toBe(false);
+    expect(queued(failed("2026-11-11T04:00:00Z", 1))).toBe(true);
+    expect(queued(failed("2026-11-10T04:00:00Z", 3))).toBe(false);
+    expect(queued(failed("2026-11-04T04:00:00Z", 3))).toBe(true);
   });
 });

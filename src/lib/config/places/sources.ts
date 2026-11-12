@@ -8,7 +8,14 @@ import {
   EUROSTAT_REQUESTS,
   seriesOf,
 } from "@/lib/config/budgets/eurostat";
-import { OECD_MEMBERS, eurostatKey, oecdKey, worldBankKey, worldCountries } from "./world";
+import {
+  OECD_MEMBERS,
+  WORLD_BANK_WORLD_KEY,
+  eurostatKey,
+  oecdKey,
+  worldBankKey,
+  worldCountries,
+} from "./world";
 import { METRICS } from "./metrics";
 import type { SourceInput } from "./schema";
 
@@ -267,8 +274,14 @@ const eurostatSource = (pack: string, iso2: string, cadence = "0 4 11 * *"): Sou
   packs: [pack],
 });
 
-const worldBankSource = (pack: string, country: string, cadence = "0 4 9 * *"): SourceInput => ({
-  key: worldBankKey(country),
+const worldBankSource = (
+  pack: string,
+  /** One country by its code, or many read in one request per indicator. */
+  countries: string | readonly string[],
+  key = typeof countries === "string" ? worldBankKey(countries) : WORLD_BANK_WORLD_KEY,
+  cadence = "0 4 9 * *",
+): SourceInput => ({
+  key,
   publisher: "World Bank",
   dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",
@@ -284,8 +297,14 @@ const worldBankSource = (pack: string, country: string, cadence = "0 4 9 * *"): 
   cadence,
   adapter: "worldbank_indicators",
   options: {
-    place: { scheme: "iso_3166_1", value: country },
-    country,
+    ...(typeof countries === "string"
+      ? { place: { scheme: "iso_3166_1", value: countries }, country: countries }
+      : {
+          countries: countries.map((a2) => ({
+            code: a2,
+            place: { scheme: "iso_3166_1", value: a2 },
+          })),
+        }),
     fromYear: 1990,
     indicators: WDI_INDICATORS,
   },
@@ -1431,9 +1450,9 @@ function worldSources(): SourceInput[] {
       adapter: "fixture",
       packs: ["world"],
     },
-    // Spread over the morning, so no publisher sees a burst: the World Bank is asked one country a
-    // minute, the OECD one every two.
-    ...countries.map((a2, i) => worldBankSource("world", a2, staggered(i, 9))),
+    // The World Bank answers for every country at once: one source, one request an indicator.
+    // The OECD is asked a country at a time.
+    worldBankSource("world", countries),
     ...countries
       .filter((a2) => OECD_MEMBERS.includes(a2))
       .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),

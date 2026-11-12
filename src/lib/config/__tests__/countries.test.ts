@@ -63,10 +63,15 @@ describe("the world pack", () => {
     );
     const sourceKeys = new Set(world.sources);
     expect(sourceKeys.size).toBe(world.sources.length);
-    for (const c of COUNTRIES.filter((c) => !held.has(c.a2)))
-      expect(sourceKeys.has(`worldbank-wdi-${c.a2.toLowerCase()}`), c.a2).toBe(true);
-    for (const a2 of held)
-      expect(sourceKeys.has(`worldbank-wdi-${a2.toLowerCase()}`), a2).toBe(false);
+    // One World Bank source reads every such country at once, and no country a pack holds.
+    expect(sourceKeys.has("worldbank-wdi-world")).toBe(true);
+    const source = placesConfig.sources.find((s) => s.key === "worldbank-wdi-world")!;
+    const read = (source.options as { countries: { code: string }[] }).countries.map((c) => c.code);
+    expect(read.sort()).toEqual(
+      COUNTRIES.filter((c) => !held.has(c.a2))
+        .map((c) => c.a2)
+        .sort(),
+    );
   });
 
   it("spreads the OECD's sources so none starts within two minutes of another", () => {
