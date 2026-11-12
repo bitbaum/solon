@@ -17,3 +17,22 @@ export function newHeadings(
   while (i < path.length && previous && previous[i] === path[i]) i++;
   return path.slice(i);
 }
+
+const isArticle = (path: string) => /^(?:art|par)_/.test(path);
+
+/**
+ * The headings to print above `current`: the new ones when it follows an article under the same
+ * chapter, all of them when it stands on its own (an annex or the text of a promulgation), because the
+ * page prints a heading again above each such block, even the same "II." twice in one page.
+ */
+export function headingsAbove(
+  previous: { path: string; heading?: string; headingPath?: readonly string[] } | undefined,
+  current: { path: string; headingPath?: readonly string[] },
+): string[] {
+  const path = current.headingPath ?? [];
+  const same = previous && isArticle(previous.path) && isArticle(current.path);
+  // A heading that is also the heading of the provision just before is that provision's own.
+  return newHeadings(same ? previous.headingPath : undefined, path).filter(
+    (h) => h !== previous?.heading,
+  );
+}

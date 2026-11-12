@@ -45,7 +45,11 @@ export function blockText(fragment: string): string {
   return (
     decodeEntities(
       fragment
-        .replace(/<div|<\/div>|<br\s*\/?>|<\/p>/g, (m) => (m === "<div" ? "\n<div" : "\n"))
+        .replace(/<div|<\/div>|<br\s*\/?>|<\/p>|<\/tr>|<\/li>/g, (m) =>
+          m === "<div" ? "\n<div" : "\n",
+        )
+        // Cells of a table are words apart, not one word ("KontoAufwand").
+        .replace(/<\/t[dh]>/g, " ")
         .replace(/<[^>]+>/g, ""),
     )
       // `&#0;` or a stray NUL: Postgres cannot store one.
