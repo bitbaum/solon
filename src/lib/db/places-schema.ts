@@ -572,6 +572,11 @@ export const facts = pgTable(
       t.metricKey,
       t.validFrom,
     ),
+    // A statistic across every place (the statistics pages, a rank among countries): the current
+    // figures of one metric, without reading every place's other series.
+    index("facts_metric_current_idx")
+      .on(t.metricKey, t.jurisdictionId, t.validFrom.desc())
+      .where(sql`${t.supersededAt} IS NULL AND ${t.variant} IS NULL`),
     // One current row per fact key, so "the current value" is never a choice.
     uniqueIndex("facts_one_current_per_key")
       .on(t.jurisdictionId, t.metricKey, sql`coalesce(${t.variant}, '')`, t.validFrom)

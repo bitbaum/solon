@@ -19,7 +19,7 @@ import {
   type Axis,
 } from "@/lib/statistics/axes";
 import { statisticMetrics } from "@/lib/statistics/present";
-import { loadSeries } from "@/lib/statistics/read";
+import { loadSeriesFor } from "@/lib/statistics/read";
 import { customAxisFromQuery } from "@/lib/statistics/compare";
 import { viewSpecSchema } from "@/lib/statistics/views";
 
@@ -65,13 +65,19 @@ export default async function StatisticsPage({
   setRequestLocale(locale);
   const q = await searchParams;
   const metrics = statisticMetrics(placesConfig);
-  const statistics = await Promise.all(
-    metrics.map(async (metric) => ({
-      metric,
-      series: await loadSeries(db, placesConfig, metric.key, locale),
-    })),
+  // Every statistic's latest plausible value per place, in one query: what the index and the
+  // axes read, however many statistics there are.
+  const byMetric = await loadSeriesFor(
+    db,
+    placesConfig,
+    metrics.map((m) => m.key),
+    locale,
+    { latestOnly: true },
   );
-  const byMetric = new Map(statistics.map((s) => [s.metric.key, s.series]));
+  const statistics = metrics.map((metric) => ({
+    metric,
+    series: byMetric.get(metric.key) ?? [],
+  }));
   const org = typeof q.org === "string" ? q.org : undefined;
   const base = `${SITE}${getPathname({ href: "/statistics", locale })}`;
   const axes = (await axesFor(org)).map((axis) => {

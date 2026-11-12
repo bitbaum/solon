@@ -7,7 +7,7 @@ import AxisPanel from "@/components/statistics/axis-panel";
 import MetricView from "@/components/statistics/metric-view";
 import PageLayout from "@/components/ui/page-layout";
 import { scoreAxis } from "@/lib/statistics/axes";
-import { loadSeries } from "@/lib/statistics/read";
+import { loadSeriesFor } from "@/lib/statistics/read";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { proposalEvidence } from "@/lib/db/statistics-schema";
@@ -51,12 +51,11 @@ export default async function SavedViewPage({ params }: { params: Params }) {
     const metrics = new Map(
       placesConfig.metrics.filter((m) => m.statistic && !m.retired).map((m) => [m.key, m]),
     );
-    const byMetric = new Map(
-      await Promise.all(
-        definition.components.map(
-          async (c) => [c.metric, await loadSeries(db, placesConfig, c.metric, locale)] as const,
-        ),
-      ),
+    const byMetric = await loadSeriesFor(
+      db,
+      placesConfig,
+      definition.components.map((c) => c.metric),
+      locale,
     );
     const url = `${SITE}${getPathname({ href: viewPath(sha), locale })}`;
     return (
