@@ -132,8 +132,10 @@ export interface VerifyResult {
   recoveredAddress?: string;
   /**
    * Every standard address the recovered key answers to, when the signature is
-   * valid. One key verifies under up to three address strings, so "has this
-   * KEY been seen" must be asked of all of them, never of the claimed one.
+   * valid: P2PKH of the uncompressed key, and P2PKH, P2WPKH and P2SH-P2WPKH of
+   * the compressed key, whatever the header said. One key answers to all four
+   * strings, so "has this KEY been seen" must be asked of all of them, never
+   * of the claimed one.
    */
   keyAddresses?: string[];
   reason?: string;
@@ -179,17 +181,27 @@ export function verifyMessage(
       Uint8Array.from(raw.subarray(1)),
     );
     const recoveredKey = secp.recoverPublicKey(recoveredSig, digest, { prehash: false });
-    const pub = secp.Point.fromBytes(recoveredKey).toBytes(compressed);
+    const point = secp.Point.fromBytes(recoveredKey);
+    const compressedPub = point.toBytes(true);
+    const uncompressedPub = point.toBytes(false);
+    const compressedForms = [
+      p2pkhAddress(compressedPub),
+      p2wpkhAddress(compressedPub),
+      p2shP2wpkhAddress(compressedPub),
+    ];
+    const uncompressedForm = p2pkhAddress(uncompressedPub);
 
-    const candidates = compressed
-      ? [p2pkhAddress(pub), p2wpkhAddress(pub), p2shP2wpkhAddress(pub)]
-      : [p2pkhAddress(pub)];
+    // What the signature is valid FOR follows the header, as it always has.
+    const candidates = compressed ? compressedForms : [uncompressedForm];
     const valid = candidates.includes(address);
     return {
       valid,
       recoveredAddress: candidates[0],
+      // What the KEY answers to does not. The header's compression flag is not
+      // covered by the signed digest, so the holder of one key can re-encode
+      // the same r||s under either serialization; both are the same key.
       ...(valid
-        ? { keyAddresses: candidates }
+        ? { keyAddresses: [uncompressedForm, ...compressedForms] }
         : { reason: "recovered key does not derive the claimed address" }),
     };
   } catch (e) {
