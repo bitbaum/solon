@@ -94,8 +94,10 @@ pnpm run test         # the same tests without the coverage report, for a quick 
   what the adapter declares from the source's URL and imports each in turn;
   `--backfill` loads history once, on a source's first load only. Adapters parse a
   format; which levels and schemes rows become is the source's `options` in config.
-  In production the box's daily appcron timer calls `POST /api/cron/places`
-  (`CRON_SECRET`), which imports every source whose `cadence` names the day. The
+  In production the box's hourly appcron timer calls `POST /api/cron/places`
+  (`CRON_SECRET`), which starts a worker that imports every source the run log
+  says is behind its `cadence` (`src/lib/places/importer/queue.ts`): a new
+  source loads within the hour, a failed one is tried again a day later. The
   bundle has no scripts: a first load or `--backfill` runs `places:fetch` from a
   checkout of the deployed commit on the box (design §8.3, "In production").
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)

@@ -16,6 +16,16 @@ one to read for the detail. Fixes get the same weight as features.
   identity. The founding seat and an organization's founder are tagged as they are created; the
   operator's add-member script checks before seating.
 
+### Fixed
+
+- **Every country's figures can now load.** The governance, spending and safety figures on country
+  pages had loaded for four countries only: the scheduled import did all its work inside one
+  request that is cut off after five minutes, and asked the World Bank for one country at a time,
+  thousands of requests on one day. The import is now a queue that works through whatever is
+  behind, hour by hour, tries a publisher that was down again the next day, and records every
+  attempt; and the World Bank is asked for all countries at once, ten requests in all.
+- **A country's page reads its figures in one query** instead of one per figure.
+
 ## 2026-11-11
 
 ### Added

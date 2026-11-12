@@ -1064,12 +1064,27 @@ inclusive end dates (978 facts, 125 place updates) without deleting a row.
 
 **The scheduled runner** (built 2026-09-30): the box's appcron timer
 (`appcron-solon-places`, registered in Loki's `install-app-crons.sh`) calls
-`POST /api/cron/places` once a day with the app's `CRON_SECRET`. The route
-fetches and imports every source whose cadence names that day
-(`src/lib/places/schedule.ts` reads the day fields; the timer owns the hour), in
-registry order, with snapshots under `PLACES_SNAPSHOT_DIR`. A failed run answers
-500, which fires the timer's failure alert. `?source=<key>` runs one source now.
-It calls no model. Backfills stay manual, from a checkout.
+`POST /api/cron/places` every hour with the app's `CRON_SECRET` (once a day
+until 2026-11-12). The route starts a worker and answers at once; the worker
+fetches and imports, in registry order, every source that is behind
+(`src/lib/places/importer/queue.ts`), with snapshots under
+`PLACES_SNAPSHOT_DIR`. Behind is read from the run log alone
+(`src/lib/places/schedule.ts`, `importQueue`): a source whose latest run did
+not apply on or after the last day its cadence names. So a source never loaded
+loads whatever its day, one whose publisher was down on its day is tried again
+a day later (a week later after three failures in a row), and a day with
+hundreds of sources due is drained over as many hours as it takes; one worker a
+process, fifty minutes at a time. A fetch that fails before any import is
+recorded as a failed run. The route answers 500 when a run failed since the
+last call, which fires the timer's failure alert once per failure.
+`?source=<key>` runs one source now and waits. It calls no model. Backfills
+stay manual, from a checkout.
+
+Why: the route did all the work inside the request, and the timer's `curl`
+stops at 300 seconds. The World Bank's indicators were one source a country
+(235 sources, ten requests each, all due on the 9th); none had loaded. They are
+one source now (`worldbank-wdi-world`): the API's `country/all`, one request an
+indicator.
 
 **Areas and their file** (built 2026-10-01): a batch may carry `areas` and one
 `geometry` (level, edition, TopoJSON text). The check refuses areas without a

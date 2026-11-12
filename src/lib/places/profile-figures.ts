@@ -63,29 +63,52 @@ export async function loadProfileFigures(
     ]);
   }
 
-  const out: ProfileFigureView[] = [];
-  for (const figure of PROFILE_FIGURES) {
+  // Each figure's metric: the first of its list the place holds.
+  const chosen = PROFILE_FIGURES.flatMap((figure) => {
     const metricKey = figure.metrics.find((k) => (series.get(k)?.length ?? 0) > 0);
     const metric = metricKey ? metrics.get(metricKey) : undefined;
-    if (!metricKey || !metric?.statistic) continue;
-    const points = series.get(metricKey)!;
-    const latest = points.at(-1)!;
-    const [peers] = rowsOf<{ below: string; others: string }>(
+    return metricKey && metric?.statistic
+      ? [
+          {
+            figure,
+            metricKey,
+            metric,
+            points: series.get(metricKey)!,
+            latest: series.get(metricKey)!.at(-1)!,
+          },
+        ]
+      : [];
+  });
+  if (chosen.length === 0) return [];
+
+  // Where every latest value stands among the countries reporting that year: one query for all.
+  const peers = new Map(
+    rowsOf<{ metric_key: string; below: string; others: string }>(
       await db.execute(sql`
-        SELECT count(*) FILTER (WHERE f.value_numeric < ${latest.value}) AS below,
+        SELECT w.metric_key,
+               count(*) FILTER (WHERE f.value_numeric < w.value) AS below,
                count(*) FILTER (WHERE f.jurisdiction_id <> ${jurisdictionId}) AS others
-        FROM facts f
-        WHERE f.metric_key = ${metricKey} AND f.superseded_at IS NULL AND f.variant IS NULL
-          AND f.value_numeric IS NOT NULL
-          AND EXTRACT(YEAR FROM f.valid_from)::int = ${latest.year}
-          AND EXISTS (
-            SELECT 1 FROM jurisdiction_identifiers i
-            WHERE i.jurisdiction_id = f.jurisdiction_id AND i.scheme = ${PROFILE_PEERS_SCHEME}
-              AND i.superseded_at IS NULL
-          )`),
-    );
-    const others = Number(peers?.others ?? 0);
-    out.push({
+        FROM (VALUES ${sql.join(
+          chosen.map(
+            (c) => sql`(${c.metricKey}, ${c.latest.year}::int, ${c.latest.value}::numeric)`,
+          ),
+          sql`, `,
+        )}) AS w(metric_key, year, value)
+        JOIN facts f ON f.metric_key = w.metric_key AND f.superseded_at IS NULL
+          AND f.variant IS NULL AND f.value_numeric IS NOT NULL
+          AND f.valid_from = make_date(w.year, 1, 1)
+        WHERE EXISTS (
+          SELECT 1 FROM jurisdiction_identifiers i
+          WHERE i.jurisdiction_id = f.jurisdiction_id AND i.scheme = ${PROFILE_PEERS_SCHEME}
+            AND i.superseded_at IS NULL
+        )
+        GROUP BY w.metric_key`),
+    ).map((r) => [r.metric_key, { below: Number(r.below), others: Number(r.others) }]),
+  );
+
+  return chosen.map(({ figure, metricKey, metric, points, latest }) => {
+    const position = peers.get(metricKey);
+    return {
       key: figure.key,
       group: figure.group,
       metricKey,
@@ -93,13 +116,12 @@ export async function loadProfileFigures(
       unit: metric.unit,
       value: latest.value,
       year: latest.year,
-      position: others + 1 >= PROFILE_MIN_PEERS ? { below: Number(peers!.below), others } : null,
+      position: position && position.others + 1 >= PROFILE_MIN_PEERS ? position : null,
       trend: points.filter((p) => p.year > latest.year - PROFILE_TREND_YEARS),
-      publisher: metric.statistic.series.publisher,
+      publisher: metric.statistic!.series.publisher,
       href: metricPath(metricKey),
-    });
-  }
-  return out;
+    };
+  });
 }
 
 /** The place a country's figures are held on, by its country code; null where Solon holds none. */

@@ -49,12 +49,27 @@ export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): 
     init.body = JSON.stringify(request.body);
   }
   // A server error is retried five times, backing off from a few seconds: some publishers
-  // (the OECD's SDMX API, 2026-11-08) answer 500 now and 200 a moment later.
+  // (the OECD's SDMX API, 2026-11-08) answer 500 now and 200 a moment later. An answer that
+  // never comes (the World Bank's API hung for two minutes on one request and answered the
+  // same one in half a second, 2026-11-12) is retried the same way, twice.
+  let unanswered = 0;
   for (let attempt = 0; ; attempt += 1) {
-    const response = await fetchImpl(request.url, {
-      ...init,
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
+    let response: Response;
+    try {
+      response = await fetchImpl(request.url, {
+        ...init,
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+    } catch (error) {
+      unanswered += 1;
+      if (unanswered > RETRIES_WHEN_UNANSWERED) {
+        throw new Error(
+          `${describeRequest(request)}: no answer (${error instanceof Error ? error.message : String(error)})`,
+        );
+      }
+      await new Promise((resolve) => setTimeout(resolve, retryDelayMs * 2 ** attempt));
+      continue;
+    }
     if (response.ok) {
       return response;
     }
@@ -65,6 +80,7 @@ export async function send(fetchImpl: typeof fetch, request: RetrievalRequest): 
   }
 }
 
+const RETRIES_WHEN_UNANSWERED = 2;
 const RETRIES_ON_SERVER_ERROR = 5;
 let retryDelayMs = 4_000;
 /** Tests shorten the wait between retries. */

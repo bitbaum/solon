@@ -43,6 +43,47 @@ describe("the World Bank's indicators", () => {
     }
   });
 
+  it("reads the world's countries in one request an indicator, and passes over the rest", async () => {
+    const urls = (await plannedRetrievals(placesConfig, "worldbank-wdi-world", "2026-11-08")).map(
+      (r) => r.url,
+    );
+    expect(urls).toHaveLength(statistics.length);
+    expect(
+      urls.every((u) => u.includes("/country/all/indicator/") && u.includes("per_page=20000")),
+    ).toBe(true);
+    const row = (id: string, date: string, value: number | null) => ({
+      indicator: { id: "NE.CON.GOVT.ZS", value: "" },
+      country: { id, value: "" },
+      date,
+      value,
+    });
+    const skipped: { row: string; reason: string }[] = [];
+    const batch = mapSource(
+      "worldbank-wdi-world",
+      [
+        { page: 1, pages: 1, total: 5 },
+        // Germany, a year with no value, an aggregate, a territory with no code, and a country a pack holds.
+        [
+          row("DE", "2023", 21.5),
+          row("DE", "2024", null),
+          row("ZH", "2023", 15),
+          row("", "2023", 9),
+          row("CH", "2023", 11),
+        ],
+      ],
+      skipped,
+    );
+    expect(batch.pack).toBe("world");
+    expect(batch.facts).toHaveLength(1);
+    expect(batch.facts[0]).toMatchObject({
+      jurisdiction: { scheme: "iso_3166_1", value: "DE" },
+      metricKey: "economy.government.consumption",
+      validFrom: "2023-01-01",
+    });
+    expect(batch.facts[0]!.value).toBeCloseTo(0.215, 5);
+    expect(skipped).toEqual([]);
+  });
+
   it("is a source of every pack it names", () => {
     for (const source of placesConfig.sources.filter((s) => s.adapter === "worldbank_indicators")) {
       const pack = placesConfig.packs.find((p) => p.key === source.packs[0])!;
@@ -188,5 +229,24 @@ describe("fetching a source", () => {
     const missing = answers([404]);
     await expect(send(missing.impl, { url: "https://example.org/c" })).rejects.toThrow(/HTTP 404/);
     expect(missing.calls()).toBe(1);
+  });
+
+  it("asks again when no answer comes, twice, then says so", async () => {
+    setRetryDelayForTests(1);
+    let calls = 0;
+    const hangsOnce = (async () => {
+      if (calls++ === 0) throw new Error("The operation was aborted due to timeout");
+      return new Response("x");
+    }) as typeof fetch;
+    expect((await send(hangsOnce, { url: "https://example.org/d" })).status).toBe(200);
+    expect(calls).toBe(2);
+
+    let silent = 0;
+    const never = (async () => {
+      silent += 1;
+      throw new Error("fetch failed");
+    }) as typeof fetch;
+    await expect(send(never, { url: "https://example.org/e" })).rejects.toThrow(/no answer/);
+    expect(silent).toBe(3);
   });
 });
