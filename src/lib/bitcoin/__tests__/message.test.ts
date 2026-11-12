@@ -106,6 +106,27 @@ describe("BIP137 segwit support", () => {
     expect(verifyMessage(message, addrs.p2wpkh, signature).valid).toBe(true);
   });
 
+  it("names every address the key answers to, whichever one was claimed", () => {
+    // One key, three address strings. A seat check must be able to ask "has
+    // this KEY been seen", so a valid result carries all three.
+    for (const claimed of [addrs.p2pkh, addrs.p2wpkh, addrs.p2shP2wpkh]) {
+      const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: claimed });
+      const result = verifyMessage(message, claimed, signMessage(message, pair.privateKeyHex));
+      expect(result.valid).toBe(true);
+      expect([...(result.keyAddresses ?? [])].sort()).toEqual(
+        [addrs.p2pkh, addrs.p2wpkh, addrs.p2shP2wpkh].sort(),
+      );
+    }
+  });
+
+  it("names no addresses for a signature that does not verify", () => {
+    const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: addrs.p2pkh });
+    const other = generateKeyPair();
+    const result = verifyMessage(message, addrs.p2pkh, signMessage(message, other.privateKeyHex));
+    expect(result.valid).toBe(false);
+    expect(result.keyAddresses).toBeUndefined();
+  });
+
   it("accepts a signature claiming the P2SH-wrapped address", () => {
     const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: addrs.p2shP2wpkh });
     const signature = signMessage(message, pair.privateKeyHex);

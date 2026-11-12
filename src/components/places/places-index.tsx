@@ -3,6 +3,7 @@ import PageLayout from "@/components/ui/page-layout";
 import type { PackIndex, PlaceHit, PlaceSearch } from "@/lib/places/search";
 import Atlas from "@/components/atlas/atlas";
 import type { PlacesTranslator } from "./translator";
+import { placeHref } from "@/lib/places/place-href";
 
 interface PlacesIndexProps {
   query: string;
@@ -23,7 +24,7 @@ function HitList({ hits, t }: { hits: PlaceHit[]; t: PlacesTranslator }) {
       {hits.map((hit) => (
         <li key={hit.slugPath} className="px-5 py-3">
           <Link
-            href={`/places/${hit.slugPath}`}
+            href={placeHref(hit.canonicalPath)}
             className="font-medium text-fg-primary hover:underline"
           >
             {hit.name}

@@ -26,6 +26,8 @@ import type { GeometryStore } from "../importer/geometry-store";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { loadAtlasPlace } from "../atlas-place";
+import { findPlace } from "../paths";
+import { placeHref } from "../place-href";
 import { loadPlacePage } from "../place-page";
 import { findPlaceByIdentifier } from "../by-identifier";
 import { countWithin } from "../ancestors";
@@ -200,7 +202,7 @@ describe.skipIf(!RUN)("United States, imported", () => {
       ON,
     ))!;
     const county = (await loadAtlasPlace(db, config, wyoming, ON, "en"))!.children[0]!.places[0]!;
-    const countyOld = county.path.replace(/^\/places\//, "");
+    const countyOld = county.path.replace(/^\/places\/united-/, "united_");
     const hyphen = (path: string) => path.replace(/^united_states/, "united-states");
     for (const old of [PACK, wyoming, countyOld]) {
       expect(old.startsWith("united_states")).toBe(true);
@@ -215,6 +217,38 @@ describe.skipIf(!RUN)("United States, imported", () => {
     }
     expect(await loadAtlasPlace(db, config, "united-states/nowhere", ON, "en")).toBeNull();
     expect(await loadPlacePage(db, config, "united-states/nowhere", ON, "en")).toBeNull();
+  });
+
+  it("links every place by its canonical path, so no click answers 308", async () => {
+    const wyoming = (await findPlaceByIdentifier(
+      db,
+      { scheme: "us_state_fips", value: "56" },
+      ON,
+    ))!;
+    const hrefs = new Set<string>();
+    for (const path of [PACK, wyoming]) {
+      const page = (await loadPlacePage(db, config, path, ON, "en"))!;
+      const atlas = (await loadAtlasPlace(db, config, path, ON, "en"))!;
+      for (const link of [...page.partOf, ...page.parts.flatMap((g) => g.places)]) {
+        if (link.canonicalPath) hrefs.add(placeHref(link.canonicalPath));
+      }
+      hrefs.add(atlas.place.path);
+      for (const link of [...atlas.chain, ...atlas.children.flatMap((g) => g.places)]) {
+        hrefs.add(link.path);
+      }
+    }
+    for (const hit of (await searchPlaces(db, config, "Laramie County", ON, "en")).hits) {
+      hrefs.add(placeHref(hit.canonicalPath));
+    }
+    for (const place of (await loadMapData(db, config, PACK, ON, "en"))!.places) {
+      hrefs.add(placeHref(place.canonicalPath));
+    }
+    expect(hrefs.size).toBeGreaterThan(10);
+    for (const href of hrefs) {
+      const asked = href.replace(/^\/places\//, "");
+      const found = await findPlace(db, config, asked);
+      expect(found?.canonicalPath, href).toBe(asked);
+    }
   });
 
   it("knows what lies within the nation and within Wyoming, at every depth", async () => {

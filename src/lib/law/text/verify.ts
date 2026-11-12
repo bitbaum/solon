@@ -15,6 +15,7 @@ import { legalActVersions, legalActs, legalProvisions } from "@/lib/db/law-schem
 import { sources } from "@/lib/db/places-schema";
 import { read } from "../publishers/http";
 import { headingsAbove } from "../heading-path";
+import { cleanPdfText, documentText } from "./cantonal";
 
 const ENTITIES: Record<string, string> = {
   amp: "&",
@@ -118,7 +119,17 @@ export interface Sequence {
   longestMissing: { words: number; at: number; text: string };
   /** Every page word is held, in the page's order. */
   wordForWord: boolean;
+  /** Page words before the first one held: a title block or cover lines, when few. */
+  leading: number;
+  /**
+   * Not word for word only because of up to TITLE_BLOCK_WORDS words at the very start (the act's
+   * title and cover lines, held as the act's title, not as a provision); everything after is held in order.
+   */
+  afterTitleBlock: boolean;
 }
+
+/** The most words at the start of a page that count as its title block. */
+export const TITLE_BLOCK_WORDS = 40;
 
 /**
  * How much of the page the stored text holds in the page's order. A Myers diff over the words:
@@ -193,8 +204,12 @@ export function sequence(page: string[], stored: string[], maxEdits = 6000): Seq
     if (i < n) inOrder++;
     run = 0;
   }
+  const first = kept.indexOf(true);
+  const leading = first < 0 ? n : first;
   return {
     inOrder,
+    leading,
+    afterTitleBlock: leading > 0 && leading <= TITLE_BLOCK_WORDS && inOrder === n - leading,
     ratio: n === 0 ? 1 : inOrder / n,
     longestMissing: {
       ...best,
@@ -355,6 +370,23 @@ export function regionOf(html: string, authority: string): string {
   return html.slice(start, end < 0 ? undefined : end);
 }
 
+/**
+ * The words of a PDF's text layer, read again. `words` are those of the text as the reader cuts it
+ * (`cleanPdfText`: header and footer lines repeated on every page, bare page numbers and a word split
+ * at a line's end are dealt with the same way the reader does); `furniture` counts the words that
+ * cleaning dropped, so a reader of the report sees how much it was. A PDF with no text layer is
+ * `scanned`: its words come from OCR, which cannot be checked against itself, so none are given.
+ */
+export async function pdfWords(
+  bytes: Uint8Array,
+): Promise<{ words: string[]; furniture: number; scanned: boolean }> {
+  const raw = await documentText(bytes, "pdf");
+  const scanned = raw.replace(/\s+/g, "").length < 200;
+  if (scanned) return { words: [], furniture: 0, scanned };
+  const words = wordsOf(cleanPdfText(raw));
+  return { words, furniture: Math.max(0, wordsOf(raw).length - words.length), scanned };
+}
+
 export interface VerifyOptions {
   authority: string;
   /** How many acts to read again. */
@@ -377,6 +409,10 @@ export interface VerifiedAct {
   classes?: string;
   /** The raw HTML around the first long run. */
   around?: string;
+  /** A PDF with no text layer: its text is OCR, which is not compared with itself. */
+  scanned?: boolean;
+  /** Words of a PDF's text layer that cleaning drops as header, footer or page number. */
+  furnitureWords?: number;
   short: boolean;
   /** Every word of the page is held, in order: checked, not assumed. */
   wordForWord?: boolean;
@@ -389,8 +425,12 @@ export interface VerifyReport {
   sampled: number;
   meanRatio: number;
   short: number;
+  /** Scanned PDFs, which have no text layer to compare with. */
+  scanned: number;
   /** Acts whose every page word is held in the page's order. */
   wordForWord: number;
+  /** Acts held in order after a short title block at the start; not counted as word for word. */
+  afterTitleBlock: number;
   failed: number;
   acts: VerifiedAct[];
 }
@@ -402,7 +442,10 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
   const where = and(
     eq(legalActs.authority, authority),
     isNull(legalActVersions.inForceTo),
-    inArray(legalActVersions.format, JSON_BODIES[authority] ? ["html", "json"] : ["html"]),
+    inArray(
+      legalActVersions.format,
+      JSON_BODIES[authority] ? ["html", "json", "pdf"] : ["html", "pdf"],
+    ),
   );
   const [{ n } = { n: 0 }] = await db
     .select({ n: sql<number>`count(*)::int` })
@@ -440,15 +483,24 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
     try {
       if (!url) throw new Error("the version has no source address");
       const page = await read(url, doFetch, [new URL(url).hostname]);
-      const raw = new TextDecoder().decode(page.bytes);
+      const isPdf = row.format === "pdf";
+      const pdf = isPdf ? await pdfWords(page.bytes) : null;
+      if (pdf?.scanned) {
+        acts.push({ title, url, provisions: provisions.length, scanned: true, short: false });
+        say(`scanned PDF, not compared ${title}`);
+        continue;
+      }
+      const raw = isPdf ? "" : new TextDecoder().decode(page.bytes);
       const html = row.format === "json" ? JSON_BODIES[authority]!(JSON.parse(raw)) : raw;
-      const pageWords = wordsOf(
-        visibleText(
-          regionOf(html, authority),
-          HEADER_CLASSES[authority] ?? [],
-          FURNITURE_TABLES[authority],
-        ),
-      );
+      const pageWords =
+        pdf?.words ??
+        wordsOf(
+          visibleText(
+            regionOf(html, authority),
+            HEADER_CLASSES[authority] ?? [],
+            FURNITURE_TABLES[authority],
+          ),
+        );
       const storedWords = storedWordsOf(provisions);
       const cov = coverage(pageWords, storedWords);
       const seq = sequence(pageWords, storedWords);
@@ -460,10 +512,11 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
         sequence: seq,
         wordForWord: seq?.wordForWord ?? false,
         runs: missingRuns(pageWords, storedWords),
-        classes: divClasses(html),
+        classes: isPdf ? undefined : divClasses(html),
+        furnitureWords: pdf?.furniture,
         around: (() => {
           const runs = missingRuns(pageWords, storedWords);
-          return runs[0] ? htmlAround(html, runs[0]) : undefined;
+          return !isPdf && runs[0] ? htmlAround(html, runs[0]) : undefined;
         })(),
         short: cov.ratio < threshold,
       };
@@ -490,6 +543,8 @@ export async function verifyAuthority(db: Database, options: VerifyOptions): Pro
       ? checked.reduce((sum, a) => sum + a.coverage!.ratio, 0) / checked.length
       : 0,
     short: acts.filter((a) => a.short).length,
+    scanned: acts.filter((a) => a.scanned).length,
+    afterTitleBlock: acts.filter((a) => a.sequence?.afterTitleBlock).length,
     wordForWord: acts.filter((a) => a.wordForWord).length,
     failed: acts.filter((a) => a.error).length,
     acts,

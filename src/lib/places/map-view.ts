@@ -19,6 +19,8 @@ export interface MapPlace {
   /** The feature that draws it in the boundary file. */
   feature: string;
   slugPath: string;
+  /** The path its page has; what its link is built from. */
+  canonicalPath: string;
   name: string;
   /** The place it is part of, when it has one. */
   parentName: string | null;

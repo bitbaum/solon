@@ -4,6 +4,7 @@ import type { PlaceLaw } from "@/lib/law/place-law";
 import { lawRowText } from "@/lib/law/place-law-row";
 import type { PlacesTranslator } from "./translator";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
+import { placeHref } from "@/lib/places/place-href";
 
 /**
  * Where a place sits, from the world down to its parent: the first line of
@@ -21,15 +22,15 @@ export function PlaceTrail({ above, t }: { above: readonly PlaceLink[]; t: Place
         </li>
         {/* The world pack's root is the world itself, already the first crumb. */}
         {above
-          .filter((place) => place.slugPath !== WORLD_PACK)
+          .filter((place) => place.canonicalPath !== WORLD_PACK)
           .map((place, i) => (
             <li key={`${place.slugPath}-${i}`} className="flex items-center gap-2">
               <span aria-hidden className="text-fg-tertiary">
                 ›
               </span>
-              {place.slugPath ? (
+              {place.canonicalPath ? (
                 <Link
-                  href={`/places/${place.slugPath}`}
+                  href={placeHref(place.canonicalPath)}
                   className="text-fg-secondary hover:underline"
                 >
                   {place.name}

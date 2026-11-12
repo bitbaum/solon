@@ -3,6 +3,7 @@ import { toLocale } from "@/i18n/routing";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { searchPlaces } from "@/lib/places/search";
+import { placeHref } from "@/lib/places/place-href";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,6 @@ export async function GET(request: Request) {
     query: q,
     on,
     kind: search.kind,
-    places: search.hits.map((hit) => ({ ...hit, path: `/places/${hit.slugPath}` })),
+    places: search.hits.map((hit) => ({ ...hit, path: placeHref(hit.canonicalPath) })),
   });
 }

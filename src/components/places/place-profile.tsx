@@ -21,6 +21,7 @@ import type { ProfileFigureView } from "@/lib/places/profile-figures";
 import PlaceParts from "./place-parts";
 import SourceList from "./source-list";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
+import { placeHref } from "@/lib/places/place-href";
 
 interface PlaceProfileProps {
   view: PlaceView;
@@ -44,11 +45,9 @@ interface PlaceProfileProps {
   t: PlacesTranslator;
 }
 
-const placeHref = (slugPath: string) => `/places/${slugPath}`;
-
 function PlaceName({ place }: { place: PlaceLink }) {
-  return place.slugPath ? (
-    <Link href={placeHref(place.slugPath)} className="text-fg-primary hover:underline">
+  return place.canonicalPath ? (
+    <Link href={placeHref(place.canonicalPath)} className="text-fg-primary hover:underline">
       {place.name}
     </Link>
   ) : (
