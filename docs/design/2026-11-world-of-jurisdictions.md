@@ -31,6 +31,16 @@ read, and one Wikidata marks dissolved leaves.
 A project's coordinates are its office, not a place it governs, so a project
 gets no point on the map.
 
+## Refreshing what is generated
+
+Every dataset below is written by a generator, and all of them run in the
+order they build on each other with one command, `pnpm run data:refresh`
+(`scripts/data-refresh.ts`: profiles, the world's countries, subdivisions,
+photographs, the law plan). `.github/workflows/data-refresh.yml` runs it on
+the 4th of each month and opens a pull request when anything changed; a
+generator that fails keeps its old files and is named in the request. A new
+generator is one entry in `scripts/data-refresh.ts`.
+
 ## Profiles
 
 `pnpm run world:profiles` writes two files:
