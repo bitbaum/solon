@@ -89,6 +89,16 @@ async function main() {
   let personTag: string | null = null;
   if (type === "HUMAN" && values["oc-actor"] && !values["skip-person-check"]) {
     const check = await seatHeldByPerson(organization.id, values["oc-actor"]);
+    // Seats already here that OrangeCat now says are one person's (say, after
+    // an identity was handed over). Not this admission's to decide; shown so
+    // the organization can.
+    for (const clash of "clashes" in check ? (check.clashes ?? []) : []) {
+      console.error(
+        `note: these seats in ${org} are one person's: ${clash.seats
+          .map((s) => `"${s.displayName}" (${s.memberId})`)
+          .join(", ")}. Only the first keeps the person tag; the organization decides.`,
+      );
+    }
     if (!check.ok && check.reason === "already_seated") {
       console.error(
         `refused: the person behind --oc-actor already holds a seat in ${org} as "${check.displayName}" (${check.memberId}), under another of their OrangeCat identities. One person, one seat.`,
@@ -97,7 +107,7 @@ async function main() {
     }
     if (!check.ok) {
       console.error(
-        `refused: could not ask OrangeCat whether this person already sits in ${org} (${check.detail}). Try again, or pass --skip-person-check if you know they do not.`,
+        `refused: could not ask OrangeCat whether this person already sits in ${org} (${check.detail}). Set ORANGECAT_OAUTH_CLIENT_ID and ORANGECAT_OAUTH_CLIENT_SECRET if they are missing and try again, or pass --skip-person-check if you know they do not.`,
       );
       process.exit(1);
     }

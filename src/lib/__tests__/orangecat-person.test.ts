@@ -7,7 +7,12 @@
  * whenever OrangeCat was slow.
  */
 import { describe, expect, it, vi } from "vitest";
-import { personTagFor, personTagScope } from "@/lib/orangecat-person";
+import {
+  PERSON_TAG_BATCH,
+  personTagFor,
+  personTagScope,
+  personTagsFor,
+} from "@/lib/orangecat-person";
 
 const ACTOR = "11111111-1111-4111-8111-111111111111";
 const TAG = "ab".repeat(32);
@@ -46,7 +51,7 @@ describe("personTagFor", () => {
     expect(answer).toEqual({ ok: true, tag: null });
   });
 
-  it("does not ask at all for an account that is not OrangeCat's, or with no client configured", async () => {
+  it("does not ask at all for an account that is not OrangeCat's", async () => {
     const fetchMock = answering(200, { tags: {} });
     expect(await personTagFor("acct_local_123", "org-7", { ...creds, fetch: fetchMock })).toEqual({
       ok: true,
@@ -56,9 +61,21 @@ describe("personTagFor", () => {
       ok: true,
       tag: null,
     });
+    // Not OrangeCat's is "cannot be told apart" even with no client configured.
+    expect(
+      await personTagFor("acct_local_123", "org-7", { clientId: "", clientSecret: "" }),
+    ).toEqual({ ok: true, tag: null });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("says 'could not ask', not 'no tag', when no OrangeCat client is configured", async () => {
+    const fetchMock = answering(200, { tags: { [ACTOR]: TAG } });
     expect(
       await personTagFor(ACTOR, "org-7", { clientId: "", clientSecret: "", fetch: fetchMock }),
-    ).toEqual({ ok: true, tag: null });
+    ).toEqual({ ok: false, reason: "no OrangeCat client configured" });
+    expect(
+      await personTagsFor([ACTOR], "org-7", { clientId: "x", clientSecret: "", fetch: fetchMock }),
+    ).toEqual({ ok: false, reason: "no OrangeCat client configured" });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -87,5 +104,74 @@ describe("personTagFor", () => {
     expect((await personTagFor(ACTOR, "org-7", { ...creds, fetch: answering(200, {}) })).ok).toBe(
       false,
     );
+  });
+});
+
+/** A distinct actor id per index, so a batch can be told apart from its order. */
+function actor(i: number): string {
+  return `${i.toString(16).padStart(8, "0")}-1111-4111-8111-111111111111`;
+}
+
+/** OrangeCat answering each subject with its own tag, except those it leaves out. */
+function echoing(leaveOut: Set<string> = new Set(), failOnCall?: number) {
+  let calls = 0;
+  return vi.fn(async (_url: string, init?: RequestInit) => {
+    calls++;
+    if (calls === failOnCall) return new Response("{}", { status: 429 });
+    const { subjects } = JSON.parse(init!.body as string) as { subjects: string[] };
+    const tags = Object.fromEntries(
+      subjects.filter((s) => !leaveOut.has(s)).map((s) => [s, s.slice(0, 8).repeat(8)]),
+    );
+    return new Response(JSON.stringify({ tags }), { status: 200 });
+  }) as unknown as typeof fetch & ReturnType<typeof vi.fn>;
+}
+
+describe("personTagsFor", () => {
+  it("asks for many accounts in one request, and says which it could not tell apart", async () => {
+    const fetchMock = echoing(new Set([actor(2)]));
+    const answer = await personTagsFor([actor(1), actor(2), "acct_local"], "org-7", {
+      ...creds,
+      fetch: fetchMock,
+    });
+    expect(answer).toEqual({
+      ok: true,
+      tags: { [actor(1)]: "00000001".repeat(8), [actor(2)]: null, acct_local: null },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const body = JSON.parse((fetchMock.mock.calls[0]![1] as RequestInit).body as string);
+    expect(body.subjects).toEqual([actor(1), actor(2)]);
+  });
+
+  it("splits a long list into requests of at most the batch size OrangeCat accepts", async () => {
+    const ids = Array.from({ length: 2 * PERSON_TAG_BATCH + 50 }, (_, i) => actor(i + 1));
+    const fetchMock = echoing();
+    const answer = await personTagsFor([...ids, ids[0]!.toUpperCase()], "org-7", {
+      ...creds,
+      fetch: fetchMock,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    for (const [, init] of fetchMock.mock.calls) {
+      const { subjects } = JSON.parse((init as RequestInit).body as string);
+      expect(subjects.length).toBeLessThanOrEqual(PERSON_TAG_BATCH);
+    }
+    expect(answer.ok).toBe(true);
+    if (!answer.ok) return;
+    expect(Object.values(answer.tags).every((t) => t !== null)).toBe(true);
+    expect(answer.tags[ids[0]!.toUpperCase()]).toBe(answer.tags[ids[0]!]);
+  });
+
+  it("is 'could not ask' as a whole when any one request fails", async () => {
+    const ids = Array.from({ length: PERSON_TAG_BATCH + 1 }, (_, i) => actor(i + 1));
+    const answer = await personTagsFor(ids, "org-7", { ...creds, fetch: echoing(new Set(), 2) });
+    expect(answer).toEqual({ ok: false, reason: "OrangeCat answered 429" });
+  });
+
+  it("asks nothing for an empty list", async () => {
+    const fetchMock = echoing();
+    expect(await personTagsFor([], "org-7", { ...creds, fetch: fetchMock })).toEqual({
+      ok: true,
+      tags: {},
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

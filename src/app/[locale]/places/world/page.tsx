@@ -4,7 +4,7 @@ import PlaceHero from "@/components/places/place-hero";
 import ProfileFrame from "@/components/places/profile-frame";
 import ShareButton from "@/components/places/share-button";
 import { placesConfig } from "@/lib/config/places";
-import { packHref, placeHref } from "@/lib/places/place-href";
+import { regionHref } from "@/lib/places/place-href";
 import { WORLD, regionName } from "@/lib/config/world";
 import { db } from "@/lib/db/client";
 import { loadGlobePlaces } from "@/lib/law/globe";
@@ -41,7 +41,7 @@ export default async function WorldPage({ params }: { params: Params }) {
     const pack = region.code ? placesConfig.packs.find((p) => p.region === region.code) : undefined;
     return {
       slug: region.slug,
-      href: pack ? packHref(pack.key) : placeHref(region.slug),
+      href: regionHref(region, pack?.key),
       name: regionName(region, locale),
       acts: region.code ? (acts.get(region.code) ?? 0) : 0,
       places: Boolean(pack),

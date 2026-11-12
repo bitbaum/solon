@@ -35,6 +35,15 @@ one to read for the detail. Fixes get the same weight as features.
   behind, hour by hour, tries a publisher that was down again the next day, and records every
   attempt; and the World Bank is asked for all countries at once, eight requests in all.
 - **A country's page reads its figures in one query** instead of one per figure.
+- **One person, one seat now holds after an identity changes hands.** Solon compared a newcomer
+  with the person each seat had when it was given, so once an OrangeCat identity was handed over,
+  its former holder was refused a seat they did not hold, and its new holder could take a second.
+  Solon now asks OrangeCat about the newcomer and every seat at once, decides on that answer, and
+  updates the seats whose person changed; two seats that turn out to be one person's are named
+  for the organization to decide. Without OrangeCat's client keys an admission now says it could
+  not ask instead of seating unchecked, the tagging script asks once per organization and can
+  re-check every seat (`--refresh`), and one Bitcoin key can no longer hold a second seat under
+  its uncompressed address.
 - **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
   time, 68 sources due on two days a month; each publisher is now one source that asks for every
   country it covers at once. The national figures behind country pages take 17 requests instead

@@ -149,6 +149,11 @@ describe("contestView", () => {
       ["Georgia", "claims"],
     ]);
     expect(view.sides[0]!.lawAuthority).toBe("rso");
+    // Each side links where its page is, not to an address that redirects there.
+    expect(view.sides.map((s) => s.href)).toEqual([
+      "/places/south-ossetia",
+      "/places/world/georgia",
+    ]);
     expect(view.compared).toBe(CONTEST_TOPICS.length);
     expect(view.rows.map((r) => r.key)).toEqual(CONTEST_TOPICS.map((t) => t.key));
     expect(view.open).toBeTruthy();
@@ -185,7 +190,7 @@ describe("a pack the world list marks as claimed", () => {
     const pack = placesConfig.packs.find((p) => p.key === "south_ossetia")!;
     expect(contestSlugForPack(pack)).toBe("south-ossetia");
     expect(contestNote(contestSlugForPack(pack), "en")).toEqual({
-      claimant: { name: "Georgia", href: "/places/georgia" },
+      claimant: { name: "Georgia", href: "/places/world/georgia" },
       href: "/places/contested/south-ossetia",
     });
   });

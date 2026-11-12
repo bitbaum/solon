@@ -10,6 +10,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
+import * as secp from "@noble/secp256k1";
 import { and, eq } from "drizzle-orm";
 import { MemberStatus, MemberType } from "@/lib/db/enums";
 import { db } from "@/lib/db/client";
@@ -194,6 +195,44 @@ describe.runIf(RUN)("founding seat", () => {
       expect(result.registered).toBe(false);
       expect(result.reason).toMatch(/key is already registered/);
     }
+    expect(await genesisOpen(slug)).toBe(true);
+  });
+
+  it("will not seat one key twice under its compressed and uncompressed forms", async () => {
+    // The header's compression flag is not signed: the holder of a key seated
+    // under its compressed address can lower the header by 4 and claim the
+    // uncompressed P2PKH address with the same r||s.
+    const slug = await freshOrg();
+    const org = await db.query.organizations.findFirst({ where: eq(organizations.slug, slug) });
+    const pair = generateKeyPair();
+    await db.insert(members).values({
+      organizationId: org!.id,
+      displayName: "Agent on the compressed form",
+      memberType: MemberType.AGENT,
+      keyCustody: "SERVICE",
+      bitcoinAddress: pair.address,
+      system: `test:${randomUUID()}`,
+    });
+
+    const uncompressed = deriveAddresses(
+      secp.etc.bytesToHex(secp.Point.fromHex(pair.publicKeyHex).toBytes(false)),
+    ).p2pkh;
+    const message = registrationMessage({
+      orgSlug: slug,
+      actorId: founder,
+      memberAddress: uncompressed,
+    });
+    const sig = Buffer.from(signMessage(message, pair.privateKeyHex), "base64");
+    sig[0] -= 4;
+    const result = await registerMember({
+      orgSlug: slug,
+      actorId: founder,
+      displayName: "Same key, uncompressed",
+      key: { address: uncompressed, signature: sig.toString("base64") },
+    });
+    expect(result.verified).toBe(true);
+    expect(result.registered).toBe(false);
+    expect(result.reason).toMatch(/key is already registered/);
     expect(await genesisOpen(slug)).toBe(true);
   });
 });

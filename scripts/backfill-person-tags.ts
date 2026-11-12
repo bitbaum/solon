@@ -1,80 +1,64 @@
 /**
- * Give every existing human seat its person tag.
+ * Give every existing human seat its person tag, or check the ones stored.
  *
  * Seats created before person tags existed have none, so the one-person
  * one-seat rule has nothing to compare a new seat with. This asks OrangeCat
- * for each such seat's tag and stores it. Safe to run again: it only touches
- * seats without a tag.
+ * for such seats' tags, one request per organization per hundred seats, and
+ * stores them. Safe to run again: by default it only touches seats without a
+ * tag.
  *
- * If two human seats that are not retired in one organization turn out to be one person's,
- * the second cannot be stored (the unique index refuses it). The script does
- * not choose between them: it prints both and leaves the second untagged, for
- * the organization to decide.
+ * --refresh asks again for EVERY human seat that is not retired and rewrites
+ * the tags that changed. A tag changes when an identity is handed over to
+ * another person on OrangeCat; one OrangeCat now leaves out is cleared.
+ *
+ * If two human seats that are not retired in one organization turn out to be
+ * one person's, the script does not choose between them: the first keeps (or
+ * gets) the tag, the others are left untagged, and it prints them all for the
+ * organization to decide. --dry-run finds the same clashes without writing.
  *
  *   pnpm exec tsx scripts/backfill-person-tags.ts            # do it
  *   pnpm exec tsx scripts/backfill-person-tags.ts --dry-run  # only report
+ *   pnpm exec tsx scripts/backfill-person-tags.ts --refresh  # re-check every tag
+ *
+ * Needs ORANGECAT_OAUTH_CLIENT_ID and ORANGECAT_OAUTH_CLIENT_SECRET: without
+ * them every seat is "could not ask" and the script exits 1.
  */
 import { parseArgs } from "node:util";
-import { and, eq, isNotNull, isNull, ne } from "drizzle-orm";
-import { MemberStatus, MemberType } from "../src/lib/db/enums";
 import { db } from "../src/lib/db/client";
-import { members } from "../src/lib/db/schema";
-import { personTagFor } from "../src/lib/orangecat-person";
+import { backfillPersonTags } from "../src/lib/domain/person-seat";
 
-const { values } = parseArgs({ options: { "dry-run": { type: "boolean", default: false } } });
+const { values } = parseArgs({
+  options: {
+    "dry-run": { type: "boolean", default: false },
+    refresh: { type: "boolean", default: false },
+  },
+});
 
 async function main() {
-  const seats = await db.query.members.findMany({
-    where: and(
-      eq(members.memberType, MemberType.HUMAN),
-      ne(members.status, MemberStatus.RETIRED),
-      isNotNull(members.ocActorId),
-      isNull(members.personTag),
-    ),
-    columns: { id: true, organizationId: true, displayName: true, ocActorId: true },
-  });
-  let stored = 0;
-  let none = 0;
-  let failed = 0;
-  let clashes = 0;
+  const dryRun = values["dry-run"];
+  const report = await backfillPersonTags({ dryRun, refresh: values.refresh });
 
-  for (const seat of seats) {
-    const answer = await personTagFor(seat.ocActorId, seat.organizationId);
-    if (!answer.ok) {
-      failed++;
-      console.error(`could not ask for ${seat.id} (${seat.displayName}): ${answer.reason}`);
-      continue;
-    }
-    if (!answer.tag) {
-      none++;
-      continue;
-    }
-    const other = await db.query.members.findFirst({
-      where: and(
-        eq(members.organizationId, seat.organizationId),
-        eq(members.personTag, answer.tag),
-        eq(members.memberType, MemberType.HUMAN),
-        ne(members.status, MemberStatus.RETIRED),
-      ),
-      columns: { id: true, displayName: true },
-    });
-    if (other) {
-      clashes++;
-      console.error(
-        `ONE PERSON, TWO SEATS in organization ${seat.organizationId}: "${other.displayName}" (${other.id}) and "${seat.displayName}" (${seat.id}). Left untagged; the organization decides.`,
-      );
-      continue;
-    }
-    if (!values["dry-run"]) {
-      await db.update(members).set({ personTag: answer.tag }).where(eq(members.id, seat.id));
-    }
-    stored++;
+  for (const { organizationId, reason } of report.failures) {
+    console.error(`could not ask for the seats of organization ${organizationId}: ${reason}`);
   }
-
+  for (const { organizationId, clash } of report.clashes) {
+    const [kept, ...others] = clash.seats;
+    console.error(
+      `ONE PERSON, SEVERAL SEATS in organization ${organizationId}: "${kept!.displayName}" (${kept!.memberId}) keeps the tag; ${others
+        .map((s) => `"${s.displayName}" (${s.memberId})`)
+        .join(", ")} left untagged. The organization decides.`,
+    );
+  }
+  const verb = dryRun ? "would" : "did";
   console.log(
-    `${values["dry-run"] ? "would store" : "stored"} ${stored}; cannot be told apart ${none}; could not ask ${failed}; one person in two seats ${clashes}; of ${seats.length} untagged human seats.`,
+    `${verb} store ${report.stored}, ${verb} rewrite ${report.rewritten}, ${verb} clear ${report.cleared}; cannot be told apart ${report.none}; could not ask ${report.failed}; seats in a clash ${report.clashes.reduce((n, c) => n + c.clash.seats.length, 0)}; of ${report.asked} human seats asked about${values.refresh ? "" : " (untagged only)"}.`,
   );
-  process.exit(failed > 0 || clashes > 0 ? 1 : 0);
+  process.exitCode = report.failed > 0 || report.clashes.length > 0 ? 1 : 0;
 }
 
-void main();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  })
+  .finally(() => db.$client.end());
