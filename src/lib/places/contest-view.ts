@@ -7,11 +7,13 @@
  * Pure: the data comes in, nothing is fetched.
  */
 import { CONTEST_TOPICS, CONTESTS } from "@/lib/config/places/contested";
+import { placesConfig } from "@/lib/config/places";
 import { WORLD, regionName, worldEntryOfPack, type WorldRegion } from "@/lib/config/world";
 import { holderOfRegion } from "@/lib/budgets/holders";
 import type { PlaceRef } from "@/lib/budgets/model";
 import type { Contest, ContestProvision, ContestRole, ContestTopic } from "./contested";
 import { localized } from "./place-view";
+import { regionHref } from "./place-href";
 
 export interface ContestSideView {
   key: string;
@@ -59,7 +61,12 @@ export interface ContestData {
 
 const DATA: ContestData = { contests: CONTESTS, topics: CONTEST_TOPICS, world: WORLD };
 
-const regionHref = (region: WorldRegion) => `/places/${region.slug}`;
+/** Where a side's page is: its pack's root, else where the world list has it. */
+const sideHref = (region: WorldRegion) =>
+  regionHref(
+    region,
+    region.code ? placesConfig.packs.find((p) => p.region === region.code)?.key : null,
+  );
 
 /** The world entries another state claims, in the world list's order. */
 export const claimedRegions = (world: readonly WorldRegion[] = WORLD) =>
@@ -95,7 +102,7 @@ export function contestView(
     key: s.key,
     role: s.role,
     name: regionName(regionOf(s.role), locale),
-    href: regionHref(regionOf(s.role)),
+    href: sideHref(regionOf(s.role)),
     lawAuthority: s.lawAuthority,
     slug: regionOf(s.role).slug,
     holder: holderOfRegion(regionOf(s.role)),

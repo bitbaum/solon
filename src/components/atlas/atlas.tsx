@@ -44,7 +44,7 @@ import {
   type FocusInputs,
 } from "./focus-tree";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
-import { packHref, placeHref } from "@/lib/places/place-href";
+import { packHref, placeHref, regionHref as entryHref } from "@/lib/places/place-href";
 import { COUNTRIES } from "@/lib/config/world/countries";
 import {
   BEYOND_UN,
@@ -152,20 +152,20 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       ),
     [],
   );
-  /** The page of a country Solon holds, by its law place: its pack's path, else its world slug. */
+  /** The page of a country Solon holds, by its law place: its pack's root, else where the world list has it. */
   const pageOf = useCallback((place: GlobePlace | null) => {
     if (!place) return null;
     if (place.pack) return packHref(place.pack);
     const region = place.region ? worldRegionByCode(place.region) : undefined;
-    return region ? placeHref(region.slug) : null;
+    return region ? entryHref(region) : null;
   }, []);
-  // A world region's page: its pack's root when Solon holds the country's places (the globe says), else its world slug.
+  // A world region's page: its pack's root when Solon holds the country's places (the globe says), else where the world list has it.
   const regionHref = useCallback(
     (region: WorldRegion) => {
       const held = region.code
         ? places.find((p) => p.region === region.code && p.pack)?.pack
         : undefined;
-      return held ? packHref(held) : placeHref(region.slug);
+      return entryHref(region, held);
     },
     [places],
   );

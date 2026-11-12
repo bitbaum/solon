@@ -249,6 +249,7 @@ export function comparisonView(input: {
     const parent = chain.find((p) => p.depth === 1);
     columns.push({
       slugPath: place.slugPath,
+      canonicalPath: place.canonicalPath ?? place.slugPath,
       name: nameOf(place),
       levelName: levelName(place.levelKey),
       parentName: parent ? nameOf(parent) : null,

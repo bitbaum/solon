@@ -77,6 +77,12 @@ const estimate = (column = oak!, base: number | null = 1000, conditions = {}) =>
   estimateColumn(column, pack, { base, variant: "alone", conditions });
 
 describe("comparisonView", () => {
+  it("links each column by the path its page answers for, not by slug_path", () => {
+    const moved = { ...hamlet, slugPath: "test_land/oak", canonicalPath: "test-land/oak" };
+    const [column] = compare([{ chain: [moved, parish, shire, realm], facts: FACTS }]).columns;
+    expect(column).toMatchObject({ slugPath: "test_land/oak", canonicalPath: "test-land/oak" });
+  });
+
   it("names each place, where it sits, and who levies its tax, root first", () => {
     expect(oak).toMatchObject({
       name: "Oak Hollow",
