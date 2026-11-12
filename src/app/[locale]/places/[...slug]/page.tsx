@@ -166,6 +166,7 @@ export default async function PlacePage({ params }: { params: Params }) {
           db,
           law.map((a) => a.key),
           today(),
+          locale,
         )}
         locale={locale}
         t={t}
@@ -210,6 +211,7 @@ export default async function PlacePage({ params }: { params: Params }) {
         db,
         law.map((a) => a.key),
         today(),
+        locale,
       )}
       locale={locale}
       hero={placeHero({

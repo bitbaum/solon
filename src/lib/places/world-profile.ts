@@ -20,6 +20,7 @@ import {
 import { WORLD_PROFILES_FILE, kindOf, type PlaceKind } from "@/lib/config/world/kinds";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
+import { actTitleSql } from "@/lib/law/act-title";
 
 type Texts = Readonly<Record<string, string>>;
 
@@ -217,10 +218,12 @@ export async function loadWorldProfile(
   const constitution = authority
     ? (rowsOf<{ id: string; title: string }>(
         await db.execute(sql`
-          SELECT a.id, n.text AS title FROM legal_acts a
-          JOIN legal_act_names n ON n.act_id = a.id AND n.kind = 'title' AND n.superseded_at IS NULL
-          WHERE a.authority = ${authority} AND a.kind = 'constitution' AND a.in_force
-            AND EXISTS (SELECT 1 FROM legal_act_versions v WHERE v.act_id = a.id AND v.in_force_to IS NULL)
+          SELECT * FROM (
+            SELECT a.id, ${actTitleSql(sql`a.id`, locale)} AS title FROM legal_acts a
+            WHERE a.authority = ${authority} AND a.kind = 'constitution' AND a.in_force
+              AND EXISTS (SELECT 1 FROM legal_act_versions v WHERE v.act_id = a.id AND v.in_force_to IS NULL)
+          ) c
+          WHERE title IS NOT NULL
           LIMIT 1`),
       )[0] ?? null)
     : null;
