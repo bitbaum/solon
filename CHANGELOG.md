@@ -6,6 +6,16 @@ one to read for the detail. Fixes get the same weight as features.
 
 ## 2026-11-12
 
+### Added
+
+- **One person, one seat.** A person on OrangeCat can hold several identities, each its own
+  account, so a seat per account could become several seats for one person. Solon now asks
+  OrangeCat for an opaque tag per account, keyed to the organization, and refuses a second human
+  seat for the same person there. The tag says nothing about who the person is or about their
+  seats elsewhere. A suspended seat still counts, so a suspension cannot be dodged under another
+  identity. The founding seat and an organization's founder are tagged as they are created; the
+  operator's add-member script checks before seating.
+
 ### Fixed
 
 - **Every country's figures can now load.** The governance, spending and safety figures on country
