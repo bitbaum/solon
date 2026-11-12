@@ -25,6 +25,7 @@ import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { findPlace } from "@/lib/places/paths";
 import { countryOfPlace } from "@/lib/places/place-country";
 import { hyphenated } from "@/lib/places/world-slug-redirects";
 import { countryPlaceId, loadProfileFigures } from "@/lib/places/profile-figures";
@@ -181,7 +182,12 @@ export default async function PlacePage({ params }: { params: Params }) {
   // A country no pack holds in depth is a place of the world pack, under the
   // same slug; its page there carries its figures. A place another state
   // claims keeps this page, which says so.
-  if (!pack && !region.claimedBy && (await load(`${WORLD_PACK}/${region.slug}`, locale))) {
+  // Whether the world pack holds it: a two-query lookup, not a full page load.
+  if (
+    !pack &&
+    !region.claimedBy &&
+    (await findPlace(db, placesConfig, `${WORLD_PACK}/${region.slug}`))
+  ) {
     redirect({ href: `/places/${WORLD_PACK}/${region.slug}`, locale });
   }
   const profile = await profileOf(region, locale);
