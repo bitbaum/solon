@@ -15,6 +15,9 @@ export const WORLD_PACK = "world";
 export function worldPack(): CountryPackInput {
   return {
     key: WORLD_PACK,
+    // A country here moves to a pack of its own when one is added (importer: "Places another
+    // pack holds").
+    yields: true,
     names: {
       en: "The world",
       de: "Die Welt",

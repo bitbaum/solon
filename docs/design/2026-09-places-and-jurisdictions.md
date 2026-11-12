@@ -1086,6 +1086,19 @@ restart) is closed as failed after eight hours, longer than any import runs
 and backed off like any failure. A worker starts on a day with nothing due as
 well, for the daily rebuild of the ancestors view.
 
+**A pack takes a country over** (2026-11-12). The world pack `yields`: it
+holds every country no other pack holds, and only until one does. When a
+pack's import names a place the world pack holds (by the place's own ref, its
+ISO code for a country), the place moves: its row keeps its id (so its figures
+and records stay), its pack and path change, the new path becomes canonical in
+`place_paths` and the old one redirects, and the parents other sources stated
+for it are superseded (its new pack states its parent). What the world pack
+held under a moved place that the batch does not restate ends that day; a
+later batch that restates one moves it and makes it current again. A batch of
+the world pack leaves alone a place another pack holds, and every place it
+states under one, so a world file not yet regenerated cannot take a country
+back (`src/lib/places/__tests__/pack-handover.integration.test.ts`).
+
 **Two sides, one queue** (2026-11-12). A publisher that refuses the box's
 address (the World Bank answered it HTTP 403 on 2026-11-10) is marked on its
 source, `fetchFrom: "runner"`. The box's worker leaves such sources out; a
