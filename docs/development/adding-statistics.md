@@ -51,9 +51,14 @@ Commands (all under `pnpm run`):
    under that key stays credited to it.
 4. **Test it** against a real response saved as a fixture
    (`src/lib/places/__tests__/fixtures/`). Check the mapping, that a missing
-   value is skipped and reported, and that the plausible band holds.
+   value is never stored and is reported (each year, for a source of one
+   country; for a source of many, one line a series naming the countries it has
+   no value for: `adapters/gaps.ts`), and that the plausible band holds.
 5. **Load it twice.** `places:sync-config`, then `places:fetch <source>`; the
    second run must report `unchanged` for every retrieval (nothing re-read).
+   A retrieval that left out figures for a country not held here is read again
+   on every run instead, and its report names the country: load the country's
+   places, and the figures land.
 6. **Look at it.** `statistics:quality` lists gaps and large steps; open the
    statistic's page. Read the numbers against the publisher's page. If two
    countries look alike or unlike for a reason of scope, the scope sentence is
@@ -134,8 +139,9 @@ A country is a pack and its sources (see `docs/design/2026-09-places-and-jurisdi
 For the statistics: add its ISO 3166-1 numeric code to
 `src/lib/config/statistics/world.ts` (a test fails if a pack's country is
 missing). The World Bank's source already reads every country; add it to
-`OECD_MEMBERS` or `EUROSTAT_GOV_COUNTRIES` (`sources.ts`) if it is in either, and
-its figures come with the next run.
+`OECD_MEMBERS` (`src/lib/config/places/world.ts`) or `EUROSTAT_GOV_COUNTRIES`
+(`src/lib/config/budgets/eurostat.ts`) if it is in either, and its figures come
+with the next run.
 
 ## 6. What the page checks for you
 

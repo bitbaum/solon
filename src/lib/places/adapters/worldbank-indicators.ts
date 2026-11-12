@@ -2,17 +2,19 @@
  * Yearly national series from the World Bank's Indicators API (v2, JSON):
  * one request per indicator, one row per country and calendar year. A source
  * reads one country (`place`, `country`) or many at once (`countries`: the
- * API's `country/all`, ten requests for the whole world where one source a
- * country made thousands). Format only: which countries, which indicators and
- * which metric each becomes are the source's `options`.
+ * API's `country/all`, one request an indicator for the whole world where one
+ * source a country made thousands). Format only: which countries, which
+ * indicators and which metric each becomes are the source's `options`.
  *
  * The API answers `[page, rows]`; `rows` is null when the country has no
- * data for the indicator at all. A year with no value is left out and
- * reported, never stored as zero.
+ * data for the indicator at all. A year with no value is left out, never
+ * stored as zero: for one country each missing year is reported, for many
+ * each indicator names the countries it has no value for (gaps.ts).
  */
 import { z } from "zod";
 import type { BatchFactInput } from "../importer/batch";
 import type { Adapter } from "./types";
+import { countryGaps } from "./gaps";
 
 const API = "https://api.worldbank.org/v2";
 
@@ -122,6 +124,7 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
     const many = options.countries
       ? new Map(options.countries.map((c) => [c.code, c.place]))
       : null;
+    const gaps = countryGaps([...(many?.keys() ?? [])], options.fromYear);
     for (const r of rows ?? []) {
       const place = many ? many.get(r.country.id) : options.place!;
       if (!place) continue;
@@ -129,16 +132,18 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
       if (!indicator) {
         throw new Error(`indicator ${r.indicator.id} is not in the source's options`);
       }
+      gaps.series(indicator.code);
       const year = Number(r.date);
       const label = `${r.indicator.id} ${r.country.id} ${r.date}`;
       if (year < options.fromYear) {
         continue;
       }
       if (r.value === null) {
-        // One country's gaps are reported year by year; the world's would be thousands of lines.
+        // One country's gaps are reported year by year; many countries', once a series (gaps.ts).
         if (!many) skip(label, "the World Bank publishes no value for this year");
         continue;
       }
+      gaps.value(indicator.code, r.country.id);
       facts.push({
         jurisdiction: place,
         metricKey: indicator.metric,
@@ -151,6 +156,7 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
         publisherFlag: r.obs_status ? r.obs_status : null,
       });
     }
+    if (many) gaps.report("the World Bank", skip);
     return { pack: pack.key, jurisdictions: [], facts };
   },
 };

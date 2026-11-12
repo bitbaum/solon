@@ -33,10 +33,10 @@ one to read for the detail. Fixes get the same weight as features.
   request that is cut off after five minutes, and asked the World Bank for one country at a time,
   thousands of requests on one day. The import is now a queue that works through whatever is
   behind, hour by hour, tries a publisher that was down again the next day, and records every
-  attempt; and the World Bank is asked for all countries at once, ten requests in all.
+  attempt; and the World Bank is asked for all countries at once, eight requests in all.
 - **A country's page reads its figures in one query** instead of one per figure.
 - **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
-  time, 68 sources spread over the month; each publisher is now one source that asks for every
+  time, 68 sources due on two days a month; each publisher is now one source that asks for every
   country it covers at once. The national figures behind country pages take 17 requests instead
   of 350.
 - **Every figure is credited to whoever published it.** Liechtenstein's tax revenue and public

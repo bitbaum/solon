@@ -87,5 +87,15 @@ describe("coverageView", () => {
       coverageView(input({ config, retrievals: [old, ...input().retrievals], runs: [] })),
     ).sources[0]!;
     expect(both.retrievedOn).toBe("2025-08-01");
+    // It read again under its current key: that reading is its date, wherever the rows come.
+    const fresh = { sourceKey: "testland-register", retrievedAt: new Date("2025-09-01T03:00:00Z") };
+    for (const retrievals of [
+      [old, fresh],
+      [fresh, old],
+    ]) {
+      expect(
+        pack(coverageView(input({ config, retrievals, runs: [] }))).sources[0]!.retrievedOn,
+      ).toBe("2025-09-01");
+    }
   });
 });

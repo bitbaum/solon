@@ -1,6 +1,7 @@
 import type { Rounding } from "@/lib/tax-model";
 import { alpha3Of } from "@/lib/config/world/countries";
 import { COUNTRY_PACKS } from "./countries";
+import { COUNTRY_SCHEME } from "./identifier-schemes";
 import {
   EUROSTAT_FROM_YEAR,
   EUROSTAT_GOV_COUNTRIES,
@@ -226,7 +227,7 @@ const packsOf = (countries: readonly string[]): string[] => [
     p.key !== WORLD_PACK && p.region && countries.includes(p.region) ? [p.key] : [],
   ),
 ];
-const country = (a2: string) => ({ scheme: "iso_3166_1", value: a2 });
+const country = (a2: string) => ({ scheme: COUNTRY_SCHEME, value: a2 });
 
 /** The OECD's series for every member, one request a series (their codes joined with "+"). */
 const oecdSource = (members: readonly string[]): SourceInput => ({
@@ -1431,10 +1432,9 @@ export const SOURCES: readonly SourceInput[] = [
 ];
 
 /**
- * The world pack's sources: the country names and codes, the World Bank's
- * indicators for every country no pack holds, and the OECD's tax series for
- * those of them that are OECD members. Computed from the country registry, so
- * a country is never a line to remember.
+ * The world pack's own sources: the country names and codes, and the
+ * subdivisions of every country. The national statistics (World Bank, OECD,
+ * Eurostat) are one source each for every country, built above.
  */
 function worldSources(): SourceInput[] {
   return [

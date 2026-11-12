@@ -9,12 +9,14 @@
  * JSON-stat stores the values of a cube in one flat object keyed by position:
  * the position is read back into a code per dimension, so a value is never
  * taken from the wrong series. A year with no value is absent from the cube
- * and is reported, never stored as zero.
+ * and is never stored as zero: for one country each missing year is reported,
+ * for many each series names the countries it holds no figure for (gaps.ts).
  */
 import { z } from "zod";
 import type { FactQuality } from "../vocabulary";
 import type { BatchFactInput } from "../importer/batch";
 import type { Adapter } from "./types";
+import { countryGaps } from "./gaps";
 
 const API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data";
 
@@ -169,6 +171,8 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
     const places = options.geos
       ? new Map(options.geos.map((g) => [g.code, g.place]))
       : new Map([[options.geo!, options.place!]]);
+    const gaps = countryGaps([...places.keys()], options.fromYear);
+    for (const s of request.series) gaps.series(`${dataset} ${s.code}`);
     for (const cell of cellsOf(c)) {
       const where = `${dataset} ${JSON.stringify(cell.codes)}`;
       const place = places.get(cell.codes.geo ?? "");
@@ -183,6 +187,7 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
       const year = Number(time);
       if (year < options.fromYear) continue;
       seen.add(`${series.code} ${year}`);
+      gaps.value(`${dataset} ${series.code}`, cell.codes.geo!);
       facts.push({
         jurisdiction: place,
         metricKey: series.metric,
@@ -194,9 +199,12 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
         publisherFlag: cell.flag ? cell.flag : null,
       });
     }
-    // Series the request asked for and the cube holds no figure of, for a year it has. Reported
-    // for one country only: every country's gaps would be thousands of lines.
-    if (options.geos) return { pack: pack.key, jurisdictions: [], facts };
+    // Series the request asked for and the cube holds no figure of, for a year it has: for one
+    // country, year by year; for many, the countries a series has no figure for at all (gaps.ts).
+    if (options.geos) {
+      gaps.report("Eurostat", skip);
+      return { pack: pack.key, jurisdictions: [], facts };
+    }
     const years = Object.keys(c.dimension.time?.category.index ?? {}).filter(
       (y) => Number(y) >= options.fromYear,
     );

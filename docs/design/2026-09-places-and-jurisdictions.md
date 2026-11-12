@@ -1122,7 +1122,11 @@ series loader, so every chart, caption and source line reads the same answer. A
 config test fails when two sources could state one statistic for the same
 country, since the facts diff keys a figure on place, metric and period. A
 batch of figures alone leaves out, and reports once per place, figures for a
-place not held here, so one country not yet loaded never stops the others.
+country not held here, so one country not yet loaded never stops the others;
+the retrieval is then recorded with a `+partial` importer version, so the next
+run reads it again rather than skipping it as applied. Any other unknown place
+still fails the run. A source of many countries reports gaps once a series: the
+countries asked for that it holds no value for (`adapters/gaps.ts`).
 
 **Areas and their file** (built 2026-10-01): a batch may carry `areas` and one
 `geometry` (level, edition, TopoJSON text). The check refuses areas without a

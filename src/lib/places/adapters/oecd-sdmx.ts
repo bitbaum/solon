@@ -10,6 +10,7 @@ import { z } from "zod";
 import type { FactQuality } from "../vocabulary";
 import type { BatchFactInput } from "../importer/batch";
 import { decodeCsv } from "./csv";
+import { countryGaps } from "./gaps";
 import type { Adapter } from "./types";
 
 const API = "https://sdmx.oecd.org/public/rest/data";
@@ -104,6 +105,7 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
     const many = options.countries
       ? new Map(options.countries.map((c) => [c.code, c.place]))
       : null;
+    const gaps = countryGaps([...(many?.keys() ?? [])], options.fromYear);
     for (const [i, row] of table.entries()) {
       const where = `row ${i + 2}`;
       const series = options.series.find(
@@ -115,6 +117,7 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
       if (!series) {
         throw new Error(`${where}: ${row.DATAFLOW} ${row.MEASURE} is not in the source's options`);
       }
+      gaps.series(series.metric);
       if (row.FREQ !== "A" || !/^\d{4}$/.test(row.TIME_PERIOD ?? "")) {
         throw new Error(`${where}: not a yearly figure (${row.FREQ} ${row.TIME_PERIOD})`);
       }
@@ -130,10 +133,11 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
       const raw = row.OBS_VALUE ?? "";
       const value = Number(raw);
       if (raw.trim() === "" || !Number.isFinite(value)) {
-        // One country's gaps are reported year by year; every member's would be hundreds of lines.
+        // One country's gaps are reported year by year; many countries', once a series (gaps.ts).
         if (!many) skip(label, "the OECD publishes no value for this year");
         continue;
       }
+      gaps.value(series.metric, row.REF_AREA ?? "");
       if (row.UNIT_MULT && row.UNIT_MULT !== "0") {
         throw new Error(`${where}: unit multiplier ${row.UNIT_MULT} is not read`);
       }
@@ -148,6 +152,7 @@ export const oecdSdmxAdapter: Adapter<Rows, OecdOptions> = {
         publisherFlag: row.OBS_STATUS && row.OBS_STATUS !== "A" ? row.OBS_STATUS : null,
       });
     }
+    if (many) gaps.report("the OECD", skip);
     return { pack: pack.key, jurisdictions: [], facts };
   },
 };

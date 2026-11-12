@@ -54,7 +54,8 @@ import {
   type ImportBatch,
 } from "./batch";
 import { defaultGeometryStore, type GeometryStore } from "./geometry-store";
-import { alreadyApplied, importerVersion } from "./applied";
+import { COUNTRY_SCHEME } from "@/lib/config/places/identifier-schemes";
+import { alreadyApplied, importerVersion, partialVersion } from "./applied";
 import { sha256Hex, type SnapshotStore } from "./snapshots";
 import { checkBatch } from "./validate";
 
@@ -356,6 +357,12 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         // importer is not the migrating role (0027).
         if (HIERARCHY_CHANGES.some((kind) => applied.counts[kind] > 0)) {
           await refreshAncestors(tx);
+        }
+        if (applied.unresolved.length > 0) {
+          await tx
+            .update(sources)
+            .set({ importerVersion: partialVersion(version) })
+            .where(eq(sources.id, sourceRow!.id));
         }
         report.sourceId = sourceRow!.id;
         return applied;
@@ -774,9 +781,11 @@ async function applyBatch(
 
   // --- Facts: per period; a changed value supersedes, it never overwrites. ---
   // A batch of figures alone (a publisher's series for every country) states nothing about
-  // places: a figure for a place not held here is left out and reported, so one country not yet
-  // loaded never stops the others. A batch that also states places keeps the rule that every
-  // figure's place is known.
+  // places: a figure for a country not held here is left out and reported, so one country not
+  // yet loaded never stops the others, and the retrieval is read again on the next run (see
+  // `partialVersion`). Any other unknown place is still a problem that fails the run: a mistyped
+  // commune number in a hand-kept table must not pass as applied. A batch that also states
+  // places keeps the rule that every figure's place is known.
   const factsOnly =
     batch.jurisdictions.length === 0 &&
     batch.relations.length === 0 &&
@@ -786,8 +795,8 @@ async function applyBatch(
   const notHeld = new Map<string, number>();
   const placedFacts = factsOnly
     ? batch.facts.filter((f) => {
-        if (ids.has(refKey(f.jurisdiction))) return true;
         const key = refKey(f.jurisdiction);
+        if (ids.has(key) || f.jurisdiction.scheme !== COUNTRY_SCHEME) return true;
         notHeld.set(key, (notHeld.get(key) ?? 0) + 1);
         return false;
       })

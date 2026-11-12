@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { ChainInstrument, ChainPlace } from "../chain";
-import { displayName, localized, placeActions, placeView } from "../place-view";
+import { displayName, localized, placeActions, placeSources, placeView } from "../place-view";
 import { withTestland } from "./fixtures/testland/config";
 
 const testland = withTestland(placesConfig);
@@ -176,5 +176,23 @@ describe("placeActions", () => {
       ["testland_moot", "https://mill.invalid/moot"],
     ]);
     expect(placeActions(testland, CHAIN, [], "en")).toEqual([]);
+  });
+});
+
+describe("placeSources", () => {
+  it("lists a source once, at its latest reading, whatever key its figures were read under", () => {
+    const listed = placeSources(
+      placesConfig,
+      [
+        // An unchanged figure keeps the per-country key it was first read under.
+        { sourceKey: "oecd-tax-ch", retrievedAt: new Date("2026-11-10T04:00:00Z") },
+        { sourceKey: "oecd-tax-world", retrievedAt: new Date("2026-12-10T04:00:00Z") },
+        { sourceKey: "no-such-source", retrievedAt: new Date("2026-12-10T04:00:00Z") },
+      ],
+      "en",
+    );
+    expect(listed.map((s) => [s.publisher, s.retrievedAt])).toEqual([
+      [placesConfig.sources.find((s) => s.key === "oecd-tax-world")!.publisher, "2026-12-10"],
+    ]);
   });
 });

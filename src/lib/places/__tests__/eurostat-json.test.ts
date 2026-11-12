@@ -19,17 +19,56 @@ const source = placesConfig.sources.find((s) => s.key === EUROSTAT_KEY)!;
 
 type Options = Parameters<NonNullable<typeof eurostatJsonAdapter.map>>[1]["options"];
 
-function run(name: string, options: Options) {
+function run(name: string | object, options: Options) {
   const skipped: string[] = [];
+  const reasons: string[] = [];
   const context = {
     source,
     pack,
     options,
     retrieval: { url: null, validFrom: null },
-    skip: (row: string) => skipped.push(row),
+    skip: (row: string, reason: string) => {
+      skipped.push(row);
+      reasons.push(reason);
+    },
   } as MapContext<Options>;
-  const parsed = eurostatJsonAdapter.schema.parse(fixture(name));
-  return { batch: eurostatJsonAdapter.map(parsed, context), skipped };
+  const cube = typeof name === "string" ? fixture(name) : name;
+  const parsed = eurostatJsonAdapter.schema.parse(cube);
+  return { batch: eurostatJsonAdapter.map(parsed, context), skipped, reasons };
+}
+
+/**
+ * Switzerland's cube with Greece (EL) beside it: Greece holds the total only, at twice
+ * Switzerland's value, so a cell read onto the wrong country shows.
+ */
+function withGreece() {
+  const cube = fixture("gov_10a_exp-ch.json");
+  const ids: string[] = cube.id;
+  const sizes: number[] = cube.size;
+  const at = (dim: string) => ids.indexOf(dim);
+  const decode = (position: number) => {
+    const out: number[] = [];
+    for (let d = ids.length - 1; d >= 0; d--) {
+      out[d] = position % sizes[d]!;
+      position = Math.floor(position / sizes[d]!);
+    }
+    return out;
+  };
+  const wider = sizes.map((n, d) => (d === at("geo") ? 2 : n));
+  const encode = (indices: number[]) => indices.reduce((p, i, d) => p * wider[d]! + i, 0);
+  const values: Record<string, number> = {};
+  for (const [key, value] of Object.entries(cube.value as Record<string, number>)) {
+    const indices = decode(Number(key));
+    values[String(encode(indices))] = value;
+    if (indices[at("cofog99")] === 0) {
+      values[String(encode(indices.map((i, d) => (d === at("geo") ? 1 : i))))] = value * 2;
+    }
+  }
+  cube.size = wider;
+  cube.value = values;
+  cube.dimension.geo.category.index = { CH: 0, EL: 1 };
+  cube.dimension.geo.category.label = { CH: "Switzerland", EL: "Greece" };
+  return cube;
 }
 
 const CH: Options = {
@@ -142,11 +181,26 @@ describe("Eurostat JSON-stat", () => {
         { code: "EL", place: { scheme: "iso_3166_1", value: "GR" } },
       ],
     };
-    const { batch, skipped } = run("gov_10a_exp-ch.json", many);
-    expect(batch.facts!.length).toBeGreaterThan(0);
-    expect(batch.facts!.every((f) => f.jurisdiction.value === "CH")).toBe(true);
-    // Every country's gaps would be thousands of lines: reported for one country only.
-    expect(skipped).toEqual([]);
+    const { batch, skipped, reasons } = run(withGreece(), many);
+    const total = (country: string, year: string) =>
+      batch.facts!.find(
+        (f) =>
+          f.jurisdiction.value === country &&
+          f.metricKey === "budget.gg.expenditure.total" &&
+          f.validFrom === `${year}-01-01`,
+      )!.value as number;
+    expect(total("GR", "2023")).toBeCloseTo(total("CH", "2023") * 2, 10);
+    expect(
+      batch.facts!.filter((f) => f.jurisdiction.value === "GR").map((f) => f.metricKey),
+    ).toEqual(expect.arrayContaining(["budget.gg.expenditure.total"]));
+    expect(
+      batch.facts!.some(
+        (f) => f.jurisdiction.value === "GR" && f.metricKey !== "budget.gg.expenditure.total",
+      ),
+    ).toBe(false);
+    // A line a series, naming the countries it holds no figure for; none for one they all have.
+    expect(skipped).toEqual(["gov_10a_exp GF07", "gov_10a_exp GF0701"]);
+    expect(reasons[0]).toBe("Eurostat publishes no value from 2021 on for EL");
     const url = new URL(
       eurostatUrl("gov_10a_exp", ["CH", "EL"], 1995, { unit: "PC_GDP" }, "cofog99", ["TOTAL"]),
     );

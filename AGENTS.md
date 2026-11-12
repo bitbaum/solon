@@ -137,8 +137,8 @@ A check that warns on correct data is a bug: remove or narrow it, do not add a c
 Budgets (`/budgets`, design `docs/design/2026-11-budgets.md`) are one model over two
 inputs. The taxonomies in `src/lib/config/budgets/` (COFOG for spending, ESA 2010 for
 revenue) are the single source: they generate the `budget.<scope>.<side>.<code>` metrics and
-the Eurostat sources (`eurostat_json` adapter, one per country, run like every Places source:
-`pnpm run places:fetch eurostat-gov-<cc>`). A budget read from a law is a document under
+the Eurostat source (`eurostat_json` adapter, one source for every country it covers, run like
+every Places source: `pnpm run places:fetch eurostat-gov-world`). A budget read from a law is a document under
 `src/lib/config/budgets/documents/`, its lines as printed and each placed on a category; its
 lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
 `Budget` and holds the arithmetic; pages and the contested places use only its components.

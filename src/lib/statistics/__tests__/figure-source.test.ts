@@ -50,6 +50,19 @@ describe("who a place's figures are credited to", () => {
     });
   });
 
+  it("finds a source by a key it had before, not only by its current one", () => {
+    // Liechtenstein's office, had its source once been keyed otherwise: still the office's.
+    const config = {
+      ...placesConfig,
+      sources: placesConfig.sources.map((s) =>
+        s.key === "li-fiscal-ratio" ? { ...s, formerKeys: ["li-fiscal-ratio-old"] } : s,
+      ),
+    };
+    expect(figureSource(config, revenue, "li-fiscal-ratio-old", "LI").publisher).toBe(
+      "Amt für Statistik, Liechtenstein",
+    );
+  });
+
   it("credits the series when the source is no longer registered", () => {
     expect(figureSource(placesConfig, revenue, "gone-source", "CH").publisher).toBe(
       "OECD, Revenue Statistics",

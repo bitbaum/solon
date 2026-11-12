@@ -138,7 +138,14 @@ describe("the World Bank's indicators", () => {
       validFrom: "2023-01-01",
     });
     expect(batch.facts[0]!.value).toBeCloseTo(0.215, 5);
-    expect(skipped).toEqual([]);
+    // One line for the indicator, naming every country asked for that has no value in it: not
+    // Germany (a year without one is not a gap of the country), not Switzerland.
+    expect(skipped.map((s) => s.row)).toEqual(["NE.CON.GOVT.ZS"]);
+    const silent = skipped[0]!.reason.replace(/^.* for /, "").split(", ");
+    expect(silent).toContain("LI");
+    expect(silent).not.toContain("DE");
+    expect(silent).not.toContain("CH");
+    expect(skipped[0]!.reason).toMatch(/^the World Bank publishes no value from \d{4} on for /);
   });
 
   it("turns a percentage of GDP into a ratio per calendar year", () => {
@@ -153,7 +160,7 @@ describe("the World Bank's indicators", () => {
       validTo: "2024-01-01",
     });
     expect(y2023.value).toBeCloseTo(0.117415, 5);
-    expect(skipped).toEqual([]);
+    expect(skipped.map((s) => s.row)).toEqual(["NE.CON.GOVT.ZS"]);
     expect(checkBatch(batch, placesConfig, WORLD_BANK_KEY).problems).toEqual([]);
   });
 
@@ -204,15 +211,20 @@ describe("the OECD Tax Database", () => {
     const bytes = new Uint8Array(
       readFileSync(join(__dirname, "fixtures", "oecd", "oecd-est-ts-pit.csv")),
     );
+    const skipped: { row: string; reason: string }[] = [];
     const batch = importBatchSchema.parse(
       adapter.map(adapter.schema.parse(adapter.decode!(bytes)), {
         source,
         pack: placesConfig.packs.find((p) => p.key === WORLD_PACK),
         options: adapter.options?.parse(source.options),
         retrieval: { url: null, validFrom: null },
-        skip: () => undefined,
+        skip: (row, reason) => skipped.push({ row, reason }),
       }),
     );
+    // The file holds Estonia only: one line for the series names every other member, not Estonia.
+    expect(skipped.map((s) => s.row)).toEqual(["tax.income.top_rate"]);
+    expect(skipped[0]!.reason).toMatch(/^the OECD publishes no value from \d{4} on for AUT, /);
+    expect(skipped[0]!.reason).not.toMatch(/\bEST\b/);
     const y2023 = batch.facts.find((f) => f.validFrom === "2023-01-01")!;
     expect(y2023).toMatchObject({
       jurisdiction: { scheme: "iso_3166_1", value: "EE" },
