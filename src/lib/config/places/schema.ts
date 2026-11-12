@@ -259,6 +259,12 @@ export const sourceSchema = z.object({
    * country): rows already held under them are still this source's. Read through `findSource`.
    */
   formerKeys: z.array(sourceKey).optional(),
+  /**
+   * Where it is fetched from: the box's hourly queue (`box`, the default), or a GitHub runner's
+   * daily queue (`runner`) for a publisher that refuses the box's address (the World Bank answered
+   * it HTTP 403, 2026-11-10). The run log is the same whichever side fetched.
+   */
+  fetchFrom: z.enum(["box", "runner"]).optional(),
   publisher: z.string().min(1),
   dataset: z.string().min(1),
   homepage: z.url(),

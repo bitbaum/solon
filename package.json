@@ -31,6 +31,7 @@
     "snapshots:compress": "tsx scripts/snapshots-compress.ts",
     "places:import-files": "tsx scripts/places-import-files.ts",
     "places:fetch": "tsx scripts/places-fetch.ts",
+    "places:queue": "tsx scripts/places-queue.ts",
     "statistics:sync": "tsx scripts/statistics-sync.ts",
     "statistics:quality": "tsx scripts/statistics-quality.ts",
     "geography:world": "tsx scripts/build-world-geography.ts",

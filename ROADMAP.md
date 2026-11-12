@@ -295,8 +295,9 @@ Changing the law
       with the people who will receive it (a decision for them, not for Solon)
 
 Statistics
-- [ ] A named list of series for Liechtenstein, each with its publisher and date. Today none loads:
-      the World Bank's API answers the box HTTP 403, so no World Bank series has ever loaded
+- [ ] A named list of series for Liechtenstein, each with its publisher and date. The World Bank's
+      API answers the box HTTP 403, so its series are read daily from a GitHub runner instead
+      (`fetchFrom: "runner"`, 2026-11-12); loaded once that run has applied them
 - [ ] The tax model's rates read against the published tariff, with the article
 
 Keeping it true

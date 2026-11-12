@@ -304,6 +304,8 @@ const worldBankSource = (countries: readonly string[]): SourceInput => ({
   key: WORLD_BANK_KEY,
   // One source a country until 2026-11-12: rows read then keep their key.
   formerKeys: countries.map((a2) => `worldbank-wdi-${a2.toLowerCase()}`),
+  // The World Bank's API answers the box's address HTTP 403 (2026-11-10): a runner reads it.
+  fetchFrom: "runner",
   publisher: "World Bank",
   dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",

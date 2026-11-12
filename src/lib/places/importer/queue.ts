@@ -84,6 +84,10 @@ export interface QueueOptions {
   budgetMs: number;
   /** The run log as the caller already read it; read here when absent. */
   runs?: Map<string, SourceRuns>;
+  /** Which side's sources it fetches; the box's by default. */
+  side?: QueueSide;
+  /** Rebuild the ancestors view once a day (the box's worker does; a runner's need not). */
+  dailyRefresh?: boolean;
   now?: () => Date;
   fetchSource?: typeof fetchAndImport;
 }
@@ -93,8 +97,13 @@ export interface QueueReport {
   ran: { source: string; status: "applied" | "failed"; problems: string[] }[];
 }
 
-const fetchable = (source: { adapter: string }) =>
-  Boolean(ADAPTERS.get(source.adapter)?.retrievals);
+/** Where a queue runs: the box's hourly worker, or a runner's daily one (`Source.fetchFrom`). */
+export type QueueSide = "box" | "runner";
+
+/** A source this side's queue fetches: one with an address to read, assigned to this side. */
+export const fetchableFrom =
+  (side: QueueSide) => (source: { adapter: string; fetchFrom?: QueueSide }) =>
+    Boolean(ADAPTERS.get(source.adapter)?.retrievals) && (source.fetchFrom ?? "box") === side;
 
 /** The sources behind right now. */
 export const pendingSources = async (
@@ -102,7 +111,8 @@ export const pendingSources = async (
   config: PlacesConfig,
   now = new Date(),
   runs?: Map<string, SourceRuns>,
-) => importQueue(config, runs ?? (await sourceRuns(db)), now, fetchable);
+  side: QueueSide = "box",
+) => importQueue(config, runs ?? (await sourceRuns(db)), now, fetchableFrom(side));
 
 // The day this process last rebuilt the ancestors view.
 const state = globalThis as unknown as { solonAncestorsDay?: string };
@@ -117,12 +127,12 @@ export async function drainQueue(db: Database, options: QueueOptions): Promise<Q
   // An import rebuilds the ancestors view only when it moved a place; a relation that starts or
   // ends on a later day moves one without any import, so the view is also rebuilt once a day.
   const today = now().toISOString().slice(0, 10);
-  if (state.solonAncestorsDay !== today) {
+  if ((options.dailyRefresh ?? true) && state.solonAncestorsDay !== today) {
     await refreshAncestors(db);
     state.solonAncestorsDay = today;
   }
   const fetchSource = options.fetchSource ?? fetchAndImport;
-  const queue = await pendingSources(db, options.config, now(), options.runs);
+  const queue = await pendingSources(db, options.config, now(), options.runs, options.side);
   const report: QueueReport = { queued: queue.length, ran: [] };
   for (const source of queue) {
     if (now().getTime() - started >= options.budgetMs) break;

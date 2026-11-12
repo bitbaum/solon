@@ -5,18 +5,24 @@ name: Places load (cloud runner)
 # never loaded; a runner has another address. It writes to the same production database through an SSH
 # tunnel to the box and copies the snapshots it takes back to the box afterwards (see law-text-cloud.yml).
 # dry_run=true (default) reports what would change and writes nothing.
+#
+# Every day it also drains the queue of sources marked `fetchFrom: "runner"` (the World Bank's):
+# `pnpm run places:queue --from runner`, the same queue the box's hourly worker drains for every
+# other source, with the same run log. A dispatch with kind=queue does the same by hand.
 on:
+  schedule:
+    - cron: "17 6 * * *"
   workflow_dispatch:
     inputs:
       kind:
-        description: "import (a file in the repo) or fetch (from the publisher)"
+        description: "import (a file in the repo), fetch (from the publisher) or queue (every runner source behind)"
         type: choice
-        options: [import, fetch]
+        options: [import, fetch, queue]
         default: fetch
       source:
-        description: "Source key from src/lib/config/places/sources.ts"
+        description: "Source key from src/lib/config/places/sources.ts (not for queue)"
         type: string
-        required: true
+        default: ""
       file:
         description: "For import: the file, under data/places/"
         type: string
@@ -30,13 +36,17 @@ permissions:
   contents: read
 
 concurrency:
-  group: places-cloud-${{ inputs.source }}
+  group: places-cloud-${{ inputs.source || 'queue' }}
   cancel-in-progress: false
 
 jobs:
   load:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
+    # The schedule drains the queue and writes; a dispatch does what it was asked.
+    env:
+      KIND: ${{ github.event_name == 'schedule' && 'queue' || inputs.kind }}
+      DRY: ${{ github.event_name == 'schedule' && 'false' || inputs.dry_run }}
     steps:
       - uses: actions/checkout@v7
 
@@ -88,12 +98,16 @@ jobs:
 
       - name: Load
         env:
-          KIND: ${{ inputs.kind }}
           SOURCE: ${{ inputs.source }}
           FILE: ${{ inputs.file }}
-          DRY: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
+          if [ "$KIND" = queue ]; then
+            # A dry run lists what is behind; otherwise every runner source behind is fetched.
+            plan=""; [ "$DRY" = "true" ] && plan="--plan"
+            pnpm run places:queue --from runner --minutes 30 $plan 2>&1 | grep -vE 'postgres(ql)?://' | tail -n 80
+            exit 0
+          fi
           [[ "$SOURCE" =~ ^[a-z0-9-]+$ ]] || { echo "source must be a registry key"; exit 1; }
           flag=""; [ "$DRY" = "true" ] && flag="--dry-run"
           if [ "$KIND" = import ]; then
@@ -104,7 +118,7 @@ jobs:
           fi
 
       - name: Copy the snapshots to the box
-        if: always() && inputs.dry_run == false
+        if: always() && env.DRY != 'true'
         run: |
           set -euo pipefail
           IP=167.233.22.31

@@ -49,6 +49,9 @@ one to read for the detail. Fixes get the same weight as features.
   link to the US state of Georgia showed the country Georgia's card. A place's country is now its
   own ISO country code, never its name.
 - **Place pages open faster**: each is rendered once an hour, not on every visit.
+- **The World Bank's figures are read from a machine it answers.** It refuses Solon's server, so
+  the governance, spending and safety figures it publishes had never loaded in production. They
+  are now fetched every day they are due from a GitHub runner, into the same database.
 - **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
   time, 68 sources due on two days a month; each publisher is now one source that asks for every
   country it covers at once. The national figures behind country pages take 17 requests instead

@@ -1085,6 +1085,14 @@ restart) is closed as failed after two worker budgets, so it is reported once
 and backed off like any failure. A worker starts on a day with nothing due as
 well, for the daily rebuild of the ancestors view.
 
+**Two sides, one queue** (2026-11-12). A publisher that refuses the box's
+address (the World Bank answered it HTTP 403 on 2026-11-10) is marked on its
+source, `fetchFrom: "runner"`. The box's worker leaves such sources out; a
+GitHub runner drains them daily with `pnpm run places:queue --from runner`
+(`.github/workflows/places-load-cloud.yml`), writing to the production database
+through an SSH tunnel and copying its snapshots back to the box. The schedule,
+the retries and the run log are the same on both sides.
+
 **Place pages are kept for an hour** (2026-11-12): `/places/...` renders a
 place on its first visit and serves that render for an hour (ISR, with no
 pages built ahead), since nothing on it depends on who reads it. An hour is
