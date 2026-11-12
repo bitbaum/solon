@@ -35,6 +35,14 @@ one to read for the detail. Fixes get the same weight as features.
   behind, hour by hour, tries a publisher that was down again the next day, and records every
   attempt; and the World Bank is asked for all countries at once, ten requests in all.
 - **A country's page reads its figures in one query** instead of one per figure.
+- **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
+  time, 68 sources spread over the month; each publisher is now one source that asks for every
+  country it covers at once. The national figures behind country pages take 17 requests instead
+  of 350.
+- **Every figure is credited to whoever published it.** Liechtenstein's tax revenue and public
+  spending come from its statistics office, which the OECD does not cover, yet charts, the
+  statistics index and the country card named the OECD and linked its pages. Each place's
+  figures now name, and link, the publisher they were read from.
 
 ## 2026-11-11
 

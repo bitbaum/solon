@@ -9,12 +9,13 @@ import {
   qualityOfEurostatFlag,
 } from "../adapters/eurostat-json";
 import type { MapContext } from "../adapters/types";
+import { EUROSTAT_KEY } from "@/lib/config/places/world";
 
 const fixture = (name: string) =>
   JSON.parse(readFileSync(join(__dirname, "fixtures", "eurostat", name), "utf8"));
 
 const pack = placesConfig.packs.find((p) => p.key === "switzerland")!;
-const source = placesConfig.sources.find((s) => s.key === "eurostat-gov-ch")!;
+const source = placesConfig.sources.find((s) => s.key === EUROSTAT_KEY)!;
 
 type Options = Parameters<NonNullable<typeof eurostatJsonAdapter.map>>[1]["options"];
 
@@ -103,7 +104,14 @@ describe("Eurostat JSON-stat", () => {
   });
 
   it("refuses a cube for another country, or a filter the source did not ask for", () => {
-    expect(() => run("gov_10a_exp-ch.json", { ...CH, geo: "AT" })).toThrow(/not AT/);
+    expect(() =>
+      run("gov_10a_exp-ch.json", {
+        ...CH,
+        geo: undefined,
+        place: undefined,
+        geos: [{ code: "AT", place: { scheme: "iso_3166_1", value: "AT" } }],
+      }),
+    ).toThrow(/CH was not asked for/);
     const wrongUnit = {
       ...CH,
       requests: [{ ...CH.requests[0]!, filters: { ...CH.requests[0]!.filters, unit: "MIO_EUR" } }],
@@ -122,6 +130,27 @@ describe("Eurostat JSON-stat", () => {
     };
     const { batch } = run("gov_10a_exp-ch.json", both);
     expect(batch.facts!.every((f) => !f.metricKey.endsWith(".meur"))).toBe(true);
+  });
+
+  it("reads many countries from one cube, each onto its own place", () => {
+    const many: Options = {
+      ...CH,
+      geo: undefined,
+      place: undefined,
+      geos: [
+        { code: "CH", place: { scheme: "iso_3166_1", value: "CH" } },
+        { code: "EL", place: { scheme: "iso_3166_1", value: "GR" } },
+      ],
+    };
+    const { batch, skipped } = run("gov_10a_exp-ch.json", many);
+    expect(batch.facts!.length).toBeGreaterThan(0);
+    expect(batch.facts!.every((f) => f.jurisdiction.value === "CH")).toBe(true);
+    // Every country's gaps would be thousands of lines: reported for one country only.
+    expect(skipped).toEqual([]);
+    const url = new URL(
+      eurostatUrl("gov_10a_exp", ["CH", "EL"], 1995, { unit: "PC_GDP" }, "cofog99", ["TOTAL"]),
+    );
+    expect(url.searchParams.getAll("geo")).toEqual(["CH", "EL"]);
   });
 
   it("asks for one dataset per request, every series named, from the first year", () => {
@@ -147,9 +176,15 @@ describe("Eurostat JSON-stat", () => {
 
 describe("the Eurostat sources as configured", () => {
   it("read Greece as EL and ask for every category of both taxonomies", () => {
-    const greece = placesConfig.sources.find((s) => s.key === "eurostat-gov-gr");
-    expect(greece?.options).toMatchObject({ geo: "EL", place: { value: "GR" } });
     const options = source.options as Options;
+    expect(options.geos).toContainEqual({
+      code: "EL",
+      place: { scheme: "iso_3166_1", value: "GR" },
+    });
+    expect(options.geos).toContainEqual({
+      code: "CH",
+      place: { scheme: "iso_3166_1", value: "CH" },
+    });
     const codes = options.requests.flatMap((r) => r.series.map((s) => s.code));
     expect(codes).toContain("TOTAL");
     expect(codes).toContain("GF1009");

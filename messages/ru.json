@@ -1420,7 +1420,7 @@
       "statedBy": "По словам {source}, с {from} по {to}.",
       "statedSince": "По словам {source}, с {from}.",
       "sourcesTitle": "Откуда каждая цифра",
-      "sourceRow": "{place}: прочитано {date}",
+      "sourceRow": "{place}: {publisher}, прочитано {date}",
       "sourceLink": "данные издателя",
       "rawLink": "полученный файл",
       "saveTitle": "Сохранить этот вид",

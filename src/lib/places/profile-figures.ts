@@ -17,6 +17,7 @@ import type { Metric, PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
 import { metricPath } from "@/lib/statistics/present";
+import { figureSource } from "@/lib/statistics/source";
 import { localized } from "./place-view";
 
 export interface ProfileFigureView {
@@ -43,10 +44,11 @@ export async function loadProfileFigures(
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
   const keys = PROFILE_FIGURES.flatMap((f) => f.metrics).filter((k) => metrics.has(k));
   if (keys.length === 0) return [];
-  const rows = rowsOf<{ metric_key: string; year: number; value: string }>(
+  const rows = rowsOf<{ metric_key: string; year: number; value: string; source_key: string }>(
     await db.execute(sql`
-      SELECT f.metric_key, EXTRACT(YEAR FROM f.valid_from)::int AS year, f.value_numeric::text AS value
-      FROM facts f
+      SELECT f.metric_key, EXTRACT(YEAR FROM f.valid_from)::int AS year,
+             f.value_numeric::text AS value, s.source_key
+      FROM facts f JOIN sources s ON s.id = f.source_id
       WHERE f.jurisdiction_id = ${jurisdictionId} AND f.superseded_at IS NULL
         AND f.variant IS NULL AND f.value_numeric IS NOT NULL
         AND f.metric_key IN (${sql.join(
@@ -55,11 +57,11 @@ export async function loadProfileFigures(
         )})
       ORDER BY f.metric_key, f.valid_from`),
   );
-  const series = new Map<string, { year: number; value: number }[]>();
+  const series = new Map<string, { year: number; value: number; sourceKey: string }[]>();
   for (const r of rows) {
     series.set(r.metric_key, [
       ...(series.get(r.metric_key) ?? []),
-      { year: Number(r.year), value: Number(r.value) },
+      { year: Number(r.year), value: Number(r.value), sourceKey: r.source_key },
     ]);
   }
 
@@ -118,7 +120,7 @@ export async function loadProfileFigures(
       year: latest.year,
       position: position && position.others + 1 >= PROFILE_MIN_PEERS ? position : null,
       trend: points.filter((p) => p.year > latest.year - PROFILE_TREND_YEARS),
-      publisher: metric.statistic!.series.publisher,
+      publisher: figureSource(config, metric, latest.sourceKey, null).publisher,
       href: metricPath(metricKey),
     };
   });

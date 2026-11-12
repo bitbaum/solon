@@ -126,8 +126,14 @@ export function coverageView(input: CoverageInput): PackCoverage[] {
         if (!source) {
           return [];
         }
-        const retrieval = input.retrievals.find((r) => r.sourceKey === key);
-        const run = input.runs.find((r) => r.sourceKey === key);
+        // What it read under a key it had before counts until it reads again.
+        const keys = new Set([key, ...(source.formerKeys ?? [])]);
+        const latest = <T extends { sourceKey: string }>(rows: readonly T[], at: (r: T) => Date) =>
+          rows
+            .filter((r) => keys.has(r.sourceKey))
+            .reduce<T | undefined>((a, b) => (a && at(a) >= at(b) ? a : b), undefined);
+        const retrieval = latest(input.retrievals, (r) => r.retrievedAt);
+        const run = latest(input.runs, (r) => r.startedAt);
         return [
           {
             key,

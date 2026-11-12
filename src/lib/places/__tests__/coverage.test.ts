@@ -69,4 +69,23 @@ describe("coverageView", () => {
     const never = pack(coverageView(input({ retrievals: [], runs: [] }))).sources[0]!;
     expect(never).toMatchObject({ retrievedOn: null, lastRun: null });
   });
+
+  it("counts what a source read under a key it had before, until it reads again", () => {
+    const config = {
+      ...testland,
+      sources: testland.sources.map((s) =>
+        s.key === "testland-register" ? { ...s, formerKeys: ["testland-register-old"] } : s,
+      ),
+    };
+    const old = {
+      sourceKey: "testland-register-old",
+      retrievedAt: new Date("2025-08-01T03:00:00Z"),
+    };
+    const sources = pack(coverageView(input({ config, retrievals: [old], runs: [] }))).sources;
+    expect(sources[0]).toMatchObject({ retrievedOn: "2025-08-01", lastRun: null });
+    const both = pack(
+      coverageView(input({ config, retrievals: [old, ...input().retrievals], runs: [] })),
+    ).sources[0]!;
+    expect(both.retrievedOn).toBe("2025-08-01");
+  });
 });

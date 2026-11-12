@@ -57,6 +57,8 @@ const worldbankOptions = z
         z.object({
           /** The World Bank's indicator code, e.g. NE.CON.GOVT.ZS. */
           code: z.string().regex(/^[A-Z0-9_.]+$/),
+          /** The API's database id when the indicator is not in the World Development Indicators (3: governance). */
+          database: z.number().int().positive().optional(),
           metric: z.string().min(1),
           /** An indicator in percent becomes a ratio with 100 here. */
           divideBy: z.number().positive().default(1),
@@ -69,21 +71,24 @@ const worldbankOptions = z
   });
 type WorldbankOptions = z.infer<typeof worldbankOptions>;
 
-/**
- * The World Bank's source id for an indicator: the Worldwide Governance
- * Indicators (`GOV_WGI_…`) are source 3, everything else the World Development
- * Indicators, the API's default.
- */
-const sourceOf = (code: string) => (code.startsWith("GOV_WGI_") ? "&source=3" : "");
-
 /** Rows asked for at once: one country's years, or every country's (about 270 × 40 years). */
 const PER_PAGE = { one: 1000, all: 20000 };
 
-/** The request for one indicator, every year from `fromYear` to `today`'s year; `all` for every country. */
-export const worldbankUrl = (country: string, code: string, fromYear: number, today: string) =>
+/**
+ * The request for one indicator, every year from `fromYear` to `today`'s year; `all` for every
+ * country. `database` is the API's source id where the indicator is not in the World Development
+ * Indicators, the API's default (the governance indicators are 3).
+ */
+export const worldbankUrl = (
+  country: string,
+  code: string,
+  fromYear: number,
+  today: string,
+  database?: number,
+) =>
   `${API}/country/${country}/indicator/${code}?format=json&per_page=${
     country === "all" ? PER_PAGE.all : PER_PAGE.one
-  }${sourceOf(code)}&date=${fromYear}:${today.slice(0, 4)}`;
+  }${database ? `&source=${database}` : ""}&date=${fromYear}:${today.slice(0, 4)}`;
 
 /** The page of the indicator the World Bank publishes for people, for "show the source series". */
 export const worldbankIndicatorPage = (code: string, country: string) =>
@@ -98,7 +103,13 @@ export const worldbankIndicatorsAdapter: Adapter<Response, WorldbankOptions> = {
   options: worldbankOptions,
   retrievals: (options, today) =>
     options.indicators.map((indicator) => ({
-      url: worldbankUrl(options.country ?? "all", indicator.code, options.fromYear, today),
+      url: worldbankUrl(
+        options.country ?? "all",
+        indicator.code,
+        options.fromYear,
+        today,
+        indicator.database,
+      ),
     })),
   map: ([page, rows], { pack, options, skip }) => {
     if (!pack) {

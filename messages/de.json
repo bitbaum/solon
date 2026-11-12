@@ -1420,7 +1420,7 @@
       "statedBy": "Gesagt von {source}, {from} bis {to}.",
       "statedSince": "Gesagt von {source}, seit {from}.",
       "sourcesTitle": "Woher jede Zahl kommt",
-      "sourceRow": "{place}: gelesen am {date}",
+      "sourceRow": "{place}: {publisher}, gelesen am {date}",
       "sourceLink": "die Zahlen des Herausgebers",
       "rawLink": "die abgerufene Datei",
       "saveTitle": "Diese Ansicht behalten",

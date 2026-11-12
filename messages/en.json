@@ -2001,7 +2001,7 @@
       "statedBy": "Stated by {source}, {from} to {to}.",
       "statedSince": "Stated by {source}, since {from}.",
       "sourcesTitle": "Where each number comes from",
-      "sourceRow": "{place}: read on {date}",
+      "sourceRow": "{place}: {publisher}, read on {date}",
       "sourceLink": "the publisher's figures",
       "rawLink": "the retrieved file",
       "saveTitle": "Keep this view",

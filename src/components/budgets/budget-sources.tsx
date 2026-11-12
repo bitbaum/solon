@@ -1,7 +1,7 @@
 import { actKey } from "@/components/law/quoted-words";
 import QuotedWords from "@/components/law/quoted-words";
 import { BUDGET_DOCUMENTS, BUDGET_TAXONOMIES } from "@/lib/config/budgets";
-import { placesConfig } from "@/lib/config/places";
+import { findSource, placesConfig } from "@/lib/config/places";
 import { formatOriginal } from "@/lib/budgets/format";
 import type { Budget } from "@/lib/budgets/model";
 import { categoryLabel, categoryOf } from "@/lib/budgets/taxonomy";
@@ -46,7 +46,7 @@ export default function BudgetSources({
       </summary>
       <div className="mt-4 space-y-6">
         {series.map((s) => {
-          const source = placesConfig.sources.find((c) => c.key === s.key);
+          const source = findSource(placesConfig, s.key);
           const name = source?.attribution ? localized(source.attribution, locale) : s.key;
           return (
             <p key={s.key} className="mb-0 text-fg-secondary">

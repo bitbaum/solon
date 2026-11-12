@@ -3,7 +3,7 @@
  * loader reads the database, this decides what a reader sees, so a made-up
  * country renders from its pack alone.
  */
-import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
+import { findSource, type LocalizedText, type PlacesConfig } from "@/lib/config/places/schema";
 import { configTranslation } from "@/lib/i18n/config-catalog";
 import { taxingLevels } from "@/lib/tax-model";
 import {
@@ -277,7 +277,7 @@ export function placeSources(
   locale: string,
 ): PlaceSource[] {
   return retrievals.flatMap(({ sourceKey, retrievedAt }) => {
-    const source = config.sources.find((s) => s.key === sourceKey);
+    const source = findSource(config, sourceKey);
     return source
       ? [
           {

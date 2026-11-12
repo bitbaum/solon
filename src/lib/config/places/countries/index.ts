@@ -21,6 +21,7 @@ const DEPTH: readonly CountryPackInput[] = [
 
 export const COUNTRY_PACKS: readonly CountryPackInput[] = [
   ...DEPTH,
-  // Every other country, as a nation only (the countries above are not in it).
-  worldPack(new Set(DEPTH.flatMap((p) => (p.region ? [p.region] : [])))),
+  // Every other country, as a nation and its ISO 3166-2 subdivisions (the countries above are
+  // not in its data files; scripts/places-world-*.ts leave them out).
+  worldPack(),
 ];
