@@ -186,6 +186,10 @@ export const placeImportRuns = pgTable(
     })
       .onDelete("restrict")
       .onUpdate("cascade"),
+    // The queue reads each source's latest runs, and the hourly call the runs that failed lately:
+    // without these, both scan a log that only grows (it refuses deletes).
+    index("place_import_runs_source_key_started_at_idx").on(t.sourceKey, t.startedAt.desc()),
+    index("place_import_runs_status_finished_at_idx").on(t.status, t.finishedAt),
   ],
 );
 

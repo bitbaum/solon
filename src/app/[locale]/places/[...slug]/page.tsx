@@ -6,13 +6,7 @@ import { toLocale, type Locale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
 import { placesConfig } from "@/lib/config/places";
-import {
-  regionName,
-  worldEntryOfPack,
-  worldRegion,
-  worldRegionByCode,
-  type WorldRegion,
-} from "@/lib/config/world";
+import { regionName, worldRegion, worldRegionByCode, type WorldRegion } from "@/lib/config/world";
 import { loadWorldProfile, type WorldProfileView } from "@/lib/places/world-profile";
 import { placePhoto } from "@/lib/places/place-photo";
 import PlaceHero from "@/components/places/place-hero";
@@ -31,12 +25,23 @@ import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { countryOfPlace } from "@/lib/places/place-country";
 import { hyphenated } from "@/lib/places/world-slug-redirects";
 import { countryPlaceId, loadProfileFigures } from "@/lib/places/profile-figures";
 import { recentChanges } from "@/lib/law/recent";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
-export const dynamic = "force-dynamic";
+/**
+ * Rendered on a place's first visit and kept for an hour (ISR), so a page's queries run about
+ * once an hour per place and language, not once per view: nothing on it depends on who reads it.
+ * An hour is how stale a figure can be after an import, whichever process wrote it. Nothing is
+ * rendered at build: the build has no database, and there are thousands of places.
+ */
+export const revalidate = 3600;
+
+export function generateStaticParams() {
+  return [];
+}
 
 type Params = Promise<{ locale: string; slug: string[] }>;
 
@@ -141,13 +146,8 @@ export default async function PlacePage({ params }: { params: Params }) {
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
     const pack = placesConfig.packs.find((p) => p.key === view.packKey);
     const contest = contestNote(pack ? contestSlugForPack(pack) : null, locale);
-    // A country's budget is shown on the country's own page: a world nation, or a pack's root.
-    const country =
-      view.packKey === WORLD_PACK
-        ? worldRegion(view.slugPath.split("/").at(-1) ?? "")
-        : pack && view.partOf.length === 0
-          ? worldEntryOfPack(pack)
-          : undefined;
+    // A country's budget, profile and photograph are shown on the country's own page only.
+    const country = countryOfPlace(view, pack);
     const budget = await budgetLink(country, locale);
     const profile = await profileOf(country, locale);
     const hero = placeViewHero({ view, country: country?.slug ?? null, profile, law, t });

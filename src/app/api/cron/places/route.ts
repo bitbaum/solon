@@ -3,7 +3,14 @@ import { placesConfig } from "@/lib/config/places";
 import { isCronRequest } from "@/lib/cron-auth";
 import { db } from "@/lib/db/client";
 import { fetchAndImport } from "@/lib/places/importer/fetch";
-import { drainQueue, failedSince, pendingSources } from "@/lib/places/importer/queue";
+import {
+  ancestorsDue,
+  closeAbandonedRuns,
+  drainQueue,
+  failedSince,
+  pendingSources,
+  sourceRuns,
+} from "@/lib/places/importer/queue";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { syncStatisticRecords } from "@/lib/statistics/sync";
@@ -77,15 +84,22 @@ export async function POST(request: Request) {
     );
   }
 
-  const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
-  const pending = (await pendingSources(db, placesConfig)).map((s) => s.key);
   const busy = Boolean(state.solonImportWorker);
-  if (!busy && pending.length > 0) {
+  // A run older than two budgets was left open by a process that stopped: report it, back off.
+  if (!busy) await closeAbandonedRuns(db, 2 * WORKER_BUDGET_MS);
+  const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
+  const runs = await sourceRuns(db);
+  const pending = (await pendingSources(db, placesConfig, new Date(), runs)).map((s) => s.key);
+  // The worker also rebuilds the ancestors view once a day, for relations dated to start or end
+  // on a later day: it starts on a day with nothing due, too.
+  const start = !busy && (pending.length > 0 || ancestorsDue());
+  if (start) {
     const worker = drainQueue(db, {
       config: placesConfig,
       snapshots: defaultSnapshotStore(),
       gitSha,
       budgetMs: WORKER_BUDGET_MS,
+      runs,
     })
       .catch((error) => console.error("[places import worker]", error))
       .finally(() => {
@@ -97,7 +111,7 @@ export async function POST(request: Request) {
   }
   const failed = "error" in statistics || failures.length > 0;
   return NextResponse.json(
-    { today, statistics, busy, started: !busy && pending.length > 0, pending, failures },
+    { today, statistics, busy, started: start, pending, failures },
     { status: failed ? 500 : 200 },
   );
 }

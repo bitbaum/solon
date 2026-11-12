@@ -246,6 +246,13 @@
       "when": 1794460740419,
       "tag": "0034_member_person_tag",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1794467490217,
+      "tag": "0035_place_import_runs_indexes",
+      "breakpoints": true
     }
   ]
 }

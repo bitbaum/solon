@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "design:check": "node scripts/design-system-check.js",
-    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run check:places-literals && pnpm run check:cycles && pnpm run test:coverage",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run design:check && pnpm run check:places-literals && pnpm run places:world-countries --check && pnpm run check:cycles && pnpm run test:coverage",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",

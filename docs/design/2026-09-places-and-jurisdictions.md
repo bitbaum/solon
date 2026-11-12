@@ -1078,7 +1078,18 @@ process, fifty minutes at a time. A fetch that fails before any import is
 recorded as a failed run. The route answers 500 when a run failed since the
 last call, which fires the timer's failure alert once per failure.
 `?source=<key>` runs one source now and waits. It calls no model. Backfills
-stay manual, from a checkout.
+stay manual, from a checkout. The run log is read through an index on
+(`source_key`, `started_at`), one row a source, so its cost does not grow with
+its history. A run left `running` by a process that stopped (a deploy's
+restart) is closed as failed after two worker budgets, so it is reported once
+and backed off like any failure. A worker starts on a day with nothing due as
+well, for the daily rebuild of the ancestors view.
+
+**Place pages are kept for an hour** (2026-11-12): `/places/...` renders a
+place on its first visit and serves that render for an hour (ISR, with no
+pages built ahead), since nothing on it depends on who reads it. An hour is
+therefore how stale a figure can be after an import, whichever process wrote
+it.
 
 **What a run skips** (2026-11-12). A retrieval whose bytes are those the
 source last applied, read by the same importer, is recorded as an applied run

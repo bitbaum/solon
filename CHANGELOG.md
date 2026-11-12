@@ -44,6 +44,11 @@ one to read for the detail. Fixes get the same weight as features.
   not ask instead of seating unchecked, the tagging script asks once per organization and can
   re-check every seat (`--refresh`), and one Bitcoin key can no longer hold a second seat under
   its uncompressed address.
+- **A region named like its country no longer shows the country's page.** The Djibouti Region
+  and the City of San Marino showed their country's profile, photograph and budget, and a shared
+  link to the US state of Georgia showed the country Georgia's card. A place's country is now its
+  own ISO country code, never its name.
+- **Place pages open faster**: each is rendered once an hour, not on every visit.
 - **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
   time, 68 sources due on two days a month; each publisher is now one source that asks for every
   country it covers at once. The national figures behind country pages take 17 requests instead
