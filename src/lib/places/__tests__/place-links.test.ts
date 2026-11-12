@@ -4,11 +4,14 @@
  * underscores) must still be linked by the path `findPlace` answers 200 for,
  * or every click redirects once. The two differ here on purpose.
  */
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { WORLD } from "@/lib/config/world";
 import { placesConfig } from "@/lib/config/places";
 import type { ChainPlace } from "../chain";
 import { view as atlasView } from "../atlas-place";
-import { packHref, placeHref } from "../place-href";
+import { packHref, placeHref, regionHref } from "../place-href";
 import { placeView } from "../place-view";
 import { withTestland } from "./fixtures/testland/config";
 
@@ -81,5 +84,58 @@ describe("links to a place", () => {
     for (const path of paths) {
       expect(path).toMatch(new RegExp(`^/places/${NEW}`));
     }
+  });
+});
+
+const entry = (slug: string) => WORLD.find((r) => r.slug === slug)!;
+const packOf = (slug: string) =>
+  placesConfig.packs.find((p) => p.region && p.region === entry(slug).code)?.key;
+
+describe("links to a world-list entry", () => {
+  it("name a country no pack holds by its place in the world pack", () => {
+    for (const slug of ["france", "georgia", "hong-kong-sar-china", "u-s-virgin-islands"])
+      expect(regionHref(entry(slug), packOf(slug)), slug).toBe(`/places/world/${slug}`);
+  });
+
+  it("name a country a pack holds by the pack's root", () => {
+    expect(regionHref(entry("switzerland"), packOf("switzerland"))).toBe("/places/switzerland");
+    expect(regionHref(entry("united-states"), packOf("united-states"))).toBe(
+      "/places/united-states",
+    );
+  });
+
+  it("keep a claimed place, and an entry the world pack does not hold, on their own page", () => {
+    expect(regionHref(entry("abkhazia"))).toBe("/places/abkhazia");
+    expect(regionHref(entry("kosovo"))).toBe("/places/kosovo");
+    expect(regionHref(entry("south-ossetia"))).toBe("/places/south-ossetia");
+    const noCode = WORLD.find((r) => !r.code && !r.claimedBy)!;
+    expect(regionHref(noCode)).toBe(`/places/${noCode.slug}`);
+  });
+});
+
+/**
+ * Every link to a place goes through place-href.ts. A path written by hand
+ * (`/places/${...}`) is how the index and the world list came to link
+ * addresses that redirect; only a redirect's own target may be built here.
+ */
+describe("place paths are built in one place", () => {
+  const ALLOWED = new Set([
+    "src/lib/places/place-href.ts",
+    "src/lib/places/world-slug-redirects.ts",
+    "src/app/[locale]/places/[...slug]/page.tsx",
+    "src/app/[locale]/places/by/[scheme]/[value]/page.tsx",
+  ]);
+  const files = (dir: string): string[] =>
+    readdirSync(dir).flatMap((name) => {
+      const path = join(dir, name);
+      if (statSync(path).isDirectory()) return name === "__tests__" ? [] : files(path);
+      return /\.(ts|tsx)$/.test(name) ? [path] : [];
+    });
+
+  it("no other file writes a /places/ path from a variable", () => {
+    const handBuilt = files("src")
+      .filter((path) => !ALLOWED.has(path))
+      .filter((path) => /[`"']\/places\/\$\{/.test(readFileSync(path, "utf8")));
+    expect(handBuilt).toEqual([]);
   });
 });
