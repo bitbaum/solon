@@ -11,7 +11,12 @@ import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { routesFor } from "@/lib/config/law/routes";
 import { countryAuthority } from "@/lib/law/places";
 import type { WorldRegion } from "@/lib/config/world";
-import { FACT_OVERRIDES, type FactOverride } from "@/lib/config/world/overrides";
+import {
+  FACT_OVERRIDES,
+  type FactOverride,
+  type OverriddenFact,
+  type OverrideValues,
+} from "@/lib/config/world/overrides";
 import { WORLD_PROFILES_FILE, kindOf, type PlaceKind } from "@/lib/config/world/kinds";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
@@ -70,15 +75,18 @@ export interface ProfileFact {
   source?: { title: string; url: string };
 }
 
-/** Pure: the codes of a fact, the cited override of the place when there is one, else Wikidata's. */
-export function applyOverrides(
+/**
+ * Pure: a fact of a place, the cited override when there is one, else
+ * Wikidata's (which may be null). Works the same for every fact and place.
+ */
+export function applyOverrides<F extends OverriddenFact>(
   place: string,
-  fact: FactOverride["fact"],
-  wikidata: readonly string[],
+  fact: F,
+  wikidata: OverrideValues[F] | null,
   overrides: readonly FactOverride[] = FACT_OVERRIDES,
-): { value: readonly string[]; source?: FactOverride["source"] } {
+): { value: OverrideValues[F] | null; source?: FactOverride["source"] } {
   const hit = overrides.find((o) => o.place === place && o.fact === fact);
-  return hit ? { value: hit.value, source: hit.source } : { value: wikidata };
+  return hit ? { value: hit.value as OverrideValues[F], source: hit.source } : { value: wikidata };
 }
 
 export interface WorldProfileView {
@@ -108,6 +116,7 @@ export async function loadWorldProfile(
   locale: string,
   regionBySlugOrCode: (code: string) => WorldRegion | undefined,
   nameOf: (region: WorldRegion) => string,
+  overrides: readonly FactOverride[] = FACT_OVERRIDES,
 ): Promise<WorldProfileView | null> {
   const file = profiles();
   const p = file.places[region.slug];
@@ -120,7 +129,7 @@ export async function loadWorldProfile(
     new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
       new Date(`${iso}T00:00:00Z`),
     );
-  const list = (items: Texts[]) =>
+  const list = (items: readonly Texts[]) =>
     items
       .map((t) => pick(t, locale))
       .filter(Boolean)
@@ -134,39 +143,64 @@ export async function loadWorldProfile(
   ) => {
     if (value) facts.push({ key, value, ...(href ? { href } : {}), ...(source ? { source } : {}) });
   };
+  // Every fact below is Wikidata's unless a cited override for this place says otherwise.
+  const of = <F extends OverriddenFact>(fact: F, wikidata: OverrideValues[F] | null) =>
+    applyOverrides(region.slug, fact, wikidata, overrides);
+  /** A fact Wikidata gives as names (the capital, who heads the state). */
+  const names = (
+    key: ProfileFact["key"],
+    fact: "capital" | "government" | "headOfState" | "headOfGovernment",
+  ) => {
+    const cited = applyOverrides(region.slug, fact, null, overrides);
+    const value: readonly Texts[] = cited.value ?? p[fact];
+    add(key, list(value), undefined, cited.source);
+  };
+
   const unSince = region.code ? (file.un[region.code] ?? null) : null;
   if (unSince) add("unSince", date(unSince));
-  add("capital", list(p.capital));
-  if (p.population) {
+  names("capital", "capital");
+  const population = of("population", p.population);
+  if (population.value) {
+    const { value, year } = population.value;
     add(
       "population",
-      p.population.year
-        ? `${number.format(p.population.value)} (${p.population.year})`
-        : number.format(p.population.value),
+      year ? `${number.format(value)} (${year})` : number.format(value),
+      undefined,
+      population.source,
     );
   }
-  if (p.areaKm2 !== null) add("area", `${number.format(p.areaKm2)} km²`);
-  const spoken = applyOverrides(region.slug, "languages", p.languages);
+  const area = of("areaKm2", p.areaKm2);
+  if (area.value !== null) add("area", `${number.format(area.value)} km²`, undefined, area.source);
+  const spoken = of("languages", p.languages);
   add(
     "languages",
-    spoken.value.map((l) => languages.of(l) ?? l).join(", "),
+    (spoken.value ?? []).map((l) => languages.of(l) ?? l).join(", "),
     undefined,
     spoken.source,
   );
-  const money = applyOverrides(region.slug, "currencies", p.currencies);
+  const money = of("currencies", p.currencies);
   add(
     "currency",
-    money.value.map((c) => currencies.of(c) ?? c).join(", "),
+    (money.value ?? []).map((c) => currencies.of(c) ?? c).join(", "),
     undefined,
     money.source,
   );
-  add("government", list(p.government));
-  add("headOfState", list(p.headOfState));
-  add("headOfGovernment", list(p.headOfGovernment));
+  names("government", "government");
+  names("headOfState", "headOfState");
+  names("headOfGovernment", "headOfGovernment");
   // A state's founding year in Wikidata can be centuries back (Russia: 1263); a state shows its
   // UN admission instead, and only the places beyond it their founding or proclamation.
-  if (kind !== "state" && kind !== "territory" && p.inception) add("founded", date(p.inception));
-  if (p.website) add("website", new URL(p.website).hostname.replace(/^www\./, ""), p.website);
+  const founded = of("inception", p.inception);
+  if (kind !== "state" && kind !== "territory" && founded.value)
+    add("founded", date(founded.value), undefined, founded.source);
+  const website = of("website", p.website);
+  if (website.value)
+    add(
+      "website",
+      new URL(website.value).hostname.replace(/^www\./, ""),
+      website.value,
+      website.source,
+    );
 
   const within =
     p.country && p.country !== region.code
