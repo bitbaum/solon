@@ -30,7 +30,9 @@ export async function loadPlaceLaw(
 ): Promise<PlaceLaw[]> {
   if (authorities.length === 0) return [];
   const nearest = authorities.map((key) => chainOf(key)).sort((a, b) => b.length - a.length)[0]!;
-  const coverage = await loadLawCoverage(db);
+  // Only the authorities the page shows: the chain, and the parts of its nearest.
+  const shown = [...nearest.map((a) => a.key), ...partsOf(nearest[0]!.key).map((p) => p.key)];
+  const coverage = await loadLawCoverage(db, { authorities: shown });
   const held = new Map(coverage.authorities.map((a) => [a.key, a.withText]));
   const registered = new Map(
     coverage.authorities.map((a) => [a.key, a.inForce + a.statusNotStated]),
