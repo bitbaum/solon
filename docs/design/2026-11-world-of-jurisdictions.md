@@ -129,9 +129,9 @@ place, a country or a commune:
   request at a time with Solon's own user agent, and kept in
   `place_photo_bytes`, so a reader's browser never asks Wikimedia, a page never
   waits on it twice and a deploy never empties the store. Only files
-  `photos.json` names are served. After each deploy the places-data workflow
-  reads the world list's photographs (`places:photos:warm`); a subdivision's is
-  read the first time it is opened.
+  `photos.json` names are served. After a deploy that changed `photos.json` or
+  the photo code, the places-data workflow reads the world list's photographs
+  (`places:photos:warm`); a subdivision's is read the first time it is opened.
 
 ## The page
 
