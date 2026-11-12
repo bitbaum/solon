@@ -1,18 +1,16 @@
 import { Meter, Sparkline } from "@bitbaum/chartkit/react";
 import { Link } from "@/i18n/navigation";
 import { PROFILE_FIGURE_GROUPS } from "@/lib/config/places/profile-figures";
+import { UNITS } from "@/lib/config/places/units";
 import type { ProfileFigureView } from "@/lib/places/profile-figures";
 import type { PlacesTranslator } from "./translator";
 
 /** A figure as a reader reads it: a share in per cent, a rate to one decimal, a score whole. */
 function formatFigure(figure: ProfileFigureView, locale: string): string {
-  if (figure.unit === "ratio") {
-    return new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(
-      figure.value,
-    );
-  }
+  const rule = UNITS[figure.unit];
   return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: figure.unit === "none" ? 0 : 1,
+    ...(rule.percent ? { style: "percent" as const } : {}),
+    maximumFractionDigits: rule.figureDecimals,
   }).format(figure.value);
 }
 

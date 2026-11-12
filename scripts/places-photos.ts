@@ -37,8 +37,8 @@ import {
   thumbAt,
   type PhotoInfo as Info,
 } from "@/lib/places/photo-rules";
+import { politeJson, sparql } from "@/lib/wikidata/query";
 
-const UA = "SolonPlacePhotos/1.0 (https://solon.orangecat.ch/credits; place photographs)";
 const OUT = join(process.cwd(), WORLD_PHOTOS_FILE);
 const COMMONS = "https://commons.wikimedia.org/w/api.php";
 
@@ -61,32 +61,6 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const args = process.argv.slice(2);
 const flag = (name: string) =>
   args.includes(`--${name}`) ? args[args.indexOf(`--${name}`) + 1] : undefined;
-
-async function politeJson(url: string, accept = "application/json"): Promise<unknown> {
-  for (let attempt = 1; ; attempt++) {
-    const r = await fetch(url, {
-      headers: { "user-agent": UA, accept },
-      signal: AbortSignal.timeout(180_000),
-    });
-    if (r.ok) return r.json();
-    if ((r.status !== 429 && r.status !== 503) || attempt >= 8)
-      throw new Error(`${url.slice(0, 120)}: HTTP ${r.status}`);
-    const asked = Number(r.headers.get("retry-after"));
-    await sleep(
-      Math.min(120_000, Number.isFinite(asked) && asked > 0 ? asked * 1000 + 500 : 5000 * attempt),
-    );
-  }
-}
-
-async function sparql(query: string): Promise<Record<string, string>[]> {
-  const body = (await politeJson(
-    `https://query.wikidata.org/sparql?query=${encodeURIComponent(query)}`,
-    "application/sparql-results+json",
-  )) as { results: { bindings: Record<string, { value: string }>[] } };
-  return body.results.bindings.map((b) =>
-    Object.fromEntries(Object.entries(b).map(([k, v]) => [k, v.value])),
-  );
-}
 
 const fileOf = (filePath: string) =>
   decodeURIComponent(filePath.replace(/^.*Special:FilePath\//, "")).replace(/_/g, " ");

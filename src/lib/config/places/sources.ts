@@ -19,6 +19,7 @@ import {
   WORLD_SUBDIVISIONS_KEY,
 } from "./world";
 import { METRICS } from "./metrics";
+import { UNITS } from "./units";
 import type { SourceInput } from "./schema";
 
 /** The calculator rounds taxable income down to CHF 100 before a tariff applies… */
@@ -185,7 +186,7 @@ const WDI_INDICATORS = METRICS.flatMap((metric) =>
             ? { database: metric.statistic.series.database }
             : {}),
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],
@@ -209,7 +210,7 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
           measure: metric.statistic.series.measure,
           match: metric.statistic.series.match ?? {},
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],
@@ -304,6 +305,8 @@ const worldBankSource = (countries: readonly string[]): SourceInput => ({
   key: WORLD_BANK_KEY,
   // One source a country until 2026-11-12: rows read then keep their key.
   formerKeys: countries.map((a2) => `worldbank-wdi-${a2.toLowerCase()}`),
+  // The World Bank's API answers the box's address HTTP 403 (2026-11-10): a runner reads it.
+  fetchFrom: "runner",
   publisher: "World Bank",
   dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",

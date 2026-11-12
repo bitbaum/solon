@@ -98,3 +98,14 @@ describe("who writes each statistic", () => {
     ]).toEqual(["LI"]);
   });
 });
+
+describe("which side fetches a source", () => {
+  it("the box fetches every source with an address but the World Bank's, which a runner fetches", async () => {
+    const { fetchableFrom } = await import("@/lib/places/importer/queue");
+    const fromBox = placesConfig.sources.filter(fetchableFrom("box")).map((s) => s.key);
+    const fromRunner = placesConfig.sources.filter(fetchableFrom("runner")).map((s) => s.key);
+    expect(fromRunner).toEqual([WORLD_BANK_KEY]);
+    expect(fromBox).toContain(OECD_KEY);
+    expect(fromBox).not.toContain(WORLD_BANK_KEY);
+  });
+});

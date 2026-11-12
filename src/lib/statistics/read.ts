@@ -9,6 +9,7 @@ import { rowsOf } from "@/lib/db/rows";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { displayName } from "@/lib/places/place-view";
+import { COUNTRY_SCHEME } from "@/lib/config/places/identifier-schemes";
 import { figureSource } from "./source";
 import type { NameType } from "@/lib/places/vocabulary";
 import {
@@ -127,7 +128,35 @@ export async function loadSeries(
   metricKey: string,
   locale: string,
 ): Promise<PlaceSeries[]> {
+  return (await loadSeriesFor(db, config, [metricKey], locale)).get(metricKey) ?? [];
+}
+
+/**
+ * Several metrics' series in one query, and their places named in one more set: a page of
+ * statistics costs the same queries however many it shows. With `latestOnly`, each place's
+ * latest value within the metric's plausible band and nothing older: what an index or a ranking
+ * reads, as a chart's screening (sanity.ts) would leave it.
+ */
+export async function loadSeriesFor(
+  db: Database,
+  config: PlacesConfig,
+  metricKeys: readonly string[],
+  locale: string,
+  { latestOnly = false }: { latestOnly?: boolean } = {},
+): Promise<Map<string, PlaceSeries[]>> {
+  const metrics = new Map(config.metrics.map((m) => [m.key, m]));
+  const keys = [...new Set(metricKeys)].filter((k) => metrics.has(k));
+  const out = new Map<string, PlaceSeries[]>(keys.map((k) => [k, []]));
+  if (keys.length === 0) return out;
+  const bands = sql.join(
+    keys.map((k) => {
+      const band = metrics.get(k)!.plausible;
+      return sql`(${k}, ${band?.min ?? null}::numeric, ${band?.max ?? null}::numeric)`;
+    }),
+    sql`, `,
+  );
   const facts = rowsOf<{
+    metric_key: string;
     jurisdiction_id: string;
     valid_from: string;
     value: string;
@@ -136,51 +165,62 @@ export async function loadSeries(
     url: string | null;
     retrieved_at: Date | string;
   }>(
-    await db.execute(sql`
-      SELECT f.jurisdiction_id, f.valid_from::text AS valid_from, f.value_numeric::text AS value,
-             f.quality, s.source_key, s.url, s.retrieved_at
-      FROM facts f JOIN sources s ON s.id = f.source_id
-      WHERE f.metric_key = ${metricKey} AND f.superseded_at IS NULL AND f.value_numeric IS NOT NULL
-        AND f.variant IS NULL
-      ORDER BY f.jurisdiction_id, f.valid_from
-    `),
+    await db.execute(
+      latestOnly
+        ? sql`
+          SELECT DISTINCT ON (f.metric_key, f.jurisdiction_id)
+                 f.metric_key, f.jurisdiction_id, f.valid_from::text AS valid_from,
+                 f.value_numeric::text AS value, f.quality, s.source_key, s.url, s.retrieved_at
+          FROM facts f
+          JOIN (VALUES ${bands}) AS b(metric_key, lo, hi) ON b.metric_key = f.metric_key
+          JOIN sources s ON s.id = f.source_id
+          WHERE f.superseded_at IS NULL AND f.value_numeric IS NOT NULL AND f.variant IS NULL
+            AND (b.lo IS NULL OR f.value_numeric >= b.lo)
+            AND (b.hi IS NULL OR f.value_numeric <= b.hi)
+          ORDER BY f.metric_key, f.jurisdiction_id, f.valid_from DESC`
+        : sql`
+          SELECT f.metric_key, f.jurisdiction_id, f.valid_from::text AS valid_from,
+                 f.value_numeric::text AS value, f.quality, s.source_key, s.url, s.retrieved_at
+          FROM facts f
+          JOIN (VALUES ${bands}) AS b(metric_key, lo, hi) ON b.metric_key = f.metric_key
+          JOIN sources s ON s.id = f.source_id
+          WHERE f.superseded_at IS NULL AND f.value_numeric IS NOT NULL AND f.variant IS NULL
+          ORDER BY f.metric_key, f.jurisdiction_id, f.valid_from`,
+    ),
   );
-  if (facts.length === 0) {
-    return [];
-  }
-  const ids = [...new Set(facts.map((f) => f.jurisdiction_id))];
-  const places = await placeLabels(db, config, ids, locale);
-  const metric = config.metrics.find((m) => m.key === metricKey)!;
-  const sourceOf = (
-    f: { source_key: string; url: string | null; retrieved_at: Date | string },
-    code: string,
-  ): PlaceSeries["source"] => ({
-    key: f.source_key,
-    url: f.url,
-    retrievedAt: new Date(f.retrieved_at).toISOString().slice(0, 10),
-    ...figureSource(config, metric, f.source_key, code),
-  });
-  const byPlace = new Map<string, PlaceSeries>();
+  if (facts.length === 0) return out;
+  const places = await placeLabels(
+    db,
+    config,
+    [...new Set(facts.map((f) => f.jurisdiction_id))],
+    locale,
+  );
+  const byKey = new Map<string, PlaceSeries>();
   for (const f of facts) {
     const place = places.get(f.jurisdiction_id)!;
-    let series = byPlace.get(f.jurisdiction_id);
+    const metric = metrics.get(f.metric_key)!;
+    const source: PlaceSeries["source"] = {
+      key: f.source_key,
+      url: f.url,
+      retrievedAt: new Date(f.retrieved_at).toISOString().slice(0, 10),
+      ...figureSource(config, metric, f.source_key, place.code),
+    };
+    const id = `${f.metric_key} ${f.jurisdiction_id}`;
+    let series = byKey.get(id);
     if (!series) {
-      series = {
-        jurisdictionId: f.jurisdiction_id,
-        ...place,
-        points: [],
-        source: sourceOf(f, place.code),
-      };
-      byPlace.set(f.jurisdiction_id, series);
+      series = { jurisdictionId: f.jurisdiction_id, ...place, points: [], source };
+      byKey.set(id, series);
+      out.get(f.metric_key)!.push(series);
     }
     series.points.push({
       year: Number(f.valid_from.slice(0, 4)),
       value: Number(f.value),
       quality: f.quality,
     });
-    series.source = sourceOf(f, place.code); // ordered by period, so the last is the latest value's
+    series.source = source; // ordered by period, so the last is the latest value's
   }
-  return [...byPlace.values()].sort((a, b) => a.name.localeCompare(b.name, locale));
+  for (const list of out.values()) list.sort((a, b) => a.name.localeCompare(b.name, locale));
+  return out;
 }
 
 /** Names and codes of places, for charts: the place's own name in the reader's language. */
@@ -190,6 +230,8 @@ export async function placeLabels(
   ids: readonly string[],
   locale: string,
 ): Promise<Map<string, { code: string; name: string; slugPath: string | null }>> {
+  const out = new Map<string, { code: string; name: string; slugPath: string | null }>();
+  if (ids.length === 0) return out;
   const list = sql.join(
     ids.map((id) => sql`${id}`),
     sql`, `,
@@ -204,33 +246,45 @@ export async function placeLabels(
       WHERE jurisdiction_id IN (${list}) AND superseded_at IS NULL
       ORDER BY (scheme = 'iso_3166_1') DESC, scheme`),
   ]);
-  const out = new Map<string, { code: string; name: string; slugPath: string | null }>();
+  const namesOf = new Map<
+    string,
+    { locale: string; script: string | null; name: string; nameType: NameType }[]
+  >();
+  for (const n of rowsOf<{
+    jurisdiction_id: string;
+    locale: string;
+    script: string | null;
+    name: string;
+    name_type: NameType;
+  }>(names)) {
+    const own = namesOf.get(n.jurisdiction_id) ?? [];
+    own.push({ locale: n.locale, script: n.script, name: n.name, nameType: n.name_type });
+    namesOf.set(n.jurisdiction_id, own);
+  }
+  // Ordered with the country code first: a place's first identifier is its code.
+  const codesOf = new Map<string, { scheme: string; value: string }[]>();
+  for (const c of rowsOf<{ jurisdiction_id: string; scheme: string; value: string }>(codes)) {
+    const own = codesOf.get(c.jurisdiction_id) ?? [];
+    own.push({ scheme: c.scheme, value: c.value });
+    codesOf.set(c.jurisdiction_id, own);
+  }
+  const regions = regionNames(locale);
   for (const p of rowsOf<{ id: string; country_pack: string | null; slug_path: string | null }>(
     places,
   )) {
-    const own = rowsOf<{
-      jurisdiction_id: string;
-      locale: string;
-      script: string | null;
-      name: string;
-      name_type: NameType;
-    }>(names)
-      .filter((n) => n.jurisdiction_id === p.id)
-      .map((n) => ({ locale: n.locale, script: n.script, name: n.name, nameType: n.name_type }));
     const pack = config.packs.find((k) => k.key === p.country_pack);
-    const code =
-      rowsOf<{ jurisdiction_id: string; value: string }>(codes).find(
-        (c) => c.jurisdiction_id === p.id,
-      )?.value ?? p.id.slice(0, 8);
+    const own = codesOf.get(p.id) ?? [];
+    const code = own[0]?.value ?? p.id.slice(0, 8);
     // A country is named as the reader's language names it ("Switzerland",
     // not "Schweiz"); any other place by its own name.
-    const country = rowsOf<{ jurisdiction_id: string; scheme: string; value: string }>(codes).find(
-      (c) => c.jurisdiction_id === p.id && c.scheme === "iso_3166_1",
-    );
-    const countryName = country ? regionName(country.value, locale) : null;
+    const country = own.find((c) => c.scheme === COUNTRY_SCHEME);
+    const countryName = country ? regions(country.value) : null;
     out.set(p.id, {
       code,
-      name: countryName ?? (displayName(own as never, locale, pack?.defaultLocales ?? []) || code),
+      name:
+        countryName ??
+        (displayName((namesOf.get(p.id) ?? []) as never, locale, pack?.defaultLocales ?? []) ||
+          code),
       slugPath: p.slug_path,
     });
   }
@@ -297,12 +351,21 @@ export async function findAct(db: Database, act: ActRef): Promise<string | null>
   return rows[0]?.id ?? null;
 }
 
-function regionName(code: string, locale: string): string | null {
+/** A country's name in the reader's language, from one formatter for the whole list. */
+function regionNames(locale: string): (code: string) => string | null {
+  let display: Intl.DisplayNames | null = null;
   try {
-    return new Intl.DisplayNames([locale], { type: "region", fallback: "none" }).of(code) ?? null;
+    display = new Intl.DisplayNames([locale], { type: "region", fallback: "none" });
   } catch {
-    return null;
+    display = null;
   }
+  return (code) => {
+    try {
+      return display?.of(code) ?? null;
+    } catch {
+      return null;
+    }
+  };
 }
 
 export interface EventRow {

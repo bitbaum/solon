@@ -36,6 +36,12 @@ Commands (all under `pnpm run`):
      under one measure; a World Bank series outside the WDI names its `database`
      (`3` for the Worldwide Governance Indicators);
    - `unit` and a `plausible` band: values outside it are quarantined at import.
+
+   A metric of a known family is a few lines: `wgiMetric({ key, code, name })`
+   for a governance indicator, and the shared words in
+   `src/lib/config/places/statistic-templates.ts` (`ALL_LEVELS_SCOPE`,
+   `PERCEPTION_SCOPE`, `sentence()` for a label put into a sentence in each
+   language). Give a name whole in each language; never assemble one from parts.
    A metric whose series is not comparable across countries is not charted: leave
    `statistic` off, or retire it with `retired: true` (never delete one that has
    data).

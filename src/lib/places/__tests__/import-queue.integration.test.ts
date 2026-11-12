@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { placeImportRuns } from "@/lib/db/places-schema";
-import { drainQueue, failedSince, sourceRuns } from "../importer/queue";
+import { closeAbandonedRuns, drainQueue, failedSince, sourceRuns } from "../importer/queue";
 import type { SnapshotStore } from "../importer/snapshots";
 
 const RUN = process.env.INTEGRATION === "1";
@@ -57,5 +57,43 @@ describe.runIf(RUN)("the import queue", () => {
     const after = (await sourceRuns(db)).get(key)!;
     expect(after.latest?.status).toBe("applied");
     expect(after.failuresInARow).toBe(0);
+  });
+
+  it("counts every failure since the latest applied run, however many", async () => {
+    const key = `queue-count-${Date.now()}`;
+    const start = Date.now() - 600_000;
+    const at = (minutes: number) => new Date(start + minutes * 60_000);
+    await db.insert(placeImportRuns).values([
+      { sourceKey: key, status: "failed", report: {}, startedAt: at(0), finishedAt: at(0) },
+      { sourceKey: key, status: "applied", report: {}, startedAt: at(1), finishedAt: at(1) },
+      { sourceKey: key, status: "failed", report: {}, startedAt: at(2), finishedAt: at(2) },
+      { sourceKey: key, status: "failed", report: {}, startedAt: at(3), finishedAt: at(3) },
+      // A dry run and a run still open say nothing about whether the source loaded.
+      { sourceKey: key, status: "dry_run", report: {}, startedAt: at(4), finishedAt: at(4) },
+    ]);
+    expect((await sourceRuns(db)).get(key)).toEqual({
+      latest: { status: "failed", at: at(3) },
+      failuresInARow: 2,
+    });
+  });
+
+  it("closes a run its process left open as failed, once, and reports it", async () => {
+    const key = `queue-abandoned-${Date.now()}`;
+    const now = new Date();
+    const hours = (n: number) => new Date(now.getTime() - n * 3_600_000);
+    await db.insert(placeImportRuns).values([
+      { sourceKey: key, status: "running", report: {}, startedAt: hours(3) },
+      // Still within two budgets: a worker may be at it.
+      { sourceKey: `${key}-fresh`, status: "running", report: {}, startedAt: hours(0.5) },
+    ]);
+    const closed = await closeAbandonedRuns(db, 2 * 3_600_000, now);
+    expect(closed).toContain(key);
+    expect(closed).not.toContain(`${key}-fresh`);
+    expect(await closeAbandonedRuns(db, 2 * 3_600_000, now)).not.toContain(key);
+    const reported = await failedSince(db, new Date(now.getTime() - 60_000));
+    expect(reported.find((f) => f.source === key)?.problems).toEqual([
+      "the run never finished: its process stopped",
+    ]);
+    expect((await sourceRuns(db)).get(key)).toMatchObject({ failuresInARow: 1 });
   });
 });

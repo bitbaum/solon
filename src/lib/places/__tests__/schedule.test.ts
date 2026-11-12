@@ -92,4 +92,21 @@ describe("importQueue", () => {
     expect(queued(failed("2026-11-10T04:00:00Z", 3))).toBe(false);
     expect(queued(failed("2026-11-04T04:00:00Z", 3))).toBe(true);
   });
+
+  it("does not miss a once-a-day queue's next run by the minutes its start time drifts", () => {
+    const failedAt = (iso: string) =>
+      new Map([
+        [source.key, { latest: { status: "failed" as const, at: at(iso) }, failuresInARow: 1 }],
+      ]);
+    const runner = (now: string) =>
+      importQueue(
+        placesConfig,
+        failedAt("2026-11-11T06:21:00Z"),
+        at(now),
+        (s) => s.key === source.key,
+      ).length > 0;
+    // Failed at 06:21; the next day's run starts at 06:17.
+    expect(runner("2026-11-12T06:17:00Z")).toBe(true);
+    expect(runner("2026-11-11T18:00:00Z")).toBe(false);
+  });
 });

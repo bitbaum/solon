@@ -3,7 +3,14 @@ import { placesConfig } from "@/lib/config/places";
 import { isCronRequest } from "@/lib/cron-auth";
 import { db } from "@/lib/db/client";
 import { fetchAndImport } from "@/lib/places/importer/fetch";
-import { drainQueue, failedSince, pendingSources } from "@/lib/places/importer/queue";
+import {
+  ancestorsDue,
+  closeAbandonedRuns,
+  drainQueue,
+  failedSince,
+  pendingSources,
+  sourceRuns,
+} from "@/lib/places/importer/queue";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { syncStatisticRecords } from "@/lib/statistics/sync";
@@ -12,6 +19,8 @@ export const dynamic = "force-dynamic";
 
 /** How long one worker keeps starting sources; the next hour's call takes what is left. */
 const WORKER_BUDGET_MS = 50 * 60_000;
+/** Longer than any import may run, on the box or from a runner through the tunnel. */
+const ABANDONED_AFTER_MS = 8 * 3_600_000;
 /** The timer calls hourly; failures are reported once, over a little more than that. */
 const REPORT_WINDOW_MS = 65 * 60_000;
 
@@ -77,15 +86,24 @@ export async function POST(request: Request) {
     );
   }
 
-  const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
-  const pending = (await pendingSources(db, placesConfig)).map((s) => s.key);
   const busy = Boolean(state.solonImportWorker);
-  if (!busy && pending.length > 0) {
+  // A run still open after longer than any process here may live (a worker's budget, a load a
+  // workflow runs, which GitHub stops at six hours) was left by a process that stopped: report it,
+  // back off. Any other process's run, however long, is younger than that.
+  await closeAbandonedRuns(db, ABANDONED_AFTER_MS);
+  const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
+  const runs = await sourceRuns(db);
+  const pending = (await pendingSources(db, placesConfig, new Date(), runs)).map((s) => s.key);
+  // The worker also rebuilds the ancestors view once a day, for relations dated to start or end
+  // on a later day: it starts on a day with nothing due, too.
+  const start = !busy && (pending.length > 0 || ancestorsDue());
+  if (start) {
     const worker = drainQueue(db, {
       config: placesConfig,
       snapshots: defaultSnapshotStore(),
       gitSha,
       budgetMs: WORKER_BUDGET_MS,
+      runs,
     })
       .catch((error) => console.error("[places import worker]", error))
       .finally(() => {
@@ -97,7 +115,7 @@ export async function POST(request: Request) {
   }
   const failed = "error" in statistics || failures.length > 0;
   return NextResponse.json(
-    { today, statistics, busy, started: !busy && pending.length > 0, pending, failures },
+    { today, statistics, busy, started: start, pending, failures },
     { status: failed ? 500 : 200 },
   );
 }

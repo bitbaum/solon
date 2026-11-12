@@ -1078,7 +1078,27 @@ process, fifty minutes at a time. A fetch that fails before any import is
 recorded as a failed run. The route answers 500 when a run failed since the
 last call, which fires the timer's failure alert once per failure.
 `?source=<key>` runs one source now and waits. It calls no model. Backfills
-stay manual, from a checkout.
+stay manual, from a checkout. The run log is read through an index on
+(`source_key`, `started_at`), one row a source, so its cost does not grow with
+its history. A run left `running` by a process that stopped (a deploy's
+restart) is closed as failed after eight hours, longer than any import runs
+(a workflow's job stops at six), so it is reported once
+and backed off like any failure. A worker starts on a day with nothing due as
+well, for the daily rebuild of the ancestors view.
+
+**Two sides, one queue** (2026-11-12). A publisher that refuses the box's
+address (the World Bank answered it HTTP 403 on 2026-11-10) is marked on its
+source, `fetchFrom: "runner"`. The box's worker leaves such sources out; a
+GitHub runner drains them daily with `pnpm run places:queue --from runner`
+(`.github/workflows/places-load-cloud.yml`), writing to the production database
+through an SSH tunnel and copying its snapshots back to the box. The schedule,
+the retries and the run log are the same on both sides.
+
+**Place pages are rendered on every visit** (2026-11-12). ISR was tried and
+left: Next keeps every rendered URL on the server's disk, a few thousand places
+in five languages and any made-up path besides, with no bound. A view's cost
+is cut where it is spent instead: a two-query lookup for an old link, the law
+counts of the place's own authorities, and every statistic in one query.
 
 **What a run skips** (2026-11-12). A retrieval whose bytes are those the
 source last applied, read by the same importer, is recorded as an applied run

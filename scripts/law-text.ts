@@ -25,7 +25,7 @@
  *   pnpm run law:text recut-lilex [--limit 5000] [--dry-run]   (the same for Liechtenstein's acts held: the text outside the articles)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text recut-ukleg [--limit 5000] [--dry-run]   (the same for the UK acts held)
- *   pnpm run law:text verify --authority li [--limit 30]   (read a random sample of held HTML acts again and report how much of each page's words the stored text holds)
+ *   pnpm run law:text verify --authority li [--sample 30]   (read a random sample of held HTML acts again, a second apart, and report how much of each page's words the stored text holds; --limit, a batch size for the loaders, is not read here)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
@@ -119,7 +119,9 @@ async function main(): Promise<number> {
     if (!authority) throw new Error("verify needs --authority, e.g. li");
     const report = await verifyAuthority(db, {
       authority,
-      sample: flag("limit") ? Number(flag("limit")) : 30,
+      // Its own flag: the workflow passes every source a batch --limit (1,500 by default), and
+      // reading that many publisher pages back to back is not a sample.
+      sample: flag("sample") ? Number(flag("sample")) : 30,
       onProgress: (message) => console.error(message),
     });
     // One line an act, the lowest first, then the totals: the workflow shows only the end of the output.

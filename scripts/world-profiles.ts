@@ -23,6 +23,7 @@ import {
   PROCLAIMED_MIN_WIKIPEDIAS,
   SELF_GOVERNING_ITEMS,
 } from "@/lib/config/world/extras";
+import { sparql } from "@/lib/wikidata/query";
 
 const UA = "SolonLawReader/1.0 (https://solon.orangecat.ch; world profiles)";
 const LANGS = ["en", "de", "fr", "it", "ru"] as const;
@@ -30,28 +31,6 @@ const OUT = join(process.cwd(), "data", "world", "profiles.json");
 const EXTRAS_OUT = join(process.cwd(), "src", "lib", "config", "world", "extras.json");
 
 type Row = Record<string, string | undefined>;
-
-async function sparql(query: string): Promise<Row[]> {
-  for (let attempt = 1; ; attempt++) {
-    const response = await fetch(
-      `https://query.wikidata.org/sparql?query=${encodeURIComponent(query)}`,
-      {
-        headers: { accept: "application/sparql-results+json", "user-agent": UA },
-        signal: AbortSignal.timeout(180_000),
-      },
-    );
-    if (response.ok) {
-      const body = (await response.json()) as {
-        results: { bindings: Record<string, { value: string }>[] };
-      };
-      return body.results.bindings.map((b) =>
-        Object.fromEntries(Object.entries(b).map(([k, v]) => [k, v.value])),
-      );
-    }
-    if (attempt >= 4) throw new Error(`Wikidata: HTTP ${response.status}`);
-    await new Promise((r) => setTimeout(r, 15_000 * attempt));
-  }
-}
 
 const q = (uri: string | undefined) => uri?.replace(/^.*\//, "");
 

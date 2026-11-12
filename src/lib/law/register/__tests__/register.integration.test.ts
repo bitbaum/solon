@@ -151,6 +151,18 @@ describe.skipIf(!RUN)("law register import", () => {
     });
   });
 
+  it("stops at once when the register's acts are those it last applied", async () => {
+    const bytes = snapshotOf([
+      act(A, "Kantonsverfassung", `${N}.1`),
+      act(B, "Gesetz B", `${N}.2`),
+      act(C, `Gesetz C ${N}`, null, false),
+    ]);
+    const first = await run(bytes);
+    const again = await run(bytes);
+    expect(again).toMatchObject({ status: "applied", unchanged: true, sourceId: first.sourceId });
+    expect(again.counts.actsInserted).toBe(0);
+  });
+
   it("supersedes a changed title and number, updates the in-force flag, and reports an act no longer listed", async () => {
     const report = await run(
       snapshotOf([

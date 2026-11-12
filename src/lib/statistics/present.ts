@@ -4,6 +4,7 @@
  * pages and the tests read one answer.
  */
 import type { Metric, PlacesConfig } from "@/lib/config/places/schema";
+import { scaled } from "@/lib/config/places/units";
 import type { PlaceSeries } from "./read";
 
 /** The metrics a reader can chart, in catalog order. */
@@ -13,9 +14,9 @@ export const statisticMetrics = (config: PlacesConfig): Metric[] =>
 export const findStatistic = (config: PlacesConfig, key: string): Metric | undefined =>
   statisticMetrics(config).find((m) => m.key === key);
 
-/** A value as charts show it: a ratio in per cent, anything else as stored. */
+/** A value as charts show it: a ratio in per cent, anything else as stored (units.ts). */
 export const chartValue = (metric: Pick<Metric, "unit">, value: number): number =>
-  metric.unit === "ratio" ? Math.round(value * 10000) / 100 : Math.round(value * 1000) / 1000;
+  scaled(metric.unit, value);
 
 /** The publishers of the series shown, each once: the metric's own when nothing is shown. */
 export const publishersOf = (metric: Metric, shown: readonly PlaceSeries[]): string[] =>
