@@ -114,16 +114,55 @@ export const TESTLAND_INSTRUMENT_KINDS = [
   { key: "testland_toll", label: { en: "Pay the toll" } },
 ] satisfies InstrumentKindInput[] as InstrumentKindInput[];
 
+/**
+ * Quuxland: a made-up country the world pack holds until a pack of its own is added, for the
+ * handover (importer: "Places another pack holds"). Known by a user-assigned ISO code.
+ */
+export const QUUXLAND_PACK = {
+  key: "quuxland",
+  names: { en: "Quuxland" },
+  currency: "XTS",
+  fiscalYear: { startMonthDay: "01-01" },
+  defaultLocales: ["en"],
+  slug: { strategy: "official-name", transliterate: true },
+  levels: [
+    { key: "nation", parent: null, names: { en: "Nation" } },
+    { key: "province", parent: "nation", names: { en: "Province" } },
+  ],
+  identifierSchemes: ["iso_3166_1", "iso_3166_2"],
+  instrumentKinds: [],
+} satisfies CountryPackInput;
+
+const FIXTURE_SOURCE = {
+  licence: "CC0-1.0",
+  cadence: "0 3 1 * *",
+  adapter: "fixture",
+} as const;
+
 export const TESTLAND_SOURCES = [
   {
     key: "testland-register",
     publisher: "Testland Office of Registers",
     dataset: "Register of places and rates",
     homepage: "https://register.testland.invalid/",
-    licence: "CC0-1.0",
-    cadence: "0 3 1 * *",
-    adapter: "fixture",
+    ...FIXTURE_SOURCE,
     packs: ["testland"],
+  },
+  {
+    key: "quuxland-register",
+    publisher: "Quuxland Office of Registers",
+    dataset: "Register of places",
+    homepage: "https://register.quuxland.invalid/",
+    ...FIXTURE_SOURCE,
+    packs: ["quuxland"],
+  },
+  {
+    key: "testland-world",
+    publisher: "Test world register",
+    dataset: "Countries and subdivisions",
+    homepage: "https://world.testland.invalid/",
+    ...FIXTURE_SOURCE,
+    packs: ["world"],
   },
 ] satisfies SourceInput[];
 
@@ -131,7 +170,9 @@ export const TESTLAND_SOURCES = [
 export function withTestland(base: PlacesConfig): PlacesConfig {
   return definePlacesConfig({
     ...base,
-    packs: [...base.packs, TESTLAND_PACK],
+    // A pack's sources are computed from the sources that name it: the base's are recomputed with
+    // the test sources, one of which serves the world pack.
+    packs: [...base.packs.map((p) => ({ ...p, sources: [] })), TESTLAND_PACK, QUUXLAND_PACK],
     sources: [...base.sources, ...TESTLAND_SOURCES],
     metrics: [...base.metrics, ...TESTLAND_METRICS],
     identifierSchemes: [...base.identifierSchemes, ...TESTLAND_SCHEMES],

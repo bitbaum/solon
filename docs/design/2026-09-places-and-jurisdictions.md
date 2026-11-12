@@ -1064,12 +1064,102 @@ inclusive end dates (978 facts, 125 place updates) without deleting a row.
 
 **The scheduled runner** (built 2026-09-30): the box's appcron timer
 (`appcron-solon-places`, registered in Loki's `install-app-crons.sh`) calls
-`POST /api/cron/places` once a day with the app's `CRON_SECRET`. The route
-fetches and imports every source whose cadence names that day
-(`src/lib/places/schedule.ts` reads the day fields; the timer owns the hour), in
-registry order, with snapshots under `PLACES_SNAPSHOT_DIR`. A failed run answers
-500, which fires the timer's failure alert. `?source=<key>` runs one source now.
-It calls no model. Backfills stay manual, from a checkout.
+`POST /api/cron/places` every hour with the app's `CRON_SECRET` (once a day
+until 2026-11-12). The route starts a worker and answers at once; the worker
+fetches and imports, in registry order, every source that is behind
+(`src/lib/places/importer/queue.ts`), with snapshots under
+`PLACES_SNAPSHOT_DIR`. Behind is read from the run log alone
+(`src/lib/places/schedule.ts`, `importQueue`): a source whose latest run did
+not apply on or after the last day its cadence names. So a source never loaded
+loads whatever its day, one whose publisher was down on its day is tried again
+a day later (a week later after three failures in a row), and a day with
+hundreds of sources due is drained over as many hours as it takes; one worker a
+process, fifty minutes at a time. A fetch that fails before any import is
+recorded as a failed run. The route answers 500 when a run failed since the
+last call, which fires the timer's failure alert once per failure.
+`?source=<key>` runs one source now and waits. It calls no model. Backfills
+stay manual, from a checkout. The run log is read through an index on
+(`source_key`, `started_at`), one row a source, so its cost does not grow with
+its history. A run left `running` by a process that stopped (a deploy's
+restart) is closed as failed after eight hours, longer than any import runs
+(a workflow's job stops at six), so it is reported once
+and backed off like any failure. A worker starts on a day with nothing due as
+well, for the daily rebuild of the ancestors view.
+
+**A pack takes a country over** (2026-11-12). The world pack `yields`: it
+holds every country no other pack holds, and only until one does. When a
+pack's import names a place the world pack holds (by the place's own ref, its
+ISO code for a country), the place moves: its row keeps its id (so its figures
+and records stay), its pack and path change, the new path becomes canonical in
+`place_paths` and the old one redirects, and the parents other sources stated
+for it are superseded (its new pack states its parent). What the world pack
+held under a moved place that the batch does not restate ends that day; a
+later batch that restates one moves it and makes it current again. A batch of
+the world pack leaves alone a place another pack holds, and every place it
+states under one, so a world file not yet regenerated cannot take a country
+back (`src/lib/places/__tests__/pack-handover.integration.test.ts`).
+
+**Two sides, one queue** (2026-11-12). A publisher that refuses the box's
+address (the World Bank answered it HTTP 403 on 2026-11-10) is marked on its
+source, `fetchFrom: "runner"`. The box's worker leaves such sources out; a
+GitHub runner drains them daily with `pnpm run places:queue --from runner`
+(`.github/workflows/places-load-cloud.yml`), writing to the production database
+through an SSH tunnel and copying its snapshots back to the box. The schedule,
+the retries and the run log are the same on both sides.
+
+**Place pages are rendered on every visit** (2026-11-12). ISR was tried and
+left: Next keeps every rendered URL on the server's disk, a few thousand places
+in five languages and any made-up path besides, with no bound. A view's cost
+is cut where it is spent instead: a two-query lookup for an old link, the law
+counts of the place's own authorities, and every statistic in one query.
+
+**What a run skips** (2026-11-12). A retrieval whose bytes are those the
+source last applied, read by the same importer, is recorded as an applied run
+marked `unchanged` and goes no further: no parse, no transaction, no registry
+sync. "The same importer" is `<adapter>@<version>#<hash of the source's options
+and packs>` (`src/lib/places/importer/applied.ts`), so a new metric or a changed
+divisor reads the same bytes again. An adapter whose retrievals are parts of the
+source (`independentRetrievals`: one indicator, one series) compares each
+address with its own last reading; any other compares with the source's latest
+reading of any address, so going back to an earlier edition re-applies it. An
+adapter that publishes a file beside its rows (`publishesFiles`: boundaries) is
+always read again. The ancestors view (`place_ancestors`) is rebuilt only when an
+import moved a place (places or `part_of` relations changed), because a
+non-concurrent refresh locks the view against page reads; the queue worker also
+rebuilds it once a day, for relations whose validity starts or ends on a later
+date. Facts are compared only for the metrics a batch states, and written a
+thousand rows a statement.
+
+Why: the route did all the work inside the request, and the timer's `curl`
+stops at 300 seconds. The World Bank's indicators were one source a country
+(235 sources, ten requests each, all due on the 9th); none had loaded. They are
+one source now (`worldbank-wdi-world`): the API's `country/all`, one request an
+indicator.
+
+**One source a publisher** (2026-11-12). The OECD and Eurostat followed: one
+source each (`oecd-tax-world`, `eurostat-gov-world`), asking for every country
+they cover in one request a series (SDMX's `+`-joined reference areas,
+JSON-stat's repeated `geo`): three sources and 17 requests read every
+national figure, where there were 73 sources and 350 requests. A metric names its reader (`series.read`, and
+`database` for a World Bank series outside the WDI); the publisher's source is
+generated from the metrics that name it, so a new statistic is its metric and
+nothing else. A pack's `sources` is computed from the sources that name the
+pack; a written list that differs is a configuration error. A source whose key
+changes keeps the old one in `formerKeys`, and everything that reads a stored
+row's source (`findSource`: a page's source list, coverage, a figure's credit)
+resolves it, so what was read under `oecd-tax-ch` stays the OECD's. A figure is
+credited to its metric's series where that reader read it, else to the source
+that supplied it (Liechtenstein's tax revenue is its statistics office's):
+`figureSource` (`src/lib/statistics/source.ts`), resolved once per place by the
+series loader, so every chart, caption and source line reads the same answer. A
+config test fails when two sources could state one statistic for the same
+country, since the facts diff keys a figure on place, metric and period. A
+batch of figures alone leaves out, and reports once per place, figures for a
+country not held here, so one country not yet loaded never stops the others;
+the retrieval is then recorded with a `+partial` importer version, so the next
+run reads it again rather than skipping it as applied. Any other unknown place
+still fails the run. A source of many countries reports gaps once a series: the
+countries asked for that it holds no value for (`adapters/gaps.ts`).
 
 **Areas and their file** (built 2026-10-01): a batch may carry `areas` and one
 `geometry` (level, edition, TopoJSON text). The check refuses areas without a

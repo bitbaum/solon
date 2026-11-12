@@ -4,8 +4,9 @@ name: Places data
 # repository whose bytes changed since its source was last applied
 # (src/lib/config/places/repo-files.ts, `pnpm run places:import-files`). An
 # edited tariff or commune list reaches the site by itself; nobody has to
-# remember a load. Unchanged files are skipped, so a deploy that touched no
-# data changes nothing.
+# remember a load. A deploy that touched no Places data, importer or
+# photograph list runs neither job; one that did imports only the files whose
+# bytes changed.
 #
 # Runs on the box from a checkout of the commit that was deployed, with the
 # box's own DATABASE_URL read into this process alone. "Run workflow" runs it
@@ -15,6 +16,10 @@ on:
     workflows: [Deploy]
     types: [completed]
     branches: [main]
+  # Weekly, the import whatever changed: a file applied while some of its places were not held
+  # yet (`+partial`) is read again, as is one whose import failed.
+  schedule:
+    - cron: "23 5 * * 1"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -28,10 +33,55 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read # the previous deploy's commit, to see what changed
 
 jobs:
+  # What this deploy changed since the last load decides what runs: most deploys touch no
+  # Places data and no photograph, and then nothing here clones, installs or reads anything. A run
+  # by hand does both.
+  changes:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      data: ${{ steps.diff.outputs.data }}
+      photos: ${{ steps.diff.outputs.photos }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          both() { echo "data=true" >> "$GITHUB_OUTPUT"; echo "photos=true" >> "$GITHUB_OUTPUT"; echo "$1"; exit 0; }
+          [ "$EVENT" = workflow_dispatch ] && both "run by hand: both jobs"
+          if [ "$EVENT" = schedule ]; then
+            echo "data=true" >> "$GITHUB_OUTPUT"; echo "photos=false" >> "$GITHUB_OUTPUT"
+            echo "weekly: the import, for anything left partial or failed"; exit 0
+          fi
+          # The commit this workflow last succeeded for after a deploy: what has been loaded. A run
+          # that failed does not count, so its changes are tried again by the next deploy's run; a
+          # dispatch (perhaps a dry run) does not count either.
+          prev=$(gh run list -R "$GITHUB_REPOSITORY" --workflow places-data.yml --event workflow_run \
+            --status success --limit 20 --json headSha \
+            --jq "[.[] | select(.headSha != \"$SHA\")][0].headSha // empty" || true)
+          { [ -n "$prev" ] && git cat-file -e "$prev^{commit}" 2>/dev/null; } || both "no earlier load found: both jobs"
+          changed=$(git diff --name-only "$prev" "$SHA")
+          data=false; photos=false
+          grep -qE '^(data/places/|src/lib/config/places/|src/lib/places/(adapters|importer)/|scripts/places-import-files\.ts$)' <<<"$changed" && data=true
+          grep -qE '^(data/world/photos\.json$|src/lib/places/(photo-store|place-photo)\.ts$|scripts/places-photos-warm\.ts$)' <<<"$changed" && photos=true
+          echo "data=$data" >> "$GITHUB_OUTPUT"
+          echo "photos=$photos" >> "$GITHUB_OUTPUT"
+          echo "since ${prev:0:12}: Places data changed: $data; photographs changed: $photos"
+
   import:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    needs: changes
+    if: needs.changes.outputs.data == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -52,8 +102,9 @@ jobs:
           set -euo pipefail
           WD=$(mktemp -d /tmp/solon-places-data.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
-          git clone -q https://github.com/bitbaum/solon "$WD/repo"
-          cd "$WD/repo" && git checkout -q "$SHA"
+          # The deployed commit alone, not the repository's whole history.
+          git init -q "$WD/repo" && cd "$WD/repo"
+          git fetch -q --depth 1 https://github.com/bitbaum/solon "$SHA" && git checkout -q FETCH_HEAD
           PNPM="corepack pnpm"; $PNPM --version >/dev/null 2>&1 || PNPM="npx --yes pnpm@11"
           $PNPM install --frozen-lockfile >install.log 2>&1 || { echo "install failed:"; tail -n 20 install.log; exit 1; }
           envf=/opt/solon/shared/.env; [ -f "$envf" ] || envf=/opt/solon/app/.env
@@ -72,7 +123,8 @@ jobs:
   # once, through the live site, so no reader is the first to ask for one. Held
   # photographs answer at once; a deploy that added none costs a minute.
   photos:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    needs: changes
+    if: needs.changes.outputs.photos == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:

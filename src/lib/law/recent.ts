@@ -8,6 +8,7 @@
 import { sql } from "drizzle-orm";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
+import { actTitleSql } from "./act-title";
 
 export interface RecentChange {
   actId: string;
@@ -22,6 +23,7 @@ export async function recentChanges(
   db: Database,
   authorities: readonly string[],
   today: string,
+  locale: string,
   limit = 6,
 ): Promise<{ total: number; changes: RecentChange[] }> {
   if (authorities.length === 0) return { total: 0, changes: [] };
@@ -37,16 +39,23 @@ export async function recentChanges(
     in_force_from: string;
     amended: boolean;
   }>(
+    // One row an act, however many languages it is held in: its latest current version, its
+    // title in the reader's language first.
     await db.execute(sql`
-      SELECT a.id AS act_id, n.text AS title, a.authority, v.in_force_from::text AS in_force_from,
-             EXISTS (SELECT 1 FROM legal_act_versions e
-                     WHERE e.act_id = a.id AND e.in_force_from < v.in_force_from) AS amended
-      FROM legal_act_versions v
-      JOIN legal_acts a ON a.id = v.act_id
-      JOIN legal_act_names n ON n.act_id = a.id AND n.kind = 'title' AND n.superseded_at IS NULL
-      WHERE a.authority IN (${list}) AND a.in_force AND v.in_force_to IS NULL
-        AND v.date_basis = 'publisher' AND ${window}
-      ORDER BY v.in_force_from DESC, n.text
+      SELECT * FROM (
+        SELECT DISTINCT ON (a.id)
+               a.id AS act_id, ${actTitleSql(sql`a.id`, locale)} AS title, a.authority,
+               v.in_force_from::text AS in_force_from,
+               EXISTS (SELECT 1 FROM legal_act_versions e
+                       WHERE e.act_id = a.id AND e.in_force_from < v.in_force_from) AS amended
+        FROM legal_act_versions v
+        JOIN legal_acts a ON a.id = v.act_id
+        WHERE a.authority IN (${list}) AND a.in_force AND v.in_force_to IS NULL
+          AND v.date_basis = 'publisher' AND ${window}
+        ORDER BY a.id, v.in_force_from DESC
+      ) latest
+      WHERE title IS NOT NULL
+      ORDER BY in_force_from DESC, title
       LIMIT ${limit}`),
   );
   const [count] = rowsOf<{ total: string }>(

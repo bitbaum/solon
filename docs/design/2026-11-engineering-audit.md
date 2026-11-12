@@ -45,8 +45,10 @@ Shared types now live in `components/statistics/shared.ts` and `components/place
   a program fetches the cited pages every week and fails when a page stops saying them.
 - Append-only where it matters: curated records, facts and audit events cannot be updated or
   deleted, by trigger.
-- Copy-paste is almost absent (0.28%), cycles are now gated, and the generators are checked
-  (`geography:world`, `places:world-countries` with `--check`).
+- Copy-paste is almost absent (0.28%), cycles are now gated, and `verify` checks that the world
+  pack's countries file holds exactly the countries no pack holds
+  (`places:world-countries --check`, offline; corrected 2026-11-12: it was not run before).
+  `geography:world --check` needs the Natural Earth and GeoNames downloads, so it is run by hand.
 
 ## Debt, in the order to pay it
 

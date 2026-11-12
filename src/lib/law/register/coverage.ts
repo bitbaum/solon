@@ -3,7 +3,7 @@
  * page is computed from the tables, never typed"). The view is pure; the loader
  * counts in the database.
  */
-import { count, countDistinct, eq, isNull, max, sql } from "drizzle-orm";
+import { and, count, countDistinct, eq, inArray, isNull, max, sql } from "drizzle-orm";
 import { LAW_AUTHORITIES, LEXFIND } from "@/lib/config/law";
 import type { Database } from "@/lib/db/client";
 import { legalActs, legalActVersions } from "@/lib/db/law-schema";
@@ -74,7 +74,17 @@ export function lawCoverage({ counts, withText = [], retrievedAt }: CoverageCoun
   };
 }
 
-export async function loadLawCoverage(db: Database): Promise<LawCoverage> {
+/**
+ * What the register holds, per authority. With `authorities`, those authorities' rows alone:
+ * a place's page counts its own chain, not the whole law database (the others count as none).
+ */
+export async function loadLawCoverage(
+  db: Database,
+  { authorities }: { authorities?: readonly string[] } = {},
+): Promise<LawCoverage> {
+  const only = authorities ? inArray(legalActs.authority, [...authorities]) : undefined;
+  if (authorities?.length === 0)
+    return lawCoverage({ counts: [], withText: [], retrievedAt: null });
   const counts = await db
     .select({
       authority: legalActs.authority,
@@ -83,12 +93,13 @@ export async function loadLawCoverage(db: Database): Promise<LawCoverage> {
       acts: count(),
     })
     .from(legalActs)
+    .where(only)
     .groupBy(legalActs.authority, legalActs.inForce, legalActs.statusStated);
   const withText = await db
     .select({ authority: legalActs.authority, acts: countDistinct(legalActVersions.actId) })
     .from(legalActVersions)
     .innerJoin(legalActs, eq(legalActs.id, legalActVersions.actId))
-    .where(isNull(legalActVersions.inForceTo))
+    .where(and(isNull(legalActVersions.inForceTo), only))
     .groupBy(legalActs.authority);
   const [latest] = await db
     .select({ at: max(sources.retrievedAt) })

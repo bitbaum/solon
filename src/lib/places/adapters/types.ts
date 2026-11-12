@@ -46,6 +46,19 @@ export interface Adapter<Parsed = unknown, Options = unknown> {
   key: string;
   /** Recorded on every `sources` row it produces. Bump when the mapping changes. */
   version: string;
+  /**
+   * Each retrieval states its own part of the source, which no other retrieval states (one
+   * indicator, one series, one dataset). A retrieval is then "already applied" when its own
+   * address last gave the same bytes. Otherwise retrievals are states of one thing (an edition,
+   * a dated snapshot), and the same bytes are applied again unless they are the source's latest.
+   */
+  independentRetrievals?: boolean;
+  /**
+   * It publishes a file beside its rows (a boundary file, `batch.geometry`). Its retrievals are
+   * read again even when their bytes were applied before, so the file is published to whatever
+   * store this run publishes to. Boundaries change once a year; the saving would be nothing.
+   */
+  publishesFiles?: boolean;
   /** Bytes to a value the schema can check; JSON by default. */
   decode?: (bytes: Uint8Array) => unknown;
   /** A format change fails here, loudly. */

@@ -9,26 +9,66 @@ import {
   qualityOfEurostatFlag,
 } from "../adapters/eurostat-json";
 import type { MapContext } from "../adapters/types";
+import { EUROSTAT_KEY } from "@/lib/config/places/world";
 
 const fixture = (name: string) =>
   JSON.parse(readFileSync(join(__dirname, "fixtures", "eurostat", name), "utf8"));
 
 const pack = placesConfig.packs.find((p) => p.key === "switzerland")!;
-const source = placesConfig.sources.find((s) => s.key === "eurostat-gov-ch")!;
+const source = placesConfig.sources.find((s) => s.key === EUROSTAT_KEY)!;
 
 type Options = Parameters<NonNullable<typeof eurostatJsonAdapter.map>>[1]["options"];
 
-function run(name: string, options: Options) {
+function run(name: string | object, options: Options) {
   const skipped: string[] = [];
+  const reasons: string[] = [];
   const context = {
     source,
     pack,
     options,
     retrieval: { url: null, validFrom: null },
-    skip: (row: string) => skipped.push(row),
+    skip: (row: string, reason: string) => {
+      skipped.push(row);
+      reasons.push(reason);
+    },
   } as MapContext<Options>;
-  const parsed = eurostatJsonAdapter.schema.parse(fixture(name));
-  return { batch: eurostatJsonAdapter.map(parsed, context), skipped };
+  const cube = typeof name === "string" ? fixture(name) : name;
+  const parsed = eurostatJsonAdapter.schema.parse(cube);
+  return { batch: eurostatJsonAdapter.map(parsed, context), skipped, reasons };
+}
+
+/**
+ * Switzerland's cube with Greece (EL) beside it: Greece holds the total only, at twice
+ * Switzerland's value, so a cell read onto the wrong country shows.
+ */
+function withGreece() {
+  const cube = fixture("gov_10a_exp-ch.json");
+  const ids: string[] = cube.id;
+  const sizes: number[] = cube.size;
+  const at = (dim: string) => ids.indexOf(dim);
+  const decode = (position: number) => {
+    const out: number[] = [];
+    for (let d = ids.length - 1; d >= 0; d--) {
+      out[d] = position % sizes[d]!;
+      position = Math.floor(position / sizes[d]!);
+    }
+    return out;
+  };
+  const wider = sizes.map((n, d) => (d === at("geo") ? 2 : n));
+  const encode = (indices: number[]) => indices.reduce((p, i, d) => p * wider[d]! + i, 0);
+  const values: Record<string, number> = {};
+  for (const [key, value] of Object.entries(cube.value as Record<string, number>)) {
+    const indices = decode(Number(key));
+    values[String(encode(indices))] = value;
+    if (indices[at("cofog99")] === 0) {
+      values[String(encode(indices.map((i, d) => (d === at("geo") ? 1 : i))))] = value * 2;
+    }
+  }
+  cube.size = wider;
+  cube.value = values;
+  cube.dimension.geo.category.index = { CH: 0, EL: 1 };
+  cube.dimension.geo.category.label = { CH: "Switzerland", EL: "Greece" };
+  return cube;
 }
 
 const CH: Options = {
@@ -103,7 +143,14 @@ describe("Eurostat JSON-stat", () => {
   });
 
   it("refuses a cube for another country, or a filter the source did not ask for", () => {
-    expect(() => run("gov_10a_exp-ch.json", { ...CH, geo: "AT" })).toThrow(/not AT/);
+    expect(() =>
+      run("gov_10a_exp-ch.json", {
+        ...CH,
+        geo: undefined,
+        place: undefined,
+        geos: [{ code: "AT", place: { scheme: "iso_3166_1", value: "AT" } }],
+      }),
+    ).toThrow(/CH was not asked for/);
     const wrongUnit = {
       ...CH,
       requests: [{ ...CH.requests[0]!, filters: { ...CH.requests[0]!.filters, unit: "MIO_EUR" } }],
@@ -122,6 +169,42 @@ describe("Eurostat JSON-stat", () => {
     };
     const { batch } = run("gov_10a_exp-ch.json", both);
     expect(batch.facts!.every((f) => !f.metricKey.endsWith(".meur"))).toBe(true);
+  });
+
+  it("reads many countries from one cube, each onto its own place", () => {
+    const many: Options = {
+      ...CH,
+      geo: undefined,
+      place: undefined,
+      geos: [
+        { code: "CH", place: { scheme: "iso_3166_1", value: "CH" } },
+        { code: "EL", place: { scheme: "iso_3166_1", value: "GR" } },
+      ],
+    };
+    const { batch, skipped, reasons } = run(withGreece(), many);
+    const total = (country: string, year: string) =>
+      batch.facts!.find(
+        (f) =>
+          f.jurisdiction.value === country &&
+          f.metricKey === "budget.gg.expenditure.total" &&
+          f.validFrom === `${year}-01-01`,
+      )!.value as number;
+    expect(total("GR", "2023")).toBeCloseTo(total("CH", "2023") * 2, 10);
+    expect(
+      batch.facts!.filter((f) => f.jurisdiction.value === "GR").map((f) => f.metricKey),
+    ).toEqual(expect.arrayContaining(["budget.gg.expenditure.total"]));
+    expect(
+      batch.facts!.some(
+        (f) => f.jurisdiction.value === "GR" && f.metricKey !== "budget.gg.expenditure.total",
+      ),
+    ).toBe(false);
+    // A line a series, naming the countries it holds no figure for; none for one they all have.
+    expect(skipped).toEqual(["gov_10a_exp GF07", "gov_10a_exp GF0701"]);
+    expect(reasons[0]).toBe("Eurostat publishes no value from 2021 on for EL");
+    const url = new URL(
+      eurostatUrl("gov_10a_exp", ["CH", "EL"], 1995, { unit: "PC_GDP" }, "cofog99", ["TOTAL"]),
+    );
+    expect(url.searchParams.getAll("geo")).toEqual(["CH", "EL"]);
   });
 
   it("asks for one dataset per request, every series named, from the first year", () => {
@@ -147,9 +230,15 @@ describe("Eurostat JSON-stat", () => {
 
 describe("the Eurostat sources as configured", () => {
   it("read Greece as EL and ask for every category of both taxonomies", () => {
-    const greece = placesConfig.sources.find((s) => s.key === "eurostat-gov-gr");
-    expect(greece?.options).toMatchObject({ geo: "EL", place: { value: "GR" } });
     const options = source.options as Options;
+    expect(options.geos).toContainEqual({
+      code: "EL",
+      place: { scheme: "iso_3166_1", value: "GR" },
+    });
+    expect(options.geos).toContainEqual({
+      code: "CH",
+      place: { scheme: "iso_3166_1", value: "CH" },
+    });
     const codes = options.requests.flatMap((r) => r.series.map((s) => s.code));
     expect(codes).toContain("TOTAL");
     expect(codes).toContain("GF1009");

@@ -34,6 +34,7 @@ import {
 import { evaluate, taxingLevels } from "@/lib/tax-model";
 import { evaluatorFacts, loadChain, loadFacts } from "../chain";
 import type { ImportBatch } from "../importer/batch";
+import { ADAPTERS } from "../adapters";
 import { runImport } from "../importer/run";
 import { loadPlacePage } from "../place-page";
 import type { SnapshotStore } from "../importer/snapshots";
@@ -545,5 +546,101 @@ describe.runIf(RUN)("Testland, through the importer", () => {
         ),
       );
     expect(history.map((h) => h.quality)).toContain("provisional");
+  });
+
+  it("reads figures for a place not held yet again, until they land", async () => {
+    // A batch of figures alone: one for a place held, one for a country that is not, yet.
+    const multiplier = testlandBatch().facts.find((f) => f.metricKey === "test.multiplier")!;
+    const missing = { scheme: "iso_3166_1", value: "QZ" };
+    const batch = {
+      pack: "testland",
+      jurisdictions: [],
+      relations: [],
+      facts: [multiplier, { ...multiplier, jurisdiction: missing }],
+    };
+    // Its own source: a batch with no places, read by the register's source, would end every
+    // name and identifier that source states.
+    const register0 = testland.sources.find((x) => x.key === "testland-register")!;
+    const config = {
+      ...testland,
+      sources: [...testland.sources, { ...register0, key: "testland-figures" }],
+    };
+    const read = () =>
+      runImport(db, {
+        config,
+        sourceKey: "testland-figures",
+        retrieval: {
+          bytes: encode(batch),
+          url: "https://register.testland.invalid/figures.json",
+          retrievedAt: new Date(),
+        },
+        snapshots,
+        gitSha: null,
+      });
+    const first = await read();
+    expect(first.status).toBe("applied");
+    expect(first.skipped).toEqual([
+      {
+        row: "iso_3166_1:QZ",
+        reason: "no place here is known by this identifier; 1 figure left out",
+      },
+    ]);
+    // Not skipped as already applied: its figures did not all arrive.
+    const again = await read();
+    expect(again.unchanged).toBeUndefined();
+    expect(again.skipped).toHaveLength(1);
+
+    // Any other unknown place is a mistake in the source, not a country yet to come: it fails.
+    batch.facts = [multiplier, { ...multiplier, jurisdiction: register("T999") }];
+    const typo = await read();
+    expect(typo.status).toBe("failed");
+    expect(typo.problems.join(" ")).toContain("T999");
+  });
+
+  it("does not read again bytes it applied last, until the importer changes", async () => {
+    const read = (adapters?: typeof ADAPTERS) =>
+      runImport(db, {
+        config: testland,
+        sourceKey: "testland-register",
+        retrieval: {
+          bytes: encode(testlandBatch()),
+          url: "https://register.testland.invalid/2025.json",
+          retrievedAt: new Date(),
+        },
+        snapshots,
+        gitSha: null,
+        adapters,
+      });
+    const held = async () =>
+      (
+        await db
+          .select({ id: sources.id })
+          .from(sources)
+          .where(eq(sources.sourceKey, "testland-register"))
+      ).length;
+    const first = await read();
+    expect(first.status).toBe("applied");
+    const rows = await held();
+
+    const again = await read();
+    expect(again).toMatchObject({ status: "applied", unchanged: true, sourceId: first.sourceId });
+    expect(Object.values(again.counts).every((n) => n === 0)).toBe(true);
+    expect(await held()).toBe(rows);
+    const [run] = await db
+      .select({ report: placeImportRuns.report })
+      .from(placeImportRuns)
+      .where(eq(placeImportRuns.id, again.runId));
+    expect(run!.report).toMatchObject({ unchanged: true });
+
+    // The same bytes, read by a new version of the adapter: read again.
+    const fixture = ADAPTERS.get("fixture")!;
+    const bumped = new Map(ADAPTERS).set("fixture", {
+      ...fixture,
+      version: `${fixture.version}+1`,
+    });
+    const reread = await read(bumped);
+    expect(reread.status).toBe("applied");
+    expect(reread.unchanged).toBeUndefined();
+    expect(await held()).toBe(rows + 1);
   });
 });

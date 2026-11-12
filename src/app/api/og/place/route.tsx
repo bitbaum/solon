@@ -10,6 +10,7 @@ import { db } from "@/lib/db/client";
 import { placePhoto } from "@/lib/places/place-photo";
 import { databaseKeep, photoBytes } from "@/lib/places/photo-store";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { countryOfPlace } from "@/lib/places/place-country";
 
 /**
  * The card a shared link to a place shows (named by the place page's metadata;
@@ -33,17 +34,26 @@ export async function GET(request: Request) {
   const t = await getTranslations({ locale, namespace: "Places" });
   const path = (params.get("path") ?? "").split("/").filter(Boolean).slice(0, 8);
   const last = path.at(-1) ?? "";
-  const region = worldRegion(last);
-  const view =
-    !region || path.length > 1
-      ? await loadPlacePage(
-          db,
-          placesConfig,
-          path.join("/"),
-          new Date().toISOString().slice(0, 10),
-          locale,
-        ).catch(() => null)
-      : null;
+  // One segment names a country or territory; a longer path is a place, whose country is its own
+  // ISO code, never its last segment (the US state of Georgia is not the country).
+  const single = path.length === 1 ? worldRegion(last) : undefined;
+  const view = single
+    ? null
+    : await loadPlacePage(
+        db,
+        placesConfig,
+        path.join("/"),
+        new Date().toISOString().slice(0, 10),
+        locale,
+      ).catch(() => null);
+  const region =
+    single ??
+    (view
+      ? countryOfPlace(
+          view,
+          placesConfig.packs.find((p) => p.key === view.packKey),
+        )
+      : undefined);
   const name = view?.name ?? (region ? regionName(region, locale) : last);
   const kicker = region
     ? t(`profile.kicker.${kindOf(region)}`)

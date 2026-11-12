@@ -6,7 +6,11 @@
  * out of this file by running the script again.
  *
  *   pnpm run places:world-countries           write data/places/world/countries.json
- *   pnpm run places:world-countries --check   fail when the file is out of date
+ *   pnpm run places:world-countries --check   fail when the file holds other countries than
+ *                                             it should (part of `verify`: a new pack's
+ *                                             country must leave this file). Names are not
+ *                                             compared: they come from the runtime's CLDR,
+ *                                             which a Node update may change.
  *
  * Imported by the `world-country-registry` source
  * (src/lib/config/places/sources.ts).
@@ -63,18 +67,31 @@ async function main() {
     { parser: "json" },
   );
   if (process.argv.includes("--check")) {
-    let was = "";
+    let held: string[] = [];
     try {
-      was = readFileSync(FILE, "utf8");
+      const file = JSON.parse(readFileSync(FILE, "utf8")) as {
+        jurisdictions: { ref: { scheme: string; value: string } }[];
+      };
+      held = file.jurisdictions
+        .filter((j) => j.ref.scheme === "iso_3166_1")
+        .map((j) => j.ref.value);
     } catch {
-      // Missing: out of date.
+      // Missing or unreadable: out of date.
     }
-    if (was !== body) {
+    const wanted = nations.map((c) => c.a2);
+    const extra = held.filter((a2) => !wanted.includes(a2));
+    const missing = wanted.filter((a2) => !held.includes(a2));
+    if (extra.length > 0 || missing.length > 0) {
       console.error(
-        "data/places/world/countries.json is out of date: run pnpm run places:world-countries",
+        `data/places/world/countries.json is out of date${
+          extra.length > 0
+            ? `; it holds ${extra.join(", ")}, which a pack holds or the registry lost`
+            : ""
+        }${missing.length > 0 ? `; it lacks ${missing.join(", ")}` : ""}: run pnpm run places:world-countries`,
       );
       process.exit(1);
     }
+    console.log(`${held.length} countries, as the registry and the packs say`);
   } else {
     mkdirSync(dirname(FILE), { recursive: true });
     writeFileSync(FILE, body);

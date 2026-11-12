@@ -1,19 +1,22 @@
 /**
  * Yearly national series from Eurostat's dissemination API, as JSON-stat 2.0
- * (`format=JSON`): one request per dataset for one country, every series of
- * that dataset in it, one value per series and year. Format only: which
+ * (`format=JSON`): one request per dataset, every series of that dataset in
+ * it, one value per series, country and year. A source reads one country
+ * (`place`, `geo`) or many (`geos`, each sent as its own `geo` parameter). Format only: which
  * dataset, which dimension holds the series, which filters fix the others
  * and which metric each series becomes are the source's `options`.
  *
  * JSON-stat stores the values of a cube in one flat object keyed by position:
  * the position is read back into a code per dimension, so a value is never
  * taken from the wrong series. A year with no value is absent from the cube
- * and is reported, never stored as zero.
+ * and is never stored as zero: for one country each missing year is reported,
+ * for many each series names the countries it holds no figure for (gaps.ts).
  */
 import { z } from "zod";
 import type { FactQuality } from "../vocabulary";
 import type { BatchFactInput } from "../importer/batch";
 import type { Adapter } from "./types";
+import { countryGaps } from "./gaps";
 
 const API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data";
 
@@ -35,46 +38,58 @@ const cube = z
   .refine((c) => c.id.length === c.size.length, "every dimension has a size");
 type Cube = z.infer<typeof cube>;
 
-const eurostatOptions = z.object({
-  /** The place the figures are about, by an identifier Places holds. */
-  place: z.object({ scheme: z.string().min(1), value: z.string().min(1) }),
-  /** Eurostat's code for the country (ISO 3166-1 alpha-2, except EL for Greece). */
-  geo: z.string().regex(/^[A-Z]{2}$/),
-  fromYear: z.number().int().min(1950),
-  requests: z
-    .array(
-      z.object({
-        dataset: z.string().regex(/^[a-z0-9_]+$/),
-        /** The dimension whose codes are the series. */
-        dimension: z.string().regex(/^[a-z0-9_]+$/),
-        /** One code for every other dimension but `geo` and `time`. */
-        filters: z.record(z.string().regex(/^[a-z0-9_]+$/), z.string().min(1)),
-        series: z
-          .array(
-            z.object({
-              code: z.string().min(1),
-              metric: z.string().min(1),
-              /** A series in per cent becomes a ratio with 100 here. */
-              divideBy: z.number().positive().default(1),
-            }),
-          )
-          .min(1),
-      }),
-    )
-    .min(1),
-});
+const placeRef = z.object({ scheme: z.string().min(1), value: z.string().min(1) });
+const geoCode = z.string().regex(/^[A-Z]{2}$/);
+const eurostatOptions = z
+  .object({
+    /** One country: the place the figures are about, by an identifier Places holds. */
+    place: placeRef.optional(),
+    /** One country: Eurostat's code for it (ISO 3166-1 alpha-2, except EL for Greece). */
+    geo: geoCode.optional(),
+    /** Many countries in one request a dataset: each by Eurostat's code, and its place. */
+    geos: z
+      .array(z.object({ code: geoCode, place: placeRef }))
+      .min(1)
+      .optional(),
+    fromYear: z.number().int().min(1950),
+    requests: z
+      .array(
+        z.object({
+          dataset: z.string().regex(/^[a-z0-9_]+$/),
+          /** The dimension whose codes are the series. */
+          dimension: z.string().regex(/^[a-z0-9_]+$/),
+          /** One code for every other dimension but `geo` and `time`. */
+          filters: z.record(z.string().regex(/^[a-z0-9_]+$/), z.string().min(1)),
+          series: z
+            .array(
+              z.object({
+                code: z.string().min(1),
+                metric: z.string().min(1),
+                /** A series in per cent becomes a ratio with 100 here. */
+                divideBy: z.number().positive().default(1),
+              }),
+            )
+            .min(1),
+        }),
+      )
+      .min(1),
+  })
+  .refine((o) => Boolean(o.geos) !== Boolean(o.place && o.geo), {
+    message: "name one country (place and geo) or many (geos), not both",
+  });
 type EurostatOptions = z.infer<typeof eurostatOptions>;
 
 /** The request for one dataset: every series of it, for one country, from a year on. */
 export function eurostatUrl(
   dataset: string,
-  geo: string,
+  geo: string | readonly string[],
   fromYear: number,
   filters: Readonly<Record<string, string>>,
   dimension: string,
   codes: readonly string[],
 ): string {
-  const params = new URLSearchParams({ format: "JSON", lang: "EN", geo });
+  const params = new URLSearchParams({ format: "JSON", lang: "EN" });
+  for (const g of typeof geo === "string" ? [geo] : geo) params.append("geo", g);
   params.set("sinceTimePeriod", String(fromYear));
   for (const [key, value] of Object.entries(filters)) params.set(key, value);
   for (const code of codes) params.append(dimension, code);
@@ -123,13 +138,15 @@ export function cellsOf(
 export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
   key: "eurostat_json",
   version: "1",
+  // One request per indicator or series: each is its own part of the source.
+  independentRetrievals: true,
   schema: cube,
   options: eurostatOptions,
   retrievals: (options) =>
     options.requests.map((r) => ({
       url: eurostatUrl(
         r.dataset,
-        options.geo,
+        options.geos ? options.geos.map((g) => g.code) : options.geo!,
         options.fromYear,
         r.filters,
         r.dimension,
@@ -151,9 +168,15 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
     }
     const facts: BatchFactInput[] = [];
     const seen = new Set<string>();
+    const places = options.geos
+      ? new Map(options.geos.map((g) => [g.code, g.place]))
+      : new Map([[options.geo!, options.place!]]);
+    const gaps = countryGaps([...places.keys()], options.fromYear);
+    for (const s of request.series) gaps.series(`${dataset} ${s.code}`);
     for (const cell of cellsOf(c)) {
       const where = `${dataset} ${JSON.stringify(cell.codes)}`;
-      if (cell.codes.geo !== options.geo) throw new Error(`${where}: not ${options.geo}`);
+      const place = places.get(cell.codes.geo ?? "");
+      if (!place) throw new Error(`${where}: ${cell.codes.geo} was not asked for`);
       for (const [dim, code] of Object.entries(request.filters)) {
         if (cell.codes[dim] !== code) throw new Error(`${where}: ${dim} is not ${code}`);
       }
@@ -164,8 +187,9 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
       const year = Number(time);
       if (year < options.fromYear) continue;
       seen.add(`${series.code} ${year}`);
+      gaps.value(`${dataset} ${series.code}`, cell.codes.geo!);
       facts.push({
-        jurisdiction: options.place,
+        jurisdiction: place,
         metricKey: series.metric,
         variant: null,
         validFrom: `${year}-01-01`,
@@ -175,7 +199,12 @@ export const eurostatJsonAdapter: Adapter<Cube, EurostatOptions> = {
         publisherFlag: cell.flag ? cell.flag : null,
       });
     }
-    // Series the request asked for and the cube holds no figure of, for a year it has.
+    // Series the request asked for and the cube holds no figure of, for a year it has: for one
+    // country, year by year; for many, the countries a series has no figure for at all (gaps.ts).
+    if (options.geos) {
+      gaps.report("Eurostat", skip);
+      return { pack: pack.key, jurisdictions: [], facts };
+    }
     const years = Object.keys(c.dimension.time?.category.index ?? {}).filter(
       (y) => Number(y) >= options.fromYear,
     );

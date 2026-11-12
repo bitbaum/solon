@@ -15,6 +15,8 @@ export interface ComparePlaceRef {
 
 export interface CompareColumn {
   slugPath: string;
+  /** The path its page answers 200 for (`place_paths`), which every link to it uses. */
+  canonicalPath: string;
   name: string;
   levelName: string;
   /** The place it is part of, when it has one. */

@@ -1,0 +1,1 @@
+CREATE INDEX "facts_metric_current_idx" ON "facts" USING btree ("metric_key","jurisdiction_id","valid_from" DESC NULLS LAST) WHERE "facts"."superseded_at" IS NULL AND "facts"."variant" IS NULL;

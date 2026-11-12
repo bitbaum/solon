@@ -56,28 +56,14 @@ describe("the country registry", () => {
 });
 
 describe("the world pack", () => {
-  it("holds every registry country no other pack holds, with its series sources, and nothing twice", () => {
+  it("is read by one national-statistics source per publisher, every registry country in it", () => {
     const world = placesConfig.packs.find((p) => p.key === "world")!;
-    const held = new Set(
-      placesConfig.packs.filter((p) => p.key !== "world" && p.region).map((p) => p.region!),
-    );
-    const sourceKeys = new Set(world.sources);
-    expect(sourceKeys.size).toBe(world.sources.length);
-    for (const c of COUNTRIES.filter((c) => !held.has(c.a2)))
-      expect(sourceKeys.has(`worldbank-wdi-${c.a2.toLowerCase()}`), c.a2).toBe(true);
-    for (const a2 of held)
-      expect(sourceKeys.has(`worldbank-wdi-${a2.toLowerCase()}`), a2).toBe(false);
-  });
-
-  it("spreads the OECD's sources so none starts within two minutes of another", () => {
-    const cadences = placesConfig.sources
-      .filter((s) => s.key.startsWith("oecd-tax-") && s.packs.includes("world"))
-      .map((s) => s.cadence.split(" "))
-      .map(([min, hour]) => Number(hour) * 60 + Number(min));
-    expect(cadences.length).toBeGreaterThan(30);
-    const sorted = [...cadences].sort((a, b) => a - b);
-    for (let i = 1; i < sorted.length; i++)
-      expect(sorted[i]! - sorted[i - 1]!).toBeGreaterThanOrEqual(2);
+    expect(new Set(world.sources).size).toBe(world.sources.length);
+    // The World Bank source reads every country, whichever pack holds its places.
+    expect(world.sources).toContain("worldbank-wdi-world");
+    const source = placesConfig.sources.find((s) => s.key === "worldbank-wdi-world")!;
+    const read = (source.options as { countries: { code: string }[] }).countries.map((c) => c.code);
+    expect(read.sort()).toEqual(COUNTRIES.map((c) => c.a2).sort());
   });
 });
 

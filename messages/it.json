@@ -1420,7 +1420,7 @@
       "statedBy": "Secondo {source}, dal {from} al {to}.",
       "statedSince": "Secondo {source}, dal {from}.",
       "sourcesTitle": "Da dove viene ogni numero",
-      "sourceRow": "{place}: letto il {date}",
+      "sourceRow": "{place}: {publisher}, letto il {date}",
       "sourceLink": "i dati dell'editore",
       "rawLink": "il file scaricato",
       "saveTitle": "Conserva questa vista",

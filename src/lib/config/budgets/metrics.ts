@@ -4,23 +4,9 @@
  */
 import { categoryLabel } from "@/lib/budgets/taxonomy";
 import type { LocalizedText, MetricInput } from "@/lib/config/places/schema";
-import { configTranslation } from "@/lib/i18n/config-catalog";
+import { sentence } from "@/lib/config/places/statistic-templates";
 import { EUROSTAT_PUBLISHER, EUROSTAT_REQUESTS, eurostatBrowserUrl, seriesOf } from "./eurostat";
 import { GENERAL_GOVERNMENT } from "./scopes";
-
-const LOCALES = ["en", "de", "fr", "it", "ru"] as const;
-
-/** "{label}" put into a sentence in each language, the label from the catalog where the taxonomy has none. */
-const sentence = (templates: Record<(typeof LOCALES)[number], string>, label: LocalizedText) =>
-  Object.fromEntries(
-    LOCALES.map((l) => [
-      l,
-      templates[l].replace(
-        "{label}",
-        label[l] ?? configTranslation(label.en ?? "", l) ?? label.en ?? "",
-      ),
-    ]),
-  ) as LocalizedText;
 
 const LABEL = {
   share: {
@@ -99,6 +85,7 @@ export const BUDGET_METRICS: readonly MetricInput[] = EUROSTAT_REQUESTS.flatMap(
       code: request.dataset,
       url: eurostatBrowserUrl(request.dataset),
       match: { ...request.filters, [request.dimension]: code },
+      read: "eurostat_json" as const,
     };
     const unit = request.measure === "share" ? ("ratio" as const) : ("none" as const);
     if (!category) {

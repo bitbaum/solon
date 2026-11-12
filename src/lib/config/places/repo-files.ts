@@ -11,6 +11,7 @@
  */
 export const PLACES_REPO_FILES: readonly { source: string; file: string }[] = [
   { source: "world-country-registry", file: "data/places/world/countries.json" },
+  { source: "world-subdivisions", file: "data/places/world/subdivisions.json" },
   { source: "li-constitution-communes", file: "data/places/liechtenstein/communes.json" },
   { source: "li-income-tax", file: "data/places/liechtenstein/income-tax.json" },
   { source: "li-communal-surcharges", file: "data/places/liechtenstein/communal-surcharges.csv" },

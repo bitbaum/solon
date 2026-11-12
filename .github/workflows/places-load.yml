@@ -2,8 +2,7 @@ name: Places load
 
 # By hand: one Places import or fetch against the production database.
 #
-# The daily timer (/api/cron/places) fetches the sources that have something
-# to fetch. A hand-kept file (adapter "fixture", e.g. li-constitution-communes)
+# The hourly timer (/api/cron/places) fetches the sources that are behind. A hand-kept file (adapter "fixture", e.g. li-constitution-communes)
 # has nothing to fetch, so it reaches production only through `places:import`,
 # and a source that builds on it (Liechtenstein's postcodes need its communes)
 # fails until it has. This runs that step on the box, from a fresh checkout of

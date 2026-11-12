@@ -3,7 +3,7 @@ import PageLayout from "@/components/ui/page-layout";
 import type { PackIndex, PlaceHit, PlaceSearch } from "@/lib/places/search";
 import Atlas from "@/components/atlas/atlas";
 import type { PlacesTranslator } from "./translator";
-import { placeHref } from "@/lib/places/place-href";
+import { packHref, placeHref } from "@/lib/places/place-href";
 
 interface PlacesIndexProps {
   query: string;
@@ -123,7 +123,7 @@ export default function PlacesIndex({
         <noscript>
           {packs.map((pack) => (
             <p key={pack.key} className="text-sm text-fg-secondary">
-              <Link href={`/places/${pack.key}`} className="text-fg-primary hover:underline">
+              <Link href={packHref(pack.key)} className="text-fg-primary hover:underline">
                 {pack.name}
               </Link>
               {": "}

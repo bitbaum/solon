@@ -94,8 +94,10 @@ pnpm run test         # the same tests without the coverage report, for a quick 
   what the adapter declares from the source's URL and imports each in turn;
   `--backfill` loads history once, on a source's first load only. Adapters parse a
   format; which levels and schemes rows become is the source's `options` in config.
-  In production the box's daily appcron timer calls `POST /api/cron/places`
-  (`CRON_SECRET`), which imports every source whose `cadence` names the day. The
+  In production the box's hourly appcron timer calls `POST /api/cron/places`
+  (`CRON_SECRET`), which starts a worker that imports every source the run log
+  says is behind its `cadence` (`src/lib/places/importer/queue.ts`): a new
+  source loads within the hour, a failed one is tried again a day later. The
   bundle has no scripts: a first load or `--backfill` runs `places:fetch` from a
   checkout of the deployed commit on the box (design §8.3, "In production").
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
@@ -135,8 +137,8 @@ A check that warns on correct data is a bug: remove or narrow it, do not add a c
 Budgets (`/budgets`, design `docs/design/2026-11-budgets.md`) are one model over two
 inputs. The taxonomies in `src/lib/config/budgets/` (COFOG for spending, ESA 2010 for
 revenue) are the single source: they generate the `budget.<scope>.<side>.<code>` metrics and
-the Eurostat sources (`eurostat_json` adapter, one per country, run like every Places source:
-`pnpm run places:fetch eurostat-gov-<cc>`). A budget read from a law is a document under
+the Eurostat source (`eurostat_json` adapter, one source for every country it covers, run like
+every Places source: `pnpm run places:fetch eurostat-gov-world`). A budget read from a law is a document under
 `src/lib/config/budgets/documents/`, its lines as printed and each placed on a category; its
 lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
 `Budget` and holds the arithmetic; pages and the contested places use only its components.

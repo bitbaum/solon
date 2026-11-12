@@ -6,6 +6,8 @@
  */
 import { sql } from "drizzle-orm";
 import { BUDGET_DOCUMENTS, BUDGET_TAXONOMIES } from "@/lib/config/budgets";
+import { placesConfig } from "@/lib/config/places";
+import { findSource } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { rowsOf } from "@/lib/db/rows";
 import { budgetOfDocument, type Taxonomies } from "./documents";
@@ -42,6 +44,8 @@ interface Gathered {
 export function budgetsFromFacts(
   rows: readonly BudgetFactRow[],
   taxonomies: Taxonomies = BUDGET_TAXONOMIES,
+  /** The registered source a stored key names: a key it had before resolves to it. */
+  sourceOf: (key: string) => string = (key) => findSource(placesConfig, key)?.key ?? key,
 ): Budget[] {
   const byKey = new Map<string, Gathered>();
   const empty = () => ({
@@ -64,14 +68,21 @@ export function budgetsFromFacts(
       };
       byKey.set(key, gathered);
     }
-    if (!gathered.sources.some((s) => s.key === row.sourceKey)) {
+    // One line a source, however many keys its figures were read under: an unchanged figure
+    // keeps the key it was first read under, a revised one is recorded under the current key.
+    const sourceKey = sourceOf(row.sourceKey);
+    const known = gathered.sources.find((s) => s.key === sourceKey);
+    if (!known) {
       gathered.sources.push({
         kind: "facts",
-        key: row.sourceKey,
-        publisher: row.sourceKey,
+        key: sourceKey,
+        publisher: sourceKey,
         url: row.url,
         read: row.retrievedAt,
       });
+    } else if (known.kind === "facts" && row.retrievedAt > (known.read ?? "")) {
+      known.url = row.url;
+      known.read = row.retrievedAt;
     }
     const figures = gathered.figures[parsed.measure];
     if (parsed.side === null) {

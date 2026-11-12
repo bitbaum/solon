@@ -58,6 +58,5 @@ export const southOssetia: CountryPackInput = {
     },
   ],
   identifierSchemes: ["wikidata"],
-  sources: ["so-constitution-units"],
   instrumentKinds: [],
 };

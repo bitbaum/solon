@@ -1,26 +1,23 @@
-import { COUNTRIES } from "@/lib/config/world/countries";
 import type { CountryPackInput } from "../schema";
-import { EUROSTAT_GOV_COUNTRIES } from "@/lib/config/budgets/eurostat";
-import { OECD_MEMBERS, eurostatKey, oecdKey, worldBankKey } from "../world";
 
 /**
- * The world: every country as a nation, and nothing deeper. A country gets a
- * pack of its own when Solon holds its subdivisions, law or tax in depth, and
+ * The world: every country as a nation, and under it its ISO 3166-2
+ * subdivisions by name and code alone. A country gets a
+ * pack of its own when Solon holds its places, law or tax in depth, and
  * leaves this one (`scripts/places-world-countries.ts` regenerates the data).
- * Its figures are the World Bank's for every country and the OECD's tax series
- * for the OECD's members, Eurostat's government finance for the countries it covers: sources computed from the country registry in
- * ../world.ts, never listed by hand.
- *
- * The pack's sources are listed lazily by `worldPack` so that it can see which
- * countries the other packs hold without importing them (they import the config).
+ * Its sources are the ones that name it (sources.ts): the country list, the
+ * subdivisions, and the national statistics, which read every country
+ * wherever its places live.
  */
 /** The world pack's key, and its root place's path: every country no other pack holds sits under it. */
 export const WORLD_PACK = "world";
 
-export function worldPack(held: ReadonlySet<string>): CountryPackInput {
-  const countries = COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => c.a2);
+export function worldPack(): CountryPackInput {
   return {
     key: WORLD_PACK,
+    // A country here moves to a pack of its own when one is added (importer: "Places another
+    // pack holds").
+    yields: true,
     names: {
       en: "The world",
       de: "Die Welt",
@@ -44,14 +41,47 @@ export function worldPack(held: ReadonlySet<string>): CountryPackInput {
         parent: "world",
         names: { en: "Country", de: "Land", fr: "pays", it: "paese" },
       },
+      {
+        // An ISO 3166-2 subdivision directly under its country, whatever the country calls it
+        // (a state, a region, a province); the tiers below hold the ones inside another.
+        key: "subdivision",
+        parent: "nation",
+        names: {
+          en: "Subdivision",
+          de: "Gebietseinheit",
+          fr: "subdivision",
+          it: "suddivisione",
+          ru: "административная единица",
+        },
+      },
+      {
+        // A subdivision inside another, where ISO lists both tiers (a French department in its
+        // region, a Spanish province in its autonomous community).
+        key: "subdivision_2",
+        parent: "subdivision",
+        names: {
+          en: "Second-tier subdivision",
+          de: "Gebietseinheit zweiter Stufe",
+          fr: "subdivision de deuxième niveau",
+          it: "suddivisione di secondo livello",
+          ru: "административная единица второго уровня",
+        },
+      },
+      {
+        // A third tier, where ISO lists one (Alsace's departments within the European
+        // Collectivity of Alsace, within Grand Est).
+        key: "subdivision_3",
+        parent: "subdivision_2",
+        names: {
+          en: "Third-tier subdivision",
+          de: "Gebietseinheit dritter Stufe",
+          fr: "subdivision de troisième niveau",
+          it: "suddivisione di terzo livello",
+          ru: "административная единица третьего уровня",
+        },
+      },
     ],
-    identifierSchemes: ["world_root", "iso_3166_1"],
-    sources: [
-      "world-country-registry",
-      ...countries.map(worldBankKey),
-      ...countries.filter((a2) => OECD_MEMBERS.includes(a2)).map(oecdKey),
-      ...countries.filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES).map(eurostatKey),
-    ],
+    identifierSchemes: ["world_root", "iso_3166_1", "iso_3166_2", "wikidata"],
     instrumentKinds: [],
   };
 }

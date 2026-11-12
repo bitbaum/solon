@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The places inside every country.** Every country's page now lists its states, regions,
+  provinces and departments, 4,759 places in 194 countries, each with a page of its own and a
+  photograph where Wikimedia Commons has one. A French department sits in its region, an Italian
+  province in its region. Taiwan, Abkhazia, Transnistria and Kosovo keep their own pages and are
+  not listed inside the state that regards them as its territory. {#world-subdivisions}
+
 - **One person, one seat.** A person on OrangeCat can hold several identities, each its own
   account, so a seat per account could become several seats for one person. Solon now asks
   OrangeCat for an opaque tag per account, keyed to the organization, and refuses a second human
@@ -15,6 +21,46 @@ one to read for the detail. Fixes get the same weight as features.
   seats elsewhere. A suspended seat still counts, so a suspension cannot be dodged under another
   identity. The founding seat and an organization's founder are tagged as they are created; the
   operator's add-member script checks before seating.
+
+### Fixed
+
+- **Place pages no longer wait on an import.** Each import of figures rebuilt the index of where
+  places sit, which holds every page that reads it until it is done, though figures move no place.
+  It is now rebuilt only when places or their borders changed, and once a day. An import whose
+  publisher's file had not changed since the last one stops at once instead of reading it again.
+- **Every country's figures can now load.** The governance, spending and safety figures on country
+  pages had loaded for four countries only: the scheduled import did all its work inside one
+  request that is cut off after five minutes, and asked the World Bank for one country at a time,
+  thousands of requests on one day. The import is now a queue that works through whatever is
+  behind, hour by hour, tries a publisher that was down again the next day, and records every
+  attempt; and the World Bank is asked for all countries at once, eight requests in all.
+- **A country's page reads its figures in one query** instead of one per figure.
+- **One person, one seat now holds after an identity changes hands.** Solon compared a newcomer
+  with the person each seat had when it was given, so once an OrangeCat identity was handed over,
+  its former holder was refused a seat they did not hold, and its new holder could take a second.
+  Solon now asks OrangeCat about the newcomer and every seat at once, decides on that answer, and
+  updates the seats whose person changed; two seats that turn out to be one person's are named
+  for the organization to decide. Without OrangeCat's client keys an admission now says it could
+  not ask instead of seating unchecked, the tagging script asks once per organization and can
+  re-check every seat (`--refresh`), and one Bitcoin key can no longer hold a second seat under
+  its uncompressed address.
+- **A region named like its country no longer shows the country's page.** The Djibouti Region
+  and the City of San Marino showed their country's profile, photograph and budget, and a shared
+  link to the US state of Georgia showed the country Georgia's card. A place's country is now its
+  own ISO country code, never its name.
+- **The statistics page reads every statistic at once**: four queries instead of 136, and a new
+  statistic adds none. A place ranked on it shows its latest plausible figure, as its chart does.
+- **The World Bank's figures are read from a machine it answers.** It refuses Solon's server, so
+  the governance, spending and safety figures it publishes had never loaded in production. They
+  are now fetched every day they are due from a GitHub runner, into the same database.
+- **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
+  time, 68 sources due on two days a month; each publisher is now one source that asks for every
+  country it covers at once. The national figures behind country pages take 17 requests instead
+  of 350.
+- **Every figure is credited to whoever published it.** Liechtenstein's tax revenue and public
+  spending come from its statistics office, which the OECD does not cover, yet charts, the
+  statistics index and the country card named the OECD and linked its pages. Each place's
+  figures now name, and link, the publisher they were read from.
 
 ## 2026-11-11
 

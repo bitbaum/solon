@@ -88,8 +88,9 @@ src/lib/config/budgets/               src/lib/budgets/              src/componen
   year from 1995: spending by COFOG division and group, revenue by ESA item,
   the balance, all in per cent of GDP (comparable without exchange rates). Reuse
   is authorised with acknowledgement (Eurostat's copyright notice, read
-  2026-11-10; `LicenseRef-eurostat-reuse`). In production the sources run on the
-  11th of each month; the first load is `pnpm run places:fetch eurostat-gov-<cc>`.
+  2026-11-10; `LicenseRef-eurostat-reuse`). One source reads every country, one
+  request a dataset; in production it runs on the 11th of each month, and the
+  first load is `pnpm run places:fetch eurostat-gov-world`.
 - **South Ossetia, 2023**, from its Parliament: revenue line by line from the
   law on the budget's execution (Appendix 1), spending by section from the
   spreadsheet that page links as Appendix 3, which is headed as an appendix to

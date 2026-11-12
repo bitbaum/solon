@@ -1,0 +1,2 @@
+CREATE INDEX "place_import_runs_source_key_started_at_idx" ON "place_import_runs" USING btree ("source_key","started_at" DESC NULLS LAST);--> statement-breakpoint
+CREATE INDEX "place_import_runs_status_finished_at_idx" ON "place_import_runs" USING btree ("status","finished_at");

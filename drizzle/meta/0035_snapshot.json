@@ -1,5 +1,5 @@
 {
-  "id": "424cf818-e91f-447e-a724-671f1c64d869",
+  "id": "30954378-fd5b-461d-ac39-7936c6e38524",
   "prevId": "fdcabcc0-5c31-4013-b617-362ce716df4a",
   "version": "7",
   "dialect": "postgresql",
@@ -3271,7 +3271,50 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "place_import_runs_source_key_started_at_idx": {
+          "name": "place_import_runs_source_key_started_at_idx",
+          "columns": [
+            {
+              "expression": "source_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_import_runs_status_finished_at_idx": {
+          "name": "place_import_runs_status_finished_at_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "finished_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "place_import_runs_source_id_fkey": {
           "name": "place_import_runs_source_id_fkey",
@@ -5321,54 +5364,6 @@
           "value": "\"statistic_views\".\"sha256\" ~ '^[0-9a-f]{64}$'"
         }
       },
-      "isRLSEnabled": false
-    },
-    "public.rate_limit_windows": {
-      "name": "rate_limit_windows",
-      "schema": "",
-      "columns": {
-        "key": {
-          "name": "key",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "hits": {
-          "name": "hits",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "touched_at": {
-          "name": "touched_at",
-          "type": "timestamp (3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "rate_limit_windows_touched_at_idx": {
-          "name": "rate_limit_windows_touched_at_idx",
-          "columns": [
-            {
-              "expression": "touched_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },

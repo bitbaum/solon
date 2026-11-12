@@ -6,13 +6,7 @@ import { toLocale, type Locale } from "@/i18n/routing";
 import PlaceProfile from "@/components/places/place-profile";
 import WorldRegionPage from "@/components/places/world-region-page";
 import { placesConfig } from "@/lib/config/places";
-import {
-  regionName,
-  worldEntryOfPack,
-  worldRegion,
-  worldRegionByCode,
-  type WorldRegion,
-} from "@/lib/config/world";
+import { regionName, worldRegion, worldRegionByCode, type WorldRegion } from "@/lib/config/world";
 import { loadWorldProfile, type WorldProfileView } from "@/lib/places/world-profile";
 import { placePhoto } from "@/lib/places/place-photo";
 import PlaceHero from "@/components/places/place-hero";
@@ -31,11 +25,17 @@ import { countryLawKey, loadCountryLaw, loadPlaceLaw } from "@/lib/law/place-law
 import { LAW_AUTHORITIES } from "@/lib/config/law";
 import { contestNote, contestSlugForPack } from "@/lib/places/contest-view";
 import { loadPlacePage } from "@/lib/places/place-page";
+import { findPlace } from "@/lib/places/paths";
+import { countryOfPlace } from "@/lib/places/place-country";
 import { hyphenated } from "@/lib/places/world-slug-redirects";
 import { countryPlaceId, loadProfileFigures } from "@/lib/places/profile-figures";
 import { recentChanges } from "@/lib/law/recent";
 import { WORLD_PACK } from "@/lib/config/places/countries/world";
 
+// Rendered on every visit. ISR was tried and left (2026-11-12): Next keeps every rendered URL on
+// the server's disk, a few thousand places in five languages and any made-up path besides, with
+// no bound. What a view costs is cut instead: one-query lookups, the law counts of the place's
+// own authorities, every statistic in one query.
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; slug: string[] }>;
@@ -141,13 +141,8 @@ export default async function PlacePage({ params }: { params: Params }) {
     const taxHref = key ? `/places/tax?in=${key}` : "/places/tax";
     const pack = placesConfig.packs.find((p) => p.key === view.packKey);
     const contest = contestNote(pack ? contestSlugForPack(pack) : null, locale);
-    // A country's budget is shown on the country's own page: a world nation, or a pack's root.
-    const country =
-      view.packKey === WORLD_PACK
-        ? worldRegion(view.slugPath.split("/").at(-1) ?? "")
-        : pack && view.partOf.length === 0
-          ? worldEntryOfPack(pack)
-          : undefined;
+    // A country's budget, profile and photograph are shown on the country's own page only.
+    const country = countryOfPlace(view, pack);
     const budget = await budgetLink(country, locale);
     const profile = await profileOf(country, locale);
     const hero = placeViewHero({ view, country: country?.slug ?? null, profile, law, t });
@@ -165,6 +160,7 @@ export default async function PlacePage({ params }: { params: Params }) {
           db,
           law.map((a) => a.key),
           today(),
+          locale,
         )}
         locale={locale}
         t={t}
@@ -181,7 +177,12 @@ export default async function PlacePage({ params }: { params: Params }) {
   // A country no pack holds in depth is a place of the world pack, under the
   // same slug; its page there carries its figures. A place another state
   // claims keeps this page, which says so.
-  if (!pack && !region.claimedBy && (await load(`${WORLD_PACK}/${region.slug}`, locale))) {
+  // Whether the world pack holds it: a two-query lookup, not a full page load.
+  if (
+    !pack &&
+    !region.claimedBy &&
+    (await findPlace(db, placesConfig, `${WORLD_PACK}/${region.slug}`))
+  ) {
     redirect({ href: `/places/${WORLD_PACK}/${region.slug}`, locale });
   }
   const profile = await profileOf(region, locale);
@@ -204,6 +205,7 @@ export default async function PlacePage({ params }: { params: Params }) {
         db,
         law.map((a) => a.key),
         today(),
+        locale,
       )}
       locale={locale}
       hero={placeHero({

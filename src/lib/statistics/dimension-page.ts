@@ -12,7 +12,7 @@ import { findStatistic, latestPoint } from "./present";
 import { RUBRICS } from "@/lib/config/statistics/rubrics";
 import { DIMENSION_LAYERS } from "./dimensions";
 import { checkScatter, checkSeries, screenSeries, type SanityFinding } from "./sanity";
-import { loadAssessments, loadSeries, type PlaceSeries } from "./read";
+import { loadAssessments, loadSeriesFor, type PlaceSeries } from "./read";
 
 export interface Measure {
   metric: Metric;
@@ -41,10 +41,17 @@ export async function loadDimensionPage(
   if (!dimension) return null;
   const measures: Measure[] = [];
   const withheld: SanityFinding[] = [];
-  for (const { metric: mk, layer } of measuresOf(dimension)) {
+  const wanted = measuresOf(dimension);
+  const loaded = await loadSeriesFor(
+    db,
+    config,
+    wanted.map((w) => w.metric),
+    locale,
+  );
+  for (const { metric: mk, layer } of wanted) {
     const metric = findStatistic(config, mk);
     if (!metric) continue;
-    const screened = screenSeries(metric.plausible, await loadSeries(db, config, mk, locale));
+    const screened = screenSeries(metric.plausible, loaded.get(mk) ?? []);
     withheld.push(...screened.findings);
     measures.push({ metric, layer, series: screened.series });
   }

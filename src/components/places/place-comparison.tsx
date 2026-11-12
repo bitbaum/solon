@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { placeHref } from "@/lib/places/place-href";
 import { groupInput, useDeviceInputs } from "./device-inputs";
 import TaxSituation from "./tax-situation";
 import ActionList from "./action-list";
@@ -133,7 +134,7 @@ export default function PlaceComparison({ comparison }: { comparison: Comparison
                   className="min-w-28 px-2 py-3 text-left align-top sm:min-w-44 sm:px-4"
                 >
                   <Link
-                    href={`/places/${column.slugPath}`}
+                    href={placeHref(column.canonicalPath)}
                     className="font-semibold text-fg-primary hover:underline"
                   >
                     {column.name}
