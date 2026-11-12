@@ -24,7 +24,8 @@ A second copy of the truth is a copy that goes stale, so it is gone.
 ## The three that matter most
 
 **`pnpm run verify` is the gate.** format:check + lint + typecheck + design:check +
-check:places-literals + test. CI's `verify` job runs it. Run it before every commit.
+check:places-literals + check:cycles + test:coverage (the unit tests, measured, with a
+floor in `vitest.config.ts`). CI's `verify` job runs it. Run it before every commit.
 
 **Design tokens live in the shared package, not in this repo.** It is
 `bitbaum/design-tokens`, published as `@bitbaum/design-tokens`; Solon installs it

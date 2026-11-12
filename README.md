@@ -298,7 +298,7 @@ pnpm exec tsx scripts/agent-vote.ts
 vendored-drift check, the governance-ratification warning on PRs, and the build):
 
 ```bash
-pnpm run verify   # format:check && lint && typecheck && design:check && check:places-literals && test
+pnpm run verify   # format:check && lint && typecheck && design:check && check:places-literals && check:cycles && test:coverage
 ```
 
 ```bash
