@@ -61,3 +61,20 @@ export const eurostatKey = (a2: string) => `eurostat-gov-${a2.toLowerCase()}`;
 export function worldCountries(held: ReadonlySet<string>): string[] {
   return COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => c.a2);
 }
+
+/**
+ * Subdivisions the world pack leaves out because the place has a page of its
+ * own in the world list: ISO 3166-2 lists each under the state that regards it
+ * as its territory, and that page says so, neutrally, with the comparison of
+ * the two sets of law. By ISO 3166-2 code, to the world list's slug. (A
+ * subdivision whose Wikidata item is itself a world entry, Greenland under
+ * Denmark or Hong Kong under China, is left out by the generator's own rule.)
+ */
+export const SUBDIVISIONS_WITH_OWN_PAGE: Readonly<Record<string, string>> = {
+  "CN-TW": "taiwan",
+  "GE-AB": "abkhazia",
+  "MD-SN": "transnistria",
+  "RS-KM": "kosovo",
+};
+
+export const WORLD_SUBDIVISIONS_KEY = "world-subdivisions";

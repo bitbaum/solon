@@ -29,7 +29,9 @@ export default function PlaceTile({
     >
       {photo && (
         <Image
-          src={photoUrl(photo, 960)}
+          // A banner is a strip (1920 by about 270): cropped to the tile it fills its height only
+          // at full width; any narrower and the tile enlarges it into a blur.
+          src={photoUrl(photo, photo.shape === "banner" ? 1920 : 960)}
           alt=""
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"

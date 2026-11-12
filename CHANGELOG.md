@@ -8,6 +8,12 @@ one to read for the detail. Fixes get the same weight as features.
 
 ### Added
 
+- **The places inside every country.** Every country's page now lists its states, regions,
+  provinces and departments, 4,759 places in 194 countries, each with a page of its own and a
+  photograph where Wikimedia Commons has one. A French department sits in its region, an Italian
+  province in its region. Taiwan, Abkhazia, Transnistria and Kosovo keep their own pages and are
+  not listed inside the state that regards them as its territory. {#world-subdivisions}
+
 - **One person, one seat.** A person on OrangeCat can hold several identities, each its own
   account, so a seat per account could become several seats for one person. Solon now asks
   OrangeCat for an opaque tag per account, keyed to the organization, and refuses a second human
