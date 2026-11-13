@@ -60,8 +60,8 @@ importers:
         specifier: ^1.7.14
         version: 1.7.14(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.13)(@types/pg@8.23.1)(kysely@0.29.6)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.64.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5)
       bip-kit:
-        specifier: github:bitbaum/bip-kit#v0.8.0
-        version: '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/e5b8480275b9fe41f380b3d359d247147a559868(react@19.3.1)'
+        specifier: github:bitbaum/bip-kit#v0.8.1
+        version: '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/8052af06970886ba9d2d0b4da79560723a66bb08(react@19.3.1)'
       bs58check:
         specifier: ^4.0.0
         version: 4.0.0
@@ -424,9 +424,9 @@ packages:
       react:
         optional: true
 
-  '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/e5b8480275b9fe41f380b3d359d247147a559868':
-    resolution: {gitHosted: true, integrity: sha512-lvJb6D9dQi84/8bN8ydTcAgWP0rY5fQd5tztaQOyFW2HJ8S4xRWXKKkUML0tDpEwR0aYIgG+8AfUkVHaXfH4cQ==, tarball: https://codeload.github.com/bitbaum/bip-kit/tar.gz/e5b8480275b9fe41f380b3d359d247147a559868}
-    version: 0.8.0
+  '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/8052af06970886ba9d2d0b4da79560723a66bb08':
+    resolution: {gitHosted: true, integrity: sha512-qXkWV85FAJ48t5wmiTnQJAsQU/5j/Dktw/5dCIKTW6lf7om4VJ517BGltuydjzW5RNSPmbv+df6FtvEdOH9z5w==, tarball: https://codeload.github.com/bitbaum/bip-kit/tar.gz/8052af06970886ba9d2d0b4da79560723a66bb08}
+    version: 0.8.1
     engines: {node: '>=20'}
     peerDependencies:
       katex: '>=0.16'
@@ -5156,7 +5156,7 @@ snapshots:
     transitivePeerDependencies:
       - canvas
 
-  '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/e5b8480275b9fe41f380b3d359d247147a559868(react@19.3.1)':
+  '@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/8052af06970886ba9d2d0b4da79560723a66bb08(react@19.3.1)':
     dependencies:
       react: 19.3.1
 
