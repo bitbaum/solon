@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { ArticleBody } from "bip-kit/react";
+import { ArticleBody, ShareRow } from "bip-kit/react";
 import "bip-kit/styles.css";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { toLocale } from "@/i18n/routing";
 import { blogPost, blogPosts } from "@/lib/content/reading";
+import { postOnOrangeCatUrl, postUrl } from "@/lib/content/cross-post";
 
 type Params = { params: Promise<{ locale: string; slug: string }> };
 
@@ -18,7 +19,24 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params) {
   const post = blogPost((await params).slug);
-  return post ? { title: `${post.title} — Solon`, description: post.summary } : {};
+  if (!post) return {};
+  // A shared link previews as this post, not as "Solon" from the layout.
+  const url = postUrl(post.slug);
+  return {
+    title: `${post.title} — Solon`,
+    description: post.summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.summary,
+      url,
+      siteName: "Solon",
+      ...(post.date ? { publishedTime: post.date } : {}),
+      ...(post.author ? { authors: [post.author] } : {}),
+    },
+    twitter: { card: "summary", title: post.title, description: post.summary },
+  };
 }
 
 export default async function BlogPostPage({ params }: Params) {
@@ -35,9 +53,17 @@ export default async function BlogPostPage({ params }: Params) {
     >
       <div className="bp-theme max-w-3xl">
         <ArticleBody blocks={post.blocks} />
+        <div className="mt-12 border-t border-default pt-6">
+          <ShareRow
+            url={postUrl(post.slug)}
+            title={post.title}
+            summary={post.summary}
+            crossPost={{ href: postOnOrangeCatUrl(post.slug), label: "Post on OrangeCat" }}
+          />
+        </div>
         <Link
           href="/blog"
-          className="mt-12 inline-block text-sm text-fg-secondary transition-colors hover:text-fg-primary"
+          className="mt-6 flex min-h-11 items-center text-sm text-fg-secondary transition-colors hover:text-fg-primary"
         >
           ← All posts
         </Link>
