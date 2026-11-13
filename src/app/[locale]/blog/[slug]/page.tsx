@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { ArticleBody } from "bip-kit/react";
+import { ArticleBody, ShareRow } from "bip-kit/react";
 import "bip-kit/styles.css";
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
@@ -53,20 +53,20 @@ export default async function BlogPostPage({ params }: Params) {
     >
       <div className="bp-theme max-w-3xl">
         <ArticleBody blocks={post.blocks} />
-        <div className="mt-12 grid grid-cols-2 gap-3 border-t border-default pt-6 text-sm">
-          <Link
-            href="/blog"
-            className="flex min-h-11 items-center text-fg-secondary transition-colors hover:text-fg-primary"
-          >
-            ← All posts
-          </Link>
-          <a
-            href={postOnOrangeCatUrl(post.slug)}
-            className="flex min-h-11 items-center justify-end text-fg-secondary transition-colors hover:text-fg-primary"
-          >
-            Post on OrangeCat →
-          </a>
+        <div className="mt-12 border-t border-default pt-6">
+          <ShareRow
+            url={postUrl(post.slug)}
+            title={post.title}
+            summary={post.summary}
+            crossPost={{ href: postOnOrangeCatUrl(post.slug), label: "Post on OrangeCat" }}
+          />
         </div>
+        <Link
+          href="/blog"
+          className="mt-6 flex min-h-11 items-center text-sm text-fg-secondary transition-colors hover:text-fg-primary"
+        >
+          ← All posts
+        </Link>
       </div>
     </PageLayout>
   );

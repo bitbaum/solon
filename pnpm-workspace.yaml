@@ -11,7 +11,7 @@ allowBuilds:
   "@swc/core": false
   # bip-kit from its verified Git release builds its dist on install (npm
   # publish of 0.7.x is blocked on the npm trusted-publisher link).
-  "@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/6189477d5c0c442b8347b50b54828b4f9be9af2c": true
+  "@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/e5b8480275b9fe41f380b3d359d247147a559868": true
   esbuild: true
   puppeteer: true
   tesseract.js: false
