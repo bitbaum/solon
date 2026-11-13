@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
 import { toLocale } from "@/i18n/routing";
 import { blogPost, blogPosts } from "@/lib/content/reading";
-import { postOnOrangeCatUrl } from "@/lib/content/cross-post";
+import { postOnOrangeCatUrl, postUrl } from "@/lib/content/cross-post";
 
 type Params = { params: Promise<{ locale: string; slug: string }> };
 
@@ -19,7 +19,24 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params) {
   const post = blogPost((await params).slug);
-  return post ? { title: `${post.title} — Solon`, description: post.summary } : {};
+  if (!post) return {};
+  // A shared link previews as this post, not as "Solon" from the layout.
+  const url = postUrl(post.slug);
+  return {
+    title: `${post.title} — Solon`,
+    description: post.summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.summary,
+      url,
+      siteName: "Solon",
+      ...(post.date ? { publishedTime: post.date } : {}),
+      ...(post.author ? { authors: [post.author] } : {}),
+    },
+    twitter: { card: "summary", title: post.title, description: post.summary },
+  };
 }
 
 export default async function BlogPostPage({ params }: Params) {
