@@ -117,7 +117,11 @@ describe("the assistants' limiter", () => {
     down = false;
     expect((await check("b", "research", now + 29_000)).allowed).toBe(true);
     expect(calls.n).toBe(1);
-    expect((await check("b", "research", now + 30_000)).allowed).toBe(true);
+    // Well past the half minute, not at it: the back-off is counted from when
+    // the attempt FAILED, so it ends 30 s plus however long the failure took.
+    // Asked at exactly +30 000 this failed whenever that took a millisecond
+    // (CI, twice on 2026-11-13, blocking a deploy).
+    expect((await check("b", "research", now + 60_000)).allowed).toBe(true);
     expect(calls.n).toBe(2);
     warn.mockRestore();
   });
