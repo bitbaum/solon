@@ -149,6 +149,11 @@ describe("contestView", () => {
       ["Georgia", "claims"],
     ]);
     expect(view.sides[0]!.lawAuthority).toBe("rso");
+    // Each side links where its page is, not to an address that redirects there.
+    expect(view.sides.map((s) => s.href)).toEqual([
+      "/places/south-ossetia",
+      "/places/world/georgia",
+    ]);
     expect(view.compared).toBe(CONTEST_TOPICS.length);
     expect(view.rows.map((r) => r.key)).toEqual(CONTEST_TOPICS.map((t) => t.key));
     expect(view.open).toBeTruthy();
@@ -185,7 +190,7 @@ describe("a pack the world list marks as claimed", () => {
     const pack = placesConfig.packs.find((p) => p.key === "south_ossetia")!;
     expect(contestSlugForPack(pack)).toBe("south-ossetia");
     expect(contestNote(contestSlugForPack(pack), "en")).toEqual({
-      claimant: { name: "Georgia", href: "/places/georgia" },
+      claimant: { name: "Georgia", href: "/places/world/georgia" },
       href: "/places/contested/south-ossetia",
     });
   });
@@ -197,46 +202,12 @@ describe("a pack the world list marks as claimed", () => {
   });
 });
 
-describe("a side's public money", () => {
-  it("South Ossetia, 2023: the budget law's lines add up and the arithmetic follows from them alone", () => {
+describe("a side's records", () => {
+  it("each side names the place its records are held under, so its budget can be found", () => {
     const view = contestView("south-ossetia", "en")!;
-    const l = view.ledgers.find((x) => x.side === "rso" && x.ledger.year === 2023)!;
-    const a = l.arithmetic;
-    // 9,108,338.6 revenue, of which 1,707,844.9 own; 9,234,425.6 spent (thousand roubles).
-    expect(a.own).toBeCloseTo(1707844.9, 0);
-    expect(a.receivedShare).toBeCloseTo(0.8125, 3);
-    expect(a.ownCoverage).toBeCloseTo(0.1849, 3);
-    expect(a.ownMultipleNeeded!).toBeCloseTo(5.41, 2);
-    expect(a.spendingCutNeeded).toBeCloseTo(0.8151, 3);
-  });
-
-  it("refuses a ledger whose lines do not add up to the revenue the law states, or money from no one", () => {
-    const c = contest({
-      place: "x",
-      sides: [
-        { key: "a", role: "governs", lawAuthority: null },
-        { key: "b", role: "claims", lawAuthority: null },
-      ],
-      ledgers: [
-        {
-          side: "a",
-          year: 2023,
-          currency: "RUB",
-          unit: 1000,
-          revenue: 100,
-          expenditure: 120,
-          lines: [
-            { label: { en: "own" }, amount: 20, kind: "own" },
-            { label: { en: "aid" }, amount: 70, kind: "received" },
-          ],
-          label: "Budget law",
-          act: null,
-          quote: quote(),
-        },
-      ],
-    });
-    const problems = contestProblems(CONTEST_TOPICS, [c]).join("\n");
-    expect(problems).toMatch(/add up to 90, not the stated revenue 100/);
-    expect(problems).toMatch(/received from no one/);
+    expect(view.sides.map((s) => [s.slug, s.holder])).toEqual([
+      ["south-ossetia", { scheme: "wikidata", value: "Q23427" }],
+      ["georgia", { scheme: "iso_3166_1", value: "GE" }],
+    ]);
   });
 });

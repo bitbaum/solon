@@ -3,7 +3,8 @@ import { GAPS } from "@/lib/config/statistics/gaps";
 import { countryOf } from "@/lib/config/world/countries";
 import { buildGapsBrief } from "../gaps-brief";
 import { checkExplanation } from "../explain";
-import { defineGaps, gapsOf } from "../gaps";
+import { gapPlaceName, solonPlaceIds } from "../gap-places";
+import { defineGaps, findTopic, gapsOf, placeId, topicHref, topicSlug } from "../gaps";
 
 const topic = {
   key: "t.x",
@@ -96,7 +97,10 @@ describe("where the gaps are", () => {
 describe("the shipped registry", () => {
   it("names real countries, and every line says what it rests on", () => {
     for (const c of GAPS.coverage) {
-      expect(countryOf(c.place.value), `${c.place.value}`).toBeDefined();
+      // An ISO code is a real country; any other id must be one a country pack names.
+      const id = placeId(c.place);
+      if (c.place.scheme === "iso_3166_1") expect(countryOf(c.place.value), id).toBeDefined();
+      else expect(gapPlaceName(id, "en"), id).not.toBe(id);
       expect(c.evidence.length).toBeGreaterThan(0);
     }
   });
@@ -109,8 +113,7 @@ describe("the shipped registry", () => {
   });
 
   it("gives an AI only what was read: it cannot answer with a figure no line holds", () => {
-    const names = new Intl.DisplayNames(["en"], { type: "region" });
-    const facts = buildGapsBrief(GAPS.topics[0]!, GAPS.coverage, (a) => names.of(a) ?? a);
+    const facts = buildGapsBrief(GAPS.topics[0]!, GAPS.coverage, (id) => gapPlaceName(id, "en"));
     expect(facts.map((f) => f.params.text).join("\n")).toContain("Denmark");
     const denmark = facts.find((f) => String(f.params.text).startsWith("Denmark"))!.id;
     expect(checkExplanation(`Denmark lists 80 countries of origin [${denmark}].`, facts).ok).toBe(
@@ -122,5 +125,131 @@ describe("the shipped registry", () => {
     expect(checkExplanation(`France is an enemy of statistics [${denmark}].`, facts).ok).toBe(
       false,
     );
+  });
+});
+
+describe("a topic's address", () => {
+  it("has no dot, so the English page is not mistaken for a file", () => {
+    for (const t of GAPS.topics) {
+      expect(topicHref(t.key)).not.toContain(".");
+      expect(topicHref(t.key)).toMatch(/^\/statistics\/gaps\/[a-z0-9-]+$/);
+    }
+    expect(topicSlug("crime.by_background")).toBe("crime-by-background");
+  });
+
+  it("is one per topic", () => {
+    const slugs = GAPS.topics.map((t) => topicSlug(t.key));
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("finds the topic by its slug and by its key, as links already shared name it", () => {
+    const [first] = GAPS.topics;
+    expect(findTopic(GAPS.topics, topicSlug(first.key))).toBe(first);
+    expect(findTopic(GAPS.topics, first.key)).toBe(first);
+    expect(findTopic(GAPS.topics, first.key.replace(".", "%2E"))).toBe(first);
+    expect(findTopic(GAPS.topics, "no-such-topic")).toBeUndefined();
+    expect(findTopic(GAPS.topics, "%E0%A4%A")).toBeUndefined();
+  });
+});
+
+describe("offices and proposals", () => {
+  const office = (extra = {}) => ({
+    key: "dk.stat",
+    place: { scheme: "iso_3166_1", value: "DK" },
+    name: "Stat",
+    contacts: [
+      { kind: "page", value: "https://example.org/contact" },
+      { kind: "email", value: "info@example.org" },
+    ],
+    evidence: [{ ...ev, expect: ["info@example.org"] }],
+    ...extra,
+  });
+  const proposal = { collect: { en: "Publish X." }, author: "Solon's configuration" };
+
+  it("links a line to an office of its own place, and to a proposal that names one", () => {
+    const g = defineGaps({
+      topics: [{ ...topic, proposal }],
+      offices: [office()],
+      coverage: [
+        line("DK", "a", "not_collected", {
+          office: "dk.stat",
+          proposal: { ...proposal, office: "dk.stat" },
+        }),
+      ],
+    });
+    expect(g.coverage[0]!.office).toBe("dk.stat");
+    expect(g.topics[0]!.proposal?.collect.en).toBe("Publish X.");
+  });
+
+  it("refuses an office that is not in the registry, or belongs to another place", () => {
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        offices: [],
+        coverage: [line("DK", "a", "published", { office: "gone" })],
+      }),
+    ).toThrow(/not in the registry/);
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        offices: [office()],
+        coverage: [line("SE", "a", "published", { office: "dk.stat" })],
+      }),
+    ).toThrow(/belongs to DK, not SE/);
+  });
+
+  it("refuses an e-mail or telephone no cited page is expected to say", () => {
+    expect(() =>
+      defineGaps({
+        topics: [topic],
+        coverage: [],
+        offices: [office({ evidence: [{ ...ev, expect: ["something else"] }] })],
+      }),
+    ).toThrow(/not among the words/);
+  });
+
+  it("refuses an office declared twice", () => {
+    expect(() =>
+      defineGaps({ topics: [topic], coverage: [], offices: [office(), office()] }),
+    ).toThrow(/twice/);
+  });
+
+  it("holds Statistics Denmark as the first office, with its general channels", () => {
+    const dk = GAPS.offices.find((o) => o.key === "dk.statistics-denmark");
+    expect(dk?.contacts.map((c) => c.kind)).toEqual(["page", "email", "phone", "postal"]);
+    expect(GAPS.coverage.find((c) => c.place.value === "DK")?.office).toBe("dk.statistics-denmark");
+  });
+});
+
+describe("places a gap line can be about", () => {
+  it("takes an ISO code or a Wikidata item, and refuses a value that does not fit its scheme", () => {
+    const ok = (place: object) =>
+      defineGaps({ topics: [topic], coverage: [{ ...line("DK", "a", "published"), place }] });
+    expect(() => ok({ scheme: "wikidata", value: "Q23427" })).not.toThrow();
+    expect(() => ok({ scheme: "wikidata", value: "DK" })).toThrow();
+    expect(() => ok({ scheme: "iso_3166_1", value: "Q23427" })).toThrow();
+    expect(() => ok({ scheme: "geonames", value: "1" })).toThrow();
+  });
+
+  it("names a place through the shared model: an ISO code by CLDR, a Wikidata item by its country pack", () => {
+    expect(placeId({ scheme: "iso_3166_1", value: "DK" })).toBe("DK");
+    expect(placeId({ scheme: "wikidata", value: "Q23427" })).toBe("wikidata:Q23427");
+    expect(gapPlaceName("DK", "en")).toBe("Denmark");
+    expect(gapPlaceName("wikidata:Q23427", "en")).toBe("South Ossetia");
+    expect(gapPlaceName("wikidata:Q23427", "ru")).toBe("Южная Осетия");
+    expect(gapPlaceName("wikidata:Q1", "en")).toBe("wikidata:Q1");
+    expect(solonPlaceIds()).toContain("wikidata:Q23427");
+    expect(solonPlaceIds()).toContain("LI");
+  });
+
+  it("lists South Ossetia as a gap against the places that publish, with its office and proposal", () => {
+    const rows = gapsOf("crime.by_background", GAPS.coverage);
+    const so = rows.find((r) => r.place === "wikidata:Q23427");
+    expect(so?.variant).toBe("composite_background");
+    expect(so?.publishedElsewhere).toContain("DK");
+    const line = GAPS.coverage.find((c) => c.place.scheme === "wikidata")!;
+    expect(line.office).toBe("so.state-statistics-office");
+    expect(line.proposal?.office).toBe("so.state-statistics-office");
+    expect(line.evidence.every((e) => e.unchecked || e.expect.length > 0)).toBe(true);
   });
 });

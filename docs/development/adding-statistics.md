@@ -30,23 +30,41 @@ Commands (all under `pnpm run`):
    - `scope`: **what it covers**, in one sentence (a series that counts only
      central government must say so; a federal country will otherwise look
      small beside a unitary one);
-   - `series`: `publisher`, `code`, `url`, and for SDMX `measure`, `key` (with
+   - `series`: `publisher`, `code`, `url`, `read` (the adapter that reads it:
+     `worldbank_indicators` or `oecd_sdmx`), and for SDMX `measure`, `key` (with
      `{iso3}` where a country goes) and `match` where a flow holds several series
-     under one measure;
+     under one measure; a World Bank series outside the WDI names its `database`
+     (`3` for the Worldwide Governance Indicators);
    - `unit` and a `plausible` band: values outside it are quarantined at import.
+
+   A metric of a known family is a few lines: `wgiMetric({ key, code, name })`
+   for a governance indicator, and the shared words in
+   `src/lib/config/places/statistic-templates.ts` (`ALL_LEVELS_SCOPE`,
+   `PERCEPTION_SCOPE`, `sentence()` for a label put into a sentence in each
+   language). Give a name whole in each language; never assemble one from parts.
    A metric whose series is not comparable across countries is not charted: leave
    `statistic` off, or retire it with `retired: true` (never delete one that has
    data).
-3. **Name the source.** World Bank and OECD series are generated per country in
-   `src/lib/config/places/sources.ts` from the metric blocks; for a new publisher
-   add an adapter in `src/lib/places/adapters/` (format only: it names no country)
-   and register it in `adapters/index.ts`. Add the source key to the country's
-   pack (`countries/*.ts`).
+3. **Name the source.** For a World Bank or OECD series there is nothing more
+   to write: its `read` puts it in that publisher's one source
+   (`src/lib/config/places/sources.ts`), which asks for every country in one
+   request per series, and the next run reads it. For a new publisher add an
+   adapter in `src/lib/places/adapters/` (format only: it names no country),
+   register it in `adapters/index.ts`, and add one source for it that lists the
+   countries it covers and the packs it serves (`packs`). A pack's own list of
+   sources is computed from the sources that name it; never write it by hand.
+   If a source's key changes, keep the old one in `formerKeys`: what it read
+   under that key stays credited to it.
 4. **Test it** against a real response saved as a fixture
    (`src/lib/places/__tests__/fixtures/`). Check the mapping, that a missing
-   value is skipped and reported, and that the plausible band holds.
+   value is never stored and is reported (each year, for a source of one
+   country; for a source of many, one line a series naming the countries it has
+   no value for: `adapters/gaps.ts`), and that the plausible band holds.
 5. **Load it twice.** `places:sync-config`, then `places:fetch <source>`; the
-   second run must report `factsInserted: 0`.
+   second run must report `unchanged` for every retrieval (nothing re-read).
+   A retrieval that left out figures for a country not held here is read again
+   on every run instead, and its report names the country: load the country's
+   places, and the figures land.
 6. **Look at it.** `statistics:quality` lists gaps and large steps; open the
    statistic's page. Read the numbers against the publisher's page. If two
    countries look alike or unlike for a reason of scope, the scope sentence is
@@ -124,9 +142,18 @@ A coding reads one feature of a law onto a written scale.
 ## 5. Add a country
 
 A country is a pack and its sources (see `docs/design/2026-09-places-and-jurisdictions.md`).
-For the statistics: add its ISO 3166-1 numeric code to
+Every country is already a place of the world pack; adding a pack of its own
+takes it over. Write the pack (`src/lib/config/places/countries/<key>.ts`, with
+its `region`) and run `pnpm run places:world-countries` (`verify` fails until
+you do). The first import of the pack's own register moves the country and the
+places it restates into the pack: same rows, so its figures stay, and its old
+`/places/world/...` path redirects. What the world pack held under it that the
+pack does not restate ends that day. For the statistics: add its ISO 3166-1 numeric code to
 `src/lib/config/statistics/world.ts` (a test fails if a pack's country is
-missing), and its World Bank and OECD sources are generated from the metrics.
+missing). The World Bank's source already reads every country; add it to
+`OECD_MEMBERS` (`src/lib/config/places/world.ts`) or `EUROSTAT_GOV_COUNTRIES`
+(`src/lib/config/budgets/eurostat.ts`) if it is in either, and its figures come
+with the next run.
 
 ## 6. What the page checks for you
 

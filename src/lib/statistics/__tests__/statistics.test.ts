@@ -20,12 +20,12 @@ import {
   metricSlug,
   pickPlaces,
   pickYears,
-  seriesPageFor,
   splitAt,
   statisticMetrics,
   windowAround,
 } from "../present";
 import type { PlaceSeries } from "../read";
+import { seriesPageFor } from "../source";
 import { defineCuratedRecords } from "../records";
 import { citedViewHashes, normalizeSpec, viewHash, type ViewSpec } from "../views";
 
@@ -35,7 +35,13 @@ const series = (code: string, points: [number, number][]): PlaceSeries => ({
   name: code,
   slugPath: null,
   points: points.map(([year, value]) => ({ year, value, quality: "normal" as const })),
-  source: { key: "s", url: null, retrievedAt: "2026-11-08" },
+  source: {
+    key: "s",
+    url: null,
+    retrievedAt: "2026-11-08",
+    publisher: "P",
+    page: "https://example.org",
+  },
 });
 
 describe("the statistic catalog", () => {

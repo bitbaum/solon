@@ -1,8 +1,25 @@
 import type { Rounding } from "@/lib/tax-model";
 import { alpha3Of } from "@/lib/config/world/countries";
 import { COUNTRY_PACKS } from "./countries";
-import { OECD_MEMBERS, oecdKey, worldBankKey, worldCountries } from "./world";
+import { COUNTRY_SCHEME } from "./identifier-schemes";
+import {
+  EUROSTAT_FROM_YEAR,
+  EUROSTAT_GOV_COUNTRIES,
+  EUROSTAT_PUBLISHER,
+  EUROSTAT_REQUESTS,
+  seriesOf,
+} from "@/lib/config/budgets/eurostat";
+import { COUNTRIES } from "@/lib/config/world/countries";
+import { WORLD_PACK } from "./countries/world";
+import {
+  EUROSTAT_KEY,
+  OECD_KEY,
+  OECD_MEMBERS,
+  WORLD_BANK_KEY,
+  WORLD_SUBDIVISIONS_KEY,
+} from "./world";
 import { METRICS } from "./metrics";
+import { UNITS } from "./units";
 import type { SourceInput } from "./schema";
 
 /** The calculator rounds taxable income down to CHF 100 before a tariff applies… */
@@ -34,7 +51,7 @@ const HUNDRED_DIVIDED = { base: 100, divided: 100 };
  * for the canton, one per commune) with a couple's rebate and a minimum tax
  * (vs-income-tax), matches it in every commune, 2026-10-30.
  */
-const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
+export const MODELLED_CANTONS: Record<string, { fso: string; rounding?: Rounding }> = {
   ZH: { fso: "1", rounding: HUNDRED },
   BE: { fso: "2", rounding: HUNDRED },
   LU: { fso: "3", rounding: HUNDRED },
@@ -156,30 +173,34 @@ const ESTV_COMMUNE_CANTONS = Object.keys(MODELLED_CANTONS).filter((code) => code
  * the access path, format and licence, then record them here.
  */
 /**
- * The World Bank's indicators for one country: every metric whose statistic
- * names a World Development Indicators series, so the series code lives once,
- * on the metric. A percentage becomes a ratio; a rate stays as published.
+ * The World Bank's indicators: every live metric whose statistic names the
+ * World Bank's reader, so the series code lives once, on the metric. A
+ * percentage becomes a ratio; a rate stays as published.
  */
 const WDI_INDICATORS = METRICS.flatMap((metric) =>
-  !("retired" in metric) && metric.statistic?.series.publisher.startsWith("World Bank")
+  !("retired" in metric) && metric.statistic?.series.read === "worldbank_indicators"
     ? [
         {
           code: metric.statistic.series.code,
+          ...(metric.statistic.series.database
+            ? { database: metric.statistic.series.database }
+            : {}),
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],
 );
 
 /**
- * The OECD's series for one country, from every metric whose statistic names
- * an OECD dataflow, a measure and a data key (`{iso3}` stands for the
- * country's code). The key lives on the metric because every dataflow orders
- * its dimensions its own way.
+ * The OECD's series: every live metric whose statistic names the OECD's
+ * reader, with its dataflow, measure and data key (`{iso3}` stands for the
+ * countries' codes). The key lives on the metric because every dataflow
+ * orders its dimensions its own way.
  */
 const OECD_SERIES = METRICS.flatMap((metric) =>
-  metric.statistic?.series.publisher.startsWith("OECD") &&
+  !("retired" in metric) &&
+  metric.statistic?.series.read === "oecd_sdmx" &&
   metric.statistic.series.measure &&
   metric.statistic.series.key
     ? [
@@ -189,14 +210,31 @@ const OECD_SERIES = METRICS.flatMap((metric) =>
           measure: metric.statistic.series.measure,
           match: metric.statistic.series.match ?? {},
           metric: metric.key,
-          divideBy: metric.unit === "ratio" ? 100 : 1,
+          divideBy: UNITS[metric.unit].publishedAsPercent ? 100 : 1,
         },
       ]
     : [],
 );
 
-const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceInput => ({
-  key: oecdKey(iso2),
+/**
+ * The packs a national-statistics source writes to: the world pack first (its
+ * batches are checked against it), then every pack that holds one of the
+ * countries in depth. A country's figures land on its place wherever that
+ * place lives, found by its ISO 3166-1 code.
+ */
+const packsOf = (countries: readonly string[]): string[] => [
+  WORLD_PACK,
+  ...COUNTRY_PACKS.flatMap((p) =>
+    p.key !== WORLD_PACK && p.region && countries.includes(p.region) ? [p.key] : [],
+  ),
+];
+const country = (a2: string) => ({ scheme: COUNTRY_SCHEME, value: a2 });
+
+/** The OECD's series for every member, one request a series (their codes joined with "+"). */
+const oecdSource = (members: readonly string[]): SourceInput => ({
+  key: OECD_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: members.map((a2) => `oecd-tax-${a2.toLowerCase()}`),
   publisher: "OECD",
   dataset: "OECD Tax Database, Revenue Statistics and Government at a Glance",
   homepage: "https://www.oecd.org/en/data/datasets/oecd-tax-database.html",
@@ -209,25 +247,66 @@ const oecdSource = (pack: string, iso2: string, cadence = "0 4 10 * *"): SourceI
     ru: "Налоговая база данных ОЭСР (CC BY 4.0)",
   },
   // Yearly tables, revised through the year.
-  cadence,
+  cadence: "0 4 10 * *",
   adapter: "oecd_sdmx",
   options: {
-    place: { scheme: "iso_3166_1", value: iso2 },
+    countries: members.map((a2) => ({ code: alpha3Of(a2), place: country(a2) })),
     fromYear: 2000,
     series: OECD_SERIES.map(({ flow, key, measure, match, metric, divideBy }) => ({
       flow,
-      key: key.replace("{iso3}", alpha3Of(iso2)),
+      key: key.replace("{iso3}", members.map(alpha3Of).join("+")),
       measure,
       match,
       metric,
       divideBy,
     })),
   },
-  packs: [pack],
+  packs: packsOf(members),
 });
 
-const worldBankSource = (pack: string, country: string, cadence = "0 4 9 * *"): SourceInput => ({
-  key: worldBankKey(country),
+/**
+ * Eurostat's government finance for every country it covers: every category
+ * of the budget taxonomies, in per cent of GDP (src/lib/config/budgets/eurostat.ts),
+ * one request a dataset.
+ */
+const eurostatSource = (countries: readonly string[]): SourceInput => ({
+  key: EUROSTAT_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: countries.map((a2) => `eurostat-gov-${a2.toLowerCase()}`),
+  publisher: EUROSTAT_PUBLISHER,
+  dataset: "Government finance statistics: main aggregates and expenditure by function (COFOG)",
+  homepage: "https://ec.europa.eu/eurostat/web/government-finance-statistics",
+  licence: "LicenseRef-eurostat-reuse",
+  attribution: {
+    en: "Eurostat, government finance statistics (gov_10a_main, gov_10a_exp)",
+    de: "Eurostat, Statistik der Staatsfinanzen (gov_10a_main, gov_10a_exp)",
+    fr: "Eurostat, statistiques de finances publiques (gov_10a_main, gov_10a_exp)",
+    it: "Eurostat, statistiche di finanza pubblica (gov_10a_main, gov_10a_exp)",
+    ru: "Евростат, статистика государственных финансов (gov_10a_main, gov_10a_exp)",
+  },
+  // Yearly tables, notified in April and October.
+  cadence: "0 4 11 * *",
+  adapter: "eurostat_json",
+  options: {
+    geos: countries.map((a2) => ({ code: EUROSTAT_GOV_COUNTRIES[a2]!, place: country(a2) })),
+    fromYear: EUROSTAT_FROM_YEAR,
+    requests: EUROSTAT_REQUESTS.map((r) => ({
+      dataset: r.dataset,
+      dimension: r.dimension,
+      filters: r.filters,
+      series: seriesOf(r).map((s) => ({ ...s, divideBy: r.divideBy })),
+    })),
+  },
+  packs: packsOf(countries),
+});
+
+/** The World Bank's indicators for every country, one request an indicator (`country/all`). */
+const worldBankSource = (countries: readonly string[]): SourceInput => ({
+  key: WORLD_BANK_KEY,
+  // One source a country until 2026-11-12: rows read then keep their key.
+  formerKeys: countries.map((a2) => `worldbank-wdi-${a2.toLowerCase()}`),
+  // The World Bank's API answers the box's address HTTP 403 (2026-11-10): a runner reads it.
+  fetchFrom: "runner",
   publisher: "World Bank",
   dataset: "World Development Indicators and Worldwide Governance Indicators",
   homepage: "https://datacatalog.worldbank.org/search/dataset/0037712",
@@ -240,20 +319,15 @@ const worldBankSource = (pack: string, country: string, cadence = "0 4 9 * *"): 
     ru: "Всемирный банк, World Development Indicators и Worldwide Governance Indicators, обновление 2026 (www.govindicators.org) (CC BY 4.0)",
   },
   // Monthly: the World Bank revises its indicators several times a year.
-  cadence,
+  cadence: "0 4 9 * *",
   adapter: "worldbank_indicators",
   options: {
-    place: { scheme: "iso_3166_1", value: country },
-    country,
+    countries: countries.map((a2) => ({ code: a2, place: country(a2) })),
     fromYear: 1990,
     indicators: WDI_INDICATORS,
   },
-  packs: [pack],
+  packs: packsOf(countries),
 });
-
-/** The `i`-th source of a day: the same day of the month, `every` minutes later each, from 04:00. */
-const staggered = (i: number, day: number, every = 1) =>
-  `${(i * every) % 60} ${4 + Math.floor((i * every) / 60)} ${day} * *`;
 
 export const SOURCES: readonly SourceInput[] = [
   {
@@ -1009,6 +1083,72 @@ export const SOURCES: readonly SourceInput[] = [
     packs: ["liechtenstein"],
   },
   {
+    // Kept by hand from the Amt für Statistik's own table, so that the series the OECD
+    // and the World Bank do not carry for Liechtenstein is the office's: Staatsquote,
+    // the expenditure of general government (Land, communes and public social
+    // insurance, consolidated) in per cent of GDP, 2011–2024 (Finanzstatistik 2024,
+    // table 6.0, read 2026-11-11). The office marks GDP for 2023 and 2024 provisional.
+    // https://www.statistikportal.li/de/themen/staat-und-politik/oeffentliche-finanzen
+    key: "li-government-expenditure",
+    publisher: "Amt für Statistik, Liechtenstein",
+    dataset:
+      "Finanzstatistik 2024, Tabelle 6.0: Ausgaben des Staates in Prozent des BIP (Staatsquote)",
+    homepage:
+      "https://www.statistikportal.li/statistikportal/publications/501-oeffentliche-finanzen/2024/01/1/501.2024.01.1_02_finanzstatistik-2024-tabellen.xlsx",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Office of Statistics of Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      de: "Amt für Statistik Liechtenstein, Finanzstatistik 2024",
+      fr: "Office de la statistique du Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      it: "Ufficio di statistica del Liechtenstein (Amt für Statistik), Finanzstatistik 2024",
+      ru: "Статистическое управление Лихтенштейна (Amt für Statistik), Finanzstatistik 2024",
+    },
+    // Nothing to fetch: the file is handed in (`places:import`) after each edit; the office
+    // publishes a year's figures in the autumn after it.
+    cadence: "0 6 3 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "iso_3166_1", column: "country" },
+      yearColumn: "year",
+      facts: [
+        {
+          metric: "economy.government.expenditure",
+          column: "government_expenditure_percent",
+          divideBy: 100,
+        },
+      ],
+    },
+    packs: ["liechtenstein"],
+  },
+  {
+    // Kept by hand from the Amt für Statistik's own table: Fiskalquote, the tax revenue of
+    // Land and communes plus compulsory social insurance contributions (ESVG) in per cent
+    // of GDP, 1998–2024 (Steuern, Abgaben 2025, table 1.1.1, read 2026-11-11). The office
+    // calls GDP for 2023 provisional and for 2024 an estimate.
+    // https://www.statistikportal.li/de/themen/staat-und-politik/steuern-abgaben
+    key: "li-fiscal-ratio",
+    publisher: "Amt für Statistik, Liechtenstein",
+    dataset: "Steuern, Abgaben 2025, Tabelle 1.1.1: Fiskalquote",
+    homepage:
+      "https://www.statistikportal.li/statistikportal/publications/502-steuern-abgaben/2025/01/1/502.2025.01_01_steuern-abgaben-2025-tabellen.xlsx",
+    licence: "LicenseRef-li-official-act",
+    attribution: {
+      en: "Office of Statistics of Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      de: "Amt für Statistik Liechtenstein, Steuern, Abgaben 2025",
+      fr: "Office de la statistique du Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      it: "Ufficio di statistica del Liechtenstein (Amt für Statistik), Steuern, Abgaben 2025",
+      ru: "Статистическое управление Лихтенштейна (Amt für Statistik), Steuern, Abgaben 2025",
+    },
+    cadence: "0 6 3 1 *",
+    adapter: "csv_facts",
+    options: {
+      place: { scheme: "iso_3166_1", column: "country" },
+      yearColumn: "year",
+      facts: [{ metric: "tax.revenue.general", column: "fiscal_ratio_percent", divideBy: 100 }],
+    },
+    packs: ["liechtenstein"],
+  },
+  {
     // Confirmed 2026-10-22: the same directory as swisstopo-postcode-localities
     // (same URL and terms) lists Liechtenstein's 13 postcodes in 20 rows, each
     // with its commune's number (7001–7011) and no canton. This source reads
@@ -1285,26 +1425,21 @@ export const SOURCES: readonly SourceInput[] = [
     adapter: "fixture",
     packs: ["south_ossetia"],
   },
-  worldBankSource("switzerland", "CH"),
-  worldBankSource("liechtenstein", "LI"),
-  worldBankSource("estonia", "EE"),
-  worldBankSource("united_states", "US"),
-  // Liechtenstein is not an OECD member; the Tax Database has no figures for it.
-  oecdSource("switzerland", "CH"),
-  oecdSource("estonia", "EE"),
-  oecdSource("united_states", "US"),
+  // National statistics, each publisher one source for every country it covers, wherever that
+  // country's places live: a new country is a line in the country registry, a new series a line
+  // on its metric.
+  worldBankSource(COUNTRIES.map((c) => c.a2)),
+  oecdSource(COUNTRIES.map((c) => c.a2).filter((a2) => OECD_MEMBERS.includes(a2))),
+  eurostatSource(COUNTRIES.map((c) => c.a2).filter((a2) => a2 in EUROSTAT_GOV_COUNTRIES)),
   ...worldSources(),
 ];
 
 /**
- * The world pack's sources: the country names and codes, the World Bank's
- * indicators for every country no pack holds, and the OECD's tax series for
- * those of them that are OECD members. Computed from the country registry, so
- * a country is never a line to remember.
+ * The world pack's own sources: the country names and codes, and the
+ * subdivisions of every country. The national statistics (World Bank, OECD,
+ * Eurostat) are one source each for every country, built above.
  */
 function worldSources(): SourceInput[] {
-  const held = new Set(COUNTRY_PACKS.flatMap((p) => (p.region ? [p.region] : [])));
-  const countries = worldCountries(held);
   return [
     {
       // Written by `scripts/places-world-countries.ts` from the country registry, itself
@@ -1322,11 +1457,25 @@ function worldSources(): SourceInput[] {
       adapter: "fixture",
       packs: ["world"],
     },
-    // Spread over the morning, so no publisher sees a burst: the World Bank is asked one country a
-    // minute, the OECD one every two.
-    ...countries.map((a2, i) => worldBankSource("world", a2, staggered(i, 9))),
-    ...countries
-      .filter((a2) => OECD_MEMBERS.includes(a2))
-      .map((a2, i) => oecdSource("world", a2, staggered(i, 10, 2))),
+    {
+      // Written by `scripts/places-world-subdivisions.ts` from Wikidata (CC0): every item with
+      // an ISO 3166-2 code (P300), under the country its code names, with its names in five
+      // languages and its item number. Nothing to fetch: handed in by `places:import`.
+      key: WORLD_SUBDIVISIONS_KEY,
+      publisher: "Wikidata",
+      dataset: "Subdivisions by ISO 3166-2 code (P300), their names and item numbers",
+      homepage: "https://www.wikidata.org/wiki/Property:P300",
+      licence: "CC0-1.0",
+      attribution: {
+        en: "Wikidata (CC0)",
+        de: "Wikidata (CC0)",
+        fr: "Wikidata (CC0)",
+        it: "Wikidata (CC0)",
+        ru: "Wikidata (CC0)",
+      },
+      cadence: "0 6 7 1 *",
+      adapter: "fixture",
+      packs: ["world"],
+    },
   ];
 }

@@ -3,7 +3,13 @@
  * loader reads the database, this decides what a reader sees, so a made-up
  * country renders from its pack alone.
  */
-import type { LocalizedText, PlacesConfig } from "@/lib/config/places/schema";
+import {
+  findSource,
+  type LocalizedText,
+  type PlacesConfig,
+  type Source,
+} from "@/lib/config/places/schema";
+import { configTranslation } from "@/lib/i18n/config-catalog";
 import { taxingLevels } from "@/lib/tax-model";
 import {
   evaluatorFacts,
@@ -18,6 +24,10 @@ export interface PlaceLink {
   name: string;
   levelName: string;
   slugPath: string | null;
+  /** The path its page has; what its link is built from. */
+  canonicalPath: string | null;
+  /** Its identifiers as `scheme:value`, for a place inside this one (its photograph, its tile). */
+  refs?: string[];
 }
 
 export interface PlaceIdentifier {
@@ -70,6 +80,8 @@ export interface PlaceView {
   alsoServedBy: PlaceLink[];
   otherNames: { locale: string; name: string }[];
   identifiers: PlaceIdentifier[];
+  /** Its identifiers as stored, `scheme:value`: how its photograph and other records are found. */
+  refs: string[];
   /** Null when the pack has no tax model yet. */
   takesTax: boolean | null;
   /** What a resident can do here, one per kind, in the registry's order. */
@@ -91,33 +103,54 @@ export interface PlaceViewInput {
   refinements?: readonly ChainPlace[];
   /** Every place directly inside it. */
   parts?: readonly ChainPlace[];
+  /** The identifiers of the places inside it. */
+  partIdentifiers?: readonly { jurisdictionId: string; scheme: string; value: string }[];
   /** The latest retrieval of each source that stated something about the place. */
   sources: readonly { sourceKey: string; retrievedAt: Date }[];
   locale: string;
 }
 
 /** The text for a locale, else English, else whatever there is. */
+/**
+ * A configured text in the reader's language: the configuration's own words
+ * for that language, else the catalog's translation of the English
+ * (`data/i18n/config.json`), else the English.
+ */
 export function localized(text: LocalizedText, locale: string): string {
-  return text[locale] ?? text.en ?? Object.values(text)[0] ?? "";
+  return (
+    text[locale] ??
+    (text.en === undefined ? undefined : configTranslation(text.en, locale)) ??
+    text.en ??
+    Object.values(text)[0] ??
+    ""
+  );
 }
 
-/** A place's own name for a reader: in their language, else the pack's, else any. */
+/**
+ * A place's name for a reader, so a page reads in one language: its own name
+ * in the reader's language; else the name the reader's language uses for it
+ * (Tskhinval for an English reader, never город Цхинвал); else its own name
+ * in the pack's languages; else any. A historical name is never shown as the
+ * current one. Its own names stay listed on its page with their languages.
+ */
 export function displayName(
   names: readonly ChainName[],
   locale: string,
   packLocales: readonly string[],
 ): string {
-  const own = names.filter((n) => n.nameType === "self");
-  const pool = own.length > 0 ? own : names;
-  for (const wanted of [locale, ...packLocales]) {
-    const match =
-      pool.find((n) => n.locale === wanted && n.script === null) ??
-      pool.find((n) => n.locale === wanted);
-    if (match) {
-      return match.name;
-    }
-  }
-  return pool[0]?.name ?? "";
+  const current = names.filter((n) => n.nameType !== "historical");
+  const own = current.filter((n) => n.nameType === "self");
+  const inLocale = (pool: readonly ChainName[], wanted: string) =>
+    pool.find((n) => n.locale === wanted && n.script === null) ??
+    pool.find((n) => n.locale === wanted);
+  const found =
+    inLocale(own, locale) ??
+    inLocale(current, locale) ??
+    packLocales.map((l) => inLocale(own, l)).find(Boolean) ??
+    own[0] ??
+    current[0] ??
+    names[0];
+  return found?.name ?? "";
 }
 
 export function placeView(input: PlaceViewInput): PlaceView | null {
@@ -135,8 +168,13 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     name: displayName(p.names, locale, pack.defaultLocales),
     levelName: levelName(p.levelKey),
     slugPath: p.slugPath,
+    canonicalPath: p.canonicalPath,
   });
   const name = displayName(place.names, locale, pack.defaultLocales);
+  const partRefs = new Map<string, string[]>();
+  for (const { jurisdictionId, scheme, value } of input.partIdentifiers ?? []) {
+    partRefs.set(jurisdictionId, [...(partRefs.get(jurisdictionId) ?? []), `${scheme}:${value}`]);
+  }
 
   const schemes = new Map(config.identifierSchemes.map((s) => [s.key, s]));
   const identifiers = input.identifiers.map(({ scheme, value }) => {
@@ -161,7 +199,7 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
     parts: pack.levels.flatMap((level) => {
       const places = (input.parts ?? [])
         .filter((p) => p.levelKey === level.key)
-        .map(link)
+        .map((p) => ({ ...link(p), refs: partRefs.get(p.id) ?? [] }))
         .sort((a, b) => a.name.localeCompare(b.name, locale));
       return places.length > 0 ? [{ levelName: localized(level.names, locale), places }] : [];
     }),
@@ -177,6 +215,7 @@ export function placeView(input: PlaceViewInput): PlaceView | null {
         (n, i, all) => all.findIndex((m) => m.locale === n.locale && m.name === n.name) === i,
       ),
     identifiers,
+    refs: input.identifiers.map(({ scheme, value }) => `${scheme}:${value}`),
     takesTax:
       pack.taxModel && place.levelKey
         ? taxingLevels(
@@ -227,6 +266,7 @@ export function placeActions(
           name: displayName(by.names, locale, pack.defaultLocales),
           levelName: level ? localized(level.names, locale) : "",
           slugPath: by.slugPath,
+          canonicalPath: by.canonicalPath,
         },
         deadline:
           deadline && deadlineSource ? { monthDay: deadline, source: deadlineSource } : null,
@@ -235,25 +275,30 @@ export function placeActions(
   });
 }
 
-/** The registered sources behind these retrievals, in the reader's language. */
+/**
+ * The registered sources behind these retrievals, in the reader's language: one entry a source,
+ * dated by its latest retrieval, however many keys its figures were read under (an unchanged
+ * figure keeps the key it was first read under).
+ */
 export function placeSources(
   config: PlacesConfig,
   retrievals: readonly { sourceKey: string; retrievedAt: Date }[],
   locale: string,
 ): PlaceSource[] {
-  return retrievals.flatMap(({ sourceKey, retrievedAt }) => {
-    const source = config.sources.find((s) => s.key === sourceKey);
-    return source
-      ? [
-          {
-            publisher: source.publisher,
-            dataset: source.dataset,
-            homepage: source.homepage,
-            licence: source.licence,
-            attribution: source.attribution ? localized(source.attribution, locale) : null,
-            retrievedAt: retrievedAt.toISOString().slice(0, 10),
-          },
-        ]
-      : [];
-  });
+  const latest = new Map<string, { source: Source; retrievedAt: Date }>();
+  for (const { sourceKey, retrievedAt } of retrievals) {
+    const source = findSource(config, sourceKey);
+    const seen = source ? latest.get(source.key) : undefined;
+    if (source && (!seen || retrievedAt > seen.retrievedAt)) {
+      latest.set(source.key, { source, retrievedAt });
+    }
+  }
+  return [...latest.values()].map(({ source, retrievedAt }) => ({
+    publisher: source.publisher,
+    dataset: source.dataset,
+    homepage: source.homepage,
+    licence: source.licence,
+    attribution: source.attribution ? localized(source.attribution, locale) : null,
+    retrievedAt: retrievedAt.toISOString().slice(0, 10),
+  }));
 }

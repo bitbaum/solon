@@ -1,4 +1,6 @@
+import { BUDGET_METRICS } from "@/lib/config/budgets/metrics";
 import type { MetricInput } from "./schema";
+import { ALL_LEVELS_SCOPE, wgiMetric } from "./statistic-templates";
 
 /**
  * The metric catalog: what a fact can measure, its value type, unit and
@@ -523,9 +525,9 @@ export const METRICS: readonly MetricInput[] = [
     unit: "currency",
   },
   // --- Statistics a reader can chart (/statistics). Read from the World
-  // Bank's World Development Indicators (CC BY 4.0), one source per country
-  // (sources.ts, "worldbank-wdi-*"). Codes and definitions checked against the
-  // Indicators API on 2026-11-08.
+  // Bank's World Development Indicators (CC BY 4.0) by one source for every
+  // country (sources.ts, built from each series' `read`). Codes and definitions
+  // checked against the Indicators API on 2026-11-08.
   {
     key: "economy.government.consumption",
     label: {
@@ -546,17 +548,12 @@ export const METRICS: readonly MetricInput[] = [
         it: "Spesa per consumi finali delle amministrazioni pubbliche, in quota del PIL: quanto spendono tutti i livelli dello Stato in beni e servizi, compresi i salari del personale.",
         ru: "Расходы органов государственного управления на конечное потребление в доле ВВП: траты всех уровней власти на товары и услуги, включая оплату труда их сотрудников.",
       },
-      scope: {
-        en: "General government: every level together, so a federal country's states and communes count.",
-        de: "Der Staat insgesamt: alle Ebenen zusammen; Gliedstaaten und Gemeinden eines Bundesstaats zählen mit.",
-        fr: "L'ensemble des administrations publiques : tous niveaux confondus, les États fédérés et les communes d'un pays fédéral y comptent.",
-        it: "L'insieme delle amministrazioni pubbliche: tutti i livelli insieme; gli stati federati e i comuni di un paese federale vi rientrano.",
-        ru: "Государственный сектор в целом: все уровни вместе, штаты и общины федеративной страны учитываются.",
-      },
+      scope: ALL_LEVELS_SCOPE,
       series: {
         publisher: "World Bank, World Development Indicators",
         code: "NE.CON.GOVT.ZS",
         url: "https://data.worldbank.org/indicator/NE.CON.GOVT.ZS",
+        read: "worldbank_indicators",
       },
     },
   },
@@ -585,6 +582,7 @@ export const METRICS: readonly MetricInput[] = [
         publisher: "World Bank, World Development Indicators",
         code: "GC.XPN.TOTL.GD.ZS",
         url: "https://data.worldbank.org/indicator/GC.XPN.TOTL.GD.ZS",
+        read: "worldbank_indicators",
       },
     },
   },
@@ -613,6 +611,7 @@ export const METRICS: readonly MetricInput[] = [
         publisher: "World Bank, World Development Indicators",
         code: "GC.TAX.TOTL.GD.ZS",
         url: "https://data.worldbank.org/indicator/GC.TAX.TOTL.GD.ZS",
+        read: "worldbank_indicators",
       },
     },
   },
@@ -647,6 +646,7 @@ export const METRICS: readonly MetricInput[] = [
         publisher: "World Bank, World Development Indicators (from UNODC)",
         code: "VC.IHR.PSRC.P5",
         url: "https://data.worldbank.org/indicator/VC.IHR.PSRC.P5",
+        read: "worldbank_indicators",
       },
     },
   },
@@ -684,6 +684,7 @@ export const METRICS: readonly MetricInput[] = [
         measure: "TS_PIT",
         key: "{iso3}.A..TS_PIT........",
         url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_TAX_PIT%40DF_PIT_TOP_EARN_THRESH&df[ag]=OECD.CTP.TPS",
+        read: "oecd_sdmx",
       },
     },
   },
@@ -720,6 +721,7 @@ export const METRICS: readonly MetricInput[] = [
         measure: "GE",
         key: "A.{iso3}.GE.PT_B1GQ.S13..",
         url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_GOV%40DF_GOV_PF_2025&df[ag]=OECD.GOV.GIP",
+        read: "oecd_sdmx",
       },
     },
   },
@@ -743,13 +745,7 @@ export const METRICS: readonly MetricInput[] = [
         it: "Entrate fiscali totali dell'insieme delle amministrazioni pubbliche, in percentuale del PIL, come le indicano le «Revenue Statistics» dell'OCSE. In questa serie i contributi previdenziali contano come imposte.",
         ru: "Общие налоговые поступления государственного сектора в процентах ВВП, как их указывает статистика доходов ОЭСР «Revenue Statistics». Взносы на социальное страхование в этом ряду считаются налогами.",
       },
-      scope: {
-        en: "General government: every level together, so a federal country's states and communes count.",
-        de: "Der Staat insgesamt: alle Ebenen zusammen; Gliedstaaten und Gemeinden eines Bundesstaats zählen mit.",
-        fr: "L'ensemble des administrations publiques : tous niveaux confondus, les États fédérés et les communes d'un pays fédéral y comptent.",
-        it: "L'insieme delle amministrazioni pubbliche: tutti i livelli insieme; gli stati federati e i comuni di un paese federale vi rientrano.",
-        ru: "Государственный сектор в целом: все уровни вместе, штаты и общины федеративной страны учитываются.",
-      },
+      scope: ALL_LEVELS_SCOPE,
       series: {
         publisher: "OECD, Revenue Statistics",
         code: "OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0",
@@ -757,6 +753,7 @@ export const METRICS: readonly MetricInput[] = [
         key: "{iso3}.TAX_REV.S13._T..PT_B1GQ.A",
         match: { SECTOR: "S13", UNIT_MEASURE: "PT_B1GQ" },
         url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS",
+        read: "oecd_sdmx",
       },
     },
   },
@@ -794,6 +791,7 @@ export const METRICS: readonly MetricInput[] = [
         key: "{iso3}.TAX_REV.S1311._T..PT_OTR_REV_CAT.A",
         match: { SECTOR: "S1311", UNIT_MEASURE: "PT_OTR_REV_CAT" },
         url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS",
+        read: "oecd_sdmx",
       },
     },
   },
@@ -831,211 +829,76 @@ export const METRICS: readonly MetricInput[] = [
         key: "{iso3}.AV_TW.PT_COS_LB.S_C0.AW100._Z.A",
         match: { HOUSEHOLD_TYPE: "S_C0", INCOME_PRINCIPAL: "AW100" },
         url: "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_TAX_WAGES_COMP%40DF_TW_COMP&df[ag]=OECD.CTP.TPS",
+        read: "oecd_sdmx",
       },
     },
   },
-  {
+  wgiMetric({
     key: "governance.wgi.voice",
-    label: {
-      en: "Voice and Accountability (World Bank score, 0–100)",
-      de: "Mitsprache und Rechenschaft (Weltbank-Wert, 0–100)",
-      fr: "Participation et redevabilité (note de la Banque mondiale, 0–100)",
-      it: "Voce e responsabilità (punteggio della Banca mondiale, 0–100)",
-      ru: "Право голоса и подотчётность (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_VA.SC",
+    name: {
+      en: "Voice and Accountability",
+      de: "Mitsprache und Rechenschaft",
+      fr: "Participation et redevabilité",
+      it: "Voce e responsabilità",
+      ru: "Право голоса и подотчётность",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Voice and Accountability, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Mitsprache und Rechenschaft, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "Participation et redevabilité, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Voce e responsabilità, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Право голоса и подотчётность — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_VA.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
-  {
+  }),
+  wgiMetric({
     key: "governance.wgi.stability",
-    label: {
-      en: "Political Stability (World Bank score, 0–100)",
-      de: "Politische Stabilität (Weltbank-Wert, 0–100)",
-      fr: "Stabilité politique (note de la Banque mondiale, 0–100)",
-      it: "Stabilità politica (punteggio della Banca mondiale, 0–100)",
-      ru: "Политическая стабильность (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_PV.SC",
+    name: {
+      en: "Political Stability",
+      de: "Politische Stabilität",
+      fr: "Stabilité politique",
+      it: "Stabilità politica",
+      ru: "Политическая стабильность",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Political Stability, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Politische Stabilität, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "Stabilité politique, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Stabilità politica, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Политическая стабильность — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_PV.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
-  {
+  }),
+  wgiMetric({
     key: "governance.wgi.effectiveness",
-    label: {
-      en: "Government Effectiveness (World Bank score, 0–100)",
-      de: "Effektivität der Regierung (Weltbank-Wert, 0–100)",
-      fr: "Efficacité de l'État (note de la Banque mondiale, 0–100)",
-      it: "Efficacia del governo (punteggio della Banca mondiale, 0–100)",
-      ru: "Эффективность правительства (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_GE.SC",
+    name: {
+      en: "Government Effectiveness",
+      de: "Effektivität der Regierung",
+      fr: "Efficacité de l'État",
+      it: "Efficacia del governo",
+      ru: "Эффективность правительства",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Government Effectiveness, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Effektivität der Regierung, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "Efficacité de l'État, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Efficacia del governo, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Эффективность правительства — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_GE.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
-  {
+  }),
+  wgiMetric({
     key: "governance.wgi.regulation",
-    label: {
-      en: "Regulatory Quality (World Bank score, 0–100)",
-      de: "Regulierungsqualität (Weltbank-Wert, 0–100)",
-      fr: "Qualité de la réglementation (note de la Banque mondiale, 0–100)",
-      it: "Qualità della regolamentazione (punteggio della Banca mondiale, 0–100)",
-      ru: "Качество регулирования (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_RQ.SC",
+    name: {
+      en: "Regulatory Quality",
+      de: "Regulierungsqualität",
+      fr: "Qualité de la réglementation",
+      it: "Qualità della regolamentazione",
+      ru: "Качество регулирования",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Regulatory Quality, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Regulierungsqualität, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "Qualité de la réglementation, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Qualità della regolamentazione, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Качество регулирования — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_RQ.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
-  {
+  }),
+  wgiMetric({
     key: "governance.wgi.rule_of_law",
-    label: {
-      en: "Rule of Law (World Bank score, 0–100)",
-      de: "Rechtsstaatlichkeit (Weltbank-Wert, 0–100)",
-      fr: "État de droit (note de la Banque mondiale, 0–100)",
-      it: "Stato di diritto (punteggio della Banca mondiale, 0–100)",
-      ru: "Верховенство закона (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_RL.SC",
+    name: {
+      en: "Rule of Law",
+      de: "Rechtsstaatlichkeit",
+      fr: "État de droit",
+      it: "Stato di diritto",
+      ru: "Верховенство закона",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Rule of Law, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Rechtsstaatlichkeit, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "État de droit, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Stato di diritto, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Верховенство закона — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_RL.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
-  {
+  }),
+  wgiMetric({
     key: "governance.wgi.corruption",
-    label: {
-      en: "Control of Corruption (World Bank score, 0–100)",
-      de: "Korruptionskontrolle (Weltbank-Wert, 0–100)",
-      fr: "Maîtrise de la corruption (note de la Banque mondiale, 0–100)",
-      it: "Controllo della corruzione (punteggio della Banca mondiale, 0–100)",
-      ru: "Контроль коррупции (оценка Всемирного банка, 0–100)",
+    code: "GOV_WGI_CC.SC",
+    name: {
+      en: "Control of Corruption",
+      de: "Korruptionskontrolle",
+      fr: "Maîtrise de la corruption",
+      it: "Controllo della corruzione",
+      ru: "Контроль коррупции",
     },
-    valueType: "number",
-    unit: "none",
-    plausible: { min: 0, max: 100 },
-    statistic: {
-      definition: {
-        en: "Control of Corruption, one of the six Worldwide Governance Indicators, as a score from 0 to 100 (higher is a better standing among the countries covered). It is a composite of perceptions drawn from 35 cross-country sources (household surveys, firm surveys and expert assessments), not a count of anything, and the World Bank treats it as an estimate rather than a definitive rating.",
-        de: "Korruptionskontrolle, einer der sechs Worldwide Governance Indicators, als Wert von 0 bis 100 (höher heisst eine bessere Stellung unter den erfassten Ländern). Ein Verbund von Wahrnehmungen aus 35 länderübergreifenden Quellen (Haushalts- und Unternehmensumfragen und Expertenbeurteilungen), keine Zählung; die Weltbank versteht ihn als Schätzung, nicht als endgültige Bewertung.",
-        fr: "Maîtrise de la corruption, l'un des six Worldwide Governance Indicators, en note de 0 à 100 (plus élevée, meilleure position parmi les pays couverts). Un composite de perceptions tirées de 35 sources internationales (enquêtes auprès des ménages et des entreprises, évaluations d'experts), pas un dénombrement ; la Banque mondiale le considère comme une estimation, non comme une note définitive.",
-        it: "Controllo della corruzione, uno dei sei Worldwide Governance Indicators, come punteggio da 0 a 100 (più alto, posizione migliore tra i paesi coperti). Un composito di percezioni tratte da 35 fonti internazionali (indagini presso famiglie e imprese, valutazioni di esperti), non un conteggio; la Banca mondiale lo considera una stima, non una valutazione definitiva.",
-        ru: "Контроль коррупции — один из шести Worldwide Governance Indicators, оценка от 0 до 100 (выше — лучше положение среди охваченных стран). Сводка восприятий из 35 международных источников (опросы домохозяйств и компаний, экспертные оценки), а не подсчёт; Всемирный банк считает её оценкой, а не окончательным рейтингом.",
-      },
-      scope: {
-        en: "The whole country. Scores move with the sources behind them and public perceptions can lag behind reforms; the World Bank intends them for research, policy analysis and reflection, not for credit or investment decisions.",
-        de: "Das ganze Land. Die Werte folgen den zugrunde liegenden Quellen, und die Wahrnehmung kann Reformen hinterherhinken; die Weltbank sieht sie für Forschung, Politikanalyse und Reflexion vor, nicht für Kredit- oder Anlageentscheide.",
-        fr: "Le pays entier. Les notes suivent les sources sous-jacentes et la perception peut retarder sur les réformes ; la Banque mondiale les destine à la recherche, à l'analyse des politiques et à la réflexion, pas aux décisions de crédit ou d'investissement.",
-        it: "L'intero paese. I punteggi seguono le fonti sottostanti e la percezione può restare indietro rispetto alle riforme; la Banca mondiale li destina a ricerca, analisi delle politiche e riflessione, non a decisioni di credito o investimento.",
-        ru: "Вся страна. Оценки зависят от исходных источников, а восприятие может отставать от реформ; Всемирный банк предназначает их для исследований, анализа политики и размышлений, а не для кредитных и инвестиционных решений.",
-      },
-      series: {
-        publisher: "World Bank, Worldwide Governance Indicators",
-        code: "GOV_WGI_CC.SC",
-        url: "https://www.worldbank.org/en/publication/worldwide-governance-indicators",
-      },
-    },
-  },
+  }),
+  // Budgets: generated from the taxonomies (src/lib/config/budgets/metrics.ts).
+  ...BUDGET_METRICS,
 ];

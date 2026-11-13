@@ -80,4 +80,48 @@ describe.skipIf(!RUN)("recutCantonalText", () => {
     const again = await recutCantonalText(db, { snapshots, authority: "ne" });
     expect(again.examined).toBe(0);
   });
+
+  it("keeps the mark of a text read by OCR, and leaves it alone once it carries the current version", async () => {
+    const [source] = await db
+      .insert(sources)
+      .values({
+        sourceKey: CANTONAL_DOCUMENTS.key,
+        retrievedAt: new Date(),
+        url: "https://www.lexfind.ch/tol/2/de",
+        contentSha256: "c".repeat(64),
+        snapshotKey: "memory/test-ocr",
+        importerVersion: "law-text-cantonal-0+ocr",
+        licenceSpdx: CANTONAL_DOCUMENTS.licenceSpdx,
+      })
+      .returning({ id: sources.id });
+    const actId = randomUUID();
+    await db.insert(legalActs).values({
+      id: actId,
+      authority: "ne",
+      kind: "ordinance",
+      inForce: true,
+      sourceId: source!.id,
+    });
+    const [version] = await db
+      .insert(legalActVersions)
+      .values({
+        actId,
+        lang: "de",
+        inForceFrom: "2026-10-24",
+        dateBasis: "retrieved",
+        status: "consolidated",
+        format: "html",
+        sourceId: source!.id,
+      })
+      .returning({ id: legalActVersions.id });
+    await db
+      .insert(legalProvisions)
+      .values({ versionId: version!.id, path: "text", heading: "", text: "whole", ord: 0 });
+
+    await recutCantonalText(db, { snapshots, authority: "ne" });
+    const [src] = await db.select().from(sources).where(eq(sources.id, source!.id));
+    expect(src!.importerVersion).toBe(`${CANTONAL_IMPORTER_VERSION}+ocr`);
+    const again = await recutCantonalText(db, { snapshots, authority: "ne" });
+    expect(again.examined).toBe(0);
+  });
 });

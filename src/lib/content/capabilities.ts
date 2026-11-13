@@ -30,3 +30,24 @@ export const CAPABILITIES = {
 } as const satisfies Record<string, CapabilityStatus>;
 
 export type CapabilityKey = keyof typeof CAPABILITIES;
+
+/**
+ * What Solon does with laws and numbers for each place, as /statistics/why
+ * names it. Its words live in `Statistics.why.items`, because that page is
+ * translated and `Capabilities` is not yet. ROADMAP: `#stats-place-gaps`,
+ * `#stats-timeline-markers`, `#stats-policy-by-trend` for the planned ones.
+ */
+export const DATA_CAPABILITIES = {
+  lawByPlace: "available",
+  statisticsSeries: "available",
+  publicBudgets: "available",
+  measurementGaps: "available",
+  lawEvents: "available",
+  aiResearch: "available",
+  groupMeasures: "available",
+  placeGapReport: "planned",
+  trendMarkers: "planned",
+  policyByTrend: "planned",
+} as const satisfies Record<string, CapabilityStatus>;
+
+export type DataCapabilityKey = keyof typeof DATA_CAPABILITIES;

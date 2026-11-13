@@ -13,7 +13,7 @@ import {
 } from "@bitbaum/geo-kit";
 import { createHash } from "node:crypto";
 import { eq, isNull } from "drizzle-orm";
-import type { PlacesConfig } from "@/lib/config/places/schema";
+import { findSource, type PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { areas, sources } from "@/lib/db/places-schema";
 import type { GeometryStore } from "./importer/geometry-store";
@@ -130,7 +130,7 @@ export async function buildManifest(
   const retrieved = new Map<string, Date>();
   for (const row of rows) {
     const ref = parseGeometryRef(row.geometryRef);
-    const source = config.sources.find((s) => s.key === row.sourceKey);
+    const source = findSource(config, row.sourceKey);
     if (!ref || !source) {
       continue;
     }
@@ -161,7 +161,7 @@ export async function buildManifest(
     });
   }
   const manifestSources: GeographySource[] = [...retrieved].flatMap(([key, retrievedAt]) => {
-    const source = config.sources.find((s) => s.key === key);
+    const source = findSource(config, key);
     return source
       ? [
           {

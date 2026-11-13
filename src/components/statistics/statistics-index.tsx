@@ -3,12 +3,13 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import PageLayout from "@/components/ui/page-layout";
 import type { Metric } from "@/lib/config/places/schema";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
-import { chartValue, latestPoint, metricPath, seriesPageFor } from "@/lib/statistics/present";
+import { chartValue, latestPoint, metricPath } from "@/lib/statistics/present";
 import type { PlaceSeries } from "@/lib/statistics/read";
 import AxisBuilder from "./axis-builder";
 import AxisPanel, { type AxisPanelProps } from "./axis-panel";
-import { unitLabel, type StatisticsTranslator } from "./shared";
+import { publishersText, unitLabel, type StatisticsTranslator } from "./shared";
 
 interface StatisticsIndexProps {
   statistics: { metric: Metric; series: PlaceSeries[] }[];
@@ -52,7 +53,7 @@ export default function StatisticsIndex({
                       label: s.name,
                       value: chartValue(metric, p.value),
                       note: t("index.latestNote", { year: p.year }),
-                      href: seriesPageFor(metric, s.code),
+                      href: s.source.page,
                     },
                   ]
                 : [];
@@ -71,14 +72,14 @@ export default function StatisticsIndex({
                     caption={t("index.latestCaption", {
                       metric: label,
                       unit,
-                      publisher: statistic.series.publisher,
+                      publisher: publishersText(metric, series, locale),
                     })}
                   />
                 ) : (
                   <p className="text-sm text-fg-secondary">
-                    {t("index.empty", { publisher: statistic.series.publisher })}{" "}
+                    {t("index.empty", { publisher: cite(statistic.series.publisher, locale) })}{" "}
                     <a href={statistic.series.url} className="underline" rel="noopener">
-                      {statistic.series.publisher}
+                      {cite(statistic.series.publisher, locale)}
                     </a>
                   </p>
                 )}
@@ -100,6 +101,9 @@ export default function StatisticsIndex({
             <h2 className="text-2xl font-semibold text-fg-primary">{t("index.dimensionsTitle")}</h2>
             <p className="max-w-3xl text-fg-secondary">{t("index.dimensionsIntro")}</p>
             <p className="mb-0 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+              <Link href="/statistics/why" className="text-fg-primary underline">
+                {t("why.title")}
+              </Link>
               <Link href="/statistics/methods" className="text-fg-primary underline">
                 {t("methods.title")}
               </Link>

@@ -67,7 +67,8 @@ Read `README.md` for what the product is. This file is how to work in the repo.
 ```bash
 pnpm run dev          # next dev (localhost:3000)
 pnpm run build        # next build (standalone) — no codegen step, Drizzle types come from the schema
-pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + test — run before every commit
+pnpm run verify       # format:check + lint + typecheck + design:check + check:places-literals + check:cycles + test:coverage — run before every commit
+pnpm run test         # the same tests without the coverage report, for a quick loop
 ```
 
 `pnpm run verify` is the single source of truth for "is this change clean?" CI's
@@ -93,8 +94,10 @@ pnpm run verify       # format:check + lint + typecheck + design:check + check:p
   what the adapter declares from the source's URL and imports each in turn;
   `--backfill` loads history once, on a source's first load only. Adapters parse a
   format; which levels and schemes rows become is the source's `options` in config.
-  In production the box's daily appcron timer calls `POST /api/cron/places`
-  (`CRON_SECRET`), which imports every source whose `cadence` names the day. The
+  In production the box's hourly appcron timer calls `POST /api/cron/places`
+  (`CRON_SECRET`), which starts a worker that imports every source the run log
+  says is behind its `cadence` (`src/lib/places/importer/queue.ts`): a new
+  source loads within the hour, a failed one is tried again a day later. The
   bundle has no scripts: a first load or `--backfill` runs `places:fetch` from a
   checkout of the deployed commit on the box (design §8.3, "In production").
   No engine file names a country: Testland (`src/lib/places/__tests__/fixtures/testland/`)
@@ -128,6 +131,45 @@ metric says what it covers (`scope`). Charts are screened by `src/lib/statistics
 warning) and every page can offer an AI explanation (`brief.ts`, `explain.ts`): the model sees
 only the page's numbered facts, and an answer with a number or citation not in them is dropped.
 A check that warns on correct data is a bug: remove or narrow it, do not add a caveat. `/statistics/research` (`research.ts`, `research-tools.ts`) lets a model read Solon's data and law with read-only tools: every fact a tool returns is a numbered source, and the report is checked with the same rules.
+
+## Budgets
+
+Budgets (`/budgets`, design `docs/design/2026-11-budgets.md`) are one model over two
+inputs. The taxonomies in `src/lib/config/budgets/` (COFOG for spending, ESA 2010 for
+revenue) are the single source: they generate the `budget.<scope>.<side>.<code>` metrics and
+the Eurostat source (`eurostat_json` adapter, one source for every country it covers, run like
+every Places source: `pnpm run places:fetch eurostat-gov-world`). A budget read from a law is a document under
+`src/lib/config/budgets/documents/`, its lines as printed and each placed on a category; its
+lines must add up to the totals the law states. `src/lib/budgets/` turns both into one
+`Budget` and holds the arithmetic; pages and the contested places use only its components.
+
+## Money and language
+
+Money on any page is in the reader's currency: `src/lib/money/` converts at a year's average
+rate from `data/money/rates.json` (`pnpm run money:rates`, official publishers only) and never
+borrows another year's rate. The law reads in the reader's language: a version in it when the
+publisher has one, else a cached machine translation labelled as such
+(`src/lib/law/translate.ts`, `text_translations`), with the authentic text a click away.
+`pnpm run law:translate --authority <key>` translates an authority's titles ahead of readers;
+texts are translated when a page is first read.
+
+## Chat and text boxes
+
+- Every chat is chatkit's `ChatApp` or `Composer`, with the microphone and the
+  paperclip on. Turning either off needs `// experience-exempt: <reason>` on the line.
+- Every text box people type into is `TextBox` (chatkit's `DictationField`,
+  `src/components/chat/text-box.tsx`), never a bare `<textarea>`. A file that
+  must have one says why in a first-line `// experience-exempt: <reason>`.
+- Never print a server's error text. Routes answer with a status and a `code`;
+  chatkit names the problem from the status, in the reader's language.
+- The assistants' rate limit is `@bitbaum/limitkit`'s decision over windows
+  held in Postgres (`src/lib/chat/rate-limit.ts`, table `rate_limit_windows`),
+  so it survives a deploy and is one allowance across instances. Solon's part
+  is the numbers per bucket; a new route takes a bucket there, never its own counter.
+- Every label is in `messages/*.json` for ru, de, fr, it and en. A test fails
+  when a chat label falls back to chatkit's English default.
+- The fleet experience audit (`.github/workflows/experience.yml`) fails over
+  the ceiling in `package-plan.json`, which is zero. Do not raise it.
 
 ## CI
 
@@ -222,6 +264,14 @@ fleet's choice for i18n (fleet `STACK.md`; evig, hirnli and four others use it).
   pages lose the notice. An official route's words per language live on the
   route (`OfficialRoute.text`, `src/lib/config/law/routes.ts`); English is the
   fallback.
+- Words in the configuration (a rubric, a budget line, a source's attribution,
+  who published a series) are written once, in English, beside their source.
+  Their other languages live in `data/i18n/config.json`, keyed by the English
+  words, and `localized()` / `cite()` read it (`src/lib/i18n/`). A changed
+  English text has no translation until one is written, so a stale one is
+  never shown. `pnpm run i18n:config` lists what is missing (`--json` prints a
+  skeleton to fill), and `src/lib/i18n/__tests__/config-texts.test.ts` fails
+  while any text a translated page shows lacks a language.
 - German uses Swiss spelling (ss, never ß).
 
 **The one habit that matters:** never assemble a sentence by concatenation.

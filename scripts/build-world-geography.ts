@@ -21,6 +21,7 @@
  * Solon's own places (communes of the countries it holds) stay in the places
  * pipeline; these are the base map for everywhere else.
  */
+import { format } from "prettier";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -314,9 +315,16 @@ async function main() {
     if (!was || c.rank < was.rank) byA2.set(c.a2, c);
   }
   const registry = [...byA2.values()].sort((a, b) => a.a2.localeCompare(b.a2));
+  // Formatted as the repository formats its data, so a rebuild with the same input is no change.
   outputs.set(
     REGISTRY,
-    `${JSON.stringify({ source: `Natural Earth 1:10m ${TAG}, admin 0, public domain`, countries: registry }, null, 1)}\n`,
+    await format(
+      JSON.stringify({
+        source: `Natural Earth 1:10m ${TAG}, admin 0, public domain`,
+        countries: registry,
+      }),
+      { parser: "json" },
+    ),
   );
 
   let differ = 0;

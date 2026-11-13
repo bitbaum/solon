@@ -6,7 +6,12 @@ const action = (kind: string, monthDay: string | null): PlaceAction => ({
   kind,
   label: kind,
   url: "https://tax.example/file",
-  offeredBy: { slugPath: "testland/northshire", name: "Northshire", levelName: "Shire" },
+  offeredBy: {
+    slugPath: "testland/northshire",
+    canonicalPath: "testland/northshire",
+    name: "Northshire",
+    levelName: "Shire",
+  },
   deadline: monthDay ? { monthDay, source: "https://tax.example/deadline" } : null,
 });
 const opts = (now: Date) => ({

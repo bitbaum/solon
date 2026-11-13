@@ -20,8 +20,12 @@ export interface ChatLabels {
   app: Partial<ChatAppLabels>;
 }
 
-export function useChatLabels(): ChatLabels {
-  const t = useTranslations("Chat");
+export type Translate = ((key: string, values?: Record<string, string | number>) => string) & {
+  raw: (key: string) => unknown;
+};
+
+/** The chat words from a translator over the `Chat` namespace; the hook below binds it to next-intl, a test to the message files. */
+export function buildChatLabels(t: Translate): ChatLabels {
   return {
     thread: {
       copy: t("copy"),
@@ -36,7 +40,8 @@ export function useChatLabels(): ChatLabels {
       failed: t("failed"),
       loading: t("loading"),
       replies: t("replies"),
-      thoughtFor: t("thoughtFor"),
+      // A template: chatkit fills in {time} itself.
+      thoughtFor: t.raw("thoughtFor") as string,
       thought: t("thought"),
       thinking: t("thinking"),
     },
@@ -49,6 +54,19 @@ export function useChatLabels(): ChatLabels {
       confirmRecording: t("confirmRecording"),
       listening: t("listening"),
       transcribing: t("transcribing"),
+      attach: t("attach"),
+      attachMenu: {
+        title: t("attachMenu.title"),
+        close: t("attachMenu.close"),
+        sources: { files: t("attachMenu.files") },
+      },
+      remove: (name) => t("attachRemove", { name }),
+      attachNotes: {
+        wrongType: (name) => t("attachNotes.wrongType", { name }),
+        textTooLarge: (name, k) => t("attachNotes.textTooLarge", { name, k }),
+        unreadable: (name) => t("attachNotes.unreadable", { name }),
+        tooMany: (max) => t("attachNotes.tooMany", { max }),
+      },
       queue: t("queue"),
       dismiss: t("dismiss"),
       retryTake: t("retryTake"),
@@ -57,6 +75,8 @@ export function useChatLabels(): ChatLabels {
         silence: t("dictation.silence"),
         unavailable: t("dictation.unavailable"),
         fileTooLarge: t("dictation.fileTooLarge"),
+        signIn: t("dictation.signIn"),
+        busy: t("dictation.busy"),
       },
     },
     app: {
@@ -96,4 +116,8 @@ export function useChatLabels(): ChatLabels {
       },
     },
   };
+}
+
+export function useChatLabels(): ChatLabels {
+  return buildChatLabels(useTranslations("Chat") as unknown as Translate);
 }

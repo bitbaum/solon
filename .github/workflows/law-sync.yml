@@ -8,7 +8,8 @@ name: Law sync
 # Solon reads the law again so that what it holds is what is in
 # force (design: law-as-data, "Staying current"): the registers (new and
 # repealed acts), each publisher's new versions (Fedlex, Lilex, the cantons,
-# ZH-Lex, the communes, Estonia, the European Union, Germany), and the documents it holds read again, oldest
+# ZH-Lex, the communes, Estonia, the European Union, Germany, Russia's register, and every country's
+# constitution the plan in data/law/plan.json has a source for), and the documents it holds read again, oldest
 # first, so a text a publisher changed becomes a new version. What changed is
 # served at /api/v1/law/changes and by the MCP tool law_changes.
 #
@@ -45,10 +46,12 @@ jobs:
           ssh -i ~/.ssh/id -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=40 "ubuntu@$IP" \
             "SHA=$SHA bash -s" > out.txt 2>&1 <<'REMOTE' || status=$?
           set -uo pipefail
-          # One load at a time on the box: a second waits here for the first to finish,
-          # so two big loads never share its memory (two at once ran it out, 2026-11-08).
-          exec 9>/tmp/solon-law-load.lock
-          flock 9
+          # One heavy load at a time on the box, this sync included: it takes the same lock as a
+          # heavy load dispatched by hand (law-text.yml), so two never share its memory (two at
+          # once ran it out, 2026-11-08). After 45 minutes' wait it leaves this week's sync be, so
+          # a sync that starts keeps most of its job's time.
+          exec 9>/tmp/solon-law-load-heavy.lock
+          flock -w 2700 9 || { echo "a heavy load held the box for 45 minutes: this week's sync did not run"; exit 0; }
           WD=$(mktemp -d /tmp/solon-law-sync.XXXXXX)
           trap 'rm -rf "$WD"' EXIT
           git clone -q https://github.com/bitbaum/solon "$WD/repo"
@@ -77,6 +80,8 @@ jobs:
           step "estonia"                $PNPM run law:text riigiteataja --limit 3000
           step "european union"         $PNPM run law:text eurlex --limit 1500
           step "germany"                $PNPM run law:text gii --limit 3000
+          step "russia (register)"      $PNPM run law:text pravo-gov-ru
+          step "constitutions (plan)"   $PNPM run law:text plan-constitutions
           step "communes"               $PNPM run law:text municipal --publisher all --limit 500
           step "refresh held documents" $PNPM run law:text refresh --limit 3000
           step "recut"                  $PNPM run law:text recut --limit 50000

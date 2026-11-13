@@ -1,4 +1,4 @@
-import { and, count, eq, exists, not } from "drizzle-orm";
+import { and, count, eq, exists, inArray, not } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import {
   AuditEventType,
@@ -10,6 +10,7 @@ import {
   organizations,
 } from "@/lib/db/schema";
 import { registrationMessage, verifyMessage } from "@/lib/bitcoin/message";
+import { recordPersonTag } from "@/lib/domain/person-seat";
 import { founderRule, genesisVerdict, genesisRefusalCopy } from "./founder";
 
 export interface RegisterMemberInput {
@@ -67,6 +68,10 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   if (!org) return { registered: false, verified: false, reason: "organization not found" };
 
   const key = input.key ?? null;
+  // Every address the signing key answers to. One key verifies as a legacy, a
+  // native-segwit and a wrapped-segwit address, so a seat check on the claimed
+  // string alone would let one key hold three seats.
+  let keyAddresses: string[] = [];
   if (key) {
     const message = registrationMessage({
       orgSlug: input.orgSlug,
@@ -81,6 +86,7 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
         reason: verification.reason ?? "signature does not match the address",
       };
     }
+    keyAddresses = verification.keyAddresses ?? [key.address];
   }
 
   // One actor holds at most one seat in an organization, and one address is at
@@ -101,14 +107,20 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
   }
   const existingByAddress = key
     ? await db.query.members.findFirst({
-        where: and(eq(members.organizationId, org.id), eq(members.bitcoinAddress, key.address)),
+        where: and(
+          eq(members.organizationId, org.id),
+          inArray(members.bitcoinAddress, keyAddresses),
+        ),
       })
     : null;
   if (existingByAddress) {
     return {
       registered: false,
       verified: true,
-      reason: "this Bitcoin address is already registered to a member",
+      reason:
+        existingByAddress.bitcoinAddress === key?.address
+          ? "this Bitcoin address is already registered to a member"
+          : "this Bitcoin key is already registered to a member under another of its addresses",
     };
   }
 
@@ -172,6 +184,9 @@ export async function registerMember(input: RegisterMemberInput): Promise<Regist
       });
       return created;
     });
+    // Which person this is, for the admissions that come after. Best-effort:
+    // it never fails the seat, and the backfill picks up one it missed.
+    await recordPersonTag(member.id, org.id, input.actorId);
     return { registered: true, verified: true, genesis: true, memberId: member.id };
   } catch (e) {
     const taken = e instanceof Error && e.message === "GENESIS_TAKEN";

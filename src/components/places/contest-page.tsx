@@ -1,10 +1,14 @@
 import { Link } from "@/i18n/navigation";
 import PageLayout from "@/components/ui/page-layout";
-import { DEFAULT_CATEGORY, proposeHref } from "@/lib/domain/proposal-draft";
+import { cite } from "@/lib/i18n/config-catalog";
 import type { ContestSideView, ContestView } from "@/lib/places/contest-view";
-import ContestLedger from "./contest-ledger";
-import { actKey, ProvisionQuote } from "./contest-quote";
+import QuotedWords, { actKey } from "@/components/law/quoted-words";
+import type { BudgetsTranslator } from "@/components/budgets/translator";
+import type { MoneyDisplay } from "@/lib/budgets/format";
+import type { BudgetSummary } from "@/lib/budgets/summary";
+import ContestMoney from "./contest-money";
 import { PlaceTrail } from "./place-head";
+import ShareButton from "./share-button";
 import type { PlacesTranslator } from "./translator";
 
 interface ContestPageProps {
@@ -12,7 +16,12 @@ interface ContestPageProps {
   /** Solon's id of each act a provision cites, by `authority:scheme:value`, when the register holds it. */
   actIds: ReadonlyMap<string, string>;
   locale: string;
+  /** Each side's budget, when Solon holds one. */
+  money: readonly { side: ContestSideView; summary: BudgetSummary | null }[];
+  /** How money is shown to the reader. */
+  display: MoneyDisplay;
   t: PlacesTranslator;
+  tb: BudgetsTranslator;
 }
 
 function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
@@ -46,16 +55,22 @@ function SideCard({ side, t }: { side: ContestSideView; t: PlacesTranslator }) {
  * other's, in a fixed order (the side that governs, then the claimant). A side
  * with nothing read says so. Solon's words only frame; the rest is quotation.
  */
-export default function ContestPage({ view, actIds, locale, t }: ContestPageProps) {
+export default function ContestPage({
+  view,
+  actIds,
+  money,
+  display,
+  locale,
+  t,
+  tb,
+}: ContestPageProps) {
+  const quoteLabels = {
+    translation: t("contested.translation"),
+    read: (date: string) => t("contested.read", { date }),
+    translatedBy: (translator: string) => t("contested.translatedBy", { translator }),
+    proposeChange: t("contested.proposeChange"),
+  };
   const claimant = view.sides.find((s) => s.role === "claims");
-  const propose = proposeHref({
-    category: DEFAULT_CATEGORY,
-    title: t("contested.proposeTitle", { place: view.name }),
-    body: t("contested.proposeBody", {
-      place: view.name,
-      sides: view.sides.map((s) => s.name).join(", "),
-    }),
-  });
   return (
     <PageLayout
       title={t("contested.title", { place: view.name })}
@@ -66,7 +81,10 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
       })}
     >
       <div className="max-w-5xl space-y-10">
-        <PlaceTrail above={[]} name={view.name} t={t} />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <PlaceTrail above={[]} t={t} />
+          <ShareButton title={view.name} />
+        </div>
 
         <ul className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
           {view.sides.map((side) => (
@@ -98,12 +116,15 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
                     <h3 className="text-sm font-semibold text-fg-secondary">{side.name}</h3>
                     {cell.provisions.length > 0 ? (
                       cell.provisions.map((p) => (
-                        <ProvisionQuote
+                        <QuotedWords
                           key={p.label}
-                          provision={p}
+                          label={cite(p.label, locale)}
+                          quote={p.quote}
+                          provision={p.provision}
+                          translator={p.translator}
                           actId={p.act ? (actIds.get(actKey(p.act)) ?? null) : null}
                           locale={locale}
-                          t={t}
+                          labels={quoteLabels}
                         />
                       ))
                     ) : (
@@ -118,7 +139,7 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
           </section>
         ))}
 
-        <ContestLedger view={view} actIds={actIds} locale={locale} t={t} />
+        <ContestMoney sides={money} display={display} t={t} tb={tb} />
 
         <section
           aria-labelledby="contest-act"
@@ -130,9 +151,21 @@ export default function ContestPage({ view, actIds, locale, t }: ContestPageProp
           <p className="mb-4 text-sm text-fg-secondary">
             {t("contested.actIntro", { place: view.name })}
           </p>
-          <Link href={propose} className="btn-primary min-h-11">
-            {t("contested.propose", { place: view.name })}
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {view.sides.flatMap((side, i) =>
+              side.lawAuthority
+                ? [
+                    <Link
+                      key={side.key}
+                      href={`/law/place/${side.lawAuthority}`}
+                      className={i === 0 ? "btn-primary min-h-11" : "btn-secondary min-h-11"}
+                    >
+                      {t("contested.proposeLaw", { side: side.name })}
+                    </Link>,
+                  ]
+                : [],
+            )}
+          </div>
         </section>
 
         <details className="rounded-surface border border-default bg-surface-base p-5 text-sm sm:p-6">

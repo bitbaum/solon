@@ -323,7 +323,7 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
     outcome:
       "The bill is put before the Parliament of the Republic of South Ossetia by a holder of the right of legislative initiative.",
     source: {
-      title: "Конституция Республики Южная Осетия (Constitution of the Republic of South Ossetia)",
+      title: "Constitution of the Republic of South Ossetia",
       provision: "Art. 69",
       url: "https://parliamentrso.org/node/3567",
       readOn: "2026-11-10",
@@ -338,8 +338,276 @@ export const OFFICIAL_ROUTES: readonly OfficialRoute[] = [
         sourceTitle: "Конституция Республики Южная Осетия",
         provision: "Статья 69",
       },
+      de: {
+        name: "Ein von einem Abgeordneten eingebrachter Gesetzentwurf",
+        whoMaySign:
+          "Jeder einzelne Abgeordnete des Parlaments, der das Recht der Gesetzesinitiative hat (wie der Präsident, die Regierung sowie das Verfassungsgericht, das Oberste Gericht, der Generalstaatsanwalt und die Zentrale Wahlkommission in ihren Zuständigkeitsbereichen); die Bürgerinnen und Bürger selbst haben es nicht",
+        outcome:
+          "Der Gesetzentwurf wird dem Parlament der Republik Südossetien von einem Inhaber des Rechts der Gesetzesinitiative vorgelegt.",
+        sourceTitle: "Verfassung der Republik Südossetien",
+        provision: "Art. 69",
+      },
+      fr: {
+        name: "Un projet de loi déposé par un député",
+        whoMaySign:
+          "Tout député du Parlement, titulaire du droit d'initiative législative (comme le Président, le Gouvernement, ainsi que la Cour constitutionnelle, la Cour suprême, le Procureur général et la Commission électorale centrale dans les domaines de leur compétence) ; les citoyens eux-mêmes ne le détiennent pas",
+        outcome:
+          "Le projet de loi est soumis au Parlement de la République d'Ossétie du Sud par un titulaire du droit d'initiative législative.",
+        sourceTitle: "Constitution de la République d'Ossétie du Sud",
+        provision: "Art. 69",
+      },
+      it: {
+        name: "Un disegno di legge presentato da un deputato",
+        whoMaySign:
+          "Qualsiasi deputato del Parlamento, titolare del diritto di iniziativa legislativa (come il Presidente, il Governo, nonché la Corte costituzionale, la Corte suprema, il Procuratore generale e la Commissione elettorale centrale nelle materie di loro competenza); i cittadini stessi non lo hanno",
+        outcome:
+          "Il disegno di legge è presentato al Parlamento della Repubblica dell'Ossezia del Sud da un titolare del diritto di iniziativa legislativa.",
+        sourceTitle: "Costituzione della Repubblica dell'Ossezia del Sud",
+        provision: "Art. 69",
+      },
     },
   },
+  {
+    key: "ru-bill",
+    authority: "ru",
+    name: "A bill put before the State Duma",
+    appliesTo: ["statute"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the Federation Council, senators, deputies of the State Duma, the Government and the legislatures of the subjects of the Federation, and the Constitutional Court and the Supreme Court on matters within their competence; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "A bill that introduces or abolishes a tax, grants an exemption, issues state loans, changes the state's financial obligations or calls for spending from the federal budget can be put forward only with the Government's opinion on it",
+    ],
+    window: null,
+    outcome: "Bills are put before the State Duma.",
+    source: {
+      title: "Constitution of the Russian Federation (ConsultantPlus's consolidated text)",
+      provision: "Art. 104",
+      url: "https://www.consultant.ru/document/cons_doc_LAW_28399/3f8c850abc4dc2ba4207acc563b176d93bdcf5f7/",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект, внесённый в Государственную Думу",
+        whoMaySign:
+          "Президент, Совет Федерации, сенаторы, депутаты Государственной Думы, Правительство и законодательные (представительные) органы субъектов Российской Федерации, а также Конституционный Суд и Верховный Суд по вопросам их ведения; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Законопроекты о введении или отмене налогов, освобождении от их уплаты, о выпуске государственных займов, об изменении финансовых обязательств государства и другие законопроекты, предусматривающие расходы из федерального бюджета, вносятся только при наличии заключения Правительства",
+        ],
+        outcome: "Законопроекты вносятся в Государственную Думу.",
+        sourceTitle: "Конституция Российской Федерации",
+        provision: "Статья 104",
+      },
+    },
+  },
+  {
+    key: "ru-constitution",
+    authority: "ru",
+    name: "A proposal to amend the Constitution",
+    appliesTo: ["constitution"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the Federation Council, the State Duma, the Government, the legislatures of the subjects of the Federation, or a group of at least one fifth of the senators or of the State Duma's deputies; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "Chapters 1, 2 and 9 cannot be revised by the Federal Assembly; a proposal to revise them supported by three fifths of all senators and deputies convenes a Constitutional Assembly (Art. 135)",
+      "Amendments to chapters 3 to 8 are adopted in the way a federal constitutional law is, and take effect once the legislatures of at least two thirds of the subjects approve them (Art. 136)",
+    ],
+    window: null,
+    outcome: "The proposal is decided under Articles 135 and 136.",
+    source: {
+      title:
+        "Constitution of the Russian Federation (Wikisource's copy of the text as amended in 2020)",
+      provision: "Art. 134 to 136",
+      url: "https://ru.wikisource.org/wiki/%D0%9A%D0%BE%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%86%D0%B8%D1%8F_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B9_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B8",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Предложение о поправке к Конституции",
+        whoMaySign:
+          "Президент, Совет Федерации, Государственная Дума, Правительство, законодательные (представительные) органы субъектов Российской Федерации, а также группа численностью не менее одной пятой членов Совета Федерации или депутатов Государственной Думы; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Положения глав 1, 2 и 9 не могут быть пересмотрены Федеральным Собранием; предложение об их пересмотре, поддержанное тремя пятыми голосов от общего числа членов Совета Федерации и депутатов Государственной Думы, ведёт к созыву Конституционного Собрания (статья 135)",
+          "Поправки к главам 3–8 принимаются в порядке, предусмотренном для принятия федерального конституционного закона, и вступают в силу после их одобрения органами законодательной власти не менее чем двух третей субъектов (статья 136)",
+        ],
+        outcome: "Предложение рассматривается в порядке статей 135 и 136.",
+        sourceTitle: "Конституция Российской Федерации (копия Викитеки, в редакции 2020 года)",
+        provision: "Статьи 134–136",
+      },
+    },
+  },
+  {
+    key: "ua-bill",
+    authority: "ua",
+    name: "A bill put before the Verkhovna Rada",
+    appliesTo: ["statute"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, the people's deputies and the Cabinet of Ministers; citizens do not hold the right themselves",
+    signatures: null,
+    window: null,
+    outcome:
+      "The bill is put before the Verkhovna Rada; a bill the President marks as urgent is considered out of turn.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 93",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект, внесённый в Верховную Раду",
+        whoMaySign:
+          "Президент, народные депутаты и Кабинет Министров; сами граждане этим правом не обладают",
+        outcome:
+          "Законопроект вносится в Верховную Раду; законопроекты, определённые Президентом как неотложные, рассматриваются вне очереди.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статья 93",
+      },
+    },
+  },
+  {
+    key: "ua-constitution",
+    authority: "ua",
+    name: "A bill amending the Constitution",
+    appliesTo: ["constitution"],
+    venue: "legislature",
+    whoMaySign:
+      "The President, or at least one third of the constitutional membership of the Verkhovna Rada; citizens do not hold the right themselves",
+    signatures: null,
+    alsoRequired: [
+      "Adopted when the Rada first approves it by a majority of its constitutional membership and then, at its next regular session, by at least two thirds (Art. 155)",
+      "Sections I, III and XIII: put forward by the President or two thirds of the Rada, adopted by two thirds and approved by an all-Ukrainian referendum (Art. 156)",
+    ],
+    cannotChange:
+      "No amendment that abolishes or restricts human and civil rights and freedoms or aims at ending Ukraine's independence or violating its territorial integrity; and none under martial law or a state of emergency (Art. 157)",
+    window: null,
+    outcome: "The Verkhovna Rada decides under Articles 155 and 156.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 154 to 157",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Законопроект о внесении изменений в Конституцию",
+        whoMaySign:
+          "Президент или не менее трети народных депутатов от конституционного состава Верховной Рады; сами граждане этим правом не обладают",
+        alsoRequired: [
+          "Принимается, если предварительно одобрен большинством от конституционного состава Верховной Рады, а на следующей очередной сессии за него проголосовали не менее двух третей (статья 155)",
+          "Разделы I, III и XIII: подаётся Президентом или двумя третями Верховной Рады, принимается двумя третями и утверждается всеукраинским референдумом (статья 156)",
+        ],
+        cannotChange:
+          "Конституция не может быть изменена, если изменения предусматривают отмену или ограничение прав и свобод человека и гражданина либо направлены на ликвидацию независимости или нарушение территориальной целостности Украины; не может быть изменена в условиях военного или чрезвычайного положения (статья 157)",
+        outcome: "Верховная Рада решает в порядке статей 155 и 156.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статьи 154–157",
+      },
+    },
+  },
+  {
+    key: "ua-referendum",
+    authority: "ua",
+    name: "An all-Ukrainian referendum at the people's initiative",
+    appliesTo: ["statute"],
+    venue: "voters",
+    whoMaySign: "citizens of Ukraine with the right to vote",
+    signatures: { count: 3_000_000 },
+    alsoRequired: [
+      "Signatures gathered in at least two thirds of the oblasts, at least 100,000 in each",
+    ],
+    cannotChange: "No referendum on bills about taxes, the budget or amnesty (Art. 74)",
+    window: null,
+    outcome: "An all-Ukrainian referendum is proclaimed at the people's initiative.",
+    source: {
+      title: "Constitution of Ukraine (the Constitutional Court of Ukraine's copy)",
+      provision: "Art. 72 and 74",
+      url: "https://ccu.gov.ua/sites/default/files/konstytuciya_ukrayiny_0.pdf",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: "Всеукраинский референдум по народной инициативе",
+        whoMaySign: "граждан Украины, имеющих право голоса",
+        alsoRequired: [
+          "Подписи собраны не менее чем в двух третях областей, не менее ста тысяч в каждой",
+        ],
+        cannotChange:
+          "Референдум не допускается по законопроектам о налогах, бюджете и амнистии (статья 74)",
+        outcome: "Всеукраинский референдум провозглашается по народной инициативе.",
+        sourceTitle: "Конституция Украины (копия Конституционного Суда Украины)",
+        provision: "Статьи 72 и 74",
+      },
+    },
+  },
+  ...(
+    [
+      {
+        authority: "ru",
+        level: "federal",
+        signatures: { count: 100_000 },
+        ru: {
+          name: "Российская общественная инициатива, федеральный уровень",
+          group: "федерального",
+        },
+      },
+      {
+        authority: "ru-se",
+        level: "regional",
+        signatures: {
+          percent: 5,
+          of: "the region's population (100,000 votes where it exceeds 2 million)",
+        },
+        ru: {
+          name: "Российская общественная инициатива, региональный уровень",
+          group: "регионального",
+        },
+      },
+    ] as const
+  ).map(({ authority, level, signatures, ru }): OfficialRoute => ({
+    key: `${authority}-roi`,
+    authority,
+    name: `Russian Public Initiative, ${level} level`,
+    appliesTo: ["statute"],
+    venue: "authorities",
+    whoMaySign:
+      "Citizens of the Russian Federation aged 18 or over with a SNILS number and a confirmed account on the state services portal, through which every vote is cast",
+    signatures,
+    alsoRequired: [
+      "An initiative is a proposal on the country's social and economic development or on public and municipal administration",
+      "Moderators check it against the rules before it is put to the vote, within two months",
+    ],
+    window: { months: 12 },
+    outcome: `An initiative that gathers the votes in time is sent to the ${level} expert working group for consideration.`,
+    source: {
+      title:
+        "Russian Public Initiative (roi.ru), under Presidential Decree No. 183 of 4 March 2013",
+      provision: "How it works",
+      url: "https://www.roi.ru/page/how-it-works/",
+      readOn: "2026-11-10",
+    },
+    text: {
+      ru: {
+        name: ru.name,
+        whoMaySign:
+          "граждане Российской Федерации не моложе 18 лет, имеющие СНИЛС и подтверждённую учётную запись на Едином портале госуслуг, через которую подаётся каждый голос",
+        ...(authority === "ru-se"
+          ? { signatureBase: "населения региона (100 000 голосов, если население больше 2 млн)" }
+          : {}),
+        alsoRequired: [
+          "Общественная инициатива — предложение по вопросам социально-экономического развития страны, совершенствования государственного и муниципального управления",
+          "Модераторы проверяют её на соответствие Правилам до голосования, не более двух месяцев",
+        ],
+        outcome: `Инициатива, набравшая голоса в срок, направляется на рассмотрение в экспертную рабочую группу ${ru.group} уровня.`,
+        sourceTitle:
+          "Российская общественная инициатива (roi.ru), Указ Президента РФ № 183 от 4 марта 2013 года",
+        provision: "Как это работает",
+      },
+    },
+  })),
   ...[
     "li7001",
     "li7002",
@@ -410,3 +678,7 @@ export const routesFor = (authority: string, kind: string): OfficialRoute[] =>
   OFFICIAL_ROUTES.filter(
     (r) => r.authority === authority && (r.appliesTo as readonly string[]).includes(kind),
   );
+
+/** Every route that changes an authority's law, whatever the kind of act. */
+export const routesOfAuthority = (authority: string): OfficialRoute[] =>
+  OFFICIAL_ROUTES.filter((r) => r.authority === authority);

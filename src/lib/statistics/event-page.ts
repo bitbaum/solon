@@ -6,7 +6,7 @@
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
 import { compareAround, findStatistic, windowAround, type ComparisonRow } from "./present";
-import { actFor, loadEvents, loadSeries, type EventRow, type PlaceSeries } from "./read";
+import { actFor, loadEvents, loadSeriesFor, type EventRow, type PlaceSeries } from "./read";
 import type { Metric } from "@/lib/config/places/schema";
 
 export interface EventChart {
@@ -31,10 +31,11 @@ export async function loadEventPage(
   if (!event) return null;
   const pivot = pivotYear(event.body);
   const charts: EventChart[] = [];
+  const loaded = await loadSeriesFor(db, config, event.body.series, locale);
   for (const key of event.body.series) {
     const metric = findStatistic(config, key);
     if (!metric) continue;
-    const series = await loadSeries(db, config, key, locale);
+    const series = loaded.get(key) ?? [];
     if (!series.some((s) => s.code === event.placeCode)) continue;
     charts.push({
       metric,

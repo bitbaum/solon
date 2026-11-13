@@ -2,9 +2,10 @@ import { complete, completeStream, freeChain, usableChain } from "@bitbaum/ai-ki
 import { sseResponse } from "@bitbaum/ai-kit/sse";
 import { z } from "zod";
 import { selfOriginOf } from "@/lib/auth/actor";
+import { ATTACHMENT_BODY_BYTES, attachmentsSchema, withAttachments } from "@/lib/chat/attachments";
 import { readJsonBounded } from "@/lib/chat/body";
 import type { LawChatEvent } from "@/lib/chat/events";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { answerMessages, sourcesOf } from "@/lib/law/ask/answer";
 import {
@@ -38,13 +39,15 @@ const Body = z.object({
     .optional(),
   /** Asked while drafting a change: think it through (consult.ts). */
   proposal: proposalSchema.optional(),
+  /** Text files attached to the last question; read as context. */
+  attachments: attachmentsSchema,
 });
 
 /** Public: the law is public. Bounded by origin, size and a per-address rate. */
 export async function POST(req: Request) {
   if (req.headers.get("origin") !== selfOriginOf(req))
     return Response.json({ error: "Request origin was not recognized." }, { status: 403 });
-  const read = await readJsonBounded(req);
+  const read = await readJsonBounded(req, ATTACHMENT_BODY_BYTES);
   if (!read.ok)
     return Response.json({ error: "Send a shorter question." }, { status: read.status });
   const parsed = Body.safeParse(read.body);
@@ -53,13 +56,17 @@ export async function POST(req: Request) {
   const chain = usableChain(freeChain("SOLON"), process.env);
   if (!chain.length)
     return Response.json({ error: "The assistant is not available just now." }, { status: 503 });
-  const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (!allowAssistantRequest(address, "law"))
+  const limit = await checkAssistantRequest(clientIp(req.headers), "law");
+  if (!limit.allowed)
     return Response.json(
       { error: "Please wait a few minutes before asking again." },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
-  const { messages: turns, proposal } = parsed.data;
+  const { proposal, attachments } = parsed.data;
+  // The files travel with the last question only, as context after it.
+  const turns = parsed.data.messages.map((m, i, all) =>
+    i === all.length - 1 ? { ...m, content: withAttachments(m.content, attachments) } : m,
+  );
   let { scope } = parsed.data;
   // The act being changed, as the database knows it; its place is always searched.
   let act: ProposalAct | null = null;

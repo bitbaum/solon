@@ -1,6 +1,6 @@
 import { LineChart } from "@bitbaum/chartkit/react";
 import type { Locale } from "@/i18n/routing";
-import { chartValue, seriesPageFor, splitAt } from "@/lib/statistics/present";
+import { chartValue, splitAt } from "@/lib/statistics/present";
 import { localized } from "@/lib/places/place-view";
 import type { EventChart } from "@/lib/statistics/event-page";
 import type { EventActor, EventVote } from "@/lib/statistics/records";
@@ -179,11 +179,11 @@ export function NumbersAround({
   const unit = unitLabel(metric, t);
   const label = localized(metric.label, locale);
   const inWindow = (p: { year: number }) => p.year >= window.from && p.year <= window.to;
-  const draw = (code: string, list: { year: number; value: number; quality: string }[]) =>
+  const draw = (page: string, list: { year: number; value: number; quality: string }[]) =>
     list.map((p) => ({
       x: String(p.year),
       y: chartValue(metric, p.value),
-      href: seriesPageFor(metric, code),
+      href: page,
       preliminary: p.quality !== "normal",
     }));
   // The place itself, cut at the change and scaled to its own values so a step
@@ -197,18 +197,22 @@ export function NumbersAround({
         {
           id: `${placeCode}-before`,
           label: t("event.chartBefore", { place: focalSeries.name, year: pivot }),
-          points: draw(placeCode, before),
+          points: draw(focalSeries.source.page, before),
         },
         {
           id: `${placeCode}-from`,
           label: t("event.chartFrom", { place: focalSeries.name, year: pivot }),
-          points: draw(placeCode, from),
+          points: draw(focalSeries.source.page, from),
         },
       ].filter((x) => x.points.length > 0)
     : [];
   const peers = series
     .filter((s) => s.code !== placeCode)
-    .map((s) => ({ id: s.code, label: s.name, points: draw(s.code, s.points.filter(inWindow)) }))
+    .map((s) => ({
+      id: s.code,
+      label: s.name,
+      points: draw(s.source.page, s.points.filter(inWindow)),
+    }))
     .filter((s) => s.points.length > 0);
   const showLater = comparison.some((row) => row.later !== null);
   const fmt = (p: { value: number } | null) =>

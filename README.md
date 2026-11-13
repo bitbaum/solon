@@ -213,7 +213,7 @@ founder signs. Changing it afterwards is a `GOVERNANCE_RULES` vote.
 | `GET` | `/api/v1/places/compare` | The facts and tax model `/compare` reads, for any place |
 | `GET` | `/api/v1/places/map` | What the `/places` map draws |
 | `GET` | `/api/v1/places/geography` | Geography manifest (`/geography/{file}` serves each boundary file) |
-| `POST` | `/api/cron/places` | Daily Places import (`CRON_SECRET`) |
+| `POST` | `/api/cron/places` | Hourly Places import: starts the queue worker (`CRON_SECRET`) |
 | `GET` | `/api/health` | Liveness |
 
 ## Pages
@@ -298,7 +298,7 @@ pnpm exec tsx scripts/agent-vote.ts
 vendored-drift check, the governance-ratification warning on PRs, and the build):
 
 ```bash
-pnpm run verify   # format:check && lint && typecheck && design:check && check:places-literals && test
+pnpm run verify   # format:check && lint && typecheck && design:check && check:places-literals && check:cycles && test:coverage
 ```
 
 ```bash

@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { toLocale } from "@/i18n/routing";
 import ContestPage from "@/components/places/contest-page";
-import { actKey } from "@/components/places/contest-quote";
+import { actKey } from "@/components/law/quoted-words";
+import { loadBudgetsOf } from "@/lib/budgets/read";
+import { summarize } from "@/lib/budgets/summary";
+import { readerMoney } from "@/lib/site/reader-money";
 import { db } from "@/lib/db/client";
 import { contestView } from "@/lib/places/contest-view";
 import { findAct } from "@/lib/statistics/read";
@@ -10,6 +13,7 @@ import { findAct } from "@/lib/statistics/read";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ locale: string; slug: string }>;
+type SearchParams = Promise<{ in?: string }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
@@ -25,7 +29,13 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 /** One claimed place, question by question (design `2026-11-contested-law.md` §4.2). */
-export default async function ContestedPlacePage({ params }: { params: Params }) {
+export default async function ContestedPlacePage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { locale: raw, slug } = await params;
   const locale = toLocale(raw);
   setRequestLocale(locale);
@@ -35,7 +45,6 @@ export default async function ContestedPlacePage({ params }: { params: Params })
     ...view.rows.flatMap((r) =>
       r.cells.flatMap((c) => c.provisions.flatMap((p) => (p.act ? [p.act] : []))),
     ),
-    ...view.ledgers.flatMap((l) => (l.ledger.act ? [l.ledger.act] : [])),
   ];
   const actIds = new Map<string, string>();
   for (const act of acts) {
@@ -44,6 +53,25 @@ export default async function ContestedPlacePage({ params }: { params: Params })
     const id = await findAct(db, act);
     if (id) actIds.set(key, id);
   }
-  const t = await getTranslations({ locale, namespace: "Places" });
-  return <ContestPage view={view} actIds={actIds} locale={locale} t={t} />;
+  const money = await Promise.all(
+    view.sides.map(async (side) => ({
+      side,
+      summary: side.holder ? summarize(await loadBudgetsOf(db, side.holder)) : null,
+    })),
+  );
+  const [t, tb] = await Promise.all([
+    getTranslations({ locale, namespace: "Places" }),
+    getTranslations({ locale, namespace: "Budgets" }),
+  ]);
+  return (
+    <ContestPage
+      view={view}
+      actIds={actIds}
+      money={money}
+      display={await readerMoney(locale, (await searchParams).in)}
+      locale={locale}
+      t={t}
+      tb={tb}
+    />
+  );
 }

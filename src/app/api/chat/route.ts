@@ -4,8 +4,9 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { selfOriginOf } from "@/lib/auth/actor";
 import type { ChatEvent } from "@/lib/chat/events";
+import { ATTACHMENT_BODY_BYTES, attachmentsSchema, withAttachments } from "@/lib/chat/attachments";
 import { readJsonBounded } from "@/lib/chat/body";
-import { allowAssistantRequest } from "@/lib/chat/rate-limit";
+import { checkAssistantRequest, toHeaders } from "@/lib/chat/rate-limit";
 import { governancePrompt } from "@/lib/chat/prompt";
 
 const Body = z.object({
@@ -14,6 +15,8 @@ const Body = z.object({
     .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(12000) }))
     .min(1)
     .max(20),
+  /** Text files attached to the last question; read as context. */
+  attachments: attachmentsSchema,
 });
 export const maxDuration = 45;
 
@@ -23,7 +26,7 @@ export async function POST(req: Request) {
   const session = await auth();
   if (!session) return Response.json({ error: "Sign in to ask Solon." }, { status: 401 });
   // Bound the request before parsing; content-length alone can be absent or forged.
-  const read = await readJsonBounded(req);
+  const read = await readJsonBounded(req, ATTACHMENT_BODY_BYTES);
   if (!read.ok)
     return Response.json(
       {
@@ -47,10 +50,11 @@ export async function POST(req: Request) {
       },
       { status: 503 },
     );
-  if (!allowAssistantRequest(session.actorId, "chat"))
+  const limit = await checkAssistantRequest(session.actorId, "chat");
+  if (!limit.allowed)
     return Response.json(
       { error: "Please wait a few minutes before asking again." },
-      { status: 429, headers: { "Retry-After": "600" } },
+      { status: 429, headers: toHeaders(limit) },
     );
   return sseResponse<ChatEvent>(
     async (emit, signal) => {
@@ -60,7 +64,11 @@ export async function POST(req: Request) {
         env: process.env,
         messages: [
           { role: "system", content: governancePrompt(parsed.data.locale) },
-          ...parsed.data.messages,
+          ...parsed.data.messages.map((m, i, all) =>
+            i === all.length - 1
+              ? { ...m, content: withAttachments(m.content, parsed.data.attachments) }
+              : m,
+          ),
         ],
         maxTokens: 2400,
         timeoutMs: 35000,

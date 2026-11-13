@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import type { PlacesConfig } from "@/lib/config/places/schema";
 import type { ChainInstrument, ChainPlace } from "../chain";
-import { displayName, localized, placeActions, placeView } from "../place-view";
+import { displayName, localized, placeActions, placeSources, placeView } from "../place-view";
 import { withTestland } from "./fixtures/testland/config";
 
 const testland = withTestland(placesConfig);
@@ -18,6 +18,7 @@ const place = (
   countryPack: "testland",
   levelKey,
   slugPath,
+  canonicalPath: slugPath,
   depth,
   names: [{ locale: "en", script: null, name, nameType: "self" }],
 });
@@ -52,6 +53,17 @@ describe("displayName", () => {
     expect(displayName(names, "fr", ["en"])).toBe("Northshire");
     expect(displayName(names, "ru", ["de"])).toBe("Nordgrafschaft");
   });
+
+  it("uses the reader's language for a place whose own name is in another, never a historical name", () => {
+    const tskhinval = [
+      { locale: "ru", script: "Cyrl", name: "город Цхинвал", nameType: "self" as const },
+      { locale: "en", script: "Latn", name: "Tskhinval", nameType: "common" as const },
+      { locale: "de", script: "Latn", name: "Zchinwali", nameType: "historical" as const },
+    ];
+    expect(displayName(tskhinval, "en", ["ru"])).toBe("Tskhinval");
+    expect(displayName(tskhinval, "ru", ["ru"])).toBe("город Цхинвал");
+    expect(displayName(tskhinval, "de", ["ru"])).toBe("город Цхинвал");
+  });
 });
 
 describe("localized", () => {
@@ -67,7 +79,12 @@ describe("placeView", () => {
     const v = view(testland);
     expect(v.partOf.map((p) => p.name)).toEqual(["Testland", "Northshire", "Millbrook"]);
     expect(v.alsoServedBy).toEqual([
-      { name: "Weavers' Guild", levelName: "Guild", slugPath: "testland/weavers-guild" },
+      {
+        name: "Weavers' Guild",
+        levelName: "Guild",
+        slugPath: "testland/weavers-guild",
+        canonicalPath: "testland/weavers-guild",
+      },
     ]);
     expect(v.levelName).toBe("Hamlet");
     expect(view(testland, "de").levelName).toBe("Weiler");
@@ -122,14 +139,24 @@ describe("placeActions", () => {
         kind: "testland_moot",
         label: "Am Thing sprechen",
         url: "https://north.invalid/moot",
-        offeredBy: { name: "Northshire", levelName: "Grafschaft", slugPath: "testland/northshire" },
+        offeredBy: {
+          name: "Northshire",
+          levelName: "Grafschaft",
+          slugPath: "testland/northshire",
+          canonicalPath: "testland/northshire",
+        },
         deadline: { monthDay: "03-31", source: "https://north.invalid/dates" },
       },
       {
         kind: "testland_toll",
         label: "Pay the toll",
         url: "https://realm.invalid/toll",
-        offeredBy: { name: "Testland", levelName: "Reich", slugPath: "testland" },
+        offeredBy: {
+          name: "Testland",
+          levelName: "Reich",
+          slugPath: "testland",
+          canonicalPath: "testland",
+        },
         deadline: null,
       },
     ]);
@@ -149,5 +176,23 @@ describe("placeActions", () => {
       ["testland_moot", "https://mill.invalid/moot"],
     ]);
     expect(placeActions(testland, CHAIN, [], "en")).toEqual([]);
+  });
+});
+
+describe("placeSources", () => {
+  it("lists a source once, at its latest reading, whatever key its figures were read under", () => {
+    const listed = placeSources(
+      placesConfig,
+      [
+        // An unchanged figure keeps the per-country key it was first read under.
+        { sourceKey: "oecd-tax-ch", retrievedAt: new Date("2026-11-10T04:00:00Z") },
+        { sourceKey: "oecd-tax-world", retrievedAt: new Date("2026-12-10T04:00:00Z") },
+        { sourceKey: "no-such-source", retrievedAt: new Date("2026-12-10T04:00:00Z") },
+      ],
+      "en",
+    );
+    expect(listed.map((s) => [s.publisher, s.retrievedAt])).toEqual([
+      [placesConfig.sources.find((s) => s.key === "oecd-tax-world")!.publisher, "2026-12-10"],
+    ]);
   });
 });

@@ -26,6 +26,7 @@ export const southOssetia: CountryPackInput = {
     fr: "Ossétie du Sud",
     it: "Ossezia del Sud",
   },
+  nation: { scheme: "wikidata", value: "Q23427" },
   currency: "RUB",
   fiscalYear: { startMonthDay: "01-01" },
   defaultLocales: ["ru", "os"],
@@ -57,6 +58,5 @@ export const southOssetia: CountryPackInput = {
     },
   ],
   identifierSchemes: ["wikidata"],
-  sources: ["so-constitution-units"],
   instrumentKinds: [],
 };

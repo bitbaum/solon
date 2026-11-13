@@ -1,4 +1,5 @@
 import { createHash, createPublicKey, createVerify } from "node:crypto";
+import * as secp from "@noble/secp256k1";
 import { describe, expect, it } from "vitest";
 import {
   deriveAddresses,
@@ -104,6 +105,63 @@ describe("BIP137 segwit support", () => {
     const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: addrs.p2wpkh });
     const signature = signMessage(message, pair.privateKeyHex);
     expect(verifyMessage(message, addrs.p2wpkh, signature).valid).toBe(true);
+  });
+
+  it("names every compressed address the key answers to, whichever one was claimed", () => {
+    // One key, several address strings. A seat check must be able to ask "has
+    // this KEY been seen", so a valid result carries all of them.
+    for (const claimed of [addrs.p2pkh, addrs.p2wpkh, addrs.p2shP2wpkh]) {
+      const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: claimed });
+      const result = verifyMessage(message, claimed, signMessage(message, pair.privateKeyHex));
+      expect(result.valid).toBe(true);
+      expect(result.keyAddresses).toEqual(
+        expect.arrayContaining([addrs.p2pkh, addrs.p2wpkh, addrs.p2shP2wpkh]),
+      );
+    }
+  });
+
+  it("names the key's uncompressed address too, whichever header was used", () => {
+    // The header's compression flag is not signed: the holder of one key can
+    // lower it by 4 and the same r||s verifies under the uncompressed P2PKH
+    // address. Both serializations are one key, so both must be named, or one
+    // key could hold a seat under each.
+    const uncompressedHex = secp.etc.bytesToHex(
+      secp.Point.fromHex(pair.publicKeyHex).toBytes(false),
+    );
+    const uncompressed = deriveAddresses(uncompressedHex).p2pkh;
+    const all = [uncompressed, addrs.p2pkh, addrs.p2wpkh, addrs.p2shP2wpkh].sort();
+
+    const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: uncompressed });
+    const compressedSig = Buffer.from(signMessage(message, pair.privateKeyHex), "base64");
+    const reheadered = Buffer.from(compressedSig);
+    reheadered[0] = compressedSig[0] - 4;
+
+    const viaUncompressed = verifyMessage(message, uncompressed, reheadered.toString("base64"));
+    expect(viaUncompressed.valid).toBe(true);
+    expect([...(viaUncompressed.keyAddresses ?? [])].sort()).toEqual(all);
+
+    const viaCompressed = verifyMessage(message, addrs.p2pkh, compressedSig.toString("base64"));
+    expect(viaCompressed.valid).toBe(true);
+    expect([...(viaCompressed.keyAddresses ?? [])].sort()).toEqual(all);
+  });
+
+  it("still ties validity to the header: a compressed header does not verify the uncompressed address", () => {
+    const uncompressedHex = secp.etc.bytesToHex(
+      secp.Point.fromHex(pair.publicKeyHex).toBytes(false),
+    );
+    const uncompressed = deriveAddresses(uncompressedHex).p2pkh;
+    const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: uncompressed });
+    const result = verifyMessage(message, uncompressed, signMessage(message, pair.privateKeyHex));
+    expect(result.valid).toBe(false);
+    expect(result.keyAddresses).toBeUndefined();
+  });
+
+  it("names no addresses for a signature that does not verify", () => {
+    const message = voteMessage({ sessionId: "s", choice: "yes", memberAddress: addrs.p2pkh });
+    const other = generateKeyPair();
+    const result = verifyMessage(message, addrs.p2pkh, signMessage(message, other.privateKeyHex));
+    expect(result.valid).toBe(false);
+    expect(result.keyAddresses).toBeUndefined();
   });
 
   it("accepts a signature claiming the P2SH-wrapped address", () => {

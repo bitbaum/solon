@@ -11,7 +11,8 @@ const nextConfig = {
   // sibling app on the box).
   output: "standalone",
   // Member pictures come from OrangeCat's storage (the identity root keeps
-  // the profile; Solon only shows it). No other remote images.
+  // the profile; Solon only shows it). Places' photographs come from
+  // Wikimedia Commons (`pnpm run places:photos`, each with its licence).
   images: {
     remotePatterns: [
       {
@@ -20,6 +21,8 @@ const nextConfig = {
         pathname: "/storage/v1/object/public/**",
       },
       { protocol: "https", hostname: "orangecat.ch" },
+      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" },
+      { protocol: "https", hostname: "thumb.wikimedia.org", pathname: "/wikipedia/commons/**" },
     ],
   },
 };

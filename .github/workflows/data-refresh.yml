@@ -1,0 +1,86 @@
+name: Data refresh
+
+# The generated datasets (the world's profiles and countries, every country's
+# subdivisions, the world list's photographs, the plan for every country's
+# law) were refreshed only when someone ran their generators on a laptop, in
+# an order nobody wrote down. This runs them every month, in order
+# (`pnpm run data:refresh`, scripts/data-refresh.ts), and opens a pull request
+# when anything changed. The sweep merges it when CI is green, and the deploy's
+# places-data job imports what changed. A generator that fails keeps its old
+# files; the PR body names it.
+#
+# TOKEN: FLEET_PAT when the org secret exists, else GITHUB_TOKEN, as in
+# auto-merge.yml and bitbaum/substrata's recheck-data.yml. Prefer the PAT: a
+# push or a PR made with GITHUB_TOKEN triggers no workflows, so CI would never
+# run on the data commit.
+
+on:
+  schedule:
+    # The 4th of each month, 03:41 UTC.
+    - cron: "41 3 4 * *"
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Only these generators, comma-separated (empty: all; see `pnpm run data:refresh --list`)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ secrets.FLEET_PAT || github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.FLEET_PAT || github.token }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run the generators
+        env:
+          ONLY: ${{ inputs.only }}
+        run: |
+          set -o pipefail
+          [[ -z "$ONLY" || "$ONLY" =~ ^[a-z0-9,-]+$ ]] || { echo "only: generator keys, comma-separated"; exit 1; }
+          only=""; [ -n "$ONLY" ] && only="--only $ONLY"
+          # A failed generator keeps its files; the rest are still committed.
+          pnpm run data:refresh $only 2>&1 | tee report.txt || true
+          pnpm exec prettier --write data/world data/places/world data/law src/lib/config/world/extras.json >/dev/null
+
+      - name: Open a pull request with what changed
+        run: |
+          if git diff --quiet; then
+            echo "Nothing changed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          day=$(date -u +%F)
+          branch="bot/data-refresh-$day"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -A data src/lib/config/world/extras.json
+          git commit -q -m "data: refresh $day (scheduled)" \
+            -m "pnpm run data:refresh; see the pull request for any generator that failed."
+          git push origin "HEAD:$branch"
+          {
+            echo "The monthly refresh of the generated datasets (\`.github/workflows/data-refresh.yml\`, \`pnpm run data:refresh\`)."
+            echo
+            git diff --stat HEAD~1 | tail -n 20 | sed 's/^/    /'
+            echo
+            grep -E "^FAILED|every generator ran" report.txt || true
+          } > body.md
+          gh pr create --base main --head "$branch" --title "data: refresh $day" --body-file body.md

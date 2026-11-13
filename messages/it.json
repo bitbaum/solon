@@ -69,10 +69,12 @@
       "lawCoverage": "Che cosa conserva Solon",
       "lawAmendments": "Modifiche proposte",
       "statistics": "Statistiche",
+      "statisticsWhy": "Perché leggi e numeri",
       "statisticsEvents": "Eventi giuridici",
       "statisticsMethods": "Come sono fatte le classifiche",
       "statisticsGaps": "Cosa viene misurato, e cosa no",
-      "statisticsResearch": "Ricerca con l'IA"
+      "statisticsResearch": "Ricerca con l'IA",
+      "budgets": "Bilanci"
     },
     "desc": {
       "whatYouCanDo": "Tutto ciò che c'è qui, in parole semplici, con un punto di partenza",
@@ -120,10 +122,12 @@
       "lawCoverage": "Quali atti conserva Solon, contati dai dati",
       "lawAmendments": "Le modifiche proposte al diritto, con la redline e i sostegni",
       "statistics": "Il diritto accanto ai numeri: serie nel tempo, ognuna con la sua fonte e la sua legge",
+      "statisticsWhy": "Perché Solon affianca il diritto di ogni luogo alle sue statistiche, e cosa è già attivo",
       "statisticsEvents": "Che cosa è successo al diritto di un luogo: che cosa è cambiato, come, chi stava dove",
       "statisticsMethods": "Chi fa ogni indice, come, e cosa chiedergli.",
       "statisticsGaps": "Cosa raccoglie ogni ufficio, e dove la stessa domanda non ha risposta.",
-      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti."
+      "statisticsResearch": "Ponete una domanda; ottenete un rapporto le cui cifre sono verificate rispetto alle fonti.",
+      "budgets": "Cosa incassano gli Stati e per cosa lo spendono, confrontabile tra luoghi"
     },
     "accountIntro": "Con un account Solon si entra in un’organizzazione, si propone e si vota. Bastano un indirizzo e-mail e una password, o una passkey; con OrangeCat basta un clic."
   },
@@ -339,10 +343,32 @@
     "law": {
       "kicker": "Il diritto, aperto",
       "title": "Ogni parola del diritto, aperta a tutti.",
-      "body": "Solon conserva il testo di ogni atto federale e cantonale in vigore in Svizzera, di ogni atto del Liechtenstein, del Lussemburgo e dell'Estonia, le leggi del Wyoming e le regole di un numero crescente di comuni — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o proponete una modifica a qualsiasi articolo.",
+      "body": "Solon conserva il testo del diritto svizzero, dalla Confederazione e dai cantoni a un numero crescente di comuni, e quello di sempre più paesi, stati e dell'Unione europea — ciascuno come lo ha pubblicato il suo editore, con un hash che prova la copia. Cercate in parole semplici, fate una domanda o proponete una modifica a qualsiasi articolo.",
       "next": "Sul globo ogni luogo è ombreggiato secondo quanto del suo diritto conserva Solon. Si aggiungono altri luoghi: il sistema è costruito una volta, ogni nuovo paese sono i suoi dati.",
       "find": "Trovare una legge",
       "ask": "Interrogare il diritto"
+    },
+    "data": {
+      "kicker": "Leggi e numeri",
+      "title": "Come è governato un luogo. Come sta.",
+      "body": "Accanto al diritto di ogni luogo, Solon conserva le statistiche e i bilanci che pubblicano i suoi uffici, negli anni, ogni dato con la sua fonte e ciò che copre. Tema per tema, mostra dove un luogo misura ciò che un altro non misura, e cosa dovrebbe accompagnare una nuova misura.",
+      "note": "Suggerire quali misure un luogo potrebbe avviare, e quali politiche altri luoghi hanno scelto di fronte alla stessa tendenza, è previsto e non ancora realizzato.",
+      "why": "Perché leggi e numeri",
+      "stats": "Vedi le statistiche",
+      "points": {
+        "governed": {
+          "name": "Come è governato",
+          "body": "Il suo diritto, come l'ha pubblicato il suo editore, e le vie ufficiali per cambiarlo."
+        },
+        "doing": {
+          "name": "Come sta",
+          "body": "Le sue statistiche e il suo bilancio negli anni, ogni dato con la sua fonte e il giorno in cui è stato letto."
+        },
+        "missing": {
+          "name": "Cosa non misura",
+          "body": "Dove luoghi comparabili pubblicano un dato che esso non pubblica, con ciò che Solon non ha letto segnato come non letto."
+        }
+      }
     },
     "roots": {
       "kicker": "Da dove vengono le idee",
@@ -488,13 +514,22 @@
     "metaDescription": "Chi ha scattato le fotografie di questo sito, e con quale licenza.",
     "kicker": "Crediti fotografici",
     "title": "Le fotografie di questo sito",
-    "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere."
+    "lede": "Provengono tutte da Wikimedia Commons e sono usate con le licenze indicate qui sotto. Nessuna mostra un cliente di Solon né lo lascia intendere.",
+    "placesTitle": "Le fotografie dei luoghi",
+    "placesLede": "La fotografia di ogni paese, territorio e giurisdizione, da Wikimedia Commons, ciascuna con la sua licenza libera e mostrata senza modifiche. Autore e licenza sono indicati anche sulla fotografia stessa.",
+    "placesPages": "Pagine delle fotografie dei luoghi"
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
     "changelogTitle": "Novità — Solon",
     "roadmapDescription": "Dove va Solon, nell'ordine in cui ci va — letto dal registro di riferimento della flotta.",
     "changelogDescription": "Cosa è cambiato in Solon per chi lo usa, dal più recente — letto dal registro di riferimento della flotta."
+  },
+  "Status": {
+    "available": "Disponibile",
+    "inDevelopment": "In sviluppo",
+    "planned": "Previsto",
+    "researched": "Ricercato, non ancora caricato"
   },
   "Places": {
     "kicker": "{level} · {pack}",
@@ -643,6 +678,7 @@
       "rank": "{rank, number}° su {count, number} partendo dal più basso: {amount} in più del luogo più conveniente",
       "cheapest": "Il più conveniente dei {count, number} luoghi sulla mappa",
       "open": "Apri il luogo",
+      "openPlace": "Apri {place}",
       "close": "Chiudi",
       "addCompare": "Aggiungi al confronto",
       "inCompare": "Nel confronto",
@@ -687,11 +723,21 @@
       "title": "Il mondo",
       "kicker": "Paese o territorio",
       "claimed": "Si amministra da sé e non è membro delle Nazioni Unite. <link>{claimant}</link> lo considera parte del proprio territorio.",
+      "claimedBy": "<link>{claimant}</link> lo considera parte del proprio territorio.",
       "notYet": "Solon non raccoglie ancora i luoghi di {place}.",
       "coverage": "Che cosa copre Solon finora",
       "metaDescription": "{place} su Solon: il diritto che Solon vi raccoglie e i luoghi al suo interno.",
       "indexIntro": "Ogni paese e ogni territorio, ciascuno con una pagina propria. Aprine uno per vedere il diritto che Solon vi raccoglie e i luoghi al suo interno.",
-      "heldPlaces": "{count, plural, =0 {Solo luoghi} one {Luoghi · # atto} other {Luoghi · # atti}}"
+      "heldPlaces": "{count, plural, =0 {Solo luoghi} one {Luoghi · # atto} other {Luoghi · # atti}}",
+      "groups": {
+        "state": "Membri delle Nazioni Unite",
+        "observer": "Stati osservatori",
+        "self_governing": "Si governano da sé, fuori dall'ONU",
+        "territory": "Territori",
+        "proclaimed": "Stati proclamati",
+        "special": "Giurisdizioni speciali",
+        "project": "Progetti di nuove giurisdizioni"
+      }
     },
     "law": {
       "title": "Diritto",
@@ -702,7 +748,7 @@
       "nothing": "Ancora nessun atto",
       "textsNotHeld": "I testi non sono ancora raccolti.",
       "moreRegistered": "{count, plural, one {# altro atto registrato} other {# altri atti registrati}}, testi non ancora raccolti.",
-      "communes": "Comuni ({count})"
+      "below": "Al di sotto ({count})"
     },
     "parts": {
       "title": "Luoghi di {place}",
@@ -736,31 +782,85 @@
       "translation": "Traduzione:",
       "translatedBy": "Tradotto da {translator}",
       "read": "letto il {date}",
-      "actTitle": "Proporre condizioni",
-      "actIntro": "La regola di una parte vi sembra migliore su una domanda, o vedete condizioni accettabili per entrambe? Redigetele come proposta: attesta un sostegno, va a chi decide e non è mai diritto.",
-      "propose": "Proporre condizioni per {place}",
-      "proposeTitle": "Condizioni per {place}",
-      "proposeBody": "Quale regola dovrebbe valere a {place}, domanda per domanda, e perché. Parti confrontate: {sides}.",
+      "actTitle": "Proporre una modifica",
+      "actIntro": "Pensi che la regola di una parte sia migliore, o vuoi cambiare una legge? Apri la legge in Solon, scegli l'articolo e scrivi le parole che vuoi: sono mostrate come modifica rispetto al testo pubblicato, altri possono sostenerle, e la pagina dice come quella legge viene modificata ufficialmente. Il sostegno qui è una prova, mai una legge.",
       "methodTitle": "Come è fatto questo confronto",
       "method": "Ogni riga è una citazione da una pagina che qualcuno ha aperto, con il giorno della lettura; l'originale sta accanto a ogni traduzione, e un programma rilegge ogni pagina ogni settimana e segnala le parole scomparse. Le domande sono le stesse per ogni luogo. La parte che governa viene sempre per prima, poi quella che rivendica. Dove non è stato letto nulla, la pagina lo dice.",
       "all": "Tutti i luoghi contesi",
       "proposeChange": "Proporre una modifica di questo articolo",
       "money": {
         "title": "Su cosa poggia il bilancio pubblico",
-        "question": "Quanto ha raccolto ciascuna parte da sé, quanto ha ricevuto e da chi, e quanto ha speso?",
-        "year": "{side}, {year}",
-        "caption": "Entrate del bilancio dello Stato di {side} nel {year}, {total} in tutto, per provenienza",
-        "own": "Entrate proprie",
-        "from": "{from}",
-        "revenue": "Entrate",
-        "spent": "Spese",
-        "ownCovered": "Spese coperte da entrate proprie",
-        "receivedShare": "Entrate ricevute da altri",
-        "withoutTitle": "Spendere lo stesso senza quanto ricevuto",
-        "without": "Perché {side} spenda lo stesso con le sole entrate proprie, queste dovrebbero essere {multiple} volte quelle che erano; oppure le spese dovrebbero scendere del {cut}; oppure un misto delle due cose.",
-        "notForecast": "Un calcolo sulle cifre della legge di bilancio, non una previsione: non dice nulla di ciò che l'economia potrebbe raccogliere con altre regole, né di cosa si spenderebbe invece.",
-        "notRead": "Per {side} non è ancora stato letto alcun bilancio."
-      }
+        "notRead": "Per {side} non è ancora stato letto alcun bilancio.",
+        "open": "L'intero bilancio di {side}"
+      },
+      "proposeLaw": "Proporre una modifica al diritto di {side}"
+    },
+    "profile": {
+      "title": "In breve",
+      "kinds": {
+        "state": "Membro delle Nazioni Unite dal {date}.",
+        "observer": "Uno Stato osservatore non membro delle Nazioni Unite.",
+        "self_governing": "Si governa da sé e non è membro delle Nazioni Unite.",
+        "territory": "Non è membro delle Nazioni Unite.",
+        "territoryOf": "Non è membro delle Nazioni Unite; Wikidata lo colloca sotto {country}.",
+        "proclaimed": "Proclamato Stato dai suoi fondatori. Non è membro delle Nazioni Unite.",
+        "special": "Una giurisdizione con un diritto proprio all'interno di {country}.",
+        "specialNoCountry": "Una giurisdizione con un diritto proprio all'interno di uno Stato.",
+        "project": "Un progetto per una nuova giurisdizione."
+      },
+      "kicker": {
+        "state": "Paese",
+        "observer": "Stato osservatore",
+        "self_governing": "Si governa da sé",
+        "territory": "Territorio",
+        "proclaimed": "Stato proclamato",
+        "special": "Giurisdizione speciale",
+        "project": "Progetto di nuova giurisdizione"
+      },
+      "facts": {
+        "capital": "Capitale",
+        "population": "Popolazione",
+        "area": "Superficie",
+        "languages": "Lingue ufficiali",
+        "currency": "Valuta",
+        "government": "Forma di governo",
+        "headOfState": "Capo di Stato",
+        "headOfGovernment": "Capo del governo",
+        "founded": "Fondato o proclamato",
+        "unSince": "Membro dell'ONU dal",
+        "website": "Sito web"
+      },
+      "constitution": "Leggi la sua costituzione",
+      "noConstitution": "Solon non ha ancora la sua costituzione.",
+      "allLaw": "Tutto il suo diritto in Solon",
+      "routes": "{count, plural, =0 {Solon non sa ancora come il suo diritto viene modificato ufficialmente.} one {# via ufficiale per modificare il suo diritto, con la fonte.} other {# vie ufficiali per modificare il suo diritto, con le fonti.}}",
+      "source": "Dati da <wikidata>Wikidata</wikidata>, letti il {date}; appartenenza dall'<un>elenco delle Nazioni Unite</un>. Ogni tipo di luogo dice cosa fa, non se la sua rivendicazione è fondata.",
+      "rule": "Gli Stati proclamati sono elencati secondo un'unica regola: Wikidata li classifica come micronazioni, non disciolte, con una voce in almeno 30 Wikipedie."
+    },
+    "photoCredit": "Foto: {author} · {license}",
+    "figures": {
+      "title": "Misurato",
+      "intro": "Dove si colloca {place} su dati pubblicati per quasi ogni paese. Ognuno apre la sua serie e la sua fonte.",
+      "groups": {
+        "state": "Cosa preleva e spende lo Stato",
+        "governance": "Come è governato, misurato",
+        "safety": "Sicurezza"
+      },
+      "position": "Più alto che in {percent}% di {count} altri paesi nel {year}",
+      "trend": "{label} dal {from}",
+      "source": "{publisher}, {year}",
+      "highest": "Il più alto di {count} paesi nel {year}",
+      "lowest": "Il più basso di {count} paesi nel {year}"
+    },
+    "change": {
+      "title": "Come si cambia il suo diritto",
+      "intro": "Le vie ufficiali con cui le persone a cui si applica, non solo il legislatore, possono cambiare il diritto qui, secondo le disposizioni che le stabiliscono."
+    },
+    "recent": {
+      "title": "Cosa è cambiato di recente",
+      "intro": "{count, plural, one {# atto} other {# atti}} di {place} e dei luoghi di cui fa parte sono entrati in vigore negli ultimi dodici mesi. I più recenti:",
+      "new": "Nuovo, in vigore dal {date}",
+      "amended": "Modificato, in vigore dal {date}"
     }
   },
   "AuthError": {
@@ -778,7 +878,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Copertura del diritto",
-      "metaDescription": "Quali atti della Svizzera, del Liechtenstein e del Lussemburgo conserva Solon, per autorità, contati dai dati.",
+      "metaDescription": "Quali atti conserva Solon, per autorità, contati dai dati.",
       "kicker": "Diritto",
       "title": "Che cosa conserva Solon",
       "intro": "Contato dai dati, letto presso l'editore il {date}: gli atti di ogni autorità e per quanti Solon conserva il testo.",
@@ -787,13 +887,13 @@
       "authorities": "Autorità",
       "row": "{inForce} in vigore · {notInForce} no",
       "rowNotStated": "{inForce} in vigore · {notInForce} no · {notStated} stato non indicato dall'editore",
-      "totalsNotStated": "{notStated, plural, one {# altro atto è elencato} other {# altri atti sono elencati}} da editori che non indicano se siano in vigore.",
+      "totalsNotStated": "{notStated} {count, plural, one {altro atto è elencato} other {altri atti sono elencati}} da editori che non indicano se siano in vigore.",
       "note": "I comuni si aggiungono una raccolta alla volta; quelli conservati finora sono nell'elenco qui sopra.",
       "readLink": "Trovare e leggere un atto →"
     },
     "index": {
       "metaTitle": "Trovare un atto",
-      "metaDescription": "Trovare un atto della Svizzera o del Liechtenstein per titolo o numero e leggerlo come lo ha scritto il suo editore.",
+      "metaDescription": "Trovare un atto per titolo o numero in qualsiasi luogo di cui Solon conserva il diritto, e leggerlo come lo ha scritto il suo editore.",
       "kicker": "Diritto",
       "title": "Trovare un atto",
       "intro": "Cerchi in tutte le leggi che Solon conserva: Confederazione, cantoni e comuni. Scriva con parole semplici ciò che cerca, oppure parta dal luogo in cui abita.",
@@ -829,6 +929,7 @@
       "inForceSince": "In vigore dal {date}, secondo l'editore.",
       "readOn": "L'editore non indica da quando si applica questa versione. Letta il {date}.",
       "copy": "Copia letta il {date}.",
+      "copyKeptBy": "Il testo come lo conserva {keeper}, non la copia dell'editore ufficiale.",
       "copyFrom": "La pagina da cui è stata letta",
       "copyArchived": "Copia letta il {date} dalla copia dell'Internet Archive del {captured}, perché il sito dell'editore ha rifiutato il lettore di Solon. Non è la copia dell'editore stesso.",
       "copyArchivedFrom": "La copia archiviata da cui è stata letta",
@@ -845,7 +946,13 @@
       "morePlace": "Altre leggi di {place}",
       "asMarkdown": "Per le macchine: Markdown",
       "titleDerived": "Questo titolo è stato costruito da Solon dalle ultime righe dell'atto. L'editore non dà all'atto alcun titolo oltre al suo tipo.",
-      "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}"
+      "contents": "{count, plural, one {Indice: # disposizione} other {Indice: # disposizioni}}",
+      "translatedNote": "Traduzione automatica per la lettura ({from} → {to}). Solo il testo autentico fa legge.",
+      "originalNote": "Il testo autentico ({from}).",
+      "showOriginal": "Mostrare il testo autentico ({from})",
+      "showTranslation": "Mostrare la traduzione ({to})",
+      "translating": "Traduzione di questa pagina…",
+      "translationFailed": "Questa pagina non ha potuto essere tradotta ora; è mostrato il testo autentico."
     },
     "kinds": {
       "constitution": "costituzione",
@@ -975,6 +1082,31 @@
       "withinSixMonths": "Entro sei mesi dalla chiusura dell’esercizio, approvati dall’assemblea generale ordinaria"
     }
   },
+  "AskSolon": {
+    "title": "Chiedi a Solon",
+    "description": "Capisci le regole, confronta i modi di decidere o trasforma un’idea in una bozza di proposta.",
+    "status": "Lettura delle regole di governance",
+    "starters": {
+      "one": "Chi può decidere cosa?",
+      "two": "Confronta i profili di governance",
+      "three": "Aiutami a scrivere una proposta"
+    },
+    "startersTitle": "Rendere più chiara la prossima decisione.",
+    "placeholder": "Chiedi di una decisione, o scrivi una proposta…",
+    "draftsNote": "Le bozze non sono decisioni.",
+    "signInLink": "Accedi per chiedere a Solon",
+    "methods": "Leggi le regole di voto",
+    "record": "Leggi il registro delle decisioni",
+    "errors": {
+      "failed": "Solon non ha potuto rispondere. Riprova.",
+      "signIn": "Accedi per chiedere a Solon. Tornerai qui.",
+      "tooLong": "Questa conversazione è troppo lunga. Iniziane una nuova.",
+      "rateLimited": "Attendi qualche minuto prima di chiedere di nuovo.",
+      "unavailable": "L’IA di Solon non è disponibile al momento. Puoi comunque leggere le regole o scrivere una proposta qui sotto.",
+      "noAnswer": "La risposta non è arrivata. Riprova.",
+      "interrupted": "La risposta è stata interrotta. Riprova."
+    }
+  },
   "Chat": {
     "copy": "Copia",
     "copied": "Copiato",
@@ -998,6 +1130,19 @@
     "confirmRecording": "Fatto — usa quello che ho detto",
     "listening": "Ti ascolto…",
     "transcribing": "Trascrizione in corso…",
+    "attach": "Allega un file di testo",
+    "attachRemove": "Rimuovi {name}",
+    "attachMenu": {
+      "title": "Aggiungi al messaggio",
+      "close": "Chiudi",
+      "files": "File di testo"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: allega un file di testo (txt, md, csv o json). Immagini e PDF qui non vengono letti.",
+      "textTooLarge": "{name} è troppo lungo (al massimo {k}k caratteri).",
+      "unreadable": "Impossibile leggere {name}.",
+      "tooMany": "Fino a {max} file."
+    },
     "queue": "Metti in coda un messaggio…",
     "dismiss": "Nascondi",
     "retryTake": "Riprova",
@@ -1005,7 +1150,9 @@
       "mic": "Il microfono è bloccato. Consentilo per questo sito e riprova.",
       "silence": "Non è stato sentito nulla. Riprova, un po’ più vicino al microfono.",
       "unavailable": "L’inserimento vocale non è disponibile al momento. Scrivi oppure riprova più tardi.",
-      "fileTooLarge": "Questa registrazione è troppo grande per essere trascritta qui."
+      "fileTooLarge": "Questa registrazione è troppo grande per essere trascritta qui.",
+      "signIn": "Accedi per usare la dettatura.",
+      "busy": "La dettatura è molto richiesta in questo momento. Riprova tra un attimo."
     },
     "app": {
       "chats": "Conversazioni",
@@ -1044,6 +1191,113 @@
       }
     }
   },
+  "Amend": {
+    "metaTitle": "Proporre una modifica",
+    "kicker": "Proporre una modifica",
+    "intro": "Scrivi le parole di questo atto come pensi che dovrebbero essere. Solon mostra la tua modifica rispetto al testo pubblicato e la lega a quel testo preciso, così che non possa mai essere applicata a una formulazione che non hai visto.",
+    "notLaw": "Una proposta qui non è legge. Il sostegno su Solon è la prova che le persone vogliono il cambiamento; la via ufficiale dice cosa serve perché diventi legge.",
+    "signInFirst": "Accedi per presentare la tua proposta. Ciò che hai scritto resta su questa pagina.",
+    "signIn": "Accedi per presentarla",
+    "forkOf": "Stai partendo dalla proposta di qualcun altro. La tua è presentata come alternativa, ed entrambe restano agli atti.",
+    "changeLabel": "Modifica {n}",
+    "chooseProvision": "Articolo",
+    "pickOne": "Scegli un articolo",
+    "operation": "Cosa farne",
+    "ops": {
+      "replace": "Riformularlo",
+      "repeal": "Abrogarlo",
+      "insert": "Aggiungere un nuovo articolo dopo di esso"
+    },
+    "asPublished": "Come pubblicato",
+    "yourWording": "La tua formulazione",
+    "newHeading": "Titolo del nuovo articolo",
+    "newText": "Testo del nuovo articolo",
+    "redline": "La tua modifica, a confronto",
+    "loading": "Lettura dell'articolo…",
+    "loadFailed": "Non è stato possibile leggere l'articolo. Sceglilo di nuovo.",
+    "addChange": "Modificare un altro articolo",
+    "removeChange": "Togliere questa modifica",
+    "title": "Titolo",
+    "titleHint": "Una riga che dice cosa cambia, per esempio «Dimezzare la tassa sui cani».",
+    "rationale": "Perché",
+    "rationaleHint": "A chi giova, quanto costa, cosa risolve. È ciò che convince le persone a sostenerla.",
+    "dictate": "Parla invece di scrivere",
+    "stopDictating": "Ho finito di parlare",
+    "dictationProblems": {
+      "mic": "Qui non si può usare nessun microfono.",
+      "silence": "Non si è sentito nulla.",
+      "unavailable": "Il riconoscimento vocale non è disponibile al momento.",
+      "fileTooLarge": "La registrazione è troppo lunga."
+    },
+    "submit": "Presenta questa proposta",
+    "submitting": "Presentazione…",
+    "problems": {
+      "stale_base": "Il testo pubblicato di {path} è cambiato mentre scrivevi. Scegli di nuovo l'articolo per scrivere sul testo attuale.",
+      "unknown_path": "{path} non è più in questo atto.",
+      "duplicate_path": "{path} è modificato due volte; tieni una sola modifica.",
+      "no_effect": "La tua formulazione di {path} è identica al testo pubblicato.",
+      "unknown_anchor": "L'articolo dopo cui aggiungere non è più in questo atto."
+    },
+    "failed": "Non è stato possibile presentare la proposta: {reason}",
+    "amendment": {
+      "kicker": "Modifica proposta",
+      "to": "A: {act}",
+      "filed": "Revisione {revision}, presentata il {date}",
+      "current": "Scritta sul testo in vigore oggi.",
+      "outdated": "La legge è cambiata da quando questo è stato scritto. Il confronto mostra la modifica rispetto al testo per cui è stata scritta.",
+      "support": "{total, plural, =0 {Nessuno la sostiene ancora} one {# persona la sostiene} other {# persone la sostengono}}",
+      "supportSplit": "{account} con accesso · {signed} hanno firmato con la propria chiave",
+      "supportButton": "Sostieni questa proposta",
+      "withdrawButton": "Ritira il mio sostegno",
+      "youSupport": "Sostieni questa revisione.",
+      "signInToSupport": "Accedi per sostenerla",
+      "supportFailed": "Non è stato possibile registrare il tuo sostegno: {reason}",
+      "notLaw": "Una proposta qui non è legge. Il sostegno su Solon è la prova che le persone vogliono il cambiamento; la via ufficiale dice cosa serve perché diventi legge.",
+      "changes": "Cosa cambia",
+      "replaced": "Riformulato",
+      "repealed": "Abrogato",
+      "inserted": "Nuovo articolo",
+      "rationale": "Perché",
+      "routes": "Come questa legge viene modificata ufficialmente",
+      "noRoute": "Solon non conosce ancora la via ufficiale di questa legge. La proposta è registrata comunque, e la via comparirà qui quando sarà aggiunta la sua fonte.",
+      "routeBar": "{count} firme di {who}",
+      "routeWindowMonths": "entro {months} mesi",
+      "routeWindowDays": "entro {days} giorni",
+      "routeNoBar": "{who}; non è richiesto alcun numero di firme",
+      "routeSource": "Fonte: {provision}, {title}",
+      "fork": "Scrivere un'alternativa",
+      "revisions": "Tutte le revisioni",
+      "revisionRow": "Revisione {revision} · {date} · {support}",
+      "chain": "Ogni proposta e ogni sostegno è una voce di un'unica catena di hash che chiunque può verificare.",
+      "chainLink": "Leggi la catena",
+      "routeShare": "Firme di {who} pari al {percent}% di {of}"
+    },
+    "list": {
+      "metaTitle": "Modifiche proposte alla legge",
+      "title": "Modifiche proposte",
+      "intro": "Le modifiche che le persone hanno proposto alle leggi che Solon conserva, dalle più recenti.",
+      "empty": "Qui nessuno ha ancora proposto modifiche.",
+      "howTo": "Per proporne una, apri un atto e premi «Proporre una modifica» accanto a qualsiasi articolo.",
+      "row": "Revisione {revision} · {support}",
+      "supporters": "{total, plural, =0 {ancora nessun sostenitore} one {# sostenitore} other {# sostenitori}}"
+    },
+    "act": {
+      "propose": "Proporre una modifica",
+      "proposals": "Modifiche proposte a questo atto",
+      "noProposals": "Nessuno ha ancora proposto modifiche a questo atto."
+    },
+    "consult": {
+      "title": "Pensaci bene",
+      "intro": "Chiedi cosa farebbe la tua modifica, chi ci guadagnerebbe e chi ne sopporterebbe il costo, e dove qualcosa di simile è già legge. L'assistente legge la tua bozza così com'è, cita le leggi e gli studi che trova e non prende posizione. Ciò che presenti resta tuo.",
+      "placeholder": "Cosa farebbe questa modifica?",
+      "starters": {
+        "one": "Cosa farebbe questa modifica, e a chi?",
+        "two": "Dove qualcosa di simile è già legge, e com'è andata?",
+        "three": "Come rendere più chiara la formulazione?"
+      },
+      "startersTitle": "Domande per iniziare"
+    }
+  },
   "Atlas": {
     "world": "Il mondo",
     "worldTitle": "Il diritto del mondo, pezzo per pezzo",
@@ -1068,7 +1322,11 @@
     "taxNone": "Non c'è ancora una mappa dell'imposta per {country}.",
     "taxWorldTitle": "Quanto ti costerebbe l'imposta, luogo per luogo",
     "taxWorldIntro": "Scegli un paese per colorarne i luoghi secondo quanto ti costerebbe l'imposta.",
-    "everyCountry": "Ogni paese e ogni territorio"
+    "everyCountry": "Ogni paese e ogni territorio",
+    "showLabel": "Cosa mostra la mappa",
+    "showAll": "Tutti i luoghi",
+    "showBeyond": "Oltre l'ONU",
+    "beyondIntro": "Luoghi che si governano da sé senza essere membri dell'ONU, Stati proclamati dai loro fondatori, giurisdizioni con un diritto proprio all'interno di uno Stato e progetti per nuove giurisdizioni. Ognuno è indicato per ciò che fa, non per se la sua rivendicazione sia fondata."
   },
   "Statistics": {
     "kicker": "Statistiche",
@@ -1162,7 +1420,7 @@
       "statedBy": "Secondo {source}, dal {from} al {to}.",
       "statedSince": "Secondo {source}, dal {from}.",
       "sourcesTitle": "Da dove viene ogni numero",
-      "sourceRow": "{place}: letto il {date}",
+      "sourceRow": "{place}: {publisher}, letto il {date}",
       "sourceLink": "i dati dell'editore",
       "rawLink": "il file scaricato",
       "saveTitle": "Conserva questa vista",
@@ -1513,7 +1771,7 @@
       "metaDescription": "Ponete una domanda su governo, libertà o statistica: un'IA legge le serie, le dimensioni, le descrizioni dei metodi e il diritto di Solon e scrive un rapporto in cui ogni cifra e citazione è verificata.",
       "kicker": "Ricerca",
       "title": "Ricerca con l'IA",
-      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti.",
+      "intro": "Ponete una domanda su governo, libertà, statistica o diritto. Un'IA legge ciò che Solon detiene (serie con definizioni e note di qualità, dimensioni che tengono separati diritto, pratica e risultati, come sono fatte le classifiche pubblicate, il diritto stesso) e scrive un breve rapporto. Ogni cifra e ogni citazione è verificata rispetto alle fonti lette prima che la vediate; il ragionamento no, leggete quindi le fonti. Conosce solo ciò che Solon detiene: dove Solon non ha dati per un luogo, non ne ha neanche lei.",
       "questionLabel": "La vostra domanda",
       "placeholder": "Per esempio: come si confronta il carico fiscale dell'Estonia con quello della Svizzera, e cosa dice il diritto sull'aliquota massima?",
       "ask": "Ricerca",
@@ -1553,6 +1811,8 @@
       "intro": "Gli uffici di statistica decidono cosa raccogliere e pubblicare, per ragioni giuridiche, storiche, pratiche o politiche: la stessa domanda può quindi avere risposta in un paese e non in un altro. Qui ogni tema è presentato allo stesso modo: cosa dice una fonte letta che si raccoglie, incrociato con cosa, sotto quale diritto, dove la risposta manca, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Solon descrive e propone; non valuta gli uffici e non caratterizza le persone.",
       "open": "Apri",
       "back": "Tutti i temi",
+      "soFar": "{count, plural, one {# tema finora.} other {# temi finora.}} Previsti in seguito: il divario fiscale, l'applicazione della legge sul possesso di droga e i tassi di risoluzione per reato.",
+      "why": "Perché Solon segnala ciò che non è misurato",
       "stance": "Solon riporta ciò che dicono le pagine di ciascun ufficio e ciò che non è stato letto. Una lacuna può essere una legge scelta da un paese; una differenza in una tabella non è una spiegazione. Nulla qui descrive un ufficio o un gruppo di persone.",
       "purposesTitle": "A cosa serve la risposta",
       "matrixTitle": "Cosa pubblica ogni luogo",
@@ -1594,6 +1854,109 @@
       "propose": "Proponi una posizione",
       "proposeTitle": "Posizione su ciò che viene misurato: {topic}",
       "proposeBody": "Chiediamo al nostro ufficio di statistica di considerare la misura descritta in {url}, con gli elementi di accompagnamento e le salvaguardie ivi elencati."
+    },
+    "why": {
+      "metaTitle": "Perché leggi e numeri, per ogni luogo",
+      "metaDescription": "Perché Solon affianca il diritto di ogni luogo alle sue statistiche, segnala ciò che non è misurato e cita ogni fonte, per decidere insieme.",
+      "kicker": "Statistiche",
+      "title": "Leggi e numeri, per ogni luogo",
+      "intro": "Il diritto di un luogo dice come è governato. Le sue statistiche dicono come sta. Solon tiene entrambi fianco a fianco, per ogni luogo che riesce a leggere, e segnala ciò che un luogo non misura. Lavora per mostrare quali misure e quali politiche altri luoghi hanno scelto per lo stesso problema, così che le persone possano decidere insieme cosa cambiare.",
+      "why": {
+        "title": "Perché entrambi",
+        "body": "La legge da sola mostra intenzioni; i numeri da soli mostrano risultati senza una causa accanto. Insieme, una modifica della legge si può mettere accanto a ciò che è seguito, e le scelte di un luogo accanto a quelle di un altro. Ognuno è conservato come l'ha pubblicato il suo editore, con la fonte a un clic."
+      },
+      "gaps": {
+        "title": "Cosa viene misurato, e cosa no",
+        "body": "Gli uffici statistici scelgono cosa rilevare, per ragioni giuridiche, storiche, pratiche o politiche, così una domanda a cui un paese risponde con i propri dati resta senza risposta in un altro. Solon mostra chi pubblica cosa, incrociato con cosa e in base a quale legge, e cosa dovrebbe accompagnare una nuova misura perché non sia letta male. Non dà voti agli uffici e non descrive gruppi di persone.",
+        "sources": "Per esempio, <denmark>Statistics Denmark</denmark> pubblica quante persone sono state riconosciute colpevoli di reati, per paese d'origine, sesso ed età, con dati dal 2000 al 2025; il <france>Consiglio costituzionale</france> francese ha deciso che gli studi non possono basarsi sull'origine etnica o sulla razza."
+      },
+      "trends": {
+        "title": "Le tendenze, e cosa hanno fatto altri luoghi",
+        "body": "Una serie mostra come un dato si è mosso negli anni. Una modifica della legge è registrata come un evento: cosa è cambiato, come ci si è arrivati, chi ha votato come e cosa se ne è detto, tenuto separato da ciò che è accaduto. Mettere le due cose fianco a fianco, tra luoghi diversi, permette a un gruppo di vedere cosa hanno tentato altri."
+      },
+      "items": {
+        "lawByPlace": {
+          "name": "Il diritto di ogni luogo",
+          "body": "Gli atti come li pubblicano i loro editori, con il giorno in cui sono stati letti e un'impronta che prova la copia, per i luoghi che Solon ha letto finora."
+        },
+        "statisticsSeries": {
+          "name": "Le statistiche nel tempo",
+          "body": "Serie della Banca mondiale, dell'OCSE e di Eurostat, ognuna con la sua definizione, ciò che copre e il giorno in cui è stata letta."
+        },
+        "publicBudgets": {
+          "name": "I bilanci pubblici",
+          "body": "Cosa incassano i governi e per cosa lo spendono, dalle leggi di bilancio e dagli uffici statistici, secondo una classificazione internazionale perché i luoghi siano confrontabili."
+        },
+        "measurementGaps": {
+          "name": "Cosa viene misurato, e dove no",
+          "body": "Tema per tema: quali uffici pubblicano una misura, incrociata con cosa e in base a quale legge, e cosa dovrebbe accompagnarne una nuova. Per ora un tema: la criminalità secondo l'origine di una persona."
+        },
+        "placeGapReport": {
+          "name": "Le misure che mancano a un luogo, e come cominciare",
+          "body": "Per un luogo: cosa non misura, i luoghi comparabili che lo fanno, l'ufficio responsabile e una proposta che le persone possono riprendere per chiederla."
+        },
+        "lawEvents": {
+          "name": "Le modifiche della legge, e come sono avvenute",
+          "body": "Cosa è cambiato, i passaggi e i voti, e cosa se ne è detto, tenuto separato da ciò che è accaduto."
+        },
+        "trendMarkers": {
+          "name": "Le modifiche della legge sulla linea",
+          "body": "Ogni modifica della legge tracciata sulla serie che riguarda, nell'anno in cui si è applicata."
+        },
+        "policyByTrend": {
+          "name": "Cosa hanno fatto altri luoghi di fronte a una tendenza",
+          "body": "Accanto a una serie, le modifiche della legge fatte da altri luoghi quando i loro dati si muovevano allo stesso modo, e cosa è seguito, senza dire quale fosse giusta."
+        },
+        "aiResearch": {
+          "name": "Ricerca con l'IA",
+          "body": "Fai una domanda: un'IA legge ciò che Solon contiene e scrive un rapporto in cui ogni dato e ogni citazione sono verificati rispetto a ciò che ha letto. Conosce solo ciò che Solon contiene."
+        },
+        "groupMeasures": {
+          "name": "Le misure proprie di un gruppo, per voto",
+          "body": "Un gruppo sceglie quali misure contano, e quanto, come una regola su cui votano i suoi membri."
+        }
+      },
+      "example": {
+        "kicker": "Esempio",
+        "title": "Ossezia del Sud",
+        "status": "L'Ossezia del Sud si amministra da sé e non è membro delle Nazioni Unite. La Georgia la considera parte del proprio territorio. Solon registra entrambe le cose e non dice chi ha ragione.",
+        "why": "Pochi editori esterni se ne occupano, quindi gran parte di ciò che si può sapere viene dalle sue stesse autorità, e Solon lo registra come la loro versione. Mostra cosa fa Solon dove le fonti sono scarse: conservare ciò che è pubblicato, dire di chi è e segnalare ciò che manca.",
+        "sources": "L'<geostat>ufficio statistico</geostat> della Georgia dichiara che, dal 1994, i suoi dati non coprono il territorio, che chiama regione di Tskhinvali. L'<ugosstat>ufficio statistico</ugosstat> dell'Ossezia del Sud pubblica una raccolta ogni anno e ogni trimestre; l'edizione 2025 è stata pubblicata il 24 giugno 2026.",
+        "items": {
+          "law": {
+            "name": "Il suo diritto",
+            "body": "Gli atti che pubblicano il suo Parlamento e il suo Presidente, ciascuno con la data dell'editore. L'editore non dice se un atto è ancora in vigore, e Solon lo dice."
+          },
+          "budget": {
+            "name": "Il suo bilancio statale",
+            "body": "Il bilancio 2023 come lo indica la legge sulla sua esecuzione, collocato secondo la classificazione internazionale perché sia confrontabile: circa quattro quinti delle entrate venivano dalla Federazione Russa."
+          },
+          "statistics": {
+            "name": "I dati del suo ufficio statistico",
+            "body": "Popolazione, reati registrati, PIL e bilancio statale, letti dalla raccolta 2025 con le riserve dell'ufficio stesso: la popolazione è una stima proiettata dal suo censimento del 2015, e il PIL un'approssimazione, perché l'ufficio dice di non avere i dati per calcolarlo per intero."
+          },
+          "gaps": {
+            "name": "Cosa non misura",
+            "body": "Nella raccolta 2025 le persone che hanno commesso reati sono contate per sesso, età e occupazione, non per cittadinanza, luogo di nascita od origine, la suddivisione che pubblica la Danimarca. L'ufficio statistico della Georgia non pubblica alcun dato sulla popolazione, e non è stato trovato nessun altro conteggio dall'esterno."
+          },
+          "next": {
+            "name": "Cosa verrebbe dopo",
+            "body": "Una pagina per l'Ossezia del Sud che elenca queste lacune, i luoghi comparabili che le misurano, l'ufficio responsabile e cosa dovrebbe accompagnare una nuova misura (età e sesso sempre, numeri piccoli omessi), come proposta che le persone sul posto possono riprendere."
+          }
+        },
+        "note": "Ricercato, non ancora caricato: i dati e le lacune qui sopra sono stati letti presso l'editore e annotati, con ogni indirizzo e ogni data, nella <note>nota di ricerca</note> di Solon. Non sono ancora sulle pagine di Solon."
+      },
+      "honest": {
+        "title": "Come Solon resta onesto",
+        "body": "I dati sono conservati come pubblicati, con il giorno in cui sono stati letti; una revisione si aggiunge, senza mai sovrascrivere. «Non letto» significa che Solon non ha guardato, non che non esista nulla. Le classifiche fatte da altri sono descritte, non usate come verdetti. Un'IA può spiegare una pagina, ma solo dai fatti elencati lì, e la sua risposta è verificata rispetto a essi prima che tu la veda.",
+        "link": "Come sono fatte le classifiche"
+      },
+      "decide": {
+        "title": "Perché le persone decidano insieme",
+        "body": "Niente di tutto questo dice a qualcuno cosa fare. Su Solon un gruppo può scegliere le proprie misure e i propri pesi per voto, chiedere una misura a un ufficio statistico con una proposta, e proporre una modifica a una legge accanto ai numeri che l'hanno motivata.",
+        "cta": "Proponi qualcosa",
+        "secondary": "Apri le statistiche"
+      }
     }
   },
   "Find": {
@@ -1610,6 +1973,151 @@
       "gaps": "Cosa viene misurato",
       "places": "Luoghi",
       "law": "Diritto"
+    }
+  },
+  "Budgets": {
+    "kicker": "Bilanci pubblici",
+    "indexTitle": "Bilanci pubblici: cosa incassano gli Stati e per cosa lo spendono",
+    "indexIntro": "Ogni luogo di cui Solon detiene un bilancio: cosa è entrato e da dove, per cosa è stato speso, e se era in pareggio. Ogni cifra rimanda alla legge o all'istituto di statistica da cui è stata letta, e ogni bilancio può essere confrontato con qualsiasi altro secondo la stessa classificazione.",
+    "indexEmpty": "Solon non detiene ancora alcun bilancio.",
+    "columns": {
+      "place": "Luogo",
+      "year": "Anno",
+      "spending": "Spese",
+      "revenue": "Entrate",
+      "balance": "Saldo",
+      "largest": "Quota maggiore della spesa"
+    },
+    "title": "{place}: bilancio pubblico",
+    "intro": "Cosa ha incassato il governo di {place} e per cosa lo ha speso, secondo le cifre che pubblicano le sue leggi di bilancio o un istituto di statistica. Solon colloca ogni cifra sulla stessa classificazione internazionale, perché possa essere confrontata con qualsiasi altro luogo.",
+    "basis": {
+      "executed": "Consuntivo: cosa è entrato ed è stato speso",
+      "enacted": "Come approvato: cosa è stato stanziato"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Altri anni",
+    "figures": {
+      "revenue": "Entrate",
+      "spending": "Spese",
+      "balance": "Avanzo (+) o disavanzo (−)",
+      "ofGdp": "del PIL",
+      "withGdp": "{value} · {share} del PIL"
+    },
+    "spending": {
+      "title": "Per cosa si spende il denaro",
+      "caption": "{place}, {year}: spesa per funzione, come quota di tutta la spesa"
+    },
+    "income": {
+      "title": "Da dove viene il denaro",
+      "caption": "{place}, {year}: entrate per tipo, come quota di tutte le entrate"
+    },
+    "rest": "Non ripartito, o senza categoria",
+    "noBreakdown": "L'editore indica questo totale ma non lo ripartisce.",
+    "detailCaption": "{category} nel dettaglio, come quota di essa",
+    "reliance": {
+      "title": "Chi paga",
+      "question": "Quanto ha incassato il governo da sé, quanto ha ricevuto e da chi, e quanto ha speso?",
+      "own": "Incassato da sé",
+      "caption": "Entrate di {holder} nel {year}, {total} in tutto, per chi le ha fornite",
+      "ownCovered": "Spese coperte da entrate proprie",
+      "receivedShare": "Entrate ricevute da altri",
+      "withoutTitle": "Spendere lo stesso senza quanto ricevuto",
+      "without": "Perché {holder} spenda lo stesso con le sole entrate proprie, queste dovrebbero essere {multiple} volte quelle che erano; oppure le spese dovrebbero scendere del {cut}; oppure un misto delle due cose.",
+      "notForecast": "Un calcolo sulle cifre del bilancio stesso, non una previsione: non dice nulla di ciò che l'economia potrebbe raccogliere con altre regole, né di cosa si spenderebbe invece."
+    },
+    "history": {
+      "title": "Negli anni",
+      "caption": "{place}: entrate e spese, {from}–{to}",
+      "revenue": "Entrate",
+      "spending": "Spese",
+      "millions": "milioni {currency}"
+    },
+    "sources": {
+      "title": "Da dove vengono queste cifre",
+      "lines": "Le righe dell'editore ({count})",
+      "code": "Codice",
+      "line": "Riga",
+      "amount": "Importo",
+      "category": "Contato in",
+      "notPlaced": "Senza categoria",
+      "placement": "Come sono state collocate le righe",
+      "facts": "Serie lette da {publisher} il {date}.",
+      "translation": "Traduzione:",
+      "read": "letto il {date}",
+      "translatedBy": "Tradotto da {translator}"
+    },
+    "act": {
+      "title": "Cambiarlo",
+      "intro": "Questo denaro dovrebbe essere incassato o speso diversamente? Redigetelo come proposta: attesta un sostegno, va a chi decide e non è mai diritto.",
+      "propose": "Proporre una modifica di questo bilancio",
+      "proposeTitle": "{place}: il bilancio {year}",
+      "proposeBody": "Cosa dovrebbe cambiare nel bilancio di {place}, e perché: quali entrate, quali spese, di quanto. Cifre: {url}",
+      "compare": "Confrontare una funzione tra paesi"
+    },
+    "notHeld": "Solon non detiene ancora alcun bilancio per {place}.",
+    "placeCard": {
+      "title": "Bilancio pubblico",
+      "text": "Cosa incassa il governo di {place} e per cosa lo spende.",
+      "open": "Aprire il bilancio"
+    },
+    "currency": {
+      "label": "Mostrare il denaro in",
+      "converted": "Importi in {to}, convertiti da {from} al cambio medio del {year} ({sources}).",
+      "notConverted": "Importi in {from}: Solon non detiene alcun cambio del {year} per convertirli in {to}."
+    }
+  },
+  "MethodLab": {
+    "tablist": "Come contare le stesse preferenze",
+    "caption": "Come ogni gruppo di membri valuta ogni opzione, da 0 a 5",
+    "members": "{count} membri",
+    "asks": "La scheda chiede:",
+    "floor": "Tutto ciò che ha {floor} o più conta come accettabile; il resto si attenua qui sopra.",
+    "firstChoices": "prime scelte",
+    "rating": "{value} su 5",
+    "ratingApproved": "{value} su 5 — approvato",
+    "ratingNotApproved": "{value} su 5 — non approvato",
+    "pluralityWins": "{winner} vince con {count} su {total}.",
+    "pluralityNote": "Quattro dei sette membri le hanno dato zero. Nulla è stato contato male — è a questo che serve «sceglierne una», ed è per questo che l'opzione con cui i più possono convivere può perdere contro quella che una grande minoranza ama.",
+    "otherWins": "{winner} vince.",
+    "otherNote": "Gli stessi sette membri, le stesse preferenze, una domanda diversa — e una risposta diversa.",
+    "tabs": {
+      "plurality": {
+        "label": "Sceglierne una",
+        "asks": "Quale singola opzione vuole di più?"
+      },
+      "approval": {
+        "label": "Approvazione",
+        "asks": "Con quali opzioni potrebbe convivere?"
+      },
+      "dot": {
+        "label": "Punti",
+        "asks": "Come dividerebbe cinque punti tra di esse?"
+      },
+      "score": {
+        "label": "Voto",
+        "asks": "Valuti ogni opzione da 0 a 5."
+      },
+      "ranked": {
+        "label": "Classifica",
+        "asks": "Le metta nel suo ordine di preferenza."
+      }
+    },
+    "units": {
+      "approvals": "approvazioni",
+      "dots": "punti",
+      "avg": "media",
+      "points": "punti"
+    },
+    "options": {
+      "roof": "Riparare il tetto",
+      "apprenticeship": "Finanziare l'apprendistato",
+      "tooling": "Comprare gli attrezzi",
+      "reserve": "Tenere in riserva"
+    },
+    "camps": {
+      "daily": "Tre membri che usano l'edificio ogni giorno",
+      "train": "Due membri che formano i nuovi",
+      "work": "Due membri che fanno il lavoro stesso"
     }
   }
 }

@@ -18,6 +18,8 @@ import { buildBrief } from "./brief";
 import { buildDimensionBrief } from "./dimension-brief";
 import { loadDimensionPage } from "./dimension-page";
 import { factText } from "./explain";
+import { gapPlaceName } from "./gap-places";
+import { topicHref } from "./gaps";
 import { buildGapsBrief } from "./gaps-brief";
 import { buildMethodBrief } from "./method-brief";
 import { loadMetricPage } from "./metric-page";
@@ -207,13 +209,12 @@ export function researchTools(deps: {
       case "read_gaps": {
         const topic = GAPS.topics.find((x) => x.key === str("topic"));
         if (!topic) return { summary: `no topic "${str("topic")}"; use search_catalog for keys` };
-        const names = new Intl.DisplayNames(["en"], { type: "region" });
-        const facts = buildGapsBrief(topic, GAPS.coverage, (a2) => names.of(a2) ?? a2);
+        const facts = buildGapsBrief(topic, GAPS.coverage, (id) => gapPlaceName(id, "en"));
         return {
           summary: `${facts.length} facts about ${topic.key}`,
           sources: facts.map((f) => ({
             text: factText(f),
-            href: f.href ?? `${SITE}/statistics/gaps/${topic.key}`,
+            href: f.href ?? `${SITE}${topicHref(topic.key)}`,
           })),
         };
       }

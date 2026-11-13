@@ -1,3 +1,4 @@
+// experience-exempt: a base64 signature pasted from a wallet is not words anyone speaks
 "use client";
 
 import { useState, type ReactNode } from "react";

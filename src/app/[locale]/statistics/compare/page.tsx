@@ -5,7 +5,7 @@ import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { scatterPoints } from "@/lib/statistics/compare";
 import { statisticMetrics } from "@/lib/statistics/present";
-import { loadSeries } from "@/lib/statistics/read";
+import { loadSeriesFor } from "@/lib/statistics/read";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +34,11 @@ export default async function ComparePage({
   const x = metrics.find((m) => m.key === q.x) ?? metrics[0];
   const y =
     metrics.find((m) => m.key === q.y) ?? metrics.find((m) => m.key !== x?.key) ?? metrics[0];
-  const [xs, ys] =
+  const loaded =
     x && y && keys.has(x.key) && keys.has(y.key)
-      ? await Promise.all([
-          loadSeries(db, placesConfig, x.key, locale),
-          loadSeries(db, placesConfig, y.key, locale),
-        ])
-      : [[], []];
+      ? await loadSeriesFor(db, placesConfig, [x.key, y.key], locale)
+      : new Map();
+  const [xs, ys] = [loaded.get(x?.key ?? "") ?? [], loaded.get(y?.key ?? "") ?? []];
   const t = await getTranslations({ locale, namespace: "Statistics" });
   return (
     <CompareView

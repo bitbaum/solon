@@ -1,9 +1,11 @@
+import { UNITS } from "@/lib/config/places/units";
 import { BarChart } from "@bitbaum/chartkit/react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import type { Metric } from "@/lib/config/places/schema";
 import { canonicalJson } from "@/lib/domain/canonical";
 import { proposeHref } from "@/lib/domain/proposal-draft";
+import { cite } from "@/lib/i18n/config-catalog";
 import { localized } from "@/lib/places/place-view";
 import { STATISTIC_AXES_POLICY_KEY, type Axis, type AxisScore } from "@/lib/statistics/axes";
 import { parallelData } from "@/lib/statistics/compare";
@@ -58,7 +60,7 @@ export default function AxisPanel({
     <div className="min-w-0 space-y-4 rounded-surface border border-default bg-surface-base p-6">
       <h3 className="text-xl font-semibold text-fg-primary">{label}</h3>
       <p className="mb-0 text-sm text-fg-tertiary">
-        {t("index.axisAuthor", { author: axis.author })}
+        {t("index.axisAuthor", { author: cite(axis.author, locale) })}
       </p>
       <BarChart
         rows={scores.map((s) => {
@@ -69,7 +71,7 @@ export default function AxisPanel({
           const figure =
             only?.value != null && metric
               ? `${chartValue(metric, only.value).toLocaleString(locale)}${
-                  metric.unit === "ratio" ? " %" : ""
+                  UNITS[metric.unit].percent ? " %" : ""
                 } (${only.year})`
               : undefined;
           return {

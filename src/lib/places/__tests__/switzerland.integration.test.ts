@@ -97,8 +97,11 @@ const RETRIEVALS: [sourceKey: string, file: string][] = [
   // The hand-kept file, cut to the cantons above (adapters.test.ts checks the whole file).
   ["ch-cantonal-tax-steps", "tax-steps-cut.csv"],
   // One indicator of each statistics source (the adapters' own tests read the rest).
-  ["worldbank-wdi-ch", "../worldbank/ch-ne-con-govt-zs.json"],
-  ["oecd-tax-ch", "../oecd/oecd-che-ts-pit.csv"],
+  // The national-statistics sources read every country; Switzerland's rows land on the place
+  // its own pack holds.
+  ["worldbank-wdi-world", "../worldbank/ch-ne-con-govt-zs.json"],
+  ["oecd-tax-world", "../oecd/oecd-che-ts-pit.csv"],
+  ["eurostat-gov-world", "../eurostat/gov_10a_exp-ch.json"],
 ];
 
 /**
@@ -194,13 +197,21 @@ async function placeId(scheme: string, value: string): Promise<string> {
 }
 
 describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
-  it("imports the register's snapshots, its mergers, the city's quarters and the multipliers", async () => {
-    for (const [sourceKey, file] of RETRIEVALS) {
-      const report = await importFixture(sourceKey, file);
-      expect(report.problems, file).toEqual([]);
-      expect(report.status, file).toBe("applied");
-    }
-  });
+  // Measured in CI: 1.4 s on a quiet runner (run 43052241295), over 5 s on a loaded one
+  // (run 43054633059, same code path; the commit between them changed only page copy).
+  // It is the first test in the file and runs every import against a cold database, so
+  // it is sized at 30 s, a ceiling for a loaded runner, not a figure to grow into.
+  it(
+    "imports the register's snapshots, its mergers, the city's quarters and the multipliers",
+    { timeout: 30_000 },
+    async () => {
+      for (const [sourceKey, file] of RETRIEVALS) {
+        const report = await importFixture(sourceKey, file);
+        expect(report.problems, file).toEqual([]);
+        expect(report.status, file).toBe("applied");
+      }
+    },
+  );
 
   it("changes nothing when a scheduled run brings the same state again", async () => {
     // The first two are backfill: a schedule never refetches the past.
@@ -700,7 +711,12 @@ describe.skipIf(!RUN)("Switzerland, imported (P1)", () => {
     expect(communal.inTaxModel).toBe(true);
     expect(communal.places).toBeGreaterThanOrEqual(2);
     expect(communal.places).toBeLessThan(communal.of);
-    expect(swiss.sources.every((s) => s.retrievedOn !== null)).toBe(true);
+    // Every source that names the pack is listed; the cut holds no Vaud commune, so Vaud's two
+    // hand-kept files are the ones not read here (the pack's own list once left them out).
+    expect(swiss.sources.filter((s) => s.retrievedOn === null).map((s) => s.key)).toEqual([
+      "vd-income-tax-reduction",
+      "vd-income-tax-limit",
+    ]);
 
     const t = createTranslator({ locale: "en", messages: en, namespace: "Places" });
     const html = renderToStaticMarkup(

@@ -111,6 +111,9 @@ export async function fetchSystematicIds(
   return parseSystematicIds(html);
 }
 
+/** The link from a word to its footnote at the foot of the page; not part of the text. */
+const FOOTNOTE_MARK = /<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g;
+
 // A heading is `tit`, `tit1`, `tit1m` …: the digit and a letter after it name its level and kind.
 const BOUNDARY = /<div class="(?:art|tit\d?[a-z]*|fntext)"|<div class="sacht" style=/g;
 
@@ -124,11 +127,15 @@ export function parseLilexProvisions(html: string): Provision[] {
   const starts = [...html.matchAll(/<div class="art"[^>]*>/g)].map((m) => m.index!);
   const out: { at: number; provision: Provision }[] = [];
   const seen = new Map<string, number>();
+  const headings = headingsOf(html);
+  const loose = looseText(html);
+  // Where a block of text begins: an article, or the body under a heading. Headings are listed above the next one.
+  const boundaries = [...starts, ...loose.map((l) => l.at)];
   for (const start of starts) {
     BOUNDARY.lastIndex = start + 1;
     const end = BOUNDARY.exec(html)?.index ?? html.length;
     // Footnote marks are links to the notes at the end of the page; not part of the text.
-    const block = html.slice(start, end).replace(/<a href="#fn[^"]*"[^>]*>[\s\S]*?<\/a\s*>/g, "");
+    const block = html.slice(start, end).replace(FOOTNOTE_MARK, "");
     const anchor = /<a name="((?:art|par):[^"]+)"><\/a>/.exec(block)?.[1];
     if (!anchor) continue;
     // An announcement of several EEA decisions numbers each decision's articles from 1, so one page
@@ -154,6 +161,7 @@ export function parseLilexProvisions(html: string): Provision[] {
         path,
         heading: [number, title].filter(Boolean).join(" "),
         text: blockText(body),
+        headingPath: pathAt(headings, start, boundaries),
       },
     });
   }
@@ -162,9 +170,11 @@ export function parseLilexProvisions(html: string): Provision[] {
   // its words (125 of 5,395 on one of Liechtenstein's EEA decisions). Footnotes stay out.
   if (out.length > 0) {
     let n = 0;
-    for (const { at, provision } of looseText(html)) {
+    for (const { at, provision } of loose) {
       n++;
-      out.push({ at, provision: { ...provision, path: `part_${n}` } });
+      // The text before the first heading has none above it.
+      const headingPath = headings.some((h) => h.at === at) ? pathAt(headings, at, boundaries) : [];
+      out.push({ at, provision: { ...provision, path: `part_${n}`, headingPath } });
     }
   }
   if (out.length === 0) {
@@ -172,11 +182,74 @@ export function parseLilexProvisions(html: string): Provision[] {
     if (start >= 0) {
       const title = blockText(/<div class="htit1">([\s\S]*?)<\/div>/.exec(html)?.[1] ?? "");
       const notes = html.indexOf('<div class="fntext"');
-      const text = blockText(html.slice(start, notes < 0 ? undefined : notes));
+      const text = blockText(
+        html.slice(start, notes < 0 ? undefined : notes).replace(FOOTNOTE_MARK, ""),
+      );
       if (text) out.push({ at: start, provision: { path: WHOLE_ACT, heading: title, text } });
     }
   }
   return out.sort((a, b) => a.at - b.at).map((o) => o.provision);
+}
+
+interface Heading {
+  at: number;
+  level: number;
+  text: string;
+  /** A title printed above one article only (`sacht` before its `art`), not above the ones after it. */
+  single: boolean;
+}
+
+/**
+ * The chapter headings of a page (`tit1`, `tit2`, `tit3` …) and the titles that stand above a single
+ * article, in page order, each with its level.
+ */
+function headingsOf(html: string): Heading[] {
+  const found: Heading[] = [];
+  for (const m of html.matchAll(/<div class="tit(\d?)([a-z]*)"[^>]*>([\s\S]*?)<\/div>/g)) {
+    found.push({
+      at: m.index!,
+      // `tit1ue`: the title line under a numbered heading ("II." then "Inkrafttreten"), one level below it.
+      level: m[1] ? Number(m[1]) + (m[2] ? 0.5 : 0) : 1,
+      text: blockText(m[3]!.replace(FOOTNOTE_MARK, "")),
+      single: false,
+    });
+  }
+  // `<div class="sacht" style=…><a name="vorart:14;sacht:1">` outside an article names the article after it.
+  for (const m of html.matchAll(
+    /<div class="sacht"[^>]*>\s*(<a name="vorart:[^>]*><\/a>[\s\S]*?)<\/div>/g,
+  )) {
+    found.push({
+      at: m.index!,
+      level: 99,
+      text: blockText(m[1]!.replace(FOOTNOTE_MARK, "")),
+      single: true,
+    });
+  }
+  return found.filter((h) => h.text).sort((a, b) => a.at - b.at);
+}
+
+/**
+ * The headings above the block that begins at `at`, outermost first, in the page's order: those still
+ * in force from before the previous block (`boundaries`: where articles and annexes begin), then every
+ * heading printed since, even one a later heading of its own level replaced ("Anlage", then its
+ * title, then "Erfolgsrechnung", over one table). A heading is never lost for want of a body.
+ */
+function pathAt(headings: Heading[], at: number, boundaries: number[]): string[] {
+  const since = Math.max(-1, ...boundaries.filter((b) => b < at));
+  const run = headings.filter((h) => h.at > since && h.at < at);
+  const top = Math.min(99, ...run.map((h) => h.level));
+  const held = new Map<number, string>();
+  for (const h of headings) {
+    if (h.at > since) break;
+    if (h.single) continue;
+    for (const level of held.keys()) if (level >= h.level) held.delete(level);
+    held.set(h.level, h.text);
+  }
+  const older = [...held.entries()]
+    .filter(([level]) => level < top)
+    .sort((x, y) => x[0] - y[0])
+    .map(([, text]) => text);
+  return [...older, ...run.map((h) => h.text)];
 }
 
 /**
@@ -196,7 +269,9 @@ function looseText(html: string): { at: number; provision: Provision }[] {
   const first = html.slice(bodyAt, marks[0]!.at);
   const title = /<div class="htit1">([\s\S]*?)<\/div>/.exec(first)?.[1] ?? "";
   const preamble = blockText(
-    first.replace(/<div class="(?:htit\d|vom|tit\d?[a-z]*)"[^>]*>[\s\S]*?<\/div>/g, ""),
+    first
+      .replace(/<div class="(?:htit\d|vom|tit\d?[a-z]*)"[^>]*>[\s\S]*?<\/div>/g, "")
+      .replace(FOOTNOTE_MARK, ""),
   );
   if (preamble)
     out.push({ at: bodyAt, provision: { path: "", heading: blockText(title), text: preamble } });
@@ -205,9 +280,16 @@ function looseText(html: string): { at: number; provision: Provision }[] {
     const segment = html.slice(mark.at, marks[i + 1]?.at ?? html.length);
     const head = /^<div class="tit\d?[a-z]*"[^>]*>([\s\S]*?)<\/div>/.exec(segment);
     if (!head) continue;
-    const text = blockText(segment.slice(head[0].length));
+    const text = blockText(segment.slice(head[0].length).replace(FOOTNOTE_MARK, ""));
     if (text)
-      out.push({ at: mark.at, provision: { path: "", heading: blockText(head[1]!), text } });
+      out.push({
+        at: mark.at,
+        provision: {
+          path: "",
+          heading: blockText(head[1]!.replace(FOOTNOTE_MARK, "")),
+          text,
+        },
+      });
   }
   return out;
 }

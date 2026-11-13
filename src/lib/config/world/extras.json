@@ -1,0 +1,426 @@
+{
+  "read": "2026-11-10",
+  "un": [
+    "AD",
+    "AE",
+    "AF",
+    "AG",
+    "AL",
+    "AM",
+    "AO",
+    "AR",
+    "AT",
+    "AU",
+    "AZ",
+    "BA",
+    "BB",
+    "BD",
+    "BE",
+    "BF",
+    "BG",
+    "BH",
+    "BI",
+    "BJ",
+    "BN",
+    "BO",
+    "BR",
+    "BS",
+    "BT",
+    "BW",
+    "BY",
+    "BZ",
+    "CA",
+    "CD",
+    "CF",
+    "CG",
+    "CH",
+    "CI",
+    "CL",
+    "CM",
+    "CN",
+    "CO",
+    "CR",
+    "CU",
+    "CV",
+    "CY",
+    "CZ",
+    "DE",
+    "DJ",
+    "DK",
+    "DM",
+    "DO",
+    "DZ",
+    "EC",
+    "EE",
+    "EG",
+    "ER",
+    "ES",
+    "ET",
+    "FI",
+    "FJ",
+    "FM",
+    "FR",
+    "GA",
+    "GB",
+    "GD",
+    "GE",
+    "GH",
+    "GM",
+    "GN",
+    "GQ",
+    "GR",
+    "GT",
+    "GW",
+    "GY",
+    "HN",
+    "HR",
+    "HT",
+    "HU",
+    "ID",
+    "IE",
+    "IL",
+    "IN",
+    "IQ",
+    "IR",
+    "IS",
+    "IT",
+    "JM",
+    "JO",
+    "JP",
+    "KE",
+    "KG",
+    "KH",
+    "KI",
+    "KM",
+    "KN",
+    "KP",
+    "KR",
+    "KW",
+    "KZ",
+    "LA",
+    "LB",
+    "LC",
+    "LI",
+    "LK",
+    "LR",
+    "LS",
+    "LT",
+    "LU",
+    "LV",
+    "LY",
+    "MA",
+    "MC",
+    "MD",
+    "ME",
+    "MG",
+    "MH",
+    "MK",
+    "ML",
+    "MM",
+    "MN",
+    "MR",
+    "MT",
+    "MU",
+    "MV",
+    "MW",
+    "MX",
+    "MY",
+    "MZ",
+    "NA",
+    "NE",
+    "NG",
+    "NI",
+    "NL",
+    "NO",
+    "NP",
+    "NR",
+    "NZ",
+    "OM",
+    "PA",
+    "PE",
+    "PG",
+    "PH",
+    "PK",
+    "PL",
+    "PT",
+    "PW",
+    "PY",
+    "QA",
+    "RO",
+    "RS",
+    "RU",
+    "RW",
+    "SA",
+    "SB",
+    "SC",
+    "SD",
+    "SE",
+    "SG",
+    "SI",
+    "SK",
+    "SL",
+    "SM",
+    "SN",
+    "SO",
+    "SR",
+    "SS",
+    "ST",
+    "SV",
+    "SY",
+    "SZ",
+    "TD",
+    "TG",
+    "TH",
+    "TJ",
+    "TL",
+    "TM",
+    "TN",
+    "TO",
+    "TR",
+    "TT",
+    "TV",
+    "TZ",
+    "UA",
+    "UG",
+    "US",
+    "UY",
+    "UZ",
+    "VC",
+    "VE",
+    "VN",
+    "VU",
+    "WS",
+    "YE",
+    "ZA",
+    "ZM",
+    "ZW"
+  ],
+  "points": {
+    "abkhazia": [
+      41,
+      43.15
+    ],
+    "south-ossetia": [
+      43.97,
+      42.225
+    ],
+    "transnistria": [
+      29.25,
+      47.3
+    ],
+    "northern-cyprus": [
+      33.3634,
+      35.1816
+    ],
+    "somaliland": [
+      46.2,
+      9.8
+    ]
+  },
+  "extras": [
+    {
+      "slug": "prospera",
+      "wikidata": "Q106541201",
+      "kind": "special",
+      "names": {
+        "de": "Próspera",
+        "en": "Próspera",
+        "fr": "Próspera",
+        "ru": "Проспера"
+      },
+      "point": [
+        -86.4625,
+        16.3725
+      ],
+      "country": "HN"
+    },
+    {
+      "slug": "seasteading-institute",
+      "wikidata": "Q30274228",
+      "kind": "project",
+      "names": {
+        "en": "Seasteading Institute"
+      },
+      "point": null,
+      "country": "US"
+    },
+    {
+      "slug": "freedom-ship",
+      "wikidata": "Q2704160",
+      "kind": "project",
+      "names": {
+        "de": "freedom ship",
+        "en": "Freedom Ship",
+        "fr": "Freedom Ship",
+        "it": "Freedom Ship",
+        "ru": "Freedom Ship"
+      },
+      "point": null,
+      "country": "US"
+    },
+    {
+      "slug": "blueseed",
+      "wikidata": "Q4930540",
+      "kind": "project",
+      "names": {
+        "de": "Blueseed",
+        "en": "Blueseed",
+        "fr": "Blueseed",
+        "it": "Blueseed"
+      },
+      "point": null,
+      "country": "US"
+    },
+    {
+      "slug": "principality-of-sealand",
+      "wikidata": "Q13706",
+      "kind": "proclaimed",
+      "names": {
+        "ru": "Силенд",
+        "de": "Sealand",
+        "en": "Principality of Sealand",
+        "fr": "Principauté de Sealand",
+        "it": "Principato di Sealand"
+      },
+      "point": [
+        1.4825,
+        51.894444444
+      ],
+      "country": "GB"
+    },
+    {
+      "slug": "liberland",
+      "wikidata": "Q19801186",
+      "kind": "proclaimed",
+      "names": {
+        "de": "Liberland",
+        "en": "Liberland",
+        "fr": "Liberland",
+        "it": "Liberland",
+        "ru": "Либерленд"
+      },
+      "point": [
+        18.871388888,
+        45.768333333
+      ],
+      "country": null
+    },
+    {
+      "slug": "republic-of-molossia",
+      "wikidata": "Q1155768",
+      "kind": "proclaimed",
+      "names": {
+        "it": "Repubblica di Molossia",
+        "ru": "Молоссия",
+        "de": "Republik Molossia",
+        "en": "Republic of Molossia",
+        "fr": "République de Molossia"
+      },
+      "point": [
+        -119.539472222,
+        39.322805555
+      ],
+      "country": "US"
+    },
+    {
+      "slug": "filettino",
+      "wikidata": "Q116836",
+      "kind": "proclaimed",
+      "names": {
+        "de": "Filettino",
+        "en": "Filettino",
+        "fr": "Filettino",
+        "it": "Filettino",
+        "ru": "Филеттино"
+      },
+      "point": [
+        13.333333333,
+        41.883333333
+      ],
+      "country": "IT"
+    },
+    {
+      "slug": "uzupis",
+      "wikidata": "Q945499",
+      "kind": "proclaimed",
+      "names": {
+        "ru": "Заречье",
+        "en": "Užupis",
+        "de": "Užupis",
+        "fr": "Uzupis",
+        "it": "Užupis"
+      },
+      "point": [
+        25.296944,
+        54.680556
+      ],
+      "country": "LT"
+    },
+    {
+      "slug": "lundy",
+      "wikidata": "Q324812",
+      "kind": "proclaimed",
+      "names": {
+        "en": "Lundy",
+        "de": "Lundy",
+        "fr": "Lundy",
+        "ru": "Ланди",
+        "it": "Lundy"
+      },
+      "point": [
+        -4.67,
+        51.18
+      ],
+      "country": "GB"
+    },
+    {
+      "slug": "principality-of-seborga",
+      "wikidata": "Q1549254",
+      "kind": "proclaimed",
+      "names": {
+        "it": "Principato di Seborga",
+        "en": "Principality of Seborga",
+        "fr": "principauté de Seborga",
+        "ru": "Княжество Себорга"
+      },
+      "point": [
+        7.694444444,
+        43.826111111
+      ],
+      "country": null
+    },
+    {
+      "slug": "conch-republic",
+      "wikidata": "Q1123960",
+      "kind": "proclaimed",
+      "names": {
+        "de": "Conch Republic",
+        "en": "Conch Republic",
+        "fr": "République de Conch",
+        "ru": "Республика Конк"
+      },
+      "point": [
+        -81.784166666,
+        24.559166666
+      ],
+      "country": "US"
+    },
+    {
+      "slug": "ladonia",
+      "wikidata": "Q968430",
+      "kind": "proclaimed",
+      "names": {
+        "en": "Ladonia",
+        "fr": "Ladonia",
+        "it": "Ladonia",
+        "de": "Ladonien",
+        "ru": "Ладония"
+      },
+      "point": [
+        12.53944444,
+        56.28777778
+      ],
+      "country": "SE"
+    }
+  ]
+}

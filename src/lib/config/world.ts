@@ -13,6 +13,7 @@
  */
 import type { LocalizedText } from "./places/schema";
 import { countryOf } from "./world/countries";
+import { EXTRA_PLACES } from "./world/kinds";
 
 export interface WorldRegion {
   /** ISO 3166-1 alpha-2, or the user-assigned code CLDR names it by (XK). */
@@ -22,9 +23,16 @@ export interface WorldRegion {
   slug: string;
   mapName?: string;
   claimedBy?: string;
+  /**
+   * The identifier Places knows a place by when it has no ISO code (South
+   * Ossetia's Wikidata item), so pages about it can find its records.
+   */
+  ref?: { scheme: string; value: string };
+  /** [longitude, latitude] to mark it by, for a place with no outline (a proclaimed state). */
+  point?: [number, number];
 }
 
-export const WORLD: readonly WorldRegion[] = [
+const LISTED: readonly WorldRegion[] = [
   { code: "AF", slug: "afghanistan" },
   { code: "AX", slug: "aland-islands" },
   { code: "AL", slug: "albania" },
@@ -282,6 +290,8 @@ export const WORLD: readonly WorldRegion[] = [
   },
   {
     slug: "south-ossetia",
+    // The item the South Ossetia pack identifies its nation by (its places data, `wikidata`).
+    ref: { scheme: "wikidata", value: "Q23427" },
     names: {
       en: "South Ossetia",
       de: "Südossetien",
@@ -327,6 +337,33 @@ export const WORLD: readonly WorldRegion[] = [
     claimedBy: "SO",
   },
 ];
+
+/**
+ * Every country and territory, then the places beyond the ISO list (proclaimed states, special
+ * jurisdictions, projects; ./world/extras.json, `pnpm run world:profiles`), each by its own names.
+ */
+export const WORLD: readonly WorldRegion[] = [
+  ...LISTED,
+  ...EXTRA_PLACES.filter((p) => !LISTED.some((l) => l.slug === p.slug)).map((p): WorldRegion => ({
+    slug: p.slug,
+    names: p.names as LocalizedText,
+    ref: { scheme: "wikidata", value: p.wikidata },
+    ...(p.point ? { point: p.point } : {}),
+  })),
+];
+
+/**
+ * The world entry a place pack is about: the one with its ISO code, or, for a
+ * place with none, the one whose slug is the pack's key with hyphens (the
+ * pack root's canonical path, migration 0025).
+ */
+export const worldEntryOfPack = (
+  pack: { key: string; region?: string | null },
+  world: readonly WorldRegion[] = WORLD,
+): WorldRegion | undefined =>
+  world.find((w) =>
+    pack.region ? w.code === pack.region : w.slug === pack.key.replace(/_/g, "-"),
+  );
 
 /** The region whose slug this is. */
 export const worldRegion = (slug: string) => WORLD.find((r) => r.slug === slug);

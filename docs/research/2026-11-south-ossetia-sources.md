@@ -184,8 +184,15 @@ Each is a statement about what a page says or does not say, with the URL and dat
    sources (quoted). Comparator and proposal to be written at load time.
 4. **Official gazette and consolidated texts.** None found (§2.4).
 5. **Contact points** for the responsible office are on the Statistics Office page
-   (`/kontakty/`, id 665, not yet read); named persons and mobile numbers appear in the compendium
-   and are not to be stored, only the institution's official channel.
+   (`/kontakty/`, id 665). Read 2026-11-11: the page's HTML carries no body text (its title,
+   "Контактная информация — УГС РЮО", only); the text is in the WordPress REST content,
+   `https://ugosstat.ru/wp-json/wp/v2/pages/665?_fields=id,link,title,content`, which states:
+   "Республика Южная Осетия — Государство Алания, г. Цхинвал, ул. Героев, 16" and
+   "Тел.: +7 (850 2) 45 23 64". That is the institution's own address and general telephone, no
+   person; it is the channel to register as the office's contact. No e-mail is stated there. Named
+   persons and mobile numbers appear in the compendium and are not to be stored. The office is registered
+   (`so.state-statistics-office`, page and telephone only; the Cyrillic address is not held, as the
+   REST text cannot be checked for it by `statistics:verify`).
 
 ## 6. Licence and what this note does not claim
 

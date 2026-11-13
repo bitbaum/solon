@@ -12,10 +12,12 @@
 import { and, eq, inArray } from "drizzle-orm";
 import type { CountryPack, PlacesConfig } from "@/lib/config/places/schema";
 import type { Database } from "@/lib/db/client";
-import { areaAssertions, areas, jurisdictions } from "@/lib/db/places-schema";
+import { areaAssertions, areas } from "@/lib/db/places-schema";
 import { loadChain, loadRefinements, type ChainPlace } from "./chain";
 import { geographyFileHref, parseGeometryRef } from "./geography";
 import { drawnOn } from "./map-data";
+import { findPlace, type Located } from "./paths";
+import { placeHref } from "./place-href";
 import { displayName, localized } from "./place-view";
 
 /** Where a place's outline is: a feature in a boundary file, which the browser verifies by its hash. */
@@ -71,7 +73,7 @@ export function view(input: AtlasInput): AtlasPlace | null {
   const { chain, locale } = input;
   const self = chain.find((p) => p.depth === 0);
   const pack: CountryPack | undefined = input.config.packs.find((p) => p.key === self?.countryPack);
-  if (!self || !pack || !self.slugPath) {
+  if (!self || !pack || !self.canonicalPath) {
     return null;
   }
   const levelName = (key: string | null) => {
@@ -79,15 +81,15 @@ export function view(input: AtlasInput): AtlasPlace | null {
     return level ? localized(level.names, locale) : (key ?? "");
   };
   const link = (p: ChainPlace): AtlasLink => ({
-    path: `/places/${p.slugPath}`,
+    path: placeHref(p.canonicalPath!),
     name: displayName(p.names, locale, pack.defaultLocales),
     levelName: levelName(p.levelKey),
   });
   const children = pack.levels.flatMap((level) => {
     const places = input.parts
-      .filter((p) => p.levelKey === level.key && p.slugPath)
+      .filter((p) => p.levelKey === level.key && p.canonicalPath)
       .map((p) => ({
-        path: `/places/${p.slugPath}`,
+        path: placeHref(p.canonicalPath!),
         name: displayName(p.names, locale, pack.defaultLocales),
         area: input.areas.get(p.id) ?? null,
       }))
@@ -106,7 +108,7 @@ export function view(input: AtlasInput): AtlasPlace | null {
       area: input.areas.get(self.id) ?? null,
     },
     chain: chain
-      .filter((p) => p.depth !== null && p.depth > 0 && p.slugPath)
+      .filter((p) => p.depth !== null && p.depth > 0 && p.canonicalPath)
       .sort((a, b) => b.depth! - a.depth!)
       .map(link),
     children,
@@ -120,11 +122,8 @@ export async function loadAtlasPlace(
   slugPath: string,
   on: string,
   locale: string,
-): Promise<AtlasPlace | null> {
-  const [place] = await db
-    .select({ id: jurisdictions.id, countryPack: jurisdictions.countryPack })
-    .from(jurisdictions)
-    .where(and(eq(jurisdictions.slugPath, slugPath), eq(jurisdictions.origin, "state")));
+): Promise<(AtlasPlace & Located) | null> {
+  const place = await findPlace(db, config, slugPath);
   const pack = config.packs.find((p) => p.key === place?.countryPack);
   if (!place || !pack) {
     return null;
@@ -154,5 +153,6 @@ export async function loadAtlasPlace(
       return ref ? [[r.id, ref] as const] : [];
     }),
   );
-  return view({ config, on, locale, chain, parts, areas: refs });
+  const atlas = view({ config, on, locale, chain, parts, areas: refs });
+  return atlas && { ...atlas, canonicalPath: place.canonicalPath };
 }

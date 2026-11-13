@@ -1,0 +1,25 @@
+name: Experience audit
+# Fleet rule: the experience belongs to the package (bitbaum/fleet AGENTS.md).
+# Runs fleet's own experience-audit.mjs, the same script the composition audit
+# calls, against the ceiling in package-plan.json (zero): a new bare <textarea>,
+# a local composer or a local header fails the pull request. Not the whole
+# composition workflow: its chat check still names chatkit's older ChatScreen
+# parts, which Solon no longer uses, and would fail for that reason alone.
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  experience:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Count what stands where a package owns the behaviour
+        run: |
+          git clone --quiet --depth 1 https://github.com/bitbaum/fleet.git "$RUNNER_TEMP/fleet-experience"
+          node "$RUNNER_TEMP/fleet-experience/scripts/ci/experience-audit.mjs" --dir "$GITHUB_WORKSPACE" --list

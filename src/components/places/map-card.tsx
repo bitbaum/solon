@@ -9,6 +9,7 @@ import {
   type CompareTaxPack,
 } from "@/lib/places/compare-view";
 import type { MapPlace } from "@/lib/places/map-view";
+import { placeHref } from "@/lib/places/place-href";
 
 interface MapCardProps {
   place: MapPlace;
@@ -110,7 +111,7 @@ export default function MapCard({
       {estimate.kind === "error" && <p className="text-sm text-fg-secondary">{tc("error")}</p>}
 
       <div className="flex flex-wrap gap-2">
-        <Link href={`/places/${place.slugPath}`} className="btn-primary min-h-11">
+        <Link href={placeHref(place.canonicalPath)} className="btn-primary min-h-11">
           {t("open")}
         </Link>
         <button

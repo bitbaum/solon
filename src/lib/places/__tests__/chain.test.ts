@@ -6,6 +6,7 @@ const place = (id: string, levelKey: string | null, depth: number | null): Chain
   countryPack: "testland",
   levelKey,
   slugPath: null,
+  canonicalPath: null,
   depth,
   names: [],
 });

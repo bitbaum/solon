@@ -17,7 +17,9 @@ import { describe, expect, it } from "vitest";
 import { placesConfig } from "@/lib/config/places";
 import { db } from "@/lib/db/client";
 import { jurisdictionIdentifiers, jurisdictions } from "@/lib/db/places-schema";
+import { loadAtlasPlace } from "../atlas-place";
 import { loadChain } from "../chain";
+import { loadPlacePage } from "../place-page";
 import { runImport, type ImportReport } from "../importer/run";
 import type { SnapshotStore } from "../importer/snapshots";
 import { resolvePostcode } from "../postcodes";
@@ -131,6 +133,21 @@ describe.skipIf(!RUN)("Liechtenstein, imported", () => {
       ["landschaft", "Oberland"],
       ["nation", "Liechtenstein"],
     ]);
+  });
+
+  it("finds Vaduz and the nation through place_paths, each at its one path, for the page and the atlas", async () => {
+    const [vaduz] = await db
+      .select({ slugPath: jurisdictions.slugPath })
+      .from(jurisdictions)
+      .where(eq(jurisdictions.id, await placeId("li_municipality", "7001")));
+    const config = withTestland(placesConfig);
+    for (const path of [vaduz!.slugPath!, vaduz!.slugPath!.split("/")[0]!]) {
+      const page = await loadPlacePage(db, config, path, ON, "en");
+      const atlas = await loadAtlasPlace(db, config, path, ON, "en");
+      expect(page?.canonicalPath, path).toBe(path);
+      expect(atlas?.canonicalPath, path).toBe(path);
+    }
+    expect(await loadPlacePage(db, config, "liechtenstein/nowhere", ON, "en")).toBeNull();
   });
 
   it("finds Vaduz by name and by postcode, as /api/v1/places does", async () => {

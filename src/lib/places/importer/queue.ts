@@ -1,0 +1,180 @@
+/**
+ * The scheduled import as a queue (schedule.ts, importQueue): one worker per
+ * process fetches every source the run log says is behind, in registry order,
+ * until the queue is empty or its time is up. The hourly timer starts it and
+ * does not wait for it: a publisher that takes minutes to answer, or a few
+ * hundred sources due on one day, never outlasts an HTTP request.
+ *
+ * Every attempt is in `place_import_runs`: an import records itself, and a
+ * fetch that failed before any import (the publisher was down) is recorded
+ * here, so the queue knows to try again later and a reader of the log sees it.
+ */
+import { sql } from "drizzle-orm";
+import type { PlacesConfig } from "@/lib/config/places/schema";
+import type { Database } from "@/lib/db/client";
+import { placeImportRuns } from "@/lib/db/places-schema";
+import { rowsOf } from "@/lib/db/rows";
+import { ADAPTERS } from "../adapters";
+import { importQueue, type SourceRuns } from "../schedule";
+import { fetchAndImport } from "./fetch";
+import { refreshAncestors } from "./run";
+import type { GeometryStore } from "./geometry-store";
+import type { SnapshotStore } from "./snapshots";
+
+/**
+ * What the run log says of every source: its latest finished run and its failures in a row (the
+ * failed runs since its latest applied one). One query over the (source_key, started_at) index,
+ * not the whole log, which only grows.
+ */
+export async function sourceRuns(db: Database): Promise<Map<string, SourceRuns>> {
+  const rows = rowsOf<{
+    source_key: string;
+    status: "applied" | "failed";
+    started_at: Date | string;
+    failures: number | string;
+  }>(
+    await db.execute(sql`
+      SELECT DISTINCT ON (r.source_key) r.source_key, r.status, r.started_at,
+        (SELECT count(*) FROM place_import_runs f
+         WHERE f.source_key = r.source_key AND f.status = 'failed'
+           AND f.started_at > COALESCE(
+             (SELECT max(a.started_at) FROM place_import_runs a
+              WHERE a.source_key = r.source_key AND a.status = 'applied'),
+             '-infinity')) AS failures
+      FROM place_import_runs r
+      WHERE r.status IN ('applied', 'failed')
+      ORDER BY r.source_key, r.started_at DESC`),
+  );
+  return new Map(
+    rows.map((r) => [
+      r.source_key,
+      {
+        latest: { status: r.status, at: new Date(r.started_at) },
+        failuresInARow: Number(r.failures),
+      },
+    ]),
+  );
+}
+
+/**
+ * Runs left `running` by a process that stopped (a deploy's restart, a worker out of memory) are
+ * closed as failed, so the hourly call reports them once and the queue backs off as for any
+ * failure, instead of the run staying open and its source being tried again every hour.
+ */
+export async function closeAbandonedRuns(db: Database, olderThanMs: number, now = new Date()) {
+  const before = new Date(now.getTime() - olderThanMs).toISOString();
+  return rowsOf<{ source_key: string }>(
+    await db.execute(sql`
+      UPDATE place_import_runs
+      SET status = 'failed', finished_at = ${now.toISOString()}::timestamptz AT TIME ZONE 'UTC',
+          report = report || jsonb_build_object(
+            'stage', 'abandoned',
+            'problems', jsonb_build_array('the run never finished: its process stopped'))
+      WHERE status = 'running' AND started_at < ${before}::timestamptz AT TIME ZONE 'UTC'
+      RETURNING source_key`),
+  ).map((r) => r.source_key);
+}
+
+export interface QueueOptions {
+  config: PlacesConfig;
+  snapshots: SnapshotStore;
+  geometry?: GeometryStore;
+  gitSha?: string | null;
+  /** Stop starting new sources after this long; the next start takes the rest. */
+  budgetMs: number;
+  /** The run log as the caller already read it; read here when absent. */
+  runs?: Map<string, SourceRuns>;
+  /** Which side's sources it fetches; the box's by default. */
+  side?: QueueSide;
+  /** Rebuild the ancestors view once a day (the box's worker does; a runner's need not). */
+  dailyRefresh?: boolean;
+  now?: () => Date;
+  fetchSource?: typeof fetchAndImport;
+}
+
+export interface QueueReport {
+  queued: number;
+  ran: { source: string; status: "applied" | "failed"; problems: string[] }[];
+}
+
+/** Where a queue runs: the box's hourly worker, or a runner's daily one (`Source.fetchFrom`). */
+export type QueueSide = "box" | "runner";
+
+/** A source this side's queue fetches: one with an address to read, assigned to this side. */
+export const fetchableFrom =
+  (side: QueueSide) => (source: { adapter: string; fetchFrom?: QueueSide }) =>
+    Boolean(ADAPTERS.get(source.adapter)?.retrievals) && (source.fetchFrom ?? "box") === side;
+
+/** The sources behind right now. */
+export const pendingSources = async (
+  db: Database,
+  config: PlacesConfig,
+  now = new Date(),
+  runs?: Map<string, SourceRuns>,
+  side: QueueSide = "box",
+) => importQueue(config, runs ?? (await sourceRuns(db)), now, fetchableFrom(side));
+
+// The day this process last rebuilt the ancestors view.
+const state = globalThis as unknown as { solonAncestorsDay?: string };
+
+/** The ancestors view has not been rebuilt today by this process: a worker should start. */
+export const ancestorsDue = (now = new Date()) =>
+  state.solonAncestorsDay !== now.toISOString().slice(0, 10);
+
+export async function drainQueue(db: Database, options: QueueOptions): Promise<QueueReport> {
+  const now = options.now ?? (() => new Date());
+  const started = now().getTime();
+  // An import rebuilds the ancestors view only when it moved a place; a relation that starts or
+  // ends on a later day moves one without any import, so the view is also rebuilt once a day.
+  const today = now().toISOString().slice(0, 10);
+  if ((options.dailyRefresh ?? true) && state.solonAncestorsDay !== today) {
+    await refreshAncestors(db);
+    state.solonAncestorsDay = today;
+  }
+  const fetchSource = options.fetchSource ?? fetchAndImport;
+  const queue = await pendingSources(db, options.config, now(), options.runs, options.side);
+  const report: QueueReport = { queued: queue.length, ran: [] };
+  for (const source of queue) {
+    if (now().getTime() - started >= options.budgetMs) break;
+    try {
+      const reports = await fetchSource(db, {
+        config: options.config,
+        sourceKey: source.key,
+        today: now().toISOString().slice(0, 10),
+        snapshots: options.snapshots,
+        geometry: options.geometry,
+        gitSha: options.gitSha,
+      });
+      const failed = reports.find((r) => r.status === "failed");
+      report.ran.push({
+        source: source.key,
+        status: failed ? "failed" : "applied",
+        problems: failed?.problems ?? [],
+      });
+    } catch (error) {
+      const problem = error instanceof Error ? error.message : String(error);
+      await db.insert(placeImportRuns).values({
+        sourceKey: source.key,
+        status: "failed",
+        report: { problems: [problem], stage: "fetch" },
+        finishedAt: now(),
+      });
+      report.ran.push({ source: source.key, status: "failed", problems: [problem] });
+    }
+  }
+  return report;
+}
+
+/** Runs failed since `since`, for the timer's answer: what the last hour's work could not load. */
+export async function failedSince(
+  db: Database,
+  since: Date,
+): Promise<{ source: string; problems: unknown }[]> {
+  const rows = rowsOf<{ source_key: string; problems: unknown }>(
+    await db.execute(sql`
+      SELECT source_key, report->'problems' AS problems FROM place_import_runs
+      WHERE status = 'failed' AND finished_at > (${since.toISOString()}::timestamptz AT TIME ZONE 'UTC')
+      ORDER BY finished_at`),
+  );
+  return rows.map((r) => ({ source: r.source_key, problems: r.problems }));
+}

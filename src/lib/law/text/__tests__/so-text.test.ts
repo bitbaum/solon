@@ -136,3 +136,10 @@ describe("verify reads a decree kept as JSON through its content field", () => {
     expect(() => JSON_BODIES.rso!({ id: 1 })).toThrow(/no content/);
   });
 });
+
+describe("a footnote marker in a decree", () => {
+  it("stays a word of its own, apart from the word it follows (post 64429)", () => {
+    const html = "<p>Начальник отдела в Службе судебных приставов<sup>1</sup>   06-3-3-45</p>";
+    expect(linesOf(html)).toBe("Начальник отдела в Службе судебных приставов 1 06-3-3-45");
+  });
+});

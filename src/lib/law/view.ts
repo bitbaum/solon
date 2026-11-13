@@ -32,7 +32,7 @@ export interface ActView {
     retrievedOn: string;
     provisionCount: number;
   } | null;
-  provisions: { path: string; heading: string; text: string }[];
+  provisions: { path: string; heading: string; text: string; headingPath?: string[] }[];
 }
 
 /** The act, and one page (or with `all`, up to 5,000) of the provisions of its current version in `lang`. */
@@ -74,7 +74,7 @@ export async function loadActView(
 
   const offset = Math.max(0, input.page - 1) * PROVISIONS_PER_PAGE;
   const provisions = await db.execute(sql`
-    SELECT path, heading, text FROM legal_provisions
+    SELECT path, heading, text, heading_path AS "headingPath" FROM legal_provisions
     WHERE version_id = ${versionId}
     ORDER BY ord
     LIMIT ${input.all ? 5000 : PROVISIONS_PER_PAGE} OFFSET ${input.all ? 0 : offset}

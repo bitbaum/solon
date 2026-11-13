@@ -7,16 +7,13 @@
  * Pure: the data comes in, nothing is fetched.
  */
 import { CONTEST_TOPICS, CONTESTS } from "@/lib/config/places/contested";
-import { WORLD, regionName, type WorldRegion } from "@/lib/config/world";
-import {
-  ledgerArithmetic,
-  type Contest,
-  type ContestLedger,
-  type ContestProvision,
-  type ContestRole,
-  type ContestTopic,
-} from "./contested";
+import { placesConfig } from "@/lib/config/places";
+import { WORLD, regionName, worldEntryOfPack, type WorldRegion } from "@/lib/config/world";
+import { holderOfRegion } from "@/lib/budgets/holders";
+import type { PlaceRef } from "@/lib/budgets/model";
+import type { Contest, ContestProvision, ContestRole, ContestTopic } from "./contested";
 import { localized } from "./place-view";
+import { regionHref } from "./place-href";
 
 export interface ContestSideView {
   key: string;
@@ -26,6 +23,10 @@ export interface ContestSideView {
   href: string;
   /** The law register's key, when Solon holds that side's law. */
   lawAuthority: string | null;
+  /** The world list's slug of the side's own place. */
+  slug: string;
+  /** How Places identifies the side's place, so its records (a budget) can be found. */
+  holder: PlaceRef | null;
 }
 
 export interface ContestCell {
@@ -41,21 +42,11 @@ export interface ContestRow {
   cells: ContestCell[];
 }
 
-export interface ContestLedgerView {
-  side: string;
-  sideName: string;
-  ledger: ContestLedger;
-  lines: { label: string; amount: number; kind: "own" | "received"; from: string | null }[];
-  arithmetic: ReturnType<typeof ledgerArithmetic>;
-}
-
 export interface ContestView {
   slug: string;
   name: string;
   sides: ContestSideView[];
   rows: ContestRow[];
-  /** Each side's public money, newest year first. */
-  ledgers: ContestLedgerView[];
   open: string | null;
   /** Questions with words from every side. */
   compared: number;
@@ -70,7 +61,12 @@ export interface ContestData {
 
 const DATA: ContestData = { contests: CONTESTS, topics: CONTEST_TOPICS, world: WORLD };
 
-const regionHref = (region: WorldRegion) => `/places/${region.slug}`;
+/** Where a side's page is: its pack's root, else where the world list has it. */
+const sideHref = (region: WorldRegion) =>
+  regionHref(
+    region,
+    region.code ? placesConfig.packs.find((p) => p.region === region.code)?.key : null,
+  );
 
 /** The world entries another state claims, in the world list's order. */
 export const claimedRegions = (world: readonly WorldRegion[] = WORLD) =>
@@ -81,8 +77,7 @@ export function contestSlugForPack(
   pack: { key: string; region?: string | null },
   world: readonly WorldRegion[] = WORLD,
 ): string | null {
-  const canonical = pack.key.replace(/_/g, "-");
-  const entry = world.find((w) => (pack.region ? w.code === pack.region : w.slug === canonical));
+  const entry = worldEntryOfPack(pack, world);
   return entry?.claimedBy ? entry.slug : null;
 }
 
@@ -107,8 +102,10 @@ export function contestView(
     key: s.key,
     role: s.role,
     name: regionName(regionOf(s.role), locale),
-    href: regionHref(regionOf(s.role)),
+    href: sideHref(regionOf(s.role)),
     lawAuthority: s.lawAuthority,
+    slug: regionOf(s.role).slug,
+    holder: holderOfRegion(regionOf(s.role)),
   }));
   const rows = data.topics.map((topic) => ({
     key: topic.key,
@@ -121,33 +118,11 @@ export function contestView(
       ),
     })),
   }));
-  const ledgers = (contest?.ledgers ?? [])
-    .flatMap((ledger) => {
-      const side = sides.find((s) => s.key === ledger.side);
-      return side
-        ? [
-            {
-              side: side.key,
-              sideName: side.name,
-              ledger,
-              lines: ledger.lines.map((l) => ({
-                label: localized(l.label, locale),
-                amount: l.amount,
-                kind: l.kind,
-                from: l.from ? localized(l.from, locale) : null,
-              })),
-              arithmetic: ledgerArithmetic(ledger),
-            },
-          ]
-        : [];
-    })
-    .sort((a, b) => b.ledger.year - a.ledger.year);
   return {
     slug,
     name: regionName(place, locale),
     sides,
     rows,
-    ledgers,
     open: contest?.open ? localized(contest.open, locale) : null,
     compared: rows.filter((r) => r.cells.every((c) => c.provisions.length > 0)).length,
     topics: data.topics.length,

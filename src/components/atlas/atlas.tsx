@@ -6,13 +6,22 @@ import { geoCentroid } from "d3-geo";
 import {
   cameraFor,
   cameraForBounds,
+  createFocus,
   type Camera,
+  type FocusController,
+  type FocusView,
   type MapController,
   type MapFeature,
 } from "@bitbaum/geo-kit/map";
 import { Link, useRouter } from "@/i18n/navigation";
 import { REGISTER_POLICY_DEFAULTS } from "@/lib/config/places/policies";
-import { WORLD, regionFeature, regionName, worldRegionByCode } from "@/lib/config/world";
+import {
+  WORLD,
+  regionFeature,
+  regionName,
+  worldRegionByCode,
+  type WorldRegion,
+} from "@/lib/config/world";
 import type { GlobePlace } from "@/lib/law/globe";
 import type { AddressHit } from "@/lib/places/address-search";
 import { compareHref, formatMoney } from "@/lib/places/compare-view";
@@ -26,8 +35,24 @@ import MapSearch from "@/components/places/map-search";
 import SourceList from "@/components/places/source-list";
 import TaxSituation from "@/components/places/tax-situation";
 import { useTaxLayer } from "@/components/places/tax-layer";
+import {
+  BEYOND,
+  SUB,
+  focusCamera,
+  focusChildren,
+  focusParent,
+  type FocusInputs,
+} from "./focus-tree";
 import AtlasCanvas, { ATLAS_LIMITS, type PlaceName } from "./atlas-canvas";
+import { packHref, placeHref, regionHref as entryHref } from "@/lib/places/place-href";
 import { COUNTRIES } from "@/lib/config/world/countries";
+import {
+  BEYOND_UN,
+  PLACE_KINDS,
+  SELF_GOVERNING_POINTS,
+  kindOf,
+  type PlaceKind,
+} from "@/lib/config/world/kinds";
 import { atlasPalette, loadWorld, readAtlasTokens, shadeOf, type AtlasTokens } from "./world";
 import {
   ADMIN1,
@@ -51,12 +76,8 @@ import {
 const HOME: Camera = { center: [8, 40], k: 1 };
 /** Roughly a street's width around an address, so the map zooms to it rather than the whole place. */
 const ADDRESS_SPAN = 0.004;
-/** A country fills most of the map, however small (Liechtenstein stops short of one valley). */
-const COUNTRY_ZOOM = { fill: 0.85, most: 120 };
 /** A country with this many places or fewer lists them all, open; a larger one keeps the list closed. */
 const PLACE_LIST_OPEN = 30;
-/** A country's own places are drawn under this prefix, apart from the world's shapes. */
-const SUB = "sub:";
 
 interface AtlasProps {
   /**
@@ -90,6 +111,9 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   const locale = useLocale();
   const router = useRouter();
   const colours = useMapColours();
+  // What the world view shows: every place, or only those beyond the UN's member states.
+  const [show, setShow] = useState<"all" | "beyond">("all");
+  const beyond = mode === "full" && layer === "places" && show === "beyond";
   const [tokens, setTokens] = useState<AtlasTokens | null>(null);
   useEffect(() => {
     const read = () => setTokens(readAtlasTokens());
@@ -128,13 +152,23 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       ),
     [],
   );
-  /** The page of a country Solon holds, by its law place: its pack's path, else its world slug. */
+  /** The page of a country Solon holds, by its law place: its pack's root, else where the world list has it. */
   const pageOf = useCallback((place: GlobePlace | null) => {
     if (!place) return null;
-    if (place.pack) return `/places/${place.pack}`;
+    if (place.pack) return packHref(place.pack);
     const region = place.region ? worldRegionByCode(place.region) : undefined;
-    return region ? `/places/${region.slug}` : null;
+    return region ? entryHref(region) : null;
   }, []);
+  // A world region's page: its pack's root when Solon holds the country's places (the globe says), else where the world list has it.
+  const regionHref = useCallback(
+    (region: WorldRegion) => {
+      const held = region.code
+        ? places.find((p) => p.region === region.code && p.pack)?.pack
+        : undefined;
+      return entryHref(region, held);
+    },
+    [places],
+  );
 
   // The world's outlines.
   const stateIds = useMemo(
@@ -268,6 +302,32 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
   const fly = (camera: Camera | null) => {
     if (camera) map.current?.flyTo(camera);
   };
+  // Which place the map is about is geo-kit's rule (`createFocus`): choosing a place frames its own
+  // outline, never a child's, and draws what it is part of faintly. The tree below only says where
+  // each outline is, read from what is loaded when a choice is made.
+  const treeState = useRef<FocusInputs>({
+    world: new Map(),
+    country: null,
+    drawn: null,
+  });
+  const [focusView, setFocusView] = useState<FocusView | null>(null);
+  const focus = useRef<FocusController | null>(null);
+  useEffect(() => {
+    focus.current = createFocus(
+      {
+        home: HOME,
+        cameraOf: (id) => focusCamera(treeState.current, id),
+        childrenOf: (id) => focusChildren(treeState.current, id),
+        parentOf: (id) => focusParent(treeState.current, id),
+      },
+      (next) => {
+        setFocusView(next);
+        setSelected(next.selected);
+        if (next.camera) map.current?.flyTo(next.camera);
+      },
+    );
+  }, []);
+  const choose = (id: string | null) => focus.current?.choose(id);
   const [view, setView] = useState<"map" | "list">("map");
   const [notice, setNotice] = useState<string | null>(null);
   const [tray, setTray] = useState<MapPlace[]>([]);
@@ -288,33 +348,36 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         router.push(`/places?in=${place.key}`);
         return;
       }
-      setSelected(null);
       setNotice(null);
       setView("map");
       setOpen(place.key);
-      const shape = worldById.get(place.feature);
-      if (shape) fly(cameraFor(shape.geometry, ATLAS_LIMITS, COUNTRY_ZOOM));
+      // The tree reads the country that is opening, not the one the last render held.
+      treeState.current = { ...treeState.current, country: place.feature, drawn: null };
+      choose(place.feature);
     },
-    [mode, router, worldById],
+    [mode, router],
   );
 
   // Facing the country asked for in the address, once both the map and the country are known.
   const faced = useRef(false);
+  useEffect(() => {
+    treeState.current = {
+      ...treeState.current,
+      world: worldById,
+      country: country?.feature ?? null,
+      drawn,
+    };
+  }, [worldById, country?.feature, drawn]);
   const onMap = useCallback((controller: MapController | null) => {
     map.current = controller;
   }, []);
   useEffect(() => {
     if (faced.current || !country || !world || !map.current) return;
     faced.current = true;
-    const shape = worldById.get(country.feature);
-    const camera = shape ? cameraFor(shape.geometry, ATLAS_LIMITS, COUNTRY_ZOOM) : null;
-    if (camera) map.current.flyTo(camera);
+    choose(country.feature);
   });
-
-  // Once its places arrive, frame them rather than the country's outline (which may include islands far away).
-  useEffect(() => {
-    if (drawn) map.current?.flyTo(cameraForBounds(drawn.bounds, ATLAS_LIMITS, 0.9));
-  }, [drawn]);
+  // What the focus tree reads, kept current. Its places arriving moves nothing: the camera stays on
+  // the place that was chosen, whatever happens to be drawn inside it.
 
   const openA2 = drawn ? (country?.region ?? null) : null;
   const shapes = useMemo<MapFeature[]>(() => {
@@ -327,12 +390,12 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       .map((f) => ({ ...f, layer: 1 }));
     const base = [...countries, ...subdivisions, ...rest.map((f) => ({ ...f, layer: 2 }))];
     if (!drawn) return base;
-    // Once a country's own places are drawn they are its shape: its coarse outline from the world file
-    // (Natural Earth, a few dozen points for Liechtenstein) is left out, or it shows through as a
-    // second, mismatched border over the places.
-    const outer = country?.feature;
+    // The country's coarse outline from the world file (Natural Earth, a few dozen points for
+    // Liechtenstein) stays as plain land under its own places, so no gap shows where the two do not
+    // meet. It is never outlined as the selection (see `selected` below): that would be a second,
+    // mismatched border over the places.
     return [
-      ...base.filter((f) => f.id !== outer),
+      ...base,
       ...drawn.features.features.map((f) => ({
         id: SUB + f.properties.code,
         geometry: f.geometry,
@@ -340,7 +403,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
         layer: 3,
       })),
     ];
-  }, [world, drawn, admin1, openA2, country?.feature]);
+  }, [world, drawn, admin1, openA2]);
 
   const fills = useMemo(() => {
     const out = new Map<string, string>();
@@ -353,6 +416,13 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       }
       return out;
     }
+    if (beyond) {
+      // Only the places beyond the UN's member states, in one shade: their kind is said in the list.
+      for (const [feature, region] of regionByFeature) {
+        if (BEYOND_UN.has(kindOf(region))) out.set(feature, colours.scale.at(-1)!);
+      }
+      return out;
+    }
     for (const p of named) if (p.acts > 0) out.set(p.feature, shadeOf(p.acts, colours.scale));
     // A subdivision is drawn over its country, so it wears the country's shade.
     for (const [a2, features] of admin1) {
@@ -360,11 +430,21 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       if (fill) for (const f of features) out.set(f.id, fill);
     }
     return out;
-  }, [colours, open, layer, tax.fills, data, named, admin1, featureOfA2]);
+  }, [colours, open, layer, tax.fills, data, named, admin1, featureOfA2, beyond, regionByFeature]);
 
   // A dot on each country Solon holds law for, so the small ones can be found; none inside a country.
   const dots = useMemo(() => {
     if (open) return new Map<string, [number, number]>();
+    if (beyond) {
+      // A dot where a place beyond the UN has no outline to fill: a proclaimed state, a special
+      // jurisdiction, a place that governs itself the world's outlines do not draw.
+      return new Map(
+        WORLD.flatMap((r) => {
+          const point = r.point ?? (regionFeature(r) ? undefined : SELF_GOVERNING_POINTS[r.slug]);
+          return point && BEYOND_UN.has(kindOf(r)) ? [[`beyond:${r.slug}`, point] as const] : [];
+        }),
+      );
+    }
     return new Map(
       named.flatMap((p) => {
         const shape = worldById.get(p.feature);
@@ -373,7 +453,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           : [];
       }),
     );
-  }, [open, named, worldById]);
+  }, [open, named, worldById, beyond]);
 
   const regionNames = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
   const countryName = (a2: string | undefined): string => {
@@ -417,10 +497,12 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       if (!region) return "";
       const place = byFeature.get(featureOfA2.get(region.a2) ?? "");
       const name = `${region.names[locale] ?? region.name}, ${countryName(region.a2)}`;
-      return place && place.acts > 0 ? tg("held", { name, count: place.acts }) : name;
+      return place && place.own > 0 ? tg("held", { name, count: place.own }) : name;
     }
     const place = byFeature.get(id);
-    if (place && place.acts > 0) return tg("held", { name: place.name, count: place.acts });
+    // The figure printed is the place's own law, as its place page and Law page print it; the
+    // shade is everything within it.
+    if (place && place.own > 0) return tg("held", { name: place.name, count: place.own });
     const region = regionByFeature.get(id);
     return region ? regionName(region, locale) : (place?.name ?? countryName(a2OfFeature.get(id)));
   };
@@ -431,8 +513,8 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       setSelected(null);
       return;
     }
-    if (id.startsWith(SUB)) {
-      setSelected(id);
+    if (id.startsWith(SUB) || id.startsWith(BEYOND)) {
+      choose(id);
       return;
     }
     // A subdivision answers for its country.
@@ -446,7 +528,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     }
     // A country Solon holds nothing for yet: its own page says so, and can be shared.
     const region = regionByFeature.get(countryFeature);
-    if (region) router.push(`/places/${region.slug}`);
+    if (region) router.push(regionHref(region));
     // Outside every list, it is still named and outlined, so a tap always answers.
     else setSelected(id);
   };
@@ -477,14 +559,11 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     if (town) fly({ center: town.at, k: Math.max(cam.camera.k * 1.5, zoomOfLevel(town.z + 2, r)) });
   };
 
-  const showBounds = (feature: string, bounds: Bounds | undefined) => {
+  const showPlace = (place: MapPlace) => {
     setNotice(null);
-    setSelected(SUB + feature);
     setView("map");
-    if (bounds) fly(cameraForBounds(bounds, ATLAS_LIMITS, 0.6));
+    choose(SUB + place.feature);
   };
-  const showPlace = (place: MapPlace) =>
-    showBounds(place.feature, drawn?.areas.get(place.feature)?.bounds);
   const showAddress = (hit: AddressHit) => {
     const [x, y] = hit.position;
     const holder = [...(drawn?.areas ?? [])].find(
@@ -500,14 +579,24 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       setNotice(tm("addressOutside", { address: hit.label }));
       return;
     }
-    showBounds(holder[0], [x - ADDRESS_SPAN, y - ADDRESS_SPAN, x + ADDRESS_SPAN, y + ADDRESS_SPAN]);
+    setNotice(null);
+    setView("map");
+    choose(SUB + holder[0]);
+    // The address, not the whole place, is what was asked for: the one choice that frames closer.
+    fly(
+      cameraForBounds(
+        [x - ADDRESS_SPAN, y - ADDRESS_SPAN, x + ADDRESS_SPAN, y + ADDRESS_SPAN],
+        ATLAS_LIMITS,
+        0.6,
+      ),
+    );
   };
 
   const backToWorld = () => {
     setOpen(null);
-    setSelected(null);
     setNotice(null);
-    fly(HOME);
+    treeState.current = { ...treeState.current, country: null, drawn: null };
+    choose(null);
   };
 
   const limit = REGISTER_POLICY_DEFAULTS.compareLimit;
@@ -577,6 +666,15 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     // Inside an open country its places carry the colour; a wash over the whole country would hide it.
     return open ? { ...p, selectedFill: undefined } : p;
   }, [colours, tokens, open]);
+  // What the chosen place is part of, drawn faintly round it (geo-kit's `context`, nearest first).
+  const contextOutlines = useMemo(
+    () =>
+      (focusView?.context ?? []).flatMap((id) => {
+        const shape = worldById.get(id);
+        return shape ? [shape.geometry] : [];
+      }),
+    [focusView, worldById],
+  );
   const ready = colours && tokens && palette && world && !broken;
   const canvas = ready ? (
     <AtlasCanvas
@@ -588,7 +686,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       names={placeNames}
       nameColour={tokens.text}
       nameHalo={tokens.page}
-      selected={selected ?? (drawn ? null : (country?.feature ?? null))}
+      // A country with its own places drawn is not outlined itself: its coarse edge would be a second
+      // border over theirs. Its places, and the one chosen among them, carry the outline.
+      selected={drawn && selected === country?.feature ? null : selected}
+      context={contextOutlines}
       onMap={onMap}
       home={HOME}
       spin={!open}
@@ -619,11 +720,40 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
     );
   }
 
+  const beyondPlaces = new Map<PlaceKind, typeof WORLD>();
+  for (const r of WORLD) {
+    const kind = kindOf(r);
+    if (BEYOND_UN.has(kind)) beyondPlaces.set(kind, [...(beyondPlaces.get(kind) ?? []), r]);
+  }
+  for (const list of beyondPlaces.values()) {
+    (list as WorldRegion[]).sort((a, b) =>
+      regionName(a, locale).localeCompare(regionName(b, locale), locale),
+    );
+  }
   const held = named
     .filter((p) => (layer === "tax" ? p.drawn : p.acts > 0 || p.pack))
-    .sort((a, b) => b.acts - a.acts);
+    .sort((a, b) => b.own - a.own || b.acts - a.acts);
   const countryPage = pageOf(country);
-  const selectedPlace = selected ? placeByFeature.get(selected.slice(SUB.length)) : undefined;
+  const selectedPlace = selected?.startsWith(SUB)
+    ? placeByFeature.get(selected.slice(SUB.length))
+    : undefined;
+  // A place with no outline, only a dot (South Ossetia): chosen like any other, it offers its page.
+  const selectedDot = selected?.startsWith(BEYOND)
+    ? WORLD.find((r) => `${BEYOND}${r.slug}` === selected)
+    : undefined;
+  const card = selectedPlace
+    ? {
+        name: selectedPlace.name,
+        parentName: selectedPlace.parentName,
+        href: placeHref(selectedPlace.canonicalPath),
+      }
+    : selectedDot
+      ? {
+          name: regionName(selectedDot, locale),
+          parentName: null,
+          href: regionHref(selectedDot),
+        }
+      : null;
   const pageLink = country && countryPage && (
     <Link href={countryPage} className="btn-primary min-h-11 w-full justify-center">
       {t("pageOpen", { country: country.name })}
@@ -690,9 +820,30 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
           {layer === "tax" ? t("taxWorldTitle") : t("worldTitle")}
         </h2>
         <p className="text-sm text-fg-secondary">
-          {layer === "tax" ? t("taxWorldIntro") : t("worldIntro")}
+          {layer === "tax" ? t("taxWorldIntro") : beyond ? t("beyondIntro") : t("worldIntro")}
         </p>
       </div>
+      {layer === "places" && (
+        <div
+          role="group"
+          aria-label={t("showLabel")}
+          className="inline-flex rounded-control border border-default p-1"
+        >
+          {(["all", "beyond"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={show === v}
+              onClick={() => setShow(v)}
+              className={`min-h-10 rounded-control px-4 text-sm font-semibold ${
+                show === v ? "bg-accent text-on-accent" : "text-fg-primary hover:bg-surface-raised"
+              }`}
+            >
+              {v === "all" ? t("showAll") : t("showBeyond")}
+            </button>
+          ))}
+        </div>
+      )}
     </>
   );
 
@@ -734,7 +885,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                   .map((place) => (
                     <li key={place.slugPath}>
                       <Link
-                        href={`/places/${place.slugPath}`}
+                        href={placeHref(place.canonicalPath)}
                         className="flex min-h-11 items-center px-5 py-3 text-fg-primary hover:bg-surface-raised"
                       >
                         {place.name}
@@ -790,6 +941,34 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
       )}
       {sourceList}
     </>
+  ) : beyond ? (
+    <>
+      {PLACE_KINDS.filter((k) => BEYOND_UN.has(k)).map((kind) => {
+        const list = beyondPlaces.get(kind) ?? [];
+        return list.length === 0 ? null : (
+          <section key={kind} className="space-y-2">
+            <h3 className="text-sm font-semibold text-fg-secondary">
+              {tp(`profile.kicker.${kind}`)} · {list.length}
+            </h3>
+            <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
+              {list.map((r) => (
+                <li key={r.slug}>
+                  <Link
+                    href={regionHref(r)}
+                    className="flex min-h-11 items-center justify-between gap-3 px-5 py-2 text-fg-primary hover:bg-surface-raised"
+                  >
+                    <span>{regionName(r, locale)}</span>
+                    <span aria-hidden className="text-fg-tertiary">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </>
   ) : (
     <>
       <ul className="divide-y divide-default rounded-surface border border-default bg-surface-base">
@@ -801,7 +980,11 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
               className="flex min-h-11 w-full items-center justify-between gap-3 px-5 py-3 text-left hover:bg-surface-raised"
             >
               <span className="font-medium text-fg-primary">{p.name}</span>
-              <span className="text-sm text-fg-tertiary">{t("lawCount", { count: p.acts })}</span>
+              <span className="text-sm text-fg-tertiary">
+                {p.own === 0 && p.below > 0
+                  ? t("lawBelow", { count: p.below })
+                  : t("lawCount", { count: p.own })}
+              </span>
             </button>
           </li>
         ))}
@@ -886,7 +1069,7 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                   />
                 </div>
               )}
-              {layer === "places" && selectedPlace && (
+              {layer === "places" && card && (
                 <div className="absolute inset-x-3 bottom-3 sm:right-auto sm:w-80">
                   <section
                     aria-labelledby="atlas-place-title"
@@ -895,10 +1078,10 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <h2 id="atlas-place-title" className="font-semibold text-fg-primary">
-                          {selectedPlace.name}
+                          {card.name}
                         </h2>
-                        {selectedPlace.parentName && (
-                          <p className="text-sm text-fg-tertiary">{selectedPlace.parentName}</p>
+                        {card.parentName && (
+                          <p className="text-sm text-fg-tertiary">{card.parentName}</p>
                         )}
                       </div>
                       <button
@@ -910,11 +1093,8 @@ export default function Atlas({ mode, initial = null, layer = "places" }: AtlasP
                         <span aria-hidden>×</span>
                       </button>
                     </div>
-                    <Link
-                      href={`/places/${selectedPlace.slugPath}`}
-                      className="btn-primary min-h-11"
-                    >
-                      {tm("open")}
+                    <Link href={card.href} className="btn-primary min-h-11">
+                      {tm("openPlace", { place: card.name })}
                     </Link>
                   </section>
                 </div>

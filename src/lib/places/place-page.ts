@@ -16,6 +16,7 @@ import {
 } from "@/lib/db/places-schema";
 import { loadChain, loadFacts, loadInstruments, loadRefinements } from "./chain";
 import { lawAuthoritiesFor } from "@/lib/law/ask/scope";
+import { findPlace, type Located } from "./paths";
 import { placeView, type PlaceView } from "./place-view";
 
 export async function loadPlacePage(
@@ -24,12 +25,9 @@ export async function loadPlacePage(
   slugPath: string,
   on: string,
   locale: string,
-): Promise<PlaceView | null> {
-  const [place] = await db
-    .select({ id: jurisdictions.id, countryPack: jurisdictions.countryPack })
-    .from(jurisdictions)
-    .where(and(eq(jurisdictions.slugPath, slugPath), eq(jurisdictions.origin, "state")));
-  if (!place || !config.packs.some((p) => p.key === place.countryPack)) {
+): Promise<(PlaceView & Located) | null> {
+  const place = await findPlace(db, config, slugPath);
+  if (!place) {
     return null;
   }
 
@@ -108,6 +106,26 @@ export async function loadPlacePage(
       ),
     );
 
+  const partIdentifiers =
+    parts.length > 0
+      ? await db
+          .select({
+            jurisdictionId: jurisdictionIdentifiers.jurisdictionId,
+            scheme: jurisdictionIdentifiers.scheme,
+            value: jurisdictionIdentifiers.value,
+          })
+          .from(jurisdictionIdentifiers)
+          .where(
+            and(
+              inArray(
+                jurisdictionIdentifiers.jurisdictionId,
+                parts.map((r) => r.place.id),
+              ),
+              isNull(jurisdictionIdentifiers.supersededAt),
+            ),
+          )
+      : [];
+
   const view = placeView({
     config,
     chain,
@@ -116,10 +134,17 @@ export async function loadPlacePage(
     instruments,
     refinements: refinements.map((r) => r.place),
     parts: parts.map((r) => r.place),
+    partIdentifiers,
     sources: retrievals,
     locale,
   });
-  return view && { ...view, lawAuthorities: lawAuthoritiesFor(chainIdentifiers) };
+  return (
+    view && {
+      ...view,
+      lawAuthorities: lawAuthoritiesFor(chainIdentifiers),
+      canonicalPath: place.canonicalPath,
+    }
+  );
 }
 
 /** The latest retrieval of each source among these `sources` rows. */

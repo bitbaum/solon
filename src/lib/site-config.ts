@@ -76,6 +76,7 @@ export const MENU: MenuSection[] = [
     href: "/statistics",
     children: [
       { key: "statistics", href: "/statistics" },
+      { key: "budgets", href: "/budgets" },
       { key: "statisticsMethods", href: "/statistics/methods" },
       { key: "statisticsGaps", href: "/statistics/gaps" },
       { key: "statisticsResearch", href: "/statistics/research" },
@@ -123,6 +124,8 @@ export const SITE_SECTIONS: { key: SectionKey; children: NavLink[] }[] = [
     key: "data",
     children: [
       { key: "statistics", href: "/statistics" },
+      { key: "statisticsWhy", href: "/statistics/why" },
+      { key: "budgets", href: "/budgets" },
       { key: "statisticsEvents", href: "/statistics/events" },
       { key: "statisticsMethods", href: "/statistics/methods" },
       { key: "statisticsGaps", href: "/statistics/gaps" },
@@ -194,6 +197,14 @@ export const PRIMARY_NAV = MENU.map(({ key, href }) => ({ key, href }));
 export const HIRE_HREF = "/hire";
 
 /**
+ * Where this site actually serves. Next resolves the generated og:image against
+ * `metadataBase`; without it the tag is emitted as http://localhost:3000/... —
+ * present, plausible, and unfetchable by every social scraper. Texts that leave
+ * the site (a drafted proposal) link back with it too.
+ */
+export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://solon.orangecat.ch";
+
+/**
  * Pages whose words have been translated. Every other page still shows its
  * English text in every language — and says so, in the reader's language,
  * rather than pretending (components/site/translation-notice.tsx).
@@ -207,7 +218,7 @@ export const TRANSLATED_ROUTES = new Set<string>([
 ]);
 
 /** Sections translated as a whole: every page under the prefix. */
-const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics"];
+const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics", "/budgets"];
 
 /**
  * The languages in which the `Amend` messages (proposing a change to the law)
@@ -217,7 +228,7 @@ const TRANSLATED_PREFIXES = ["/places", "/compare", "/structures", "/statistics"
  * language here is how its translation becomes required (the parity test reads
  * this list).
  */
-export const AMEND_LOCALES: readonly Locale[] = ["de"];
+export const AMEND_LOCALES: readonly Locale[] = ["de", "fr", "it", "ru"];
 
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 

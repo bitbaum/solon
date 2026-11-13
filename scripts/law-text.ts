@@ -8,7 +8,9 @@
  *   pnpm run law:text riigiteataja [--limit 500] [--dry-run]   (Estonia: the national acts in force, and each one's text)
  *   pnpm run law:text parliamentrso [--limit 60] [--term 2] [--dry-run]   (South Ossetia: the Parliament's register of acts, at the site's 90-second crawl-delay; --limit is listing pages, 10 acts each)
  *   pnpm run law:text presidentruo [--limit 30] [--dry-run]   (South Ossetia: the President's register of decrees, treaties and documents from the site's API, 100 a page)
- *   pnpm run law:text parliamentrso-text|presidentruo-text [--limit 50] [--act 89961,89934] [--dry-run]   (South Ossetia: the text of the acts the register holds, cut into articles; the Parliament's at its 90-second crawl-delay, the President's a second apart)
+ *   pnpm run law:text parliamentrso-text|presidentruo-text [--limit 50] [--act 89961,89934] [--stubs] [--dry-run]   (South Ossetia: the text of the acts the register holds, cut into articles; the Parliament's at its 90-second crawl-delay, the President's a second apart; a page that only links the act's Word file is read from the file, and --stubs reads again the acts held only as such a page)
+ *   pnpm run law:text plan-constitutions [--country RU,UA] [--again] [--dry-run]   (every country's constitution from the source data/law/plan.json chose, stored as a copy with who keeps it and the day read; docs/design/2026-11-law-of-every-country.md)
+ *   pnpm run law:text pravo-gov-ru [--authority ru,ru-se] [--limit 5] [--dry-run]   (Russia: the federal laws and a subject's laws listed by the official publication portal, 200 a page, two seconds apart; the register only, since the portal's robots.txt disallows the files that hold the texts)
  *   pnpm run law:text eurlex [--limit 1000] [--year 2016,2024] [--dry-run]   (European Union: regulations and directives in force, in English; a dry run reads and cuts `limit` texts and stores nothing)
  *   pnpm run law:text ukleg [--limit 1000] [--type ukpga,uksi] [--year 2018,2024] [--dry-run]   (United Kingdom: Public General Acts and Statutory Instruments from legislation.gov.uk, a year at a time, newest first; paced by the site's robots.txt crawl-delay, 5 seconds when checked)
  *   pnpm run law:text ris [--limit 500] [--act 10001622,10000138] [--dry-run]   (Austria: the consolidated federal acts in force from the RIS, in German; a dry run reads and cuts `limit` texts and stores nothing)
@@ -23,7 +25,7 @@
  *   pnpm run law:text recut-lilex [--limit 5000] [--dry-run]   (the same for Liechtenstein's acts held: the text outside the articles)
  *   pnpm run law:text recut-gii [--limit 5000] [--dry-run]   (the same for the German federal acts held)
  *   pnpm run law:text recut-ukleg [--limit 5000] [--dry-run]   (the same for the UK acts held)
- *   pnpm run law:text verify --authority li [--limit 30]   (read a random sample of held HTML acts again and report how much of each page's words the stored text holds)
+ *   pnpm run law:text verify --authority li [--sample 30]   (read a random sample of held HTML acts again, a second apart, and report how much of each page's words the stored text holds; --limit, a batch size for the loaders, is not read here)
  *   pnpm run law:text zhlex [--limit 200] [--dry-run]
  *   pnpm run law:text municipal --publisher zurich-city|all [--history] [--limit 200] [--dry-run]
  *
@@ -42,6 +44,9 @@ import { importLegilux } from "@/lib/law/text/import-legilux";
 import { importWyoleg } from "@/lib/law/text/import-wyoleg";
 import { importGcnh } from "@/lib/law/text/import-gcnh";
 import { registerParliament, registerPresident } from "@/lib/law/text/import-so-registers";
+import { registerPravoGovRu } from "@/lib/law/text/import-pravo-gov-ru";
+import { importPlanCopies } from "@/lib/law/text/import-plan-copies";
+import { readPlan } from "@/lib/law/plan/load";
 import { importSoText } from "@/lib/law/text/import-so-text";
 import { importRiigiTeataja } from "@/lib/law/text/import-riigiteataja";
 import { importEurLex } from "@/lib/law/text/import-eurlex";
@@ -114,7 +119,9 @@ async function main(): Promise<number> {
     if (!authority) throw new Error("verify needs --authority, e.g. li");
     const report = await verifyAuthority(db, {
       authority,
-      sample: flag("limit") ? Number(flag("limit")) : 30,
+      // Its own flag: the workflow passes every source a batch --limit (1,500 by default), and
+      // reading that many publisher pages back to back is not a sample.
+      sample: flag("sample") ? Number(flag("sample")) : 30,
       onProgress: (message) => console.error(message),
     });
     // One line an act, the lowest first, then the totals: the workflow shows only the end of the output.
@@ -122,12 +129,16 @@ async function main(): Promise<number> {
       .sort((x, y) => (x.coverage?.ratio ?? -1) - (y.coverage?.ratio ?? -1))
       .map((a) =>
         a.coverage
-          ? `${(a.coverage.ratio * 100).toFixed(1)}% page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
+          ? `${(a.coverage.ratio * 100).toFixed(1)}% bag ` +
+            `${a.sequence ? `${(a.sequence.ratio * 100).toFixed(1)}% in order, longest missing run ${a.sequence.longestMissing.words}` : "order not compared"}` +
+            `${a.wordForWord ? " WORD-FOR-WORD" : a.sequence?.afterTitleBlock ? ` WORD-FOR-WORD-AFTER-${a.sequence.leading}-WORD-TITLE-BLOCK` : ""} page ${a.coverage.pageWords} held ${a.coverage.storedWords} ` +
             `${a.title.slice(0, 40)} | missing: ${a.coverage.missing
               .slice(0, 8)
               .map((m) => `${m.word}x${m.count}`)
               .join(" ")}`
-          : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
+          : a.scanned
+            ? `SCANNED (not compared) ${a.title.slice(0, 40)}`
+            : `ERROR ${a.title.slice(0, 40)} | ${a.error}`,
       );
     console.log(lines.join("\n"));
     // What the three lowest pages hold that the provisions do not, and how those pages are built.
@@ -146,6 +157,9 @@ async function main(): Promise<number> {
         sampled: report.sampled,
         meanRatio: Number(report.meanRatio.toFixed(4)),
         short: report.short,
+        wordForWord: report.wordForWord,
+        scanned: report.scanned,
+        afterTitleBlock: report.afterTitleBlock,
         failed: report.failed,
       }),
     );
@@ -202,6 +216,28 @@ async function main(): Promise<number> {
     );
     return report.failures.length > 0 ? 1 : 0;
   }
+  if (sourceKey === "plan-constitutions") {
+    const report = await importPlanCopies(db, readPlan(), {
+      countries: flag("country")?.split(","),
+      again: args.includes("--again"),
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message: string) => console.error(message),
+    });
+    console.log(JSON.stringify(report, null, 2));
+    return report.failures.length > 0 ? 1 : 0;
+  }
+  if (sourceKey === "pravo-gov-ru") {
+    const reports = await registerPravoGovRu(db, {
+      authorities: flag("authority")?.split(","),
+      limit: flag("limit") ? Number(flag("limit")) : undefined,
+      snapshots: defaultSnapshotStore(),
+      dryRun: args.includes("--dry-run"),
+      onProgress: (message: string) => console.error(message),
+    });
+    console.log(JSON.stringify(reports, null, 2));
+    return reports.some((r) => r.register.status === "failed") ? 1 : 0;
+  }
   if (sourceKey === "parliamentrso" || sourceKey === "presidentruo") {
     const options = {
       limit: flag("limit") ? Number(flag("limit")) : undefined,
@@ -224,6 +260,7 @@ async function main(): Promise<number> {
       {
         limit: flag("limit") ? Number(flag("limit")) : undefined,
         ids: flag("act")?.split(","),
+        stubs: args.includes("--stubs"),
         snapshots: defaultSnapshotStore(),
         dryRun: args.includes("--dry-run"),
         onProgress: (message) => console.error(message),

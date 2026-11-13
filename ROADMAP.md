@@ -46,6 +46,9 @@ authority that decides, and the record says so.
 - [x] Propose a change to any article: an editable copy, the change shown as a redline against the publisher's text, filed as a proposal that carries the hash of the text it amends {#law-redline}
 - [x] Support a proposed change, one click or a signed vote, counted the same way as any other proposal {#law-support}
 - [x] Thinking a change through with the assistant while drafting it: what it would do, who would gain and who would bear a cost, where something like it is already law (in the law Solon holds, and studies and experience on the web), each claim cited, no side taken {#law-consult}
+- [x] The law in the reader's language: a machine translation, labelled, cached by the hash of the words it translates and checked before it is kept, with the authentic text a click away; titles in lists too {#law-translated}
+- [x] Every configured word in the reader's language: rubrics, budget lines, tax forms, sources and who published them, from one catalog keyed by the English, a test failing while any is missing {#i18n-config}
+- [x] A code printed as a page that links its Word file is read from the file, article by article; held stubs read again with `--stubs` {#law-documents}
 - [ ] Signing a proposal or a support with one's own Bitcoin key from the page (the API takes signatures today; the page offers one click) {#law-sign-on-page}
 - [ ] A conversation under each proposal, the fleet's shared comment thread {#law-discuss}
 - [ ] The official route for each place, as data: who can put a change on the ballot or before the legislature, how many signatures in how long (a federal popular initiative in Switzerland: 100,000 in 18 months), with the source of each rule {#law-route}
@@ -64,7 +67,31 @@ substance; it never says which side is right (design:
 - [x] What each side's public budget rests on, from its own budget law, with what the figures say by arithmetic about spending the same without what was received (South Ossetia 2023: 81% of revenue was aid from the Russian Federation) {#contested-ledger}
 - [x] South Ossetia's official route: a bill reaches the Parliament through any one deputy (Constitution, Art. 69); "propose a change" on every held article of the comparison {#contested-route}
 - [ ] The codes the South Ossetian Parliament publishes as Word files read into articles, so the Tax Code can be amended article by article (design: `docs/design/2026-11-from-comparison-to-change.md` §4) {#contested-codes}
-- [ ] Safe support where proposing is risky: counts without lists, a new pseudonym per proposal, commitments instead of account ids in the public log, a page that says what is kept; before any outreach (§5) {#contested-safe-support}
+- [x] Proposing in the reader's language: the propose-a-change pages in Russian, French and Italian as well as German; "propose" on a comparison opens each side's law, not an organization's form; the claimant's quotes read in the reader's language {#contested-propose-law}
+- [ ] A side no one claims in law yet, shown as a scenario and labelled one: South Ossetia as a subject of the Russian Federation, read from Russia's federal law and North Ossetia–Alania's, on the same questions {#contested-scenarios}
+- [ ] "My life under each": a salary, a household and a pension run through each side's tax and benefit law, every figure linked to its article {#contested-my-life}
+- [ ] Georgia's budget from its own execution law, beside South Ossetia's {#contested-budget-claimant}
+- [x] A new pseudonym per proposal: a signed-in person is named in the public record by a keyed hash of their account and the proposal, never by the account, so their proposals cannot be linked to each other or to them {#safe-pseudonyms}
+- [ ] Safe support, the rest: counts without lists where a place's configuration asks for it, support without an account or an email, a page that says what is kept; before any outreach (§5) {#contested-safe-support}
+- [x] Russia and its subjects listed from the official publication portal, one adapter for all 89 (a subject is one entry in `PRAVO_GOV_RU.blocks`): the federal laws and North Ossetia–Alania's, each linked to its official publication; the federal route (Constitution Art. 104) and the Russian Public Initiative's federal and regional bars stated (research: `docs/research/2026-11-russia-sources.md`) {#ru-register}
+- [ ] Russia's federal texts from a copy that publishes them openly (the portal disallows its files to robots); North Ossetia–Alania's Constitution and its own routes {#ru-texts}
+- [x] The plan for the law of every country as data (`data/law/plan.json`): what each country should hold by Constitute's index, the copies Wikidata knows, the source chosen by rule or by a person, the copyright provision of its own law; progress counted from the database by `pnpm run law:plan status`, never written by hand (design: `docs/design/2026-11-law-of-every-country.md`) {#law-plan}
+- [x] A law authority for every country of the world list, and a `copy` text status shown with who keeps it; one reader for any country's constitution from Wikisource or a document copy, refusing a copy older than the last amendment; Russia's (Wikisource, as amended in 2020) and Ukraine's (the Constitutional Court's copy, with the 2019 amendments) loaded, with their routes to change the law and the constitution {#law-constitutions-p1}
+- [ ] Every country's constitution: load the countries the rule resolves; choose a copy by hand for the rest; done when `law:plan status` shows a text for every country Constitute lists {#law-constitutions-all}
+- [ ] Ukraine's national register and texts from the Verkhovna Rada's open data, then each country's national register in the plan's order {#law-national-registers}
+- [x] A profile on every country's, territory's, self-governing place's and proclaimed state's page: its kind in a neutral sentence (UN member since, observer, governs itself, territory, proclaimed, special jurisdiction, project), its facts from Wikidata with the day read, the way into its constitution and its law (design: `docs/design/2026-11-world-of-jurisdictions.md`) {#world-profiles}
+- [x] Proclaimed states (Liberland, Sealand and the others the stated rule picks), special jurisdictions (Próspera) and seasteading projects in the world list, with pages, law authorities and places in the plan; Liberland's constitution loaded from its own repository {#world-beyond-un}
+- [x] The map's switch: all places, or only those beyond the UN's member states, each listed by kind {#world-map-beyond}
+- [ ] Liberland's laws and the other proclaimed states' and special jurisdictions' law, through the plan {#world-beyond-law}
+- [x] A photograph on every place's page and on the card its link shows when shared, chosen by one rule from Wikidata and Wikimedia Commons for any place an identifier finds, replaceable by a person in one line, credited on the photograph and on `/credits`; the world index as a wall of photographs {#place-photos}
+- [x] Photographs for the places inside countries: every ISO 3166-2 subdivision, Swiss canton (through a crosswalk from its FSO number) and commune, US state and county Wikidata holds; the places inside a place as tiles {#place-photos-subdivisions}
+- [x] Solon serves place photographs from its own store, read once from Wikimedia, so none fails to load and none waits on Wikimedia twice {#place-photo-store}
+- [x] One page shape for every place: the hero with its main action, the law and what a reader can do beside the place at a glance; the world index grouped by kind of place {#place-page-shape}
+- [x] A place's figures on its profile, chosen in config and shown only where held: what the state takes and spends, how it is governed, how safe it is, each with its position among countries, its trend and its source {#place-figures}
+- [x] A place's profile says how its law is changed by the people it applies to, from the nearest authority up, and what in that law changed over the past year {#place-change}
+- [x] The places inside every country: every subdivision with an ISO 3166-2 code, from Wikidata, under its region where it has one, each with a page of its own {#world-subdivisions}
+- [ ] Official routes for every country whose constitution Solon holds, read from it with the provision cited {#place-routes-world}
+- [ ] A proposal on an act whose text Solon does not hold: the change asked for in words, pinned to the act's official publication, supported and counted like any other {#amend-without-text}
 - [ ] A tax proposal shows its static effect on own revenue against the ledger; every budget-execution law as a series {#contested-proposal-money}
 - [ ] The deputies, from the Parliament's own page, and the hand-over: the redline, the count per electorate and the log hash, sent to deputies who choose to receive them, their answer recorded {#contested-handover}
 - [ ] Support counted per electorate and tier (declared, vouched, attested), never summed (§6) {#contested-electorates}
@@ -75,6 +102,24 @@ substance; it never says which side is right (design:
 - [ ] Land one state administers and another claims (the areas disputed by Russia and Ukraine): sourced `claims` and `administers` rows, both countries' registers, the area hatched on the atlas {#contested-areas}
 - [ ] Layered regimes, where law applies by zone and by who a person is (the West Bank and its settlements, Gaza): each layer from its own sources, two readers before it is shown {#contested-layers}
 - [ ] Results on each side (each statistics office's own series) beside the texts, and terms for a place proposed with support counted per electorate, never summed {#contested-results}
+
+### Budgets: what governments raise and what they spend it on {#budgets}
+
+Every place's public money on one model: what came in and from where, what it
+was spent on down to the group, whether it balanced, how it moved over the
+years and who pays for it, each figure linked to its law or statistics office,
+any two budgets comparable on the same classifications (design:
+`docs/design/2026-11-budgets.md`).
+
+- [x] The model: COFOG and ESA 2010 taxonomies in config, scope in every key, metrics and sources generated from them; budget laws as documents held to their stated totals; one `Budget` shape and pure analysis for both {#budgets-model}
+- [x] Eurostat's government finance for 30 countries from 1995, spending by function and group, revenue by kind, the balance, in shares of GDP; every division also a statistic with its map and ranking {#budgets-eurostat}
+- [x] `/budgets` and `/budgets/<place>`: key figures, who pays, what the money is spent on with every division opened into its groups, where it comes from, the years, the sources and the publisher's own lines, and "propose a change"; a budget card on a country's page; the contested places' budget section through the same components {#budgets-pages}
+- [ ] Sub-national budgets (cantons, communes) and Solon organizations' budgets as holders {#budgets-entities}
+- [x] Every amount in the reader's currency (US dollars by default; EUR, CHF, GBP, RUB, GEL), chosen once and remembered across the site,, converted at the budget year's average rate from official publishers, beside its share of GDP {#budgets-money}
+
+- [ ] The money code (`src/lib/money/`) moved into a fleet package, so OrangeCat and every product convert the same way {#money-package}
+- [ ] The IMF's Government Finance Statistics for the countries Eurostat does not cover, after its licence is read {#budgets-imf}
+- [ ] A proposal that names categories and amounts, its effect on the balance computed; a page comparing places function by function {#budgets-proposals}
 
 ### One globe for every place and its law {#globe}
 
@@ -250,8 +295,9 @@ Changing the law
       with the people who will receive it (a decision for them, not for Solon)
 
 Statistics
-- [ ] A named list of series for Liechtenstein, each with its publisher and date. Today none loads:
-      the World Bank's API answers the box HTTP 403, so no World Bank series has ever loaded
+- [ ] A named list of series for Liechtenstein, each with its publisher and date. The World Bank's
+      API answers the box HTTP 403, so its series are read daily from a GitHub runner instead
+      (`fetchFrom: "runner"`, 2026-11-12); loaded once that run has applied them
 - [ ] The tax model's rates read against the published tariff, with the article
 
 Keeping it true
@@ -383,6 +429,9 @@ to add content is `docs/development/adding-statistics.md`.
 - [x] Navigation that scales: a header of four panels (Law, Places, Data, Governance) of four or five links each, a Find palette (button, Ctrl or Cmd + K, or "/") over pages, statistics, places and laws, the mobile menu as folds, and an engineering audit (`docs/design/2026-11-engineering-audit.md`) with import cycles gated in `verify` {#site-navigation}
 - [ ] The audit's debt, in order: law authorities derived from places, a page's name written once, translation coverage, the large files {#site-debt}
 - [ ] More topics and places for the gaps registry: the tax gap, enforcement of drug-possession law, clearance rates by offence, and the countries Solon models (Estonia's and Liechtenstein's offices were not read); the offices that block programs (France's Interior Ministry answers 403) read by a person and marked so {#stats-gaps-more}
+- [x] Why laws and numbers (`/statistics/why`): why Solon keeps each place's law beside its statistics, what is measured and what is not, trends and changes to the law, how it keeps itself honest and how groups decide, with every claim's status read from `DATA_CAPABILITIES`; South Ossetia as the worked example, its law and budget live, its statistics office's figures and gaps marked "researched, not yet loaded"; in five languages {#stats-why}
+- [ ] A place's missing measures, and how to start: for one place, the measures it does not publish, the comparable places that do, the responsible office and its official channel, and a pre-filled proposal; the gap model to accept places without an ISO code (South Ossetia, by Wikidata) and a status for "not in the source read", so South Ossetia's gaps from `docs/research/2026-11-south-ossetia-sources.md` §5 can be loaded {#stats-place-gaps}
+- [ ] What other places did about a trend: beside a series, the law events of places whose figures moved the same way, and what followed, never ranked as right or wrong {#stats-policy-by-trend}
 - [ ] Findings kept: a research finding a person confirms becomes a curated record or a method entry, with its evidence words checked weekly {#stats-research-keep}
 - [ ] The practice layer for the first dimensions: tax compliance and the tax gap, then drug-law enforcement where a publisher has figures {#stats-practice}
 - [ ] Published freedom indexes' components, credited to their publisher and only where their licence has been read and allows it. Licences read (`docs/design/2026-11-index-licences.md`): World Bank WGI is CC BY and loadable; OECD subnational data likely; Fraser, Heritage, Cato, Freedom House, V-Dem (share-alike), RSF and Henley are not {#stats-indexes}

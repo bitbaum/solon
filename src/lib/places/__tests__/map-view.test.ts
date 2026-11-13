@@ -56,6 +56,7 @@ describe("placeFinder", () => {
   const place = (name: string): MapPlace => ({
     feature: name,
     slugPath: name.toLowerCase(),
+    canonicalPath: name.toLowerCase(),
     name,
     parentName: null,
     groups: [],

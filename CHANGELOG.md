@@ -4,9 +4,183 @@ What changed for the people who use Solon, newest first. Every entry comes
 from a merged pull request in this repository; the number in brackets is the
 one to read for the detail. Fixes get the same weight as features.
 
+## 2026-11-12
+
+### Added
+
+- **The places inside every country.** Every country's page now lists its states, regions,
+  provinces and departments, 4,759 places in 194 countries, each with a page of its own and a
+  photograph where Wikimedia Commons has one. A French department sits in its region, an Italian
+  province in its region. Taiwan, Abkhazia, Transnistria and Kosovo keep their own pages and are
+  not listed inside the state that regards them as its territory. {#world-subdivisions}
+
+- **One person, one seat.** A person on OrangeCat can hold several identities, each its own
+  account, so a seat per account could become several seats for one person. Solon now asks
+  OrangeCat for an opaque tag per account, keyed to the organization, and refuses a second human
+  seat for the same person there. The tag says nothing about who the person is or about their
+  seats elsewhere. A suspended seat still counts, so a suspension cannot be dodged under another
+  identity. The founding seat and an organization's founder are tagged as they are created; the
+  operator's add-member script checks before seating.
+
+### Fixed
+
+- **Place pages no longer wait on an import.** Each import of figures rebuilt the index of where
+  places sit, which holds every page that reads it until it is done, though figures move no place.
+  It is now rebuilt only when places or their borders changed, and once a day. An import whose
+  publisher's file had not changed since the last one stops at once instead of reading it again.
+- **Every country's figures can now load.** The governance, spending and safety figures on country
+  pages had loaded for four countries only: the scheduled import did all its work inside one
+  request that is cut off after five minutes, and asked the World Bank for one country at a time,
+  thousands of requests on one day. The import is now a queue that works through whatever is
+  behind, hour by hour, tries a publisher that was down again the next day, and records every
+  attempt; and the World Bank is asked for all countries at once, eight requests in all.
+- **A country's page reads its figures in one query** instead of one per figure.
+- **One person, one seat now holds after an identity changes hands.** Solon compared a newcomer
+  with the person each seat had when it was given, so once an OrangeCat identity was handed over,
+  its former holder was refused a seat they did not hold, and its new holder could take a second.
+  Solon now asks OrangeCat about the newcomer and every seat at once, decides on that answer, and
+  updates the seats whose person changed; two seats that turn out to be one person's are named
+  for the organization to decide. Without OrangeCat's client keys an admission now says it could
+  not ask instead of seating unchecked, the tagging script asks once per organization and can
+  re-check every seat (`--refresh`), and one Bitcoin key can no longer hold a second seat under
+  its uncompressed address.
+- **A region named like its country no longer shows the country's page.** The Djibouti Region
+  and the City of San Marino showed their country's profile, photograph and budget, and a shared
+  link to the US state of Georgia showed the country Georgia's card. A place's country is now its
+  own ISO country code, never its name.
+- **The statistics page reads every statistic at once**: four queries instead of 136, and a new
+  statistic adds none. A place ranked on it shows its latest plausible figure, as its chart does.
+- **The World Bank's figures are read from a machine it answers.** It refuses Solon's server, so
+  the governance, spending and safety figures it publishes had never loaded in production. They
+  are now fetched every day they are due from a GitHub runner, into the same database.
+- **The OECD's and Eurostat's figures load in one go.** They were asked for one country at a
+  time, 68 sources due on two days a month; each publisher is now one source that asks for every
+  country it covers at once. The national figures behind country pages take 17 requests instead
+  of 350.
+- **Every figure is credited to whoever published it.** Liechtenstein's tax revenue and public
+  spending come from its statistics office, which the OECD does not cover, yet charts, the
+  statistics index and the country card named the OECD and linked its pages. Each place's
+  figures now name, and link, the publisher they were read from.
+
+## 2026-11-11
+
+### Added
+
+- **What a place is like, measured.** A country's page now shows the few figures a reader would
+  act on: what the state takes in tax and spends, how it is governed (voice and accountability,
+  rule of law, control of corruption, government effectiveness, from the World Bank), and how safe
+  it is. Each gives the latest value and its year, where it stands among the countries reporting
+  that year, how it moved over fifteen years, and its source. A figure Solon does not hold for a
+  place is left out, never guessed. {#place-figures}
+- **How the law is changed here, and what changed.** A place's page now sets out the official ways
+  the people it applies to can change its law, from the commune up to the country, each with its
+  bar and the provision that sets it, and lists the laws that took effect there in the past year.
+  {#place-change}
+- **Why laws and numbers.** A new page, `/statistics/why`, says why Solon keeps each place's law
+  beside its statistics: to see how a place is governed and how it is doing, to mark what a place
+  does not measure, and to let groups decide together. Each thing it names says whether it is
+  available now or planned; per-place gap reports and "what other places did about a trend" are
+  planned, not built. South Ossetia is the worked example: its law and its 2023 budget are on
+  Solon, its statistics office's figures and gaps are researched but not yet loaded. In all five
+  languages. {#stats-why}
+
+### Fixed
+
+- **New sources load without waiting for their day.** A source added after its day of the month
+  waited for the next one, and the World Bank's figures for the countries Solon holds only as
+  places of the world have not loaded yet. The daily run now loads up to forty sources that were
+  never loaded, whatever their day, so every country's figures arrive within a week; one that fails
+  is tried again a week later.
+- **Russian place pages read correctly** where a sentence named the place after a preposition
+  ("для Россия"), and the law card no longer calls every place below a country a "commune".
+
+- **One Bitcoin key is one seat.** A key answers to three address forms (legacy, native segwit,
+  wrapped segwit), and the founding-seat check compared only the form that was claimed. A key
+  already seated under one form could take a second seat in the same organization under another.
+  The check now asks for the key under every form.
+
 ## 2026-11-10
 
 ### Added
+
+- **Every place's page, rebuilt around what matters.** The photograph, the name, what kind of
+  place it is and its headline facts come first, with the one thing to do next: read its
+  constitution, or its law. Below, the law and what a resident can do sit beside the place at a
+  glance, without repeating what the photograph already says. The cantons of Switzerland, the
+  regions of France, the states and counties of the United States and every other subdivision
+  Wikidata photographs now have their photograph too, and a country's places are shown as
+  photographs. The list of the world opens on the Earth from Apollo 17 and is grouped by what each
+  place is. {#place-page-shape} {#place-photos-subdivisions}
+
+- **Every place opens on its photograph.** A country's page, a proclaimed state's, a US state's
+  now begins with a photograph of the place across the screen, its name, what kind of place it is,
+  its capital, population and area; a shared link shows the same photograph with its name. The
+  Matterhorn for Switzerland, Vaduz Castle for Liechtenstein, Fiagdon monastery for South Ossetia,
+  Yellowstone for Wyoming. The list of every country and territory is now a wall of photographs.
+  Every photograph is from Wikimedia Commons under a free licence, its author named on it.
+  {#place-photos}
+
+- **Every country, and every place beyond the UN, has a profile.** Each country's page now says
+  what kind of place it is (a UN member since a given day, an observer, a place that governs itself,
+  a territory), with its capital, population, area, languages, currency, form of government and
+  heads of state and government, and a way into its constitution and its law. Liberland, Sealand and
+  other proclaimed states, Próspera, and seasteading projects have pages too, picked by one stated
+  rule; Liberland's constitution is on Solon. The map can show only the places beyond the UN.
+  Constitutions loaded so far include Brazil's, Japan's, Morocco's, the Netherlands', Romania's,
+  Serbia's and others, each read from a copy whose source and date are on the page.
+  {#world-profiles} {#world-beyond-un} {#world-map-beyond}
+
+- **Russia's and Ukraine's constitutions, and a plan for every country's law.** Both constitutions
+  are on Solon in their own language, article by article, with how each is amended and, for
+  Ukraine, the referendum three million citizens can call. Where a government site would not serve
+  the text, it is read from another faithful copy (Wikisource, Ukraine's Constitutional Court) and
+  the page says whose copy it is and when it was read; a copy older than the last amendment is
+  refused. Every country now has its place in one plan, which shows what Solon holds for it and the
+  next step. {#law-plan} {#law-constitutions-p1}
+
+- **Russia's laws, and North Ossetia–Alania's.** The federal laws and the laws of North
+  Ossetia–Alania are listed from Russia's official publication portal, each linked to its official
+  publication, under Russia and the republic in your language. Each says how that law is officially
+  changed: a federal bill goes to the State Duma, and citizens cannot introduce one; the Russian
+  Public Initiative takes 100,000 votes for a federal proposal and, for a region, 5% of its people,
+  each vote cast through a state services account. The texts are not held yet. {#ru-register}
+
+- **Your proposals cannot be linked to each other.** Whoever files or supports a proposal is named
+  in the public record by a name of their own for that proposal only, never by their account.
+  {#safe-pseudonyms}
+
+- **Propose a change in Russian, French and Italian.** Writing a change to a law, supporting
+  one and reading how that law is officially changed now works in every language Solon speaks,
+  not only German and English. On a contested place, "propose" opens each side's law to pick
+  the article, instead of a form that asked you to join an unrelated organization, and Georgia's
+  constitution is quoted with a translation into your language. {#contested-propose-law}
+
+- **Every page in your language and one currency.** Money is shown in US dollars unless you
+  pick another currency, and your pick holds on every page: budgets, contested places and the
+  comparison of structures, where a salary quoted in francs now also shows its equivalent. The
+  words that came from Solon's own configuration and stayed in English or Russian on translated
+  pages (the statistics' scales, the tax forms, the budget lines and their classifications,
+  who published each figure, the voting example) now read in German, French, Italian and
+  Russian too. {#budgets-money} {#i18n-config}
+
+- **One currency, one language.** Money on the budget and comparison pages is shown in the
+  currency you pick (francs by default, or euro, dollars, pounds, roubles, lari), converted at
+  that year's average rate from Eurostat and, for the rouble since 2022, the Bank of Russia;
+  each page says from what it was converted. A law in another language reads in yours: a
+  machine translation, marked as one, with the authentic text a click away, and titles in
+  lists translated too. Places are named in your language (South Ossetia, Tskhinval), not only
+  in their own. Codes South Ossetia's Parliament publishes as Word files are read from the
+  files, article by article. {#budgets-money} {#law-translated} {#law-documents}
+
+- **Budgets: what governments raise and what they spend it on.** `/budgets` lists every place
+  Solon holds a budget for, and each opens on one page: revenue, spending and the balance; what
+  the money is spent on, every function opened into its parts (old-age pensions within social
+  protection, hospitals within health); where it comes from; how both moved since 1995; who pays
+  for it where part is received from elsewhere; and every figure's source, down to the
+  publisher's own lines. Eurostat's government finance for 30 European countries is read every
+  month; South Ossetia's 2023 budget is read from its own laws. Every budget sits on the same
+  international classifications, so any two can be compared, and each page ends in "propose a
+  change to this budget". {#budgets-model} {#budgets-eurostat} {#budgets-pages}
 
 - **Contested places: two sets of law, side by side.** `/places/contested` lists every place
   that governs itself while another state regards it as part of its territory, and each opens
@@ -35,6 +209,14 @@ one to read for the detail. Fixes get the same weight as features.
   United Kingdom and the United States an ethnic or racial category, and in France a Constitutional
   Council decision bars studies that rest on ethnic origin or race. Each page lists what was not
   read, and a group can propose a position from it. {#stats-gaps}
+
+### Fixed
+
+- **Photographs of places always load.** Solon now keeps every place photograph it shows and
+  serves it itself; before, about one in sixteen came up black on a first visit while Wikimedia
+  asked the site to slow down. {#place-photo-store}
+- **The chat on place pages no longer reports an error** for its "Thought for…" line, in every
+  language.
 
 ## 2026-11-09
 

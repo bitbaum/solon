@@ -5,11 +5,15 @@ import type { IdentifierSchemeInput } from "./schema";
  * (§4.3). `reserved` schemes can only be carried by a state authority; the
  * database refuses them on a founded or proposed place.
  */
+/** The scheme a country is known by: what national statistics name their countries with. */
+export const COUNTRY_SCHEME = "iso_3166_1";
+
 export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
   {
-    key: "iso_3166_1",
+    key: COUNTRY_SCHEME,
     label: { en: "ISO 3166-1 country code", de: "Ländercode ISO 3166-1" },
     pattern: "[A-Z]{2}",
+    wikidataProperty: "P297",
     reserved: true,
   },
   {
@@ -42,6 +46,7 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
       it: "numero UST del comune",
     },
     pattern: "[1-9][0-9]{0,3}",
+    wikidataProperty: "P771",
     reserved: true,
   },
   {
@@ -133,6 +138,7 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     key: "iso_3166_2",
     label: { en: "ISO 3166-2 subdivision code", de: "Code der Unterteilung ISO 3166-2" },
     pattern: "[A-Z]{2}-[A-Z0-9]{1,3}",
+    wikidataProperty: "P300",
     reserved: true,
   },
   {
@@ -142,6 +148,7 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     key: "us_state_fips",
     label: { en: "State FIPS code", de: "FIPS-Code des Bundesstaats" },
     pattern: "0[1-9]|[1-4][0-9]|5[0-6]",
+    wikidataProperty: "P5087",
     reserved: true,
   },
   {
@@ -151,6 +158,7 @@ export const IDENTIFIER_SCHEMES: readonly IdentifierSchemeInput[] = [
     key: "us_county_fips",
     label: { en: "County FIPS code", de: "FIPS-Code des County" },
     pattern: "(0[1-9]|[1-4][0-9]|5[0-6])[0-9]{3}",
+    wikidataProperty: "P882",
     reserved: true,
   },
 ];

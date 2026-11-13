@@ -211,6 +211,62 @@
       "when": 1794313409563,
       "tag": "0029_act_title_derived",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1794320000768,
+      "tag": "0030_text_translations",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1794342155443,
+      "tag": "0031_place_photo_bytes",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1794343155443,
+      "tag": "0032_drop_file_path_act_numbers",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1794344155443,
+      "tag": "0033_provision_heading_path",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1794460740419,
+      "tag": "0034_member_person_tag",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1794467490217,
+      "tag": "0035_place_import_runs_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1794468404151,
+      "tag": "0036_facts_metric_current_idx",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1794499625314,
+      "tag": "0037_rate_limit_windows",
+      "breakpoints": true
     }
   ]
 }

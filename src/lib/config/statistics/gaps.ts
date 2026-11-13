@@ -6,6 +6,7 @@
  * read is listed as unread.
  */
 import { defineGaps } from "@/lib/statistics/gaps";
+import { OFFICES } from "./offices";
 
 const READ = "2026-11-10";
 const ev = (publisher: string, url: string, expect: string[], unchecked = false) => ({
@@ -103,6 +104,21 @@ export const GAPS = defineGaps({
         { en: "Type of offence, so a difference in one kind is not read as a difference in all." },
         { en: "Years since arrival, so integration can be separated from origin." },
       ],
+      proposal: {
+        collect: {
+          en: "Publish, as an office already does for another topic, persons found guilty of or registered for offences by sex, age and a background defined from records the office already holds (country of birth, parents' country of birth, citizenship), as tables with small cells suppressed.",
+        },
+        accompany: [
+          {
+            en: "The group's definition, and what the figures are and are not adjusted for, beside every table.",
+          },
+          {
+            en: "Age and sex always; income or benefit status, education and region where the office holds them.",
+          },
+        ],
+        author:
+          "Solon's configuration (2026-11-11). A possibility stated for discussion, drawn from this topic's own purposes, cautions and companions; not a recommendation to any office and not a finding about one.",
+      },
       author:
         "Solon's configuration (version 1, 2026-11-10). Descriptive and not a recommendation to any office.",
     },
@@ -113,6 +129,7 @@ export const GAPS = defineGaps({
       place: { scheme: "iso_3166_1", value: "DK" },
       variant: "composite_background",
       status: "published",
+      office: "dk.statistics-denmark",
       crossings: ["age", "sex"],
       publisher: "Statistics Denmark (Danmarks Statistik)",
       summary: {
@@ -325,5 +342,46 @@ export const GAPS = defineGaps({
         ),
       ],
     },
+    {
+      topic: "crime.by_background",
+      place: { scheme: "wikidata", value: "Q23427" },
+      variant: "composite_background",
+      status: "not_collected",
+      office: "so.state-statistics-office",
+      crossings: ["age", "sex"],
+      publisher:
+        "Управление государственной статистики Республики Южная Осетия (State Statistics Office of the Republic of South Ossetia)",
+      summary: {
+        en: "The 2025 statistical compendium reports registered crimes taken on record by the Ministry of Internal Affairs, and a table of offenders by sex, age at the offence and occupation. It has no breakdown by citizenship, country of birth or origin.",
+      },
+      unread: [
+        "Whether the Ministry of Internal Affairs records an offender's citizenship or birthplace and does not publish it",
+        "The compendia of earlier years and the quarterly compendia (read: the 2025 annual compendium only)",
+        "Whether other publications of the Office or the Ministry carry such a table",
+      ],
+      evidence: [
+        ev(
+          "Управление государственной статистики РЮО: Статистический сборник за 2025 год (PDF; a program cannot read its words)",
+          "https://ugosstat.ru/wp-content/uploads/2026/06/spravochnik-za-2025-g.pdf",
+          [],
+          true,
+        ),
+      ],
+      proposal: {
+        collect: {
+          en: "Publish the offenders table also by citizenship and country of birth, taken from records the Ministry of Internal Affairs already keeps where it keeps them, as tables with small cells suppressed (the territory's population is under 60,000, so cells are small).",
+        },
+        accompany: [
+          {
+            en: "The definition of each group, and that the figures are registered offences, not who offends.",
+          },
+          { en: "Age and sex always, with the occupation breakdown the Office already publishes." },
+        ],
+        office: "so.state-statistics-office",
+        author:
+          "Solon's configuration (2026-11-11). A possibility stated for discussion; not a recommendation to the Office and not a finding about it.",
+      },
+    },
   ],
+  offices: OFFICES,
 });

@@ -1,5 +1,6 @@
 "use client";
 
+import { TextBox } from "@/components/chat/text-box";
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { organizationMessage } from "@/lib/bitcoin/message";
@@ -167,16 +168,17 @@ export default function CreateOrganization({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-fg-primary" htmlFor="org-description">
-          What it governs <span className="text-fg-tertiary">(optional)</span>
-        </label>
-        <textarea
+        <TextBox
           id="org-description"
+          label={
+            <>
+              What it governs <span className="text-fg-tertiary">(optional)</span>
+            </>
+          }
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onValueChange={setDescription}
           rows={3}
           maxLength={500}
-          className={field}
         />
       </div>
 

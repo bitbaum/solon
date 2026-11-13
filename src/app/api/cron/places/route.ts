@@ -1,83 +1,121 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { placesConfig } from "@/lib/config/places";
 import { isCronRequest } from "@/lib/cron-auth";
 import { db } from "@/lib/db/client";
-import { ADAPTERS } from "@/lib/places/adapters";
 import { fetchAndImport } from "@/lib/places/importer/fetch";
+import {
+  ancestorsDue,
+  closeAbandonedRuns,
+  drainQueue,
+  failedSince,
+  pendingSources,
+  sourceRuns,
+} from "@/lib/places/importer/queue";
 import { defaultSnapshotStore } from "@/lib/places/importer/snapshots";
-import { dueSources } from "@/lib/places/schedule";
 import { STATISTIC_RECORDS } from "@/lib/config/statistics/records";
 import { syncStatisticRecords } from "@/lib/statistics/sync";
 
 export const dynamic = "force-dynamic";
 
+/** How long one worker keeps starting sources; the next hour's call takes what is left. */
+const WORKER_BUDGET_MS = 50 * 60_000;
+/** Longer than any import may run, on the box or from a runner through the tunnel. */
+const ABANDONED_AFTER_MS = 8 * 3_600_000;
+/** The timer calls hourly; failures are reported once, over a little more than that. */
+const REPORT_WINDOW_MS = 65 * 60_000;
+
+// One worker per process: an hourly call that finds one still at work starts no second.
+const state = globalThis as unknown as { solonImportWorker?: Promise<unknown> | null };
+
 /**
  * The scheduled Places import (design §8.3). The box's appcron timer calls it
- * once a day; each source whose cadence names today is fetched and imported in
- * registry order, recorded in `place_import_runs` like a run by hand. A failed
- * run answers 500, so the timer's failure alert fires. `?source=<key>` runs
- * one source now, whatever its cadence. No model is called: this only fetches
+ * every hour. The call starts a worker that fetches every source the run log
+ * says is behind (src/lib/places/importer/queue.ts) and answers at once: the
+ * work goes on after the answer, each attempt recorded in
+ * `place_import_runs`. It answers 500 when a run failed since the last call,
+ * so the timer's failure alert fires once per failure. `?source=<key>` runs
+ * one source now and waits for it. No model is called: this only fetches
  * public registers.
  *
- * Every run first writes the curated statistics records (links from series to
- * the law) into their append-only log, so a record merged reaches production
- * the next morning; a place not loaded yet leaves its record for a later run.
+ * Every call first writes the curated statistics records (links from series
+ * to the law) into their append-only log, so a record merged reaches
+ * production within the hour; a place not loaded yet leaves its record for a
+ * later run.
  */
 export async function POST(request: Request) {
   if (!isCronRequest(request.headers.get("authorization"), process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const today = new Date().toISOString().slice(0, 10);
-  const only = new URL(request.url).searchParams.get("source");
-  const sources = only
-    ? placesConfig.sources.filter((s) => s.key === only)
-    : dueSources(placesConfig, today);
-  if (only && sources.length === 0) {
-    return NextResponse.json({ error: `source "${only}" is not in the registry` }, { status: 404 });
-  }
+  const gitSha = process.env.GIT_SHA ?? null;
 
   let statistics: Awaited<ReturnType<typeof syncStatisticRecords>> | { error: string };
   try {
-    statistics = await syncStatisticRecords(db, STATISTIC_RECORDS, {
-      gitSha: process.env.GIT_SHA ?? null,
-    });
+    statistics = await syncStatisticRecords(db, STATISTIC_RECORDS, { gitSha });
   } catch (error) {
     statistics = { error: error instanceof Error ? error.message : String(error) };
   }
 
-  const results = [];
-  for (const source of sources) {
-    if (!ADAPTERS.get(source.adapter)?.retrievals) {
-      continue;
+  const only = new URL(request.url).searchParams.get("source");
+  if (only) {
+    if (!placesConfig.sources.some((s) => s.key === only)) {
+      return NextResponse.json(
+        { error: `source "${only}" is not in the registry` },
+        { status: 404 },
+      );
     }
+    let runs: { status: string; problems: string[] }[];
     try {
       const reports = await fetchAndImport(db, {
         config: placesConfig,
-        sourceKey: source.key,
+        sourceKey: only,
         today,
         snapshots: defaultSnapshotStore(),
-        gitSha: process.env.GIT_SHA ?? null,
+        gitSha,
       });
-      results.push({
-        source: source.key,
-        runs: reports.map((r) => ({
-          runId: r.runId,
-          status: r.status,
-          changes: Object.fromEntries(Object.entries(r.counts).filter(([, n]) => n > 0)),
-          problems: r.problems,
-        })),
-      });
+      runs = reports.map((r) => ({ status: r.status, problems: r.problems }));
     } catch (error) {
-      // A fetch that fails before any import (the publisher is down) leaves no run row.
-      results.push({
-        source: source.key,
-        runs: [
-          { status: "failed", problems: [error instanceof Error ? error.message : String(error)] },
-        ],
-      });
+      runs = [
+        { status: "failed", problems: [error instanceof Error ? error.message : String(error)] },
+      ];
     }
+    const failed = "error" in statistics || runs.some((r) => r.status === "failed");
+    return NextResponse.json(
+      { today, statistics, source: only, runs },
+      { status: failed ? 500 : 200 },
+    );
   }
-  const failed =
-    "error" in statistics || results.some((r) => r.runs.some((run) => run.status === "failed"));
-  return NextResponse.json({ today, statistics, results }, { status: failed ? 500 : 200 });
+
+  const busy = Boolean(state.solonImportWorker);
+  // A run still open after longer than any process here may live (a worker's budget, a load a
+  // workflow runs, which GitHub stops at six hours) was left by a process that stopped: report it,
+  // back off. Any other process's run, however long, is younger than that.
+  await closeAbandonedRuns(db, ABANDONED_AFTER_MS);
+  const failures = await failedSince(db, new Date(Date.now() - REPORT_WINDOW_MS));
+  const runs = await sourceRuns(db);
+  const pending = (await pendingSources(db, placesConfig, new Date(), runs)).map((s) => s.key);
+  // The worker also rebuilds the ancestors view once a day, for relations dated to start or end
+  // on a later day: it starts on a day with nothing due, too.
+  const start = !busy && (pending.length > 0 || ancestorsDue());
+  if (start) {
+    const worker = drainQueue(db, {
+      config: placesConfig,
+      snapshots: defaultSnapshotStore(),
+      gitSha,
+      budgetMs: WORKER_BUDGET_MS,
+      runs,
+    })
+      .catch((error) => console.error("[places import worker]", error))
+      .finally(() => {
+        state.solonImportWorker = null;
+      });
+    state.solonImportWorker = worker;
+    // Keeps the work alive after the answer is sent.
+    after(() => worker);
+  }
+  const failed = "error" in statistics || failures.length > 0;
+  return NextResponse.json(
+    { today, statistics, busy, started: start, pending, failures },
+    { status: failed ? 500 : 200 },
+  );
 }

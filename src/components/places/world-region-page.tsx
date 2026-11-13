@@ -1,15 +1,34 @@
 import { Link } from "@/i18n/navigation";
-import PageLayout from "@/components/ui/page-layout";
+import ProfileFrame from "./profile-frame";
 import type { PlaceLaw } from "@/lib/law/place-law";
+import BudgetLinkCard, { type BudgetLink } from "@/components/budgets/budget-link-card";
 import ContestNote, { type ContestNoteProps } from "./contest-note";
-import { PlaceLawCard, PlaceTrail } from "./place-head";
+import CountryProfile from "./country-profile";
+import type { WorldProfileView } from "@/lib/places/world-profile";
+import { PlaceLawCard } from "./place-head";
+import PlaceFigures from "./place-figures";
+import { PlaceRecentChanges, PlaceRoutes, routesAlong } from "./place-change";
+import type { RecentChange } from "@/lib/law/recent";
+import type { Locale } from "@/i18n/routing";
+import type { ProfileFigureView } from "@/lib/places/profile-figures";
 import type { PlacesTranslator } from "./translator";
 
 interface WorldRegionPageProps {
   name: string;
   /** For a place that governs itself without being a UN member: who claims it, and its comparison. */
   contest: ContestNoteProps | null;
+  /** The way into its public budget, when Solon holds one. */
+  budget: BudgetLink | null;
   law: readonly PlaceLaw[];
+  /** Its profile: kind, facts and the way into its law. */
+  profile: WorldProfileView | null;
+  /** The top of the page: its photograph, name, headline facts and main action. */
+  hero: React.ReactNode;
+  /** Its figures, where it has any (config: PROFILE_FIGURES). */
+  figures?: readonly ProfileFigureView[];
+  /** What changed in its law over the past year. */
+  recent?: { total: number; changes: readonly RecentChange[] } | null;
+  locale?: Locale;
   t: PlacesTranslator;
 }
 
@@ -18,15 +37,35 @@ interface WorldRegionPageProps {
  * all the same, so it can be found and shared, with the law Solon does hold
  * for it and the way to see what is covered. Same frame as a place page.
  */
-export default function WorldRegionPage({ name, contest, law, t }: WorldRegionPageProps) {
+export default function WorldRegionPage({
+  name,
+  contest,
+  budget,
+  law,
+  profile,
+  hero,
+  figures = [],
+  recent = null,
+  locale = "en",
+  t,
+}: WorldRegionPageProps) {
   return (
-    <PageLayout title={name} kicker={t("world.kicker")}>
-      <div className="max-w-3xl space-y-10">
-        <PlaceTrail above={[]} name={name} t={t} />
-
-        {contest && <ContestNote {...contest} t={t} />}
+    <ProfileFrame hero={hero} aside={profile ? <CountryProfile profile={profile} t={t} /> : null}>
+      <>
+        {contest && <ContestNote {...contest} statusShown={!!profile} t={t} />}
 
         <PlaceLawCard law={law} name={name} t={t} />
+
+        <PlaceFigures figures={figures} place={name} locale={locale} t={t} />
+
+        {/* Async parts are mounted only when they have something to show. */}
+        {routesAlong(law).length > 0 && <PlaceRoutes law={law} locale={locale} t={t} />}
+
+        {recent && recent.changes.length > 0 && (
+          <PlaceRecentChanges recent={recent} law={law} place={name} locale={locale} t={t} />
+        )}
+
+        {budget && <BudgetLinkCard {...budget} />}
 
         <section
           aria-labelledby="region-parts"
@@ -43,7 +82,7 @@ export default function WorldRegionPage({ name, contest, law, t }: WorldRegionPa
             {t("world.coverage")} →
           </Link>
         </section>
-      </div>
-    </PageLayout>
+      </>
+    </ProfileFrame>
   );
 }

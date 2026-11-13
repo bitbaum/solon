@@ -208,7 +208,12 @@ describe.skipIf(!RUN)("South Ossetia's registers (real database)", () => {
   });
 
   it("writes nothing on a dry run", async () => {
-    const before = (await actsOf("parliamentrso:")).length;
+    // Only this file's acts: another file registers the Parliament's acts at the same time.
+    const ours = async () =>
+      (await actsOf("parliamentrso:")).filter((x) =>
+        x.identity.startsWith(`parliamentrso:${String(N).slice(0, 3)}`),
+      ).length;
+    const before = await ours();
     const report = await registerParliament(db, {
       snapshots,
       pauseMs: 0,
@@ -216,6 +221,6 @@ describe.skipIf(!RUN)("South Ossetia's registers (real database)", () => {
       fetchImpl: parliament("Закон РЮО «Новый закон»"),
     });
     expect(report.register.status).toBe("dry_run");
-    expect((await actsOf("parliamentrso:")).length).toBe(before);
+    expect(await ours()).toBe(before);
   });
 });

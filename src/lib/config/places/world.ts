@@ -7,7 +7,6 @@
  * Every country gets the World Bank's indicators; the OECD's tax series are
  * asked of its members only (the Tax Database has no figures for the rest).
  */
-import { COUNTRIES } from "@/lib/config/world/countries";
 
 /** ISO 3166-1 alpha-2 codes of the OECD's 38 members (oecd.org/en/about/members-and-partners). */
 export const OECD_MEMBERS: readonly string[] = [
@@ -51,10 +50,24 @@ export const OECD_MEMBERS: readonly string[] = [
   "US",
 ];
 
-export const worldBankKey = (a2: string) => `worldbank-wdi-${a2.toLowerCase()}`;
-export const oecdKey = (a2: string) => `oecd-tax-${a2.toLowerCase()}`;
+/** The national-statistics sources: one per publisher, for every country it covers. */
+export const WORLD_BANK_KEY = "worldbank-wdi-world";
+export const OECD_KEY = "oecd-tax-world";
+export const EUROSTAT_KEY = "eurostat-gov-world";
 
-/** Countries held by a pack of their own: given by the packs, so this file never lists them. */
-export function worldCountries(held: ReadonlySet<string>): string[] {
-  return COUNTRIES.filter((c) => !held.has(c.a2)).map((c) => c.a2);
-}
+/**
+ * Subdivisions the world pack leaves out because the place has a page of its
+ * own in the world list: ISO 3166-2 lists each under the state that regards it
+ * as its territory, and that page says so, neutrally, with the comparison of
+ * the two sets of law. By ISO 3166-2 code, to the world list's slug. (A
+ * subdivision whose Wikidata item is itself a world entry, Greenland under
+ * Denmark or Hong Kong under China, is left out by the generator's own rule.)
+ */
+export const SUBDIVISIONS_WITH_OWN_PAGE: Readonly<Record<string, string>> = {
+  "CN-TW": "taiwan",
+  "GE-AB": "abkhazia",
+  "MD-SN": "transnistria",
+  "RS-KM": "kosovo",
+};
+
+export const WORLD_SUBDIVISIONS_KEY = "world-subdivisions";

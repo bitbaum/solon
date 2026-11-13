@@ -6,7 +6,7 @@
  */
 import { localized } from "@/lib/places/place-view";
 import type { BriefFact } from "./brief";
-import { gapsOf, type Coverage, type Topic } from "./gaps";
+import { gapsOf, placeId, type Coverage, type Topic } from "./gaps";
 
 export function buildGapsBrief(
   topic: Topic,
@@ -20,7 +20,7 @@ export function buildGapsBrief(
   const variantLabel = (k: string) => en(topic.variants.find((v) => v.key === k)!.label);
   for (const c of coverage.filter((x) => x.topic === topic.key)) {
     lines.push({
-      text: `${placeName(c.place.value)}, ${variantLabel(c.variant)}: ${c.status.replaceAll("_", " ")}${
+      text: `${placeName(placeId(c.place))}, ${variantLabel(c.variant)}: ${c.status.replaceAll("_", " ")}${
         c.crossings.length ? `, crossed with ${c.crossings.join(" and ")}` : ""
       }. ${en(c.summary)}${c.frame ? ` The frame: ${en(c.frame)}` : ""}${
         c.unread.length ? ` Not read: ${c.unread.join("; ")}.` : ""

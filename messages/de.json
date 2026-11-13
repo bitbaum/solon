@@ -69,10 +69,12 @@
       "lawCoverage": "Was Solon führt",
       "lawAmendments": "Änderungsvorschläge",
       "statistics": "Statistik",
+      "statisticsWhy": "Warum Gesetze und Zahlen",
       "statisticsEvents": "Rechtsereignisse",
       "statisticsMethods": "Wie Ranglisten entstehen",
       "statisticsGaps": "Was gemessen wird und was nicht",
-      "statisticsResearch": "Recherche mit KI"
+      "statisticsResearch": "Recherche mit KI",
+      "budgets": "Haushalte"
     },
     "desc": {
       "whatYouCanDo": "Alles hier, in einfachen Worten, mit einem Anfang",
@@ -120,10 +122,12 @@
       "lawCoverage": "Welche Erlasse Solon führt, aus den Daten gezählt",
       "lawAmendments": "Änderungen, die jemand am Recht vorgeschlagen hat, mit Redline und Unterstützung",
       "statistics": "Das Recht neben den Zahlen: Reihen über die Zeit, jede mit ihrer Quelle und ihrem Gesetz",
+      "statisticsWhy": "Warum Solon das Recht jedes Orts neben seine Statistik stellt, und was davon schon läuft",
       "statisticsEvents": "Was mit dem Recht eines Ortes geschah: was sich änderte, wie, wer wo stand",
       "statisticsMethods": "Wer jeden Index macht, wie, und was man ihn fragen sollte.",
       "statisticsGaps": "Was jedes Amt erhebt und wo dieselbe Frage keine Antwort hat.",
-      "statisticsResearch": "Eine Frage stellen; einen Bericht erhalten, dessen Zahlen gegen die Quellen geprüft sind."
+      "statisticsResearch": "Eine Frage stellen; einen Bericht erhalten, dessen Zahlen gegen die Quellen geprüft sind.",
+      "budgets": "Was Staaten einnehmen und wofür sie es ausgeben, vergleichbar zwischen Orten"
     },
     "accountIntro": "Mit einem Solon-Konto treten Sie einer Organisation bei, stellen Anträge und stimmen ab. Eine E-Mail-Adresse und ein Passwort oder ein Passkey genügen; mit OrangeCat meldet Sie ein Klick an."
   },
@@ -339,10 +343,32 @@
     "law": {
       "kicker": "Das Recht, offen",
       "title": "Jedes Wort des Rechts, offen für alle.",
-      "body": "Solon führt den Wortlaut jedes geltenden Erlasses des Bundes und der Kantone, jedes Erlasses Liechtensteins, Luxemburgs und Estlands, die Gesetze Wyomings und die Regeln von immer mehr Gemeinden — jeweils so, wie der Herausgeber sie veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder schlagen Sie zu jedem Artikel eine Änderung vor.",
+      "body": "Solon führt den Wortlaut des Schweizer Rechts, vom Bund und den Kantonen bis zu immer mehr Gemeinden, und des Rechts von immer mehr Ländern, Staaten und der Europäischen Union — jeweils so, wie der Herausgeber es veröffentlicht hat, mit einem Hash, der die Abschrift belegt. Suchen Sie in einfachen Worten, stellen Sie eine Frage oder schlagen Sie zu jedem Artikel eine Änderung vor.",
       "next": "Auf dem Globus ist jeder Ort danach schattiert, wie viel seines Rechts Solon führt. Weitere Orte kommen dazu: Das System ist einmal gebaut, jedes neue Land sind seine Daten.",
       "find": "Einen Erlass finden",
       "ask": "Das Recht fragen"
+    },
+    "data": {
+      "kicker": "Gesetze und Zahlen",
+      "title": "Wie ein Ort regiert wird. Wie es ihm geht.",
+      "body": "Neben dem Recht jedes Orts hält Solon die Statistik und die Haushalte, die seine Ämter veröffentlichen, über die Jahre, jede Zahl mit ihrer Quelle und ihrem Geltungsbereich. Thema für Thema zeigt es, wo ein Ort misst, was ein anderer nicht misst, und was eine neue Messgrösse begleiten müsste.",
+      "note": "Vorzuschlagen, welche Messgrössen ein Ort beginnen könnte und welche Politik andere Orte bei derselben Entwicklung wählten, ist geplant und noch nicht gebaut.",
+      "why": "Warum Gesetze und Zahlen",
+      "stats": "Zur Statistik",
+      "points": {
+        "governed": {
+          "name": "Wie er regiert wird",
+          "body": "Sein Recht, wie der Herausgeber es veröffentlicht hat, und die offiziellen Wege, es zu ändern."
+        },
+        "doing": {
+          "name": "Wie es ihm geht",
+          "body": "Seine Statistik und sein Haushalt über die Jahre, jede Zahl mit ihrer Quelle und dem Tag, an dem sie gelesen wurde."
+        },
+        "missing": {
+          "name": "Was er nicht misst",
+          "body": "Wo vergleichbare Orte eine Zahl veröffentlichen, die er nicht veröffentlicht, und was Solon nicht gelesen hat, als nicht gelesen markiert."
+        }
+      }
     },
     "roots": {
       "kicker": "Woher die Ideen kommen",
@@ -488,13 +514,22 @@
     "metaDescription": "Wer die Fotografien auf dieser Website gemacht hat, und unter welcher Lizenz.",
     "kicker": "Bildnachweise",
     "title": "Die Fotografien auf dieser Website",
-    "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an."
+    "lede": "Alle stammen von Wikimedia Commons und werden unter den unten genannten Lizenzen verwendet. Keine zeigt eine Kundin oder einen Kunden von Solon oder deutet dies an.",
+    "placesTitle": "Die Fotos der Orte",
+    "placesLede": "Das Foto jedes Landes, Gebiets und Rechtsgebiets, aus Wikimedia Commons, jedes unter seiner freien Lizenz und unverändert gezeigt. Urheber und Lizenz stehen auch auf dem Foto selbst.",
+    "placesPages": "Seiten der Ortsfotos"
   },
   "Development": {
     "roadmapTitle": "Roadmap — Solon",
     "changelogTitle": "Änderungen — Solon",
     "roadmapDescription": "Wohin Solon geht, in der Reihenfolge, in der es dorthin geht — gelesen aus dem massgeblichen Verzeichnis der Flotte.",
     "changelogDescription": "Was sich in Solon für die Menschen geändert hat, die es nutzen, Neuestes zuerst — gelesen aus dem massgeblichen Verzeichnis der Flotte."
+  },
+  "Status": {
+    "available": "Jetzt verfügbar",
+    "inDevelopment": "In Entwicklung",
+    "planned": "Geplant",
+    "researched": "Recherchiert, noch nicht geladen"
   },
   "Places": {
     "kicker": "{level} · {pack}",
@@ -643,6 +678,7 @@
       "rank": "Platz {rank, number} von {count, number} ab der tiefsten Steuer: {amount} mehr als der günstigste Ort",
       "cheapest": "Der günstigste von {count, number} Orten auf der Karte",
       "open": "Ort öffnen",
+      "openPlace": "{place} öffnen",
       "close": "Schliessen",
       "addCompare": "Zum Vergleich hinzufügen",
       "inCompare": "Im Vergleich",
@@ -687,11 +723,21 @@
       "title": "Die Welt",
       "kicker": "Land oder Gebiet",
       "claimed": "Verwaltet sich selbst und ist nicht Mitglied der Vereinten Nationen. <link>{claimant}</link> betrachtet es als Teil seines Staatsgebiets.",
+      "claimedBy": "<link>{claimant}</link> betrachtet es als Teil seines Staatsgebiets.",
       "notYet": "Solon führt die Orte von {place} noch nicht.",
       "coverage": "Was Solon bisher abdeckt",
       "metaDescription": "{place} auf Solon: das Recht, das Solon dort führt, und die Orte darin.",
       "indexIntro": "Jedes Land und jedes Gebiet, jedes mit einer eigenen Seite. Öffnen Sie eines, um das Recht zu sehen, das Solon dort führt, und die Orte darin.",
-      "heldPlaces": "{count, plural, =0 {Nur Orte} one {Orte · # Erlass} other {Orte · # Erlasse}}"
+      "heldPlaces": "{count, plural, =0 {Nur Orte} one {Orte · # Erlass} other {Orte · # Erlasse}}",
+      "groups": {
+        "state": "Mitglieder der Vereinten Nationen",
+        "observer": "Beobachterstaaten",
+        "self_governing": "Regieren sich selbst, ohne UNO",
+        "territory": "Gebiete",
+        "proclaimed": "Ausgerufene Staaten",
+        "special": "Sonderrechtsgebiete",
+        "project": "Projekte für neue Rechtsgebiete"
+      }
     },
     "law": {
       "title": "Recht",
@@ -702,7 +748,7 @@
       "nothing": "Noch keine Erlasse geführt",
       "textsNotHeld": "Die Texte führt Solon noch nicht.",
       "moreRegistered": "{count, plural, one {# weiterer Erlass erfasst} other {# weitere Erlasse erfasst}}, Texte noch nicht geführt.",
-      "communes": "Gemeinden ({count})"
+      "below": "Darunter ({count})"
     },
     "parts": {
       "title": "Orte in {place}",
@@ -736,31 +782,85 @@
       "translation": "Übersetzung:",
       "translatedBy": "Übersetzt von {translator}",
       "read": "gelesen am {date}",
-      "actTitle": "Bedingungen vorschlagen",
-      "actIntro": "Ist die Regel einer Seite bei einer Frage besser, oder gibt es Bedingungen, die beide annehmen könnten? Entwerfen Sie sie als Vorschlag: Er belegt Unterstützung, geht an die Stelle, die entscheidet, und ist nie Recht.",
-      "propose": "Bedingungen für {place} vorschlagen",
-      "proposeTitle": "Bedingungen für {place}",
-      "proposeBody": "Welche Regel in {place} gelten soll, Frage für Frage, und warum. Verglichene Seiten: {sides}.",
+      "actTitle": "Eine Änderung vorschlagen",
+      "actIntro": "Halten Sie die Regel einer Seite für besser oder wollen Sie ein Gesetz ändern? Öffnen Sie das Gesetz in Solon, wählen Sie den Artikel und schreiben Sie die Worte, die Sie wollen: Sie werden als Änderung gegenüber dem veröffentlichten Text gezeigt, andere können sie unterstützen, und die Seite sagt, wie dieses Gesetz offiziell geändert wird. Unterstützung hier ist ein Beleg, nie Gesetz.",
       "methodTitle": "Wie dieser Vergleich entsteht",
       "method": "Jede Zeile ist ein Zitat von einer Seite, die jemand geöffnet hat, mit dem Tag der Lektüre; das Original steht neben jeder Übersetzung, und ein Programm liest jede Seite wöchentlich neu und meldet Worte, die fehlen. Die Fragen sind für jeden Ort dieselben. Die Seite, die regiert, steht immer zuerst, dann die beanspruchende. Wo nichts gelesen wurde, sagt die Seite das.",
       "all": "Alle umstrittenen Orte",
       "proposeChange": "Eine Änderung dieses Artikels vorschlagen",
       "money": {
         "title": "Worauf der Staatshaushalt beruht",
-        "question": "Wie viel hat jede Seite selbst eingenommen, wie viel hat sie erhalten und von wem, und was hat sie ausgegeben?",
-        "year": "{side}, {year}",
-        "caption": "Einnahmen des Staatshaushalts von {side} im Jahr {year}, insgesamt {total}, nach Herkunft",
-        "own": "Eigene Einnahmen",
-        "from": "{from}",
-        "revenue": "Einnahmen",
-        "spent": "Ausgaben",
-        "ownCovered": "Durch eigene Einnahmen gedeckte Ausgaben",
-        "receivedShare": "Von anderen erhaltene Einnahmen",
-        "withoutTitle": "Gleich viel ausgeben ohne das Erhaltene",
-        "without": "Damit {side} allein aus eigenen Einnahmen gleich viel ausgeben könnte, müssten diese das {multiple}-Fache betragen; oder die Ausgaben müssten um {cut} sinken; oder eine Mischung aus beidem.",
-        "notForecast": "Rechnung mit den eigenen Zahlen des Haushaltsgesetzes, keine Prognose: Sie sagt nichts darüber, was die Wirtschaft unter anderen Regeln einbringen könnte oder was stattdessen ausgegeben würde.",
-        "notRead": "Für {side} wurde noch kein Haushalt gelesen."
-      }
+        "notRead": "Für {side} wurde noch kein Haushalt gelesen.",
+        "open": "Der ganze Haushalt von {side}"
+      },
+      "proposeLaw": "Eine Änderung am Recht von {side} vorschlagen"
+    },
+    "profile": {
+      "title": "Auf einen Blick",
+      "kinds": {
+        "state": "Mitglied der Vereinten Nationen seit {date}.",
+        "observer": "Ein Beobachterstaat der Vereinten Nationen, kein Mitglied.",
+        "self_governing": "Regiert sich selbst und ist kein Mitglied der Vereinten Nationen.",
+        "territory": "Kein Mitglied der Vereinten Nationen.",
+        "territoryOf": "Kein Mitglied der Vereinten Nationen; Wikidata führt es unter {country}.",
+        "proclaimed": "Von seinen Gründern als Staat ausgerufen. Kein Mitglied der Vereinten Nationen.",
+        "special": "Ein Rechtsgebiet mit eigenem Recht innerhalb von {country}.",
+        "specialNoCountry": "Ein Rechtsgebiet mit eigenem Recht innerhalb eines Staates.",
+        "project": "Ein Projekt für ein neues Rechtsgebiet."
+      },
+      "kicker": {
+        "state": "Land",
+        "observer": "Beobachterstaat",
+        "self_governing": "Regiert sich selbst",
+        "territory": "Gebiet",
+        "proclaimed": "Ausgerufener Staat",
+        "special": "Sonderrechtsgebiet",
+        "project": "Projekt für ein neues Rechtsgebiet"
+      },
+      "facts": {
+        "capital": "Hauptstadt",
+        "population": "Bevölkerung",
+        "area": "Fläche",
+        "languages": "Amtssprachen",
+        "currency": "Währung",
+        "government": "Regierungsform",
+        "headOfState": "Staatsoberhaupt",
+        "headOfGovernment": "Regierungschef",
+        "founded": "Gegründet oder ausgerufen",
+        "unSince": "UNO-Mitglied seit",
+        "website": "Website"
+      },
+      "constitution": "Seine Verfassung lesen",
+      "noConstitution": "Solon führt seine Verfassung noch nicht.",
+      "allLaw": "Sein ganzes Recht in Solon",
+      "routes": "{count, plural, =0 {Solon weiss noch nicht, wie sein Recht offiziell geändert wird.} one {# offizieller Weg, sein Recht zu ändern, mit Quelle.} other {# offizielle Wege, sein Recht zu ändern, mit Quellen.}}",
+      "source": "Angaben aus <wikidata>Wikidata</wikidata>, gelesen am {date}; Mitgliedschaft aus der <un>Liste der Vereinten Nationen</un>. Jede Art von Ort sagt, was er tut, nicht, ob sein Anspruch berechtigt ist.",
+      "rule": "Ausgerufene Staaten werden nach einer Regel aufgeführt: Wikidata führt sie als Mikronationen, nicht aufgelöst, mit einem Artikel in mindestens 30 Wikipedias."
+    },
+    "photoCredit": "Foto: {author} · {license}",
+    "figures": {
+      "title": "Gemessen",
+      "intro": "Wo {place} bei Zahlen steht, die für fast jedes Land veröffentlicht werden. Jede führt zu ihrer Reihe und ihrer Quelle.",
+      "groups": {
+        "state": "Was der Staat einnimmt und ausgibt",
+        "governance": "Wie regiert wird, gemessen",
+        "safety": "Sicherheit"
+      },
+      "position": "Höher als in {percent} % von {count} anderen Ländern im Jahr {year}",
+      "trend": "{label} seit {from}",
+      "source": "{publisher}, {year}",
+      "highest": "Höchster Wert von {count} Ländern im Jahr {year}",
+      "lowest": "Tiefster Wert von {count} Ländern im Jahr {year}"
+    },
+    "change": {
+      "title": "Wie sein Recht geändert wird",
+      "intro": "Die amtlichen Wege, auf denen die Menschen, für die es gilt, und nicht nur das Parlament, das Recht hier ändern können, aus den Bestimmungen, die sie festlegen."
+    },
+    "recent": {
+      "title": "Was sich zuletzt geändert hat",
+      "intro": "{count, plural, one {# Erlass} other {# Erlasse}} von {place} und der übergeordneten Orte traten in den letzten zwölf Monaten in Kraft. Die neuesten:",
+      "new": "Neu, in Kraft seit {date}",
+      "amended": "Geändert, in Kraft seit {date}"
     }
   },
   "AuthError": {
@@ -778,7 +878,7 @@
   "Law": {
     "coverage": {
       "metaTitle": "Abdeckung des Rechts",
-      "metaDescription": "Welche Erlasse der Schweiz, Liechtensteins und Luxemburgs Solon führt, je Behörde, aus den Daten gezählt.",
+      "metaDescription": "Welche Erlasse Solon führt, je Behörde, aus den Daten gezählt.",
       "kicker": "Recht",
       "title": "Was Solon führt",
       "intro": "Aus den Daten gezählt, am {date} beim Herausgeber gelesen: die Erlasse jeder Behörde und für wie viele Solon den Wortlaut führt.",
@@ -787,13 +887,13 @@
       "authorities": "Behörden",
       "row": "{inForce} in Kraft · {notInForce} nicht",
       "rowNotStated": "{inForce} in Kraft · {notInForce} nicht · {notStated} Status vom Herausgeber nicht angegeben",
-      "totalsNotStated": "{notStated, plural, one {# weiterer Erlass wird} other {# weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
+      "totalsNotStated": "{notStated} {count, plural, one {weiterer Erlass wird} other {weitere Erlasse werden}} von Herausgebern geführt, die nicht angeben, ob sie in Kraft sind.",
       "note": "Gemeinden kommen Sammlung für Sammlung dazu; die bisher geführten stehen in der Liste oben.",
       "readLink": "Einen Erlass finden und lesen →"
     },
     "index": {
       "metaTitle": "Erlass finden",
-      "metaDescription": "Einen Erlass der Schweiz oder Liechtensteins nach Titel oder Nummer finden und im Wortlaut des Herausgebers lesen.",
+      "metaDescription": "Einen Erlass nach Titel oder Nummer finden, an jedem Ort, dessen Recht Solon führt, und im Wortlaut des Herausgebers lesen.",
       "kicker": "Recht",
       "title": "Erlass finden",
       "intro": "Suchen Sie in allen Gesetzen, die Solon führt: Bund, Kantone und Gemeinden. Schreiben Sie in einfachen Worten, was Sie suchen, oder beginnen Sie bei Ihrem Wohnort.",
@@ -829,6 +929,7 @@
       "inForceSince": "In Kraft seit {date}, wie der Herausgeber angibt.",
       "readOn": "Der Herausgeber gibt nicht an, seit wann diese Fassung gilt. Gelesen am {date}.",
       "copy": "Kopie gelesen am {date}.",
+      "copyKeptBy": "Der Wortlaut, wie {keeper} ihn führt, nicht die Ausgabe des Herausgebers.",
       "copyFrom": "Die Seite, von der sie gelesen wurde",
       "copyArchived": "Kopie gelesen am {date} aus der Kopie des Internet Archive vom {captured}, weil die Website des Herausgebers Solons Leser abgewiesen hat. Es ist nicht die Kopie des Herausgebers selbst.",
       "copyArchivedFrom": "Die archivierte Kopie, aus der sie gelesen wurde",
@@ -845,7 +946,13 @@
       "morePlace": "Weitere Gesetze von {place}",
       "asMarkdown": "Für Maschinen: Markdown",
       "titleDerived": "Dieser Titel stammt von Solon, aus den Schlusszeilen des Erlasses. Der Herausgeber gibt dem Erlass keinen Titel ausser seiner Art.",
-      "contents": "{count, plural, one {Inhalt: # Bestimmung} other {Inhalt: # Bestimmungen}}"
+      "contents": "{count, plural, one {Inhalt: # Bestimmung} other {Inhalt: # Bestimmungen}}",
+      "translatedNote": "Maschinelle Übersetzung zum Lesen ({from} → {to}). Recht ist nur der Originaltext.",
+      "originalNote": "Der Originaltext ({from}).",
+      "showOriginal": "Originaltext zeigen ({from})",
+      "showTranslation": "Übersetzung zeigen ({to})",
+      "translating": "Diese Seite wird übersetzt…",
+      "translationFailed": "Diese Seite konnte gerade nicht übersetzt werden; der verbindliche Text wird gezeigt."
     },
     "kinds": {
       "constitution": "Verfassung",
@@ -1082,6 +1189,31 @@
       "withinSixMonths": "Innert sechs Monaten nach Ablauf des Geschäftsjahres, genehmigt an der ordentlichen Generalversammlung"
     }
   },
+  "AskSolon": {
+    "title": "Solon fragen",
+    "description": "Verstehen Sie die Regeln, vergleichen Sie Entscheidungsverfahren oder machen Sie aus einer Idee einen Vorschlagsentwurf.",
+    "status": "Die Governance-Regeln werden gelesen",
+    "starters": {
+      "one": "Wer darf was entscheiden?",
+      "two": "Die Governance-Profile vergleichen",
+      "three": "Hilf mir, einen Vorschlag zu entwerfen"
+    },
+    "startersTitle": "Die nächste Entscheidung klarer machen.",
+    "placeholder": "Fragen Sie nach einer Entscheidung oder entwerfen Sie einen Vorschlag…",
+    "draftsNote": "Entwürfe sind keine Beschlüsse.",
+    "signInLink": "Anmelden, um Solon zu fragen",
+    "methods": "Die Abstimmungsregeln lesen",
+    "record": "Das Beschlussprotokoll lesen",
+    "errors": {
+      "failed": "Solon konnte nicht antworten. Versuchen Sie es erneut.",
+      "signIn": "Melden Sie sich an, um Solon zu fragen. Danach kommen Sie hierher zurück.",
+      "tooLong": "Dieses Gespräch ist zu lang. Beginnen Sie ein neues.",
+      "rateLimited": "Bitte warten Sie einige Minuten, bevor Sie erneut fragen.",
+      "unavailable": "Die KI von Solon ist gerade nicht verfügbar. Sie können die Regeln trotzdem lesen oder unten einen Vorschlag entwerfen.",
+      "noAnswer": "Die Antwort ist nicht angekommen. Versuchen Sie es erneut.",
+      "interrupted": "Die Antwort wurde unterbrochen. Versuchen Sie es erneut."
+    }
+  },
   "Chat": {
     "copy": "Kopieren",
     "copied": "Kopiert",
@@ -1105,6 +1237,19 @@
     "confirmRecording": "Fertig — das Gesagte übernehmen",
     "listening": "Ich höre zu…",
     "transcribing": "Wird transkribiert…",
+    "attach": "Textdatei anhängen",
+    "attachRemove": "{name} entfernen",
+    "attachMenu": {
+      "title": "Zur Nachricht hinzufügen",
+      "close": "Schliessen",
+      "files": "Textdatei"
+    },
+    "attachNotes": {
+      "wrongType": "{name}: Hängen Sie eine Textdatei an (txt, md, csv oder json). Bilder und PDFs werden hier nicht gelesen.",
+      "textTooLarge": "{name} ist zu lang (höchstens {k}k Zeichen).",
+      "unreadable": "{name} konnte nicht gelesen werden.",
+      "tooMany": "Bis zu {max} Dateien."
+    },
     "queue": "Nachricht vormerken…",
     "dismiss": "Ausblenden",
     "retryTake": "Nochmals versuchen",
@@ -1112,7 +1257,9 @@
       "mic": "Das Mikrofon ist blockiert. Erlaube es für diese Seite und versuche es erneut.",
       "silence": "Nichts gehört. Versuche es nochmals, etwas näher am Mikrofon.",
       "unavailable": "Spracheingabe ist gerade nicht verfügbar. Tippe stattdessen oder versuche es später.",
-      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren."
+      "fileTooLarge": "Diese Aufnahme ist zu gross, um sie hier zu transkribieren.",
+      "signIn": "Melden Sie sich an, um die Spracheingabe zu nutzen.",
+      "busy": "Die Spracheingabe ist gerade ausgelastet. Versuchen Sie es gleich noch einmal."
     },
     "app": {
       "chats": "Gespräche",
@@ -1175,7 +1322,11 @@
     "taxNone": "Für {country} gibt es noch keine Steuerkarte.",
     "taxWorldTitle": "Was die Steuer Sie kosten würde, Ort für Ort",
     "taxWorldIntro": "Wählen Sie ein Land, um seine Orte danach einzufärben, was die Steuer Sie dort kosten würde.",
-    "everyCountry": "Jedes Land und jedes Gebiet"
+    "everyCountry": "Jedes Land und jedes Gebiet",
+    "showLabel": "Was die Karte zeigt",
+    "showAll": "Alle Orte",
+    "showBeyond": "Jenseits der UNO",
+    "beyondIntro": "Orte, die sich ohne UNO-Mitgliedschaft selbst regieren, von ihren Gründern ausgerufene Staaten, Rechtsgebiete mit eigenem Recht innerhalb eines Staates und Projekte für neue. Jeder wird danach benannt, was er tut, nicht danach, ob sein Anspruch berechtigt ist."
   },
   "Statistics": {
     "kicker": "Statistik",
@@ -1269,7 +1420,7 @@
       "statedBy": "Gesagt von {source}, {from} bis {to}.",
       "statedSince": "Gesagt von {source}, seit {from}.",
       "sourcesTitle": "Woher jede Zahl kommt",
-      "sourceRow": "{place}: gelesen am {date}",
+      "sourceRow": "{place}: {publisher}, gelesen am {date}",
       "sourceLink": "die Zahlen des Herausgebers",
       "rawLink": "die abgerufene Datei",
       "saveTitle": "Diese Ansicht behalten",
@@ -1620,7 +1771,7 @@
       "metaDescription": "Stellen Sie eine Frage zu Regierungsführung, Freiheit oder Statistik: Eine KI liest Solons Reihen, Dimensionen, Methodenbeschreibungen und das Recht und schreibt einen Bericht, dessen Zahlen und Verweise gegen das Gelesene geprüft sind.",
       "kicker": "Recherche",
       "title": "Recherche mit KI",
-      "intro": "Stellen Sie eine Frage zu Regierungsführung, Freiheit, Statistik oder Recht. Eine KI liest, was Solon führt (Reihen mit Definitionen und Qualitätshinweisen, Dimensionen, die Recht, Praxis und Ergebnis trennen, wie veröffentlichte Ranglisten entstehen, das Recht selbst) und schreibt einen kurzen Bericht. Jede Zahl und jeder Verweis darin wird gegen die gelesenen Quellen geprüft, bevor Sie ihn sehen; die Argumentation nicht, lesen Sie also die Quellen.",
+      "intro": "Stellen Sie eine Frage zu Regierungsführung, Freiheit, Statistik oder Recht. Eine KI liest, was Solon führt (Reihen mit Definitionen und Qualitätshinweisen, Dimensionen, die Recht, Praxis und Ergebnis trennen, wie veröffentlichte Ranglisten entstehen, das Recht selbst) und schreibt einen kurzen Bericht. Jede Zahl und jeder Verweis darin wird gegen die gelesenen Quellen geprüft, bevor Sie ihn sehen; die Argumentation nicht, lesen Sie also die Quellen. Sie kennt nur, was Solon führt: Wo Solon für einen Ort keine Zahlen hat, hat auch sie keine.",
       "questionLabel": "Ihre Frage",
       "placeholder": "Zum Beispiel: Wie verhält sich Estlands Steuerlast zu der der Schweiz, und was sagt das Recht zum Spitzensatz?",
       "ask": "Recherchieren",
@@ -1660,6 +1811,8 @@
       "intro": "Statistische Ämter entscheiden, was sie erheben und veröffentlichen, aus rechtlichen, historischen, praktischen oder politischen Gründen; dieselbe Frage kann deshalb in einem Land beantwortbar sein und in einem anderen nicht. Hier ist jedes Thema gleich dargestellt: was laut einer gelesenen Quelle erhoben wird, wonach aufgeschlüsselt, unter welchem Recht, wo die Antwort fehlt und was ein neues Mass begleiten müsste, damit es nicht missverstanden wird. Solon beschreibt und schlägt vor; es bewertet keine Ämter und charakterisiert keine Menschen.",
       "open": "Öffnen",
       "back": "Alle Themen",
+      "soFar": "{count, plural, one {Bisher # Thema.} other {Bisher # Themen.}} Als Nächstes geplant: die Steuerlücke, die Durchsetzung des Verbots von Drogenbesitz und die Aufklärungsquoten nach Delikt.",
+      "why": "Warum Solon markiert, was nicht gemessen wird",
       "stance": "Solon nennt, was die Seiten des jeweiligen Amtes sagen und was nicht gelesen wurde. Eine Lücke kann ein Gesetz sein, das ein Land gewählt hat; ein Unterschied in einer Tabelle ist keine Erklärung. Nichts hier beschreibt ein Amt oder eine Gruppe von Menschen.",
       "purposesTitle": "Wozu die Antwort dient",
       "matrixTitle": "Was jeder Ort veröffentlicht",
@@ -1701,6 +1854,109 @@
       "propose": "Eine Haltung vorschlagen",
       "proposeTitle": "Haltung zu dem, was gemessen wird: {topic}",
       "proposeBody": "Wir bitten unser statistisches Amt, das unter {url} beschriebene Mass zu prüfen, mit den dort genannten Begleitgrössen und Schutzvorkehrungen."
+    },
+    "why": {
+      "metaTitle": "Warum Gesetze und Zahlen, für jeden Ort",
+      "metaDescription": "Warum Solon das Recht jedes Orts neben seine Statistik stellt, zeigt, was nicht gemessen wird, und jede Quelle nennt – damit Menschen gemeinsam entscheiden.",
+      "kicker": "Statistik",
+      "title": "Gesetze und Zahlen, für jeden Ort",
+      "intro": "Das Recht eines Orts sagt, wie er regiert wird. Seine Statistik sagt, wie es ihm geht. Solon hält beides nebeneinander, für jeden Ort, den es lesen kann, und zeigt, was ein Ort nicht misst. Es arbeitet darauf hin zu zeigen, welche Messgrössen und welche Politik andere Orte für dasselbe Problem gewählt haben, damit Menschen gemeinsam entscheiden können, was sie ändern wollen.",
+      "why": {
+        "title": "Warum beides",
+        "body": "Das Gesetz allein zeigt Absichten; Zahlen allein zeigen Ergebnisse ohne Ursache daneben. Zusammen lässt sich eine Gesetzesänderung neben das stellen, was danach geschah, und die Wahl eines Orts neben die eines anderen. Beides wird so aufbewahrt, wie es veröffentlicht wurde, die Quelle einen Klick entfernt."
+      },
+      "gaps": {
+        "title": "Was gemessen wird, und was nicht",
+        "body": "Statistikämter wählen, was sie erheben, aus rechtlichen, historischen, praktischen oder politischen Gründen. So kann ein Land eine Frage aus eigenen Zahlen beantworten, ein anderes nicht. Solon zeigt, wer was veröffentlicht, gekreuzt womit und nach welchem Gesetz, und was eine neue Messgrösse begleiten müsste, damit sie nicht falsch gelesen wird. Es bewertet keine Ämter und beschreibt keine Gruppen von Menschen.",
+        "sources": "Zum Beispiel veröffentlicht <denmark>Statistics Denmark</denmark>, wie viele Personen wegen Straftaten verurteilt wurden, nach Herkunftsland, Geschlecht und Alter, mit Zahlen von 2000 bis 2025; Frankreichs <france>Verfassungsrat</france> hat entschieden, dass Studien nicht auf ethnischer Herkunft oder Rasse beruhen dürfen."
+      },
+      "trends": {
+        "title": "Entwicklungen, und was andere Orte taten",
+        "body": "Eine Reihe zeigt, wie sich eine Zahl über die Jahre bewegt hat. Eine Gesetzesänderung wird als Ereignis festgehalten: was sich änderte, wie es dazu kam, wer wie abstimmte und was darüber behauptet wurde, getrennt von dem, was geschah. Beides nebeneinander, über Orte hinweg, lässt eine Gruppe sehen, was andere versucht haben."
+      },
+      "items": {
+        "lawByPlace": {
+          "name": "Das Recht jedes Orts",
+          "body": "Erlasse, wie ihre Herausgeber sie veröffentlichen, mit dem Tag, an dem sie gelesen wurden, und einem Hash, der die Kopie belegt, für die Orte, die Solon bisher gelesen hat."
+        },
+        "statisticsSeries": {
+          "name": "Statistik über die Zeit",
+          "body": "Reihen der Weltbank, der OECD und von Eurostat, jede mit ihrer Definition, ihrem Geltungsbereich und dem Tag, an dem sie gelesen wurde."
+        },
+        "publicBudgets": {
+          "name": "Öffentliche Haushalte",
+          "body": "Was Regierungen einnehmen und wofür sie es ausgeben, aus Budgetgesetzen und Statistikämtern, nach einer internationalen Klassifikation, damit Orte vergleichbar sind."
+        },
+        "measurementGaps": {
+          "name": "Was gemessen wird, und wo nicht",
+          "body": "Thema für Thema: welche Ämter eine Messgrösse veröffentlichen, gekreuzt womit und nach welchem Gesetz, und was eine neue begleiten müsste. Bisher ein Thema: Kriminalität nach Herkunft einer Person."
+        },
+        "placeGapReport": {
+          "name": "Was ein Ort nicht misst, und wie man anfängt",
+          "body": "Für einen Ort: was er nicht misst, vergleichbare Orte, die es tun, das zuständige Amt und ein Vorschlag, den Menschen aufgreifen können, um danach zu fragen."
+        },
+        "lawEvents": {
+          "name": "Änderungen des Rechts, und wie es dazu kam",
+          "body": "Was sich änderte, die Schritte und Abstimmungen und was darüber behauptet wurde, getrennt von dem, was geschah."
+        },
+        "trendMarkers": {
+          "name": "Gesetzesänderungen auf der Linie",
+          "body": "Jede Gesetzesänderung auf der Reihe eingezeichnet, die sie betrifft, im Jahr, ab dem sie galt."
+        },
+        "policyByTrend": {
+          "name": "Was andere Orte bei einer Entwicklung taten",
+          "body": "Neben einer Reihe die Gesetzesänderungen, die andere Orte machten, als sich ihre Zahlen gleich bewegten, und was folgte, ohne zu sagen, was richtig war."
+        },
+        "aiResearch": {
+          "name": "Recherche mit KI",
+          "body": "Stellen Sie eine Frage: Eine KI liest, was Solon hält, und schreibt einen Bericht, dessen Zahlen und Zitate gegen das Gelesene geprüft werden. Sie kennt nur, was Solon hält."
+        },
+        "groupMeasures": {
+          "name": "Eigene Messgrössen einer Gruppe, per Abstimmung",
+          "body": "Eine Gruppe wählt, welche Messgrössen zählen und wie stark, als Regel, über die ihre Mitglieder abstimmen."
+        }
+      },
+      "example": {
+        "kicker": "Beispiel",
+        "title": "Südossetien",
+        "status": "Südossetien verwaltet sich selbst und ist nicht Mitglied der Vereinten Nationen. Georgien betrachtet es als Teil seines Staatsgebiets. Solon hält beides fest und sagt nicht, welche Seite recht hat.",
+        "why": "Wenige Herausgeber ausserhalb berichten darüber; das meiste, was man wissen kann, stammt von seinen eigenen Behörden, und Solon hält es als deren Darstellung fest. Es zeigt, was Solon tut, wo die Quellen dünn sind: festhalten, was veröffentlicht ist, sagen, von wem es stammt, und markieren, was fehlt.",
+        "sources": "Georgiens <geostat>Statistikamt</geostat> erklärt, dass seine Zahlen ab 1994 das Gebiet nicht abdecken, das es Region Zchinwali nennt. Südossetiens eigenes <ugosstat>Statistikamt</ugosstat> veröffentlicht jedes Jahr und jedes Quartal einen Sammelband; die Ausgabe 2025 erschien am 24. Juni 2026.",
+        "items": {
+          "law": {
+            "name": "Sein Recht",
+            "body": "Die Erlasse, die sein Parlament und sein Präsident veröffentlichen, jeder mit dem eigenen Datum des Herausgebers. Der Herausgeber sagt nicht, ob ein Erlass noch gilt, und Solon sagt das."
+          },
+          "budget": {
+            "name": "Sein Staatshaushalt",
+            "body": "Der Haushalt 2023, wie ihn das Gesetz über seinen Vollzug angibt, nach der internationalen Klassifikation eingeordnet, damit er vergleichbar ist: Etwa vier Fünftel der Einnahmen kamen von der Russischen Föderation."
+          },
+          "statistics": {
+            "name": "Die Zahlen seines Statistikamts",
+            "body": "Bevölkerung, registrierte Straftaten, BIP und Staatshaushalt, aus dem Sammelband 2025 gelesen, mit den eigenen Vorbehalten des Amts: Die Bevölkerung ist eine Schätzung, fortgeschrieben aus der eigenen Volkszählung von 2015, das BIP eine Näherung, weil dem Amt nach eigener Aussage die Daten für eine vollständige Berechnung fehlen."
+          },
+          "gaps": {
+            "name": "Was es nicht misst",
+            "body": "Im Sammelband 2025 werden Personen, die Straftaten begangen haben, nach Geschlecht, Alter und Beschäftigung gezählt, nicht nach Staatsangehörigkeit, Geburtsort oder Herkunft, der Aufschlüsselung, die Dänemark veröffentlicht. Georgiens Statistikamt veröffentlicht keine Bevölkerungszahl, und keine andere Zählung von ausserhalb wurde gefunden."
+          },
+          "next": {
+            "name": "Was als Nächstes käme",
+            "body": "Eine Seite für Südossetien mit diesen Lücken, vergleichbaren Orten, die sie messen, dem zuständigen Amt und dem, was eine neue Messgrösse begleiten müsste (Alter und Geschlecht immer, kleine Zahlen weggelassen), als Vorschlag, den Menschen dort aufgreifen können."
+          }
+        },
+        "note": "Recherchiert, noch nicht geladen: Die Zahlen und Lücken oben wurden beim Herausgeber gelesen und mit jeder Adresse und jedem Datum in Solons <note>Recherchenotiz</note> festgehalten. Sie stehen noch nicht auf Solons Seiten."
+      },
+      "honest": {
+        "title": "Wie Solon ehrlich bleibt",
+        "body": "Zahlen werden so aufbewahrt, wie sie veröffentlicht wurden, mit dem Tag, an dem sie gelesen wurden; eine Revision kommt hinzu und überschreibt nichts. „Nicht gelesen“ heisst, Solon hat nicht nachgesehen, nicht, dass es nichts gibt. Ranglisten anderer werden beschrieben, nicht als Urteil verwendet. Eine KI darf eine Seite erklären, aber nur aus den dort aufgeführten Fakten, und ihre Antwort wird daran geprüft, bevor Sie sie sehen.",
+        "link": "Wie die Ranglisten entstehen"
+      },
+      "decide": {
+        "title": "Damit Menschen gemeinsam entscheiden",
+        "body": "Nichts davon sagt jemandem, was zu tun ist. Auf Solon kann eine Gruppe ihre eigenen Messgrössen und Gewichte per Abstimmung wählen, ein Statistikamt per Vorschlag um eine Messgrösse bitten und eine Gesetzesänderung neben den Zahlen vorschlagen, die dazu Anlass gaben.",
+        "cta": "Etwas vorschlagen",
+        "secondary": "Zur Statistik"
+      }
     }
   },
   "Find": {
@@ -1717,6 +1973,151 @@
       "gaps": "Was gemessen wird",
       "places": "Orte",
       "law": "Recht"
+    }
+  },
+  "Budgets": {
+    "kicker": "Öffentliche Haushalte",
+    "indexTitle": "Öffentliche Haushalte: was Staaten einnehmen und wofür sie es ausgeben",
+    "indexIntro": "Jeder Ort, für den Solon einen Haushalt hält: was hereinkam und woher, wofür es ausgegeben wurde und ob er ausgeglichen war. Jede Zahl verweist auf das Gesetz oder das Statistikamt, aus dem sie gelesen wurde, und jeder Haushalt lässt sich nach derselben Klassifikation mit jedem anderen vergleichen.",
+    "indexEmpty": "Solon hält noch keinen Haushalt.",
+    "columns": {
+      "place": "Ort",
+      "year": "Jahr",
+      "spending": "Ausgaben",
+      "revenue": "Einnahmen",
+      "balance": "Saldo",
+      "largest": "Grösster Anteil der Ausgaben"
+    },
+    "title": "{place}: öffentlicher Haushalt",
+    "intro": "Was die Regierung von {place} eingenommen und wofür sie es ausgegeben hat, nach den Zahlen, die ihre eigenen Haushaltsgesetze oder ein Statistikamt veröffentlichen. Solon ordnet jede Zahl derselben internationalen Klassifikation zu, damit sie mit jedem anderen Ort vergleichbar ist.",
+    "basis": {
+      "executed": "Rechnung: was hereinkam und ausgegeben wurde",
+      "enacted": "Voranschlag: was bewilligt wurde"
+    },
+    "scopeYear": "{scope}, {year}",
+    "years": "Andere Jahre",
+    "figures": {
+      "revenue": "Einnahmen",
+      "spending": "Ausgaben",
+      "balance": "Überschuss (+) oder Defizit (−)",
+      "ofGdp": "des BIP",
+      "withGdp": "{value} · {share} des BIP"
+    },
+    "spending": {
+      "title": "Wofür das Geld ausgegeben wird",
+      "caption": "{place}, {year}: Ausgaben nach Aufgabenbereich, als Anteil aller Ausgaben"
+    },
+    "income": {
+      "title": "Woher das Geld kommt",
+      "caption": "{place}, {year}: Einnahmen nach Art, als Anteil aller Einnahmen"
+    },
+    "rest": "Nicht aufgeschlüsselt oder keiner Kategorie zugeordnet",
+    "noBreakdown": "Der Herausgeber nennt diesen Betrag, schlüsselt ihn aber nicht auf.",
+    "detailCaption": "{category} im Einzelnen, als Anteil daran",
+    "reliance": {
+      "title": "Wer dafür bezahlt",
+      "question": "Wie viel hat die Regierung selbst eingenommen, wie viel hat sie erhalten und von wem, und was hat sie ausgegeben?",
+      "own": "Selbst eingenommen",
+      "caption": "Einnahmen von {holder} im Jahr {year}, insgesamt {total}, nach Geldgeber",
+      "ownCovered": "Durch eigene Einnahmen gedeckte Ausgaben",
+      "receivedShare": "Von anderen erhaltene Einnahmen",
+      "withoutTitle": "Gleich viel ausgeben ohne das Erhaltene",
+      "without": "Damit {holder} allein aus eigenen Einnahmen gleich viel ausgeben könnte, müssten diese das {multiple}-Fache betragen; oder die Ausgaben müssten um {cut} sinken; oder eine Mischung aus beidem.",
+      "notForecast": "Rechnung mit den eigenen Zahlen des Haushalts, keine Prognose: Sie sagt nichts darüber, was die Wirtschaft unter anderen Regeln einbringen könnte oder was stattdessen ausgegeben würde."
+    },
+    "history": {
+      "title": "Über die Jahre",
+      "caption": "{place}: Einnahmen und Ausgaben, {from}–{to}",
+      "revenue": "Einnahmen",
+      "spending": "Ausgaben",
+      "millions": "Millionen {currency}"
+    },
+    "sources": {
+      "title": "Woher diese Zahlen kommen",
+      "lines": "Die eigenen Zeilen des Herausgebers ({count})",
+      "code": "Code",
+      "line": "Zeile",
+      "amount": "Betrag",
+      "category": "Gezählt unter",
+      "notPlaced": "Keiner Kategorie zugeordnet",
+      "placement": "Wie die Zeilen zugeordnet wurden",
+      "facts": "Reihen von {publisher}, gelesen am {date}.",
+      "translation": "Übersetzung:",
+      "read": "gelesen am {date}",
+      "translatedBy": "Übersetzt von {translator}"
+    },
+    "act": {
+      "title": "Ändern",
+      "intro": "Sollte dieses Geld anders eingenommen oder ausgegeben werden? Entwerfen Sie es als Vorschlag: Er belegt Unterstützung, geht an die Stelle, die entscheidet, und ist nie Recht.",
+      "propose": "Eine Änderung dieses Haushalts vorschlagen",
+      "proposeTitle": "{place}: der Haushalt {year}",
+      "proposeBody": "Was sich am Haushalt von {place} ändern soll und warum: welche Einnahmen, welche Ausgaben, um wie viel. Zahlen: {url}",
+      "compare": "Einen Aufgabenbereich zwischen Ländern vergleichen"
+    },
+    "notHeld": "Solon hält noch keinen Haushalt für {place}.",
+    "placeCard": {
+      "title": "Öffentlicher Haushalt",
+      "text": "Was die Regierung von {place} einnimmt und wofür sie es ausgibt.",
+      "open": "Den Haushalt öffnen"
+    },
+    "currency": {
+      "label": "Geld zeigen in",
+      "converted": "Beträge in {to}, umgerechnet aus {from} zum Durchschnittskurs von {year} ({sources}).",
+      "notConverted": "Beträge in {from}: Solon hält keinen Kurs für {year}, um sie in {to} umzurechnen."
+    }
+  },
+  "MethodLab": {
+    "tablist": "Wie dieselben Vorlieben gezählt werden",
+    "caption": "Wie jede Gruppe von Mitgliedern jede Option bewertet, von 0 bis 5",
+    "members": "{count} Mitglieder",
+    "asks": "Der Stimmzettel fragt:",
+    "floor": "Alles mit {floor} oder mehr gilt als annehmbar; der Rest wird oben blasser.",
+    "firstChoices": "erste Wahlen",
+    "rating": "{value} von 5",
+    "ratingApproved": "{value} von 5 — angenommen",
+    "ratingNotApproved": "{value} von 5 — nicht angenommen",
+    "pluralityWins": "{winner} gewinnt mit {count} von {total}.",
+    "pluralityNote": "Vier der sieben Mitglieder haben sie mit null bewertet. Nichts wurde falsch gezählt — dafür ist «eine wählen» da, und deshalb kann die Option, mit der die meisten leben können, gegen jene verlieren, die eine grosse Minderheit liebt.",
+    "otherWins": "{winner} gewinnt.",
+    "otherNote": "Dieselben sieben Mitglieder, dieselben Vorlieben, eine andere Frage — und eine andere Antwort.",
+    "tabs": {
+      "plurality": {
+        "label": "Eine wählen",
+        "asks": "Welche einzelne Option wollen Sie am meisten?"
+      },
+      "approval": {
+        "label": "Zustimmung",
+        "asks": "Mit welchen Optionen könnten Sie leben?"
+      },
+      "dot": {
+        "label": "Punkte",
+        "asks": "Wie würden Sie fünf Punkte auf sie verteilen?"
+      },
+      "score": {
+        "label": "Bewertung",
+        "asks": "Bewerten Sie jede Option von 0 bis 5."
+      },
+      "ranked": {
+        "label": "Rangfolge",
+        "asks": "Bringen Sie sie in Ihre Reihenfolge."
+      }
+    },
+    "units": {
+      "approvals": "Zustimmungen",
+      "dots": "Punkte",
+      "avg": "Schnitt",
+      "points": "Punkte"
+    },
+    "options": {
+      "roof": "Das Dach reparieren",
+      "apprenticeship": "Die Lehrstelle finanzieren",
+      "tooling": "Das Werkzeug kaufen",
+      "reserve": "In Reserve halten"
+    },
+    "camps": {
+      "daily": "Drei Mitglieder, die das Gebäude täglich nutzen",
+      "train": "Zwei Mitglieder, die Neue ausbilden",
+      "work": "Zwei Mitglieder, die die Arbeit selbst machen"
     }
   }
 }

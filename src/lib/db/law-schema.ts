@@ -14,6 +14,7 @@ import {
   foreignKey,
   integer,
   index,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -200,6 +201,11 @@ export const legalProvisions = pgTable(
     /** As the act heads it: "Art. 270b Anfechtung des Anfangsmietzinses". */
     heading: text("heading").notNull(),
     text: text("text").notNull(),
+    /** The chapter and section headings above it, outermost first. Empty when the source has none. */
+    headingPath: jsonb("heading_path")
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
     /** Position in the act, from 0. */
     ord: integer("ord").notNull(),
   },
@@ -218,4 +224,28 @@ export const legalProvisions = pgTable(
       .onDelete("restrict")
       .onUpdate("cascade"),
   ],
+);
+
+/**
+ * Translations of the law's words for readers of another language: a cache
+ * keyed by the sha256 of the publisher's words and the language asked for, so
+ * the same words are translated once, and words the publisher changes are
+ * translated afresh. A translation is never the law and is never stored as an
+ * act or a version; pages show it labelled, with the authentic words a click
+ * away (design: docs/design/2026-10-law-as-data.md, principle 2).
+ */
+export const textTranslations = pgTable(
+  "text_translations",
+  {
+    id: text("id").primaryKey().$defaultFn(uuid),
+    /** sha256 of the publisher's words, hex. */
+    sourceSha256: text("source_sha256").notNull(),
+    sourceLang: text("source_lang").notNull(),
+    targetLang: text("target_lang").notNull(),
+    text: text("text").notNull(),
+    /** Who translated: the model, as `provider/model`. */
+    translator: text("translator").notNull(),
+    recordedAt: recordedAt(),
+  },
+  (t) => [uniqueIndex("text_translations_source_target_key").on(t.sourceSha256, t.targetLang)],
 );

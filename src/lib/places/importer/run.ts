@@ -25,7 +25,7 @@
  * source can say when a place ended.
  */
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { makeGeometryRef } from "@bitbaum/geo-kit";
 import type { CountryPack, PlacesConfig, Source } from "@/lib/config/places/schema";
 import type { Database, Tx } from "@/lib/db/client";
@@ -39,12 +39,15 @@ import {
   jurisdictionRelations,
   jurisdictions,
   placeImportRuns,
+  placePaths,
   placePostcodes,
   sources,
 } from "@/lib/db/places-schema";
+import { rowsOf } from "@/lib/db/rows";
 import { ADAPTERS, type Adapter } from "../adapters";
 import { hierarchyProblems } from "../invariants";
 import { slugSegment } from "../slug";
+import { hyphenated } from "../world-slug-redirects";
 import { syncPlacesConfigIn } from "../sync-config";
 import {
   importBatchSchema,
@@ -54,6 +57,8 @@ import {
   type ImportBatch,
 } from "./batch";
 import { defaultGeometryStore, type GeometryStore } from "./geometry-store";
+import { COUNTRY_SCHEME } from "@/lib/config/places/identifier-schemes";
+import { alreadyApplied, importerVersion, partialVersion } from "./applied";
 import { sha256Hex, type SnapshotStore } from "./snapshots";
 import { checkBatch } from "./validate";
 
@@ -80,6 +85,8 @@ export interface ImportOptions {
 export const CHANGE_KINDS = [
   "placesInserted",
   "placesUpdated",
+  "placesMoved",
+  "placesEnded",
   "namesInserted",
   "namesSuperseded",
   "identifiersInserted",
@@ -112,6 +119,11 @@ export interface ImportReport {
   /** Rows the adapter left out on purpose, with why. */
   skipped: { row: string; reason: string }[];
   problems: string[];
+  /**
+   * The bytes are those of the source's last applied retrieval from the same address, read by
+   * the same importer: nothing was parsed or written, and the run counts as applied.
+   */
+  unchanged?: boolean;
 }
 
 class RunFailed extends Error {
@@ -128,10 +140,21 @@ class DryRunDone extends Error {
 interface ApplyOutcome {
   counts: ChangeCounts;
   missingFromSource: string[];
+  /** Figures left out because their place is not held (a batch of figures only). */
+  unresolved: { row: string; reason: string }[];
 }
 
 const noChanges = (): ChangeCounts =>
   Object.fromEntries(CHANGE_KINDS.map((kind) => [kind, 0])) as ChangeCounts;
+
+/**
+ * Rows a thousand at a time: Postgres takes at most 65,535 parameters a
+ * statement, and five thousand places with five names each are well past it
+ * (the world's subdivisions, 2026-11-12).
+ */
+function* batches<T>(rows: readonly T[], size = 1000): Generator<T[]> {
+  for (let i = 0; i < rows.length; i += size) yield rows.slice(i, i + size);
+}
 
 /** JSON with sorted keys, so equal values compare equal. */
 const canonical = (value: unknown): string =>
@@ -140,6 +163,43 @@ const canonical = (value: unknown): string =>
       ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)))
       : v,
   );
+
+/** The kinds of change that move a place, after which the ancestors view is rebuilt. */
+const HIERARCHY_CHANGES: readonly ChangeKind[] = [
+  "placesInserted",
+  "placesUpdated",
+  "placesMoved",
+  "placesEnded",
+  "relationsInserted",
+  "relationsEnded",
+  "relationsSuperseded",
+];
+
+/** Rebuilds `place_ancestors`, through the function its owner defined (migration 0028). */
+export async function refreshAncestors(db: Database | Tx): Promise<void> {
+  await db.execute(sql`SELECT place_ancestors_refresh()`);
+}
+
+/** Writes a run's outcome onto its row in `place_import_runs`. */
+async function recordRun(db: Database, report: ImportReport): Promise<void> {
+  await db
+    .update(placeImportRuns)
+    .set({
+      status: report.status,
+      sourceId: report.sourceId,
+      report: {
+        ...(report.unchanged ? { unchanged: true } : {}),
+        contentSha256: report.contentSha256,
+        counts: report.counts,
+        quarantined: report.quarantined,
+        missingFromSource: report.missingFromSource,
+        skipped: report.skipped,
+        problems: report.problems,
+      },
+      finishedAt: new Date(),
+    })
+    .where(eq(placeImportRuns.id, report.runId));
+}
 
 export async function runImport(db: Database, options: ImportOptions): Promise<ImportReport> {
   const { config, sourceKey, retrieval, snapshots, dryRun = false } = options;
@@ -177,7 +237,43 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
 
     const sha = sha256Hex(retrieval.bytes);
     report.contentSha256 = sha;
+    const version = importerVersion(adapter, source);
+    // Kept even when nothing else is: the bytes behind every recorded reading stay readable.
     const snapshotKey = await snapshots.put(sha, retrieval.bytes);
+    // Bytes already applied, by the same importer: say so and stop. Most scheduled fetches
+    // find their publisher's figures as they were; parsing, diffing and writing them again
+    // cost a transaction, a registry sync and a refresh of the places' ancestors each time.
+    if (!dryRun && !adapter.publishesFiles) {
+      const [last] = await db
+        .select({
+          id: sources.id,
+          url: sources.url,
+          sha256: sources.contentSha256,
+          importerVersion: sources.importerVersion,
+        })
+        .from(sources)
+        .where(
+          and(
+            eq(sources.sourceKey, sourceKey),
+            // An adapter whose retrievals are parts compares each with its own last reading;
+            // one whose retrievals are editions compares with the source's latest of any.
+            adapter.independentRetrievals
+              ? retrieval.url === null
+                ? isNull(sources.url)
+                : eq(sources.url, retrieval.url)
+              : undefined,
+          ),
+        )
+        .orderBy(desc(sources.retrievedAt))
+        .limit(1);
+      if (last && last.url === retrieval.url && alreadyApplied(last, sha, version)) {
+        report.status = "applied";
+        report.sourceId = last.id;
+        report.unchanged = true;
+        await recordRun(db, report);
+        return report;
+      }
+    }
 
     const decoded = adapter.decode
       ? adapter.decode(retrieval.bytes)
@@ -241,7 +337,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
             url: retrieval.url,
             contentSha256: sha,
             snapshotKey,
-            importerVersion: `${adapter.key}@${adapter.version}`,
+            importerVersion: version,
             licenceSpdx: source.licence,
           })
           .returning();
@@ -261,9 +357,20 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         if (dryRun) {
           throw new DryRunDone(applied);
         }
-        // Where places sit is derived from the relations just written (migration 0025). Through a function:
-        // only the view's owner may refresh it, and the importer is not the migrating role (0027).
-        await tx.execute(sql`SELECT place_ancestors_refresh()`);
+        // Where places sit is derived from the relations just written (migration 0025), so the view
+        // is rebuilt when they or the places changed, and only then: a batch of figures moves no
+        // place. (A relation that starts or ends on a later day is caught by the daily rebuild in
+        // the import queue.) Through a function: only the view's owner may refresh it, and the
+        // importer is not the migrating role (0027).
+        if (HIERARCHY_CHANGES.some((kind) => applied.counts[kind] > 0)) {
+          await refreshAncestors(tx);
+        }
+        if (applied.unresolved.length > 0) {
+          await tx
+            .update(sources)
+            .set({ importerVersion: partialVersion(version) })
+            .where(eq(sources.id, sourceRow!.id));
+        }
         report.sourceId = sourceRow!.id;
         return applied;
       })
@@ -275,6 +382,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
       });
     report.counts = outcome.counts;
     report.missingFromSource = outcome.missingFromSource;
+    report.skipped.push(...outcome.unresolved);
     report.status = dryRun ? "dry_run" : "applied";
   } catch (error) {
     report.status = "failed";
@@ -285,22 +393,7 @@ export async function runImport(db: Database, options: ImportOptions): Promise<I
         : [error instanceof Error ? describeDbError(error) : String(error)];
   }
 
-  await db
-    .update(placeImportRuns)
-    .set({
-      status: report.status,
-      sourceId: report.sourceId,
-      report: {
-        contentSha256: report.contentSha256,
-        counts: report.counts,
-        quarantined: report.quarantined,
-        missingFromSource: report.missingFromSource,
-        skipped: report.skipped,
-        problems: report.problems,
-      },
-      finishedAt: new Date(),
-    })
-    .where(eq(placeImportRuns.id, report.runId));
+  await recordRun(db, report);
   return report;
 }
 
@@ -358,12 +451,14 @@ async function applyBatch(
   config: PlacesConfig,
   pack: CountryPack,
   source: Source,
-  batch: ImportBatch,
+  stated: ImportBatch,
   sourceId: string,
   geometrySha: string | null,
 ): Promise<ApplyOutcome> {
   const counts = noChanges();
   const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+  let batch = stated;
   const ids = await resolveRefs(tx, [
     ...batch.jurisdictions.flatMap((j) => [j.ref, ...j.identifiers]),
     ...batch.relations.flatMap((r) => [r.from, r.to]),
@@ -380,6 +475,78 @@ async function applyBatch(
     }
     return id;
   };
+
+  // --- Places another pack holds. A pack that `yields` (the world pack) holds a country only
+  // until a pack of its own states it: the place then moves here, keeping its id, its figures and
+  // its old path. A batch of a yielding pack leaves alone a place another pack now holds, and the
+  // places it states under it, so a world file not yet regenerated cannot take a country back.
+  const yielding = new Set(config.packs.filter((p) => p.yields).map((p) => p.key));
+  const packOf = new Map<string, string | null>();
+  const resolvedIds = [
+    ...new Set([
+      ...batch.jurisdictions.flatMap((j) => ids.get(refKey(j.ref)) ?? []),
+      ...batch.relations.flatMap((r) => ids.get(refKey(r.to)) ?? []),
+    ]),
+  ];
+  for (const part of batches(resolvedIds)) {
+    for (const row of await tx
+      .select({ id: jurisdictions.id, countryPack: jurisdictions.countryPack })
+      .from(jurisdictions)
+      .where(inArray(jurisdictions.id, part))) {
+      packOf.set(row.id, row.countryPack);
+    }
+  }
+  const heldBy = (place: BatchJurisdiction) => {
+    const id = ids.get(refKey(place.ref));
+    return id === undefined ? undefined : packOf.get(id);
+  };
+  const moving = new Set(
+    batch.jurisdictions.flatMap((j) => {
+      const from = heldBy(j);
+      return from && from !== pack.key && yielding.has(from) ? [refKey(j.ref)] : [];
+    }),
+  );
+  if (pack.yields) {
+    const elsewhere = (ref: ExternalRef) => {
+      const id = ids.get(refKey(ref));
+      const holder = id === undefined ? undefined : packOf.get(id);
+      return Boolean(holder && holder !== pack.key);
+    };
+    const leave = new Set([
+      ...batch.jurisdictions.flatMap((j) => (elsewhere(j.ref) ? [refKey(j.ref)] : [])),
+      // A place stated under one another pack holds (a subdivision file naming the country only
+      // as a parent).
+      ...batch.relations.flatMap((r) =>
+        r.relation === "part_of" && r.validTo === null && elsewhere(r.to) ? [refKey(r.from)] : [],
+      ),
+    ]);
+    // And what the batch states under them, however deep.
+    const parentOf = new Map(
+      batch.relations
+        .filter((r) => r.relation === "part_of" && r.validTo === null)
+        .map((r) => [refKey(r.from), refKey(r.to)]),
+    );
+    for (let grew = leave.size > 0; grew;) {
+      grew = false;
+      for (const j of batch.jurisdictions) {
+        const key = refKey(j.ref);
+        const parent = parentOf.get(key);
+        if (!leave.has(key) && parent && leave.has(parent)) {
+          leave.add(key);
+          grew = true;
+        }
+      }
+    }
+    if (leave.size > 0) {
+      batch = {
+        ...batch,
+        jurisdictions: batch.jurisdictions.filter((j) => !leave.has(refKey(j.ref))),
+        relations: batch.relations.filter(
+          (r) => !leave.has(refKey(r.from)) && !leave.has(refKey(r.to)),
+        ),
+      };
+    }
+  }
 
   // --- Places: new ones get a row, a path and their identifier. ---
   // The current parent, or for a place that has ended, the last one it had.
@@ -404,7 +571,8 @@ async function applyBatch(
     let parentPath: string | null = null;
     const parentRef = currentParent.get(key);
     if (parentRef) {
-      const recordedParent = ids.get(refKey(parentRef));
+      // A parent moving here takes its path from this batch, not from the pack it leaves.
+      const recordedParent = moving.has(refKey(parentRef)) ? undefined : ids.get(refKey(parentRef));
       const parentInBatch = byRef.get(refKey(parentRef));
       if (recordedParent) {
         const [row] = await tx
@@ -446,9 +614,42 @@ async function applyBatch(
     takenPaths.add(path);
   }
 
+  const moved: { id: string; from: string }[] = [];
   for (const place of batch.jurisdictions) {
     const key = refKey(place.ref);
     const existingId = ids.get(key);
+    if (existingId && moving.has(key)) {
+      const from = packOf.get(existingId)!;
+      const path = await pathOf(place);
+      await tx
+        .update(jurisdictions)
+        .set({
+          countryPack: pack.key,
+          slugPath: path,
+          levelKey: place.levelKey,
+          validFrom: place.validFrom,
+          validTo: place.validTo,
+        })
+        .where(eq(jurisdictions.id, existingId));
+      await moveCanonicalPath(tx, existingId, path);
+      // Its parents as other sources stated them go: its new pack's sources state its parent now
+      // (this batch, for one it states; the relations below are this source's alone).
+      await tx
+        .update(jurisdictionRelations)
+        .set({ supersededAt: now })
+        .where(
+          and(
+            eq(jurisdictionRelations.fromId, existingId),
+            eq(jurisdictionRelations.relation, "part_of"),
+            isNull(jurisdictionRelations.supersededAt),
+            sql`${jurisdictionRelations.sourceId} NOT IN (
+              SELECT id FROM sources WHERE source_key = ${source.key})`,
+          ),
+        );
+      moved.push({ id: existingId, from });
+      counts.placesMoved += 1;
+      continue;
+    }
     if (existingId) {
       const [row] = await tx.select().from(jurisdictions).where(eq(jurisdictions.id, existingId));
       if (
@@ -482,6 +683,54 @@ async function applyBatch(
     counts.placesInserted += 1;
   }
   const placeIds = batch.jurisdictions.map((j) => ids.get(refKey(j.ref))!);
+
+  // What the pack it left held under a moved place, and this batch does not state, ends today:
+  // the new pack's own places take over. One it states later moves here and is current again.
+  const stating = new Set(placeIds);
+  for (const { id, from } of moved) {
+    const below = rowsOf<{ id: string }>(
+      await tx.execute(sql`
+        WITH RECURSIVE below(id) AS (
+          SELECT r.from_id FROM jurisdiction_relations r
+          JOIN jurisdictions j ON j.id = r.from_id AND j.country_pack = ${from}
+          WHERE r.to_id = ${id} AND r.relation = 'part_of'
+            AND r.superseded_at IS NULL AND r.valid_to IS NULL
+          UNION
+          SELECT r.from_id FROM jurisdiction_relations r
+          JOIN below b ON r.to_id = b.id
+          JOIN jurisdictions j ON j.id = r.from_id AND j.country_pack = ${from}
+          WHERE r.relation = 'part_of' AND r.superseded_at IS NULL AND r.valid_to IS NULL
+        )
+        SELECT id FROM below`),
+    )
+      .map((r) => r.id)
+      .filter((placeId) => !stating.has(placeId));
+    for (const part of batches(below)) {
+      // A place cannot end before it began: one that began today ends tomorrow.
+      const ended = await tx
+        .update(jurisdictions)
+        .set({
+          validTo: sql`CASE WHEN ${jurisdictions.validFrom} >= ${today}::date
+            THEN ${jurisdictions.validFrom} + 1 ELSE ${today}::date END`,
+        })
+        .where(and(inArray(jurisdictions.id, part), isNull(jurisdictions.validTo)))
+        .returning({ id: jurisdictions.id });
+      await tx
+        .update(jurisdictionRelations)
+        .set({
+          validTo: sql`CASE WHEN ${jurisdictionRelations.validFrom} >= ${today}::date
+            THEN ${jurisdictionRelations.validFrom} + 1 ELSE ${today}::date END`,
+        })
+        .where(
+          and(
+            inArray(jurisdictionRelations.fromId, part),
+            isNull(jurisdictionRelations.validTo),
+            isNull(jurisdictionRelations.supersededAt),
+          ),
+        );
+      counts.placesEnded += ended.length;
+    }
+  }
 
   // --- Identifiers: what this source states replaces what it stated before. ---
   const currentIdentifiers = await tx
@@ -536,9 +785,9 @@ async function applyBatch(
   }
   const newIdentifiers = wantedIdentifiers.filter((r) => !haveIdentifierKeys.has(identifierKey(r)));
   if (newIdentifiers.length > 0) {
-    await tx
-      .insert(jurisdictionIdentifiers)
-      .values(newIdentifiers.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newIdentifiers.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionIdentifiers).values(rows);
+    }
     counts.identifiersInserted += newIdentifiers.length;
   }
 
@@ -613,7 +862,9 @@ async function applyBatch(
   }
   const newNames = wantedNames.filter((r) => !haveNameKeys.has(nameKey(r)));
   if (newNames.length > 0) {
-    await tx.insert(jurisdictionNames).values(newNames.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newNames.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionNames).values(rows);
+    }
     counts.namesInserted += newNames.length;
   }
 
@@ -685,20 +936,59 @@ async function applyBatch(
   }
   const newRelations = wantedRelations.filter((r) => !haveByKey.has(relationKey(r)));
   if (newRelations.length > 0) {
-    await tx.insert(jurisdictionRelations).values(newRelations.map((r) => ({ ...r, sourceId })));
+    for (const rows of batches(newRelations.map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(jurisdictionRelations).values(rows);
+    }
     counts.relationsInserted += newRelations.length;
   }
 
   // --- Facts: per period; a changed value supersedes, it never overwrites. ---
+  // A batch of figures alone (a publisher's series for every country) states nothing about
+  // places: a figure for a country not held here is left out and reported, so one country not
+  // yet loaded never stops the others, and the retrieval is read again on the next run (see
+  // `partialVersion`). Any other unknown place is still a problem that fails the run: a mistyped
+  // commune number in a hand-kept table must not pass as applied. A batch that also states
+  // places keeps the rule that every figure's place is known.
+  const factsOnly =
+    batch.jurisdictions.length === 0 &&
+    batch.relations.length === 0 &&
+    batch.postcodes.length === 0 &&
+    batch.areas.length === 0 &&
+    batch.instruments.length === 0;
+  const notHeld = new Map<string, number>();
+  const placedFacts = factsOnly
+    ? batch.facts.filter((f) => {
+        const key = refKey(f.jurisdiction);
+        if (ids.has(key) || f.jurisdiction.scheme !== COUNTRY_SCHEME) return true;
+        notHeld.set(key, (notHeld.get(key) ?? 0) + 1);
+        return false;
+      })
+    : batch.facts;
+  // One line a place, however many of its figures were left out.
+  const unresolved = [...notHeld].map(([place, n]) => ({
+    row: place,
+    reason: `no place here is known by this identifier; ${n} figure${n === 1 ? "" : "s"} left out`,
+  }));
+  // Read only the metrics this batch states: a place holds figures from many sources, and one
+  // indicator for every country must not load every country's every series to compare.
   const metrics = new Map(config.metrics.map((m) => [m.key, m]));
-  const factIds = [...new Set(batch.facts.map((f) => idOf(f.jurisdiction, `fact ${f.metricKey}`)))];
-  const currentFacts =
-    factIds.length === 0
-      ? []
-      : await tx
-          .select()
-          .from(facts)
-          .where(and(inArray(facts.jurisdictionId, factIds), isNull(facts.supersededAt)));
+  const factIds = [...new Set(placedFacts.map((f) => idOf(f.jurisdiction, `fact ${f.metricKey}`)))];
+  const factMetrics = [...new Set(placedFacts.map((f) => f.metricKey))];
+  const currentFacts: (typeof facts.$inferSelect)[] = [];
+  for (const ids of batches(factIds)) {
+    currentFacts.push(
+      ...(await tx
+        .select()
+        .from(facts)
+        .where(
+          and(
+            inArray(facts.jurisdictionId, ids),
+            inArray(facts.metricKey, factMetrics),
+            isNull(facts.supersededAt),
+          ),
+        )),
+    );
+  }
   const factKey = (r: {
     jurisdictionId: string;
     metricKey: string;
@@ -706,7 +996,9 @@ async function applyBatch(
     validFrom: string;
   }) => canonical([r.jurisdictionId, r.metricKey, r.variant, r.validFrom]);
   const haveFacts = new Map(currentFacts.map((r) => [factKey(r), r]));
-  for (const fact of batch.facts) {
+  const supersededFacts: string[] = [];
+  const newFacts: (typeof facts.$inferInsert)[] = [];
+  for (const fact of placedFacts) {
     const row = {
       jurisdictionId: idOf(fact.jurisdiction, `fact ${fact.metricKey}`),
       metricKey: fact.metricKey,
@@ -734,12 +1026,19 @@ async function applyBatch(
       if (same) {
         continue;
       }
-      await tx.update(facts).set({ supersededAt: now }).where(eq(facts.id, have.id));
-      counts.factsSuperseded += 1;
+      supersededFacts.push(have.id);
     }
-    await tx.insert(facts).values({ ...row, sourceId, method: "imported" });
-    counts.factsInserted += 1;
+    newFacts.push({ ...row, sourceId, method: "imported" });
   }
+  // The old row first, then its successor: one current figure per place, metric and period.
+  for (const ids of batches(supersededFacts)) {
+    await tx.update(facts).set({ supersededAt: now }).where(inArray(facts.id, ids));
+  }
+  counts.factsSuperseded += supersededFacts.length;
+  for (const rows of batches(newFacts)) {
+    await tx.insert(facts).values(rows);
+  }
+  counts.factsInserted += newFacts.length;
 
   // --- Postcodes: the source's whole directory; what it no longer states is superseded. ---
   const currentPostcodes = await tx
@@ -825,10 +1124,31 @@ async function applyBatch(
     .filter((r) => !inBatch.has(r.jurisdictionId))
     .map((r) => r.slugPath ?? r.jurisdictionId);
 
-  return { counts, missingFromSource };
+  return { counts, missingFromSource, unresolved };
 }
 
 /** The pack's current hierarchy, checked against its level declarations. */
+/**
+ * A moved place's page: its new path becomes the canonical one, written as the path trigger writes
+ * a new place's (the pack's root segment with hyphens; migration 0026), and its old one stays,
+ * answering with a redirect. Paths are never deleted and never point at another place.
+ */
+async function moveCanonicalPath(tx: Tx, jurisdictionId: string, slugPath: string) {
+  const root = slugPath.split("/")[0]!;
+  const canonicalPath = hyphenated(root) + slugPath.slice(root.length);
+  await tx
+    .update(placePaths)
+    .set({ canonical: false })
+    .where(and(eq(placePaths.jurisdictionId, jurisdictionId), eq(placePaths.canonical, true)));
+  await tx.insert(placePaths).values({ path: canonicalPath, jurisdictionId, canonical: true });
+  if (canonicalPath !== slugPath) {
+    await tx
+      .insert(placePaths)
+      .values({ path: slugPath, jurisdictionId, canonical: false })
+      .onConflictDoNothing();
+  }
+}
+
 async function packInvariants(tx: Tx, pack: CountryPack): Promise<string[]> {
   const places = await tx
     .select({
@@ -917,7 +1237,9 @@ async function applyInstruments(
     counts.instrumentsSuperseded += 1;
   }
   if (wanted.size > 0) {
-    await tx.insert(instruments).values([...wanted.values()].map((r) => ({ ...r, sourceId })));
+    for (const rows of batches([...wanted.values()].map((r) => ({ ...r, sourceId })))) {
+      await tx.insert(instruments).values(rows);
+    }
     counts.instrumentsInserted += wanted.size;
   }
 }

@@ -134,8 +134,11 @@ export function cutProvisions(text: string): Provision[] {
   return out;
 }
 
-/** Plain lines of a fragment of HTML, as the page prints them. */
-export const linesOf = (html: string): string => blockText(html);
+/**
+ * Plain lines of a fragment of HTML, as the page prints them. A raised footnote marker is its own
+ * word on the page ("приставов¹"), so it is kept apart from the word before it, not fused into it.
+ */
+export const linesOf = (html: string): string => blockText(html.replace(/<sup[^>]*>/g, " <sup>"));
 
 /** A WordPress post's rendered content, as plain lines; the title as the page's own. */
 export function postText(json: unknown): { title: string; text: string; date: string } {
