@@ -33,6 +33,30 @@ describe.skipIf(!RUN)("translateMissing", () => {
       );
   });
 
+  it("stops at the first batch nobody answers, and says so once", async () => {
+    // 2026-11-13: with the free pools spent, every batch walked every model.
+    const many = Array.from(
+      { length: 40 },
+      (_, i) => `${"Длинная статья ".repeat(120)}${i} ${tag}`,
+    );
+    let calls = 0;
+    let told = 0;
+    const result = await translateMissing(
+      db,
+      many,
+      "ru",
+      "en",
+      async () => {
+        calls++;
+        throw new Error("every link refused");
+      },
+      { onUnanswered: () => told++ },
+    );
+    expect(calls).toBe(1);
+    expect(told).toBe(1);
+    expect(result).toEqual({ kept: 0, failed: 40 });
+  });
+
   it("translates what it does not hold, keeps it, and asks nothing the second time", async () => {
     expect(await translateMissing(db, passages, "ru", "en", ask)).toEqual({ kept: 2, failed: 0 });
     const held = await cachedTranslations(db, passages, "en");
