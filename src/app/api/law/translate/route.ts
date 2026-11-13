@@ -6,7 +6,7 @@ import { readJsonBounded } from "@/lib/chat/body";
 import { checkAssistantRequest, clientIp, toHeaders } from "@/lib/chat/rate-limit";
 import { db } from "@/lib/db/client";
 import { passagesOf } from "@/lib/law/act-translation";
-import { translateMissing } from "@/lib/law/translate";
+import { createPause, isCrawler, translateMissing } from "@/lib/law/translate";
 import { loadActView } from "@/lib/law/view";
 
 const Body = z.object({
@@ -14,6 +14,9 @@ const Body = z.object({
   page: z.number().int().min(1).max(10_000),
   to: z.enum(locales),
 });
+
+/** Ten minutes without asking, after every free model refused (lib/law/translate). */
+const pause = createPause(10 * 60_000);
 
 /**
  * Translates one page of an act into the reader's language, so the next view
@@ -28,8 +31,11 @@ export async function POST(req: Request) {
   if (!read.ok) return Response.json({ error: "Send a shorter request." }, { status: read.status });
   const parsed = Body.safeParse(read.body);
   if (!parsed.success) return Response.json({ error: "Name an act and a page." }, { status: 400 });
+  // A crawler runs the page's script too. Its page view must not spend the
+  // free models every app on the server shares; it reads the authentic text.
+  if (isCrawler(req.headers.get("user-agent"))) return new Response(null, { status: 204 });
   const chain = usableChain(freeChain("SOLON"), process.env);
-  if (!chain.length)
+  if (!chain.length || pause.active())
     return Response.json({ error: "Translation is not available just now." }, { status: 503 });
   const limit = await checkAssistantRequest(clientIp(req.headers), "translate");
   if (!limit.allowed)
@@ -41,10 +47,16 @@ export async function POST(req: Request) {
   const { act: id, page, to } = parsed.data;
   const act = await loadActView(db, { id, lang: to, page });
   if (!act?.version) return Response.json({ error: "That act has no text." }, { status: 404 });
-  const result = await translateMissing(db, passagesOf(act), act.version.lang, to, (messages) =>
-    complete({ messages, chain, env: process.env, maxTokens: 6000, timeoutMs: 90_000 }).then(
-      (r) => ({ text: r.text, id: r.id }),
-    ),
+  const result = await translateMissing(
+    db,
+    passagesOf(act),
+    act.version.lang,
+    to,
+    (messages) =>
+      complete({ messages, chain, env: process.env, maxTokens: 6000, timeoutMs: 90_000 }).then(
+        (r) => ({ text: r.text, id: r.id }),
+      ),
+    { onUnanswered: pause.start },
   );
   return Response.json(result, { status: result.failed > 0 && result.kept === 0 ? 502 : 200 });
 }

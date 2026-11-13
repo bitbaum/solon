@@ -123,16 +123,28 @@ export async function translateMissing(
   from: string,
   to: string,
   ask: Ask,
+  options: { onUnanswered?: () => void } = {},
 ): Promise<{ kept: number; failed: number }> {
   if (from === to) return { kept: 0, failed: 0 };
   const held = await cachedTranslations(db, passages, to);
   const missing = [...new Set(passages)].filter((p) => p.trim() !== "" && !held.has(textHash(p)));
   let kept = 0;
   let failed = 0;
-  for (const batch of batches(missing)) {
+  const todo = batches(missing);
+  for (const [index, batch] of todo.entries()) {
     const answer = await ask(translationPrompt(batch, from, to)).catch(() => null);
-    const translated = answer ? readTranslation(answer.text, batch) : null;
-    if (!answer || !translated) {
+    if (!answer) {
+      // Nobody answered: every model in the chain refused or failed. The next
+      // batch would walk the same chain to the same refusals. On 2026-11-13,
+      // with the free pools spent, one page view cost a refusal from every
+      // model for every batch: 1,783 failed calls in ninety minutes, from this
+      // route alone, against the pool every app on the server shares.
+      failed += todo.slice(index).reduce((n, b) => n + b.length, 0);
+      options.onUnanswered?.();
+      break;
+    }
+    const translated = readTranslation(answer.text, batch);
+    if (!translated) {
       failed += batch.length;
       continue;
     }
@@ -169,5 +181,30 @@ export async function translatedTitles(
       const translated = a.title ? held.get(textHash(a.title)) : undefined;
       return translated ? [[a.id, translated] as const] : [];
     }),
+  );
+}
+
+/**
+ * A pause after nobody answered. While it holds, the route asks no model at
+ * all: a spent free pool comes back in hours, not between two page views.
+ * In-process on purpose: one server, and a restart clearing it costs one walk.
+ */
+export function createPause(ms: number, now: () => number = Date.now) {
+  let until = 0;
+  return {
+    start: () => {
+      until = now() + ms;
+    },
+    active: () => now() < until,
+  };
+}
+
+/** A program reading the page, not a person. Nothing is translated for it. */
+export function isCrawler(userAgent: string | null | undefined): boolean {
+  return (
+    !userAgent ||
+    /bot\b|bot\/|crawl|spider|slurp|headless|lighthouse|playwright|puppeteer|curl\/|wget\/|python-requests|preview/i.test(
+      userAgent,
+    )
   );
 }
