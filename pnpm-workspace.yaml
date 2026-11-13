@@ -9,9 +9,6 @@
 allowBuilds:
   "@parcel/watcher": false
   "@swc/core": false
-  # bip-kit from its verified Git release builds its dist on install (npm
-  # publish of 0.7.x is blocked on the npm trusted-publisher link).
-  "@bitbaum/bip-kit@https://codeload.github.com/bitbaum/bip-kit/tar.gz/8052af06970886ba9d2d0b4da79560723a66bb08": true
   esbuild: true
   puppeteer: true
   tesseract.js: false
