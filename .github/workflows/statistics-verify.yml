@@ -29,7 +29,7 @@ jobs:
         run: pnpm run statistics:verify --json=statistics-sources.json
       - name: Keep the report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: statistics-sources
           path: statistics-sources.json
