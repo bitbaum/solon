@@ -54,7 +54,14 @@ export async function POST(req: Request) {
         tools,
         web: tools.web === true,
         call: (options) =>
-          complete({ ...options, chain, env: process.env, timeoutMs: 25000, signal }),
+          complete({
+            ...options,
+            chain,
+            env: process.env,
+            feature: "statistics-research",
+            timeoutMs: 25000,
+            signal,
+          }),
         onStep: (tool, args) =>
           emit({
             type: "activity",
@@ -73,6 +80,7 @@ export async function POST(req: Request) {
             messages,
             chain,
             env: process.env,
+            feature: "statistics-research",
             maxTokens: 1400,
             timeoutMs: 45000,
             signal,

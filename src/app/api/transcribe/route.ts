@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       filename: audio instanceof File ? audio.name : "dictation.webm",
       language: typeof locale === "string" ? locale.split("-")[0] : undefined,
       chain: speechChain(),
+      feature: "dictation",
       timeoutMs: 20000,
       signal: req.signal,
     });
