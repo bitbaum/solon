@@ -1532,6 +1532,7 @@
       "originalNote": "The authentic text ({from}).",
       "showOriginal": "Show the authentic text ({from})",
       "showTranslation": "Show the translation ({to})",
+      "translate": "Translate this page",
       "translating": "Translating this page…",
       "translationFailed": "This page could not be translated just now; the authentic text is shown."
     },

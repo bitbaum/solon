@@ -23,11 +23,19 @@ async function freshOrg() {
   return org;
 }
 
+/**
+ * Each seat joins one second after the last. The first to join keeps a shared
+ * tag (planPersonTags); two inserts in a row could carry the same joinedAt,
+ * and the tie then fell to the random id, so "A first" failed one run in a few.
+ */
+let joined = Date.UTC(2026, 0, 1);
 async function seat(organizationId: string, values: Partial<typeof members.$inferInsert> = {}) {
+  joined += 1000;
   const [row] = await db
     .insert(members)
     .values({
       organizationId,
+      joinedAt: new Date(joined),
       displayName: "Member",
       memberType: MemberType.HUMAN,
       ocActorId: randomUUID(),

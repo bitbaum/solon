@@ -951,6 +951,7 @@
       "originalNote": "Der Originaltext ({from}).",
       "showOriginal": "Originaltext zeigen ({from})",
       "showTranslation": "Übersetzung zeigen ({to})",
+      "translate": "Diese Seite übersetzen",
       "translating": "Diese Seite wird übersetzt…",
       "translationFailed": "Diese Seite konnte gerade nicht übersetzt werden; der verbindliche Text wird gezeigt."
     },
