@@ -24,8 +24,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(react@19.3.1)
       '@bitbaum/chatkit':
-        specifier: ^0.35.0
-        version: 0.35.0(react@19.3.1)
+        specifier: ^0.36.0
+        version: 0.36.0(react@19.3.1)
       '@bitbaum/geo-kit':
         specifier: ^0.8.0
         version: 0.8.0(d3-geo@3.1.1)(topojson-client@3.1.0)
@@ -443,8 +443,8 @@ packages:
     peerDependencies:
       react: '>=18'
 
-  '@bitbaum/chatkit@0.35.0':
-    resolution: {integrity: sha512-GqTpzqBWKj2JHTxRzssEJo4DIWwqwZWA6fWbl4lDEqLIbx1EMWVs9ex70y9oM9KMTeaYmZh/03tCFViRhI51BQ==}
+  '@bitbaum/chatkit@0.36.0':
+    resolution: {integrity: sha512-7NjVRdLvzVXiH7FIbQ1raD3gGPv4dcqIktH1OzP3cG2HA3YOA7jqIiHKKcqvqnNICMQmHQ4ad0qc6TdRHZWVpg==}
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
@@ -5171,7 +5171,7 @@ snapshots:
     dependencies:
       react: 19.3.1
 
-  '@bitbaum/chatkit@0.35.0(react@19.3.1)':
+  '@bitbaum/chatkit@0.36.0(react@19.3.1)':
     dependencies:
       '@bitbaum/threadkit': 0.1.2
       pdfjs-dist: 6.4.299
