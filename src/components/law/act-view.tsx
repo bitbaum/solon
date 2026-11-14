@@ -104,7 +104,11 @@ export default async function ActViewPage({
                 act={act.id}
                 page={page}
                 to={translation.lang}
-                labels={{ translating: t("act.translating"), failed: t("act.translationFailed") }}
+                labels={{
+                  translate: t("act.translate"),
+                  translating: t("act.translating"),
+                  failed: t("act.translationFailed"),
+                }}
               />
             )}
           </div>

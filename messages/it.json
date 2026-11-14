@@ -951,6 +951,7 @@
       "originalNote": "Il testo autentico ({from}).",
       "showOriginal": "Mostrare il testo autentico ({from})",
       "showTranslation": "Mostrare la traduzione ({to})",
+      "translate": "Traduci questa pagina",
       "translating": "Traduzione di questa pagina…",
       "translationFailed": "Questa pagina non ha potuto essere tradotta ora; è mostrato il testo autentico."
     },
