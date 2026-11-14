@@ -83,13 +83,21 @@ export async function POST(req: Request) {
     async (emit, signal) => {
       emit({ type: "step", step: "plan" });
       const ask: Completer = (options) =>
-        complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
+        complete({
+          ...options,
+          chain,
+          env: process.env,
+          feature: "law-ask",
+          timeoutMs: 20000,
+          signal,
+        });
       // A second opinion from the next model in the chain, if the first plan is weak.
       const askAgain: Completer = (options) =>
         complete({
           ...options,
           chain: [...chain.slice(1), ...chain.slice(0, 1)],
           env: process.env,
+          feature: "law-ask",
           timeoutMs: 20000,
           signal,
         });
@@ -103,7 +111,14 @@ export async function POST(req: Request) {
       emit({ type: "step", step: "research" });
       // The same tools /api/mcp offers, and the web when a search backend is set.
       const callTools: ToolCaller = (options) =>
-        complete({ ...options, chain, env: process.env, timeoutMs: 20000, signal });
+        complete({
+          ...options,
+          chain,
+          env: process.env,
+          feature: "law-ask",
+          timeoutMs: 20000,
+          signal,
+        });
       const { hits, web } = await research({
         db,
         turns,
@@ -120,6 +135,7 @@ export async function POST(req: Request) {
       for await (const delta of completeStream({
         chain,
         env: process.env,
+        feature: "law-ask",
         messages:
           proposal && act
             ? consultMessages(turns, plan, hits, web, proposal, act)

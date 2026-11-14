@@ -62,6 +62,7 @@ export async function POST(req: Request) {
       for await (const delta of completeStream({
         chain,
         env: process.env,
+        feature: "governance-chat",
         messages: [
           { role: "system", content: governancePrompt(parsed.data.locale) },
           ...parsed.data.messages.map((m, i, all) =>

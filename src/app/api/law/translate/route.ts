@@ -53,9 +53,14 @@ export async function POST(req: Request) {
     act.version.lang,
     to,
     (messages) =>
-      complete({ messages, chain, env: process.env, maxTokens: 6000, timeoutMs: 90_000 }).then(
-        (r) => ({ text: r.text, id: r.id }),
-      ),
+      complete({
+        messages,
+        chain,
+        env: process.env,
+        feature: "law-translate",
+        maxTokens: 6000,
+        timeoutMs: 90_000,
+      }).then((r) => ({ text: r.text, id: r.id })),
     { onUnanswered: pause.start },
   );
   return Response.json(result, { status: result.failed > 0 && result.kept === 0 ? 502 : 200 });

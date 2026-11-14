@@ -82,7 +82,14 @@ export async function POST(req: Request) {
       language: locale,
       question,
       ask: (messages) =>
-        complete({ messages, chain, env: process.env, maxTokens: 900, timeoutMs: 40000 }),
+        complete({
+          messages,
+          chain,
+          env: process.env,
+          feature: "statistics-explain",
+          maxTokens: 900,
+          timeoutMs: 40000,
+        }),
     });
     if (!result.ok) {
       return Response.json(
